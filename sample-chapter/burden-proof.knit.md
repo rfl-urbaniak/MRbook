@@ -6,9 +6,7 @@ output: pdf_document
 number_sections: true
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
+
 
 # Introduction
 
