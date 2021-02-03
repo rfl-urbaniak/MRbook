@@ -1,7 +1,3 @@
-\PassOptionsToPackage{unicode=true}{hyperref} % options for packages loaded elsewhere
-\PassOptionsToPackage{hyphens}{url}
-\PassOptionsToPackage{dvipsnames,svgnames*,x11names*}{xcolor}
-%
 \documentclass[10pt,dvipsnames]{scrartcl}
 \usepackage{lmodern}
 \usepackage{amssymb,amsmath}
@@ -10,9 +6,12 @@
 \ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
-  \usepackage{textcomp} % provides euro and other symbols
 \else % if luatex or xelatex
-  \usepackage{unicode-math}
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
   \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
 \fi
 % use upquote if available, for straight quotes in verbatim environments
@@ -22,20 +21,14 @@
 \usepackage[]{microtype}
 \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
 }{}
-\IfFileExists{parskip.sty}{%
-\usepackage{parskip}
-}{% else
-\setlength{\parindent}{0pt}
-\setlength{\parskip}{6pt plus 2pt minus 1pt}
-}
-\usepackage{xcolor}
-\usepackage{hyperref}
+\PassOptionsToPackage{hyphens}{url} % url is loaded by hyperref
+\usepackage[unicode=true]{hyperref}
+\PassOptionsToPackage{usenames,dvipsnames}{color} % color is loaded by hyperref
 \hypersetup{
             pdftitle={Burdens of Proof - Sample Chapter},
             pdfauthor={Marcello Di Bello and Rafal Urbaniak},
             colorlinks=true,
             linkcolor=Maroon,
-            filecolor=Maroon,
             citecolor=Blue,
             urlcolor=blue,
             breaklinks=true}
@@ -49,6 +42,12 @@
 % margins by default, and it is still possible to overwrite the defaults
 % using explicit options in \includegraphics[width, height, ...]{}
 \setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
 \setlength{\emergencystretch}{3em}  % prevent overfull lines
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
@@ -168,9 +167,8 @@
 
 \tableofcontents
 
-\hypertarget{sample-chapter---introduction}{%
 \section{SAMPLE CHAPTER -
-Introduction}\label{sample-chapter---introduction}}
+Introduction}\label{sample-chapter---introduction}
 
 After the evidence has been presented, examined and cross-examined at
 trial, trained judges or lay jurors must reach a decision. The decision
@@ -182,18 +180,15 @@ description of standards of proof in the law, then outlines different
 probabilistic approaches, discusses challanges to these approaches,
 compares them with competing accounts in the literature.
 
-\hypertarget{legal-background}{%
-\section{Legal Background}\label{legal-background}}
+\section{Legal Background}\label{legal-background}
 
 \label{subsec:legal-background}
 
-\hypertarget{burden-of-pleading-production-and-persuasion}{%
 \subsection{Burden of pleading, production and
-persuasion}\label{burden-of-pleading-production-and-persuasion}}
+persuasion}\label{burden-of-pleading-production-and-persuasion}
 
-\hypertarget{proof-standards-in-the-law}{%
 \subsection{Proof standards in the
-law}\label{proof-standards-in-the-law}}
+law}\label{proof-standards-in-the-law}
 
 In criminal proceedings, the governing standard is `proof beyond a
 reasonable doubt.' If the decision makers are persuaded beyond a
@@ -244,20 +239,18 @@ Probability theory can bring conceptual clarity to an otherwise
 heterogeneous legal doctrine, or at least this is the position of legal
 probabilists.
 
-\hypertarget{probabilistic-thresholds}{%
-\section{Probabilistic Thresholds}\label{probabilistic-thresholds}}
+\section{Probabilistic Thresholds}\label{probabilistic-thresholds}
 
-\hypertarget{posterior-probability-kaplan-kaye-etc.}{%
 \subsection{Posterior probability (Kaplan, Kaye,
-etc.)}\label{posterior-probability-kaplan-kaye-etc.}}
+etc.)}\label{posterior-probability-kaplan-kaye-etc.}
 
 Legal probabilists have proposed to interpret proof beyond a reasonable
 doubt as the requirement that the defendant's probability of guilt,
 given the evidence presented at trial, meet a threshold, say,
 \textgreater{}95\%. Variations of this view are common (see Bernoulli,
-1713; Dekay, 1996; Kaye, 1979a; Laplace, 1814, @Kaplan1968decision;
-Laudan, 2006). This interpretation is, in some respects, plausible. From
-a legal standpoint, the requirement that guilt be established with high
+1713; Dekay, 1996; Kaye, 1979a; Laplace, 1814, Kaplan (1968); Laudan,
+2006). This interpretation is, in some respects, plausible. From a legal
+standpoint, the requirement that guilt be established with high
 probability, still short of 100\%, accords with the principle that proof
 beyond a reasonable doubt is the most stringent standard of all but at
 the same time `does not involve proof to an absolute certainty' and thus
@@ -285,9 +278,8 @@ between the other two, it can be interpreted as the requirement that the
 plaintiff establish its versions of the facts with, say, 75-80\%
 probability.
 
-\hypertarget{interval-thresholds-finkelstein}{%
 \subsection{Interval thresholds
-(Finkelstein)}\label{interval-thresholds-finkelstein}}
+(Finkelstein)}\label{interval-thresholds-finkelstein}
 
 The prior probability cannot be easily determined (Friedman, 2000). Even
 if it can be determined, arriving at a posterior probability might be
@@ -299,26 +291,21 @@ posterior probability of guilt can be viewed as an idealized process, a
 regulative ideal which can improve the precision of legal reasoning.
 (CITE BIEDERMAN TARONI).
 
-\hypertarget{comparative-cheng}{%
-\subsection{Comparative (Cheng)}\label{comparative-cheng}}
+\subsection{Comparative (Cheng)}\label{comparative-cheng}
 
-\hypertarget{likelihood-ratio-dawid-kaplow-sullivan}{%
 \subsection{Likelihood ratio (Dawid, Kaplow,
-Sullivan)}\label{likelihood-ratio-dawid-kaplow-sullivan}}
+Sullivan)}\label{likelihood-ratio-dawid-kaplow-sullivan}
 
 Add here stuff from Marcello's Mind paper about the prisoner
 hypothetical. Then, discuss Rafal's critique of the likelihood ratio
 threshold and see where we end up.
 
-\hypertarget{p-value-cheng}{%
-\subsection{p-value (Cheng?)}\label{p-value-cheng}}
+\subsection{p-value (Cheng?)}\label{p-value-cheng}
 
-\hypertarget{challenges}{%
-\section{Challenges}\label{challenges}}
+\section{Challenges}\label{challenges}
 
-\hypertarget{practical-and-descriptive-challenges}{%
 \subsection{Practical and descriptive
-challenges}\label{practical-and-descriptive-challenges}}
+challenges}\label{practical-and-descriptive-challenges}
 
 Some worry that a mechanical application of numerical thresholds would
 undermine the humanizing function of trial decision-making. As (Tribe,
@@ -374,37 +361,28 @@ practical life and which makes the doubts silent without completely
 excluding them' (Federal Court of Justice, February 17, 1970; III ZR
 139/67).
 
-\hypertarget{naked-statistical-evidence}{%
 \subsection{Naked Statistical
-Evidence}\label{naked-statistical-evidence}}
+Evidence}\label{naked-statistical-evidence}
 
-\hypertarget{conjuction-paradox}{%
-\subsection{Conjuction Paradox}\label{conjuction-paradox}}
+\subsection{Conjuction Paradox}\label{conjuction-paradox}
 
-\hypertarget{how-probabilistic-thresholds-measure-against-these-challanges}{%
 \subsection{How probabilistic thresholds measure against these
-challanges}\label{how-probabilistic-thresholds-measure-against-these-challanges}}
+challanges}\label{how-probabilistic-thresholds-measure-against-these-challanges}
 
-\hypertarget{probabilistic-thresholds-revised}{%
 \section{Probabilistic Thresholds
-Revised}\label{probabilistic-thresholds-revised}}
+Revised}\label{probabilistic-thresholds-revised}
 
-\hypertarget{likelihood-ratios-and-naked-statistical-evidence}{%
 \subsection{Likelihood ratios and naked statistical
-evidence}\label{likelihood-ratios-and-naked-statistical-evidence}}
+evidence}\label{likelihood-ratios-and-naked-statistical-evidence}
 
-\hypertarget{conjcution-paradox-and-bayesian-networks}{%
 \subsection{Conjcution paradox and Bayesian
-networks}\label{conjcution-paradox-and-bayesian-networks}}
+networks}\label{conjcution-paradox-and-bayesian-networks}
 
-\hypertarget{conclusions}{%
-\section{Conclusions}\label{conclusions}}
+\section{Conclusions}\label{conclusions}
 
-\hypertarget{new-chapter---introduction}{%
-\section{NEW CHAPTER - Introduction}\label{new-chapter---introduction}}
+\section{NEW CHAPTER - Introduction}\label{new-chapter---introduction}
 
-\hypertarget{alternative-accounts}{%
-\section{Alternative accounts}\label{alternative-accounts}}
+\section{Alternative accounts}\label{alternative-accounts}
 
 There exist several theoretical alternatives to the probabilistic
 interpretation of proof standards in the scholarly literature. Some
@@ -412,23 +390,19 @@ scholars, on empirical or normative grounds, resist the claim that the
 point of gathering and assessing evidence at trial is solely to estimate
 the probability of the defendant's civil or criminal liability.
 
-\hypertarget{relative-plausibility}{%
-\subsection{Relative Plausibility}\label{relative-plausibility}}
+\subsection{Relative Plausibility}\label{relative-plausibility}
 
-(Pennington \& Hastie, 1991, @penn1993) have proposed the
-\textit{story model} according to which judges and jurors, first make
-sense of the evidence by constructing stories of what happened, and then
-select the best story on the basis of multiple criteria, such as
+(Pennington \& Hastie, 1991, Pennington \& Hastie (1993)) have proposed
+the \textit{story model} according to which judges and jurors, first
+make sense of the evidence by constructing stories of what happened, and
+then select the best story on the basis of multiple criteria, such as
 coherence, fit with the evidence and completeness. Along similar lines,
 (Pardo \& Allen, 2008) argue that the version of the facts that best
 explains the evidence should prevail in a court of law. For a discussion
 of inference to the best explanation in legal reasoning, see (Schwartz
-\& Sober, 2019, @hastie2019CaseRelativePlausibilitya,
-@lai2019HowPlausibleRelative,
-@nance2019LimitationsRelativePlausibility).
+\& Sober, 2019, Hastie (2019), Ho (2019), Nance (2019)).
 
-\hypertarget{arguments}{%
-\subsection{Arguments}\label{arguments}}
+\subsection{Arguments}\label{arguments}
 
 Another approach is due to (Gordon, Prakken, \& Walton, 2007) and
 (Prakken \& Sartor, 2009) who view the trial as a place in which
@@ -437,33 +411,28 @@ the best arguments, all things considered, should prevail. On this view,
 probability estimates can themselves be the target of objections and
 counterarguments.
 
-\hypertarget{relevant-alternatives}{%
-\subsection{Relevant alternatives}\label{relevant-alternatives}}
+\subsection{Relevant alternatives}\label{relevant-alternatives}
 
 (Gardiner, 2019) argues that standards of proof should rule out all
 error possibilities that are relevant and these need not coincide with
 error possibilities that are probable.
 
-\hypertarget{normic-support}{%
-\subsection{Normic Support}\label{normic-support}}
+\subsection{Normic Support}\label{normic-support}
 
-\hypertarget{justification}{%
-\subsection{Justification}\label{justification}}
+\subsection{Justification}\label{justification}
 
 (Ho, 2008) and (Haack, 2014) hold that degrees of epistemic warrant for
 a claim, which depend on multiple factors -- such as the extent to which
 the evidence supports the claim and it is comprehensive -- cannot be
 equated to probabilities.
 
-\hypertarget{weight}{%
-\subsection{Weight}\label{weight}}
+\subsection{Weight}\label{weight}
 
 (Stein, 2008) argues that, in order to warrant a verdict against the
 defendant, the evidence should have withstood objections and
 counterarguments, not merely supporting a high probability.
 
-\hypertarget{completeness}{%
-\subsection{Completeness}\label{completeness}}
+\subsection{Completeness}\label{completeness}
 
 Discuss here Nance proposal. (Nance, 2016) argues that the evidence on
 which to base a trial decision should be reasonably complete---it should
@@ -472,70 +441,54 @@ conscientious investigation of the facts. A similar argument can be
 found in (Davidson \& Pargetter, 1987). Arguably, probability-based
 decision thresholds can accommodate these considerations, for example,
 by lowering the probability of civil or criminal liability whenever the
-body of evidence is one-sided or incomplete (Kaye, 1979b, @Kaye1986Do,
-@friedman1996). Another strategy is to give a probability-based account
-of the notion of completeness of the evidence and other seemingly
-non-probabilistic criteria (Urbaniak, 2018).
+body of evidence is one-sided or incomplete (Kaye, 1979b, Kaye (1986),
+Friedman (1996)). Another strategy is to give a probability-based
+account of the notion of completeness of the evidence and other
+seemingly non-probabilistic criteria (Urbaniak, 2018).
 
-\hypertarget{knowledge}{%
-\subsection{Knowledge}\label{knowledge}}
+\subsection{Knowledge}\label{knowledge}
 
 Some epistemologists argue that a probabilistic belief, no matter how
 high, is not enough to warrant knowledge, and knowledge should be the
 standard for trial verdicts.
 
-\hypertarget{comparisons-probabilistic-thresholds-and}{%
 \section{Comparisons: Probabilistic Thresholds
-and}\label{comparisons-probabilistic-thresholds-and}}
+and}\label{comparisons-probabilistic-thresholds-and}
 
-\hypertarget{relative-plausibility-1}{%
 \subsection{\ldots{} relative
-plausibility}\label{relative-plausibility-1}}
+plausibility}\label{relative-plausibility-1}
 
-\hypertarget{arguments-1}{%
-\subsection{\ldots{} arguments}\label{arguments-1}}
+\subsection{\ldots{} arguments}\label{arguments-1}
 
-\hypertarget{relevant-alternatives-1}{%
 \subsection{\ldots{} relevant
-alternatives}\label{relevant-alternatives-1}}
+alternatives}\label{relevant-alternatives-1}
 
-\hypertarget{normic-support-1}{%
-\subsection{\ldots{} normic Support}\label{normic-support-1}}
+\subsection{\ldots{} normic Support}\label{normic-support-1}
 
-\hypertarget{knowledge-1}{%
-\subsection{\ldots{} knowledge}\label{knowledge-1}}
+\subsection{\ldots{} knowledge}\label{knowledge-1}
 
-\hypertarget{conclusion}{%
-\section{Conclusion}\label{conclusion}}
+\section{Conclusion}\label{conclusion}
 
-\hypertarget{new-chapter---introduction-1}{%
-\section{NEW CHAPTER -
-Introduction}\label{new-chapter---introduction-1}}
+\section{NEW CHAPTER - Introduction}\label{new-chapter---introduction-1}
 
-\hypertarget{functions-of-proof-standards}{%
 \section{Functions of proof
-standards}\label{functions-of-proof-standards}}
+standards}\label{functions-of-proof-standards}
 
-\hypertarget{protecting-defendants-re-winship}{%
 \subsection{Protecting defendants (re
-Winship)}\label{protecting-defendants-re-winship}}
+Winship)}\label{protecting-defendants-re-winship}
 
-\hypertarget{error-reduction-and-error-distributionallocation-laudan-stein-allen}{%
 \subsection{Error reduction and error distribution/allocation (Laudan,
 Stein,
-Allen)}\label{error-reduction-and-error-distributionallocation-laudan-stein-allen}}
+Allen)}\label{error-reduction-and-error-distributionallocation-laudan-stein-allen}
 
-\hypertarget{dispute-resolution-nesson}{%
 \subsection{Dispute resolution
-(Nesson)}\label{dispute-resolution-nesson}}
+(Nesson)}\label{dispute-resolution-nesson}
 
-\hypertarget{justification-and-answerability-duff}{%
 \subsection{Justification and answerability
-(Duff)}\label{justification-and-answerability-duff}}
+(Duff)}\label{justification-and-answerability-duff}
 
-\hypertarget{probabilistic-accounts-and-the-functions-of-proof-standards}{%
 \section{Probabilistic accounts and the functions of proof
-standards}\label{probabilistic-accounts-and-the-functions-of-proof-standards}}
+standards}\label{probabilistic-accounts-and-the-functions-of-proof-standards}
 
 Even if numerical thresholds cannot be used in the daily business of
 trial proceedings, they can still serve as theoretical concepts to
@@ -556,8 +509,7 @@ would minimize expected costs? As shown below, these questions can be
 answered using the formal apparatus of probability theory, in
 combination with calculus and expected utility theory.
 
-\hypertarget{minimizing-expected-costs}{%
-\subsection{Minimizing expected costs}\label{minimizing-expected-costs}}
+\subsection{Minimizing expected costs}\label{minimizing-expected-costs}
 
 Probabilistic standard of proof can be conceptualized through the lenses
 of expected utility theory {[}Kaplan (1968), Dekay (1996), Hamer
@@ -626,9 +578,8 @@ utilities. In line with the law and economics movement, trial
 decision-making is viewed as one instrument among others for maximizing
 overall social welfare (Posner, 1973).
 
-\hypertarget{minimizing-overall-expected-errors}{%
 \subsection{Minimizing overall expected
-errors}\label{minimizing-overall-expected-errors}}
+errors}\label{minimizing-overall-expected-errors}
 
 Instead of thinking in terms of maximizing expected utility (or
 minimizing expected costs), probabiListic standardS of proof can be also
@@ -653,12 +604,13 @@ The figure below uses a right skewed distribution
     \includegraphics[width=10cm]{beta(18,3)2.png}
 \end{center}
 
-\noindent The right skew reflects the assumption that defendants in
-criminal cases are sent to trial only if the incriminating evidence
-against them is strong. It should be no surprise that most defendants
-are assigned a high probability of guilt. The distribution of the
-probability of liability in civil cases over a period of time might look
-quite different, probably centered around 50\% or 60\%.
+\noindent
+ The right skew reflects the assumption that defendants in criminal
+cases are sent to trial only if the incriminating evidence against them
+is strong. It should be no surprise that most defendants are assigned a
+high probability of guilt. The distribution of the probability of
+liability in civil cases over a period of time might look quite
+different, probably centered around 50\% or 60\%.
 
 In the figure above, the threshold for conviction is set at \(>80\%\),
 and the area under the curve to the right of the threshold is about
@@ -713,7 +665,7 @@ and 14\%.
 The rates of incorrect decisions---false convictions and false
 acquittals or more generally false positives and false negatives---can
 be inferred from this model as a function of the threshold \(t\) (Hamer,
-2004, @hamer2014). The integral \(\int_0^t \! xf(x) \, \mathrm{d}x\)
+2004, Hamer (2014)). The integral \(\int_0^t \! xf(x) \, \mathrm{d}x\)
 equals the expected rate of false acquittals, or in other words, the
 expected proportion of guilty defendants who fall below threshold \(t\)
 (out of all defendants), and the integral
@@ -765,10 +717,10 @@ decisions overall, no matter the underlying distribution, lies at
 \(50\%\). The claim that setting threshold at \(t=.5\) minimizes the
 expected error rate for any underlying distribution of \(x\) is general
 and holds for \(t=.5\) only. It holds given the distribution
-\(f(x)=\)beta(18,3) as well as any other distribution (Kaye, 1982,
-@Kaye1999clarifying, @cheng2015). To show this, let \(E(t)\) as a
-function of threshold \(t\) be the sum of rates of false positive and
-false negative decisions:
+\(f(x)=\)beta(18,3) as well as any other distribution (Kaye, 1982, Kaye
+(1999), Cheng \& Pardo (2015)). To show this, let \(E(t)\) as a function
+of threshold \(t\) be the sum of rates of false positive and false
+negative decisions:
 
 \[E(t) = \int_0^t \! x f(x) \, \mathrm{d}x + \int_t^1 \! (1-x) f(x) \, \mathrm{d}x.
 \]
@@ -821,9 +773,8 @@ other goals, for example, protecting more innocents against mistaken
 convictions, even at the cost of making a larger number of mistaken
 trial decisions overall.
 
-\hypertarget{expected-errors-and-actual-errors}{%
 \subsection{Expected errors and actual
-errors}\label{expected-errors-and-actual-errors}}
+errors}\label{expected-errors-and-actual-errors}
 
 The standard `proof beyond a reasonable doubt' is often paired with the
 Blackstone ratio, the principle that it is better that ten guilty
@@ -843,213 +794,210 @@ positives and false negatives---and thus their ratio---depend on where
 the threshold is located but also on the distribution of the liability
 probability as given by the density function \(f(x)\).
 
-\hypertarget{minimizing-mistaken-decisions}{%
 \subsection{Minimizing mistaken
-decisions}\label{minimizing-mistaken-decisions}}
+decisions}\label{minimizing-mistaken-decisions}
 
-\hypertarget{conclusion-1}{%
-\section{Conclusion}\label{conclusion-1}}
+\section{Conclusion}\label{conclusion-1}
 
-\hypertarget{references}{%
-\section*{References}\label{references}}
+\section*{References}\label{references}
 \addcontentsline{toc}{section}{References}
 
 \hypertarget{refs}{}
-\leavevmode\hypertarget{ref-allen2014}{}%
+\hypertarget{ref-allen2014}{}
 Allen, R. J. (2014). Burdens of proof. \emph{Law, Probability and Risk},
 \emph{13}, 195--219.
 
-\leavevmode\hypertarget{ref-Bernoulli1713Ars-conjectandi}{}%
+\hypertarget{ref-Bernoulli1713Ars-conjectandi}{}
 Bernoulli, J. (1713). \emph{Ars conjectandi}.
 
-\leavevmode\hypertarget{ref-buchak2014belief}{}%
+\hypertarget{ref-buchak2014belief}{}
 Buchak, L. (2014). Belief, credence, and norms. \emph{Philosophical
 Studies}, \emph{169}(2), 285--311.
 
-\leavevmode\hypertarget{ref-cheng2015}{}%
+\hypertarget{ref-cheng2015}{}
 Cheng, E., \& Pardo, M. S. (2015). Accuracy, optimality and the
 preponderance standard. \emph{Law, Probability and Risk}, \emph{14}(3),
 193--212.
 
-\leavevmode\hypertarget{ref-davidsonpargetter1987}{}%
+\hypertarget{ref-davidsonpargetter1987}{}
 Davidson, B., \& Pargetter, R. (1987). Guilt beyond reasonable doubt.
 \emph{Australasian Journal of Philosophy}, \emph{65}(2), 182--187.
 
-\leavevmode\hypertarget{ref-Dekay1996}{}%
+\hypertarget{ref-Dekay1996}{}
 Dekay, M. L. (1996). The difference between Blackstone-like error ratios
 and probabilistic standards of proof. \emph{Law and Social Inquiry},
 \emph{21}, 95--132.
 
-\leavevmode\hypertarget{ref-dhamiEtAl2015}{}%
+\hypertarget{ref-dhamiEtAl2015}{}
 Dhami, M. K., Lundrigan, S., \& Mueller-Johnson, K. (2015). Instructions
 on reasonable doubt: Defining the standard of proof and the jurors task.
 \emph{Psychology, Public Policy, and Law, 21(2), 169178}, \emph{21}(2),
 169--178.
 
-\leavevmode\hypertarget{ref-diamond90}{}%
+\hypertarget{ref-diamond90}{}
 Diamond, H. A. (1990). Reasonable doubt: To define, or not to define.
 \emph{Columbia Law Review}, \emph{90}(6), 1716--1736.
 
-\leavevmode\hypertarget{ref-epps2015}{}%
+\hypertarget{ref-epps2015}{}
 Epps, D. (2015). The consequences of error in criminal justice.
 \emph{Harvard Law Review}, \emph{128}(4), 1065--1151.
 
-\leavevmode\hypertarget{ref-finkelstein1970bayesian}{}%
+\hypertarget{ref-finkelstein1970bayesian}{}
 Finkelstein, M. O., \& Fairley, W. B. (1970). A bayesian approach to
 identification evidence. \emph{Harvard Law Review}, 489--517. JSTOR.
 
-\leavevmode\hypertarget{ref-friedman1996}{}%
+\hypertarget{ref-friedman1996}{}
 Friedman, R. D. (1996). Assessing evidence. \emph{Michigan Law Review},
 \emph{94}, 1810--1838.
 
-\leavevmode\hypertarget{ref-Friedman2000presumption}{}%
+\hypertarget{ref-Friedman2000presumption}{}
 Friedman, R. D. (2000). A presumption of innocence, not of even odds.
 \emph{Stanford Law Review}, \emph{52}(4), 873--887.
 
-\leavevmode\hypertarget{ref-gardiner2019ppa}{}%
+\hypertarget{ref-gardiner2019ppa}{}
 Gardiner, G. (2019). The reasonable and the relevant: Legal standards of
 proof. \emph{Philosophy and Public Affairs}, \emph{47}(3), 288--318.
 
-\leavevmode\hypertarget{ref-gordon2007}{}%
+\hypertarget{ref-gordon2007}{}
 Gordon, T. F., Prakken, H., \& Walton, D. (2007). The Carneades model of
 argument and burden of proof. \emph{Artificial Intelligence},
 \emph{171}(10-15), 875--896.
 
-\leavevmode\hypertarget{ref-Haack2014-HAAEMS}{}%
+\hypertarget{ref-Haack2014-HAAEMS}{}
 Haack, S. (2014). \emph{Evidence matters: Science, proof, and truth in
 the law}. Cambridge University Press.
 
-\leavevmode\hypertarget{ref-hamer2004}{}%
+\hypertarget{ref-hamer2004}{}
 Hamer, D. (2004). Probabilistic standards of proof, their complements
 and the errors that are expected to flow from them. \emph{University of
 New England Law Journal}, \emph{1}(1), 71--107.
 
-\leavevmode\hypertarget{ref-hamer2014}{}%
+\hypertarget{ref-hamer2014}{}
 Hamer, D. (2014). Presumptions, standards and burdens: Managing the cost
 of error. \emph{Law, Probability and Risk}, \emph{13}, 221--242.
 
-\leavevmode\hypertarget{ref-hastie2019CaseRelativePlausibilitya}{}%
+\hypertarget{ref-hastie2019CaseRelativePlausibilitya}{}
 Hastie, R. (2019). The case for relative plausibility theory: Promising,
 but insufficient. \emph{The International Journal of Evidence \& Proof},
 \emph{23}(1-2), 134--140.
 
-\leavevmode\hypertarget{ref-ho2008philosophy}{}%
+\hypertarget{ref-ho2008philosophy}{}
 Ho, H. L. (2008). \emph{A philosophy of evidence law: Justice in the
 search for truth}. Oxford University Press.
 
-\leavevmode\hypertarget{ref-lai2019HowPlausibleRelative}{}%
+\hypertarget{ref-lai2019HowPlausibleRelative}{}
 Ho, H. L. (2019). How plausible is the relative plausibility theory of
 proof? \emph{The International Journal of Evidence \& Proof},
 \emph{23}(1-2), 191--197.
 
-\leavevmode\hypertarget{ref-Horowitz1996}{}%
+\hypertarget{ref-Horowitz1996}{}
 Horowitz, I. A., \& Kirkpatrick, L. C. (1996). A concept in search of a
 definition: The effect of reasonable doubt instrcutions on certainty of
 guilt standards and jury verdicts. \emph{Law and Human Behaviour},
 \emph{20}(6), 655--670.
 
-\leavevmode\hypertarget{ref-Kaplan1968decision}{}%
+\hypertarget{ref-Kaplan1968decision}{}
 Kaplan, J. (1968). Decision theory and the fact-finding process.
 \emph{Stanford Law Review}, \emph{20}(6), 1065--1092.
 
-\leavevmode\hypertarget{ref-kaplow2012}{}%
+\hypertarget{ref-kaplow2012}{}
 Kaplow, L. (2012). Burden of proof. \emph{Yale Law Journal},
 \emph{121}(4), 738--1013.
 
-\leavevmode\hypertarget{ref-kaye79}{}%
+\hypertarget{ref-kaye79}{}
 Kaye, D. H. (1979a). The laws of probability and the law of the land.
 \emph{The University of Chicago Law Review}, \emph{47}(1), 34--56.
 
-\leavevmode\hypertarget{ref-Kaye79gate}{}%
+\hypertarget{ref-Kaye79gate}{}
 Kaye, D. H. (1979b). The paradox of the Gatecrasher and other stories.
 \emph{The Arizona State Law Journal}, 101--110.
 
-\leavevmode\hypertarget{ref-kaye1982limits}{}%
+\hypertarget{ref-kaye1982limits}{}
 Kaye, D. H. (1982). The limits of the preponderance of the evidence
 standard: Justifiably naked statistical evidence and multiple causation.
 \emph{Law \& Social Inquiry}, \emph{7}(2), 487--516. Wiley Online
 Library.
 
-\leavevmode\hypertarget{ref-Kaye1986Do}{}%
+\hypertarget{ref-Kaye1986Do}{}
 Kaye, D. H. (1986). Do we need a calculus of weight to understand proof
 beyond a reasonable doubt? \emph{Boston University Law Review},
 \emph{66}, 657--672.
 
-\leavevmode\hypertarget{ref-Kaye1999clarifying}{}%
+\hypertarget{ref-Kaye1999clarifying}{}
 Kaye, D. H. (1999). Clarifying the burden of persuasion: What Bayesian
 rules do and not do. \emph{International Commentary on Evidence},
 \emph{3}, 1--28.
 
-\leavevmode\hypertarget{ref-Laplace1814}{}%
+\hypertarget{ref-Laplace1814}{}
 Laplace, P. (1814). \emph{Essai philosophique sur les probabilités}.
 
-\leavevmode\hypertarget{ref-laudan2006truth}{}%
+\hypertarget{ref-laudan2006truth}{}
 Laudan, L. (2006). \emph{Truth, error, and criminal law: An essay in
 legal epistemology}. Cambridge University Press.
 
-\leavevmode\hypertarget{ref-nance2016}{}%
+\hypertarget{ref-nance2016}{}
 Nance, D. A. (2016). \emph{The burdens of proof: Discriminatory power,
 weight of evidence, and tenacity of belief}. Cambridge University Press.
 
-\leavevmode\hypertarget{ref-nance2019LimitationsRelativePlausibility}{}%
+\hypertarget{ref-nance2019LimitationsRelativePlausibility}{}
 Nance, D. A. (2019). The limitations of relative plausibility theory.
 \emph{The International Journal of Evidence \& Proof}, \emph{23}(1-2),
 154--160.
 
-\leavevmode\hypertarget{ref-newman1993}{}%
+\hypertarget{ref-newman1993}{}
 Newman, J. O. (1993). Beyon ``reasonable doub''. \emph{New York
 University Law Review}, \emph{68}(5), 979--1002.
 
-\leavevmode\hypertarget{ref-Pardo2008judicial}{}%
+\hypertarget{ref-Pardo2008judicial}{}
 Pardo, M. S., \& Allen, R. J. (2008). Judicial proof and the best
 explanation. \emph{Law and Philosophy}, \emph{27}(3), 223--268.
 
-\leavevmode\hypertarget{ref-Pennington1991}{}%
+\hypertarget{ref-Pennington1991}{}
 Pennington, N., \& Hastie, R. (1991). A cognitive theory of juror
 decision making: The story model. \emph{Cardozo Law Review}, \emph{13},
 519--557.
 
-\leavevmode\hypertarget{ref-penn1993}{}%
+\hypertarget{ref-penn1993}{}
 Pennington, N., \& Hastie, R. (1993). Reasoning in explanation-based
 decision making. \emph{Cognition}, \emph{49}, 123--163.
 
-\leavevmode\hypertarget{ref-picinali2013}{}%
+\hypertarget{ref-picinali2013}{}
 Picinali, F. (2013). Two meanings of ``reasonableness": Dispelling the
 ``floating" reasonable doubt. \emph{Modern Law Review}, \emph{76}(5),
 845--875.
 
-\leavevmode\hypertarget{ref-Posner1973}{}%
+\hypertarget{ref-Posner1973}{}
 Posner, R. (1973). \emph{The economic analysis of law}. Brown \&
 Company.
 
-\leavevmode\hypertarget{ref-prakken2009}{}%
+\hypertarget{ref-prakken2009}{}
 Prakken, H., \& Sartor, G. (2009). A logical analysis of burdens of
 proof. In H. Kaptein, H. Prakken, \& B. Verheij (Eds.), \emph{Legal
 evidence and proof: Statistics, stories, logic} (pp. 223--253). Ashgate.
 
-\leavevmode\hypertarget{ref-schwartz2019WhatRelativePlausibility}{}%
+\hypertarget{ref-schwartz2019WhatRelativePlausibility}{}
 Schwartz, D. S., \& Sober, E. (2019). What is relative plausibility?
 \emph{The International Journal of Evidence \& Proof}, \emph{23}(1-2),
 198--204.
 
-\leavevmode\hypertarget{ref-stein2008}{}%
+\hypertarget{ref-stein2008}{}
 Stein, A. (2008). The right to silence helps the innocent: A reseponse
 to critics. \emph{Cardozo Law Review}, \emph{30}(3), 1115--1140.
 
-\leavevmode\hypertarget{ref-tribe71}{}%
+\hypertarget{ref-tribe71}{}
 Tribe, L. H. (1971). Trial by mathematics: Precision and ritual in the
 legal process. \emph{Harvard Law Review}, \emph{84}(6), 1329--1393.
 
-\leavevmode\hypertarget{ref-Urbaniak2017Narration-in-ju}{}%
+\hypertarget{ref-Urbaniak2017Narration-in-ju}{}
 Urbaniak, R. (2018). Narration in judiciary fact-finding: A
 probabilistic explication. \emph{Artificial Intelligence and Law},
 1--32.
 
-\leavevmode\hypertarget{ref-voloch1997}{}%
+\hypertarget{ref-voloch1997}{}
 Volokh, A. (1997). N guilty men. \emph{University of Pennsylvania Law
 Review}, \emph{146}(2), 173--216.
 
-\leavevmode\hypertarget{ref-walen2015}{}%
+\hypertarget{ref-walen2015}{}
 Walen, A. (2015). Proof beyond a reasonable doubt: A balanced
 retributive account. \emph{Louisiana Law Review}, \emph{76}(2),
 355--446.
