@@ -1,77 +1,117 @@
----
-title: "Burdens of Proof - Sample Chapter"
-author: "Marcello Di Bello and Rafal Urbaniak"
-output:
-  pdf_document:
-    number_sections: true
-    df_print: kable 
-    keep_tex: true
-    includes:
-      in_header:
-        - Rafal_latex6.sty
-classoption: dvipsnames,enabledeprecatedfontcommands
-fontsize: 10pt
-documentclass: scrartcl
-urlcolor: blue
-bibliography: LP-SEP-FINAL6.bib
-csl: apa-5th-edition.csl
----
+
+\documentclass{ifcolog}
+
+
+%additional packages
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{mathtools}
+\usepackage{multirow}
+
+
+%technical intermezzo
+%---------------------
+
+\newcommand{\intermezzoa}{
+	\begin{minipage}[c]{13cm}
+	\begin{center}\rule{10cm}{0.4pt}
+
+
+
+	\tiny{\sc Optional Content Starts}
+	
+	\vspace{-1mm}
+	
+	\rule{10cm}{0.4pt}\end{center}
+	\end{minipage}\nopagebreak 
+	}
+
+
+\newcommand{\intermezzob}{\nopagebreak 
+	\begin{minipage}[c]{13cm}
+	\begin{center}\rule{10cm}{0.4pt}
+
+	\tiny{\sc Optional Content Ends}
+	
+	\vspace{-1mm}
+	
+	\rule{10cm}{0.4pt}\end{center}
+	\end{minipage}
+	}
+%--------------------
+
+
+%abbreviations
+%-------------
+%probability
+\newcommand{\pr}[1]{\mbox{$\mathtt{P}(#1)$}}
+\newcommand{\prr}[1]{\mbox{$\mathtt{P}_{prior}(#1)$}}
+\newcommand{\prp}[1]{\mbox{$\mathtt{P}_{posterior}(#1)$}}
+\newcommand{\df}[1]{\mbox{$\pr{#1}\downarrow$}}
+\newcommand{\ndf}[1]{\mbox{$\pr{#1}\uparrow$}}
+\newcommand{\prt}[1]{\mbox{$\mathtt{P_t}(#1)$}}
+\newcommand{\pru}[1]{\mbox{$\mathtt{P_u}(#1)$}}
+\newcommand{\pri}[1]{\mbox{$\mathtt{P}^i(#1)$}}
+\newcommand{\pra}[1]{\mbox{$\mathtt{P}^a(#1)$}}
+\newcommand{\ppri}[1]{\mbox{$\mathtt{P}^i(#1)$}}
+\newcommand{\prcon}[3]{\mbox{$\mathtt{P}^{#3}(\mathtt{#1}\vert \mathtt{#2})$}}
+\newcommand{\prtext}[2]{\mbox{$\mathtt{P}^{#2}(\mathtt{#1})$}}
+\newcommand{\pre}{\mbox{$\mathtt{P_E}$}}
+\newcommand{\pree}[1]{\mbox{$\mathtt{P_E}(#1)$}}
+\newcommand{\ve}{\mbox{$\mathtt{E}$}}
+\newcommand{\vh}{\mbox{$\mathtt{H}$}}
+%---------------
+%connectives
+\newcommand{\jt}{\rightarrow}
+\newcommand{\n}{\neg}
+\newcommand{\et}{\wedge}
+\newcommand{\ro}{\leftrightarrow}
+%quantifiers
+\newcommand{\exi}[1]{\exists {#1}\,\, }
+\newcommand{\ko}[1]{\forall {#1}\,\,}
+%angled brackets (for sequences and such)
+\newcommand{\la}{\langle}	
+\newcommand{\ra}{\rangle}
+
+
+
+%environments
+\newtheorem{fact}{Fact}
 
 
 
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
-
-\tableofcontents
-
-# SAMPLE CHAPTER - Introduction
-
-<!-- TODO: will need to embed and redo the illustrations once we agree which ones we keep. -->
-
-After the evidence has been presented, examined and cross-examined at trial, 
-trained judges or lay jurors must reach a decision. 
-The decision criterion is defined by law and consists of a standard of proof, 
-also called the burden of persuasion. So long as the evidence against the defendant 
-is sufficiently strong to meet the requisite proof standard, the defendant should be found liable. 
-This chapter begins with a description of standards of proof in the law, 
-then outlines different probabilistic approaches, discusses challanges to these approaches, 
-compares them with competing accounts in the literature. 
- 
- 
-# Legal Background
-\label{subsec:legal-background}
-
-## Burden of pleading, production and persuasion
-## Proof standards in the law
-
-In criminal proceedings, the governing standard is 'proof beyond a reasonable doubt.' 
-If the decision makers are persuaded beyond a reasonable doubt that the defendant is guilty, 
-they should convict, or else they should acquit. In civil cases, the standard is 
-typically 'preponderance of the evidence'. 
-The latter is less demanding than the former, so the same body of evidence 
-may be enough to meet the preponderance standard, but not enough to meet the beyond a reasonable doubt standard. A vivid example of this difference is the 1995 trial of O.J. Simpson who was charged with murdering his wife. He was acquitted of the criminal charges, but when the family of the victim brought a lawsuit against him, they prevailed. O.J.\ Simpson did not kill his wife according to the beyond a reasonable doubt standard, but he did according to the preponderance standard. An intermediate standard, called 'clear and convincing evidence', is sometimes used for civil proceedings in which the decision is particularly weighty, for example, a decision whether someone should be committed to a hospital facility. 
-
-This tripartite distinction of proof standards---beyond a reasonable doubt; preponderance; clear and convincing evidence---is common in Anglo-american jurisprudence. It is not universal, however. 
-Different countries may use different standards. 
-France, for example, uses the standard of 'intimate conviction' 
-for both civil and criminal proceedings. Judges deciding cases 'must search their conscience in good
-faith and silently and thoughtfully ask themselves what impression the evidence
-given against the accused and the defence's arguments have made upon them' (French Code of Criminal Procedure, art.\ 353). German law is similar. 
-Germany's Code of Civil Procedure, Sec.\ 286, states that 'it is for the court to decide, based on its personal conviction, whether a factual claim is indeed true or not.'
-
-How to define standards of proof, or whether they should be even defined in the first place, remains  contentious [@diamond90; @newman1993; @Horowitz1996; @laudan2006truth; @walen2015]. Judicial opinions offer different paraphrases, sometimes conflicting, of what these standards mean. The meaning of `proof beyond a reasonable doubt' 
-is the most controversial. It has been equated to 'moral certainty' 
-or 'abiding conviction'  (Commonwealth v. Webster, 59 Mass. 295, 320, 1850) or to 'proof of such a convincing character that a reasonable person would not hesitate to rely and act upon it in the most important of his own affairs' (US Federal Jury Practice and Instructions, 12.10, at 354, 4th ed.\ 1987). But courts have also cautioned that there is no need to define the term because 'jurors know what is reasonable and are quite familiar with the meaning of doubt' and attempts to define it only 'muddy the water' (U.S. v. Glass, 846 F.2d 386, 1988).
-
-Probability theory can bring conceptual clarity 
-to an otherwise heterogeneous legal doctrine, 
-or at least this is the position of legal probabilists.
 
 
-# Probabilistic Thresholds
 
+\usepackage{natbib}
+
+
+
+
+
+\title{Probabilistic legal decision standards \\  still fail   
+\\[2mm] \normalsize (at least when it comes to the difficulty about conjunction and  \\[-2mm]  the gatecrasher paradox)}
+\titlethanks{This research has been funded by   Narodowe Centrum Nauki (grant no. 2016/22/E/HS1/00304) and Fonds Wetenschappelijk Onderzoek. The author would like to express his gratitude to Marcello Di Bello, Pavel Janda, Alicja Kowalewska,  and two anonymous referees for detailed comments on earlier drafts of this paper.}
+\titlerunning{Probabilistic legal decision standards still fail}
+\addauthor{Rafal Urbaniak}{University of Gdansk (Poland) \& Ghent University (Belgium)}
+\authorrunning{R. Urbaniak}
+
+
+
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+  Various  probabilistic explications of  the phrase \emph{the court's decision regarding a fact, given the evidence, is justified} have been proposed. In this paper I evaluate them against two conceptual challenges: the difficulty about conjunction and the gatecrasher paradox. I argue that despite arguments to the opposite, all proposed models fail to solve these two problems.
+\end{abstract}
+
+
+
+
+
+\section{Introduction}\label{sec:introduction}
 
 Imagine you are a trier of fact in a legal proceeding in which the defendant's guilt is identified as equivalent to a certain factual statement $G$ and that somehow you succeeded in properly evaluating $\pr{G\vert E}$ -- the probability of $G$ given the total evidence presented to you, $E$ (and perhaps some other relevant probabilities). For various reasons, some of which  will be mentioned soon, this is an idealized situation. One question that arises in such a situation is: \emph{when should you decide against the defendant? when is the evidence good enough?} 
 
@@ -81,15 +121,62 @@ For instance, one straightforward attempt might be to say: convict if $\pr{G\ver
 
 As it turns out, the idea that such a probabilistic explication $\Psi$ can be given  does not play nicely with some other desiderata that we might want to put forward for what a rational trier of fact should think about facts and evidence.
 
- A large-scale attack on probabilistic approach to legal decisions has been  launched quite some time ago by @Cohen1977The-probable-an, and some of the  developments in probabilistic evidence scholarship are to some extent  a reaction to some of Cohen's objections.  My goal here is to focus on two of them -- the \textbf{difficulty about conjunction} and the \textbf{gatecrasher paradox}. They correspond to two requirements. One, that $\Psi$ should be such that for any relevant $A$ and $B$ there should be no difference between the trier's acceptance $A$ and $B$ separately, and her acceptance of their conjunction, $A\wedge B$, that is, that $\Psi(A,E)$ and $\Psi(B,E)$ just in case $\Psi(A\wedge B,E)$. Two, that any such explication should help us make sense of cases in which  the probability of guilt given the evidence is high, and yet, conviction is not justified. 
+ A large-scale attack on probabilistic approach to legal decisions has been \linebreak launched quite some time ago by \citet{Cohen1977The-probable-an}, and some of the  developments in probabilistic evidence scholarship are to some extent  a reaction to some of Cohen's objections.  My goal here is to focus on two of them -- the \textbf{difficulty about conjunction} and the \textbf{gatecrasher paradox}. They correspond to two requirements. One, that $\Psi$ should be such that for any relevant $A$ and $B$ there should be no difference between the trier's acceptance $A$ and $B$ separately, and her acceptance of their conjunction, $A\wedge B$, that is, that $\Psi(A,E)$ and $\Psi(B,E)$ just in case $\Psi(A\wedge B,E)$. Two, that any such explication should help us make sense of cases in which  the probability of guilt given the evidence is high, and yet, conviction is not justified. 
 
  I will argue argue that even most recent proposals of what such a $\Psi$ should be have failed to address these difficulties.  This, however, does not mean that I side with Cohen and claim that thinking of evidence in legal context in terms of probabilities is doomed. Quite the contrary: probabilistic tools are highly useful, and their utility can be increased (and defended) by addressing Cohen's concerns properly. In this paper, however, I leave this positive task for a later occasion, restricting myself to a negative task of showing that legal probabilism so far has not reached this stage. 
 
 
+The paper is somewhat uneven: parts of it contain mostly philosophical discussion, while some other parts get involved with rather detailed and lengthy mathematical arguments whose philosophical points can be summed up in one or two sentences. To avoid discouraging the philosophically minded reader and disappointing the more mathematically oriented one, let me suggest three different reading strategies.
+
+\begin{description}
+	\item[A quick philosophical look] You do not want to get bogged down in mathematical details, but you want to find out what the philosophical gist of the paper is. In this case, after reading this section, read \emph{Section} \ref{sec:threshold-based} to find out what the basic variant of the view under criticism is, \emph{Section} \ref{sec:diff_conjunction} for a description of the difficulty about conjunction, \emph{Section} \ref{sec:gatecrasher} - which introduces the gatecrasher paradox, and \emph{Section} \ref{sec:informaloverview} for an informal survey of the results and a philosophical discussion thereof. This is the shortest strategy.
+
+	\item[The middle way] You want to understand the key mathematical aspects, but you do not care too much about detailed arguments and digressions that can be skipped. Read the whole paper, except for the parts marked in the following manner.
+
+
+ \intermezzoa
+
+ This is how inessential technicalities and longer side remarks are marked. 
+
+ \intermezzob 
+
+
+\item[The meticulous reader strategy] Read everything. Or, start with a quick philosophical look as described above, and then read everything. 
 
 
 
-To avoid setting the bar too high, let me get clear on what, on the present approach, a successful probabilistic model is \emph{not} required to achieve. Namely, I am  putting aside most of the issues that have to do with practicality.\footnote{My impression is that with a few exceptions, most of the arguments about legal probabilism in the early stage of the debate were concerned mostly with practicality. See   [@ball1960moment; @kaplan1968decision; @cullison1969probability; @simon1970quantifying;  @tribe1971trial; @tribe1970further; @lempert1977modeling @kaye1979paradox; @tillers1988probability].}  I will not be concerned with the lack of real data to support certain probability assessment, I will not be concerned with people being bad at reasoning about probabilities, etc. Basically, I will not be concerned with those practical issues that would arise if one would like to deploy a probabilistic model directly, by writing down numerical values for all the probabilities relevant in a given case and simply calculating the probability of guilt. I will simply grant that at least for now,  successful deployments of  this type  are not viable.
+\end{description}
+
+
+The structure of this paper is as follows. I start with a more detailed discussion of legal probabilism in \emph{Section} \ref{sec:LP_and_motivations}. Then, I go through various ways legal probabilism so far has tried to navigate around the difficulties that I am concerned with, each time explaining why it failed. 
+To illustrate the idea of a probabilistic model of a decision standard, and to get considerations of conceptual difficulties started, in \emph{Section \ref{sec:threshold-based}} I move to the first and most straightforward candidate: \emph{Threshold-based LP}. In \emph{Section} \ref{sec:diff_conjunction} I explain how this view falls prey to the  difficulty about conjuntion. Next, in \emph{Section \ref{sec:Dawid}} I look at an important attempt to save threshold-based legal probabilism  from the difficulty about conjunction, and in \emph{Section} \ref{sec:likelihood_troubles} I argue that it fails. In \emph{Section} \ref{sec:gatecrasher} I introduce the other conceptual difficulty that  will be  used as a measuring stick in the assessment of probabilistic models: the gatecrasher paradox. In \emph{Section \ref{sec:RLP}} I outline Cheng's Relative LP. In \emph{Section \ref{sec:RLP_vs_DAC}} I explain how it is supposed to handle DAC, and in \emph{section} \ref{sec:RLP_vs_Gatecrasher} I look at Cheng's attempt to avoid the gatecrasher paradox. In \emph{Section \ref{sec:troubles_with_RLP}} I argue that the approach fails on both counts. In \emph{Section} \ref{sec:DTLP}  I introduce the last candidate to be discussed, Kaplow's Decision-Theoretic LP, and  in \emph{Section} \ref{sec:troubles_DTLP} I argue that it also cannot handle the difficulties.   \emph{Section} \ref{sec:informaloverview} contains an informal overview and discussion.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\section{Legal probabilism and its motivations}\label{sec:LP_and_motivations}
+
+In multiple domains of applications, probabilistic methods have been exceedingly successful. Some of the successful applications involve  forensic and judiciary contexts.\footnote{See for instance \citep{finkelstein2001statistics,aitken2004statistics,taroni2006bayesian,lucy2013introduction,robertson2016interpreting}.}  What they seem to have in common is that they pertain to the  interpretation or weighing of particular pieces of evidence, or an evaluation of a particular argument involving probabilities or statistics. 
+
+
+
+What is somehow more contentious is whether a more general and all-en\-com\-pass\-ing probabilistic model of evidence evaluation and decision about conviction can be successfully built: one which would explicate the phrase \emph{given the evidence, the conviction is justified} in probabilistic terms (where the claim under consideration is a factual claim considered as equivalent to guilt according to the law).  On one hand, \emph{prima facie}, what the judge or the jury seem to evaluate is the probability of guilt given total available evidence and common sense knowledge, and so, probabilistic tools  seem fit to model, at least in abstraction, such phenomena. On the other hand, particular pieces of forensic evidence aside, precise probabilities are hard to come by, and conceptual and practical difficulties with developing such a model abound. 
+
+
+
+
+To avoid setting the bar too high, let me get clear on what, on the present approach, a successful probabilistic model is \emph{not} required to achieve. Namely, I am  putting aside most of the issues that have to do with practicality.\footnote{My impression is that with a few exceptions, most of the arguments about legal probabilism in the early stage of the debate were concerned mostly with practicality. See   \citep{ball1960moment,kaplan1968decision,cullison1969probability,simon1970quantifying, tribe1971trial,tribe1970further,lempert1977modeling,kaye1979paradox,tillers1988probability}.}  I will not be concerned with the lack of real data to support certain probability assessment, I will not be concerned with people being bad at reasoning about probabilities, etc. Basically, I will not be concerned with those practical issues that would arise if one would like to deploy a probabilistic model directly, by writing down numerical values for all the probabilities relevant in a given case and simply calculating the probability of guilt. I will simply grant that at least for now,  successful deployments of  this type  are not viable.
 
 This, however, does not mean that developing a general probabilistic model is pointless. There are multiple ways in which such a model, even if unfit for direct deployment, could be useful.  Once we have a probabilistic model, a vast array of mathematical results pertaining to probability can be used to deepen our understanding of the rationality of legal decisions. If at least in abstraction  adequate, the model  could be useful for diagnosing various types of biases that humans are susceptible to in such contexts; it could be useful as a measuring stick against which various qualitative inference patterns are assessed, and it could be useful as a source of insights about various aspects of legal decisions and evidence presentation methods. Just as understanding physics might be useful for deepening our understanding of how things work, and for building things or moving them around without performing direct exact calculations, a general probabilistic model -- again, if adequate -- could help us get better at understanding and  making legal decisions without its direct deployment in practice.  
 
@@ -98,38 +185,22 @@ This, however, does not mean that developing a general probabilistic model is po
 Just because I put strong practicality requirements aside, it does not mean that I put no constraints on the probabilistic model to be developed. While \emph{sufficient} conditions of adequacy of such a model are somewhat hard to explicate and I will not get into a deeper discussion thereof, there is at least a fairly clear \emph{necessary} condition. A successful probabilistic model should either avoid or explain away what seem to be important conceptual difficulties that it runs into. And this is what I will be focusing on in this paper: investigating whether available probabilistic models of legal decision standards avoid or explain away the conceptual difficulties that -- it seems -- they should be able to handle. In particular, I will focus on two pieces of paradoxical flavor, the \textbf{difficulty about conjunction (DAC)} and the \textbf{paradox of the gatecrasher}.
 
  One reason to choose these two is that they are easy to explain: and it would be nice if we could handle basic conceptual difficulties  before we move to more complex issues. Another reason is that in some variant or another, these have been widely discussed in literature. DAC has a very close cousin named the lottery paradox, which occupied the minds of many, and the gatecrasher paradox and related thought experiments and real cases have been extensively discussed by philosophers trying to identify the factor that makes naked statistical evidence actionable. 
- 
- 
- 
+
+
+
 
 Let us start with a very general assumption that all the approaches that will be discussed in what follows share; we will call it \emph{Legal Probabilism} (LP). It   is the view that the legal notion of probability is to be governed by the  mathematical principles of  probability theory, and that the decision process in juridical fact-finding is to be explicated by means of probabilistic tools.  LP is fairly general: it does not tell us \emph{ how exactly } the decision standards are to be explicated in probabilistic terms, it only tells us that somehow they should. 
 
 
 
-## Posterior probability (Kaplan, Kaye, etc.)
 
-Legal probabilists have proposed to interpret proof beyond a reasonable 
-doubt as the requirement that the defendant's probability of guilt, given the evidence presented at trial, meet a threshold, say, >95\%. Variations of this view are common  [see @Bernoulli1713Ars-conjectandi; @Laplace1814,  @Kaplan1968decision; @Dekay1996; @kaye79; @laudan2006truth]. This interpretation is, in some respects, plausible.
-From a legal standpoint, the requirement that guilt be established with high probability, still short of 100\%, accords with the  principle that proof beyond a reasonable doubt is the most stringent standard of all but 
-at the same time 'does not involve proof to an absolute certainty' and thus 
-'it is not proof beyond any doubt' (R v Lifchus, 1997, 3 SCR 320, 335).
-That this intepretation is quite natural is further 
-attested by the fact that the probabilistic interpretation 
-is taken for granted in psychological studies about people's understanding of proof beyond a reasonable doubt [@dhamiEtAl2015]. This research examines whether
-people use a 75\% or 95\% threshold, and does not question 
-whether the standard functions as a probabilistic threshold.
-
-Reliance on probabilistic ideas is even more explicit in the standard 'preponderance of the evidence'---also called 'balance of probabilities'---which governs decisions in civil disputes. This standard can be interpreted as the requirement that the plaintiff---the party making the complaint against the defendant---establish its version of the facts with greater than 50\% probability. The 50\% threshold, as opposed to a more stringent threshold of 95\% for criminal cases, reflects the fact that  preponderance is less demanding than proof beyond a reasonable doubt. The intermediate standard 'clear and convincing evidence' is more stringent than the preponderance standard but not as stringent as the beyond a reasonable doubt standard. Since it lies in between the other two, it can be interpreted as the requirement that the plaintiff establish its versions of the facts with, say, 75-80\% probability.
-
-
-
-
+\section{Threshold-based legal probabilism (TLP)}\label{sec:threshold-based}
 
 
 
 LP comes in various shapes. It is one thing to say that the standards of juridical proof are to be explicated in probabilistic terms, it is another to provide such an explication. The threshold-based legal probabilism has it that once the probability of guilt (or, to be more precise, the factual statement that according to law is equivalent to guilt) given the total evidence available is assessed, conviction is justified just in case this probability is above a certain threshold.\footnote{In the Anglo-Saxon tradition there is a distinction between decision standards in civil and in criminal cases. In the former,  decision is to be made on the preponderance of probability, and in criminal cases, the guilt statement is supposed to be beyond reasonable doubt. Assuming these are to be modeled by probability thresholds different from 1, there is no essential difference here as far as the conceptual difficulties to be discussed in this paper are involved.}
 
-  \emph{Classical Legal Probabilism} (CLP), stemming from   [@Bernoulli1713Ars-conjectandi], keeps the threshold constant:\footnote{Again, we are going to ignore the difference between civil and criminal litigation here. If one wants to keep this distinction in mind, CLP can be easily revised by positing one threshold for criminal cases, and one for civil ones. }
+  \emph{Classical Legal Probabilism} (CLP), stemming from   \citep{Bernoulli1713Ars-conjectandi}, keeps the threshold constant:\footnote{Again, we are going to ignore the difference between civil and criminal litigation here. If one wants to keep this distinction in mind, CLP can be easily revised by positing one threshold for criminal cases, and one for civil ones. }
 
 \begin{center}
 \begin{tabular}{lp{11.5cm}}
@@ -150,7 +221,7 @@ Before we move to the discussion of the two key difficulties that we will be int
 
 One reason why I will not be concerned with this problem is that this is an issue that seems to pertain to TLP only, while I would like to focus on problems that seem to be more general.
 
-Another reason is that once decision-theoretic tools are allowed, there might be reasons to think that the choice of threshold is not that arbitrary [@kaye1986we]. Say  the probability of guilt (or responsibility) is $p$, the disutility of acquitting a guilty person is $d_g$, and the disutility of convicting an innocent person is $d_i$. From the perspective of minimalization of expected disutility, we would like to convict, or find for the plaintiff, just in case the expected disutility of mistaken acquittal is greater than the expected disutility of incorrect conviction:
+Another reason is that once decision-theoretic tools are allowed, there might be reasons to think that the choice of threshold is not that arbitrary \citep{kaye1986we}. Say  the probability of guilt (or responsibility) is $p$, the disutility of acquitting a guilty person is $d_g$, and the disutility of convicting an innocent person is $d_i$. From the perspective of minimalization of expected disutility, we would like to convict, or find for the plaintiff, just in case the expected disutility of mistaken acquittal is greater than the expected disutility of incorrect conviction:
 \begin{align*}
 p d_g &> (1-p)  d_i
 \end{align*}
@@ -172,79 +243,37 @@ Now that we know what the first explication is, let us move to the first of the 
 
 
 
+\section{The difficulty about conjunction}\label{sec:diff_conjunction}
 
 
+ The \emph{Difficulty About Conjunction} (DAC) proceeds as follows. Say we focus on a civil suit where a plaintiff is required to prove  their case on the balance of probability, which for the sake of argument we construe as passing the 0.5 probability threshold.\footnote{This is a natural choice given that the plaintiff is supposed to show that their claim is more probable than the defendant's. The assumption is not essential. DAC can be deployed against any $\neq 1$ guilt probability threshold.} Suppose the plaintiff's claim to be proven based on total evidence $E$ is composed of two elements, $A$ and $B$, independent conditionally on $E$.\footnote{These assumptions, again, are not  too essential. In fact, the difficulties become more severe as the number of elements grows, and, extreme cases aside, do not tend to disappear if the elements are dependent.} The question is, what exactly is the plaintiff supposed to establish? It seems we have two possible readings:
 
 
-
-
-
-
-
-## Interval thresholds (Finkelstein)
-
-The prior probability cannot be easily determined [@Friedman2000presumption]. Even if it can be determined, arriving at a posterior probability might be impractical because of lack of adequate quantitative information. Perhaps, decision thresholds should not rely on a unique posterior  probability but on an interval of admissible probabilities given the evidence [@finkelstein1970bayesian].  Perhaps, the assessment of the posterior probability of guilt can be viewed as an idealized process, a regulative ideal which can improve the precision of legal reasoning. (CITE BIEDERMAN TARONI).
-
-
-## Comparative (Cheng)
-
-
- Let us think about juridical decisions in analogy to statistical hypothesis testing. We have two hypotheses under consideration: defendant's $H_\Delta$ and plaintiff's $H_\Pi$, and we are to pick one: $D_\Delta$ stands for the decision for $H_\Delta$ and $D_\Pi$ is the decision that $H_\Pi$. If we are right, no costs result, but incorrect decisions have their price. Let us say that  if the defendant is right and we find against them, the cost is $c_1$, and if the plaintiff is right and we find against them, the cost is $c_2$:
 
 \begin{center}
 \begin{tabular}
-{@{}llll@{}}
+{@{}ll@{}}
 \toprule
-& & \multicolumn{2}{c}{Decision}\\
-& &  $D_\Delta$ & $D_\Pi$ \\
-\cmidrule{3-4}
-\multirow{2}{*}{Truth} &  $H_\Delta$    & $0$    & $c_1$\\
-                       &  $H_\Pi$       &  $c_2$   & $0$ \\ 
+\textbf{Requirement 1}  &    $\pr{A\et B\vert E}>0.5$ \\ 
+\textbf{Requirement 2} &    $\pr{A\vert E}>0.5$ and $\pr{B\vert E}>0.5$\\   
 \bottomrule
 \end{tabular}
 \end{center}
 
+\textbf{Requirement 1} says that the plaintiff should show that their \emph{whole} claim is more likely than its negation. There are strong intuitions that this is what they should do. But the problem is, this requirement is not equivalent to \textbf{Requirement 2}. In fact, if we need  $\pr{A\et B\vert E}=\pr{A\vert E}\times\pr{B\vert E}>0.5$ (the identity being justified by the independence assumption), satisfying \textbf{Requirement 2} is not sufficient for this purpose. For instance, if $\pr{A\vert E}=\pr{B\vert E}=0.51$, $\pr{A\vert E}\times \pr{B\vert E}\approx 0.26$, and so the plaintiff's claim as a whole still fails to be established. This means that requiring the proof of $A\et B$ on the balance of probability puts an importantly higher requirement on the separate probabilities of the conjuncts. 
+
+Moreover, what is required exactly for one of them depends on what has been achieved for the other. If I already established that $\pr{A\vert E}=0.8$, I need $\pr{B\vert E}\geq 0.635$ to end up with $\pr{A\et B\vert E}\geq 0.51$. If, however, $\pr{A\vert E}=0.6$, I need $\pr{B\vert E}\geq 0.85$ to reach the same threshold. This would mean that standards of proof for a given claim could vary depending on how well a different claim has been argued for and on whether it is a part of a more complex claim that one is defending, and this does not seem very intuitive. At least, this goes strongly against the equal treatment requirement mentioned already in the introduction. 
 
 
-\noindent Arguably, we need a decision rule which minimizes the expected cost. Say that given our  total evidence $E$ we have the corresponding probabilities:
-\begin{align*}
-p_\Delta &= \pr{H_\Delta \vert E} \\
-p_\Pi & = \pr{H_\Pi \vert E}
-\end{align*}
-\noindent where $\mathtt{P}$ stands for the prior probability (this will be the case throughout our discussion of Cheng). The expected costs for deciding that $H_\Delta$ and $H_\Pi$, respectively, are:
-\begin{align*}
-E(D_\Delta) & = p_\Delta 0 + p_\Pi c_2 = c_2p_\Pi\\
-E(D_\Pi) & = p_\Delta c_1 + p_\Pi 0 = c_1 p_\Delta
-\end{align*}
-\noindent so, assuming that we are minimizing expected cost,   we would like to choose $H_\Pi$ just in case $E(D_\Pi) < E(D_\Delta)$. This condition is equivalent to:
-\begin{align}
-\nonumber c_1p_\Delta &< c_2p_\Pi \\
-\nonumber c_1 & < \frac{c_2p_\Pi}{p_\Delta}\\
-\label{eq:cheng_frac1}\frac{c_1}{c_2} & < \frac{p_\Pi}{p_\Delta}
-\end{align}
+Should we then abandon \textbf{Requirement 1} and remain content with \textbf{Requirement 2}? \citet[66]{Cohen1977The-probable-an} convincingly argues that we should not. Not evaluating  a complex civil case  as a whole is the opposite of what the courts themselves normally do. There are good reasons to think that every common law system subscribes to a sort of conjunction principle, which states that if $A$ and $B$ are established on the balance of probabilities, then  so is $A\et B$. 
+
+So, on one hand, if we take our decision standard from \textbf{Requirement 2}, our acceptance standard will not  involve closure under conjunction, and might lead to conviction in cases where $\pr{G\vert E}$ is quite low, just because $G$ is a conjunction of elements which separately satisfy the standard of proof -- and this  seems unintuitive.  On the other hand, following Cohen,  if we take our decision standard from \textbf{Requirement 1}, we will put seemingly unnecessarily high requirements sensitive to fairly contingent and irrelevant facts on the prosecution, and treat various elements to be proven unevenly. Neither seems desirable. 
 
 
-\noindent [@cheng2012reconceptualizing: 1261] insists:
-\begin{quote}
-At the same time, in a civil trial, the legal system expresses no preference between finding erroneously for the plaintiff (false positives) and finding erroneously for the defendant (false negatives). The costs $c_1$ and $c_2$ are thus equal\dots
-\end{quote}
-\noindent If we grant this assumption, \eqref{eq:cheng_frac1} reduces to:
-\begin{align}
-\nonumber 1 &< \frac{p_\Pi}{p_\Delta} \\
-\label{eq:cheng_comp1} p_\Pi &> p_\Delta 
-\end{align}
-\noindent That is, in standard civil litigation we are to find for the plaintiff just in case $H_\Pi$ is more probable given the evidence than $H_\Delta$, which doesn't seem like an insane conclusion.\footnote{Notice that this instruction is somewhat more general than the usual suggestion of the preponderance standard in civil litigation,  according to which the court should find for the plaintiff just in case $\pr{H_\Pi\vert E} >0.5$. This threshold, however, results from \eqref{eq:cheng_comp1} if it so happens that $H_\Delta$ is $\n H_\Pi$, that is, if the defendant's claim is simply the negation of the plaintiff's thesis.  By no means, Cheng argues, this is always the case: often the defendant offers a story which is much more than simply the denial of what the opposite side said.}
+\section{Dawid's likelihood strategy}\label{sec:Dawid}
 
 
- So on this approach, rather than directly evaluating the probability of $H_\Pi$ given the evidence and comparing it to a threshold, we compare the support that the evidence provides for alternative hypotheses $H_\Pi$ and $H_\Delta$ (where, let's emphasize again, the latter doesn't have to be the negation of the former), and decide for the better supported one. Let's call this decision standard \textbf{Relative Legal Probabilism (RLP)}.\footnote{I was not aware of any particular name for Cheng's model so we came up with this one. We're not particularly attached to it, and it is not standard terminology.}
-
-
-## Likelihood ratio (Dawid, Kaplow, Sullivan)
-
-\todo{I put Dawid here, but I don't think it makes sense to place it before we explain the conjunction problem, so think about moving it and move where appropriate.}
-
-
-One well-known attempt to handle DAC from the probabilistic perspective without any drastic changes to the probabilistic model  is due to @dawid1987difficulty. Here is how it proceeds (the considerations that follow apply to other sorts of uncertain evidence; we'll focus on witnesses for the sake of simplicity). Imagine the plaintiff produces two independent witnesses: $W_A$ attesting to $A$, and $W_B$ attesting to $B$.  Say the witnesses are regarded as $70\%$ reliable and $A$ and $B$ are probabilistically independent, so we infer $\pr{A}=\pr{B}=0.7$ and  $\pr{A\et B}=0.7^2=0.49$. 
+One well-known attempt to handle DAC from the probabilistic perspective without any drastic changes to the probabilistic model  is due to \citet{dawid1987difficulty}. Here is how it proceeds (the considerations that follow apply to other sorts of uncertain evidence; we'll focus on witnesses for the sake of simplicity). Imagine the plaintiff produces two independent witnesses: $W_A$ attesting to $A$, and $W_B$ attesting to $B$.  Say the witnesses are regarded as $70\%$ reliable and $A$ and $B$ are probabilistically independent, so we infer $\pr{A}=\pr{B}=0.7$ and  $\pr{A\et B}=0.7^2=0.49$. 
 
   But, Dawid argues,  this is misleading, because to reach this result we misrepresented the reliability of the witnesses: $70\%$ reliability of a witness, he continues, doesn't  mean that if the witness testifies that $A$ we should believe that  $\pr{A}=0.7$. To see his point,  consider two potential testimonies:
 
@@ -341,6 +370,9 @@ Assuming the  independence of the witnesses, this will hold  in non-degenerate c
 
 
 
+
+\intermezzoa
+
 Let us see why the above claim holds. The calculations are my reconstruction and are not due to Dawid. The reader might be annoyed with me working out the mundane details of Dawid's claims, but it turns out that in the case of Dawid's strategy, the devil is in the details. The independence of witnesses gives us:
 \begin{align*}
  \pr{a \et b \vert A\et B}& =0.7^2=0.49\\
@@ -382,6 +414,7 @@ By the law of total probability we have:
  \[\frac{49p_{11}}{21+28p_{11}-12p_{00}}> p_{11}\]
  that is, whether $28 > 28 p_{11}-12p_{00}$ (just divide both sides by $p_{11}$, multiply by the denominator, and manipulate algebraically). 
 
+\intermezzob
 
 
 
@@ -403,7 +436,7 @@ Suppose that  $rel(a),rel(b)>0.5$ and witnesses are independent conditional on a
 Roughly, the theorem says that if independent and reliable witnesses provide positive  support of their separate claims, their joint testimony provides positive support of the conjunction of their claims. 
 
 
-
+\intermezzoa
 
 Let us see why the claim holds. First, we introduce an abbreviation for witness reliability: 
   \begin{align*}\mathbf{a} &=rel(a)=\pr{a\vert A}=\pr{\n a\vert \n A}>0.5\\ 
@@ -491,133 +524,10 @@ The last line is what we have been after.
 Now that we have as a theorem an explication of what Dawid informally suggested, let's see whether it helps the probabilist handling of DAC. 
 
 
-## Kaplow
-
- On RLP, at least in certain cases, the decision rule leads us to \eqref{eq:Cheng:compar2}, which tells us to decide the case based on whether the likelihood ratio is greater than 1. Quite independently, @kaplow2014likelihood suggested another approach to juridical decisions which focuses on likelihood ratios, of which Cheng's suggestion is only a particular case.\footnote{Again, the name of the view is by no means standard, it is  just a term I coined to refer to various types of legal probabilism in a fairly uniform manner.}  While Kaplow did not discuss DAC or the gatecrasher paradox, it is only fair to evaluate Kaplow's proposal from the perspective of these difficulties. 
-
- Let $LR(E)=\pr{E\vert H_\Pi}/\pr{E\vert H_\Delta}$. In whole generality, DTLP invites us to convict just in case $LR(E)>LR^\star$, where $LR^\star$ is some critical value of the likelihood ratio. 
-
- Say we want to formulate the usual preponderance rule: convict iff $\pr{H_\Pi\vert E}>0.5$, that is, iff $\frac{\pr{H_\Pi\vert E}}{\pr{H_\Delta\vert E}}>1$. By Bayes' Theorem we have:
- \begin{align*}
-\frac{\pr{H_\Pi\vert E}}{\pr{H_\Delta\vert E}} =  \frac{\pr{H_\Pi}}{\pr{H_\Delta}}\times \frac{\pr{E\vert H_\Pi}}{\pr{E\vert H_\Delta}} &>1 \Leftrightarrow\\
-  \Leftrightarrow \frac{\pr{E\vert H_\Pi}}{\pr{E\vert H_\Delta}} &> \frac{\pr{H_\Delta}}{\pr{H_\Pi}} 
- \end{align*}
- \noindent So, as expected, $LR^\star$ is not unique and depends on priors. Analogous reformulations are available for thresholds other than $0.5$. 
-
-However, Kaplow's  point is not that we can reformulate threshold decision rules in terms of priors-sensitive likelihood ratio thresholds. Rather, he insists, when we make a decision, we should factor in its consequences. Let $G$ represent potential gain from correct conviction, and $L$ stand for the potential loss resulting from mistaken conviction. Taking them into account, Kaplow suggests, we should convict if and only if:
- \begin{align}
-\label{eq:Kaplow_decision}
-\pr{H_\Pi\vert E}\times G > \pr{H_\Delta\vert E}\times L
-\end{align}
-\noindent Now, \eqref{eq:Kaplow_decision} is equivalent to:
-\begin{align}
-\nonumber
-\frac{\pr{H_\Pi \vert E}}{\pr{H_\Delta \vert E}} & > \frac{L}{G}\\
-\nonumber
-\frac{\pr{H_\Pi}}{\pr{H_\Delta}} \times \frac{\pr{E\vert H_\Pi}}{\pr{E\vert H_\Delta}} &> \frac{L}{G}\\
-\nonumber
-\frac{\pr{E\vert H_\Pi}}{\pr{E\vert H_\Delta}}  & > \frac{\pr{H_\Delta}}{\pr{H_\Pi}} \times \frac{L}{G}\\
-\label{eq:Kaplow_decision2} LR(E)  & > \frac{\pr{H_\Delta}}{\pr{H_\Pi}} \times \frac{L}{G}
-\end{align}
-
-This is the general format of Kaplow's decision standard. Now, let us see how it fares when it comes to DAC and the gatecrasher paradox.
 
 
+\section{Troubles with the likelihood strategy}\label{sec:likelihood_troubles}
 
-
-
-
-
-
-
-Add here stuff from Marcello's Mind paper about the prisoner hypothetical. 
-Then, discuss Rafal's critique of the likelihood 
-ratio threshold and see where we end up. 
-
-
-
-
-## p-value (Cheng?)
-
-# Challenges
-
-## Practical and descriptive challenges
-
-Some worry that a mechanical application of numerical thresholds would undermine the humanizing function of trial decision-making. As [@tribe71] put it, 'induced by the persuasive force of formulas and the precision of  decimal  points  to  perceive  themselves  as  performing  a  largely mechanical and automatic  role, few jurors \dots could be relied upon to recall, let alone to perform, [their] humanizing function.' 
- Thresholds, however, can vary depending on the costs and benefits at stake in each case (see later discussion). So they need not be applied mechanically without considering the individual circumstances (CITE Hedden and Colyvan, 2019). Furthermore, if jurors are numerically literate, they should not lose sight of their humanizing function as they would no longer be intimated by numbers. So the force of the objection underscores the need to ensure that jurors are numerically literate, not to dispense with numerical thresholds altogether. 
-
-When appellate courts have examined the question whether standards of proof can be quantified using probabilities, they have often answered in the negative. One of the clearest opposition to quantification was formulated by Germany's Supreme Court, the Federal Court of Justice, in the case of Anna Anderson who claimed to be a descendant of the Tsar family. In 1967, the Regional Court of Hamburg ruled that Anderson failed to present sufficient evidence to establish that she was Grand Duchess Anastasia Nikolayevna, the youngest daughter of Tsar Nicholas II, who allegedly escaped the murder of the Tsar family by the Bolsheviks in 1918. %(Incidentally, DNA testing later demonstrated that Anna Anderson had no relationship with the Tsar family.) 
-Anderson appealed to Germany's Federal Court, complaining that the Regional Court had set too demanding a proof standard. Siding with the lower court, the Federal Court made clear that `[t]he law does not presuppose a belief free of all doubts', thus recognizing the inevitable fallibility of trial decisions. The Court warned, however, that it would be `wrong' to think that a trial decision could rest on `a probability bordering on certainty' (Federal Court of Justice, February 17, 1970; III ZR 139/67). This decision is all the more remarkable as it applies to a civil case. 
-
-%
-%but then warned that `this is often expressed imprecisely in such a way that the court may be satisfied with a probability bordering on certainty' and unequivocally concluded `this is wrong' . 
-%
-Compared to civil cases, the resistance toward quantification  can be more easily made plausible in criminal cases. 
- [@buchak2014belief], for example, 
-notes that an attribution of criminal culpability is an ascription of blame and such an ascription should require a full belief in someone's guilt, not just a probabilistic belief, however strong.
-One is left wondering, however. If a high probability of guilt short of 100\% isn't enough but absolute certainty cannot be required either, how else could the standard of proof be met? The question becomes more pressing in civil cases. Anticipating this sort of worry, Germany's Federal Court in the Anderson case endorsed a conception of proof standards  that echoed how U.S. courts describe proof beyond a reasonable doubt (see earlier in \ref{subsec:legal-background}). The Federal Court wrote that a judge's decision must satisfy
-`a degree of certainty which is useful for practical life and which makes the doubts silent without completely excluding them' (Federal Court of Justice, February 17, 1970; III ZR 139/67).  
-
-
-## Naked Statistical Evidence
-
-
-
-Here's another problem with TLP, the \emph{paradox of the gatecrasher} [@Cohen1977The-probable-an; @Nesson1979Reasonable-doub]. A variant of the paradox goes as follows: 
-\begin{quote}
-Suppose our guilt threshold is high, say at 0.99. Consider the situation in which 1000 fans enter a football stadium, and 991 of them avoid paying for their tickets. A random spectator is tried for not paying. The  probability that the spectator under trial did not pay exceeds 0.99.   Yet, intuitively, a spectator cannot be considered guilty on the sole basis of the number of people who did and did not pay.\footnote{The thought experiment that in the absence of any other evidence, the only source of probabilistic information is the statistics, and so that the probability of guilt corresponds to the frequency of unpaid admissions. If the reader does not agree, I ask her to play along, and to notice that in such a case a principled story of what the probability of guilt is and why is needed.}
-\end{quote}
-\noindent  The thought experiment can be adapted to match any particular threshold that a proponent of TLP might suggest, as long as it is $<1$. For any such a choice of a threshold, it seems, we can think of a situation where all available evidence increases the probability of guilt above it, and yet, conviction seems unjustified.
-
-The problem is not only that TLP leads to a conviction that intuitively seems unjustified and might be wrong. Once we notice that our evidence about each spectator is exactly the same, TLP seems to commit us to the conclusion that all of them should be punished, including the nine that actually paid, as long as we can't tell them apart. And arguably, there is something disturbing in the idea of a system of justice which pretty much explicitly admits that some innocent people should be punished.
-
-
-
-The gatecrasher paradox can be considered (or at least has been considered by some scholars) illustrative of a wider phenomenon. According to at least some approaches, there is an important distinction between \emph{naked statistical evidence}, such as the evidence involved in the Gatecrasher Paradox, and \emph{individualized evidence} (such as, say, eyewitness testimony) [@haack2011legal]. Seemingly, judges and human subjects are less willing to convict based on naked statistical evidence than when individualized evidence is available, despite the subjective probability of guilt being the same [@wells1992naked]. 
-
-Philosophers accepting this distinction have proposed many different explications of what this supposed difference consists in exactly, without much agreement being reached.\footnote{See [@redmayne2008exploring] for a critical survey and [@enoch2015sense] and [@smith2017does] for more recent proposals.} However, the underdevelopment of philosophical theories aside, as the gatecrasher paradox and some real cases based solely on DNA cold hits  that got thrown away indicate, there are at least some cases in which the probability of guilt given the evidence might be high, and the  conviction still is not justified. Arguably, a probabilistic explication of judiciary decision standard should at least allow for this possibility and specify the conditions under which this might happen.
-
-
-
-
-
-
-## Conjuction Paradox
-
-
-
-
- The \emph{Difficulty About Conjunction} (DAC) proceeds as follows. Say we focus on a civil suit where a plaintiff is required to prove  their case on the balance of probability, which for the sake of argument we construe as passing the 0.5 probability threshold.\footnote{This is a natural choice given that the plaintiff is supposed to show that their claim is more probable than the defendant's. The assumption is not essential. DAC can be deployed against any $\neq 1$ guilt probability threshold.} Suppose the plaintiff's claim to be proven based on total evidence $E$ is composed of two elements, $A$ and $B$, independent conditionally on $E$.\footnote{These assumptions, again, are not  too essential. In fact, the difficulties become more severe as the number of elements grows, and, extreme cases aside, do not tend to disappear if the elements are dependent.} The question is, what exactly is the plaintiff supposed to establish? It seems we have two possible readings:
-
-
-
-\begin{center}
-\begin{tabular}
-{@{}ll@{}}
-\toprule
-\textbf{Requirement 1}  &    $\pr{A\et B\vert E}>0.5$ \\ 
-\textbf{Requirement 2} &    $\pr{A\vert E}>0.5$ and $\pr{B\vert E}>0.5$\\   
-\bottomrule
-\end{tabular}
-\end{center}
-
-\textbf{Requirement 1} says that the plaintiff should show that their \emph{whole} claim is more likely than its negation. There are strong intuitions that this is what they should do. But the problem is, this requirement is not equivalent to \textbf{Requirement 2}. In fact, if we need  $\pr{A\et B\vert E}=\pr{A\vert E}\times\pr{B\vert E}>0.5$ (the identity being justified by the independence assumption), satisfying \textbf{Requirement 2} is not sufficient for this purpose. For instance, if $\pr{A\vert E}=\pr{B\vert E}=0.51$, $\pr{A\vert E}\times \pr{B\vert E}\approx 0.26$, and so the plaintiff's claim as a whole still fails to be established. This means that requiring the proof of $A\et B$ on the balance of probability puts an importantly higher requirement on the separate probabilities of the conjuncts. 
-
-Moreover, what is required exactly for one of them depends on what has been achieved for the other. If I already established that $\pr{A\vert E}=0.8$, I need $\pr{B\vert E}\geq 0.635$ to end up with $\pr{A\et B\vert E}\geq 0.51$. If, however, $\pr{A\vert E}=0.6$, I need $\pr{B\vert E}\geq 0.85$ to reach the same threshold. This would mean that standards of proof for a given claim could vary depending on how well a different claim has been argued for and on whether it is a part of a more complex claim that one is defending, and this does not seem very intuitive. At least, this goes strongly against the equal treatment requirement mentioned already in the introduction. 
-
-
-Should we then abandon \textbf{Requirement 1} and remain content with \textbf{Requirement 2}? [Cohen1977The-probable-an: 66] convincingly argues that we should not. Not evaluating  a complex civil case  as a whole is the opposite of what the courts themselves normally do. There are good reasons to think that every common law system subscribes to a sort of conjunction principle, which states that if $A$ and $B$ are established on the balance of probabilities, then  so is $A\et B$. 
-
-So, on one hand, if we take our decision standard from \textbf{Requirement 2}, our acceptance standard will not  involve closure under conjunction, and might lead to conviction in cases where $\pr{G\vert E}$ is quite low, just because $G$ is a conjunction of elements which separately satisfy the standard of proof -- and this  seems unintuitive.  On the other hand, following Cohen,  if we take our decision standard from \textbf{Requirement 1}, we will put seemingly unnecessarily high requirements sensitive to fairly contingent and irrelevant facts on the prosecution, and treat various elements to be proven unevenly. Neither seems desirable. 
-
-
-
-
-
-# Problems remain 
-
-
-## Dawid's likelihood strategy doesn't help
 
  Recall that DAC was a problem posed for the decision standard proposed by TLP, and the real question is how the information resulting from Fact \ref{ther:increase} can help to avoid that problem.  Dawid does not mention any decision standard, and so addresses quite a different question, and so it is not clear that  ``the `paradox'  evaporates'', as Dawid suggests.
 
@@ -738,7 +648,7 @@ LR(a\et b \vert A \et B) & = \frac{\pr{a\et b \vert A \et B}}{\pr{a \et b\vert \
 
 
 
-  Fact \ref{ther:increase} is so far the most optimistic reading of the claim that if witnesses are independent and fairly reliable, their testimonies are going to provide positive support for the conjunction,\footnote{And this is the reading that Dawid in passing suggests: ``the combined support is always positive, in the sense that the posterior probability of the case always exceeds its prior probability.'' [@dawid1987difficulty: 95] and any stronger reading of Dawid's suggestions fails. But Fact \ref{ther:increase} is not too exciting when it comes to answering the original DAC. The original question focused on the adjudication model according to which the deciding agents are to evaluate the posterior probability of the whole case conditional on all evidence, and to convict if it is above a certain threshold. The problem, generally, is that  it might be the case that  the pieces of evidence for particular elements of the claim can have high likelihood and posterior probabilities of particular elements can be above the threshold while the posterior joint probability will still fail to meet the threshold. The fact that the joint posterior will be higher than the joint prior does not  help much. For instance, if $\mathbf{a}=\mathbf{b}=0.7$, $pr=\la 0.1, 0.5, 0.3, 0.1\ra$, the posterior of $A$ is $\approx 0.777$, the posterior of $B$ is $\approx 0.608$ and the joint posterior is $\approx 0.216$ (yes, it is  higher than the joint prior $=0.1$, but this does not help the conjunction to satisfy the decision standard).
+  Fact \ref{ther:increase} is so far the most optimistic reading of the claim that if witnesses are independent and fairly reliable, their testimonies are going to provide positive support for the conjunction,\footnote{And this is the reading that Dawid in passing suggests: ``the combined support is always positive, in the sense that the posterior probability of the case always exceeds its prior probability.'' \citep[95]{dawid1987difficulty}} and any stronger reading of Dawid's suggestions fails. But Fact \ref{ther:increase} is not too exciting when it comes to answering the original DAC. The original question focused on the adjudication model according to which the deciding agents are to evaluate the posterior probability of the whole case conditional on all evidence, and to convict if it is above a certain threshold. The problem, generally, is that  it might be the case that  the pieces of evidence for particular elements of the claim can have high likelihood and posterior probabilities of particular elements can be above the threshold while the posterior joint probability will still fail to meet the threshold. The fact that the joint posterior will be higher than the joint prior does not  help much. For instance, if $\mathbf{a}=\mathbf{b}=0.7$, $pr=\la 0.1, 0.5, 0.3, 0.1\ra$, the posterior of $A$ is $\approx 0.777$, the posterior of $B$ is $\approx 0.608$ and the joint posterior is $\approx 0.216$ (yes, it is  higher than the joint prior $=0.1$, but this does not help the conjunction to satisfy the decision standard).
 
 
 
@@ -785,7 +695,7 @@ Before we move to another attempt at a probabilistic formulation of the decision
 
 \intermezzoa
 
-In fact, Cohen replied to Dawid's paper [@cohen1988difficulty]. His reply, however, does not have much to do with the workings of Dawid's strategy, and is rather unusual. Cohen's first point is that the calculations of posteriors require odds about unique events, whose meaning is usually given in terms of potential wagers -- and the key criticism here is that in practice such wagers cannot be decided. This is not a convincing criticism, because the betting-odds interpretations of subjective probability do not require that on each occasion the bet should really be practically decidable. It rather invites one to imagine a possible situation in which the truth could be found out and asks: how much would we bet on a certain claim in such a situation? In some cases, this assumption is false, but there is nothing in principle wrong with thinking about the consequences of false assumptions. 
+In fact, Cohen replied to Dawid's paper \citep{cohen1988difficulty}. His reply, however, does not have much to do with the workings of Dawid's strategy, and is rather unusual. Cohen's first point is that the calculations of posteriors require odds about unique events, whose meaning is usually given in terms of potential wagers -- and the key criticism here is that in practice such wagers cannot be decided. This is not a convincing criticism, because the betting-odds interpretations of subjective probability do not require that on each occasion the bet should really be practically decidable. It rather invites one to imagine a possible situation in which the truth could be found out and asks: how much would we bet on a certain claim in such a situation? In some cases, this assumption is false, but there is nothing in principle wrong with thinking about the consequences of false assumptions. 
 
 
 
@@ -796,8 +706,79 @@ Second, Cohen says that Dawid's argument works only for testimonial evidence, no
 Third, Cohen complaints that Dawid in his example worked with rather high priors, which according to Cohen would be too high to correspond to the presumption of innocence. This also is not a very successful rejoinder. Cohen picked his priors in the example for the ease of calculations, and the reasoning can be run with lower priors. Moreover, instead of discussing the conjunction problem, Cohen brings in quite a different problem: how to probabilistically model the presumption of innocence, and what priors of guilt should be appropriate? This, indeed, is an important problem; but it does not have much to do with DAC, and should be discussed separately.
 
 
-## Problems with Cheng's relative likelihood 
+\intermezzob 
 
+
+\section{The gatecrasher paradox}\label{sec:gatecrasher}
+
+Here's another problem with TLP, the \emph{paradox of the gatecrasher} \citep{Cohen1977The-probable-an, Nesson1979Reasonable-doub}. A variant of the paradox goes as follows: 
+\begin{quote}
+Suppose our guilt threshold is high, say at 0.99. Consider the situation in which 1000 fans enter a football stadium, and 991 of them avoid paying for their tickets. A random spectator is tried for not paying. The  probability that the spectator under trial did not pay exceeds 0.99.   Yet, intuitively, a spectator cannot be considered guilty on the sole basis of the number of people who did and did not pay.\footnote{The thought experiment that in the absence of any other evidence, the only source of probabilistic information is the statistics, and so that the probability of guilt corresponds to the frequency of unpaid admissions. If the reader does not agree, I ask her to play along, and to notice that in such a case a principled story of what the probability of guilt is and why is needed.}
+\end{quote}
+\noindent  The thought experiment can be adapted to match any particular threshold that a proponent of TLP might suggest, as long as it is $<1$. For any such a choice of a threshold, it seems, we can think of a situation where all available evidence increases the probability of guilt above it, and yet, conviction seems unjustified.
+
+The problem is not only that TLP leads to a conviction that intuitively seems unjustified and might be wrong. Once we notice that our evidence about each spectator is exactly the same, TLP seems to commit us to the conclusion that all of them should be punished, including the nine that actually paid, as long as we can't tell them apart. And arguably, there is something disturbing in the idea of a system of justice which pretty much explicitly admits that some innocent people should be punished.
+
+
+
+The gatecrasher paradox can be considered (or at least has been considered by some scholars) illustrative of a wider phenomenon. According to at least some approaches, there is an important distinction between \emph{naked statistical evidence}, such as the evidence involved in the Gatecrasher Paradox, and \emph{individualized evidence} (such as, say, eyewitness testimony) \citep{haack2011legal}. Seemingly, judges and human subjects are less willing to convict based on naked statistical evidence than when individualized evidence is available, despite the subjective probability of guilt being the same \citep{wells1992naked}. 
+
+Philosophers accepting this distinction have proposed many different explications of what this supposed difference consists in exactly, without much agreement being reached.\footnote{See \citep{redmayne2008exploring} for a critical survey and \citep{enoch2015sense} and \citep{smith2017does} for more recent proposals.} However, the underdevelopment of philosophical theories aside, as the gatecrasher paradox and some real cases based solely on DNA cold hits  that got thrown away indicate, there are at least some cases in which the probability of guilt given the evidence might be high, and the  conviction still is not justified. Arguably, a probabilistic explication of judiciary decision standard should at least allow for this possibility and specify the conditions under which this might happen.
+
+
+
+ \section{Cheng's Relative Legal Probabilism (RLP)}\label{sec:RLP}
+
+ Let us think about juridical decisions in analogy to statistical hypothesis testing. We have two hypotheses under consideration: defendant's $H_\Delta$ and plaintiff's $H_\Pi$, and we are to pick one: $D_\Delta$ stands for the decision for $H_\Delta$ and $D_\Pi$ is the decision that $H_\Pi$. If we are right, no costs result, but incorrect decisions have their price. Let us say that  if the defendant is right and we find against them, the cost is $c_1$, and if the plaintiff is right and we find against them, the cost is $c_2$:
+
+\begin{center}
+\begin{tabular}
+{@{}llll@{}}
+\toprule
+& & \multicolumn{2}{c}{Decision}\\
+& &  $D_\Delta$ & $D_\Pi$ \\
+\cmidrule{3-4}
+\multirow{2}{*}{Truth} &  $H_\Delta$    & $0$    & $c_1$\\
+                       &  $H_\Pi$       &  $c_2$   & $0$ \\ 
+\bottomrule
+\end{tabular}
+\end{center}
+
+
+
+\noindent Arguably, we need a decision rule which minimizes the expected cost. Say that given our  total evidence $E$ we have the corresponding probabilities:
+\begin{align*}
+p_\Delta &= \pr{H_\Delta \vert E} \\
+p_\Pi & = \pr{H_\Pi \vert E}
+\end{align*}
+\noindent where $\mathtt{P}$ stands for the prior probability (this will be the case throughout our discussion of Cheng). The expected costs for deciding that $H_\Delta$ and $H_\Pi$, respectively, are:
+\begin{align*}
+E(D_\Delta) & = p_\Delta 0 + p_\Pi c_2 = c_2p_\Pi\\
+E(D_\Pi) & = p_\Delta c_1 + p_\Pi 0 = c_1 p_\Delta
+\end{align*}
+\noindent so, assuming that we are minimizing expected cost,   we would like to choose $H_\Pi$ just in case $E(D_\Pi) < E(D_\Delta)$. This condition is equivalent to:
+\begin{align}
+\nonumber c_1p_\Delta &< c_2p_\Pi \\
+\nonumber c_1 & < \frac{c_2p_\Pi}{p_\Delta}\\
+\label{eq:cheng_frac1}\frac{c_1}{c_2} & < \frac{p_\Pi}{p_\Delta}
+\end{align}
+
+
+\noindent \citep[1261]{cheng2012reconceptualizing} insists:
+\begin{quote}
+At the same time, in a civil trial, the legal system expresses no preference between finding erroneously for the plaintiff (false positives) and finding erroneously for the defendant (false negatives). The costs $c_1$ and $c_2$ are thus equal\dots
+\end{quote}
+\noindent If we grant this assumption, \eqref{eq:cheng_frac1} reduces to:
+\begin{align}
+\nonumber 1 &< \frac{p_\Pi}{p_\Delta} \\
+\label{eq:cheng_comp1} p_\Pi &> p_\Delta 
+\end{align}
+\noindent That is, in standard civil litigation we are to find for the plaintiff just in case $H_\Pi$ is more probable given the evidence than $H_\Delta$, which doesn't seem like an insane conclusion.\footnote{Notice that this instruction is somewhat more general than the usual suggestion of the preponderance standard in civil litigation,  according to which the court should find for the plaintiff just in case $\pr{H_\Pi\vert E} >0.5$. This threshold, however, results from \eqref{eq:cheng_comp1} if it so happens that $H_\Delta$ is $\n H_\Pi$, that is, if the defendant's claim is simply the negation of the plaintiff's thesis.  By no means, Cheng argues, this is always the case: often the defendant offers a story which is much more than simply the denial of what the opposite side said.}
+
+
+ So on this approach, rather than directly evaluating the probability of $H_\Pi$ given the evidence and comparing it to a threshold, we compare the support that the evidence provides for alternative hypotheses $H_\Pi$ and $H_\Delta$ (where, let's emphasize again, the latter doesn't have to be the negation of the former), and decide for the better supported one. Let's call this decision standard \textbf{Relative Legal Probabilism (RLP)}.\footnote{I was not aware of any particular name for Cheng's model so we came up with this one. We're not particularly attached to it, and it is not standard terminology.}
+
+\section{RLP vs. DAC}\label{sec:RLP_vs_DAC}
 
 
 
@@ -821,8 +802,7 @@ the crash caused her neck injury ($C$). Thus, $H_\Pi$ is $S\et C$. Suppose that 
 \noindent It seems that whatever the defense story is, it is less plausible than the plaintiff's claim. So, at least in this case, whenever elements of a plaintiff's claim satisfy the decision standard proposed by RLP, then so does their conjunction. 
 
 
-
-
+ \section{RLP vs. the Gatecrasher Paradox}\label{sec:RLP_vs_Gatecrasher}
 
  Similarly, RLP is claimed to handle the gatecrasher paradox.  It is useful to think about the problem in terms of odds and likelikoods, where the \emph{prior odds} (before evidence $E$) of $H_\Pi$  as compared to $H_\Delta$, are $\frac{\pr{H_\Pi}}{\pr{H_\Delta}}$, the posterior odds of $H_\Delta$ given $E$ are $\frac{\pr{H_\Pi \vert E}}{\pr{H_\Delta \vert E}}$, and the corresponding likelihood ratio is $\frac{\pr{E\vert H_\Pi}}{\pr{E\vert H_\Delta}}$. 
 
@@ -833,7 +813,7 @@ the crash caused her neck injury ($C$). Thus, $H_\Pi$ is $S\et C$. Suppose that 
 \frac{\pr{E\vert H_\Pi}}{\pr{E\vert H_\Delta}} 
 \times \frac{\pr{H_\Pi}}{\pr{H_\Delta}}
  \end{align*}
-\noindent [@cheng2012reconceptualizing: 1267] insists that in civil trials the prior probabilities should be equal. Granted this assumption, prior odds are 1, and we have:
+\noindent \citet[1267]{cheng2012reconceptualizing} insists that in civil trials the prior probabilities should be equal. Granted this assumption, prior odds are 1, and we have:
 \begin{align}\label{eq:cheng_simple_odds}
 \frac{\pr{H_\Pi \vert E}}{\pr{H_\Delta \vert E}} & = 
 \frac{\pr{E\vert H_\Pi}}{\pr{E\vert H_\Delta}} 
@@ -844,12 +824,14 @@ This means that our original task of establishing that the left-hand side is gre
 \end{align}
 Thus, \eqref{eq:Cheng:compar2} tells us to convict just in case $LR(E)>1$.
 
-Now, in the case of the gatecrasher paradox, our evidence is statistical. In our variant $E$=``991 out of 1000 spectators gatecrashed''. Now pick a random spectator, call him Tom, and let $H_\Pi$=``Tom gatecrashed.'' [@cheng2012reconceptualizing: 1270] insists:
+Now, in the case of the gatecrasher paradox, our evidence is statistical. In our variant $E$=``991 out of 1000 spectators gatecrashed''. Now pick a random spectator, call him Tom, and let $H_\Pi$=``Tom gatecrashed.'' \citep[1270]{cheng2012reconceptualizing} insists:
 \begin{quote}
 But whether the audience member is a lawful patron or a gatecrasher does not change the probability of observing the evidence presented.
 \end{quote}
 \noindent So, on his view, in such a case, $\pr{E\vert H_\Pi}=\pr{E\vert H_\Delta}$, the posterior odds are, by \eqref{eq:cheng_simple_odds}, equal to 1, and conviction is unjustified.
 
+
+ \section{Troubles with RLP}\label{sec:troubles_with_RLP}
 
 
 There are various issues with how RLP has been deployed to resolve the difficulties that CLP and TLP run into.  
@@ -906,8 +888,43 @@ In the process of solving the gatecrasher paradox, to reach \eqref{eq:cheng_simp
  \noindent and $LR(E)$ will be $>1$ as soon as $\pi<0.991$. This means that contrary to what Cheng suggested, in any situation in which the prior probability of guilt is less than the posterior probability of guilt, RLP tells us to convict. This, however, does not seem desirable. 
 
 
-## Problem's with Kaplow's stuff
 
+ \section{Kaplow's Decision-Theoretic LP (DTLP)}\label{sec:DTLP}
+
+ On RLP, at least in certain cases, the decision rule leads us to \eqref{eq:Cheng:compar2}, which tells us to decide the case based on whether the likelihood ratio is greater than 1. Quite independently, \citet{kaplow2014likelihood} suggested another approach to juridical decisions which focuses on likelihood ratios, of which Cheng's suggestion is only a particular case.\footnote{Again, the name of the view is by no means standard, it is  just a term I coined to refer to various types of legal probabilism in a fairly uniform manner.}  While Kaplow did not discuss DAC or the gatecrasher paradox, it is only fair to evaluate Kaplow's proposal from the perspective of these difficulties. 
+
+ Let $LR(E)=\pr{E\vert H_\Pi}/\pr{E\vert H_\Delta}$. In whole generality, DTLP invites us to convict just in case $LR(E)>LR^\star$, where $LR^\star$ is some critical value of the likelihood ratio. 
+
+ Say we want to formulate the usual preponderance rule: convict iff $\pr{H_\Pi\vert E}>0.5$, that is, iff $\frac{\pr{H_\Pi\vert E}}{\pr{H_\Delta\vert E}}>1$. By Bayes' Theorem we have:
+ \begin{align*}
+\frac{\pr{H_\Pi\vert E}}{\pr{H_\Delta\vert E}} =  \frac{\pr{H_\Pi}}{\pr{H_\Delta}}\times \frac{\pr{E\vert H_\Pi}}{\pr{E\vert H_\Delta}} &>1 \Leftrightarrow\\
+  \Leftrightarrow \frac{\pr{E\vert H_\Pi}}{\pr{E\vert H_\Delta}} &> \frac{\pr{H_\Delta}}{\pr{H_\Pi}} 
+ \end{align*}
+ \noindent So, as expected, $LR^\star$ is not unique and depends on priors. Analogous reformulations are available for thresholds other than $0.5$. 
+
+However, Kaplow's  point is not that we can reformulate threshold decision rules in terms of priors-sensitive likelihood ratio thresholds. Rather, he insists, when we make a decision, we should factor in its consequences. Let $G$ represent potential gain from correct conviction, and $L$ stand for the potential loss resulting from mistaken conviction. Taking them into account, Kaplow suggests, we should convict if and only if:
+ \begin{align}
+\label{eq:Kaplow_decision}
+\pr{H_\Pi\vert E}\times G > \pr{H_\Delta\vert E}\times L
+\end{align}
+\noindent Now, \eqref{eq:Kaplow_decision} is equivalent to:
+\begin{align}
+\nonumber
+\frac{\pr{H_\Pi \vert E}}{\pr{H_\Delta \vert E}} & > \frac{L}{G}\\
+\nonumber
+\frac{\pr{H_\Pi}}{\pr{H_\Delta}} \times \frac{\pr{E\vert H_\Pi}}{\pr{E\vert H_\Delta}} &> \frac{L}{G}\\
+\nonumber
+\frac{\pr{E\vert H_\Pi}}{\pr{E\vert H_\Delta}}  & > \frac{\pr{H_\Delta}}{\pr{H_\Pi}} \times \frac{L}{G}\\
+\label{eq:Kaplow_decision2} LR(E)  & > \frac{\pr{H_\Delta}}{\pr{H_\Pi}} \times \frac{L}{G}
+\end{align}
+
+This is the general format of Kaplow's decision standard. Now, let us see how it fares when it comes to DAC and the gatecrasher paradox.
+
+
+
+
+
+ \section{Troubles with  DTLP}\label{sec:troubles_DTLP}
 
 
  Kaplow does not discuss the conceptual difficulties that we are concerned with, but this will not stop us from asking whether DTLP can handle them (and answering to the negative). Let us start with DAC.
@@ -1040,20 +1057,67 @@ LR(E) &> \frac{1-\pi}{\pi} \rho \\
 
 
 
+ \intermezzoa
+
+There is another, recent approach  due to \citet{Miller2018}.\footnote{The idea is not developed in any of his papers. What follows is an account based on his lecture at the UNILOG '18 conference.} Instead of  using  $\pr{H \vert E}$, he introduces a new function, $\mathtt{Q}$, which he calls contrapositive probability,  and defines it as:
+\begin{align*}
+\mathtt{Q}(H\vert E) = \pr{\n E\vert \n H}
+\end{align*}
+According to a theorem that Miller stated without a proof, if these assumptions hold
+\begin{align*}
+\mathtt{Q}(H_1\vert E) & > \mathtt{Q}(\n H_1 \vert E)\\
+\mathtt{Q}(H_2\vert E) & > \mathtt{Q}(\n H_2 \vert E)
+\end{align*}
+then it follows that:
+\begin{align*}
+\mathtt{Q}(H_1\et H_2\vert E) &
+ > \mathtt{Q}(\n (H_1 \et H_2) \vert E).
+\end{align*}
+\noindent
+
+Full assessment of this approach will have to wait for a more complete development of the strategy. Note however, that it is far from  clear that the above theorem solves the issue. It only applies to cases in which the threshold is 0.5 and says that if conjuncts are above it, then so is the conjunction. It still might be the case that the conjunction has lower ``score'' than any of the conjuncts, and if so, shifting the threshold might not preserve the value of the theorem. 
+
+Moreover, the measure has very unintuitive properties. Consider a single toss of a die and its result. $\pr{<2\vert <3}$ (that is, the probability that the result is 1 given it is less than 3) is $1/2$, and so $\mathtt{Q}(\geq 3\vert \geq 2)=1/2$. So, on this approach, the evidence that the result is one of $2,3,4,5,6$ supports the claim that it is one of $3,4,5,6$ only at the level of 1/2, despite the corresponding probability being $4/5$. Similarly, $\pr{<3\vert <5}=1/2$ and so $\mathtt{Q}(\geq 5\vert \geq 3)=1/2$ (the same level as before), despite the corresponding probability this time being $1/4$.
+
+
+
+ \intermezzob
 
 
 
 
 
-# Probabilistic Thresholds Revised
-
-## Likelihood ratios and naked statistical evidence
-
-## Conjcution paradox and Bayesian networks
-
-# Conclusions
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\section{Informal overview}\label{sec:informaloverview}
 
 
 
@@ -1091,7 +1155,7 @@ The likelihood of the evidence is higher than the odds of innocence multiplied b
  \end{center} 
 
 
-Thus, each account either simply fails to satisfy the desiderata, or succeeds on rather unrealistic assumptions.  Does this mean that a probabilistic approach to legal evidence evaluation should be abandoned? No. This only means that if we are to develop a general probabilistic model of legal decision standards, we have to do better. One promising direction is to go back to Cohen's pressure against \textbf{Requirement 1} and push against it. A brief paper suggesting this direction is [@DiBello2019plausibility], where the idea is that the probabilistic standard (be it a threshold or a comparative wrt. defending narrations) should be applied to the whole claim put forward by the plaintiff, and not to its elements. In such a context, DAC does not arise, but \textbf{equal treatment} is violated. Perhaps, there are independent reasons to abandon it, but the issue deserves further discussion. Another strategy might be to go in the direction of employing probabilistic methods to explicate the narration theory of legal decision standards [@urbaniak2018narration], but a discussion of how this approach relates to DAC and the gatecrasher paradox lies beyond the scope of this paper. 
+Thus, each account either simply fails to satisfy the desiderata, or succeeds on rather unrealistic assumptions.  Does this mean that a probabilistic approach to legal evidence evaluation should be abandoned? No. This only means that if we are to develop a general probabilistic model of legal decision standards, we have to do better. One promising direction is to go back to Cohen's pressure against \textbf{Requirement 1} and push against it. A brief paper suggesting this direction is \citep{DiBello2019plausibility}, where the idea is that the probabilistic standard (be it a threshold or a comparative wrt. defending narrations) should be applied to the whole claim put forward by the plaintiff, and not to its elements. In such a context, DAC does not arise, but \textbf{equal treatment} is violated. Perhaps, there are independent reasons to abandon it, but the issue deserves further discussion. Another strategy might be to go in the direction of employing probabilistic methods to explicate the narration theory of legal decision standards \citep{urbaniak2018narration}, but a discussion of how this approach relates to DAC and the gatecrasher paradox lies beyond the scope of this paper. 
 
 
 
@@ -1099,252 +1163,185 @@ Thus, each account either simply fails to satisfy the desiderata, or succeeds on
 
 
 
-# NEW CHAPTER - Introduction
 
-# Alternative accounts
+\bibliographystyle{isplain}
 
-There exist several theoretical alternatives to the probabilistic interpretation of proof standards in the scholarly literature. Some scholars, on empirical or normative grounds, resist the claim that the point of gathering and assessing evidence at trial is solely to estimate the probability of the defendant's civil or criminal liability. 
+\begin{thebibliography}{}
 
-## Relative Plausibility
+\bibitem[\protect\astroncite{Aitken and Taroni}{2004}]{aitken2004statistics}
+Aitken, C. and Taroni, F. (2004).
+\newblock {\em Statistics and the evaluation of evidence for forensic
+  scientists}, volume~16.
+\newblock Wiley Online Library.
 
-[@Pennington1991, @penn1993] have proposed the \textit{story model}   according to which judges and jurors, first make sense of the evidence by constructing stories of what happened, and then select the best story on the basis of multiple criteria, such as coherence, fit with the evidence and completeness.
-Along similar lines, [@Pardo2008judicial] argue that the version of the facts that best explains the evidence should prevail in a court of law. For a discussion of inference to the best explanation in legal reasoning, see  [@schwartz2019WhatRelativePlausibility, @hastie2019CaseRelativePlausibilitya, @lai2019HowPlausibleRelative, @nance2019LimitationsRelativePlausibility].
+\bibitem[\protect\astroncite{Ball}{1960}]{ball1960moment}
+Ball, V.~C. (1960).
+\newblock The moment of truth: probability theory and standards of proof.
+\newblock {\em Vanderbilt Law Review}, 14:807--830.
 
-## Arguments
+\bibitem[\protect\astroncite{Bello}{2019}]{DiBello2019plausibility}
+Bello, M.~D. (2019).
+\newblock Plausibility and probability in juridical proof.
+\newblock {\em The International Journal of Evidence {\&} Proof}, doi 10.1177/1365712718815355.
 
-Another approach is due to [@gordon2007] and [@prakken2009] who view the trial as a place in which  arguments and counterarguments confront one another.  The party that has the best arguments, all things considered, should prevail.  On this view, probability estimates can themselves be the target of objections and counterarguments. 
+\bibitem[\protect\astroncite{Bernoulli}{1713}]{Bernoulli1713Ars-conjectandi}
+Bernoulli, J. (1713).
+\newblock {\em Ars conjectandi}.
 
-## Relevant alternatives
+\bibitem[\protect\astroncite{Cheng}{2012}]{cheng2012reconceptualizing}
+Cheng, E. (2012).
+\newblock Reconceptualizing the burden of proof.
+\newblock {\em Yale LJ}, 122:1254.
 
-[@gardiner2019ppa] argues that standards of proof should rule out all error possibilities that are relevant and these need not coincide with error possibilities that are probable.
-
-## Normic Support
-
-## Justification
-
-[@ho2008philosophy] and [@Haack2014-HAAEMS] 
-hold that degrees of epistemic warrant for a claim, which depend 
-on multiple factors -- such as the extent to which the evidence 
-supports the claim and it is comprehensive -- cannot be equated 
-to probabilities.  
-
-## Weight
-
-[@stein2008] argues that,  in order to warrant a verdict against the defendant, the evidence should have withstood objections and counterarguments, not merely supporting a high probability.
-
-## Completeness
-
-Discuss here Nance proposal. [@nance2016] argues that the evidence on which to base a trial decision should be reasonably complete---it should be all the evidence that one would reasonably expect to see from a conscientious investigation of the facts. A similar argument can be found in [@davidsonpargetter1987]. Arguably, probability-based decision thresholds can accommodate these considerations, for example, by lowering the probability of civil or criminal liability whenever the body of evidence is one-sided or incomplete  [@Kaye79gate, @Kaye1986Do, @friedman1996]. Another strategy is to give a probability-based account of the notion of completeness of the evidence and other seemingly non-probabilistic criteria   [@urbaniak2018narration].
+\bibitem[\protect\astroncite{Cohen}{1977}]{Cohen1977The-probable-an}
+Cohen, J. (1977).
+\newblock {\em The probable and the provable}.
+\newblock Oxford University Press.
 
 
-## Knowledge 
-
-Some epistemologists  argue that a probabilistic belief, no matter how high, is not enough to warrant knowledge, and knowledge should be the standard for trial verdicts.
-
-
-# Comparisons: Probabilistic Thresholds and
-
-## ... relative plausibility
-
-## ... arguments
-
-## ... relevant alternatives 
-
-## ... normic Support
-
-## ... knowledge
-
-# Conclusion
-
-
-# NEW CHAPTER - Introduction
-
-
-# Functions of proof standards
-
-## Protecting defendants (re Winship) 
-
-## Error reduction and error distribution/allocation (Laudan, Stein, Allen)
-
-## Dispute resolution (Nesson)
-
-## Justification and answerability (Duff)
-
-
-# Probabilistic accounts and the functions of proof standards
-
-Even if numerical thresholds cannot be used in the daily business of trial proceedings, they
-can still serve as theoretical concepts to understand the role of proof standards in the justice system, such as regulating the relative frequency of false positive and false negative decisions or minimizing expected costs.
-A more stringent threshold will decrease the number of false positives (say false convictions) at the cost of increasing the number of false negatives (say false acquittals), and a less stringent threshold will increase the number of false positives while decreasing the number of false negatives.
-This trade-off has been described, among others, by Justice Harlan in his concurring opinion In re Winship, 397 U.S. 358, 397 (1970).  Against this background, it is natural to ask what the optimal or most efficient threshold should be. The optimal threshold may be one that minimizes false positives and false negatives overall or one that minimizes expected costs. Which threshold would minimize overall errors? 
-Which would minimize expected costs? As shown below, these questions 
-can be answered using the formal apparatus of probability theory, 
-in combination with calculus and expected utility theory.
-
-
-## Minimizing expected costs
-
-Probabilistic standard of proof can be conceptualized through the lenses of expected utility theory  [@Kaplan1968decision; @Dekay1996; @hamer2004]. Broadly speaking, expected utility theory recommends agents to take the course of action that, among the available alternatives,  maximizes expected utility. On this view, 
-the standard of proof is met whenever the expected utility (or cost) of a decision against the defendant (say, a conviction) is greater (or lower) than the expected utility (or cost) of a decision in favor of the defendant (say, an acquittal).
-Let $c(CI)$ be the cost of convicting a factually innocent defendant and $c(AG)$ the cost of acquitting a factually guilty defendant. For a conviction to be justified, the expected cost of convicting an innocent---that is, $c(CI)$  discounted by the probability of innocence $[1-\Pr(G|E)]$---must be lower than the expected cost of acquitting a guilty defendant---that is, $c(AG)$ discounted by the probability of guilt $\Pr(G|E)$. This holds just in case 
-
-\[ \frac{\Pr(G|E)}{1- \Pr(G|E)} > \frac{c(CI)}{c(AG)}.\]
-
-This inequality captures 
-how high the probability 
-of guilt or civil liability must be to justify a verdict against the defendant. 
-If the cost ratio is 9---as might be appropriate in a criminal 
-case---the inequality holds only if $\Pr(G | E)$ meets a 90\% threshold.
-
-The same analysis \textit{mutatis mutandis} applies to civil cases in which mistaken decisions comprise mistaken attributions of liability (false positives) and mistaken failures to attribute liability (false negatives). If the cost ratio is one---as might be appropriate in a civil case in which false positives and false negatives are equally harmful---the inequality holds only if the probability that the defendant is civilly liable meets a 50\% threshold. 
-
-\begin{center}
-\includegraphics[width=10cm]{civil2.png}
-\includegraphics[width=10cm]{criminal4.png}   
-\end{center}
-
-This analysis only considers the costs of mistaken decisions, but leaves out the benefits associated with correct decisions. More comprehensive analyses would consider both. The basic insight remains the same, however. The probability required for a conviction or a finding of civil liability against the defendant is a function of weighing the  costs and benefits that would result from true and false positive as well as true and false negative decisions. On this account of proof standards, the stringency of the threshold depends on costs and benefits, and thus different cases may require different thresholds. Cases in which the charge is more serious than others---say, murder compared to petty theft---may require higher thresholds so long as the cost of a mistaken decision against the defendant is more significant. Standards of proof would vary depending on the costs at stake in different cases.
-Whether or not standards of proof should vary in this way is a matter of debate [@kaplow2012, @picinali2013].
- The same standard of proof is typically applied for murder and petty theft.
- The law typically  makes coarse  distinctions between standards of proof, such as 'proof beyond a reasonable doubt' for criminal cases, 'preponderance of the evidence' for civil cases and 'clear and convincing evidence' for a narrow subset of civil cases in which the accusation against the defendant is particularly serious.
- Another complication is that eliciting costs and benefits that result from trial decisions is not easy.  Should they be elicited through a democratic process or should different jurors or judges apply their own in a subjective fashion? (CITE WHAT?)
-No matter the answer to these questions, when probabilistic standards of proof are paired with expected utility theory, they become part of the calculus of utilities. In line with the law and economics movement, trial decision-making is viewed as one instrument among others  for maximizing overall social welfare [@Posner1973]. 
-
-
-## Minimizing overall expected errors
-
-
-Instead of thinking in terms of maximizing expected utility (or minimizing expected costs), 
-probabiListic standardS of proof can be also be viewd more directly 
-as regulating the rate of erroneous trial decisions. 
-We will see, however, that the error-centered approch agrees 
-to a large extent with the approach based on maximizing expected utility. 
-
-Consider an idealized model of a criminal trial system.  
-Each defendant is assigned a probability $x$ of criminal liability (or guilt) 
-based on the evidence presented at trial. Since over a period of time many defendants face charges, the guilt probability will have its own distribution.  Extreme guilt probabilities set at 0\% or 100\%, presumably,  are assigned rarely in trials if ever, while values between 40\% and 80\% are more common.  
-A rigorous way to express this distribution is by means of a probability density function, call it  $f(x)$.  
-The figure below uses a right skewed distribution $\textsf{beta(18,3)}$. 
-
-\begin{center}
-    \includegraphics[width=10cm]{beta(18,3)2.png}
-\end{center}
+\bibitem[\protect\astroncite{Cohen}{1988}]{cohen1988difficulty}
+Cohen, J. (1988).
+\newblock The difficulty about conjunction in forensic proof.
+\newblock {\em Journal of the Royal Statistical Society: Series D (The Statistician)}, 37(4-5):415--416
+  
  
- \noindent
- The right skew reflects the assumption that defendants in criminal cases are sent to trial only if the incriminating evidence against them is strong. It should be no surprise that most defendants are assigned a high probability of guilt. The distribution of the probability of liability in civil cases over a period of time might look quite different, probably centered around 50\% or 60\%.
- 
-In the figure above, the threshold for conviction is set at $>80\%$, and the area under the curve to the right of the threshold is about $.79$. In other words, according to this model, 79\% of defendants on trial are convicted and 21\% acquitted. These figures are close to the rates of conviction and acquittal in many countries. 
-Since $f(x)$ is a probability density, the total area under the curve adds up to 100\%, encompassing all defendants, both convicted and acquitted defendants. 
-
-If the threshold becomes more stringent---for example, it moves up to 85\%---the rate of conviction would decrease provided the underlying distribution does not change. But if the distribution becomes more skewed toward the right---say \textsf{beta(25,3)}---the rate of conviction could still be about 79\% even with a more stringent threshold of 85\%. 
-
-\begin{center}
-    \includegraphics[width=10cm]{dbeta(25,3)2.png}
-\end{center}
 
 
-So far the model only describes the rate at which defendants are 
-convicted depending on the strigency of the threshold. But it is also possible 
-to represent in the model the rate at which innocent and guilty defedants 
-are convicted. 
+\bibitem[\protect\astroncite{Cullison}{1969}]{cullison1969probability}
+Cullison, A.~D. (1969).
+\newblock Probability analysis of judicial fact-finding: A preliminary outline
+  of the subjective approach.
+\newblock {\em Toledo Law Review}, 1:538--598.
 
-Presumably, among the defendants facing trail, some are 
-factually innocent and the rest are factually guilty. 
-What is the proportion of innocent and guilty defendants 
-among all defendants? The expected proportion of guilty and innocent defendants on trial, out of all defendants, can be inferred from the density distribution $f(x)$ under certain assumptions. 
-Suppose each defendant is assigned a guilt probability based on the best and most complete evidence. 
- From the perspective of judges and jurors (or anyone who has access to the evidence and evaluates it the same way), $x\%$ of defendants who are assigned  $x\%$ guilt probability are expected to be guilty and $(1-x)\%$ innocent. For example, 85\% of defendants  who are assigned a 85\% guilt probability are expected to be guilty and 15\% innocent; 90\% of defendants  who are assigned a 90\% guilt probability are expected to be guilty and 10\% innocent; and so on.  
- 
-Consequently, the function $xf(x)$ describes the (expected) assignment  of guilt probabilities for guilty defendants, and similarly, $(1-x)f(x)$   the (expected) assignment of guilt probabilities for innocent defendants. Neither of these functions is a probability density, since $\int_0^1 \! xf(x) \, \mathrm{d}x=0.86$ and $\int_0^1 \! (1-x)f(x) \, \mathrm{d}x=0.14$. That is, 
-the total areas under the curve are, respectively, $.86$ and $.14$ (see graphs below).
- These numbers express the (expected) proportion of guilty and innocent defendants out of all defendants on trial, respectively 86\% and 14\%. 
- 
-The rates of incorrect decisions---false convictions and false acquittals or more generally false positives and false negatives---can be inferred from this model as a function of the threshold $t$ [@hamer2004, @hamer2014]. The integral $\int_0^t \! xf(x) \, \mathrm{d}x$ equals the expected rate of false acquittals, or in other words, the expected proportion of guilty defendants who fall below threshold $t$ (out of all  defendants), and the  integral $\int_t^1 \! (1-x)f(x) \, \mathrm{d}x$ equals the expected rate of false convictions, or in other words, the expected proportion of innocent defendants who fall above threshold $t$ (out of all defendants).
-The rates of correct decisions---true convictions and true acquittals or more generally true positives and true negatives---can be inferred in a similar manner. The integral $\int_t^1 \! xf(x) \, \mathrm{d}x$ equals the expected rate of true convictions and $\int_0^t \! (1-x)f(x) \, \mathrm{d}x$ the expected rate of true acquittals. In the figure below, the regions shaded in gray correspond to false negatives (false acquittals) and false positives (false convictions). The remaining white regions within the solid black curve correspond to true positives (true convictions) and true negatives (true acquittals). Note that the dotted blue curve is the original overall distribution for all defendants. 
+\bibitem[\protect\astroncite{Dawid}{1987}]{dawid1987difficulty}
+Dawid, A.~P. (1987).
+\newblock The difficulty about conjunction.
+\newblock {\em The Statistician}, pages 91--97.
 
-\begin{center}
-    \includegraphics[width=10cm]{xfx3.png}
-\end{center}
+\bibitem[\protect\astroncite{Enoch and Fisher}{2015}]{enoch2015sense}
+Enoch, D. and Fisher, T. (2015).
+\newblock Sense and sensitivity: Epistemic and instrumental approaches to
+  statistical evidence.
+\newblock {\em Stan. L. Rev.}, 67:557.
+
+\bibitem[\protect\astroncite{Finkelstein and
+  Levin}{2001}]{finkelstein2001statistics}
+Finkelstein, M.~O. and Levin, B. (2001).
+\newblock {\em Statistics for lawyers}.
+\newblock Springer.
+
+\bibitem[\protect\astroncite{Haack}{2014a}]{Haack2014-HAAEMS}
+Haack, S. (2014a).
+\newblock {\em Evidence Matters: Science, Proof, and Truth in the Law}.
+\newblock Cambridge University Press.
+
+\bibitem[\protect\astroncite{Haack}{2014b}]{haack2011legal}
+Haack, S. (2014b).
+\newblock Legal probabilism: an epistemological dissent.
+\newblock In {\em \cite{Haack2014-HAAEMS}}, pages 47--77.
+
+\bibitem[\protect\astroncite{Kaplan}{1968}]{kaplan1968decision}
+Kaplan, J. (1968).
+\newblock Decision theory and the factfinding process.
+\newblock {\em Stanford Law Review}, 20:1065--1092.
+
+\bibitem[\protect\astroncite{Kaplow}{2014}]{kaplow2014likelihood}
+Kaplow, L. (2014).
+\newblock Likelihood ratio tests and legal decision rules.
+\newblock {\em American Law and Economics Review}, 16(1):1--39.
+
+\bibitem[\protect\astroncite{Kaye}{1979}]{kaye1979paradox}
+Kaye, D. (1979).
+\newblock The paradox of the gatecrasher and other stories.
+\newblock {\em Arizona State Law Journal}, pages 101--110.
+
+\bibitem[\protect\astroncite{Kaye}{1986}]{kaye1986we}
+Kaye, D.~H. (1986).
+\newblock Do we need a calculus of weight to understand proof beyond a
+  reasonable doubt?
+\newblock {\em Boston University Law Review}, 66(3-4).
+
+\bibitem[\protect\astroncite{Lempert}{1977}]{lempert1977modeling}
+Lempert, R.~O. (1977).
+\newblock Modeling relevance.
+\newblock {\em Michigan Law Review}, 75:1021--1057.
+
+\bibitem[\protect\astroncite{Lucy}{2013}]{lucy2013introduction}
+Lucy, D. (2013).
+\newblock {\em Introduction to statistics for forensic scientists}.
+\newblock John Wiley \& Sons.
+
+\bibitem[\protect\astroncite{Miller}{2018}]{Miller2018}
+Miller, D. (2018).
+\newblock Cohen's criticisms of the use of probability in the law.
+\newblock Lecture at the {S}ixth {W}orld {C}ongress on {U}niversal {L}ogic,
+  Vichy.
+
+\bibitem[\protect\astroncite{Nesson}{1979}]{Nesson1979Reasonable-doub}
+Nesson, C.~R. (1979).
+\newblock Reasonable doubt and permissive inferences: The value of complexity.
+\newblock {\em Harvard Law Review}, 92(6):1187--1225.
+
+\bibitem[\protect\astroncite{Redmayne}{2008}]{redmayne2008exploring}
+Redmayne, M. (2008).
+\newblock Exploring the proof paradoxes.
+\newblock {\em Legal Theory}, 14(4):281--309.
+
+\bibitem[\protect\astroncite{Robertson
+  et~al.}{2016}]{robertson2016interpreting}
+Robertson, B., Vignaux, G., and Berger, C. (2016).
+\newblock {\em Interpreting evidence: evaluating forensic science in the
+  courtroom}.
+\newblock John Wiley \& Sons.
+
+\bibitem[\protect\astroncite{Simon and Mahan}{1970}]{simon1970quantifying}
+Simon, R.~J. and Mahan, L. (1970).
+\newblock Quantifying burdens of proof-a view from the bench, the jury, and the
+  classroom.
+\newblock {\em Law and Society Review}, 5(3):319--330.
+
+\bibitem[\protect\astroncite{Smith}{2017}]{smith2017does}
+Smith, M. (2017).
+\newblock When does evidence suffice for conviction?
+\newblock {\em Mind}.
+
+\bibitem[\protect\astroncite{Taroni et~al.}{2006}]{taroni2006bayesian}
+Taroni, F., Biedermann, A., Bozza, S., Garbolino, P., and Aitken, C. (2006).
+\newblock {\em Bayesian networks for probabilistic inference and decision
+  analysis in forensic science}.
+\newblock John Wiley \& Sons.
+
+\bibitem[\protect\astroncite{Tillers and Green}{1988}]{tillers1988probability}
+Tillers, P. and Green, E.~D., editors (1988).
+\newblock {\em Probability and Inference in the Law of Evidence. The Uses and
+  Limits of Bayesianism}, volume 109 of {\em Boston studies in the philosophy
+  of science}.
+\newblock Springer.
+
+\bibitem[\protect\astroncite{Tribe}{1971a}]{tribe1970further}
+Tribe, L.~H. (1971a).
+\newblock A further critique of mathematical proof.
+\newblock {\em Harvard Law Review}, 84:1810--1820.
+
+\bibitem[\protect\astroncite{Urbaniak}{2018}]{urbaniak2018narration}
+Urbaniak, R. (2018).
+\newblock Narration in judiciary fact-finding: a probabilistic explication.
+\newblock {\em Artificial Intelligence and Law}, 26(4):345-376.
+
+\bibitem[\protect\astroncite{Tribe}{1971b}]{tribe1971trial}
+Tribe, L.~H. (1971b).
+\newblock Trial by mathematics: Precision and ritual in the legal process.
+\newblock {\em Harvard Law Review}, 84(6):1329--1393.
 
 
-\begin{center}
-    \includegraphics[width=10cm]{nxfx3.png}
-\end{center}
+
+\bibitem[\protect\astroncite{Wells}{1992}]{wells1992naked}
+Wells, G. (1992).
+\newblock Naked statistical evidence of liability: Is subjective probability
+  enough?
+\newblock {\em Journal of Personality and Social Psychology}, 62(5):739--752.
+
+\end{thebibliography}
 
 
-The size of the grey regions in the figures above---which correspond to false positives and false negatives---is affected by the location of threshold $t$. As $t$ moves upwards, the rate of false positives decreases but the rate of false negatives increases. Conversely, as $t$ moves downwards, the rate of false positives increases but the rate of false negatives decreases. This trade-off is inescapable so long as the underlying distribution is fixed. Below are both error rates---false positives and false negatives---and their sum plotted against a choice of $t$, while holding fixed the   ensity function $\textsf{binom(18,3)}$.
-The graph shows that any threshold that is no greater than 50\% would minimize the total error rate (comprising false positives and false negatives). A more stringent threshold, say $>90\%$, would instead  significantly reduce the rate of false positives but also significantly increase the rate of false negatives, es expected. 
-
-\begin{center}
-    \includegraphics[width=12cm]{errors.png}
-\end{center}
- 
-In general, the threshold that minimizes the expected rate of incorrect decisions overall, no matter the underlying distribution, lies at $50\%$. The claim that setting threshold at $t=.5$ minimizes the expected error rate for any  underlying distribution of $x$ is general and holds for $t=.5$ only. It holds given the distribution $f(x)=$beta(18,3) as well as any other distribution 
-[@kaye1982limits, @Kaye1999clarifying, @cheng2015]. To show this, 
-let $E(t)$ as a function of threshold $t$ 
-be the sum of  rates of  false positive and false negative decisions:
-
-\[E(t) = \int_0^t \! x f(x) \, \mathrm{d}x + \int_t^1 \! (1-x) f(x) \, \mathrm{d}x.
-\]
-
- The overall rate of error is minimized when  $E(t)$ is the lowest. To determine the value of $t$ for which $E(t)$ is the lowest, set
-the derivative of $E(t)$ %and $R(t)$ 
-to zero, that is, $\frac{d}{dt}  E(t)= 0$. 
-By calculus, 
-$t=1/2$.\footnote{Note that $\frac{d}{dt}  E(t)$ is the the sum of the derivatives of $\int_0^t \! x f(x) \, \mathrm{d}x$ 
-and 
-%$\int_t^1 \! x f(x) \, \mathrm{d}x$
-$\int_t^1 \!(1-x) f(x) \, \mathrm{d}x$, that is,
-
-\[\frac{d}{dt} E(t) = \frac{d}{dt}  \int_0^t \! x f(x) \, \mathrm{d}x + \frac{d}{dt}  \int_t^1 \! (1-x) f(x) \, \mathrm{d}x.\]
-
-By the fundamental theorem of calculus, 
-
-\[\frac{d}{dt}   \int_0^t \! x f(x) \, \mathrm{d}x = tf(t) \text{ and }
-\frac{d}{dt}   \int_t^1 \! (1-x) f(x) \, \mathrm{d}x = -(1-t)f(t). \]
-
-By plugging in the values, 
-
-\[\frac{d}{dt}  E(t) = tf(t)  -(1-t)f(t). \]
-
-Since $\frac{d}{dt}  E(t)= 0$, then $tf(t)  = (1-t)f(t)$
-and thus
-$t  = 1-t$, so 
-$t  = 1/2$ or a $>50\%$ threshold.
-} 
-
-So a threshold of 50\% is the 
-one that minimizes the aggregate 
-rate of erroneous decisions. 
-
-This claims holds when the two decisional errors are assigned the same weight, or in other words, the costs of false positives and false negatives are  symmetric. The $>50\%$ threshold therefore should be most suitable for civil trials. In criminal trials, however, false convictions are typically considered significantly more costly than false acquittals, say a cost ratio of 9:1 [but see @epps2015]. The sum of the two error rates can be weighted by their respective costs:
-
-
-\[E(t) = \int_0^t \! x f(x) \, \mathrm{d}x + 9\int_t^1 \! (1-x) f(x) \, \mathrm{d}x.\]
-
-Given a cost ratio of 9:1, the optimal threshold that minimizes the (weighted) overall rate of error is no longer $1/2$, but rather, $t=9/10=90\%$.\footnote{The proof is the same as before. Since $tf(t)  = 9(1-t)f(t)$, it follows that $t  = 9/10$.} 
-Whenever the decision threshold is more stringent than $>50\%$, the overall (unweighted) error minimization may be sacrificed to pursue other goals, for example, protecting more innocents against mistaken convictions, even at the cost of making a larger number of mistaken trial decisions overall. 
-
-## Expected errors and actual errors
-
-The standard `proof beyond a reasonable doubt' is often paired with the Blackstone ratio, the principle that it is better that ten guilty defendants go free rather than even just one innocent be convicted. The exact ratio is a matter of controversy [@voloch1997]. It is tempting to think that, say, a 99\% threshold guarantees a 1:99 ratio between false convictions and false acquittals. But this would be hasty for at least two reasons.
-First, probabilistic thresholds affect the expected rate of mistaken decisions. The actual rate may deviate from its expected value [@Kaye1999clarifying]. Second, if the threshold is $99\%$, \textit{at most} 1\% of decision against defendants are expected to be mistaken (false convictions) and \textit{at most} 99\% of the decisions in favor of the defendant are expected to be mistaken (false acquittals). The exact ratio will depend on the probabilities  assigned to defendants and how they are distributed  [@allen2014]. The (expected) rate of false positives and false negatives---and thus their ratio---depend on where the threshold is located but also on the distribution of the liability probability  as given by the density function $f(x)$.
-
-## Minimizing mistaken decisions 
-
-
-# Conclusion
-
-# References
-
-
-
-
-
-
-
-
-
-
-
- 
+\end{document}
