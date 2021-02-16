@@ -127,7 +127,7 @@
 \newcommand{\ko}[1]{\forall  #1\,}
 \newcommand{\ro}{\leftrightarrow}
 \newcommand{\exi}[1]{\exists\, {_{#1}}}
-\newcommand{\pr}{\mathsf{P}}
+\newcommand{\pr}[1]{\mathsf{P}(#1)}
 \newcommand{\odds}{\mathsf{Odds}}
 \newcommand{\ind}{\mathsf{Ind}}
 \newcommand{\nf}[2]{\nicefrac{#1\,}{#2}}
@@ -790,16 +790,23 @@ proven unevenly. Neither seems desirable.
 
 \subsection{The likelihood strategy}\label{the-likelihood-strategy}
 
-\subsection{Comparative (Cheng)}\label{comparative-cheng}
+Here is one way to think about the decision thresholds in terms of
+likelihoods, stemming from (Cheng, 2012). The idea is to conceptualize
+juridical decisions in analogy to statistical hypothesis testing. We
+have two hypotheses under consideration: defendant's \(H_\Delta\) and
+plaintiff's \(H_\Pi\), and we are to pick one: \(D_\Delta\) stands for
+the decision for \(H_\Delta\) and \(D_\Pi\) is the decision that
+\(H_\Pi\). On this approach, rather than directly evaluating the
+probability of \(H_\Pi\) given the evidence and comparing it to a
+threshold, we compare the support that the evidence provides for these
+hypotheses, and decide for the one for which the evidence provides
+better support.
 
-Let us think about juridical decisions in analogy to statistical
-hypothesis testing. We have two hypotheses under consideration:
-defendant's \(H_\Delta\) and plaintiff's \(H_\Pi\), and we are to pick
-one: \(D_\Delta\) stands for the decision for \(H_\Delta\) and \(D_\Pi\)
-is the decision that \(H_\Pi\). If we are right, no costs result, but
-incorrect decisions have their price. Let us say that if the defendant
-is right and we find against them, the cost is \(c_1\), and if the
-plaintiff is right and we find against them, the cost is \(c_2\):
+Cheng motivates this approach by the following considerations. Suppose
+that if the decision is correct, no costs result, but incorrect
+decisions have their price. Let us say that if the defendant is right
+and we find against them, the cost is \(c_1\), and if the plaintiff is
+right and we find against them, the cost is \(c_2\):
 
 \begin{center}
 \begin{tabular}
@@ -814,27 +821,30 @@ plaintiff is right and we find against them, the cost is \(c_2\):
 \end{tabular}
 \end{center}
 
-\noindent Arguably, we need a decision rule which minimizes the expected
-cost. Say that given our total evidence \(E\) we have the corresponding
-probabilities:
+Intuitively, it seems that we want a decision rule which minimizes the
+expected cost. Say that given our total evidence \(E\) the relevant
+conditional probabilities are:
+
+\vspace{-6mm}
 
 \begin{align*}
 p_\Delta &= \pr{H_\Delta \vert E} \\
 p_\Pi & = \pr{H_\Pi \vert E}
 \end{align*}
 
-\noindent where \(\mathtt{P}\) stands for the prior probability (this
-will be the case throughout our discussion of Cheng). The expected costs
-for deciding that \(H_\Delta\) and \(H_\Pi\), respectively, are:
+\noindent The expected costs for deciding that \(H_\Delta\) and
+\(H_\Pi\), respectively, are:
 
 \begin{align*}
 E(D_\Delta) & = p_\Delta 0 + p_\Pi c_2 = c_2p_\Pi\\
 E(D_\Pi) & = p_\Delta c_1 + p_\Pi 0 = c_1 p_\Delta
 \end{align*}
 
-\noindent so, assuming that we are minimizing expected cost, we would
-like to choose \(H_\Pi\) just in case \(E(D_\Pi) < E(D_\Delta)\). This
-condition is equivalent to:
+\noindent For this reason, on these assumptions, we would like to choose
+\(H_\Pi\) just in case \(E(D_\Pi) < E(D_\Delta)\). This condition is
+equivalent to:
+
+\vspace{-6mm}
 
 \begin{align}
 \nonumber c_1p_\Delta &< c_2p_\Pi \\
@@ -842,14 +852,16 @@ condition is equivalent to:
 \label{eq:cheng_frac1}\frac{c_1}{c_2} & < \frac{p_\Pi}{p_\Delta}
 \end{align}
 
-\noindent [@cheng2012reconceptualizing: 1261] insists:
+\noindent Cheng (2012) (1261) insists:
 
 \begin{quote}
 At the same time, in a civil trial, the legal system expresses no preference between finding erroneously for the plaintiff (false positives) and finding erroneously for the defendant (false negatives). The costs $c_1$ and $c_2$ are thus equal\dots
 \end{quote}
 
-\noindent If we grant this assumption, \eqref{eq:cheng_frac1} reduces
-to:
+\noindent If we grant this assumption, \(c_1=c_2\),
+\eqref{eq:cheng_frac1} reduces to:
+
+\vspace{-6mm}
 
 \begin{align}
 \nonumber 1 &< \frac{p_\Pi}{p_\Delta} \\
@@ -858,37 +870,24 @@ to:
 
 \noindent That is, in standard civil litigation we are to find for the
 plaintiff just in case \(H_\Pi\) is more probable given the evidence
-than \(H_\Delta\), which doesn't seem like an insane
-conclusion.\footnote{Notice that this instruction is somewhat more general than the usual suggestion of the preponderance standard in civil litigation,  according to which the court should find for the plaintiff just in case $\pr{H_\Pi\vert E} >0.5$. This threshold, however, results from \eqref{eq:cheng_comp1} if it so happens that $H_\Delta$ is $\n H_\Pi$, that is, if the defendant's claim is simply the negation of the plaintiff's thesis.  By no means, Cheng argues, this is always the case: often the defendant offers a story which is much more than simply the denial of what the opposite side said.}
+than \(H_\Delta\), which seems
+plausible.\footnote{Notice that this instruction is somewhat more general than the usual suggestion of the preponderance standard in civil litigation,  according to which the court should find for the plaintiff just in case $\pr{H_\Pi\vert E} >0.5$. This threshold, however, results from \eqref{eq:cheng_comp1} if it so happens that $H_\Delta$ is $\n H_\Pi$, that is, if the defendant's claim is simply the negation of the plaintiff's thesis.  By no means, Cheng argues, this is always the case.}
+Let's call this decision standard
+\textbf{Relative Legal Probabilism (RLP)}.\footnote{We were not aware of any particular name for Cheng's model so we came up with this one. We're not particularly attached to it, and it is not standard terminology.}
 
-So on this approach, rather than directly evaluating the probability of
-\(H_\Pi\) given the evidence and comparing it to a threshold, we compare
-the support that the evidence provides for alternative hypotheses
-\(H_\Pi\) and \(H_\Delta\) (where, let's emphasize again, the latter
-doesn't have to be the negation of the former), and decide for the
-better supported one. Let's call this decision standard
-\textbf{Relative Legal Probabilism (RLP)}.\footnote{I was not aware of any particular name for Cheng's model so we came up with this one. We're not particularly attached to it, and it is not standard terminology.}
-
-\subsection{Likelihood ratio (Dawid, Kaplow,
-Sullivan)}\label{likelihood-ratio-dawid-kaplow-sullivan}
-
-\todo{I put Dawid here, but I don't think it makes sense to place it before we explain the conjunction problem, so think about moving it and move where appropriate.}
-
-One well-known attempt to handle DAC from the probabilistic perspective
-without any drastic changes to the probabilistic model is due to Dawid
-(1987). Here is how it proceeds (the considerations that follow apply to
-other sorts of uncertain evidence; we'll focus on witnesses for the sake
-of simplicity). Imagine the plaintiff produces two independent
-witnesses: \(W_A\) attesting to \(A\), and \(W_B\) attesting to \(B\).
-Say the witnesses are regarded as \(70\%\) reliable and \(A\) and \(B\)
-are probabilistically independent, so we infer \(\pr{A}=\pr{B}=0.7\) and
-\(\pr{A\et B}=0.7^2=0.49\).
+Here is a slightly different perspective, due to Dawid (1987), that also
+suggests that juridical decisions should be likelihood-based. The focus
+is on witnesses for the sake of simplicity. Imagine the plaintiff
+produces two independent witnesses: \(W_A\) attesting to \(A\), and
+\(W_B\) attesting to \(B\). Say the witnesses are regarded as \(70\%\)
+reliable and \(A\) and \(B\) are probabilistically independent, so we
+infer \(\pr{A}=\pr{B}=0.7\) and \(\pr{A\et B}=0.7^2=0.49\).
 
 But, Dawid argues, this is misleading, because to reach this result we
 misrepresented the reliability of the witnesses: \(70\%\) reliability of
-a witness, he continues, doesn't mean that if the witness testifies that
-\(A\) we should believe that \(\pr{A}=0.7\). To see his point, consider
-two potential testimonies:
+a witness, he continues, does not mean that if the witness testifies
+that \(A\), we should believe that \(\pr{A}=0.7\). To see his point,
+consider two potential testimonies:
 
 \begin{center}
 \begin{tabular}
@@ -906,7 +905,7 @@ we already have fairly strong convictions about the issues at hand. In
 general, how we should revise our beliefs in light of a testimony
 depends not only on the reliability of the witness, but also on our
 prior
-convictions.\footnote{An issue that Dawid does not bring up is the interplay between our priors and our assessment of the reliability of the witnesses. Clearly, our posterior assessment of the credibility of the witness who testified $A_2$ will be lower than that of the other witness. But a deeper discussion goes beyond the scope of this paper.}
+convictions.\footnote{An issue that Dawid does not bring up is the interplay between our priors and our assessment of the reliability of the witnesses. Clearly, our posterior assessment of the credibility of the witness who testified $A_2$ will be lower than that of the other witness.}
 And this is as it should be: as indicated by Bayes' Theorem, one and the
 same testimony with different priors might lead to different posterior
 probabilities.
@@ -931,6 +930,8 @@ interested in what our \emph{posterior} probability measure,
 \(\prp{\cdot}\), and posterior odds should then be. If we're to proceed
 with Bayesian updating, we should have:
 
+\vspace{-6mm}
+
 \begin{align*}
  \frac{\prp{A}}{\prp{\n A}} & = \frac{\prr{A\vert a}}{\prr{\n A\vert a}}
  =
@@ -941,28 +942,20 @@ with Bayesian updating, we should have:
 
 that is,
 
+\vspace{-6mm}
+
 \begin{align}
  \label{bayesodss2}
- O_{posterior}(A)& = O_{prior}(A\vert a) = \underbrace{LR_{prior}(a\vert A)}_{\mbox{\footnotesize conditional likelihood ratio}}\times \,\, O_{prior}(A)
+ O_{posterior}(A)& = O_{prior}(A\vert a) = \!\!\!\!\!  \!\!\!\!\!  \!\! \!\!  \underbrace{LR_{prior}(a\vert A)}_{\mbox{\footnotesize conditional likelihood ratio}}  \!\!\!\!\!   \!\!\!\!\!  \!\! \!\!   \times  O_{prior}(A)
  \end{align}
 
 The conditional likelihood ratio seems to be a much more direct measure
 of the value of \(a\), independent of our priors regarding \(A\) itself.
 In general, the posterior probability of an event will equal to the
 witness's reliability in the sense introduced above only if the prior is
-\(1/2\).
-
-\intermezzoa
-
-Dawid gives no general argument, but it is not too hard to give one. Let
-\(rel(a)=\pr{a\vert A}=\pr{\n a\vert \n A}\). We have in the background
-\(\pr{a\vert \n A}=1-\pr{\n a\vert \n A}=1-rel(a)\).
-
-We want to find the condition under which
-\(\pr{A\vert a} = \pr{a\vert A}\). Set \(\pr{A}=p\) and start with
-Bayes' Theorem and the law of total probability, and go from there:
-
-\begin{align*}
+\(1/2\).\footnote{Dawid gives no general argument, but it is not too hard to  give one. Let $rel(a)=\pr{a\vert A}=\pr{\n a\vert \n A}$. We have in the background $\pr{a\vert \n A}=1-\pr{\n a\vert \n A}=1-rel(a)$.
+ We want to find the condition under which $\pr{A\vert a} = \pr{a\vert A}$. Set $\pr{A}=p$ and  start with Bayes' Theorem and the law of total probability, and go from there:
+ \begin{align*}
  \pr{A\vert a}& = \pr{a\vert A}\\
  \frac{\pr{a\vert A}p}{\pr{a\vert A}p+\pr{a\vert \n A}(1-p)} &= \pr{a\vert A} \\
  \pr{a\vert A}p & = \pr{a\vert A}[\pr{a\vert A}p+\pr{a\vert \n A}(1-p)]\\
@@ -975,14 +968,63 @@ Bayes' Theorem and the law of total probability, and go from there:
  2p & = 1
  \end{align*}
 
-First we multiplied both sides by the denominator. Then we divided both
-sides by \(\pr{a\vert A}\) and multiplied on the right side. Then we
-used our background notation and information. Next, we manipulated the
-right-hand side algebraically and moved \(-p\) to the left-hand side.
-Move \(2rel(a)p\) to the left and manipulate the result algebraically to
-get to the last line.
+\noindent  First we multiplied both sides by the denominator. Then we divided both sides by $\pr{a\vert A}$ and multiplied on the right side. Then we used our background notation and information. Next, we manipulated the right-hand side algebraically and  moved  $-p$ to the left-hand side. Move $2rel(a)p$ to the left and manipulate the result algebraically to get to the last line.}
 
-\intermezzob
+Quite independently, a similar approach to juridical decisions has been
+proposed by Kaplow (2014) -- we'll call it
+\textbf{decision-theoretic legal probabilism (DTLP)}. It turns out that
+Cheng's suggestion is a particular case of this more general approach.
+Let \(LR(E)=\pr{E\vert H_\Pi}/\pr{E\vert H_\Delta}\). In whole
+generality, DTLP invites us to convict just in case \(LR(E)>LR^\star\),
+where \(LR^\star\) is some critical value of the likelihood ratio.
+
+Say we want to formulate the usual preponderance rule: convict iff
+\(\pr{H_\Pi\vert E}>0.5\), that is, iff
+\(\frac{\pr{H_\Pi\vert E}}{\pr{H_\Delta\vert E}}>1\). By Bayes' Theorem
+we have:
+
+\vspace{-6mm}
+
+\begin{align*}
+\frac{\pr{H_\Pi\vert E}}{\pr{H_\Delta\vert E}} =  \frac{\pr{H_\Pi}}{\pr{H_\Delta}}\times \frac{\pr{E\vert H_\Pi}}{\pr{E\vert H_\Delta}} &>1 \Leftrightarrow\\
+  \Leftrightarrow \frac{\pr{E\vert H_\Pi}}{\pr{E\vert H_\Delta}} &> \frac{\pr{H_\Delta}}{\pr{H_\Pi}} 
+ \end{align*}
+
+\noindent So, as expected, \(LR^\star\) is not unique and depends on
+priors. Analogous reformulations are available for thresholds other than
+\(0.5\).
+
+Kaplow's point is not that we can reformulate threshold decision rules
+in terms of priors-sensitive likelihood ratio thresholds. Rather, he
+insists, when we make a decision, we should factor in its consequences.
+Let \(G\) represent potential gain from correct conviction, and \(L\)
+stand for the potential loss resulting from mistaken conviction. Taking
+them into account, Kaplow suggests, we should convict if and only if:
+
+\vspace{-6mm}
+
+\begin{align}
+\label{eq:Kaplow_decision}
+\pr{H_\Pi\vert E}\times G > \pr{H_\Delta\vert E}\times L
+\end{align}
+
+\noindent Now, \eqref{eq:Kaplow_decision} is equivalent to:
+
+\vspace{-6mm}
+
+\begin{align}
+\nonumber
+\frac{\pr{H_\Pi \vert E}}{\pr{H_\Delta \vert E}} & > \frac{L}{G}\\
+\nonumber
+\frac{\pr{H_\Pi}}{\pr{H_\Delta}} \times \frac{\pr{E\vert H_\Pi}}{\pr{E\vert H_\Delta}} &> \frac{L}{G}\\
+\nonumber
+\frac{\pr{E\vert H_\Pi}}{\pr{E\vert H_\Delta}}  & > \frac{\pr{H_\Delta}}{\pr{H_\Pi}} \times \frac{L}{G}\\
+\label{eq:Kaplow_decision2} LR(E)  & > \frac{\pr{H_\Delta}}{\pr{H_\Pi}} \times \frac{L}{G}
+\end{align}
+
+\noindent This is the general format of Kaplow's decision standard.
+
+\subsection{Likelihood and DAC}\label{likelihood-and-dac}
 
 But how does our preference for the likelihood ratio as a measure of
 evidence strength relate to DAC? Let's go through Dawid's reasoning.
@@ -1201,60 +1243,12 @@ suggested, let's see whether it helps the probabilist handling of DAC.
 
 On RLP, at least in certain cases, the decision rule leads us to
 \eqref{eq:Cheng:compar2}, which tells us to decide the case based on
-whether the likelihood ratio is greater than 1. Quite independently,
-Kaplow (2014) suggested another approach to juridical decisions which
-focuses on likelihood ratios, of which Cheng's suggestion is only a
-particular
-case.\footnote{Again, the name of the view is by no means standard, it is  just a term I coined to refer to various types of legal probabilism in a fairly uniform manner.}
+whether the likelihood ratio is greater than 1.
+
+\footnote{Again, the name of the view is by no means standard, it is  just a term I coined to refer to various types of legal probabilism in a fairly uniform manner.}
 While Kaplow did not discuss DAC or the gatecrasher paradox, it is only
 fair to evaluate Kaplow's proposal from the perspective of these
 difficulties.
-
-Let \(LR(E)=\pr{E\vert H_\Pi}/\pr{E\vert H_\Delta}\). In whole
-generality, DTLP invites us to convict just in case \(LR(E)>LR^\star\),
-where \(LR^\star\) is some critical value of the likelihood ratio.
-
-Say we want to formulate the usual preponderance rule: convict iff
-\(\pr{H_\Pi\vert E}>0.5\), that is, iff
-\(\frac{\pr{H_\Pi\vert E}}{\pr{H_\Delta\vert E}}>1\). By Bayes' Theorem
-we have:
-
-\begin{align*}
-\frac{\pr{H_\Pi\vert E}}{\pr{H_\Delta\vert E}} =  \frac{\pr{H_\Pi}}{\pr{H_\Delta}}\times \frac{\pr{E\vert H_\Pi}}{\pr{E\vert H_\Delta}} &>1 \Leftrightarrow\\
-  \Leftrightarrow \frac{\pr{E\vert H_\Pi}}{\pr{E\vert H_\Delta}} &> \frac{\pr{H_\Delta}}{\pr{H_\Pi}} 
- \end{align*}
-
-\noindent So, as expected, \(LR^\star\) is not unique and depends on
-priors. Analogous reformulations are available for thresholds other than
-\(0.5\).
-
-However, Kaplow's point is not that we can reformulate threshold
-decision rules in terms of priors-sensitive likelihood ratio thresholds.
-Rather, he insists, when we make a decision, we should factor in its
-consequences. Let \(G\) represent potential gain from correct
-conviction, and \(L\) stand for the potential loss resulting from
-mistaken conviction. Taking them into account, Kaplow suggests, we
-should convict if and only if:
-
-\begin{align}
-\label{eq:Kaplow_decision}
-\pr{H_\Pi\vert E}\times G > \pr{H_\Delta\vert E}\times L
-\end{align}
-
-\noindent Now, \eqref{eq:Kaplow_decision} is equivalent to:
-
-\begin{align}
-\nonumber
-\frac{\pr{H_\Pi \vert E}}{\pr{H_\Delta \vert E}} & > \frac{L}{G}\\
-\nonumber
-\frac{\pr{H_\Pi}}{\pr{H_\Delta}} \times \frac{\pr{E\vert H_\Pi}}{\pr{E\vert H_\Delta}} &> \frac{L}{G}\\
-\nonumber
-\frac{\pr{E\vert H_\Pi}}{\pr{E\vert H_\Delta}}  & > \frac{\pr{H_\Delta}}{\pr{H_\Pi}} \times \frac{L}{G}\\
-\label{eq:Kaplow_decision2} LR(E)  & > \frac{\pr{H_\Delta}}{\pr{H_\Pi}} \times \frac{L}{G}
-\end{align}
-
-This is the general format of Kaplow's decision standard. Now, let us
-see how it fares when it comes to DAC and the gatecrasher paradox.
 
 Add here stuff from Marcello's Mind paper about the prisoner
 hypothetical. Then, discuss Rafal's critique of the likelihood ratio
