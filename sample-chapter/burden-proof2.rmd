@@ -95,108 +95,174 @@ have to say here.
 
 
 
-# Introduction
+
+<!-- # Introduction -->
 
 <!-- \todo{will need to embed and redo the illustrations once we agree which ones we keep.} -->
 
 
 
 
+
+
+# Introduction
+
+
+<!-- \label{subsec:legal-background} -->
+<!-- ## Burden of pleading, production and persuasion -->
+<!-- ## Proof standards in the law -->
+
 After the evidence has been presented, examined and cross-examined at trial, 
 trained judges or lay jurors must reach a decision. 
-The decision criterion is defined by law and consists of a standard of proof, 
-also called the burden of persuasion. So long as the evidence against the defendant 
-is sufficiently strong to meet the requisite proof standard, the defendant should be found liable. 
-This chapter begins with a description of standards of proof in the law, 
-then outlines different probabilistic approaches, discusses challanges to these approaches, 
-compares them with competing accounts in the literature. 
- 
- 
-<!-- # Legal Background -->
-<!-- \label{subsec:legal-background} -->
+The decision criterion is defined by law and consists of 
+a standard of proof, also called the burden of persuasion. So long 
+as the evidence against the defendant is sufficiently strong 
+to meet the requisite proof standard, the defendant should be found liable. 
 
-## Burden of pleading, production and persuasion
-## Proof standards in the law
+ 
 
 In criminal proceedings, the governing standard is 'proof beyond a reasonable doubt.' 
 If the decision makers are persuaded beyond a reasonable doubt that the defendant is guilty, 
 they should convict, or else they should acquit. In civil cases, the standard is 
-typically 'preponderance of the evidence'. 
-The latter is less demanding than the former, so the same body of evidence 
-may be enough to meet the preponderance standard, but not enough to meet the beyond a reasonable doubt standard. A vivid example of this difference is the 1995 trial of O.J. Simpson who was charged with murdering his wife. He was acquitted of the criminal charges, but when the family of the victim brought a lawsuit against him, they prevailed. O.J.\ Simpson did not kill his wife according to the beyond a reasonable doubt standard, but he did according to the preponderance standard. An intermediate standard, called 'clear and convincing evidence', is sometimes used for civil proceedings in which the decision is particularly weighty, for example, a decision whether someone should be committed to a hospital facility. 
+typically 'preponderance of the evidence'. The latter is less demanding than the former, so the same body of evidence may be enough to meet the preponderance standard, but not enough to meet the beyond a reasonable doubt standard. A vivid example of this difference is the 1995 trial of O.J. Simpson who was charged with murdering his wife. He was acquitted of the criminal charges, but when the family of the victim brought a lawsuit against him, they prevailed. O.J.\ Simpson did not kill his wife according to the beyond a reasonable doubt standard, but he did according to the preponderance standard. An intermediate standard, called 'clear and convincing evidence', is sometimes used for civil proceedings in which the decision is particularly weighty, for example, a decision whether someone should be committed to a hospital facility. 
 
 This tripartite distinction of proof standards---beyond a reasonable doubt; preponderance; clear and convincing evidence---is common in Anglo-american jurisprudence. It is not universal, however. 
 Different countries may use different standards. 
 France, for example, uses the standard of 'intimate conviction' 
 for both civil and criminal proceedings. Judges deciding cases 'must search their conscience in good
 faith and silently and thoughtfully ask themselves what impression the evidence
-given against the accused and the defence's arguments have made upon them' (French Code of Criminal Procedure, art.\ 353). German law is similar. 
-Germany's Code of Civil Procedure, Sec.\ 286, states that 'it is for the court to decide, based on its personal conviction, whether a factual claim is indeed true or not.'
+given against the accused and the defence's arguments have made upon them' (French Code of Criminal Procedure, art.\ 353). German law is similar. Germany's Code of Civil Procedure, Sec.\ 286, states that 'it is for the court to decide, based on its personal conviction, whether a factual claim is indeed true or not.'
 
 How to define standards of proof, or whether they should be even defined in the first place, remains  contentious [@diamond90; @newman1993; @Horowitz1996; @laudan2006truth; @walen2015]. Judicial opinions offer different paraphrases, sometimes conflicting, of what these standards mean. The meaning of `proof beyond a reasonable doubt' 
 is the most controversial. It has been equated to 'moral certainty' 
 or 'abiding conviction'  (Commonwealth v. Webster, 59 Mass. 295, 320, 1850) or to 'proof of such a convincing character that a reasonable person would not hesitate to rely and act upon it in the most important of his own affairs' (US Federal Jury Practice and Instructions, 12.10, at 354, 4th ed.\ 1987). But courts have also cautioned that there is no need to define the term because 'jurors know what is reasonable and are quite familiar with the meaning of doubt' and attempts to define it only 'muddy the water' (U.S. v. Glass, 846 F.2d 386, 1988).
 
-Probability theory can bring conceptual clarity 
-to an otherwise heterogeneous legal doctrine, 
-or at least this is the position of legal probabilists.
+We will not survey the extensive legal literature 
+and case law about proof standards. We will examine, instead, 
+whether or not probability theory can bring conceptual clarity 
+to an otherwise heterogeneous legal doctrine. This chapter outlines 
+different probabilistic approaches, formulate 
+the most common challanges to these approaches, 
+and offer a numbere of responses from the perspective of legal probabilism.
+The legal and philosophical 
+literature have focused on the theoretical and analytical difficilties. We will 
+do the same in this chapter. We will focus on two key theoretical difficulties that have galvanized the philosophical and legal literature in evidence law in the last thirty years: the problem of naked statistical evidence and the conjunction paradox. These problems have benn formulated  
+ quite some time ago by @Cohen1977The-probable-an.
+ One reason to choose these two in particular 
+ is that it would be desirable if we could handle basic 
+ conceptual difficulties  before we move to more complex issues or even questions 
+of practical implementation.  
+
+# Probability thresholds
 
 
-# Posterior probability thresholds
-
-
-Imagine you are a trier of fact in a legal proceeding in which the defendant's guilt is identified as equivalent to a certain factual statement $G$ and that somehow you succeeded in properly evaluating $\pr{G\vert E}$ -- the probability of $G$ given the total evidence presented to you, $E$ (and perhaps some other relevant probabilities). For various reasons, some of which  will be mentioned soon, this is an idealized situation. One question that arises in such a situation is: \emph{when should you decide against the defendant? when is the evidence good enough?} 
-
-What we are after here is a condition $\Psi$, formulated in (primarily) probabilistic terms, such that the trier of fact, at least ideally, should accept any relevant claim (including $G$) just in case $\Psi(A,E)$. The requirement that the condition should apply to any relevant claim whatsoever (and not just a selected claim, such as $G$) will be called the \textbf{equal treatment requirement}.\footnote{The requirement is not explicitly mentioned in the discussion, but it is tacitly assumed, so it is useful to have a name for it. Moreover, it will turn out crucial when it comes to finding a resolution of the difficulties, but further details need to wait till the last section of this paper.}
-
-For instance, one straightforward attempt might be to say: convict if $\pr{G\vert E}$ is above a certain threshold, otherwise acquit. From this perspective, whether assessment of facts leading to conviction is justified is a matter of whether the factual statement corresponding to guilt is sufficiently probable given the evidence. 
-
-As it turns out, the idea that such a probabilistic explication $\Psi$ can be given  does not play nicely with some other desiderata that we might want to put forward for what a rational trier of fact should think about facts and evidence.
-
- A large-scale attack on probabilistic approach to legal decisions has been  launched quite some time ago by @Cohen1977The-probable-an, and some of the  developments in probabilistic evidence scholarship are to some extent  a reaction to some of Cohen's objections.  My goal here is to focus on two of them -- the \textbf{difficulty about conjunction} and the \textbf{gatecrasher paradox}. They correspond to two requirements. One, that $\Psi$ should be such that for any relevant $A$ and $B$ there should be no difference between the trier's acceptance $A$ and $B$ separately, and her acceptance of their conjunction, $A\wedge B$, that is, that $\Psi(A,E)$ and $\Psi(B,E)$ just in case $\Psi(A\wedge B,E)$. Two, that any such explication should help us make sense of cases in which  the probability of guilt given the evidence is high, and yet, conviction is not justified. 
-
- I will argue argue that even most recent proposals of what such a $\Psi$ should be have failed to address these difficulties.  This, however, does not mean that I side with Cohen and claim that thinking of evidence in legal context in terms of probabilities is doomed. Quite the contrary: probabilistic tools are highly useful, and their utility can be increased (and defended) by addressing Cohen's concerns properly. In this paper, however, I leave this positive task for a later occasion, restricting myself to a negative task of showing that legal probabilism so far has not reached this stage. 
-
-
-
-
-
-To avoid setting the bar too high, let me get clear on what, on the present approach, a successful probabilistic model is \emph{not} required to achieve. Namely, I am  putting aside most of the issues that have to do with practicality.\footnote{My impression is that with a few exceptions, most of the arguments about legal probabilism in the early stage of the debate were concerned mostly with practicality. See   [@ball1960moment; @kaplan1968decision; @cullison1969probability; @simon1970quantifying;  @tribe1971trial; @tribe1970further; @lempert1977modeling @kaye1979paradox; @tillers1988probability].}  I will not be concerned with the lack of real data to support certain probability assessment, I will not be concerned with people being bad at reasoning about probabilities, etc. Basically, I will not be concerned with those practical issues that would arise if one would like to deploy a probabilistic model directly, by writing down numerical values for all the probabilities relevant in a given case and simply calculating the probability of guilt. I will simply grant that at least for now,  successful deployments of  this type  are not viable.
-
-This, however, does not mean that developing a general probabilistic model is pointless. There are multiple ways in which such a model, even if unfit for direct deployment, could be useful.  Once we have a probabilistic model, a vast array of mathematical results pertaining to probability can be used to deepen our understanding of the rationality of legal decisions. If at least in abstraction  adequate, the model  could be useful for diagnosing various types of biases that humans are susceptible to in such contexts; it could be useful as a measuring stick against which various qualitative inference patterns are assessed, and it could be useful as a source of insights about various aspects of legal decisions and evidence presentation methods. Just as understanding physics might be useful for deepening our understanding of how things work, and for building things or moving them around without performing direct exact calculations, a general probabilistic model -- again, if adequate -- could help us get better at understanding and  making legal decisions without its direct deployment in practice.  
-
-
-
-Just because I put strong practicality requirements aside, it does not mean that I put no constraints on the probabilistic model to be developed. While \emph{sufficient} conditions of adequacy of such a model are somewhat hard to explicate and I will not get into a deeper discussion thereof, there is at least a fairly clear \emph{necessary} condition. A successful probabilistic model should either avoid or explain away what seem to be important conceptual difficulties that it runs into. And this is what I will be focusing on in this paper: investigating whether available probabilistic models of legal decision standards avoid or explain away the conceptual difficulties that -- it seems -- they should be able to handle. In particular, I will focus on two pieces of paradoxical flavor, the \textbf{difficulty about conjunction (DAC)} and the \textbf{paradox of the gatecrasher}.
-
- One reason to choose these two is that they are easy to explain: and it would be nice if we could handle basic conceptual difficulties  before we move to more complex issues. Another reason is that in some variant or another, these have been widely discussed in literature. DAC has a very close cousin named the lottery paradox, which occupied the minds of many, and the gatecrasher paradox and related thought experiments and real cases have been extensively discussed by philosophers trying to identify the factor that makes naked statistical evidence actionable. 
- 
- 
- 
-
-Let us start with a very general assumption that all the approaches that will be discussed in what follows share; we will call it \emph{Legal Probabilism} (LP). It   is the view that the legal notion of probability is to be governed by the  mathematical principles of  probability theory, and that the decision process in juridical fact-finding is to be explicated by means of probabilistic tools.  LP is fairly general: it does not tell us \emph{ how exactly } the decision standards are to be explicated in probabilistic terms, it only tells us that somehow they should. 
-
-
-
-##  (Kaplan, Kaye, etc.)
+Imagine you are a trier of fact -- say a judge or a juror -- who is expected 
+to make a decision about the guilt of a defedant facing criminal charges.
+For vividness, suppose the charge is that 
+the defedant caused the victim's death with premeditation.
+As a trier of fact, the question you are confronted with is, 
+does the evidence presented 
+at trial, all things considered, prove guilt beyond a reasonable doubt?
 
 Legal probabilists have proposed to interpret proof beyond a reasonable 
-doubt as the requirement that the defendant's probability of guilt, given the evidence presented at trial, meet a threshold, say, >95\%. Variations of this view are common  [see @Bernoulli1713Ars-conjectandi; @Laplace1814,  @Kaplan1968decision; @Dekay1996; @kaye79; @laudan2006truth]. This interpretation is, in some respects, plausible.
+doubt as the requirement that the defendant's probability of guilt, given the evidence presented at trial, meet a threshold [see @Bernoulli1713Ars-conjectandi; @Laplace1814;  @Kaplan1968decision; @Dekay1996; @kaye79; @laudan2006truth]. In other words, so long as the guilt of the defendant is established 
+with a sufficiently high probability, say 95\%, guilt is 
+proven beyond a reasonable doubt and the defendant should be convicted. If the 
+probability of guilt does not reach the threshold,  the defendant should be 
+acquitted.  This intepretation can be spelled out more formally using 
+conditional probabilities. That is, a body of evidence $E$ establishes 
+guilt $G$ beyond a reasonable doubt if and only if 
+$\pr{G\vert E}$ is above a threshold. 
+From this perspective, a conviction 
+is justified whenever guilt is sufficiently 
+probable given the evidence. 
+
+This interpretation is, in some respects, plausible.
 From a legal standpoint, the requirement that guilt be established with high probability, still short of 100\%, accords with the  principle that proof beyond a reasonable doubt is the most stringent standard of all but 
 at the same time 'does not involve proof to an absolute certainty' and thus 
 'it is not proof beyond any doubt' (R v Lifchus, 1997, 3 SCR 320, 335).
 That this intepretation is quite natural is further 
 attested by the fact that the probabilistic interpretation 
 is taken for granted in psychological studies about people's understanding of proof beyond a reasonable doubt [@dhamiEtAl2015]. This research examines whether
-people use a 75\% or 95\% threshold, and does not question 
+people use a 75\% or 95\% threshold, but does not question 
 whether the standard functions as a probabilistic threshold.
 
 Reliance on probabilistic ideas is even more explicit in the standard 'preponderance of the evidence'---also called 'balance of probabilities'---which governs decisions in civil disputes. This standard can be interpreted as the requirement that the plaintiff---the party making the complaint against the defendant---establish its version of the facts with greater than 50\% probability. The 50\% threshold, as opposed to a more stringent threshold of 95\% for criminal cases, reflects the fact that  preponderance is less demanding than proof beyond a reasonable doubt. The intermediate standard 'clear and convincing evidence' is more stringent than the preponderance standard but not as stringent as the beyond a reasonable doubt standard. Since it lies in between the other two, it can be interpreted as the requirement that the plaintiff establish its versions of the facts with, say, 75-80\% probability.
 
+<!--
+the defendant's guilt is identified as equivalent to a certain factual statement $G$ and that somehow you succeeded in properly evaluating $\pr{G\vert E}$ -- the probability of $G$ given the total evidence presented to you, $E$ (and perhaps some other relevant probabilities). For various reasons, some of which  will be mentioned soon, this is an idealized situation. One question that arises in such a situation is: \emph{when should you decide against the defendant? when is the evidence good enough?} 
+-->
+
+<!--
+What we are after here is a condition or set of conditions $\Psi$, formulated in (primarily) probabilistic terms, 
+such that the trier of fact, at least ideally, should accept any relevant claim (including $G$) just in case $\Psi(A,E)$. The requirement that the condition should apply to any relevant claim whatsoever (and not just a selected claim, such as $G$) will be called the \textbf{equal treatment requirement}.\footnote{The requirement is not explicitly mentioned in the discussion, but it is tacitly assumed, so it is useful to have a name for it. Moreover, it will turn out crucial when it comes to finding a resolution of the difficulties, but further details need to wait till the last section of this paper.}
+-->
+
+# Practical difficulties 
+
+When appellate courts have examined the question whether standards of proof can be quantified using probabilities, they have often answered in the negative. One of the clearest opposition to quantification was formulated by Germany's Supreme Court, the Federal Court of Justice, in the case of Anna Anderson who claimed to be a descendant of the Tsar family. In 1967, the Regional Court of Hamburg ruled that Anderson failed to present sufficient evidence to establish that she was Grand Duchess Anastasia Nikolayevna, the youngest daughter of Tsar Nicholas II, who allegedly escaped the murder of the Tsar family by the Bolsheviks in 1918. (Incidentally, DNA testing later demonstrated that Anna Anderson had no relationship with the Tsar family.) 
+Anderson appealed to Germany's Federal Court, complaining that the Regional Court had set too demanding a proof standard. Siding with the lower court, the Federal Court made clear that '[t]he law does not presuppose a belief free of all doubts', thus recognizing the inevitable fallibility of trial decisions. The Court warned, however, that it would be 'wrong' to think that a trial decision could rest on 'a probability bordering on certainty' (Federal Court of Justice, February 17, 1970; III ZR 139/67). This decision is all the more remarkable as it applies to a civil case. It semes as though the German court did not think trial decisions could rest on a probability, howevere high it may be. Along similar lines, 
+[@buchak2014belief] notes that an attribution of criminal culpability is an ascription of blame and such an ascription should require a full belief in someone's guilt, not just a probabilistic belief, however strong.
+One is left wondering, though. If a high probability of guilt short of 100\% isn't enough but absolute certainty cannot be required either, how else could the standard of proof be met? The question becomes more pressing in civil cases. Anticipating this worry, Germany's Federal Court in the Anderson case endorsed a conception of proof standards that echoed how U.S. courts describe proof beyond a reasonable doubt. 
+The Federal Court wrote that a judge's decision must satisfy
+'a degree of certainty which is useful for practical life and which makes the doubts silent without completely excluding them' (Federal Court of Justice, February 17, 1970; III ZR 139/67).  
+
+Besides resistance from legal practitioners, 
+the probabilistic interpretation of proof standards
+faces practical challanges.\footnote{With a few exceptions, most of the arguments about legal probabilism in the early stage of the debate were concerned mostly with practicality. See   [@ball1960moment; @kaplan1968decision; @cullison1969probability; @simon1970quantifying;  @tribe1971trial; @tribe1970further; @lempert1977modeling @kaye1979paradox; @tillers1988probability].} How are probabilities going to be estimated? How will triers of facts apply probabilistic standards? Should the application of the thresholds be mechanic -- that is, if the evidence is above the requisite threshold, find against the defedant (say, convict in a criminal trial) and if not,  find for the defedant (say, acquit)? More generally, the challenge is how 
+probabilistic thresholds will be operationalized as part of trial decisions.
+This is by no means clear. After all, judges or jurors do not necessarily 
+assess evidence in a probabilistic way and do not use 
+probability thresholds as the standard for their decisions. 
+
+There is no doubt that probabilistic thresholds constitute a 
+revisionist theory. 
+If they are to be implemented in trial proceedings, they 
+will require changes. Jurors and judges will have to become 
+familiar with probabilistic ideas. They will have to assess 
+the strength of the evidence numerically, 
+even for evidence that is not, on its face, quantitative in nature. 
+This transformation, even if feasible and realistic, could have side negative 
+effects. For example, an application of numerical thresholds as decision criteria 
+might undermine the role of judges and jurors. As [@tribe71] put it, 'induced by the persuasive force of formulas and the precision of  decimal  points  to  perceive  themselves  as  performing  a  largely mechanical and automatic  role, few jurors \dots could be relied upon to recall, let alone to perform, [their] humanizing function.' Are legal probabilists envisioning a trial system in which 'probabiistic machines' 
+take decision instead of human beings?
+ 
+ These practical challanges and worries about implementation 
+ have no easy answer. To avoid setting the bar too high, let's set these worries aside. 
+ We will not be concerned with the lack of real data to support certain probability assessment. 
+ We will not be concerned with people being bad at reasoning about probabilities. Etc. We will not be concerned with practical issues that would arise if one would like to deploy a probabilistic model directly. We will grant that, at least for now, successful deployments of  this type  are not viable. For the time being, 
+ probabilistic thresholds 
+ are perhaps best understood as offerring an 
+ analytical model of how trial decisions are made. The fact that this model cannot be easily operationalized does not mean it is pointelss. There are multiple ways in which such a model, even if unfit for direct deployment in trial proceedings, could be useful and offer insight into trial decision-making. 
+ 
+<!-- Once we have a probabilistic model, a vast array of mathematical results pertaining to probability can be used to deepen our understanding of the rationality of legal decisions. If at least in abstraction  adequate, the model  could be useful for diagnosing various types of biases that humans are susceptible to in such contexts; it could be useful as a measuring stick against which various qualitative inference patterns are assessed, and it could be useful as a source of insights about various aspects of legal decisions and evidence presentation methods. Just as understanding physics might be useful for deepening our understanding of how things work, and for building things or moving them around without performing direct exact calculations, a general probabilistic model -- again, if adequate -- could help us get better at understanding and  making legal decisions without its direct deployment in practice.  
+-->
+
+Here is an illustration of the analytic power of the probabilistic interpretation 
+of proof standards. Intuitvely, standards of proof are arranged from the least demanding (preponderance of the evidece) to the most demanding (proof beyond a reasonable doubt). But why think this way?
+Exected utility theory explains why the choice of a threshold -- say 95\% in criminal cases and 50\% in civil cases -- is well-justified [@kaye1986we]. Say the probability of guilt in a criminal case (or the probability of civil liability in a civil case) is $p$. Trial decisions could be factually 
+mistaken in two ways. The decision could be a false positive, a decision to find agaiinst the defedant even though the defedan committed no wrong (or no crime in a criminal case). 
+The decision could be a false negative, a decision to finds in favor of the defedant (xcuit in a crimina case) even thioiugh the defedant did committ the wrong or crime. Say teh cost of a false positive is
+$c_{fp}$ and the costs of a falsev negative is $c_{fn}$. Expected utiloty theory says that one should take the action that maxmizes expected utility or minimizes expected costs. So the action `find against the defedant' (`convict' in a criminal case) is justified if and only if the expected costs of a false positive is less than 
+the expected cost of a false negative. 
 
 
-
-
+The disutility of finding for the defendant $d_g$, and the disutility of convicting an innocent person is $d_i$. From the perspective of minimalization of expected disutility, we would like to convict, or find for the plaintiff, just in case the expected disutility of mistaken acquittal is greater than the expected disutility of incorrect conviction:
+\begin{align*}
+p d_g &> (1-p)  d_i
+\end{align*}
+\noindent Now, solving for $p$ gives us:
+\begin{align*}
+p d_g &> d_i - p d_i\\
+p d_g + pd_i & > d_i \\
+p(d_g+d_i)&>d_i\\
+p & > \frac{d_i}{d_g+d_i}
+\end{align*}
+\noindent So, as long as you can quantify these disutilities,  the probability threshold can be determined. But since I want to focus on probabilistic considerations, I will not pursue this discussion.
+ 
+ 
+ 
+Thresholds, however, can vary depending on the costs and benefits at stake in each case (see later discussion). So they need not be applied mechanically without considering the individual circumstances (CITE Hedden and Colyvan, 2019). Furthermore, if jurors are numerically literate, they should not lose sight of their humanizing function as they would no longer be intimated by numbers. So the force of the objection underscores the need to ensure that jurors are numerically literate, not to dispense with numerical thresholds altogether. 
 
 
 LP comes in various shapes. It is one thing to say that the standards of juridical proof are to be explicated in probabilistic terms, it is another to provide such an explication. The threshold-based legal probabilism has it that once the probability of guilt (or, to be more precise, the factual statement that according to law is equivalent to guilt) given the total evidence available is assessed, conviction is justified just in case this probability is above a certain threshold.\footnote{In the Anglo-Saxon tradition there is a distinction between decision standards in civil and in criminal cases. In the former,  decision is to be made on the preponderance of probability, and in criminal cases, the guilt statement is supposed to be beyond reasonable doubt. Assuming these are to be modeled by probability thresholds different from 1, there is no essential difference here as far as the conceptual difficulties to be discussed in this paper are involved.}
@@ -218,66 +284,21 @@ A slightly weaker (and  perhaps more common among evidence scholars)  variant of
  \end{center}
 
 
-Before we move to the discussion of the two key difficulties that we will be interested in, let me briefly mention one issue about TLP that I will not  be concerned with. A careful reader might already have the following complaint: \emph{if you are saying that there is a conviction probability threshold, what exactly is it and why?} And indeed, it seems quite difficult to point to any particular choice of value and argue that the choice is not  to a large extent arbitrary. 
-
-One reason why I will not be concerned with this problem is that this is an issue that seems to pertain to TLP only, while I would like to focus on problems that seem to be more general.
-
-Another reason is that once decision-theoretic tools are allowed, there might be reasons to think that the choice of threshold is not that arbitrary [@kaye1986we]. Say  the probability of guilt (or responsibility) is $p$, the disutility of acquitting a guilty person is $d_g$, and the disutility of convicting an innocent person is $d_i$. From the perspective of minimalization of expected disutility, we would like to convict, or find for the plaintiff, just in case the expected disutility of mistaken acquittal is greater than the expected disutility of incorrect conviction:
-\begin{align*}
-p d_g &> (1-p)  d_i
-\end{align*}
-\noindent Now, solving for $p$ gives us:
-\begin{align*}
-p d_g &> d_i - p d_i\\
-p d_g + pd_i & > d_i \\
-p(d_g+d_i)&>d_i\\
-p & > \frac{d_i}{d_g+d_i}
-\end{align*}
-\noindent So, as long as you can quantify these disutilities,  the probability threshold can be determined. But since I want to focus on probabilistic considerations, I will not pursue this discussion.
-
-Finally, as practice (such as conviction decisions based on DNA identification) indicates, there are probabilities of guilt clearly considered high enough for conviction, and there are ones which clearly are not high enough for conviction. Perhaps, there are some borderline cases, but these are not too many. From this perspective, the phrase \emph{probability of guilt sufficient for conviction} can be argued to be vague, but the vagueness does not  seem too damaging in practice (at least, not more than the vagueness that is already there, even without probabilistic tools). Moreover, it is a rather common practice to theorize about notions which in practice are somewhat vague using idealized mathematical tools which do not tolerate vagueness. As long as the results obtained hold independently of any particular choice of the precisification of a given vague notion, the initial vagueness is not a deep obstacle to the utility of these theoretical considerations. 
-
-
-Now that we know what the first explication is, let us move to the first of the two conceptual difficulties that we actually will be concerned with -- the difficulty about conjunction.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ## Interval thresholds (Finkelstein)
 
 The prior probability cannot be easily determined [@Friedman2000presumption]. Even if it can be determined, arriving at a posterior probability might be impractical because of lack of adequate quantitative information. Perhaps, decision thresholds should not rely on a unique posterior  probability but on an interval of admissible probabilities given the evidence [@finkelstein1970bayesian].  Perhaps, the assessment of the posterior probability of guilt can be viewed as an idealized process, a regulative ideal which can improve the precision of legal reasoning. (CITE BIEDERMAN TARONI).
 
 
 
-# Challenges
+# Theoretical challenges
 
-## Practical and descriptive challenges
 
-Some worry that a mechanical application of numerical thresholds would undermine the humanizing function of trial decision-making. As [@tribe71] put it, 'induced by the persuasive force of formulas and the precision of  decimal  points  to  perceive  themselves  as  performing  a  largely mechanical and automatic  role, few jurors \dots could be relied upon to recall, let alone to perform, [their] humanizing function.' 
- Thresholds, however, can vary depending on the costs and benefits at stake in each case (see later discussion). So they need not be applied mechanically without considering the individual circumstances (CITE Hedden and Colyvan, 2019). Furthermore, if jurors are numerically literate, they should not lose sight of their humanizing function as they would no longer be intimated by numbers. So the force of the objection underscores the need to ensure that jurors are numerically literate, not to dispense with numerical thresholds altogether. 
+Another set of problems for a probabikistic intepretation 
+of proof standards are analytical and theoretical. Even if the practical problems can 
+be overcome, theoretical difficulties remain. We will focus on two in particular: naked statistical evidence and the difficulty with conjunction. 
 
-When appellate courts have examined the question whether standards of proof can be quantified using probabilities, they have often answered in the negative. One of the clearest opposition to quantification was formulated by Germany's Supreme Court, the Federal Court of Justice, in the case of Anna Anderson who claimed to be a descendant of the Tsar family. In 1967, the Regional Court of Hamburg ruled that Anderson failed to present sufficient evidence to establish that she was Grand Duchess Anastasia Nikolayevna, the youngest daughter of Tsar Nicholas II, who allegedly escaped the murder of the Tsar family by the Bolsheviks in 1918. %(Incidentally, DNA testing later demonstrated that Anna Anderson had no relationship with the Tsar family.) 
-Anderson appealed to Germany's Federal Court, complaining that the Regional Court had set too demanding a proof standard. Siding with the lower court, the Federal Court made clear that `[t]he law does not presuppose a belief free of all doubts', thus recognizing the inevitable fallibility of trial decisions. The Court warned, however, that it would be `wrong' to think that a trial decision could rest on `a probability bordering on certainty' (Federal Court of Justice, February 17, 1970; III ZR 139/67). This decision is all the more remarkable as it applies to a civil case. 
-
-%
-%but then warned that `this is often expressed imprecisely in such a way that the court may be satisfied with a probability bordering on certainty' and unequivocally concluded `this is wrong' . 
-%
-Compared to civil cases, the resistance toward quantification  can be more easily made plausible in criminal cases. 
- [@buchak2014belief], for example, 
-notes that an attribution of criminal culpability is an ascription of blame and such an ascription should require a full belief in someone's guilt, not just a probabilistic belief, however strong.
-One is left wondering, however. If a high probability of guilt short of 100\% isn't enough but absolute certainty cannot be required either, how else could the standard of proof be met? The question becomes more pressing in civil cases. Anticipating this sort of worry, Germany's Federal Court in the Anderson case endorsed a conception of proof standards  that echoed how U.S. courts describe proof beyond a reasonable doubt (see earlier in \ref{subsec:legal-background}). The Federal Court wrote that a judge's decision must satisfy
-`a degree of certainty which is useful for practical life and which makes the doubts silent without completely excluding them' (Federal Court of Justice, February 17, 1970; III ZR 139/67).  
-
+ 
+ 
 
 ## Naked statistical evidence
 
