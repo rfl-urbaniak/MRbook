@@ -139,7 +139,7 @@
 %\usepackage[utf8x]{inputenc}
 %\usepackage[polish]{babel}
 %\usepackage{polski}
-\usepackage[scaled=0.88]{helvet}
+
 
 
 
@@ -400,8 +400,8 @@ the Bayesian Factor is approximately
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{EifH <-}\StringTok{ }\DecValTok{1}
-\NormalTok{EifNH <-}\StringTok{ }\FloatTok{.1}
-\NormalTok{H <-}\StringTok{ }\FloatTok{.1}
+\NormalTok{EifNH <-}\StringTok{ }\NormalTok{.}\DecValTok{1}
+\NormalTok{H <-}\StringTok{ }\NormalTok{.}\DecValTok{1}
 
 \NormalTok{E <-}\StringTok{ }\NormalTok{EifH }\OperatorTok{*}\StringTok{ }\NormalTok{H }\OperatorTok{+}\StringTok{ }\NormalTok{EifNH }\OperatorTok{*}\StringTok{ }\NormalTok{(}\DecValTok{1}\OperatorTok{-}\NormalTok{H)}
 \NormalTok{E}
@@ -426,8 +426,8 @@ the Bayesian Factor is approximately
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{EifH <-}\StringTok{ }\DecValTok{1}
-\NormalTok{EifNH <-}\StringTok{ }\FloatTok{.1}
-\NormalTok{H2 <-}\StringTok{ }\FloatTok{.2}
+\NormalTok{EifNH <-}\StringTok{ }\NormalTok{.}\DecValTok{1}
+\NormalTok{H2 <-}\StringTok{ }\NormalTok{.}\DecValTok{2}
 
 \NormalTok{E2 <-}\StringTok{ }\NormalTok{EifH }\OperatorTok{*}\StringTok{ }\NormalTok{H2 }\OperatorTok{+}\StringTok{ }\NormalTok{EifNH }\OperatorTok{*}\StringTok{ }\NormalTok{(}\DecValTok{1}\OperatorTok{-}\NormalTok{H2)}
 \NormalTok{E2}
@@ -736,12 +736,8 @@ first recommendation was about a correction of the random match
 probability, and this second recommendation is about the likelihood
 ratio.
 
-One argument provided by NRC II compared a database trawl to multiple
-hypothesis testing, and multiple hypothesis testing should be avoided if
-possible in light of classical statistical methods.
-
-Another argument by NRC employed an analogy involving coin tosses. If
-you toss several different coins at once and all show heads on the first
+One argument by NRC employed an analogy involving coin tosses. If you
+toss several different coins at once and all show heads on the first
 attempt, this seems strong evidence that the coins are biased. If,
 however, you repeat this experiment sufficiently many times, it is
 almost certain that at some point all coins will land heads. This
@@ -751,6 +747,10 @@ is analogous to trying to find a match by searching through a database
 of profiles. As the size of the database increases, so does the number
 of attempts at finding a match, and it is more likely that someone in
 the database who had nothing to do with the crime would match.
+
+Another argument provided by NRC II compared a database trawl to
+multiple hypothesis testing, and multiple hypothesis testing should be
+avoided if possible in light of classical statistical methods.
 
 Third, NRC II was concerned with the fact that in cold-hit cases the
 identification of a particular defendant occurs after testing several
@@ -769,7 +769,7 @@ Quite crucially, following (Donnelly \& Friedman, 1999) we need to pay
 attention to what hypotheses are tested, what probabilistic methods the
 context recommends, and what exactly the evidence we obtained is. For
 instance, one hypothesis of interest is what we will call a
-\emph{general match hypothesis}:
+\emph{general match hypothesis}: \vspace{1mm}
 
 \begin{tabular}{lp{8cm}}
 (General match hypothesis) &
@@ -777,68 +777,62 @@ At least one of the profiles in the database of size $d$
 would randomly match the crime sample.
 \end{tabular}
 
-\noindent The general match hypothesis is what NRC II seems to have been
-concerned with. Assuming that for each data point RMP\(=\gamma\) is held
-constant, and that random matches with different data points
-\(\mathsf{match_1, match_2, \dots, match_d}\) exclude each other, the
-probability of there being at least one random match is the same as the
-probability of their disjunction could be calculated by the additivity
-axiom:
+\vspace{1mm} \noindent The general match hypothesis is what NRC II seems
+to have been concerned with. If for each data point RMP\(=\gamma\) were
+held constant, and if random matches with different data points
+\(\mathsf{match_1, match_2, \dots, match_d}\) excluded each other, the
+probability of there being at least one random match would be the same
+as the probability of their disjunction and could be calculated by the
+additivity axiom:
 
 \begin{align*}
 \pr{\mathsf{at\,\,\, least\,\,\, one\,\,\, match}} & = \pr{\mathsf{match_1} \vee \mathsf{match_2} \vee \cdots \vee \mathsf{match_d}} \\
 & = \sum_{i}^d \pr{\mathsf{match_i}} = \gamma \times d
 \end{align*}
 
-This calculation would result in the outcome recommended by NRC II. The
-question is, whether this model should be applied to database matches.
-Notice that in applications DMP does not really behave like probability.
-Take a simple example. Suppose a given profile frequency is \(.1\) and
-you search for this particular profile in a database of size 10. Does
-the probability of a match equal \(.1 \times 10=1\)? The answer is
-clearly negative. Assuming the matches are independence, of
-\(\mathsf{no match}\) for the members of the database, this probability
-should rather be
+This calculation would result in the outcome recommended by NRC II, if
+the value of the evidence were to be a function of the probability of
+(General match hypothesis).
 
-\begin{align*}
-1-\pr{\textrm{no match}} & = 1- \left(\nicefrac{9}{10}\right)^{10}\\
-& = 1- 0.3486784 \approx 0.65.
-\end{align*}
-
-Multiplication by database size would make sense if we thought of it as
-addition of individual match probabilities, provided matches exclude
-each other and so, are (extremely) not independent. Here is a coin
-analogy. Suppose I toss a die, and my database contains \(n=\) three
-\emph{different} numbers: \(1, 2\) and \(3\). Then, for each element of
-the database, the probability \(p\) of each particular match is
-\(\nicefrac{1}{6}\), and the probability of \emph{at least one} match is
+The first question is, whether a directly additive calculation should be
+applied to database matches. First, notice that in applications DMP does
+not really behave like probability. Take a simple example. Suppose a
+given profile frequency is \(.1\) and you search for this particular
+profile in a database of size 10. Does the probability of a match equal
+\(.1 \times 10=1\)? The answer is clearly negative. Multiplication by
+database size would make sense if we thought of it as addition of
+individual match probabilities, provided matches exclude each other and
+so are not independent. Here is a coin analogy. Suppose I toss a die,
+and my database contains \(n=\) three \emph{different} numbers: \(1, 2\)
+and \(3\). Then, for each element of the database, the probability \(p\)
+of each particular match is \(\nicefrac{1}{6}\), and the probability of
+\emph{at least one} match is
 \(\nicefrac{1}{6}+\nicefrac{1}{6}+\nicefrac{1}{6}=\nicefrac{1}{6}\times 3 = n\times p =\nicefrac{1}{2}\).
 We could use addition in such a situation because each match excludes
 the other matches, a condition that is not satisfied in the database
 scenario.
 
-Another reason why DMP is problematic can be seen by taking an extreme
+Another reason why DMP is problematic can be seen by taking a limiting
 case. Suppose everyone in the world is recorded in the database. In this
 case, a unique cold-hit match would be extremely strong evidence of
-guilt, since everybody would excluded as a suspect except one matching
-individual. But if RMP were to be multiplied by the size of the
-database, the probative value of the match as measured by DMP should be
-extremely low. This is highly counter-intuitive.
+guilt, since everybody except for one matching individual would be
+excluded as a suspect. But if RMP were to be multiplied by the size of
+the database, the probative value of the match as measured by DMP should
+be extremely low. This is highly counter-intuitive.
 
 Even without a world database, the NRC II proposal remains problematic,
-since it sets up a way for defendant to arbitrarily weaken the weight of
-cold-hit DNA matches. It is enough to make more tests against more
-profiles in more databases. Even if all the additional profiles are
+since it sets up a way for the defendant to arbitrarily weaken the
+weight of cold-hit DNA matches. It is enough to make more tests against
+more profiles in more databases. Even if all the additional profiles are
 excluded (intuitively, pointing even more clearly to the defendant as
 the perpetrator), the NRC II recommendation would require to devalue the
 cold-hit match even further. This, again, is highly counter-intuitive.
 
-As mentioned in passing, perhaps a somewhat more sensible answer is
-obtained by assuming the independence of \(\mathsf{no match}\) for the
-members of the database and deploying a solution similar to the one used
-in the birthday problem. Here, the idea would be---assuming matches for
-different data points are independent and have constant RMP --- to
-calculate:
+Perhaps a somewhat more sensible answer is obtained by assuming the
+independence of \(\mathsf{no match}\) for the members of the database
+and deploying a solution similar to the one used in the birthday
+problem. Here, the idea would be---assuming matches for different data
+points are independent and have constant RMP --- to calculate:
 
 \begin{align*}
 \pr{\mathsf{match}} & = 1 - \pr{\mathsf{no match}}\\
@@ -873,68 +867,70 @@ the DMP postulated by the defendant, but pretty close. The question is,
 should this number be the probability used to evaluate the evidential
 impact of the cold hit?
 
-I could still use \(1-\pr(\mathsf{no match})\) to calculate the same
-probability, but I can't calculate \(\pr(\textrm{no match})\) by taking
-it to be
-\(\nicefrac{5}{6}\times \nicefrac{5}{6}\times \nicefrac{5}{6} = \nicefrac{5}{6}^3 \approx 0.58\),
-because the multiplication here requires independence, which is missing
-(if my die result is not a 3, it's more likely to be one of the other
-numbers).\}
+One problem is, the independence assumption is not satisfied in the
+database search problem either (after all, since two arbitrary database
+points very likely do not match, if you match one of them, you are much
+less likely to match the other one). And the independence assumption is
+not benign. We will illustrate it with a somewhat distand, but a very
+striking example, coming from \todo{cite Barnett}. Suppose you consider
+whether your effort of casting a vote in the upcoming election is worth
+it. One of the probabilities you might be interested in is the
+probability that your vote would make a difference. If we apply the
+binomial model to the problem, the probability that a candidate will
+receive exactly \(k\) votes if \(n\) people vote is supposed to be
+\({n \choose k} p^{k} (1-p)^(n-k)\), where votes of the population
+members are supposed to be indepent and estimate to have the same
+probability \(p\) of being for the candidate. For instance, if 500k
+people vote and \(p=.505\), the probability that the candidate will
+receive exactly 250k votes is \ensuremath{1.5651281\times 10^{-14}},
+which is approximately \ensuremath{1.6\times 10^{-14}}.
 
-and a slightly different hypothesis:
+Probabilistic epistemology recommends that once we obtain new evidence,
+our new degrees of belief should be the probabilities obtained by
+conditionalizing on this evidence. Crucially, we should update on the
+total evidence we obtained rather than only on a part of it. So here the
+question is, does (General match hypothesis) exhaust what we have
+learned from our database search?
 
-Perhaps, there is a better analogy here
-\citep[p.\ 950]{donnelly1999DNADatabaseSearches}. Imagine a biased coin
-whose physical appearance is indistinguishable from the fair coins in a
-piggy bank. The biased coin is the perpetrator and the piggy bank is the
-database containing innocent people. After the biased coin is thrown
-into the bank with the other coins, someone picks out a handful of coins
-at random and flips each of them twenty times. Each coin lands heads
-approximately ten times---except for one coin, which lands heads on all
-twenty flips. The fact that other coins seem unbiased makes the claim
-that this one is biased\\
-better supported since at least one coin in the bank must be biased. \%
-\% Contrary to NRC II, \cite{donnelly1999DNADatabaseSearches} argue that
-if potential suspects in the database are excluded as sources, this
-should increase, not decrease, the probability that the defendant who
-matches the crime traces is the source. A cold-hit match, then, is
-stronger and not weaker evidence of guilty than ordinary DNA matches.
+To get us started thinking about this question, consider a coin analogy
+which Donnelly \& Friedman (1999, p. 950) found more adequate than the
+one proposed by the NRC. Imagine a biased coin whose physical appearance
+is indistinguishable from the fair coins in a piggy bank. The biased
+coin is the perpetrator and the piggy bank is the database containing
+innocent people. After the biased coin is thrown into the bank with the
+other coins, someone picks out a handful of coins at random and flips
+each of them twenty times. Each coin lands heads approximately ten
+times---except for one coin, which lands heads on all twenty flips. The
+fact that other coins seem unbiased makes the claim that this one is
+biased\\
+better supported.
+
+Coming back to DNA matches, think about the following scenario: first,
+you identified the suspect by some means other than a database trawl.
+Then, it turned out his DNA profile matches the crime scene stain. Fine,
+here it seems uncontroversial that this constitutes strong further
+incriminating evidence. Now, imagine a further database search for a
+database not containing this suspect finds no matches. Would you think
+that this information supports the guilt hypothesis? If your answer is
+yes, then you do have the intuition that the lack of matches with other
+people (whose profiles, in this particular case, happen to be in a
+database) strengthens the evidence.
+
+The key lesson here (and in the complete-world database scenario) is
+that we not only learned that there was a match in the database, but
+also that in \(d-1\) cases there was no match, and this information also
+has evidential value.
+
+Contrary to NRC II, \cite{donnelly1999DNADatabaseSearches} argue that if
+potential suspects in the database are excluded as sources, this should
+increase, not decrease, the probability that the defendant who matches
+the crime traces is the source. A cold-hit match, then, is stronger and
+not weaker evidence of guilty than ordinary DNA matches.
 
 A detailed critical consideration of NRC II recommendation can be found
 in (Donnelly \& Friedman, 1999).
 
 However, the coin example involves
-
-But judges and jurors should not be concerned with \%the probability of
-the statement \%The NRC II recommendation pertained to the probability
-of the statement
-\texttt{At\ least\ one\ of\ the\ profiles\ in\ the\ database\ \%of\ size\ \$d\$\ \ would\ randomly\ match\ the\ crime\ sample.\textquotesingle{}\ \%Call\ it\ the\ general\ match\ hypothesis.\ \ \ \textbackslash{}todo\{Is\ this\ right?\ You\ have\ d+1.\ Why?\}\ \%\ \ \%are\ interested\ in\ whether\ a\ particular\ defendant\ is\ the\ source\ of\ the\ crime\ traces.\ \%They\ are\ concerned\ with\ the\ statement}The
-profile of the particular defendant on trial would randomly match the
-crime sample.`Call this the particular match hypothesis. \%and the
-probability of at least one false positive. \%So what is of interest is
-the probability of the particular, not the general match hypothesis. \%
-This is in line with the general idea that one should update on total
-available evidence: the claim that the defendant's profile match entails
-but is not entailed by the claim that at least one of the database
-profiles match, and so it is the former and not the latter that the
-fact-finders should rely on. \% They should be concerned with \%the
-probability of the statement `The profile of the defendant on trial
-would randomly match the crime sample.' The probability of finding a
-match between the defendant and the crime sample does not increase
-because other people in the database are tested. In fact, suppose
-everyone in the world is recorded in the database. A unique cold-hit
-match would then be extremely strong evidence of guilt since everybody
-would be excluded as a suspect except one matching individual. Instead,
-if the random match probability is multiplied by the size of the
-database, the probative value of the match in this case should be quite
-low. This is counter-intuitive.\%\\
-\%Even without a world database, the NRC II proposal remains problematic
-since it sets up a way for defendant to arbitrarily weaken the weight of
-cold-hit DNA matches. It is enough to make more tests against more
-profiles in more databases. Even if all the additional profiles are
-excluded (intuitively, pointing even more clearly to the defendant as
-the perpetrator), the NRC II recommendation would require to devalue the
-cold-hit match even further. \%
 
 \%\paragraph{Shortcomings of the database match probability}
 
@@ -1096,15 +1092,6 @@ investigative leads, supplements the DNA match. This lower posterior
 probability would justify the intuitive resistance towards convictions
 in cold-hit cases despite the stronger probative value of cold-hit
 matches in themselves.
-
-\%Think about the following scenario: first, you identified the suspect
-by some means. Then, it turned out his DNA profile matches the crime
-scene stain. Fine. Now, imagine further database search for a database
-not containing this suspect finds no matches. Would you think that this
-information supports the guilt hypothesis? If your answer is yes, then
-you do have the intuition that the lack of matches with other people
-(whose profiles, in this particular case, happen to be in a database)
-strengthens the evidence.
 
 \%What about the intuition that we'd be uneasy about a conviction based
 solely on a cold hit match, much less than about a DNA-match based
