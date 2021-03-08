@@ -400,8 +400,8 @@ the Bayesian Factor is approximately
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{EifH <-}\StringTok{ }\DecValTok{1}
-\NormalTok{EifNH <-}\StringTok{ }\NormalTok{.}\DecValTok{1}
-\NormalTok{H <-}\StringTok{ }\NormalTok{.}\DecValTok{1}
+\NormalTok{EifNH <-}\StringTok{ }\FloatTok{.1}
+\NormalTok{H <-}\StringTok{ }\FloatTok{.1}
 
 \NormalTok{E <-}\StringTok{ }\NormalTok{EifH }\OperatorTok{*}\StringTok{ }\NormalTok{H }\OperatorTok{+}\StringTok{ }\NormalTok{EifNH }\OperatorTok{*}\StringTok{ }\NormalTok{(}\DecValTok{1}\OperatorTok{-}\NormalTok{H)}
 \NormalTok{E}
@@ -426,8 +426,8 @@ the Bayesian Factor is approximately
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{EifH <-}\StringTok{ }\DecValTok{1}
-\NormalTok{EifNH <-}\StringTok{ }\NormalTok{.}\DecValTok{1}
-\NormalTok{H2 <-}\StringTok{ }\NormalTok{.}\DecValTok{2}
+\NormalTok{EifNH <-}\StringTok{ }\FloatTok{.1}
+\NormalTok{H2 <-}\StringTok{ }\FloatTok{.2}
 
 \NormalTok{E2 <-}\StringTok{ }\NormalTok{EifH }\OperatorTok{*}\StringTok{ }\NormalTok{H2 }\OperatorTok{+}\StringTok{ }\NormalTok{EifNH }\OperatorTok{*}\StringTok{ }\NormalTok{(}\DecValTok{1}\OperatorTok{-}\NormalTok{H2)}
 \NormalTok{E2}
@@ -615,7 +615,7 @@ evidence at trial. What follows examines some of the main arguments.
 
 For concreteness, consider the California rape and murder case of Diana
 Sylvester. In 2008, many years after the crime, John Puckett was
-identified as a unique match through a database search of 338,000
+identified as a unique 9-loci match through a database search of 338,000
 profiles. He was the only individual in the database who matched the
 traces collected from the victim Diana Sylvester in 1972. According to
 an expert witness, the particular pattern of alleles present in the
@@ -686,7 +686,7 @@ by \(338,000\) resulted in a database match probability of approximately
 \end{verbatim}
 
 \noindent which is a less impressive number than the original RMP (the
-likelihood ratio for the dmp is approximately 3.25). According to this
+likelihood ratio for the DMP is approximately 3.25). According to this
 calculation, it was no longer very unlikely that an unrelated person
 from the database would match, and so the cold-hit DNA match was no
 longer strong evidence of guilt. At least, this was Barlow's argument.
@@ -874,16 +874,54 @@ less likely to match the other one). And the independence assumption is
 not benign. We will illustrate it with a somewhat distand, but a very
 striking example, coming from \todo{cite Barnett}. Suppose you consider
 whether your effort of casting a vote in the upcoming election is worth
-it. One of the probabilities you might be interested in is the
-probability that your vote would make a difference. If we apply the
-binomial model to the problem, the probability that a candidate will
-receive exactly \(k\) votes if \(n\) people vote is supposed to be
-\({n \choose k} p^{k} (1-p)^(n-k)\), where votes of the population
-members are supposed to be indepent and estimate to have the same
+it in a context where there are 500k other voters. One of the
+probabilities you might be interested in is the probability that your
+vote would make a difference. If we apply the binomial model to the
+problem, the probability that a candidate will receive exactly \(k\)
+votes if \(n\) people vote is supposed to be
+\({n \choose k} p^{k} (1-p)^{(n-k)}\), where votes of the population
+members are supposed to be indepent and estimated to have the same
 probability \(p\) of being for the candidate. For instance, if 500k
-people vote and \(p=.505\), the probability that the candidate will
-receive exactly 250k votes is \ensuremath{1.5651281\times 10^{-14}},
-which is approximately \ensuremath{1.6\times 10^{-14}}.
+people vote and \(p= 0.5\), the probability that the candidate will
+receive exactly 250k votes is 0.0011284, which is around
+\nicefrac{1}{886} and much higher than \(\nicefrac{1}{n}\). This fairly
+high chance made some claim that the chance that your voice is decisive
+if the chances are equal is fairly high in such circumstances. However,
+note that if \(p=.505\), the probability that the candidate will receive
+exactly 250k votes is \ensuremath{1.5651281\times 10^{-14}}, which is
+less than one in a trillion. This lead some
+\todo{ Brennan and Lomasky, Democracy and
+Decision, as well as Brennan, The Ethics of Voting, 19.} to claim that
+outside of the very specific circumstances, decision-theoretic arguments
+for the rationality of voting are hopeless. Barnett, \todo{Barnett}
+however, points out that such a sensitivty to success probability simply
+makes the binomial model inappropriate for the voting context, observing
+that its calculations also disagree with empirical estimates which are
+not too far from \(1/n\).
+\todo{Andrew Gelman, Gary King, and W. John Boscardin, “Estimating the Probability of Events that Have Never Occurred: When Is Your Vote Decisive?” Journal of the American Statistical Association 93 (1998): 1–9; Gelman, Katz, and Tuerlinckx, “The Mathematics and Statistics of Voting Power”; and Casey Mulligan and
+Charles Hunter, “The Empirical Frequency of a Pivotal Vote,” Public Choice 116 (2003):
+31–54,} This sensitivity arises, because within the binomial model the
+more trials (voters) there are, the more tightly the results will tend
+to cluster around the probablity of success. To observe how unrealistic
+that is, keep \(p=.505\) and ask yourself how probable it is that the
+voting result will be between \(50.4\%\) and \(50.6\%\). Sure, this
+outcome might be quite likely, but the binomial certainly overstimates
+it at 0.8427212. Another unrealistic estimate obtained by the binomial
+model is the estimate of the probability of an upset (that the leading
+candidate will lose). With \(p=.505\) this is
+\(\mathsf{pbinom(249999,500000,.505)}\), which turns out to be extremely
+and unrealistically low: \ensuremath{7.5994495\times 10^{-13}}.
+
+The bottom line of the above example is that if we have reasons to think
+the independence assumption is not satisfied, the binomial model is not
+appropriate. So, it seems, it is not appropriate for the database match
+problem either. It is useful, in its simplicity, for illustrating an
+important distinction whose conflation underlies one of the involved
+arguments. YOu might have been surprised learning that while the expert
+testified that RMP on 9 loci for Puckett was 1 in 1.1 million, Arizona
+Department of Public Safety found 122 9-loci matches among 65,000
+individuals. After all, 122/65000 is 0.0018769, which is much higher
+than the reported RMP.
 
 Probabilistic epistemology recommends that once we obtain new evidence,
 our new degrees of belief should be the probabilities obtained by
