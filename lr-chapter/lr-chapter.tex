@@ -773,8 +773,8 @@ instance, one hypothesis of interest is what we will call a
 
 \begin{tabular}{lp{8cm}}
 (General match hypothesis) &
-At least one of the profiles in the database of size $d$ 
-would randomly match the crime sample.
+At least one of the profiles in the database of size $n$ 
+matches the crime sample.
 \end{tabular}
 
 \vspace{1mm} \noindent The general match hypothesis is what NRC II seems
@@ -867,18 +867,20 @@ the DMP postulated by the defendant, but pretty close. The question is,
 should this number be the probability used to evaluate the evidential
 impact of the cold hit?
 
-One problem is, the independence assumption is not satisfied in the
-database search problem either (after all, since two arbitrary database
-points very likely do not match, if you match one of them, you are much
-less likely to match the other one). And the independence assumption is
-not benign. We will illustrate it with a somewhat distand, but a very
-striking example, coming from \todo{cite Barnett}. Suppose you consider
-whether your effort of casting a vote in the upcoming election is worth
-it in a context where there are 500k other voters. One of the
-probabilities you might be interested in is the probability that your
-vote would make a difference. If we apply the binomial model to the
-problem, the probability that a candidate will receive exactly \(k\)
-votes if \(n\) people vote is supposed to be
+\todo{think about independence again once the section is done} One
+problem is, whether the independence assumption is satisfied in the
+database search problem is unclear. After all, if you are informed about
+the match frequencies in the database, and they teach you that since two
+arbitrary database points quite likely do not match, if the sample
+matches one of them, it is less likely to match the other one. And the
+independence assumption is not benign. We will illustrate it with a
+somewhat distand, but a very striking example, coming from
+\todo{cite Barnett}. Suppose you consider whether your effort of casting
+a vote in the upcoming election is worth it in a context where there are
+500k other voters. One of the probabilities you might be interested in
+is the probability that your vote would make a difference. If we apply
+the binomial model to the problem, the probability that a candidate will
+receive exactly \(k\) votes if \(n\) people vote is supposed to be
 \({n \choose k} p^{k} (1-p)^{(n-k)}\), where votes of the population
 members are supposed to be indepent and estimated to have the same
 probability \(p\) of being for the candidate. For instance, if 500k
@@ -910,25 +912,69 @@ it at 0.8427212. Another unrealistic estimate obtained by the binomial
 model is the estimate of the probability of an upset (that the leading
 candidate will lose). With \(p=.505\) this is
 \(\mathsf{pbinom(249999,500000,.505)}\), which turns out to be extremely
-and unrealistically low: \ensuremath{7.5994495\times 10^{-13}}.
+and unrealistically low: \ensuremath{7.5994495\times 10^{-13}}. Coming
+back to our original problem, the binomial estimate of the probability
+of a match is also quite sensitive to RMP, as illustrated in the
+following figure:
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.8\linewidth]{lr-chapter_files/figure-latex/puckett-1} 
+
+}
+
+\caption{Binomial model of the database search problem. The probability of at least one match depending on the database size, assuming independence and constant RMP used in  the Puckett case as compared with the binomial estimate for p=2/1.1e6 (dashed line). The actual database size marked with a vertical line.}\label{fig:puckett}
+\end{figure}
 
 The bottom line of the above example is that if we have reasons to think
 the independence assumption is not satisfied, the binomial model is not
 appropriate. So, it seems, it is not appropriate for the database match
 problem either. It is useful, in its simplicity, for illustrating an
 important distinction whose conflation underlies one of the involved
-arguments. YOu might have been surprised learning that while the expert
+arguments. You might have been surprised learning that while the expert
 testified that RMP on 9 loci for Puckett was 1 in 1.1 million, Arizona
 Department of Public Safety found 122 9-loci matches among 65,000
 individuals. After all, 122/65000 is 0.0018769, which is much higher
 than the reported RMP.
 
-Probabilistic epistemology recommends that once we obtain new evidence,
-our new degrees of belief should be the probabilities obtained by
-conditionalizing on this evidence. Crucially, we should update on the
-total evidence we obtained rather than only on a part of it. So here the
-question is, does (General match hypothesis) exhaust what we have
-learned from our database search?
+Notice however that there is a difference between having a sample and
+looking for a match in a database of size \(n\) and taking a database of
+size \(n\) and checking all pairs that occur within it for a match. In
+the former case, you are making \(n\) comparisons. In the latter case,
+the number of comparisons is \({n \choose 2}\), which is much higher. If
+\(n=65000\), there are \ensuremath{2.1124675\times 10^{9}} to compare,
+so while the binomial estimate of at least one match for \(n\)
+comparisons (the former case) is 0.057379, it is approximately 1 for
+\({n \choose 2}\) comparisons. For the impact it has on the Arizona
+Department of Public Safety statistics, consider the probability of at
+least 122 matches as a function of the database size, even for
+relatively low database size range (up to 50000).
+
+\begin{figure}
+
+{\centering \includegraphics[width=1\linewidth]{lr-chapter_files/figure-latex/unnamed-chunk-5-1} 
+
+}
+
+\caption{Binomial model of the database search problem. The probability of at least 122 matches depending on the database size for n comparisons and for all pairs among n datapoints (dashed), assuming p=1/1.1e6.}\label{fig:unnamed-chunk-5}
+\end{figure}
+
+From this perspective, it is no surprise there were so many matching
+pairs among all the pairs from the database, but notice also that this
+frequency does not estimate the probabiltiy of at least one match in the
+set-up we are actually intersted in, in which we do have a sample
+outside of the database and make \(n\) comparisons, instead of testing
+all possible pairs from the database for a match.
+
+Now that we used the imperfect binomial model to clear up at least one
+confusion, let us put it aside, and focus on an even deeper problem with
+using the probability of (General match hypothesis) instead of RMP in
+evidence evaluation. Probabilistic epistemology recommends that once we
+obtain new evidence, our new degrees of belief should be the
+probabilities obtained by conditionalizing on this evidence. Crucially,
+we should update on the total evidence we obtained rather than only on a
+part of it. Here the question is, does (General match hypothesis)
+exhaust what we have learned from our database match?
 
 To get us started thinking about this question, consider a coin analogy
 which Donnelly \& Friedman (1999, p. 950) found more adequate than the
@@ -954,48 +1000,47 @@ yes, then you do have the intuition that the lack of matches with other
 people (whose profiles, in this particular case, happen to be in a
 database) strengthens the evidence.
 
-The key lesson here (and in the complete-world database scenario) is
-that we not only learned that there was a match in the database, but
-also that in \(d-1\) cases there was no match, and this information also
-has evidential value.
-
-Contrary to NRC II, \cite{donnelly1999DNADatabaseSearches} argue that if
+The key lesson here (and in the complete-world database scenario we
+already discussed) is that we not only learned that there was a match in
+the database, but also that in \(d-1\) cases there was no match, and
+this information also has evidential value. In line with this, contrary
+to NRC II, \cite{donnelly1999DNADatabaseSearches} argues that if
 potential suspects in the database are excluded as sources, this should
 increase, not decrease, the probability that the defendant who matches
 the crime traces is the source. A cold-hit match, then, is stronger and
-not weaker evidence of guilty than ordinary DNA matches.
+not weaker evidence of guilty than ordinary DNA matches. Before moving
+on to a better model that explains how this could be, let us look at
+another argument put forward by NRC, an analogy to multiple hypothesis
+testing.
 
-A detailed critical consideration of NRC II recommendation can be found
-in (Donnelly \& Friedman, 1999).
-
-However, the coin example involves
-
-\%\paragraph{Shortcomings of the database match probability}
-
-\%A database that contained everybody however, is \%a far-fetched
-possibility. At least, the NRC II recommendation could very well apply
-to more limited databases. Leaving coin tossing aside, another analogy
-has been used to argue that the evidentiary value of a cold-hit match
-should be weakened. The analogy is between searching for a match in a
+NRC claimed that there is an analogy between searching for a match in a
 database and multiple hypothesis testing, which is a dubious research
 practice. In classical hypothesis testing, if the probability of type I
-error in a single test of a hypothesis is 5\%, this probability will
-increase by testing the same hypothesis multiple times. The database
-match probability---the argument goes---would correct for the increased
-risk of type I error. This analogy with multiple testing, however, is
-misplaced. As \citet{balding2002DNDatabaseSearch} points out, multiple
-testing consists in testing the \textit{same} hypothesis multiple times
-against new evidence. In cold-hit cases, there is no such multiple
-testing. \%there is no multiple hypothesis testing involved here.
-\%Rather that the hypothesis about the suspect being formulated after
-the test, Rather, multiple hypotheses---each concerning a different
-individual in the database---are tested only once and then excluded if a
-negative match occurs. \%before the search multiple individual
-hypotheses about each of potential suspects in the database are
-formulated, and each of them is tested once during the search. From this
-perspective, the hypothesis that the defendant is the source was one of
-the many hypotheses subject to testing. The cold-hit match supports that
-hypothesis and rules out the others.
+error in a single test of a hypothesis is 5\%, the probability of at
+least one type I error will increase by testing the same hypothesis
+multiple times. In analogy---the argument goes--- we need to correct for
+the increased risk of type I error, and just as the Bonferroni
+correction requires that the \(p\)-value threshold be divided by the
+number of tests, NRC II requires that the estimated probability of a
+random match should be multiplied by the number of comparisons.
+
+This analogy with multiple testing, however, is misplaced. As
+\citet{balding2002DNDatabaseSearch} points out, multiple testing
+consists in testing the \textit{same} hypothesis multiple times against
+new evidence. In cold-hit cases, no such multiple testing is involved.
+Rather, multiple hypotheses---each concerning a different individual in
+the database---are tested only once and then excluded if the test is
+negative. From this perspective, for each \(1 < i <n\), the following
+hypothesis is tested: \vspace{1mm}
+
+\begin{tabular}{lp{8cm}}
+(Particular match hypothesis) &
+Profile $i$ in the database matches the crime sample.
+\end{tabular}
+
+\vspace{1mm} \noindent and the hypothesis that the defendant is the
+source was one of the many hypotheses subject to testing. The cold-hit
+match supports that hypothesis and rules out multiple other hypotheses.
 
 \paragraph{The likelihood ratio of cold-hit matches}
 
