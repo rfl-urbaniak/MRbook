@@ -25,6 +25,8 @@ x <- 0:3000
 x.density <- dbinom(x,size = choose(65000,2), p = 1/1.1e6)
 interval <- hdi(x, x.density, .89)
 
+interval
+
 p <- 1/1.1e6
 d = seq(1500,2500, by = 1)
 probs <- dbinom(d,choose(65000,2),1/1.1e6)
