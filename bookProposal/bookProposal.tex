@@ -1,3 +1,7 @@
+\PassOptionsToPackage{unicode=true}{hyperref} % options for packages loaded elsewhere
+\PassOptionsToPackage{hyphens}{url}
+\PassOptionsToPackage{dvipsnames,svgnames*,x11names*}{xcolor}
+%
 \documentclass[10pt,dvipsnames]{scrartcl}
 \usepackage{lmodern}
 \usepackage{amssymb,amsmath}
@@ -6,12 +10,9 @@
 \ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provides euro and other symbols
 \else % if luatex or xelatex
-  \ifxetex
-    \usepackage{mathspec}
-  \else
-    \usepackage{fontspec}
-  \fi
+  \usepackage{unicode-math}
   \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
 \fi
 % use upquote if available, for straight quotes in verbatim environments
@@ -21,14 +22,20 @@
 \usepackage[]{microtype}
 \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
 }{}
-\PassOptionsToPackage{hyphens}{url} % url is loaded by hyperref
-\usepackage[unicode=true]{hyperref}
-\PassOptionsToPackage{usenames,dvipsnames}{color} % color is loaded by hyperref
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\usepackage{xcolor}
+\usepackage{hyperref}
 \hypersetup{
             pdftitle={M\& R Book proposal},
             pdfauthor={Marcello Di Bello and Rafal Urbaniak},
             colorlinks=true,
             linkcolor=Maroon,
+            filecolor=Maroon,
             citecolor=Blue,
             urlcolor=blue,
             breaklinks=true}
@@ -42,12 +49,6 @@
 % margins by default, and it is still possible to overwrite the defaults
 % using explicit options in \includegraphics[width, height, ...]{}
 \setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
-\IfFileExists{parskip.sty}{%
-\usepackage{parskip}
-}{% else
-\setlength{\parindent}{0pt}
-\setlength{\parskip}{6pt plus 2pt minus 1pt}
-}
 \setlength{\emergencystretch}{3em}  % prevent overfull lines
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
@@ -165,9 +166,11 @@
 \begin{document}
 \maketitle
 
-\section{The Book}\label{the-book}
+\hypertarget{the-book}{%
+\section{The Book}\label{the-book}}
 
-\subsection{Brief Description}\label{brief-description}
+\hypertarget{brief-description}{%
+\subsection{Brief Description}\label{brief-description}}
 
 \footnotesize In one or two paragraphs, describe the work, including its
 rationale, approach, and pedagogy. (This book is\ldots{} It does\ldots{}
@@ -185,7 +188,7 @@ other objections present in the literature. The key idea is that once
 narrations are represented as bayesian networks, various criteria on,
 features of and operations on narrations can be explicated in terms of
 corresponding properties of and operations on bayesian networks. The
-conceptual developments are accompanied by technical accounts, and
+conceptual developments are accompanied by technical accounts.
 \textbf{\textsf{R}} code capturing to the technical features developed
 is made available to the reader.
 
@@ -193,17 +196,12 @@ A secondary goal is to present a unified introduction to multiple
 positive contributions of legal probilism to the status of legal
 evidence evaluation, as many such results are scattered over many
 professional journals from different fields, and only by understanding
-them (rather than simply focusing on abstract philosophical thought
+them (rather than focusing only on abstract philosophical thought
 experiments) the reader can develop a proper assessment of the
 situation.
 
-One key feature of the book that makes it unique is that it is
-multi-faceted in its incorporation of insights from various discussions
-present in legal, philosophical, and forensic research, and in its
-implementation of the conceptual points by means of bayesian networks
-and \textbf{\textsf{R}} programming language.
-
-\subsection{Outline}\label{outline}
+\hypertarget{outline}{%
+\subsection{Outline}\label{outline}}
 
 \todo{Before I start briefly describing each chapter, take a quick look. I updated the LR chapters given our work in progress, the rest is as in previous discussions. Thoughts? Revisions?}
 
@@ -376,32 +374,74 @@ and \textbf{\textsf{R}} programming language.
 \end{enumerate}
 \end{enumerate}
 
-\subsection{Outstanding Features List}\label{outstanding-features-list}
+\hypertarget{outstanding-features-of-the-book}{%
+\subsection{Outstanding Features of the
+Book}\label{outstanding-features-of-the-book}}
 
-Briefly what you consider to be the outstanding, distinctive, or unique
-features of the work.
+\begin{itemize}
+\item
+  Multi-faceted in its incorporation of insights from various
+  discussions present in legal, philosophical, and forensic research.
+\item
+  With a practical accent, due to the implementation of the conceptual
+  points by means of bayesian networks and \textbf{\textsf{R}}
+  programming language.
+\end{itemize}
 
-\subsection{Apparatus}\label{apparatus}
+\todo{what else?}
+
+\hypertarget{apparatus}{%
+\subsection{Apparatus}\label{apparatus}}
+
+\footnotesize a. Will the book include photographs, line drawings,
+cases, questions, problems, glossaries, bibliography, references,
+appendices, etc.?
+
+\vspace{2mm}
+
+\normalsize
+
+Yes, the book will contain various plots, either of Bayesian networks,
+or some other data visualisations generated by \texttt{ggplot2}. The
+book also will contain bibliography. \vspace{2mm}
+
+\footnotesize b. If the book is a text, do you plan to provide
+supplementary material to accompany it? (Teacher's manual, study guide,
+solutions, answers, workbook, anthology, or other material.)
+
+\vspace{2mm}
+
+\normalsize
+
+The book will be accompanied by an online-only appendix detailing the
+use of the \texttt{R} code in the book and the source code we used.
+
+\hypertarget{competition}{%
+\subsection{Competition}\label{competition}}
+
+\footnotesize a. Consider the existing books in this field and discuss
+specifically their strengths and weaknesses. Spell out how your book
+will be similar to, as well as different from, competing works.
+
+\todo{For now, let's list competition, and discuss key differences}
+
+\normalsize
+
+\begin{itemize}
+\item
+  ``Bayesian Networks and Probabilistic Inference in Forensic Science''
+  by Taroni, Aitken, Garbolino and Biedermann.
+\item
+  ``Risk Assessment and Decision Analysis with Bayesian Networks'' by
+  Fenton and Neil.
+\item
+  ``Bayesian Networks With Examples in R'' by Marco Scutari and
+  Jean-Baptiste Denis.
+\end{itemize}
 
 \begin{enumerate}
 \def\labelenumi{\alph{enumi}.}
-\item
-  Will the book include photographs, line drawings, cases, questions,
-  problems, glossaries, bibliography, references, appendices, etc.?
-\item
-  If the book is a text, do you plan to provide supplementary material
-  to accompany it? (Teacher's manual, study guide, solutions, answers,
-  workbook, anthology, or other material.)
-\end{enumerate}
-
-\subsection{Competition}\label{competition}
-
-\begin{enumerate}
-\def\labelenumi{\alph{enumi}.}
-\item
-  Consider the existing books in this field and discuss specifically
-  their strengths and weaknesses. Spell out how your book will be
-  similar to, as well as different from, competing works.
+\setcounter{enumi}{1}
 \item
   Consider what aspects of topical coverage are similar to or different
   from the competition. What topics have been left out of competing
@@ -416,9 +456,11 @@ features of the work.
   due, and show how you can do it better.
 \end{enumerate}
 
-\section{Market Considerations}\label{market-considerations}
+\hypertarget{market-considerations}{%
+\section{Market Considerations}\label{market-considerations}}
 
-\subsection{The Primary Market}\label{the-primary-market}
+\hypertarget{the-primary-market}{%
+\subsection{The Primary Market}\label{the-primary-market}}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -438,7 +480,8 @@ features of the work.
   reader is your book intended?
 \end{enumerate}
 
-\section{Status of the Work}\label{status-of-the-work}
+\hypertarget{status-of-the-work}{%
+\section{Status of the Work}\label{status-of-the-work}}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -490,7 +533,8 @@ features of the work.
   protected by copyright notice on the material.)
 \end{enumerate}
 
-\section{Sample Chapters}\label{sample-chapters}
+\hypertarget{sample-chapters}{%
+\section{Sample Chapters}\label{sample-chapters}}
 
 Select one or two chapters of the manuscript that are an integral part
 of the book. They should be those you consider the best-written ones,
@@ -507,7 +551,8 @@ Please do not bind your manuscript, as we will have to unbind it in
 order to make photocopies for reviewers. Also be sure all pages are
 numbered either consecutively or double-numbered by chapter.
 
-\section{Reviews}\label{reviews}
+\hypertarget{reviews}{%
+\section{Reviews}\label{reviews}}
 
 If we are interested in your project, we will commission outside
 reviewers to read and evaluate your proposal. We will, of course, obtain
@@ -519,14 +564,16 @@ scholars to act as reviewers themselves, we may ask them for their
 suggestions for peer readers. Naturally, we do not reveal the names of
 reviewers without their permission.
 
-\section{Author Background}\label{author-background}
+\hypertarget{author-background}{%
+\section{Author Background}\label{author-background}}
 
 Please include a current CV or brief biography of your writing,
 teaching, and/or educational background and experience. Be sure to list
 any books that you have previously published, and any other information
 about yourself on why you are qualified to write this book.
 
-\section{Response Time}\label{response-time}
+\hypertarget{response-time}{%
+\section{Response Time}\label{response-time}}
 
 Please allow at least 6-10 weeks for the manuscript proposal evaluation
 and review process. We will contact you as soon as we have had a chance
