@@ -1,3 +1,7 @@
+\PassOptionsToPackage{unicode=true}{hyperref} % options for packages loaded elsewhere
+\PassOptionsToPackage{hyphens}{url}
+\PassOptionsToPackage{dvipsnames,svgnames*,x11names*}{xcolor}
+%
 \documentclass[10pt,dvipsnames,enabledeprecatedfontcommands]{scrartcl}
 \usepackage{lmodern}
 \usepackage{amssymb,amsmath}
@@ -6,12 +10,9 @@
 \ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provides euro and other symbols
 \else % if luatex or xelatex
-  \ifxetex
-    \usepackage{mathspec}
-  \else
-    \usepackage{fontspec}
-  \fi
+  \usepackage{unicode-math}
   \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
 \fi
 % use upquote if available, for straight quotes in verbatim environments
@@ -21,14 +22,20 @@
 \usepackage[]{microtype}
 \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
 }{}
-\PassOptionsToPackage{hyphens}{url} % url is loaded by hyperref
-\usepackage[unicode=true]{hyperref}
-\PassOptionsToPackage{usenames,dvipsnames}{color} % color is loaded by hyperref
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\usepackage{xcolor}
+\usepackage{hyperref}
 \hypersetup{
             pdftitle={Likelihood ratio and decision thresholds},
             pdfauthor={Marcello Di Bello and Rafal Urbaniak},
             colorlinks=true,
             linkcolor=Maroon,
+            filecolor=Maroon,
             citecolor=Blue,
             urlcolor=blue,
             breaklinks=true}
@@ -42,12 +49,6 @@
 % margins by default, and it is still possible to overwrite the defaults
 % using explicit options in \includegraphics[width, height, ...]{}
 \setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
-\IfFileExists{parskip.sty}{%
-\usepackage{parskip}
-}{% else
-\setlength{\parindent}{0pt}
-\setlength{\parskip}{6pt plus 2pt minus 1pt}
-}
 \setlength{\emergencystretch}{3em}  % prevent overfull lines
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
@@ -326,7 +327,8 @@ have to say here.
 
 \tableofcontents
 
-\section{Introduction}\label{introduction}
+\hypertarget{introduction}{%
+\section{Introduction}\label{introduction}}
 
 After the evidence has been presented, examined and cross-examined at
 trial, trained judges or lay jurors must reach a decision. In many
@@ -396,24 +398,27 @@ proof standards, the triers of facts, judges or jurors, will have to
 decide whether the evidence is sufficient to judge the defendant legally
 liable.
 
-\todo{Need to revise this when the chapter is done.} We will not survey
-the extensive legal literature and case law about proof standards. We
-will instead examine whether or not probability theory can bring
-conceptual clarity to an otherwise heterogeneous legal doctrine. This
-chapter outlines different probabilistic approaches, formulates the most
-common challenges against them, and offers a number of responses from
-the perspective of legal probabilism. The legal and philosophical
-literature has focused on the theoretical and analytical challanges. We
-will do the same here. We will focus on two key theoretical challanges
-that have galvanized the philosophical literature: the problem of naked
-statistical evidence and the conjunction paradox. One
+\todo{Need to revise this when the chapter is done.}
+
+We will not survey the extensive legal literature and case law about
+proof standards. We will instead examine whether or not probability
+theory can bring conceptual clarity to an otherwise heterogeneous legal
+doctrine. This chapter outlines different probabilistic approaches,
+formulates the most common challenges against them, and offers a number
+of responses from the perspective of legal probabilism. The legal and
+philosophical literature has focused on the theoretical and analytical
+challanges. We will do the same here. We will focus on two key
+theoretical challanges that have galvanized the philosophical
+literature: the problem of naked statistical evidence and the
+conjunction paradox. One
 reason\todo{Here you sound like you're gonna list a bunch of reasons but you give only one. Consider adding reasons or reformulating this bit.}
 to choose these two in particular is that it would be desirable to be
 able to handle basic conceptual difficulties before turning to more
 complex issues or attempting to implement probabilistic standards of
 proof in trial proceedings.
 
-\section{Probability thresholds}\label{probability-thresholds}
+\hypertarget{probability-thresholds}{%
+\section{Probability thresholds}\label{probability-thresholds}}
 
 Imagine you are a trier of fact, say a judge or a juror, who is expected
 to make a decision about the guilt of a defendant who faces criminal
@@ -424,7 +429,8 @@ presented at trial warrants a conviction. More specifically, the
 question is whether the evidence as a whole establishes the defendant's
 guilt beyond a reasonable doubt.
 
-\subsection{The basic idea}\label{the-basic-idea}
+\hypertarget{the-basic-idea}{%
+\subsection{The basic idea}\label{the-basic-idea}}
 
 Legal probabilists have proposed to interpret proof beyond a reasonable
 doubt as the requirement that the defendant's probability of guilt,
@@ -469,8 +475,9 @@ beyond a reasonable doubt standard. Since it lies in between the other
 two, it can be interpreted as the requirement that the plaintiff
 establish their versions of the facts with, say, 75-80\% probability.
 
+\hypertarget{mixed-reactions-from-legal-practitioners}{%
 \subsection{Mixed reactions from legal
-practitioners}\label{mixed-reactions-from-legal-practitioners}
+practitioners}\label{mixed-reactions-from-legal-practitioners}}
 
 When appellate courts have examined the question whether standards of
 proof can be quantified using probabilities, they have often answered in
@@ -537,10 +544,9 @@ Harlan of the United States Supreme Court:
 \dots in a judicial proceeding in which there is a dispute about the facts of some earlier event, the factfinder cannot acquire unassailably accurate knowledge of what happened. Instead, all the factfinder can acquire is a belief of what probably happened. The intensity of this belief -- the degree to which a factfinder is convinced that a given act actually occurred -- can, of course, vary. In this regard, a standard of proof represents an attempt to instruct the factfinder concerning the degree of confidence our society thinks he should have in the correctness of factual conclusions for a particular type of adjudication.\footnote{In re Winship, 397 U.S. 358, 370 (1970). This is landmark decision by the United States Supreme Court establishing  that the beyond a reasonable doubt standard must be applied to both adults and juvenile defendants.}
 \end{quote}
 
-\noindent
-After this methodological premise, Justice Harlan explicitly endorses a
-probabilistic interpretation of standards of proof, using the expression
-`degree of confidence' instead of `probability':
+\noindent After this methodological premise, Justice Harlan explicitly
+endorses a probabilistic interpretation of standards of proof, using the
+expression `degree of confidence' instead of `probability':
 
 \begin{quote}
 Although the phrases 'preponderance of the evidence' and 'proof beyond a reasonable doubt' are quantitatively imprecise, they do communicate to the finder of fact different notions concerning the degree of confidence he is expected to have in the correctness of his factual conclusions.
@@ -548,7 +554,8 @@ Although the phrases 'preponderance of the evidence' and 'proof beyond a reasona
 
 \todo{You only talk about Harlan; it would be nice to have more examples of people embracing probabilistic explications.}
 
-\subsection{Practical worries}\label{practical-worries}
+\hypertarget{practical-worries}{%
+\subsection{Practical worries}\label{practical-worries}}
 
 The remarks by Justice Harlan notwithstanding, legal practioners seem in
 general quite opposed to quantifying standards of proof
@@ -579,10 +586,9 @@ criminal trial, these claims would look as follows:
  should be the decision criterion for criminal convictions.
   \end{tabular}
 
-\noindent
-Those worried about implementation might reason thusly. If guilt cannot
-be quantified probabilistically---for example, in terms of the
-conditional probability of \(G\) given the total evidence \(E\)---no
+\noindent Those worried about implementation might reason thusly. If
+guilt cannot be quantified probabilistically---for example, in terms of
+the conditional probability of \(G\) given the total evidence \(E\)---no
 probabilistic threshold could ever be used as a decision criterion.
 Since the quantification claim is unfeasible and the threshold claim
 rests on the quantification claim, the threshold claim should be
@@ -600,7 +606,8 @@ After all, the likelihood of success of such a program of radical reform
 of trial proceedings is uncertain. Fortunately, there is a less radical
 way to respond.
 
-\subsection{Idealization}\label{idealization}
+\hypertarget{idealization}{%
+\subsection{Idealization}\label{idealization}}
 
 Legal probabilists can admit they are not---at least, not yet---engaged
 with implementation or trial reform. In fact, the quantification claim
@@ -619,9 +626,9 @@ rather than a way to reach precise numerical assessments\dots
 \hspace*{\fill} (Taroni et al., 2014, (p.~xv))
 \end{quote}
 
-\noindent
-Even from a probabilist standpoint, the quantification of guilt can well
-be an idealization which has, primarily, a heuristic role.
+\noindent Even from a probabilist standpoint, the quantification of
+guilt can well be an idealization which has, primarily, a heuristic
+role.
 
 Just as the quantification claim can be interpreted in two different
 ways, the same can be said of the threshold claim. For one thing, we can
@@ -651,21 +658,21 @@ could be relied upon to recall, let alone to
 perform, [their] humanizing function}. \hspace*{\fill} (Tribe, 1971)
 \end{quote}
 
-\noindent
-But this worry does not apply if we interpret the threshold claim in a
-non-mechanistic way. This is the interpretation we shall adopt in this
-chapter. To avoid setting the bar for legal probabilism too high, we
-will not be concerned with practical issues that arise if we wanted to
-deploy a probabilistic threshold directly. We will grant that, at least
-for now, successful implementation of such thresholds is not viable. For
-the time being, probabilistic thresholds are best understood as
-offerring an theoretical, analytical model of trial decisions. The fact
-that this theoretical model cannot be easily operationalized does not
-mean that the model is pointless. There are multiple ways in which such
-a model, even if unfit for direct deployment in trial proceedings, can
-offer insights into trial decision-making.
+\noindent But this worry does not apply if we interpret the threshold
+claim in a non-mechanistic way. This is the interpretation we shall
+adopt in this chapter. To avoid setting the bar for legal probabilism
+too high, we will not be concerned with practical issues that arise if
+we wanted to deploy a probabilistic threshold directly. We will grant
+that, at least for now, successful implementation of such thresholds is
+not viable. For the time being, probabilistic thresholds are best
+understood as offerring an theoretical, analytical model of trial
+decisions. The fact that this theoretical model cannot be easily
+operationalized does not mean that the model is pointless. There are
+multiple ways in which such a model, even if unfit for direct deployment
+in trial proceedings, can offer insights into trial decision-making.
 
-\subsection{Minimizing expected costs}\label{minimizing-expected-costs}
+\hypertarget{minimizing-expected-costs}{%
+\subsection{Minimizing expected costs}\label{minimizing-expected-costs}}
 
 Here is an illustration of the analytic power of the probabilistic
 interpretation of proof standards. Standards of proof are usually ranked
@@ -677,15 +684,16 @@ in a criminal trial than in a civil trial. A mistaken conviction will
 injustly deprive the defedant of basic liberties or even life. Instaed,
 a mistaken decision in a civil trial would not encroach upon someone's
 basic liberties since decisions in civil trials are mostly about
-imposing monetary compensation. This argument can be made precise by
-pairing probability thresholds with expected utility theory, a
-well-establish paradigm of rational decision-making used in psychology
-and economic theory. At its simplest, decision theory based on the
-maximization of expected utility states that between a number of
-alternative courses of action, the one with the highest expected utility
-(or with the lowest expected cost) should be preferred. This theory is
-general and can be applied to a variety of situations, including civil
-or criminal trials.
+imposing monetary compensation.
+
+This argument can be made precise by pairing probability thresholds with
+expected utility theory, a well-establish paradigm of rational
+decision-making used in psychology and economic theory. At its simplest,
+decision theory based on the maximization of expected utility states
+that between a number of alternative courses of action, the one with the
+highest expected utility (or with the lowest expected cost) should be
+preferred. This theory is general and can be applied to a variety of
+situations, including civil or criminal trials.
 
 To see how this works, note that trial decisions can be factually
 erroneous in two ways. A trial decision can be a false positive---i.e.~a
@@ -708,24 +716,23 @@ resulting from a mistaken acquittal---namely,
 
 \[ \text{convict provided}           \frac{\cost(CI)}{\cost(AG)} < \frac{\pr{G | E}}{\pr{I | E }}.\footnote{This follows from $\pr{I | E } \cdot \cost(CI) <  \pr{G | E} \cdot \cost(AG)$.} \]
 
-\noindent
-For the inequality to hold, the ratio of posterior probabilities
-\(\frac{\pr{G | E}}{\pr{I | E}}\) should exceed the cost ratio
-\(\frac{\cost(CI)}{\cost(AG)}\). So long as the costs can be quantified,
-the probability threshold can be determined. For example, consider a
-cost ratio of nine according to which a mistaken conviction is nine
-times as costly as a mistaken acquittal. The corresponding probability
-threshold will be 90\%. On this reading, in order to meet the standard
-of proof beyond a reasonable doubt, the prosecution should provide
-evidence that establishes the defendant's guilt with at least 90\%
-probability, or in formulas, \(\pr{G | E} > 90\%\). The higher the cost
-ratio, the higher the requisite threshold. The lower the cost ratio, the
-lower the requiste threshold. For example, if the cost ratio is 99, the
-threshold would be as high as 99\%, but if the cost ratio is 2, the
-threshold would only be 75\%. This model assumes, simplistically, that
-correct decisions do not bring any positive utility. More complex models
-are also possible (Dekay, 1996; Laudan, 2016), but the basic idea is the
-same.
+\noindent For the inequality to hold, the ratio of posterior
+probabilities \(\frac{\pr{G | E}}{\pr{I | E}}\) should exceed the cost
+ratio \(\frac{\cost(CI)}{\cost(AG)}\). So long as the costs can be
+quantified, the probability threshold can be determined. For example,
+consider a cost ratio of nine according to which a mistaken conviction
+is nine times as costly as a mistaken acquittal. The corresponding
+probability threshold will be 90\%. On this reading, in order to meet
+the standard of proof beyond a reasonable doubt, the prosecution should
+provide evidence that establishes the defendant's guilt with at least
+90\% probability, or in formulas, \(\pr{G | E} > 90\%\). The higher the
+cost ratio, the higher the requisite threshold. The lower the cost
+ratio, the lower the requiste threshold. For example, if the cost ratio
+is 99, the threshold would be as high as 99\%, but if the cost ratio is
+2, the threshold would only be 75\%. This model assumes, simplistically,
+that correct decisions do not bring any positive utility. More complex
+models are also possible (Dekay, 1996; Laudan, 2016), but the basic idea
+is the same. \todo{R: add plot.}
 
 The same line of argument applies to civil cases. Let a false
 attribution of liability \(FL\) be a decision to find the defendant
@@ -741,9 +748,8 @@ rule of decision would be as follows:
 
 \[ \text{find the defendant civilly liable provided}  \frac{\cost(FL)}{\cost(PN)} < \frac{\pr{L | E}}{\pr{NL | E}}.\footnote{This follows from $\pr{ NL | E } \cdot \cost(FP) <  \pr{L | E} \cdot \cost(FNL)$} \]
 
-\noindent
-If the cost ratio \(\frac{\cost(FP)}{\cost(PN)}\) is set to 1, the
-threshold for liability judgments should equal 50\%, a common
+\noindent If the cost ratio \(\frac{\cost(FP)}{\cost(PN)}\) is set to 1,
+the threshold for liability judgments should equal 50\%, a common
 intepretation of the preponderance standard in civil cases. This means
 that \(\pr{L | E}\) should be at least 50\% for a defedant to be found
 civilly liable.
@@ -772,19 +778,17 @@ the cost ratio between criminal and civil litigation:
 In a civil suit between two private parties for money damages, for example, we view it as no more serious in general for there to be an erroneous verdict in the defendant's favor than for there to be an erroneous verdict in the plaintiff's favor \dots In a criminal case, on the other hand, we do not view the social disutility of convicting an innocent man as equivalent to the disutility of acquitting someone who is guilty. In Re Winship (1970), 397 U. S. 358, 371.
 \end{quote}
 
-\noindent
-To underscore the differences in the cost ratios, Harlan cites an
-earlier decision of the United States Supreme Court that emphasizes how
-a defendant's liberty has a transcending value:
+\noindent To underscore the differences in the cost ratios, Harlan cites
+an earlier decision of the United States Supreme Court that emphasizes
+how a defendant's liberty has a transcending value:
 
 \begin{quote}
 [t]here is always in litigation a margin of error \dots, representing error in factfinding, which both parties must take into account \dots [w]here one party has at stake an interest of transcending value -- as a criminal defendant his liberty -- \dots this margin of error is \textit{reduced} as to him by the process of placing on the other 
 party [i.e.\ the prosecutor] the standard of \dots persuading the factfinder at the conclusion of the trial of his guilt beyond a reasonable doubt. Speiser v. Randall (1958), 357 U.S. 513, 525-26.
 \end{quote}
 
-\noindent
-Claims about cost ratios and their magnitude, and claims about
-differences between criminal and civil cases, can of of course be
+\noindent Claims about cost ratios and their magnitude, and claims about
+differences between criminal and civil cases, can of course be
 contested. Some have argued, for example, that the standard of proof in
 criminal cases should be lower than commonly assumed, and they have done
 so by offerring a different assessment of the cost ratio (CITE LAUDAN --
@@ -795,10 +799,10 @@ the point for now is that probabilistic thresholds, when paired with
 expected utility theory, provide an analytical framework to justify as
 well as meaningfully debate the different degrees of stringency
 necessary for decision criteria---i.e.~legal proof standards---in civil
-or criminal trials.In later chapters, we will examine more in detail how
-a probaility-based analytical framework acan help to theorize about the
-values that should inform trial decisions, such as the minimization of
-expected costs, the maximization of truth and accuracy, and the fair
+or criminal trials. In later chapters, we will examine more in detail
+how a probaility-based analytical framework acan help to theorize about
+the values that should inform trial decisions, such as the minimization
+of expected costs, the maximization of truth and accuracy, and the fair
 allocation of the risk of of error. (REFER HERE TO THESE LATER CHAPTERS)
 
 \subsection{SUGGESTION}
@@ -827,7 +831,66 @@ HERE IS A TENTATIVE IDEA OF WHAT TO DISCUSS:
   PROBABILISTIC FRAMEWORK IS A RICH ANALYTICAL TOOL
 \end{enumerate}
 
-\section{Theoretical challenges}\label{theoretical-challenges}
+\subsection{Minimizing overall errors}
+
+Althought the maximization of expected utility is a well-known principle
+for guiding decisions in many domains of application, some may be
+skeptical about its feasibility for guiding decisions in trial
+proceedings. Another approach is to think of trial decisions not in
+individual cases, but a part of a system of adjudication. Think about
+the criminal justice as a whole, making decisions about the guilt and
+innocence of thousands of defendants facing trial and committing type I
+and type II errors. Once again, understading standards of proof as
+probability thresholds help to understand how decisional errors are
+managed and allocated at this systemic level.
+
+Consider an idealized model of the criminal trial system.\\
+Each defendant is assigned a probability \(x\) of criminal liability (or
+guilt) based on the evidence presented at trial. As is standard, this
+probability ranges between 0 and 1, or 0\% and 100\%. Since over a
+period of time many defendants face charges, the guilt probability will
+have its own distribution. Extreme guilty probabilities set at 0\% or
+100\%, presumably, are assigned rarely in trials if ever, while values
+between 40\% and 80\% are more common.\\
+A rigorous way to express this distribution is by means of a probability
+density function, call it \(f(x)\).\\
+The figure below uses a right skewed distribution
+\(\textsf{beta(18,3)}\).
+
+\begin{center}
+    \includegraphics[width=10cm]{beta(18,3)2.png}
+\end{center}
+
+\noindent The right skew of the distribution reflects the assumption
+that defendants in criminal cases are prosecuted only if the
+incriminating evidence against them is strong. It should be no surprise
+that most defendants are assigned a high probability of guilt. The
+distribution of the probability of liability in civil cases over a
+period of time might look quite different, perhaps centered around 50\%
+or 60\%.
+
+In the figure above, the threshold for conviction is set at \(>80\%\),
+and the area under the curve to the right of the threshold is about
+\(.79\). According to this model, 79\% of defendants on trial are
+convicted and 21\% acquitted. These figures are close to the rates of
+conviction and acquittal in many countries (REFERENCES?). Since \(f(x)\)
+is a probability density, the total area under the curve adds up to 1,
+encompassing all defendants, both convicted and acquitted defendants.
+
+If the threshold becomes more stringent---for example, it moves up to
+85\%---the rate of conviction would decrease provided the underlying
+distribution does not change. But if the distribution becomes more
+skewed toward the right---say \textsf{beta(25,3)}---the rate of
+conviction could still be about 79\% even with a more stringent
+threshold of 85\%.
+
+\begin{center}
+    \includegraphics[width=10cm]{dbeta(25,3)2.png}
+\end{center}
+
+\hypertarget{theoretical-challenges---new-chapter-would-statrt-here}{%
+\section{Theoretical challenges - NEW CHAPTER WOULD STATRT
+HERE}\label{theoretical-challenges---new-chapter-would-statrt-here}}
 
 Let's take stock. We briefly examined difficulties in implementation for
 probabilistic standards of proof and set those aside. We then offered a
@@ -846,10 +909,12 @@ turn and then examine a promising line of response within legal
 probabilism based on likelihood ratios instead of posterior
 probabilities.
 
-\subsection{The problem of priors}\label{the-problem-of-priors}
+\hypertarget{the-problem-of-priors}{%
+\subsection{The problem of priors}\label{the-problem-of-priors}}
 
+\hypertarget{naked-statistical-evidence}{%
 \subsection{Naked statistical
-evidence}\label{naked-statistical-evidence}
+evidence}\label{naked-statistical-evidence}}
 
 Suppose one hundred, identically dressed prisoners are out in a yard
 during recreation. Suddenly, ninety-nine of them assault and kill the
@@ -949,7 +1014,8 @@ Fisher, 2012; Ho, 2008; Moss, 2018; Nunn, 2015; Pardo, 2018; Pritchard,
 probabilism cannot be a defensible theoretical position without offering
 a story about naked statistical evidence.
 
-\subsection{Conjuction paradox}\label{conjuction-paradox}
+\hypertarget{conjuction-paradox}{%
+\subsection{Conjuction paradox}\label{conjuction-paradox}}
 
 Another theoretical difficulty that any theory of the standard of proof
 should address is the difficulty about conjunction. First formulated by
@@ -978,32 +1044,28 @@ be equivalent, where \(S\) is a placeholder for the standard of proof:
 \end{tabular}
 \end{center}
 
-\noindent
-In other words, the conjunction principles requires that
+\noindent In other words, the conjunction principles requires that
 \[S[A \wedge B] \text{ iff } S[A] \wedge S[B],\]
 
-\noindent
-where \(S[X]\) means that claim or hypothesis \(X\) is established
-according to standard \(S\). The conjunction principle seems consistent
-with---perhaps even required by---the case law. For example, the United
-States Supreme Court writes that in criminal cases
+\noindent where \(S[X]\) means that claim or hypothesis \(X\) is
+established according to standard \(S\). The conjunction principle seems
+consistent with---perhaps even required by---the case law. For example,
+the United States Supreme Court writes that in criminal cases
 
 \begin{quote}
 the accused [is protected] against conviction except upon proof beyond a reasonable doubt of \textit{every fact} necessary to constitute the crime with which he is charged. In re Winship (1970), 397 U.S. 358, 364. 
 \end{quote}
 
-\noindent
-A plausible way to interpret this quotation is to posit this identity:
-to establish someone's guilt beyond a reasonable doubt \textit{just is}
-to establish each element of the crime beyond a reasonable doubt. That
-is,
+\noindent A plausible way to interpret this quotation is to posit this
+identity: to establish someone's guilt beyond a reasonable doubt
+\textit{just is} to establish each element of the crime beyond a
+reasonable doubt. That is,
 
 \[BARD[A \wedge B] \text{ iff } BARD[A] \wedge BARD[B],\]
 
-\noindent
-where the conjunction \(A \et B\) comprises all the material facts that,
-according to the applicable law, constitute the crime with with the
-accused is charged.
+\noindent where the conjunction \(A \et B\) comprises all the material
+facts that, according to the applicable law, constitute the crime with
+with the accused is charged.
 
 The trouble is that the conjunction principle is inconsistent with a
 probabilistic interpretation of the standard of proof. For suppose the
@@ -1110,11 +1172,11 @@ Understood this way, the conjuction principle for pieces of evidence
 can be formulated, as follows:
 \[\text{S[$a, A$] and S[$b, B$] iff S[$a \wedge b, A\wedge B$]},\]
 
-\noindent
-where \(\text{S}[E, H]\) means that evidence \(E\) supports hypothesis
-\(H\) by standard \(S\). This statement is a refinement of the earlier
-one that was formulated only in terms of claims \(A\) and \(B\) while
-disregarding the roles of the supporting evidence \(a\) and \(b\).
+\noindent where \(\text{S}[E, H]\) means that evidence \(E\) supports
+hypothesis \(H\) by standard \(S\). This statement is a refinement of
+the earlier one that was formulated only in terms of claims \(A\) and
+\(B\) while disregarding the roles of the supporting evidence \(a\) and
+\(b\).
 
 This new formulation of the conjunction principle is compatible with the
 fact that risks accumulate. Hypothesis \(A\) and \(B\) could be attacked
@@ -1221,8 +1283,9 @@ factor \(\frac{\pr{E | H}}{\pr{E}}\).
 \label{network-conjunction}
 \end{figure}
 
+\hypertarget{specific-narratives-ideas-of-a-solution-to-theoretical-difficulties}{%
 \section{Specific Narratives {[}IDEAS OF A SOLUTION TO THEORETICAL
-DIFFICULTIES{]}}\label{specific-narratives-ideas-of-a-solution-to-theoretical-difficulties}
+DIFFICULTIES{]}}\label{specific-narratives-ideas-of-a-solution-to-theoretical-difficulties}}
 
 MARCELLO: I AM NOW HAVING SECOND THOUGHTS (AGAIN!) ABOUT THE STRUCTURE
 OF THIS CHAPTER. I FEEL THAT IN THIS CHAPTER WE SHOULD ONLY DESCRIBE THE
@@ -1301,10 +1364,9 @@ Washington statute about negligent driving:
 (1)(a) A person is guilty of negligent driving in the first degree if he or she operates a motor vehicle in a manner that is both negligent and endangers or is likely to endanger any person or property, and exhibits the effects of having consumed liquor or marijuana or any drug or exhibits the effects of having inhaled or ingested any chemical, whether or not a legal substance, for its intoxicating or hallucinatory effects. RCW 46.61.5249
 \end{quote}
 
-\noindent
-In other words, a prosecutor who wishes to establish beyond a reasonable
-doubt that the defendant is guilty of negligent driving should
-establish:
+\noindent In other words, a prosecutor who wishes to establish beyond a
+reasonable doubt that the defendant is guilty of negligent driving
+should establish:
 
 \begin{quote}
 (a) the the defendant operated a vehicle
@@ -1313,15 +1375,15 @@ establish:
 (d) that the defendant -- presumably, immediately after the incident -- exihibited the signs of intoxication by liquor or drugs
 \end{quote}
 
-\noindent
-These four claims form a common narratives about what happenned. NEED TO
-COMPLETe THIS. BASIC IDEA IS THAT, FIRST, YOU ESTABLISH THE NARTRATIVES,
-AND, SECOND, THE NARRATIVE IF TRUE PROVES EACH ELEMENT. SO TO PROVE EACH
-ELEMENT SIMPLY MEANS TO PROVE A NARRARTIVE FROM WHICH ALL ELEMENTS
-FOLLOW DEDUCTIVELY. THERE IS NO PINT IN THIKING ABOUT WHETHER EACH
-ELEMENT HAS BEEN PROVEN.
+\noindent These four claims form a common narratives about what
+happenned. NEED TO COMPLETe THIS. BASIC IDEA IS THAT, FIRST, YOU
+ESTABLISH THE NARTRATIVES, AND, SECOND, THE NARRATIVE IF TRUE PROVES
+EACH ELEMENT. SO TO PROVE EACH ELEMENT SIMPLY MEANS TO PROVE A
+NARRARTIVE FROM WHICH ALL ELEMENTS FOLLOW DEDUCTIVELY. THERE IS NO PINT
+IN THIKING ABOUT WHETHER EACH ELEMENT HAS BEEN PROVEN.
 
-\section{The comparative stratgey}\label{the-comparative-stratgey}
+\hypertarget{the-comparative-stratgey}{%
+\section{The comparative stratgey}\label{the-comparative-stratgey}}
 
 Instead of thinking in terms of absolute probability threshold, standard
 of proof can be understood comparatively (Cheng, 2012). Say the
@@ -1374,19 +1436,13 @@ conditional probabilities are:
 \begin{align*}
 p_\Delta &= \pr{H_\Delta \vert E} \\
 p_\Pi & = \pr{H_\Pi \vert E}
-\end{align*}
-
-\noindent The expected costs for deciding that \(H_\Delta\) and
-\(H_\Pi\), respectively, are:
-
-\begin{align*}
+\end{align*} \noindent The expected costs for deciding that \(H_\Delta\)
+and \(H_\Pi\), respectively, are: \begin{align*}
 E(D_\Delta) & = p_\Delta 0 + p_\Pi c_2 = c_2p_\Pi\\
 E(D_\Pi) & = p_\Delta c_1 + p_\Pi 0 = c_1 p_\Delta
-\end{align*}
-
-\noindent For this reason, on these assumptions, we would like to choose
-\(H_\Pi\) just in case \(E(D_\Pi) < E(D_\Delta)\). This condition is
-equivalent to:
+\end{align*} \noindent For this reason, on these assumptions, we would
+like to choose \(H_\Pi\) just in case \(E(D_\Pi) < E(D_\Delta)\). This
+condition is equivalent to:
 
 \vspace{-6mm}
 
@@ -1410,11 +1466,9 @@ At the same time, in a civil trial, the legal system expresses no preference bet
 \begin{align}
 \nonumber 1 &< \frac{p_\Pi}{p_\Delta} \\
 \label{eq:cheng_comp1} p_\Pi &> p_\Delta 
-\end{align}
-
-\noindent That is, in standard civil litigation we are to find for the
-plaintiff just in case \(H_\Pi\) is more probable given the evidence
-than \(H_\Delta\), which seems plausible.
+\end{align} \noindent That is, in standard civil litigation we are to
+find for the plaintiff just in case \(H_\Pi\) is more probable given the
+evidence than \(H_\Delta\), which seems plausible.
 
 This instruction is somewhat more general than the usual suggestion of
 the preponderance standard in civil litigation, according to which the
@@ -1430,14 +1484,10 @@ Cheng to discuss this issue. In it, the plaintiff claims that the
 defendant was speeding (\(S\)) and that the crash caused her neck injury
 (\(C\)). Thus, \(H_\Pi\) is \(S\et C\). Suppose that given total
 evidence \(E\), the conjuncts, taken separately, meet the decision
-standard of RLP:
-
-\begin{align}
+standard of RLP: \begin{align}
  \nonumber 
  \frac{\pr{S\vert E}}{\pr{\n S \vert E}} > 1   & & \frac{\pr{C\vert E}}{\pr{\n C \vert E}} > 1
-\end{align}
-
-\noindent The question, clearly, is whether
+\end{align} \noindent The question, clearly, is whether
 \(\frac{\mathtt{P}(S\et C\vert E)}{H_\Delta \vert E}>1\). But to answer
 it, we have to decide what \(H_\Delta\) is. This is the point where
 Cheng's remark that \(H_\Delta\) isn't normally simply \(\n H_\Pi\).
@@ -1445,7 +1495,6 @@ Instead, he insists, there are three alternative defense scenarios:
 \(H_{\Delta_1}= S\et \n C\), \(H_{\Delta_2}=\n S \et C\), and
 \(H_{\Delta_3}=\n S \et \n C\). How does \(H_\Pi\) compare to each of
 them? Cheng (assuming independence) argues:
-
 \begin{align}\label{eq:cheng-multiplication}
 \frac{\pr{S\et C\vert E}}{\pr{S\et \n C\vert E}} & = \frac{\pr{S\vert E}\pr{C\vert E}}{\pr{S \vert E}\pr{\n C \vert E}}  =\frac{\pr{C\vert E}}{\pr{\n C \vert E}} > 1 \\
 \nonumber
@@ -1470,33 +1519,23 @@ corresponding likelihood ratio is
 
 Now, with this notation the \emph{odds form of Bayes' Theorem} tells us
 that the posterior odds equal the likelihood ratio multiplied by prior
-odds:
-
-\begin{align*}
+odds: \begin{align*}
 \frac{\pr{H_\Pi \vert E}}{\pr{H_\Delta \vert E}} & = 
 \frac{\pr{E\vert H_\Pi}}{\pr{E\vert H_\Delta}} 
 \times \frac{\pr{H_\Pi}}{\pr{H_\Delta}}
- \end{align*}
-
-\noindent [@cheng2012reconceptualizing: 1267] insists that in civil
-trials the prior probabilities should be equal. Granted this assumption,
-prior odds are 1, and we have:
-
+ \end{align*} \noindent [@cheng2012reconceptualizing: 1267] insists that
+in civil trials the prior probabilities should be equal. Granted this
+assumption, prior odds are 1, and we have:
 \begin{align}\label{eq:cheng_simple_odds}
 \frac{\pr{H_\Pi \vert E}}{\pr{H_\Delta \vert E}} & = 
 \frac{\pr{E\vert H_\Pi}}{\pr{E\vert H_\Delta}} 
- \end{align}
-
-This means that our original task of establishing that the left-hand
-side is greater than 1 now reduces to establishing that so is the
-right-hand side, which means that RLP tells us to convict just in case:
-
-\begin{align}\label{eq:Cheng:compar2}
+ \end{align} This means that our original task of establishing that the
+left-hand side is greater than 1 now reduces to establishing that so is
+the right-hand side, which means that RLP tells us to convict just in
+case: \begin{align}\label{eq:Cheng:compar2}
 \pr{E\vert H_\Pi} &> \pr{E\vert H_\Delta}
-\end{align}
-
-Thus, \eqref{eq:Cheng:compar2} tells us to convict just in case
-\(LR(E)>1\).
+\end{align} Thus, \eqref{eq:Cheng:compar2} tells us to convict just in
+case \(LR(E)>1\).
 
 Now, in the case of the gatecrasher paradox, our evidence is
 statistical. In our variant
@@ -1546,17 +1585,13 @@ speeding, the neck injury was not caused by the accident,
 \(\pr{\n S \vert E}\pr{C\vert E}\) does not have to be \(0\)!
 
 Without independence, the best that we can get, say for the first line
-of \eqref{eq:cheng-multiplication}, is:
-
-\begin{align*}
+of \eqref{eq:cheng-multiplication}, is: \begin{align*}
 \pr{S\et C\vert E} & = \pr{C\vert E}\pr{S\vert C \et E}\\
 \pr{S\et \n C\vert E} & = \pr{\n C\vert E}\pr{S\vert  \n C \et E}
-\end{align*}
-
-and even if we know that \(\pr{C\vert E}>\pr{\n C\vert E}\), this tells
-us nothing about the comparison of \(\pr{S\et C\vert E}\) and
-\(\pr{S\et \n C\vert E}\), because the remaining factors can make up for
-the former inequality.
+\end{align*} and even if we know that
+\(\pr{C\vert E}>\pr{\n C\vert E}\), this tells us nothing about the
+comparison of \(\pr{S\et C\vert E}\) and \(\pr{S\et \n C\vert E}\),
+because the remaining factors can make up for the former inequality.
 
 Perhaps even more importantly, much of the heavy lifting here is done by
 the strategic splitting of the defense line into multiple scenarios. The
@@ -1576,7 +1611,8 @@ scenarios). So, if we take this approach seriously, the more elements a
 case has, the more at disadvantage the defense is. This is clearly
 undesirable.
 
-\section{The likelihood strategy}\label{the-likelihood-strategy}
+\hypertarget{the-likelihood-strategy}{%
+\section{The likelihood strategy}\label{the-likelihood-strategy}}
 
 Focusing on posterior probabilities is not the only approach that legal
 probabilists can pursue. By Bayes' theorem, the following holds, using
@@ -1630,7 +1666,8 @@ suitable threshold that is a function of the cost ratio and the prior
 ratio. The outstanding question is how this threshold is to be
 determined.
 
-\subsection{Kaplow}\label{kaplow}
+\hypertarget{kaplow}{%
+\subsection{Kaplow}\label{kaplow}}
 
 Quite independently, a similar approach to juridical decisions has been
 proposed by Kaplow (2014) -- we'll call it
@@ -1650,11 +1687,9 @@ we have:
 \begin{align*}
 \frac{\pr{H_\Pi\vert E}}{\pr{H_\Delta\vert E}} =  \frac{\pr{H_\Pi}}{\pr{H_\Delta}}\times \frac{\pr{E\vert H_\Pi}}{\pr{E\vert H_\Delta}} &>1 \Leftrightarrow\\
   \Leftrightarrow \frac{\pr{E\vert H_\Pi}}{\pr{E\vert H_\Delta}} &> \frac{\pr{H_\Delta}}{\pr{H_\Pi}} 
- \end{align*}
-
-\noindent So, as expected, \(LR^\star\) is not unique and depends on
-priors. Analogous reformulations are available for thresholds other than
-\(0.5\).
+ \end{align*} \noindent So, as expected, \(LR^\star\) is not unique and
+depends on priors. Analogous reformulations are available for thresholds
+other than \(0.5\).
 
 Kaplow's point is not that we can reformulate threshold decision rules
 in terms of priors-sensitive likelihood ratio thresholds. Rather, he
@@ -1668,9 +1703,7 @@ them into account, Kaplow suggests, we should convict if and only if:
 \begin{align}
 \label{eq:Kaplow_decision}
 \pr{H_\Pi\vert E}\times G > \pr{H_\Delta\vert E}\times L
-\end{align}
-
-\noindent Now, \eqref{eq:Kaplow_decision} is equivalent to:
+\end{align} \noindent Now, \eqref{eq:Kaplow_decision} is equivalent to:
 
 \vspace{-6mm}
 
@@ -1686,7 +1719,8 @@ them into account, Kaplow suggests, we should convict if and only if:
 
 \noindent This is the general format of Kaplow's decision standard.
 
-\subsection{Dawid}\label{dawid}
+\hypertarget{dawid}{%
+\subsection{Dawid}\label{dawid}}
 
 Here is a slightly different perspective, due to Dawid (1987), that also
 suggests that juridical decisions should be likelihood-based. The focus
@@ -1730,7 +1764,6 @@ any particular choice of prior beliefs. Let \(a\) be the event that the
 witness testified that \(A\). It is useful to think about the problem in
 terms of \emph{odds, conditional odds (O)} and
 \emph{likelihood ratios (LR)}:
-
 \begin{align*} O(A)  & = \frac{\pr{A}}{\pr{\n A}}\\
  O(A\vert a) &= \frac{\pr{A\vert a}}{\pr{\n A \vert a}}  \\
  LR(a\vert A) &= \frac{\pr{a\vert A}}{\pr{a\vert \n A}}. 
@@ -1751,9 +1784,7 @@ with Bayesian updating, we should have:
  \frac{\prr{a\vert A}}{\prr{a\vert \n A}}
  \times
  \frac{\prr{A}}{\prr{\n A}}
-  \end{align*}
-
-that is,
+  \end{align*} that is,
 
 \vspace{-6mm}
 
@@ -1783,7 +1814,8 @@ witness's reliability in the sense introduced above only if the prior is
 
 \noindent  First we multiplied both sides by the denominator. Then we divided both sides by $\pr{a\vert A}$ and multiplied on the right side. Then we used our background notation and information. Next, we manipulated the right-hand side algebraically and  moved  $-p$ to the left-hand side. Move $2rel(a)p$ to the left and manipulate the result algebraically to get to the last line.}
 
-\subsection{Likelihood and DAC}\label{likelihood-and-dac}
+\hypertarget{likelihood-and-dac}{%
+\subsection{Likelihood and DAC}\label{likelihood-and-dac}}
 
 But how does our preference for the likelihood ratio as a measure of
 evidence strength relate to DAC? Let's go through Dawid's reasoning.
@@ -1822,50 +1854,35 @@ Let us see why the above claim holds. The calculations are my
 reconstruction and are not due to Dawid. The reader might be annoyed
 with me working out the mundane details of Dawid's claims, but it turns
 out that in the case of Dawid's strategy, the devil is in the details.
-The independence of witnesses gives us:
-
-\begin{align*}
+The independence of witnesses gives us: \begin{align*}
  \pr{a \et b \vert A\et B}& =0.7^2=0.49\\
  \pr{a \et b \vert A\et \n B}& =  0.7\times 0.3=0.21\\
  \pr{a \et b \vert \n A\et B}& =  0.3\times 0.7=0.21\\
  \pr{a \et b \vert \n A\et \n B}& =  0.3\times 0.3=0.09
- \end{align*}
-
-Without assuming \(A\) and \(B\) to be independent, let the
-probabilities of \(A\et B\), \(\n A\et B\), \(A\et \n B\),
+ \end{align*} Without assuming \(A\) and \(B\) to be independent, let
+the probabilities of \(A\et B\), \(\n A\et B\), \(A\et \n B\),
 \(\n A\et \n B\) be \(p_{11}, p_{01}, p_{10}, p_{00}\). First, let's see
 what \(\pr{a\et b}\) boils down to.
 
 By the law of total probability we have:
-
 \begin{align}\label{eq:total_lower}
  \pr{a\et b} & = 
                      \pr{a\et b \vert A \et B}\pr{A\et B} + \\ &  \nonumber
                      +\pr{a\et b \vert A \et \n B}\pr{A\et \n B} \\ &  \nonumber
  + \pr{a\et b \vert \n A \et B}\pr{\n A\et B} + \\ & \nonumber
                      + \pr{a\et b \vert \n A \et \n B}\pr{\n A\et \n B}
- \end{align}
-
-\noindent which, when we substitute our values and constants, results
-in:
-
-\begin{align*}
+ \end{align} \noindent which, when we substitute our values and
+constants, results in: \begin{align*}
                      & = 0.49p_{11}+0.21(p_{10}+p_{01})+0.09p_{00}
- \end{align*}
-
-Now, note that because \(p_{ii}\)s add up to one, we have
-\(p_{10}+p_{01}=1-p_{00}-p_{11}\). Let us continue.
-
-\begin{align*}
+ \end{align*} Now, note that because \(p_{ii}\)s add up to one, we have
+\(p_{10}+p_{01}=1-p_{00}-p_{11}\). Let us continue. \begin{align*}
     & = 0.49p_{11}+0.21(1-p_{00}-p_{11})+0.09p_{00} \\
                      & = 0.21+0.28p_{11}-0.12p_{00}
  \end{align*}
 
 Next, we ask what the posterior of \(A\et B\) given \(a\et b\) is (in
 the last line, we also multiply the numerator and the denominator by
-100).
-
-\begin{align*}
+100). \begin{align*}
  \pr{A\et B\vert a \et b} & =
          \frac{\pr{a\et b \vert A \et B}\pr{A\et B}}
              {\pr{a\et b}}\\
@@ -1906,14 +1923,9 @@ provides positive support of the conjunction of their claims.
 
 Let us see why the claim holds. First, we introduce an abbreviation for
 witness reliability:
-
 \begin{align*}\mathbf{a} &=rel(a)=\pr{a\vert A}=\pr{\n a\vert \n A}>0.5\\ 
 \mathbf{b} &=rel(b)=\pr{b\vert B}=\pr{\n b\vert \n A}>0.5
-\end{align*}
-
-Our independence assumption means:
-
-\begin{align*}
+\end{align*} Our independence assumption means: \begin{align*}
 \pr{a\et b \vert A\et B}  &= \mathbf{ab}\\
 \pr{a\et b \vert A\et \n B} & = \mathbf{a(1-b)}\\
 \pr{a\et b \vert \n A\et B}  & = \mathbf{(1-a)b}\\
@@ -1932,46 +1944,36 @@ $\pr{\n A \et B} = p_{01}$ & $\pr{\n A \et \n B}=p_{00}$
 \end{center}
 
 Our assumptions entail \(0\neq p_{ij}\neq 1\) for \(i,j\in \{0,1\}\)
-and:
-
-\begin{align}\label{eq:sumupto1}
+and: \begin{align}\label{eq:sumupto1}
 p_{11}+p_{10}+p_{01}+p_{00}&=1
 \end{align}
 
 \noindent So, we can use this with \eqref{eq:total_lower} to get:
-
 \begin{align}\label{eq:aetb}
 \pr{a\et b} & =  \mathbf{ab}p_{11} + \mathbf{a(1-b)}p_{10}+\mathbf{(1-a)b}p_{01} + \mathbf{(1-a)(1-b)}p_{00}\\ \nonumber
 & = p_{11}\mathbf{ab} + p_{10}(\mathbf{a}-\mathbf{ab}) + p_{01}(\mathbf{b}-\mathbf{ab})+p_{00}(1-\mathbf{b}-\mathbf{a}+\mathbf{ab})
 \end{align}
 
 Let's now work out what the posterior of \(A\et B\) will be, starting
-with an application of the Bayes' Theorem:
-
-\begin{align} \nonumber
+with an application of the Bayes' Theorem: \begin{align} \nonumber
 \pr{A\et B \vert a\et b} & = \frac{\pr{a\et b \vert A \et B}\pr{A\et B}}{\pr{a\et b}}
 \\ \label{eq:boiled}
 & = \frac{\mathbf{ab}p_{11}}{p_{11}\mathbf{ab} + p_{10}(\mathbf{a}-\mathbf{ab}) + p_{01}(\mathbf{b}-\mathbf{ab})+p_{00}(1-\mathbf{b}-\mathbf{a}+\mathbf{ab})}
-\end{align}
-
-To answer our question we therefore have to compare the content of
-\eqref{eq:boiled} to \(p_{11}\) and our claim holds just in case:
-
-\begin{align*}
+\end{align} To answer our question we therefore have to compare the
+content of \eqref{eq:boiled} to \(p_{11}\) and our claim holds just in
+case: \begin{align*}
 \frac{\mathbf{ab}p_{11}}{p_{11}\mathbf{ab} + p_{10}(\mathbf{a}-\mathbf{ab}) + p_{01}(\mathbf{b}-\mathbf{ab})+p_{00}(1-\mathbf{b}-\mathbf{a}+\mathbf{ab})} &> p_{11}
-\end{align*}\begin{align*}
+\end{align*} \begin{align*}
  \frac{\mathbf{ab}}{p_{11}\mathbf{ab} + p_{10}(\mathbf{a}-\mathbf{ab}) + p_{01}(\mathbf{b}-\mathbf{ab})+p_{00}(1-\mathbf{b}-\mathbf{a}+\mathbf{ab})} & > 1\end{align*}
-
 \begin{align}  
  \label{eq:goal}
 p_{11}\mathbf{ab} + p_{10}(\mathbf{a}-\mathbf{ab}) + p_{01}(\mathbf{b}-\mathbf{ab})+p_{00}(1-\mathbf{b}-\mathbf{a}+\mathbf{ab}) & < \mathbf{ab}
-\end{align}
-
-Proving \eqref{eq:goal} is therefore our goal for now. This is achieved
-by the following
+\end{align} Proving \eqref{eq:goal} is therefore our goal for now. This
+is achieved by the following
 reasoning:\footnote{Thanks to Pawel Pawlowski for working on this proof with me.}
 
-\hspace{-7mm} \resizebox{13.5cm}{!}{
+\hspace{-7mm}
+\resizebox{13.5cm}{!}{
 \begin{tabular}{llr}
  1. & $\mathbf{b}>0.5,\,\,\, \mathbf{a}>0.5$ & \mbox{assumption}\\
  2. & $2\mathbf{b}>1,\,\,\, 2\mathbf{a}> 1$ & \mbox{from 1.}\\
@@ -1987,7 +1989,9 @@ reasoning:\footnote{Thanks to Pawel Pawlowski for working on this proof with me.
 12. & $\mathbf{ab}(1-p_{11})> p_{10}(\mathbf{a}-\mathbf{ab})+p_{01}(\mathbf{b}-\mathbf{ab})+p_{00}(1-\mathbf{b}-\mathbf{a}+\mathbf{ab})$ & \mbox{11. and equation \eqref{eq:sumupto1}}\\
 13. & $\mathbf{ab}- \mathbf{ab}p_{11}> p_{10}(\mathbf{a}-\mathbf{ab})+p_{01}(\mathbf{b}-\mathbf{ab})+p_{00}(1-\mathbf{b}-\mathbf{a}+\mathbf{ab})$ & \mbox{12., algebraic manipulation}\\
 14. & $\mathbf{ab}> \mathbf{ab}p_{11}+ p_{10}(\mathbf{a}-\mathbf{ab})+p_{01}(\mathbf{b}-\mathbf{ab})+p_{00}(1-\mathbf{b}-\mathbf{a}+\mathbf{ab})$ & \mbox{13., moving from left to right}\\
-\end{tabular}} \%\textbackslash{}end\{adjustbox\}
+\end{tabular}}
+
+\%\textbackslash{}end\{adjustbox\}
 
 \vspace{1mm}
 
@@ -1998,7 +2002,8 @@ The last line is what we have been after.
 Now that we have as a theorem an explication of what Dawid informally
 suggested, let's see whether it helps the probabilist handling of DAC.
 
-\subsection{Kaplow}\label{kaplow-1}
+\hypertarget{kaplow-1}{%
+\subsection{Kaplow}\label{kaplow-1}}
 
 On RLP, at least in certain cases, the decision rule leads us to
 \eqref{eq:Cheng:compar2}, which tells us to decide the case based on
@@ -2013,13 +2018,16 @@ Add here stuff from Marcello's Mind paper about the prisoner
 hypothetical. Then, discuss Rafal's critique of the likelihood ratio
 threshold and see where we end up.
 
-\section{Challenges (again)}\label{challenges-again}
+\hypertarget{challenges-again}{%
+\section{Challenges (again)}\label{challenges-again}}
 
+\hypertarget{likelihood-ratio-and-the-problem-of-the-priors}{%
 \subsection{Likelihood ratio and the problem of the
-priors}\label{likelihood-ratio-and-the-problem-of-the-priors}
+priors}\label{likelihood-ratio-and-the-problem-of-the-priors}}
 
+\hypertarget{dawids-likelihood-strategy-doesnt-help}{%
 \subsection{Dawid's likelihood strategy doesn't
-help}\label{dawids-likelihood-strategy-doesnt-help}
+help}\label{dawids-likelihood-strategy-doesnt-help}}
 
 Recall that DAC was a problem posed for the decision standard proposed
 by TLP, and the real question is how the information resulting from Fact
@@ -2080,15 +2088,11 @@ are listed below as \eqref{eq:lambdamu}, the fourth is that if the
 conditions in \eqref{eq:lambdamu} hold,
 \(\pr{A\et B\vert a\et b}>max(\pr{A\vert a},\pr{B\vert b})\). Notice
 that \(\lambda=LR(a\vert A)\) and \(\mu=LR(b\vert B)\). Suppose the
-first three claims hold, that is:
-
-\begin{align}\label{eq:lambdamu}
+first three claims hold, that is: \begin{align}\label{eq:lambdamu}
  \pr{A\et B\vert  a\et b} &= \lambda \mu p_{11}/(\lambda \mu p_{11} + \lambda p_{10} +\mu p_{01} + p_{00})\\
  \pr{A\vert a} & = \frac{\lambda p_{11}}{1-p_{11}+\lambda p_{11}}\nonumber \\
  \pr{B\vert b} & = \frac{\mu p_{11}}{1-p_{11}+\mu p_{11}} \nonumber 
- \end{align}
-
-\noindent Is it really the case that
+ \end{align} \noindent Is it really the case that
 \(\pr{A\et B\vert a\et b}>\pr{A\vert a},\pr{B\vert b}\)? It does not
 seem so. Let \(\mathbf{a}=\mathbf{b}=0.6\),
 \(pr =\la p_{11},p_{10},p_{01},p_{00}\ra=\la 0.1, 0.7, 0.1, 0.1 \ra\).
@@ -2108,46 +2112,33 @@ also easily compute
    \mathbf{ab}p_{11} + \mathbf{a}(1-\mathbf{b})p_{10} + (1-\mathbf{a})\mathbf{b}p_{01} + (1-\mathbf{a})(1-\mathbf{b})p_{00}
  }  
     \approx 0.147
- \end{align*}
-
-The posterior probability of \(A\et B\) is not only lower than the
-larger of the individual posteriors, but also lower than any of them!
+ \end{align*} The posterior probability of \(A\et B\) is not only lower
+than the larger of the individual posteriors, but also lower than any of
+them!
 
 So what went wrong in Dawid's calculations in \eqref{eq:lambdamu}? Well,
 the first formula is correct. However, let us take a look at what the
 second one says (the problem with the third one is pretty much the
-same):
-
-\begin{align*}
+same): \begin{align*}
 \pr{A\vert a } & = \frac{\frac{\pr{a\vert A}}{\pr{\n a \vert A}}\times \pr{A\et B}}{\pr{\n (A\et B)}+ \frac{\pr{a\vert A}}{\pr{\n a \vert A}} \times \pr{A\et B}}
-\end{align*}
-
-Quite surprisingly, in Dawid's formula for \(\pr{A\vert a}\), the
-probability of \(A\et B\) plays a role. To see that it should not take
-any \(B\) that excludes \(A\) and the formula will lead to the
-conclusion that \emph{always} \(\pr{A\vert a}\) is undefined. The
-problem with Dawid's formula is that instead of \(p_{11}=\pr{A\et B}\)
-he should have used \(\pr{A}=p_{11}+p_{10}\), in which case the formula
-would rather say this:
-
-\begin{align*}
+\end{align*} Quite surprisingly, in Dawid's formula for
+\(\pr{A\vert a}\), the probability of \(A\et B\) plays a role. To see
+that it should not take any \(B\) that excludes \(A\) and the formula
+will lead to the conclusion that \emph{always} \(\pr{A\vert a}\) is
+undefined. The problem with Dawid's formula is that instead of
+\(p_{11}=\pr{A\et B}\) he should have used \(\pr{A}=p_{11}+p_{10}\), in
+which case the formula would rather say this: \begin{align*}
 \pr{A\vert a } & = \frac{\frac{\pr{a\vert A}}{\pr{\n a \vert A}}\times \pr{A}}{\pr{\n A}+ \frac{\pr{a\vert A}}{\pr{\n a \vert A}} \times \pr{A}}\\
 & = \frac{\frac{\pr{a\vert A}\pr{A}}{\pr{\n a \vert A}}}{\frac{\pr{\n a\vert A}\pr{\n A}}{\pr{\n a\vert A}}+ \frac{\pr{a\vert A}\pr{A}}{\pr{\n a \vert A}}}\\
 & = \frac{\pr{a\vert A}\pr{A}}{\pr{\n a\vert A}\pr{\n A} + \pr{a\vert A}\pr{A}}
-\end{align*}
-
-Now, on the assumption that witness' sensitivity is equal to their
-specificity, we have \(\pr{a\vert \n A}=\pr{\n a \vert A}\) and can
-substitute this in the denominator:
-
+\end{align*} Now, on the assumption that witness' sensitivity is equal
+to their specificity, we have \(\pr{a\vert \n A}=\pr{\n a \vert A}\) and
+can substitute this in the denominator:
 \begin{align*} & = \frac{\pr{a\vert A}\pr{A}}{\pr{ a\vert \n A}\pr{\n A} + \pr{a\vert A}\pr{A}}\end{align*}
-
 and this would be a formulation of Bayes' theorem. And indeed with
 \(\pr{A}=p_{11}+p_{10}\) the formula works (albeit its adequacy rests on
 the identity of \(\pr{a\vert \n A}\) and \(\pr{\n a \vert A}\)), and
-yields the result that we already obtained:
-
-\begin{align*}
+yields the result that we already obtained: \begin{align*}
 \pr{A\vert a} &= \frac{\lambda(p_{11}+p_{10})}{1-(p_{11}+p_{10})+\lambda(p_{11}+p_{10})}\\
 &= \frac{1.5\times 0.8}{1- 0.8+1.5\times 0.8} \approx 0.8571
 \end{align*}
@@ -2178,16 +2169,12 @@ individual ones.
 
 \intermezzoa
 
-Let us make sure this is the case. We have:
-
-\begin{align*}
+Let us make sure this is the case. We have: \begin{align*}
  LR(a\vert A) & = \frac{\pr{a\vert A}}{\pr{a\vert \n A}}\\
  &= \frac{\pr{a\vert A}}{\pr{\n a\vert  A}} \\
 & =  \frac{\mathbf{a}}{\mathbf{1-a}}.
-\end{align*}
-
-where the substitution in the denominator is legitimate only because
-witness' sensitivity is identical to their specificity.
+\end{align*} where the substitution in the denominator is legitimate
+only because witness' sensitivity is identical to their specificity.
 
 With the joint likelihood, the reasoning is just a bit more tricky. We
 will need to know what \(\pr{a\et b \vert \n (A\et B)}\) is. There are
@@ -2196,19 +2183,14 @@ three disjoint possible conditions in which the condition holds:
 \(a\et b\) in these three scenarios are respectively
 \(\mathbf{a(1-b),(1-a)b,(1-a)(1-b)}\) (again, the assumption of
 independence is important), and so on the assumption \(\n(A\et B)\) the
-probability of \(a\et b\) is:
-
-\begin{align*}
+probability of \(a\et b\) is: \begin{align*}
 \pr{a\et b \vert \n (A\et B)} & = 
 \mathbf{a}(1-\mathbf{b})+(1-\mathbf{a})\mathbf{b}+(1-\mathbf{a})(1-\mathbf{b})\\ 
 & = 
 \mathbf{a}(1-\mathbf{b})+(1-\mathbf{a})(\mathbf{b} + 1-\mathbf{b})\\
 & = \mathbf{a}(1-\mathbf{b})+(1-\mathbf{a})\\
 & = \mathbf{a}-\mathbf{a}\mathbf{b}+1-\mathbf{a} = 1- \mathbf{a}\mathbf{b}
-\end{align*}
-
-So, on the assumption of witness independence, we have:
-
+\end{align*} So, on the assumption of witness independence, we have:
 \begin{align*}
 LR(a\et b \vert A \et B) & = \frac{\pr{a\et b \vert A \et B}}{\pr{a \et b\vert \n (A \et B)}} \\
 & = \frac{\mathbf{ab}}{\mathbf{1-ab}}
@@ -2261,8 +2243,7 @@ fellow picks up the phone. I tell him what my problem is, and he reacts:
  --- & It's not fine! I'm cold here! \\
  --- & Look, sir, my notion of it being warm in your office is that the building provides some improvement to what the situation would be if it wasn't there. And you agree that you're definitely warmer than you'd be if your desk was standing outside, don't you? Your, so to speak, posterior warmth is higher than your prior warmth, right? 
  \end{tabular}
-
-\vspace{1mm}
+ \vspace{1mm}
 
 Dawid's discussion is in the vein of the above conversation. In response
 to a problem with the adjudication model under consideration Dawid
@@ -2326,8 +2307,9 @@ innocence, and what priors of guilt should be appropriate? This, indeed,
 is an important problem; but it does not have much to do with DAC, and
 should be discussed separately.
 
+\hypertarget{problems-with-chengs-relative-likelihood}{%
 \subsection{Problems with Cheng's relative
-likelihood}\label{problems-with-chengs-relative-likelihood}
+likelihood}\label{problems-with-chengs-relative-likelihood}}
 
 In the process of solving the gatecrasher paradox, to reach
 \eqref{eq:cheng_simple_odds}, Cheng makes another controversial
@@ -2384,30 +2366,26 @@ to rely on \(E\) was exactly that we did not know whether Tom paid.
 
 If you are not buying into the above argument, here is another way to
 state the problem. Say your priors are \(\pr{E}=e\), \(\pr{H_\Pi}=\pi\).
-By Bayes' Theorem we have:
-
-\begin{align*}
+By Bayes' Theorem we have: \begin{align*}
  \pr{E\vert H_\Pi} & = \frac{\pr{H_\Pi\vert E}e}{\pi}\\
  \pr{E\vert H_\Delta} & = \frac{\pr{H_\Delta\vert E}e}{1-\pi}
  \end{align*}
 
 \noindent Assuming our posteriors are taken from the statistical
 evidence, we have \(\pr{H_\Pi\vert E}=0.991\) and
-\(\pr{H_\Delta\vert E }=0.009\). So we have:
-
-\begin{align}
+\(\pr{H_\Delta\vert E }=0.009\). So we have: \begin{align}
  \label{eq:Cheng_lre} LR(E) & = \frac{\pr{H_\Pi\vert E}e}{\pi}\times \frac{1-\pi}{\pr{H_\Delta\vert E}e}\\ \nonumber
  & = \frac{\pr{H_\Pi \vert E} - \pr{H_\Pi\vert E}\pi}{\pr{H_\Delta\vert E}\pi}\\ \nonumber
  & = \frac{0.991-0.991\pi}{0.009\pi}
- \end{align}
+ \end{align} \noindent and \(LR(E)\) will be \(>1\) as soon as
+\(\pi<0.991\). This means that contrary to what Cheng suggested, in any
+situation in which the prior probability of guilt is less than the
+posterior probability of guilt, RLP tells us to convict. This, however,
+does not seem desirable.
 
-\noindent and \(LR(E)\) will be \(>1\) as soon as \(\pi<0.991\). This
-means that contrary to what Cheng suggested, in any situation in which
-the prior probability of guilt is less than the posterior probability of
-guilt, RLP tells us to convict. This, however, does not seem desirable.
-
+\hypertarget{problems-with-kaplows-stuff}{%
 \subsection{Problem's with Kaplow's
-stuff}\label{problems-with-kaplows-stuff}
+stuff}\label{problems-with-kaplows-stuff}}
 
 Kaplow does not discuss the conceptual difficulties that we are
 concerned with, but this will not stop us from asking whether DTLP can
@@ -2415,16 +2393,10 @@ handle them (and answering to the negative). Let us start with DAC.
 
 Say we consider two claims, \(A\) and \(B\). Is it generally the case
 that if they separately satisfy the decision rule, then so does
-\(A\et B\)? That is, do the assumptions:
-
-\begin{align*}
+\(A\et B\)? That is, do the assumptions: \begin{align*}
  \frac{\pr{E\vert A}}{\pr{E\vert \n A}}  & > \frac{\pr{\n A}}{\pr{A}} \times \frac{L}{G}\\
  \frac{\pr{E\vert B}}{\pr{E\vert \n B}}  & > \frac{\pr{\n B}}{\pr{B}} \times \frac{L}{G}
- \end{align*}
-
-\noindent entail
-
-\begin{align*}
+ \end{align*} \noindent entail \begin{align*}
  \frac{\pr{E\vert A\et B}}{\pr{E\vert \n (A\et B)}}  & > \frac{\pr{\n (A\et B)}}{
  \pr{A\et B}} \times \frac{L}{G}?
  \end{align*}
@@ -2453,9 +2425,7 @@ this, counterexamples for when this condition fails are analogous).
 First, notice that \(A\) and \(B\) taken separately satisfy
 \eqref{eq:Kaplow_decision2}. \(\pr{A}=\pr{\n A}=0.5\),
 \(\pr{\n A}/\pr{A}=1\) \(\pr{E\vert A}=1\), \(\pr{E\vert \n A}=0.4\).
-\eqref{eq:Kaplow_decision2} tells us to check:
-
-\begin{align*}
+\eqref{eq:Kaplow_decision2} tells us to check: \begin{align*}
  \frac{\pr{E\vert A}}{\pr{E\vert \n A}}&> \frac{L}{G}\times \frac{\pr{\n A}}{\pr{A}}\\
  \frac{1}{0.4} & > 1
  \end{align*}
@@ -2464,7 +2434,6 @@ First, notice that \(A\) and \(B\) taken separately satisfy
 For analogous reasons, we should also accept \(B\).
 \(\pr{B}=\pr{\n B}=0.5\), \(\pr{\n B}/\pr{B}=1\) \(\pr{E\vert B}=0.8\),
 \(\pr{E\vert \n B}=0.6\), so we need to check that indeed:
-
 \begin{align*}
  \frac{\pr{E\vert B}}{\pr{E\vert \n B}}&> \frac{L}{G}\times \frac{\pr{\n B}}{\pr{B}}\\
  \frac{0.8}{0.6} & > 1 
@@ -2473,9 +2442,7 @@ For analogous reasons, we should also accept \(B\).
 But now, \(\pr{A\et B}=0.3\), \(\pr{\n (A \et B)}=0.7\),
 \(\pr{\n (A\et B)}/\pr{A\et B}=2\frac{1}{3}\),
 \(\pr{E\vert A \et B}=1\), \(\pr{E\vert \n (A\et B)}=4/7\) and it is
-false that:
-
-\begin{align*}
+false that: \begin{align*}
  \frac{\pr{E\vert A \et B}}{\pr{E\vert \n (A\et B)}}&> \frac{L}{G}\times \frac{\pr{\n (A \et B)}}{\pr{A \et B}}\\
  \frac{7}{4} & > \frac{7}{3} 
  \end{align*}
@@ -2512,38 +2479,24 @@ Let us turn to the gatecrasher paradox.
 
 Suppose \(L=G\) and recall our abbreviations: \(\pr{E}=e\),
 \(\pr{H_\Pi}=\pi\). DTLP tells us to convict just in case:
-
 \begin{align*}
  LR(E) &> \frac{1-\pi}{\pi}
- \end{align*}
-
-\noindent From \eqref{eq:Cheng_lre} we already now that
-
+ \end{align*} \noindent From \eqref{eq:Cheng_lre} we already now that
 \begin{align*}
  LR(E) & = \frac{0.991-0.991\pi}{0.009\pi}
- \end{align*}
-
-\noindent so we need to see whether there are any \(0<\pi<1\) for
-which\\
-
+ \end{align*} \noindent so we need to see whether there are any
+\(0<\pi<1\) for which\\
 \begin{align*}
   \frac{0.991-0.991\pi}{0.009\pi} &> \frac{1-\pi}{\pi}
- \end{align*}
-
-\noindent Multiply both sides first by \(009\pi\) and then by \(\pi\):
-
-\begin{align*}
+ \end{align*} \noindent Multiply both sides first by \(009\pi\) and then
+by \(\pi\): \begin{align*}
  0.991\pi - 0.991\pi^2 &> 0.09\pi - 0.009\pi^2
- \end{align*}
-
-\noindent Simplify and call the resulting function \(f\):
-
+ \end{align*} \noindent Simplify and call the resulting function \(f\):
 \begin{align*}
  f(\pi) = - 0.982 \pi^2 + 0.982\pi &>0 
- \end{align*}
-
-\noindent The above condition is satisfied for any \(0<\pi <1\) (\(f\)
-has two zeros: \(\pi = 0\) and \(\pi = 1\)). Here is a plot of \(f\):
+ \end{align*} \noindent The above condition is satisfied for any
+\(0<\pi <1\) (\(f\) has two zeros: \(\pi = 0\) and \(\pi = 1\)). Here is
+a plot of \(f\):
 
 \includegraphics[width=12cm]{f-gate.png}
 
@@ -2563,18 +2516,13 @@ and \(G\)? The answer is, not too much.
 
 How sensitive is our analysis to the choice of \(L/G\)? Well, \(LR(E)\)
 does not change at all, only the threshold moves. For instance, if
-\(L/G=4\), instead of \(f\) we end up with
-
-\begin{align*}
+\(L/G=4\), instead of \(f\) we end up with \begin{align*}
  f'(\pi) = - 0.955 \pi^2 + 0.955\pi &>0 
- \end{align*}
-
-and the function still takes positive values on the interval \((0,1)\).
-In fact, the decision won't change until \(L/G\) increases to
-\(\approx 111\). Denote \(L/G\) as \(\rho\), and let us start with the
-general decision standard, plugging in our calculations for \(LR(E)\):
-
-\begin{align*}
+ \end{align*} and the function still takes positive values on the
+interval \((0,1)\). In fact, the decision won't change until \(L/G\)
+increases to \(\approx 111\). Denote \(L/G\) as \(\rho\), and let us
+start with the general decision standard, plugging in our calculations
+for \(LR(E)\): \begin{align*}
 LR(E) &> \frac{\pr{H_\Delta}}{\pr{H_\Pi}} \rho\\
 LR(E) &> \frac{1-\pi}{\pi} \rho \\
 \frac{0.991-0.991\pi}{0.009\pi} &> \frac{1-\pi}{\pi} \rho\\
@@ -2592,16 +2540,20 @@ LR(E) &> \frac{1-\pi}{\pi} \rho \\
 So, we conclude, in usual circumstances, DTLP does not handle the
 gatecrasher paradox.
 
+\hypertarget{probabilistic-thresholds-revised}{%
 \section{Probabilistic Thresholds
-Revised}\label{probabilistic-thresholds-revised}
+Revised}\label{probabilistic-thresholds-revised}}
 
+\hypertarget{likelihood-ratios-and-naked-statistical-evidence}{%
 \subsection{Likelihood ratios and naked statistical
-evidence}\label{likelihood-ratios-and-naked-statistical-evidence}
+evidence}\label{likelihood-ratios-and-naked-statistical-evidence}}
 
+\hypertarget{conjunction-paradox-and-bayesian-networks}{%
 \subsection{Conjunction paradox and Bayesian
-networks}\label{conjunction-paradox-and-bayesian-networks}
+networks}\label{conjunction-paradox-and-bayesian-networks}}
 
-\section{Conclusions}\label{conclusions}
+\hypertarget{conclusions}{%
+\section{Conclusions}\label{conclusions}}
 
 Where are we, how did we get here, and where can we go from here? We
 were looking for a probabilistically explicated condition \(\Psi\) such
@@ -2644,7 +2596,7 @@ The likelihood of the evidence is higher than the odds of innocence multiplied b
 Thus, each account either simply fails to satisfy the desiderata, or
 succeeds on rather unrealistic assumptions. Does this mean that a
 probabilistic approach to legal evidence evaluation should be abandoned?
-No. This only means that if we are to develop a general probabilistic
+No.~This only means that if we are to develop a general probabilistic
 model of legal decision standards, we have to do better. One promising
 direction is to go back to Cohen's pressure against
 \textbf{Requirement 1} and push against it. A brief paper suggesting
@@ -2660,37 +2612,38 @@ legal decision standards (Urbaniak, 2018), but a discussion of how this
 approach relates to DAC and the gatecrasher paradox lies beyond the
 scope of this paper.
 
-\section{References}\label{references}
+\hypertarget{references}{%
+\section{References}\label{references}}
 
 \hypertarget{refs}{}
-\hypertarget{ref-Allen1986A-Reconceptuali}{}
+\leavevmode\hypertarget{ref-Allen1986A-Reconceptuali}{}%
 Allen, R. J. (1986). A reconceptualization of civil trials. \emph{Boston
 University Law Review}, \emph{66}, 401--437.
 
-\hypertarget{ref-allen2001naturalized}{}
+\leavevmode\hypertarget{ref-allen2001naturalized}{}%
 Allen, R. J., \& Leiter, B. (2001). Naturalized epistemology and the law
 of evidence. \emph{Virginia Law Review}, \emph{87}(8), 1491--1550.
 JSTOR.
 
-\hypertarget{ref-allen2013}{}
+\leavevmode\hypertarget{ref-allen2013}{}%
 Allen, R. J., \& Stein, A. (2013). Evidence, probability and the burden
 of proof. \emph{Arizona Law Journal}, \emph{55}, 557--602.
 
-\hypertarget{ref-AllenPardo2019relative}{}
+\leavevmode\hypertarget{ref-AllenPardo2019relative}{}%
 Allen, R., \& Pardo, M. (2019). Relative plausibility and its critics.
 \emph{The International Journal of Evidence \& Proof}, \emph{23}(1-2),
 5--59. SAGE Publications. Retrieved from
 \url{https://doi.org/10.1177/1365712718813781}
 
-\hypertarget{ref-arkesEtAl2012}{}
+\leavevmode\hypertarget{ref-arkesEtAl2012}{}%
 Arkes, H. R., Shoots-Reinhard, B. L., \& Mayes, R. S. (2012).
 Disjunction between probability and verdict in juror decision making.
 \emph{Journal of Behavioral Decision Making}, \emph{25}(3), 276--294.
 
-\hypertarget{ref-Bernoulli1713Ars-conjectandi}{}
+\leavevmode\hypertarget{ref-Bernoulli1713Ars-conjectandi}{}%
 Bernoulli, J. (1713). \emph{Ars conjectandi}.
 
-\hypertarget{ref-BlomeTillmann2017}{}
+\leavevmode\hypertarget{ref-BlomeTillmann2017}{}%
 Blome-Tillmann, M. (2017). ``More likely than not'' --- Knowledge first
 and the role of bare statistical evidence in courts of law. In A.
 Carter, E. Gordon, \& B. Jarvi (Eds.), \emph{Knowledge
@@ -2698,217 +2651,217 @@ first---approaches in epistemology and mind} (pp. 278--292). Oxford
 University Press. Retrieved from
 \url{https://doi.org/10.1093/oso/9780198716310.003.0014}
 
-\hypertarget{ref-bolinger2018rational}{}
+\leavevmode\hypertarget{ref-bolinger2018rational}{}%
 Bolinger, R. (2018). The rational impermissibility of accepting (some)
 racial generalizations. \emph{Synthese}, 1--17. Springer.
 
-\hypertarget{ref-buchak2014belief}{}
+\leavevmode\hypertarget{ref-buchak2014belief}{}%
 Buchak, L. (2014). Belief, credence, and norms. \emph{Philosophical
 Studies}, \emph{169}(2), 285--311.
 
-\hypertarget{ref-cheng2012reconceptualizing}{}
+\leavevmode\hypertarget{ref-cheng2012reconceptualizing}{}%
 Cheng, E. (2012). Reconceptualizing the burden of proof. \emph{Yale LJ},
 \emph{122}, 1254. HeinOnline.
 
-\hypertarget{ref-Cohen1977The-probable-an}{}
+\leavevmode\hypertarget{ref-Cohen1977The-probable-an}{}%
 Cohen, J. (1977). \emph{The probable and the provable}. Oxford
 University Press.
 
-\hypertarget{ref-cohen1988difficulty}{}
+\leavevmode\hypertarget{ref-cohen1988difficulty}{}%
 Cohen, L. J. (1988). The difficulty about conjunction in forensic proof.
 \emph{The Statistician}, \emph{37}(4/5), 415. JSTOR. Retrieved from
 \url{https://doi.org/10.2307/2348767}
 
-\hypertarget{ref-dawid1987difficulty}{}
+\leavevmode\hypertarget{ref-dawid1987difficulty}{}%
 Dawid, A. P. (1987). The difficulty about conjunction. \emph{The
 Statistician}, 91--97. JSTOR.
 
-\hypertarget{ref-Dekay1996}{}
+\leavevmode\hypertarget{ref-Dekay1996}{}%
 Dekay, M. L. (1996). The difference between Blackstone-like error ratios
 and probabilistic standards of proof. \emph{Law and Social Inquiry},
 \emph{21}, 95--132.
 
-\hypertarget{ref-dhamiEtAl2015}{}
+\leavevmode\hypertarget{ref-dhamiEtAl2015}{}%
 Dhami, M. K., Lundrigan, S., \& Mueller-Johnson, K. (2015). Instructions
 on reasonable doubt: Defining the standard of proof and the jurors task.
 \emph{Psychology, Public Policy, and Law, 21(2), 169178}, \emph{21}(2),
 169--178.
 
-\hypertarget{ref-diBello2019}{}
-Di Bello, M. (2019a). Trial by statistics: Is a high probability of
-guilt enough to convict? \emph{Mind}.
-
-\hypertarget{ref-DiBello2019plausibility}{}
-Di Bello, M. (2019b). Probability and plausibility in juridical proof.
-\emph{International Journal of Evidence and Proof}.
-
-\hypertarget{ref-diamond90}{}
+\leavevmode\hypertarget{ref-diamond90}{}%
 Diamond, H. A. (1990). Reasonable doubt: To define, or not to define.
 \emph{Columbia Law Review}, \emph{90}(6), 1716--1736.
 
-\hypertarget{ref-ebert2018}{}
+\leavevmode\hypertarget{ref-diBello2019}{}%
+Di Bello, M. (2019a). Trial by statistics: Is a high probability of
+guilt enough to convict? \emph{Mind}.
+
+\leavevmode\hypertarget{ref-DiBello2019plausibility}{}%
+Di Bello, M. (2019b). Probability and plausibility in juridical proof.
+\emph{International Journal of Evidence and Proof}.
+
+\leavevmode\hypertarget{ref-ebert2018}{}%
 Ebert, P. A., Smith, M., \& Durbach, I. (2018). Lottery judgments: A
 philosophical and experimental study. \emph{Philosophical Psychology},
 \emph{31}(1), 110--138.
 
-\hypertarget{ref-Enoch2012Statistical}{}
+\leavevmode\hypertarget{ref-Enoch2012Statistical}{}%
 Enoch, D., Spectre, L., \& Fisher, T. (2012). Statistical evidence,
 sensitivity, and the legal value of knowledge. \emph{Philosophy and
 Public Affairs}, \emph{40}(3), 197--224.
 
-\hypertarget{ref-friedman2015}{}
+\leavevmode\hypertarget{ref-friedman2015}{}%
 Friedman, O., \& Turri, J. (2015). Is probabilistic evidence a source of
 knowledge? \emph{Cognitive Science}, \emph{39}(5), 1062--1080.
 
-\hypertarget{ref-haack2011legal}{}
+\leavevmode\hypertarget{ref-haack2011legal}{}%
 Haack, S. (2014). Legal probabilism: An epistemological dissent. In
 \emph{Haack2014-HAAEMS} (pp. 47--77).
 
-\hypertarget{ref-HeddenColyvan2019legal}{}
+\leavevmode\hypertarget{ref-HeddenColyvan2019legal}{}%
 Hedden, B., \& Colyvan, M. (2019). Legal probabilism: A qualified
 defence. \emph{Journal of Political Philosophy}, \emph{27}(4), 448--468.
 Wiley. Retrieved from \url{https://doi.org/10.1111/jopp.12180}
 
-\hypertarget{ref-ho2008philosophy}{}
+\leavevmode\hypertarget{ref-ho2008philosophy}{}%
 Ho, H. L. (2008). \emph{A philosophy of evidence law: Justice in the
 search for truth}. Oxford University Press.
 
-\hypertarget{ref-Horowitz1996}{}
+\leavevmode\hypertarget{ref-Horowitz1996}{}%
 Horowitz, I. A., \& Kirkpatrick, L. C. (1996). A concept in search of a
 definition: The effect of reasonable doubt instrcutions on certainty of
 guilt standards and jury verdicts. \emph{Law and Human Behaviour},
 \emph{20}(6), 655--670.
 
-\hypertarget{ref-Kaplan1968decision}{}
+\leavevmode\hypertarget{ref-Kaplan1968decision}{}%
 Kaplan, J. (1968). Decision theory and the fact-finding process.
 \emph{Stanford Law Review}, \emph{20}(6), 1065--1092.
 
-\hypertarget{ref-kaplow2014likelihood}{}
+\leavevmode\hypertarget{ref-kaplow2014likelihood}{}%
 Kaplow, L. (2014). Likelihood ratio tests and legal decision rules.
 \emph{American Law and Economics Review}, \emph{16}(1), 1--39. Oxford
 University Press.
 
-\hypertarget{ref-kaye79}{}
+\leavevmode\hypertarget{ref-kaye79}{}%
 Kaye, D. H. (1979a). The laws of probability and the law of the land.
 \emph{The University of Chicago Law Review}, \emph{47}(1), 34--56.
 
-\hypertarget{ref-Kaye79gate}{}
+\leavevmode\hypertarget{ref-Kaye79gate}{}%
 Kaye, D. H. (1979b). The paradox of the Gatecrasher and other stories.
 \emph{The Arizona State Law Journal}, 101--110.
 
-\hypertarget{ref-Laplace1814}{}
+\leavevmode\hypertarget{ref-Laplace1814}{}%
 Laplace, P. (1814). \emph{Essai philosophique sur les probabilités}.
 
-\hypertarget{ref-laudan2006truth}{}
+\leavevmode\hypertarget{ref-laudan2006truth}{}%
 Laudan, L. (2006). \emph{Truth, error, and criminal law: An essay in
 legal epistemology}. Cambridge University Press.
 
-\hypertarget{ref-laudan2016law}{}
+\leavevmode\hypertarget{ref-laudan2016law}{}%
 Laudan, L. (2016). \emph{The law's flaws: Rethinking trials and errors?}
 Law and society. College Publications. Retrieved from
 \url{https://books.google.pl/books?id=MvkWvgAACAAJ}
 
-\hypertarget{ref-Lempert1986}{}
+\leavevmode\hypertarget{ref-Lempert1986}{}%
 Lempert, R. O. (1986). The new evidence scholarship: Analysing the
 process of proof. \emph{Boston University Law Review}, \emph{66},
 439--477.
 
-\hypertarget{ref-Loftus1996}{}
+\leavevmode\hypertarget{ref-Loftus1996}{}%
 Loftus, E. F. (1996). \emph{Eyewitness testimony (revised edition)}.
 Harvard University Press.
 
-\hypertarget{ref-moss2018}{}
+\leavevmode\hypertarget{ref-moss2018}{}%
 Moss, S. (2018). \emph{Probabilistic knowledge}. Oxford University
 Press.
 
-\hypertarget{ref-Nesson1979Reasonable-doub}{}
+\leavevmode\hypertarget{ref-Nesson1979Reasonable-doub}{}%
 Nesson, C. R. (1979). Reasonable doubt and permissive inferences: The
 value of complexity. \emph{Harvard Law Review}, \emph{92}(6),
 1187--1225.
 
-\hypertarget{ref-newman1993}{}
+\leavevmode\hypertarget{ref-newman1993}{}%
 Newman, J. O. (1993). Beyon ``reasonable doub''. \emph{New York
 University Law Review}, \emph{68}(5), 979--1002.
 
-\hypertarget{ref-niedermeierEtAl1999}{}
+\leavevmode\hypertarget{ref-niedermeierEtAl1999}{}%
 Niedermeier, K. E., Kerr, N. L., \& Messeé, L. A. (1999). Jurors' use of
 naked statistical evidence: Exploring bases and implications of the
 Wells effect. \emph{Journal of Personality and Social Psychology},
 \emph{76}(4), 533--542.
 
-\hypertarget{ref-nunn2015}{}
+\leavevmode\hypertarget{ref-nunn2015}{}%
 Nunn, A. G. (2015). The incompatibility of due process and naked
 statistical evidence. \emph{Vanderbilt Law Review}, \emph{68}(5),
 1407--1433.
 
-\hypertarget{ref-pardo2018}{}
+\leavevmode\hypertarget{ref-pardo2018}{}%
 Pardo, M. S. (2018). Safety vs.~Sensitivity: Possible worlds and the law
 of evidence. \emph{Legal Theory}, \emph{24}(1), 50--75.
 
-\hypertarget{ref-pritchard2005epistemic}{}
+\leavevmode\hypertarget{ref-pritchard2005epistemic}{}%
 Pritchard, D. (2005). \emph{Epistemic luck}. Clarendon Press.
 
-\hypertarget{ref-pundik2017}{}
+\leavevmode\hypertarget{ref-pundik2017}{}%
 Pundik, A. (2017). Freedom and generalisation. \emph{Oxford Journal of
 Legal Studies}, \emph{37}(1), 189--216.
 
-\hypertarget{ref-redmayne2008exploring}{}
+\leavevmode\hypertarget{ref-redmayne2008exploring}{}%
 Redmayne, M. (2008). Exploring the proof paradoxes. \emph{Legal Theory},
 \emph{14}(4), 281--309. Cambridge University Press.
 
-\hypertarget{ref-Roth2010}{}
+\leavevmode\hypertarget{ref-Roth2010}{}%
 Roth, A. (2010). Safety in numbers? Deciding when DNA alone is enough to
 convict. \emph{New York University Law Review}, \emph{85}(4),
 1130--1185.
 
-\hypertarget{ref-schwartz2017ConjunctionProblemLogic}{}
+\leavevmode\hypertarget{ref-schwartz2017ConjunctionProblemLogic}{}%
 Schwartz, D. S., \& Sober, E. R. (2017). The Conjunction Problem and the
 Logic of Jury Findings. \emph{William \& Mary Law Review}, \emph{59}(2),
 619--692.
 
-\hypertarget{ref-smith2017}{}
+\leavevmode\hypertarget{ref-smith2017}{}%
 Smith, M. (2018). When does evidence suffice for conviction?
 \emph{Mind}, \emph{127}(508), 1193--1218.
 
-\hypertarget{ref-Stein05}{}
+\leavevmode\hypertarget{ref-Stein05}{}%
 Stein, A. (2005). \emph{Foundations of evidence law}. Oxford University
 Press.
 
-\hypertarget{ref-sykes1999}{}
+\leavevmode\hypertarget{ref-sykes1999}{}%
 Sykes, D. L., \& Johnson, J. T. (1999). Probabilistic evidence versus
 the representation of an event: The curious case of Mrs. Prob's dog.
 \emph{Basic and Applied Social Psychology}, \emph{21}(3), 199--212.
 
-\hypertarget{ref-taroni2006bayesian}{}
+\leavevmode\hypertarget{ref-taroni2006bayesian}{}%
 Taroni, F., Biedermann, A., Bozza, S., Garbolino, P., \& Aitken, C.
 (2014). \emph{Bayesian networks for probabilistic inference and decision
 analysis in forensic science} (2nd ed.). John Wiley \& Sons.
 
-\hypertarget{ref-thomson1986liability}{}
+\leavevmode\hypertarget{ref-thomson1986liability}{}%
 Thomson, J. J. (1986). Liability and individualized evidence. \emph{Law
 and Contemporary Problems}, \emph{49}(3), 199--219. JSTOR.
 
-\hypertarget{ref-tribe1971trial}{}
+\leavevmode\hypertarget{ref-tribe1971trial}{}%
 Tribe, L. H. (1971). Trial by mathematics: Precision and ritual in the
 legal process. \emph{Harvard Law Review}, \emph{84}(6), 1329--1393.
 JSTOR.
 
-\hypertarget{ref-urbaniak2018narration}{}
+\leavevmode\hypertarget{ref-urbaniak2018narration}{}%
 Urbaniak, R. (2018). Narration in judiciary fact-finding: A
 probabilistic explication. \emph{Artificial Intelligence and Law},
 1--32.
 
-\hypertarget{ref-walen2015}{}
+\leavevmode\hypertarget{ref-walen2015}{}%
 Walen, A. (2015). Proof beyond a reasonable doubt: A balanced
 retributive account. \emph{Louisiana Law Review}, \emph{76}(2),
 355--446.
 
-\hypertarget{ref-wasserman1991morality}{}
+\leavevmode\hypertarget{ref-wasserman1991morality}{}%
 Wasserman, D. T. (1991). The morality of statistical proof and the risk
 of mistaken liability. \emph{Cardozo L. Rev.}, \emph{13}, 935.
 HeinOnline.
 
-\hypertarget{ref-wells1992naked}{}
+\leavevmode\hypertarget{ref-wells1992naked}{}%
 Wells, G. (1992). Naked statistical evidence of liability: Is subjective
 probability enough? \emph{Journal of Personality and Social Psychology},
 \emph{62}(5), 739--752. American Psychological Association.
