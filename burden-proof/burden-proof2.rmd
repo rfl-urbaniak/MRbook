@@ -557,75 +557,61 @@ The rates of correct decisions---true convictions and true acquittals or more ge
 \end{center}
 
 
-The size of the grey regions in the figures above---which correspond to false positives and false negatives---is affected by the location of threshold $t$. As $t$ moves upwards, the rate of false positives decreases but the rate of false negatives increases. Conversely, as $t$ moves downwards, the rate of false positives increases but the rate of false negatives decreases. This trade-off is inescapable so long as the underlying distribution is fixed. We have already remarked on the possibility that the distribution would change in shape as a result of changes in the probability threhsold. We will retunr to this point more extensively later in the chapter.
+The size of the grey regions in the figures above---which correspond to false positives and false negatives---is affected by the location of threshold $t$. As $t$ moves upwards, the rate of false positives decreases but the rate of false negatives increases. Conversely, as $t$ moves downwards, the rate of false positives increases but the rate of false negatives decreases. This trade-off is inescapable so long as the underlying distribution is fixed. We have already remarked on the possibility that the distribution would change in shape as a result of changes in the probability threhsold. We will retunr to this point later in the chapter.
 
-
-Below are both error rates---false positives and false negatives---and their sum plotted against a choice of $t$, while holding fixed the   density function $\textsf{binom(18,3)}$.
-The graph shows that any threshold that is no greater than 50\% would minimize the total error rate %(comprising false positives and false negatives). 
+Below are both error rates---false positives and false negatives---and their sum plotted against a choice of $t$, while holding fixed the density function $\textsf{binom(18,3)}$. The graph shows that any threshold that is no greater than 50\% would minimize the total error rate %(comprising false positives and false negatives). 
 A more stringent threshold, say $>90\%$, would instead  significantly reduce the rate of false positives but also significantly increase the rate of false negatives, es expected. 
 
 \begin{center}
     \includegraphics[width=12cm]{errors.png}
 \end{center}
  
-
-In general, the threshold that minimizes the expected rate of incorrect decisions overall, no matter the underlying distribution, lies at $50\%$ 
-%The decision threshold located  at $50\%$ (and it this particular case, also below) minimizes the\todo{I checked, and in this particular case the lines really are horizontal to the left, so I modified the description a bit} expected rate of incorrect decisions overall (comprising false positives and false negatives). The claim that setting threshold at $t=.5$ minimizes the expected error rate for any  underlying distribution of $x$ is general and holds for $t=.5$ only
-%. It holds given the distribution $f(x)=$beta(18,3) as well as any other distribution 
+In general, the threshold that minimizes the expected rate of incorrect decisions overall, no matter the underlying distribution, lies at $50\%$. The claim that setting threshold at $t=.5$ minimizes the expected error rate holds given the distribution $f(x)=$beta(18,3) as well as any other distribution 
 \citep{kaye1982limits, Kaye1999Clarifying-the-, cheng2015}. To show this, 
-let $E(t)$ %as a function of threshold $t$ 
-be the sum of  rates of  false positive and false negative decisions:
-%(with respect to the whole class of defendants):
-%
+let $E(t)$ %as a function of threshold $t$ be the sum of  rates of 
+false positive and false negative decisions:
+
 \[E(t) = \int_0^t \! x f(x) \, \mathrm{d}x + \int_t^1 \! (1-x) f(x) \, \mathrm{d}x.
 \]
-%
- The overall rate of error is minimized when  $E(t)$ is the lowest. To determine the value of $t$ for which $E(t)$ is the lowest, set
+
+ The overall rate of error is minimized when  $E(t)$ is the lowest. 
+ To determine the value of $t$ for which $E(t)$ is the lowest, set
 the derivative of $E(t)$ %and $R(t)$ 
 to zero, that is, $\frac{d}{dt}  E(t)= 0$. 
-By calculus, 
-%
-%\[\frac{d}{dt}  E(t) = tf(t)  -(1-t)f(t)\] 
-%
-%Since $\frac{d}{dt}  E(t)= 0$, it follows that
-%$tf(t)  = (1-t)f(t)$ and thus 
+By calculus,
 $t=1/2$.\footnote{Note that $\frac{d}{dt}  E(t)$ is the the sum of the derivatives of $\int_0^t \! x f(x) \, \mathrm{d}x$ 
 and 
-%$\int_t^1 \! x f(x) \, \mathrm{d}x$
+
 $\int_t^1 \!(1-x) f(x) \, \mathrm{d}x$
 , that is,
-%
+
 \[\frac{d}{dt} E(t) = \frac{d}{dt}  \int_0^t \! x f(x) \, \mathrm{d}x + \frac{d}{dt}  \int_t^1 \! (1-x) f(x) \, \mathrm{d}x.\]
-%
+
 By the fundamental theorem of calculus, 
-%
+
 \[\frac{d}{dt}   \int_0^t \! x f(x) \, \mathrm{d}x = tf(t) \text{ and }
 \frac{d}{dt}   \int_t^1 \! (1-x) f(x) \, \mathrm{d}x = -(1-t)f(t). \]
-%
+
 By plugging in the values, 
-%
+
 \[\frac{d}{dt}  E(t) = tf(t)  -(1-t)f(t). \]
-%
+
 Since $\frac{d}{dt}  E(t)= 0$, then $tf(t)  = (1-t)f(t)$
 and thus
 $t  = 1-t$, so 
 $t  = 1/2$ or a $>50\%$ threshold.
 } 
-%So a threshold of 50\% is the 
-%one that minimizes the aggregate 
-%rate of erroneous decisions. 
 This claims holds when the two decisional errors are assigned the same weight, or in other words, the costs of false positives and false negatives are  symmetric. The $>50\%$ threshold therefore should be most suitable for civil trials. In criminal trials, however, false convictions are typically considered significantly more costly than false acquittals, say a cost ratio of 9:1 \cite[but see][]{epps2015}. The sum of the two error rates can be weighted by their respective costs:
-%
+
 \[E(t) = \int_0^t \! x f(x) \, \mathrm{d}x + 9\int_t^1 \! (1-x) f(x) \, \mathrm{d}x.
 \]
-%
+
 Given a cost ratio of 9:1, the optimal threshold that minimizes the (weighted) overall rate of error is no longer $1/2$, but rather, $t=9/10=90\%$.\footnote{The proof is the same as before. Since $tf(t)  = 9(1-t)f(t)$, it follows that 
 $t  = 9/10$.} 
-%Whenever the decision threshold is more stringent than $>50\%$, the overall (unweighted) error minimization may be sacrificed to pursue other goals, for example, protecting more innocents against mistaken convictions, even at the cost of making a larger number of mistaken trial decisions overall. 
 
- The standard
-`proof beyond a reasonable doubt' is often paired with the Blackstone ratio, the principle that it is better that ten guilty defendants go free rather than even just one innocent be convicted. The exact ratio is a matter of controversy \citep{voloch1997}.
-It is tempting to think that, say, a 99\% threshold guarantees a 1:99 ratio between false convictions and false acquittals. But this would be hasty for at least two reasons.
+Whenever the decision threshold is more stringent than $>50\%$, the overall (unweighted) error minimization may be sacrificed to pursue other goals, for example, protecting more innocents against mistaken convictions, even at the cost of making a larger number of mistaken trial decisions overall. 
+
+ The standard `proof beyond a reasonable doubt' is often paired with the Blackstone ratio, the principle that it is better that ten guilty defendants go free rather than even just one innocent be convicted. The exact ratio is a matter of controversy \citep{voloch1997}. It is tempting to think that, say, a 99\% threshold guarantees a 1:99 ratio between false convictions and false acquittals. But this would be hasty for at least two reasons.
 First, probabilistic thresholds affect the expected rate of mistaken decisions. The actual rate may deviate from its expected value \citep{Kaye1999Clarifying-the-}. Second, if the threshold is $99\%$, \textit{at most} 1\% of decision against defendants are expected to be mistaken (false convictions) and \textit{at most} 99\% of the decisions in favor of the defendant are expected to be mistaken (false acquittals). The exact ratio will depend on the probabilities  assigned to defendants and how they are distributed  \citep{allen2014}. The (expected) rate of false positives and false negatives---and thus their ratio---depend on where the threshold is located but also on the distribution of the liability probability  as given by the density function $f(x)$.
 
 
