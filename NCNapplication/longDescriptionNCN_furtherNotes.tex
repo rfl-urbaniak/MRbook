@@ -1,3 +1,7 @@
+\PassOptionsToPackage{unicode=true}{hyperref} % options for packages loaded elsewhere
+\PassOptionsToPackage{hyphens}{url}
+\PassOptionsToPackage{dvipsnames,svgnames*,x11names*}{xcolor}
+%
 \documentclass[11pt,dvipsnames,enabledeprecatedfontcommands]{scrartcl}
 \usepackage{lmodern}
 \usepackage{amssymb,amsmath}
@@ -6,12 +10,9 @@
 \ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provides euro and other symbols
 \else % if luatex or xelatex
-  \ifxetex
-    \usepackage{mathspec}
-  \else
-    \usepackage{fontspec}
-  \fi
+  \usepackage{unicode-math}
   \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
 \fi
 % use upquote if available, for straight quotes in verbatim environments
@@ -21,14 +22,20 @@
 \usepackage[]{microtype}
 \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
 }{}
-\PassOptionsToPackage{hyphens}{url} % url is loaded by hyperref
-\usepackage[unicode=true]{hyperref}
-\PassOptionsToPackage{usenames,dvipsnames}{color} % color is loaded by hyperref
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\usepackage{xcolor}
+\usepackage{hyperref}
 \hypersetup{
             pdftitle={Rethinking legal probabilism},
             pdfauthor={Rafał Urbaniak},
             colorlinks=true,
             linkcolor=Maroon,
+            filecolor=Maroon,
             citecolor=Blue,
             urlcolor=blue,
             breaklinks=true}
@@ -42,12 +49,6 @@
 % margins by default, and it is still possible to overwrite the defaults
 % using explicit options in \includegraphics[width, height, ...]{}
 \setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
-\IfFileExists{parskip.sty}{%
-\usepackage{parskip}
-}{% else
-\setlength{\parindent}{0pt}
-\setlength{\parskip}{6pt plus 2pt minus 1pt}
-}
 \setlength{\emergencystretch}{3em}  % prevent overfull lines
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
@@ -233,9 +234,12 @@
 \begin{document}
 \maketitle
 
+\tableofcontents
+
 \thispagestyle{empty}
 
-\section{Scientific goal}\label{scientific-goal}
+\hypertarget{scientific-goal}{%
+\section{Scientific goal}\label{scientific-goal}}
 
 As many miscarriages of justice indicate, scientific evidence is easily
 misinterpreted in court. This happens partially due to miscommunication
@@ -243,7 +247,7 @@ between the parties involved, partially due to the usual probabilistic
 fallacies, but also because incorporating scientific evidence in the
 context of a whole case can be really hard. While probabilistic tools
 for piecemeal evaluation of scientific evidence and spotting
-probabilistic fallacies in legal contexts are quite well
+probablistic fallacies in legal contexts are quite well
 developed,\todo{say sth about replicability crisis in forensic sciences at some point?}
 the construction of a more general probabilistic model of incorporating
 such evidence in a wider context of a whole case, probabilistic
@@ -258,7 +262,7 @@ least three perspectives: as an interplay of arguments, as an assessment
 of probabilities involved, or as an interaction of competing narrations.
 Each perspective presents an account of legal reasoning (Di Bello \&
 Verheij, 2018; van Eemeren \& Verheij, 2017). Individually, each of
-these strains has been investigated. The probabilistic approach is the
+these strains has been investigated. The probablistic approach is the
 most developed one but LP is still underdeveloped ---to a large extent
 this is so in light of various lines of criticism developed by the
 representatives of the other strains.
@@ -283,23 +287,19 @@ The methods employed include: Bayesian statistical methods (including
 Bayesian approach to higher-order probability), imprecise probabilities,
 and Bayesian networks.
 
-\newpage 
+\hypertarget{significance}{%
+\section{Significance}\label{significance}}
 
-\tableofcontents
+(state of the art, justification for tackling a specific scientific
+problem, justification for the pioneering nature of the project, the
+impact of the project results on the development of the research field
+and scientific discipline);
 
-\newpage
+\hypertarget{state-of-the-art}{%
+\subsection{State of the art}\label{state-of-the-art}}
 
-\section{Significance}\label{significance}
-
-\footnotesize \emph{
-(state of the art, justification for tackling a specific scientific problem,
-justification for the pioneering nature of the project,
-the impact of the project results on the development of the research field and scientific discipline);
-} \normalsize
-
-\subsection{State of the art}\label{state-of-the-art}
-
-\subsubsection{Legal probabilisim}\label{legal-probabilisim}
+\hypertarget{legal-probabilisim}{%
+\subsubsection{Legal probabilisim}\label{legal-probabilisim}}
 
 One of the functions of the trial is to resolve disputes about questions
 of facts. Did the defendant rob the bank? Who is the father of the
@@ -376,8 +376,9 @@ Such contributions fueled what has been called the New Evidence
 Scholarship, a rigorous way of studying the process of legal proof at
 trial (Lempert, 1986).
 
+\hypertarget{skeptical-voices-and-challenges}{%
 \subsubsection{Skeptical voices and
-challenges}\label{skeptical-voices-and-challenges}
+challenges}\label{skeptical-voices-and-challenges}}
 
 In response to such developments, Tribe (1971) attacked what he called
 `trial by mathematics'. His critique ranged from listing well-known
@@ -386,8 +387,8 @@ difficulties in assessing the probability of someone's criminal or civil
 liability to the dehumanization of trial decisions. After Tribe, many
 have criticized legal probabilism on a variety of grounds, both
 theoretical and practical, arguing that probabilistic models are either
-inadequate or unhelpful (Brilmayer, 1986; Cohen, 1986; Dant, 1988, Allen
-(1986); Underwood, 1977).
+inadequate or unhelpful (Brilmayer, 1986; Dant, 1988, pp.
+@Allen1986A--Reconceptuali; Underwood, 1977, p. cohen86).
 
 After the discovery of DNA fingerprinting in the eighties, many legal
 probabilists focused on how probability theory could be used to quantify
@@ -401,63 +402,58 @@ skepticism about mathematical and quantitative models of legal evidence
 is still widespread among prominent legal scholars and practitioners
 (see, for example, Allen \& Pardo, 2007). Even among legal probabilists,
 few would think it possible to quantify precisely the probability of
-someone's guilt or civil liability. In response, probabilistists such as
-Taroni, Biedermann, Bozza, Garbolino, \& Aitken (2014) suggest that the
-probabilistic formalism is still useful as an aid to structure and guide
-one's inferences under uncertainty, rather than a way to reach precise
-numerical assessments.
+someone's guilt or civil liability. In response, Taroni, Biedermann,
+Bozza, Garbolino, \& Aitken (2014) suggest that the probabilistic
+formalism `should primarily be considered as an aid to structure and
+guide one's inferences under uncertainty, rather than a way to reach
+precise numerical assessments' (p.~xv).
 
-Conceptually, the probabilistic approach togehter with
-decision-theoretic considerations, can be used to theorize about the
-standard of proof and its properties. But for this project to be
-successfull, a proper probabilist explication of such a standard needs
-to be agreed upon. Imagine you are a trier of fact in a legal proceeding
-in which the defendant's guilt is identified as equivalent to a certain
-factual statement \(G\) and that somehow you succeeded in properly
-evaluating \(\pr{G\vert E}\)----the probability of \(G\) given the total
-evidence presented to you, \(E\) One question that arises in such a
-situation is: when should you decide against the defendant? when is the
-evidence good enough? What we are after here is a condition \(\Psi\),
-formulated in (primarily) probabilistic (and perhaps decision-theoretic)
-terms, such that the trier of fact, at least ideally, should accept any
-relevant claim \(A\) (including \(G\)) just in case \(\Psi(A, E)\). One
-straightforward attempt might be to say: convict if \(\pr{G\vert E}\) is
-above a certain threshold, otherwise acquit.
-
-Perhaps the most difficult conceptual challenge to such probabilistic
-explications---at least, one that has galvanized philosophical attention
+Perhaps the most difficult conceptual challenge for legal
+probabilism---at least, one that has galvanized philosophical attention
 in recent years---comes from the paradoxes of legal proof or puzzles of
-naked statistical evidence. In a number of seminal papers, Nesson
-(1979), Cohen (1981), and Thomson (1986) formulated scenarios in which,
-even if the probability of guilt or civil liability, based on the
-available evidence, is particularly high, a verdict against the
-defendant seems unwarranted.
+naked statistical evidence. In a number of seminal papers, (Cohen, 1981;
+Nesson, 1979; Thomson, 1986) formulated scenarios in which, even if the
+probability of guilt or civil liability, based on the available
+evidence, is particularly high, a verdict against the defendant seems
+unwarranted.
 
-A variant of such a scenario---the gatecrasher paradox---goes as
-follows. Suppose our guilt threshold is high, say at 0.99. Consider the
-situation in which 1000 fans enter a football stadium, and 991 of them
-avoid paying for their tickets. A random spectator is tried for not
-paying. The probability that the spectator under trial did not pay
-exceeds 0.99. Yet,intuitively, a spectator cannot be considered liable
-on the sole basis of the number of people who did and did not pay.
+Imagine you are a trier of fact in a legal proceeding in which the
+defendant's guilt is identified as equivalent to a certain factual
+statement \(G\) and that somehow you succeeded in properly evaluating
+\(\pr{G\vert E}\)----the probability of \(G\) given the total evidence
+presented to you, \(E\) One question that arises in such a situation is:
+when should you decide against the defendant? when is the evidence good
+enough? What we are after here is a condition \(\Psi\), formulated in
+(primarily) probabilistic terms, such that the trier of fact, at least
+ideally, should accept any relevant claim \(A\) (including \(G\)) just
+in case \(\Psi(A, E)\). One straightforward attempt might be to say:
+convict if \(\pr{G\vert E}\) is above a certain threshold, otherwise
+acquit.
 
-Another problem with the proposal is the so-called difficulty about
-conjunction. It arises, because intuitively there should be no
-difference between the trier's acceptance of \(A\) and \(B\) separately,
-and her acceptance of their conjunction, \(A\wedge B\) , that is, that
-\(\Psi(A,E)\) and \(\Psi(B,E)\) just in case \(\Psi(A\wedge B, E)\). If
-\(\Psi(H,E)\) just the threshold criterion, requiring that
-\(\pr{H\vert E}\) be sufficiently high, \(\Psi\) in general fails to
-satisfy this equivalence.
+The difficulty about conjunction arises because intuitively there should
+be no difference between the trier's acceptance of \(A\) and \(B\)
+separately, and her acceptance of their conjunction, \(A\wedge B\) ,
+that is, that \(\Psi(A,E)\) and \(\Psi(B,E)\) just in case
+\(\Psi(A\wedge B, E)\). If \(\Psi(H,E)\) just the threshold criterion,
+requiring that \(\pr{H\vert E}\) be sufficiently high, \(\Psi\) in
+general fails to satisfy this equivalence.
+
+A variant of the gatecrasher paradox goes as follows. suppose our guilt
+threshold is high, say at 0.99. Consider the situationin which 1000 fans
+enter a football stadium, and 991 of them avoidpaying for their tickets.
+A random spectator is tried for not paying. The probability that the
+spectator under trial did not pay exceeds 0.99. Yet,intuitively, a
+spectator cannot be considered liable on the sole basis of the number of
+people who did and did not pay.
 
 Arguably, these scenarios underscore a theoretical difficulty with
 probabilistic accounts of legal standards of proof. Many articles have
 been written on the topic, initially by legal scholars. In the last
-decade, philosophers have also joined the debate---for critical surveys
-see Redmayne (2008), Gardiner (2018) and Pardo (2019). Crucially, even
-fairly recent proposals to mend the situation (Dawid, 1987, Cheng
-(2012), Kaplow (2014)) on the part of the legal probabilist have failed
-(Urbaniak, 2019 contains a detailed analysis).
+decade, philosophers have also joined the debate.\^{}{[}For critical
+surveys see {[}Redmayne (2008); Gardiner (2018); pardo2019\}{]}
+Crucially, even recent proposals to mend the situation on the part of
+the legal probabilist have failed (Urbaniak, 2019 contains a detailed
+analysis).
 
 At least \emph{prima facie}, then, it seems that some conditions other
 than high posterior probability of liability have to be satisfied for
@@ -474,7 +470,8 @@ innocent (Smith, 2017). A legal probabilist needs either to show that
 these notions are unnecessary or inadequate for the purpose at hand, or
 to indicate how they can be explicated in probabilistic terms.
 
-\subsubsection{The narrative approach}\label{the-narrative-approach}
+\hypertarget{the-narrative-approach}{%
+\subsubsection{The narrative approach}\label{the-narrative-approach}}
 
 More recently, alternative frameworks for modeling evidential reasoning
 and decision-making at trial have been proposed. They are based on
@@ -508,24 +505,24 @@ disadvantage of NPAS is that it abandons the rich toolbox of
 probabilistic methods and takes the key notion of plausibility to be a
 primitive notion which should be understood only intuitively.
 
+\hypertarget{bayesian-networks-as-a-tool-for-legal-probabilism}{%
 \subsubsection{Bayesian networks as a tool for legal
-probabilism}\label{bayesian-networks-as-a-tool-for-legal-probabilism}
+probabilism}\label{bayesian-networks-as-a-tool-for-legal-probabilism}}
 
 The idea that Bayesian networks can be used for probabilistic reasoning
-in legal fact-finding started gaining traction in late eighties and
-early nineties (Edwards, 1991), and it found its way to nowadays
-standard textbooks on the topic (Fenton \& Neil, 2018; Taroni et al.,
-2014).\\
-A Bayesian network comprises two components: first, a directed acyclic
-graph of relations of dependence (represented by arrows) between
-variables (represented by nodes); second, conditional probability
-tables. Consider the graphical component first. The graph is acyclic
-because the arrows connecting the nodes do not form loops. As an
-illustration, let \(H\) be the claim that the suspect committed the
-murder, \(BT\) the presence of a blood type B match with a crime scene
-stain, and \(W\) the fact that an eyewitness observed the suspect near
-the scene around the time of the crime. The graphical component of the
-Bayesian network would look like this:
+in legal fact-finding started gaining traction in late eighties
+({\textbf{???}}-) and early nineties (Edwards, 1991). Two recent books
+on the topic with an emphasis on legal applications are (Fenton \& Neil,
+2018) and (Taroni et al., 2014). A Bayesian network comprises two
+components: first, a directed acyclic graph of relations of dependence
+(represented by arrows) between variables (represented by nodes);
+second, conditional probability tables. Consider the graphical component
+first. The graph is acyclic because the arrows connecting the nodes do
+not form loops. As an illustration, let \(H\) be the claim that the
+suspect committed the murder, \(BT\) the presence of a blood type B
+match with a crime scene stain, and \(W\) the fact that an eyewitness
+observed the suspect near the scene around the time of the crime. The
+graphical component of the Bayesian network would look like this:
 
 \begin{center}\includegraphics{BNfiles/unnamed-chunk-2-1} \end{center}
 
@@ -559,47 +556,20 @@ H=no.murder & .99\\
 \end{tabular}
 \end{table}
 
-\noindent
-The .01 figure for H=murder rests on the assumption that, absent any
-incriminating evidence, the defendant is unlikely to be guilty. For
-children nodes, the tables specify their conditional probability given
-combinations of their parents' states. If the variables are binary, an
-assignment of values for them could be:
+\noindent The .01 figure for H=murder rests on the assumption that,
+absent any incriminating evidence, the defendant is unlikely to be
+guilty. For children nodes, the tables specify their conditional
+probability given combinations of their parents' states. If the
+variables are binary, an assignment of values for them could be:
 
-\begin{table}[H]
-\centering
-\begin{tabular}{lrr}
-\toprule
-  & H=murder & H=no.murder\\
-\midrule
-W=seen & .7 & .4\\
-W=not.seen & .3 & .6\\
-\bottomrule
-\end{tabular}
-\end{table}
-
-\begin{table}[H]
-\centering
-\begin{tabular}{lrr}
-\toprule
-  & H=murder & H=no.murder\\
-\midrule
-BT=match & 1 & .063\\
-BT=no.match & 0 & .937\\
-\bottomrule
-\end{tabular}
-\end{table}
-
-\noindent
 According to the tables above, even if the defendant is not the culprit,
 the eyewitness testimony would still incriminate him with probability of
 .4, while the blood evidence with probability equal to only .063. The
 blood type frequency estimate is realistic (Lucy, 2013), and so are the
 conditional probabilities for the eyewitness identification. As
 expected, eyewitness testimony is assumed to be less trustworthy than
-blood match evidence (Urbaniak, Kowalewska, Janda, \&
-Dziurosz-Serafinowicz, 2020; but for complications about assessing
-eyewitness testimony, see Wixted \& Wells, 2017).
+blood match evidence {[}but for complications about assessing eyewitness
+testimony, see Wixted \& Wells (2017); Urbaniak2020Decision{]}.
 
 The three probability tables above are all that is needed to define the
 probability distribution. The tables do not specify probabilistic
@@ -612,10 +582,9 @@ between eyewitness testimony and blood evidence. A generalization of
 this fact is the so-called Markov condition. While the Bayesian network
 above---comprising a directed acyclic graph along with probability
 tables---is simple, a correct intuitive assessment of the probability of
-the hypothesis given the evidence is already challenging. The reader is
-invited to try to estimate intuitively the probability that the
-defendant committed the murder (H=murder) given the following states of
-the evidence:
+the hypothesis given the evidence is already challenging. Try to
+estimate intuitively the probability that the defendant committed the
+murder (H=murder) given the following states of the evidence:
 
 \begin{itemize} 
 \item The suspect's blood type matches the crime stain but  information about the witness is unavailable.
@@ -642,9 +611,9 @@ BT=match, W=seen & .219\\
 \end{tabular}
 \end{table}
 
-\noindent
-Perhaps surprisingly the posterior probability of \(H\) is about .22
-even when both pieces of evidence are incriminating (BT=match, W=seen).
+\noindent Perhaps surprisingly the posterior probability of \(H\) is
+about .22 even when both pieces of evidence are incriminating (BT=match,
+W=seen).
 
 Simple graphical patterns (called \emph{idioms}) often recur while
 modeling the relationships between evidence and hypotheses. Complex
@@ -662,13 +631,13 @@ relation between a hypothesis and a piece of evidence:
 influence---which could, but need not, be interpreted as causal
 influence---goes from hypothesis to evidence (though the probabilistic
 dependence goes both ways). The hypothesis node and the evidence node
-can be binary variables, such as ``The defendant was the source of the
-crime scene traces'' (hypothesis) and ``The defendant genetically
-matches the crime traces'' (evidence). But the variables need not be
-binary. The hypothesis node might take values from the range of
-\(1-40\), say the distance in meters from which the gun was shot, and
-the evidence node might be a continuous variable representing the
-density of gun shot residues (Taroni et al., 2014).
+can be binary variables, such as
+\texttt{The\ defendant\ was\ the\ source\ of\ the\ crime\ scene\ traces\textquotesingle{}\ (hypothesis)\ and}The
+defendant genetically matches the crime traces' (evidence). But the
+variables need not be binary. The hypothesis node might take values from
+the range of \(1-40\), say the distance in meters from which the gun was
+shot, and the evidence node might be a continuous variable representing
+the density of gun shot residues (Taroni et al., 2014).
 
 As an example of a more complex idiom, called the
 \emph{evidence accuracy
@@ -696,27 +665,18 @@ alcohol level. These possibilities can be taken into consideration by
 adding an accuracy node (or multiple accuracy nodes, if each factor is
 kept separate from the other).
 
-The key poin there is that large steps have been made towards the
-development of BN-related tools for evidence evaluation. However, so
-far, most of them have to do with presentation and evaluation of various
-pieces of evidence, not with the development of a more general model to
-facilitate more general probabilistic reflection on legal decision
-standards.
+\todo{Mention many others, add refs?}
 
+\hypertarget{pioneering-nature-of-the-project}{%
 \subsection{Pioneering nature of the
-project}\label{pioneering-nature-of-the-project}
+project}\label{pioneering-nature-of-the-project}}
 
-\subsubsection{Key elements of the
-approach}\label{key-elements-of-the-approach}
-
-For the reasons already mentioned, Bayesian Networks and probabilistic
-methods will be in the focus of this project. It is quite clear that BNs
-are useful tool when it comes to piecemeal modeling and evaluation of
-scientific evidence in court. The question is, whether they can be
-useful for modeling whole cases and casting light on both the conceptual
-challenges that we already mention and for incorporating the points made
-by the representatives of other strains of research, most crucially, the
-NPAS.
+It is quite clear that BNs are useful tool when it comes to piecemeal
+modeling and evaluation of scientific evidence in court. The question
+is, whether they can be useful for modeling whole cases and casting
+light on both the conceptual challenges that we already mention and for
+incorporating the points made by the representatives of other strains of
+research, most crucially, the NPAS.
 
 Attempts have been made to use Bayesian networks to weigh and assess
 complex bodies of evidence consisting of multiple components. On one
@@ -728,19 +688,18 @@ famous Sally Clark case:
 
 \begin{center}\includegraphics{BNfiles/unnamed-chunk-11-1} \end{center}
 
-\noindent
-The arrows depict relationships of influence between variables. Whether
-Sally Clark's sons, call them \(A\) and \(B\), died by SIDS or murder
-(\textsf{A.cause} and \textsf{B.cause}) influences whether signs of
-disease (\textsf{A.disease} and \textsf{B.disease}) and bruising
-(\textsf{A.bruising} and \textsf{B.bruising}) were present. Since son A
-died first, whether A was murdered or died by SIDS (\textsf{A.cause})
-influences how son B died (\textsf{B.cause}). How the sons died
-determines how many sons were murdered (\textsf{No.murdered}), and how
-many sons were murdered decides whether Sally Clark is guilty
+\noindent The arrows depict relationships of influence between
+variables. Whether Sally Clark's sons, call them \(A\) and \(B\), died
+by SIDS or murder (\textsf{A.cause} and \textsf{B.cause}) influences
+whether signs of disease (\textsf{A.disease} and \textsf{B.disease}) and
+bruising (\textsf{A.bruising} and \textsf{B.bruising}) were present.
+Since son A died first, whether A was murdered or died by SIDS
+(\textsf{A.cause}) influences how son B died (\textsf{B.cause}). How the
+sons died determines how many sons were murdered (\textsf{No.murdered}),
+and how many sons were murdered decides whether Sally Clark is guilty
 (\textsf{guilty}).
 
-According to the calculation by \cite{Fenton2018Risk}, the prior
+According to the calculation by Fenton \& Neil (2018), the prior
 probability of \textrm{Guilty = Yes} should be .0789. After taking into
 account the incriminating evidence presented at trial, such as that
 there were signs of bruising but no signs of a preexisting disease
@@ -771,34 +730,115 @@ would drop even further to .0009). For a general discussion on how to
 elicit probabilities, see (Renooij, 2001) and (Gaag, Renooij, Witteman,
 Aleman, \& Taal, 2013).
 
-On the other hand, we have more general methodological reflection on the
-use of BNs for modeling whole cases. The main idea is that once all the
-pieces of evidence and claims are represented as nodes, one should use
-the \textit{scenario idiom} to model complex hypotheses, consisting of a
-sequence of events organized in space and time: a scenario (Vlek,
-Prakken, Renooij, \& Verheij, 2014). A graphical model that uses the
-scenario idiom would consist of the following components: first, nodes
-for the states and events in the scenario, with each node linked to the
-supporting evidence; second, a separate scenario node that has states
-and events as its children; finally, a node corresponding to the
-ultimate hypothesis as a child of the scenario node. The graphical model
-would look like this:
+\hypertarget{new-material}{%
+\subsection{NEW MATERIAL(?)}\label{new-material}}
+
+Some steps have been taken towards a more general methodological
+reflection on the use of BNs for modeling whole cases (Vlek, Prakken,
+Renooij, \& Verheij, 2014). The main idea here is that is that once all
+the pieces of evidence and claims are represented as nodes, one should
+use the \textit{scenario idiom} to model complex hypotheses, consisting
+of a sequence of events organized in space and time: a scenario. A
+graphical model that uses the scenario idiom would consist of the
+following components: first, nodes for the states and events in the
+scenario, with each node linked to the supporting evidence; second, a
+separate scenario node that has states and events as its children;
+finally, a node corresponding to the ultimate hypothesis as a child of
+the scenario node. The graphical model would look like this:
 
 \begin{center}\includegraphics{BNfiles/unnamed-chunk-13-1} \end{center}
 
-\noindent
- The scenario node unifies the different events and states.\\
+\noindent The scenario node unifies the different events and states.\\
 Because of this unifying role, increasing the probability of one part of
 the scenario (say \textsf{State/event 2}) will also increase the
 probability of the other parts (\textsf{State/event 1} and
 \textsf{State/event 3}). This is intended to capture the idea that the
 different components of a scenario form an interconnected sequence of
-events.\footnote{A discussion
-of modelling crime scenarios by means of  graphical devices mixed with probabilities can be also found in the work of @shen2007ScenariodrivenDecisionSupporta},
-Bex (2011), Bex (2015) and Verheij (2017). See also the survey by Di
-Bello \& Verheij (2018). Dawid \& Mortera (2018) give a treatment of
-scenarios in terms of Bayesian networks. Lacave \& Díez (2002)\} show
-how Bayesian Network can be used to construct explanations.
+events.
+
+Relatedly, this strategy is supposed to help to make sense of the notion
+of the coherence of a scenario as different from its probability given
+the evidence. On this approach (Vlek, 2016; Vlek, Prakken, Renooij, \&
+Verheij, 2013; Vlek et al., 2014; Vlek, Prakken, Renooij, \& Bart
+Verheij, 2015), it is identified with the prior probability of the
+scenario node.
+
+\todo{Take a look at the papers, perhaps say a bit more about them}
+
+A discussion of modelling crime scenarios by means of graphical devices
+mixed with probabilities can be also found in the work of Shen, Keppens,
+Aitken, Schafer, \& Lee (2007), Bex (2011), Bex (2015) and Verheij
+(2017). See also the survey by Di Bello \& Verheij (2018). Dawid \&
+Mortera (2018) give a treatment of scenarios in terms of Bayesian
+networks. Lacave \& Dı́ez (2002) show how Bayesian Network can be used to
+construct explanations.
+
+Here are the key reasons why the existing stage of development of
+reflection on the topic is not satisfactory:
+
+\begin{enumerate}
+\item The use of a scenario idiom is problematic is that adding a parent node by \emph{fiat} without any good reasons to think the nodes are connected other than being part of a single story, introduces probabilistic dependencies between elements of a narration also by fiat. Merely saying that, say, the defenendant, made jointly some claims (that they are part of his narration) is not a good reason to assume they are probabilistically dependent.
+
+
+
+\item Another problem results from the identification of prior probability with coherence. On one hand, this does not add up intuitively. After all, it is quite coherent with my views that that if I win a lottery, I'll buy a large house in Auckland and move there, while both the prior and the posterior given the total available evidence  of this scenario are rather low. 
+
+\item In general, the legal probabilistic approach to coherence is very simple and fails to engage with rich philosophical literature exactly on this topic [@shogenji1999;@olsson2001; @glass2002;@fitelson2003ProbabilisticTheoryCoherence;@fitelson2003comments;@meijs2007;@Douven2007Measuring], including a long list of counterexamples to the existing proposals and desiderata that a probabilistic coherence measure should satisfy [@Merricks1995]
+
+[@shogenji1999;@Akiba2000Shogenjis;@Shogenji2001Reply;@bovens2004bayesian;@Siebel2004On-Fitelsons-me; @siebel2006against;@Shogenji2006Why;@crupi2007BayesianMeasuresEvidential;@koscholke2016evaluating;@Schippers2019General]
+
+  
+
+
+
+
+
+\end{enumerate}
+
+\hypertarget{coherence-notes-to-use}{%
+\section{COHERENCE NOTES TO USE (?)}\label{coherence-notes-to-use}}
+
+plausible measure of coherence could be used to better evaluate the
+quality of some stories or narrations. For example in the legal context
+we would like to be able to assess the quality of a testimony in the
+court of law. Focusing only on the probability of a story is to some
+extent problematic, because from such a perspective, more detailed
+stories are penalized --- they contain more propositions, so they
+(usually) have lower probabilities. A plausible coherence measure could
+be used to asses an important aspect of a narration which so far seems
+to escape probabilistic analysis.
+
+Our measure diverges from the known candidates in three important
+respects: (1) It is not a function of a probabilistic measure and a set
+of propositions alone, because it is also sensitive to the selection and
+direction of arrows in a Bayesian Network representing an agent's credal
+state. (2) Unlike in the case of quite a few coherence measures, it is
+not obtained by taking a mean of some list of intermediate values (such
+as confirmation levels between subsets of a narration). It is sensitive
+also to the variance and the minimal values of the intermediate values.
+(3) The intermediate values used are not confirmation levels, but rather
+expected and weighted confirmation levels (read on for details).
+Finally, we apply our measure to the existing counterexamples and
+compare its performance to the performance of the other measures.
+Spoiler alert: it does a better job.
+
+So here is a selection counterexamples put forward against various
+probabilistic coherence measures in the literaturesudo . We attempted to
+list those that were picked up in the discussion, a few where both we
+didn't share the authors' intuitions and the examples were not picked up
+in further discussion in the literature.\footnote{One example, involving
+  Sarah and her pregnancy ({\textbf{???}}), but it focused more on
+  truth-conduciveness of coherence, which is beyond the scope of our
+  paper. We also do not discuss a few other examples involving fossils
+  and voltage (Shogenji, 2001; Siebel, 2006). In some respects, they
+  were quite similar to the dice and depth problems that we do discuss,
+  and some of their variants simply did not inspire our agreement. For
+  instance, Siebel thinks that for voltage levels \(\{V=1, V=2\}\) is
+  more coherent than \(\{V=1, V=50\}\), while we think that both sets
+  are maximally incoherent (there might be some claims in the vincinity
+  that are not incoherent, say, focusing on results of separate
+  measurements, but an example along these lines has not been properly
+  formulated in the literature).}
 
 Some preliminary moves towards such an explication have been made in
 (Urbaniak, 2018). However, as (Neil, Fenton, Lagnado, \& Gill, 2019)
@@ -810,381 +850,393 @@ Bello, 2013) pioneering a probabilistic understanding of narrations.
 
 \todo{add more about Marcello}
 
-\subsubsection{Impact}\label{impact}
+\hypertarget{choice-of-problem}{%
+\subsection{Choice of problem}\label{choice-of-problem}}
 
-\section{Work plan}\label{work-plan}
+\hypertarget{pioneering-nature-impact}{%
+\subsection{Pioneering nature \&
+impact}\label{pioneering-nature-impact}}
+
+\hypertarget{concept-and-work-plan}{%
+\section{Concept and work plan}\label{concept-and-work-plan}}
 
 (general work plan, specific research goals, results of preliminary
 research, risk analysis);
 
-\section{Methodology}\label{methodology}
+\hypertarget{research-methodology}{%
+\section{Research methodology}\label{research-methodology}}
 
 (underlying scientific methodology, methods, techniques and research
 tools, methods of results analysis, equipment and devices to be used in
 research);
 
-\section*{References}\label{references}
+\hypertarget{references}{%
+\section*{References}\label{references}}
 \addcontentsline{toc}{section}{References}
 
 \hypertarget{refs}{}
-\hypertarget{ref-Allen1986A-Reconceptuali}{}
+\leavevmode\hypertarget{ref-Allen1986A-Reconceptuali}{}%
 Allen, R. J. (1986). A reconceptualization of civil trials. \emph{Boston
 University Law Review}, \emph{66}, 401--437.
 
-\hypertarget{ref-Allen2010No-Plausible-Al}{}
+\leavevmode\hypertarget{ref-Allen2010No-Plausible-Al}{}%
 Allen, R. J. (2010). No plausible alternative to a plausible story of
 guilt as the rule of decision in criminal cases. In J. Cruz \& L. Laudan
 (Eds.), \emph{Prueba y esandares de prueba en el derecho}. Instituto de
 Investigaciones Filosoficas-UNAM.
 
-\hypertarget{ref-allen2001naturalized}{}
+\leavevmode\hypertarget{ref-allen2001naturalized}{}%
 Allen, R. J., \& Leiter, B. (2001). Naturalized epistemology and the law
 of evidence. \emph{Virginia Law Review}, \emph{87}(8), 1491--1550.
 JSTOR.
 
-\hypertarget{ref-allen2007problematic}{}
+\leavevmode\hypertarget{ref-allen2007problematic}{}%
 Allen, R., \& Pardo, M. (2007). The problematic value of mathematical
 models of evidence. \emph{The Journal of Legal Studies}, \emph{36}(1),
 107--140. JSTOR.
 
-\hypertarget{ref-becker1968crime}{}
+\leavevmode\hypertarget{ref-becker1968crime}{}%
 Becker, G. S. (1968). Crime and punishment: An economic approach.
 \emph{Journal of Political Economy}, \emph{76}, 169--217. Springer.
 
-\hypertarget{ref-Bernoulli1713Ars-conjectandi}{}
+\leavevmode\hypertarget{ref-Bernoulli1713Ars-conjectandi}{}%
 Bernoulli, J. (1713). \emph{Ars conjectandi}.
 
-\hypertarget{ref-bex2015IntegratedTheoryCausal}{}
+\leavevmode\hypertarget{ref-bex2015IntegratedTheoryCausal}{}%
 Bex, F. (2015). An integrated theory of causal stories and evidential
 arguments. In \emph{Proceedings of the 15th International Conference on
 Artificial Intelligence and Law - ICAIL '15} (pp. 13--22). San Diego,
 California: ACM Press.
 
-\hypertarget{ref-bex2011ArgumentsStoriesCriminal}{}
+\leavevmode\hypertarget{ref-bex2011ArgumentsStoriesCriminal}{}%
 Bex, F. J. (2011). \emph{Arguments, stories and criminal evidence: A
 formal hybrid theory}. Law and philosophy library. Dordrecht ; New York:
 Springer.
 
-\hypertarget{ref-bovens2004bayesian}{}
+\leavevmode\hypertarget{ref-bovens2004bayesian}{}%
 Bovens, L., \& Hartmann, S. (2004). \emph{Bayesian epistemology}. Oxford
 University Press.
 
-\hypertarget{ref-brilmayer1986}{}
+\leavevmode\hypertarget{ref-brilmayer1986}{}%
 Brilmayer, L. (1986). Second-order evidence and bayesian logic.
 \emph{Boston University Law Review}, \emph{66}, 673--691.
 
-\hypertarget{ref-Calabresi1961}{}
+\leavevmode\hypertarget{ref-Calabresi1961}{}%
 Calabresi, G. (1961). Some thoughts on risk distribution and the law of
 torts. \emph{Yale Law Journal}, \emph{70}, 499--553.
 
-\hypertarget{ref-cheng2012reconceptualizing}{}
-Cheng, E. (2012). Reconceptualizing the burden of proof. \emph{Yale LJ},
-\emph{122}, 1254. HeinOnline.
-
-\hypertarget{ref-clermont2015TrialTraditionalProbability}{}
+\leavevmode\hypertarget{ref-clermont2015TrialTraditionalProbability}{}%
 Clermont, K. M. (2015). Trial by Traditional Probability, Relative
 Plausibility, or Belief Function? \emph{Case Western Reserve Law
 Review}, \emph{66}(2), 353--391.
 
-\hypertarget{ref-Cohen81}{}
+\leavevmode\hypertarget{ref-Cohen81}{}%
 Cohen, J. L. (1981). Subjective probability and the paradox of the
 Gatecrasher. \emph{Arizona State Law Journal}, 627--634.
 
-\hypertarget{ref-cohen86}{}
-Cohen, J. L. (1986). Twelve questions about Keynes's concept of weight.
-\emph{British Journal for the Philosophy of Science}, \emph{37}(3),
-263--278.
-
-\hypertarget{ref-damaska1996free}{}
+\leavevmode\hypertarget{ref-damaska1996free}{}%
 Damaška, M. R. (1995). Free proof and its detractors. \emph{The American
 Journal of Comparative Law}, \emph{43}(3), 343--357.
 
-\hypertarget{ref-dant1988gambling}{}
+\leavevmode\hypertarget{ref-dant1988gambling}{}%
 Dant, M. (1988). Gambling on the truth: The use of purely statistical
 evidence as a basis for civil liability. \emph{Columbia Journal of Law
 and Social Problems}, \emph{22}, 31--70. HeinOnline.
 
-\hypertarget{ref-daston1988}{}
+\leavevmode\hypertarget{ref-daston1988}{}%
 Daston, L. (1988). \emph{Classical probability in the enlightenment}.
 Princeton University Press.
 
-\hypertarget{ref-dawid1987}{}
-Dawid, A. P. (1987). The difficulty about conjunction. \emph{Journal of
-the Royal Statistical Society. Series D (The Statistician),}
-\emph{36}(2/3), 91--92.
-
-\hypertarget{ref-dawid2018graphical}{}
+\leavevmode\hypertarget{ref-dawid2018graphical}{}%
 Dawid, A. P., \& Mortera, J. (2018). Graphical models for forensic
 analysis. In \emph{Handbook of graphical models} (pp. 491--514). CRC
 Press.
 
-\hypertarget{ref-di2013statistics}{}
+\leavevmode\hypertarget{ref-di2013statistics}{}%
 Di Bello, M. (2013). \emph{Statistics and probability in criminal
 trials} (PhD thesis). University of Stanford.
 
-\hypertarget{ref-di2018evidential}{}
+\leavevmode\hypertarget{ref-di2018evidential}{}%
 Di Bello, M., \& Verheij, B. (2018). Evidential reasoning. In
 \emph{Handbook of legal reasoning and argumentation} (pp. 447--493).
 Springer.
 
-\hypertarget{ref-Edwards1991Influence-diagr}{}
+\leavevmode\hypertarget{ref-Edwards1991Influence-diagr}{}%
 Edwards, W. (1991). Influence diagrams, bayesian imperialism, and the
 collins case: An appeal to reason. \emph{Cardozo Law Review}, \emph{13},
 1025--1074.
 
-\hypertarget{ref-enoch2015sense}{}
+\leavevmode\hypertarget{ref-enoch2015sense}{}%
 Enoch, D., \& Fisher, T. (2015). Sense and sensitivity: Epistemic and
 instrumental approaches to statistical evidence. \emph{Stan. L. Rev.},
 \emph{67}, 557--611. HeinOnline.
 
-\hypertarget{ref-Fenton2018Risk}{}
+\leavevmode\hypertarget{ref-Fenton2018Risk}{}%
 Fenton, N., \& Neil, M. (2018). \emph{Risk assessment and decision
 analysis with bayesian networks}. Chapman; Hall.
 
-\hypertarget{ref-fenton2013GeneralStructureLegal}{}
+\leavevmode\hypertarget{ref-fenton2013GeneralStructureLegal}{}%
 Fenton, N., Neil, M., \& Lagnado, D. A. (2013). A General Structure for
 Legal Arguments About Evidence Using Bayesian Networks. \emph{Cognitive
 Science}, \emph{37}(1), 61--102.
 
-\hypertarget{ref-Finkelstein1970A}{}
+\leavevmode\hypertarget{ref-Finkelstein1970A}{}%
 Finkelstein, M. O., \& Fairley, W. B. (1970). A Bayesian approach to
 identification evidence. \emph{Harvard Law Review}, \emph{83}(3),
 489--517.
 
-\hypertarget{ref-Franklin2001}{}
+\leavevmode\hypertarget{ref-Franklin2001}{}%
 Franklin, J. (2001). \emph{The science of conjecture: Evidence and
 probability before pascal}. John Hopkins University Press.
 
-\hypertarget{ref-gaag2013elicit}{}
+\leavevmode\hypertarget{ref-gaag2013elicit}{}%
 Gaag, L. C. van der, Renooij, S., Witteman, C. L. M., Aleman, B. M. P.,
-\& Taal, B. G. (2013). How to elicit many probabilities.
+\& Taal, B. G. (2013). How to elicit many probabilities. Retrieved from
+\url{http://arxiv.org/abs/1301.6745}
 
-\hypertarget{ref-gardiner2018}{}
+\leavevmode\hypertarget{ref-gardiner2018}{}%
 Gardiner, G. (2018). Legal burdens of proof and statistical evidence. In
 D. Coady \& J. Chase (Eds.), \emph{Routledge handbook of applied
 epistemology}. Routledge.
 
-\hypertarget{ref-gordon2007}{}
+\leavevmode\hypertarget{ref-gordon2007}{}%
 Gordon, T. F., Prakken, H., \& Walton, D. (2007). The Carneades model of
 argument and burden of proof. \emph{Artificial Intelligence},
 \emph{171}(10-15), 875--896.
 
-\hypertarget{ref-haack2011legal}{}
+\leavevmode\hypertarget{ref-haack2011legal}{}%
 Haack, S. (2014). Legal probabilism: An epistemological dissent. In
 \emph{Haack2014-HAAEMS} (pp. 47--77).
 
-\hypertarget{ref-Hacking1984}{}
+\leavevmode\hypertarget{ref-Hacking1984}{}%
 Hacking, I. (1975). \emph{The emergence of probability: A philosophical
 study of early ideas about probability, induction and statistical
 inference}. Cambridge University Press.
 
-\hypertarget{ref-hepler2007ObjectorientedGraphicalRepresentations}{}
+\leavevmode\hypertarget{ref-hepler2007ObjectorientedGraphicalRepresentations}{}%
 Hepler, A. B., Dawid, A. P., \& Leucari, V. (2007). Object-oriented
 graphical representations of complex patterns of evidence. \emph{Law,
 Probability and Risk}, \emph{6}(1-4), 275--293.
 
-\hypertarget{ref-ho2008philosophy}{}
+\leavevmode\hypertarget{ref-ho2008philosophy}{}%
 Ho, H. L. (2008). \emph{A philosophy of evidence law: Justice in the
 search for truth}. Oxford University Press.
 
-\hypertarget{ref-kadane2011probabilistic}{}
+\leavevmode\hypertarget{ref-kadane2011probabilistic}{}%
 Kadane, J. B., \& Schum, D. A. (2011). \emph{A probabilistic analysis of
 the sacco and vanzetti evidence}. John Wiley \& Sons.
 
-\hypertarget{ref-kaplow2014likelihood}{}
-Kaplow, L. (2014). Likelihood ratio tests and legal decision rules.
-\emph{American Law and Economics Review}, \emph{16}(1), 1--39. Oxford
-University Press.
-
-\hypertarget{ref-kaye1986admissibility}{}
-Kaye, D. H. (1986). The admissibility of ``probability evidence'' in
+\leavevmode\hypertarget{ref-kaye1986admissibility}{}%
+Kaye, D. H. (1986). The admissibility of "probability evidence" in
 criminal trials---part I. \emph{Jurimetrics Journal}, 343--346.
 
-\hypertarget{ref-Kaye2010The-Double-Heli}{}
+\leavevmode\hypertarget{ref-Kaye2010The-Double-Heli}{}%
 Kaye, D. H. (2010). \emph{The double helix and the law of evidence}.
 Harvard University Press.
 
-\hypertarget{ref-Koehler1996On-Conveying-th}{}
+\leavevmode\hypertarget{ref-Koehler1996On-Conveying-th}{}%
 Koehler, J. J. (1996). On conveying the probative value of DNA evidence:
 Frequencies, likelihood ratios, and error rates. \emph{University of
 Colorado law Review}, \emph{67}, 859--886.
 
-\hypertarget{ref-lacave2002ReviewExplanationMethodsa}{}
-Lacave, C., \& Díez, F. J. (2002). A review of explanation methods for
+\leavevmode\hypertarget{ref-lacave2002ReviewExplanationMethodsa}{}%
+Lacave, C., \& Dı́ez, F. J. (2002). A review of explanation methods for
 Bayesian networks. \emph{The Knowledge Engineering Review},
 \emph{17}(2), 107--127.
 
-\hypertarget{ref-lempert1977modeling}{}
+\leavevmode\hypertarget{ref-lempert1977modeling}{}%
 Lempert, R. O. (1977). Modeling relevance. \emph{Michigan Law Review},
 \emph{75}, 1021--1057. JSTOR.
 
-\hypertarget{ref-Lempert1986}{}
+\leavevmode\hypertarget{ref-Lempert1986}{}%
 Lempert, R. O. (1986). The new evidence scholarship: Analysing the
 process of proof. \emph{Boston University Law Review}, \emph{66},
 439--477.
 
-\hypertarget{ref-Lipton2004-LIPITT}{}
+\leavevmode\hypertarget{ref-Lipton2004-LIPITT}{}%
 Lipton, P. (2004). \emph{Inference to the best explanation}.
 Routledge/Taylor; Francis Group.
 
-\hypertarget{ref-lucy2013introduction}{}
+\leavevmode\hypertarget{ref-lucy2013introduction}{}%
 Lucy, D. (2013). \emph{Introduction to statistics for forensic
 scientists}. John Wiley \& Sons.
 
-\hypertarget{ref-NRCI1992}{}
+\leavevmode\hypertarget{ref-NRCI1992}{}%
 National Research Council. (1992). \emph{DNA technology in forensic
 science \textup{{[}NRC I{]}}}. Committee on DNA technology in Forensic
 Science, National Research Council.
 
-\hypertarget{ref-neil2000BuildingLargescaleBayesian}{}
-Neil, M., Fenton, N., \& Nielson, L. (2000). Building large-scale
-Bayesian Networks. \emph{The Knowledge Engineering Review},
-\emph{15}(3), 257--284.
-
-\hypertarget{ref-Fenton2019Modelling}{}
+\leavevmode\hypertarget{ref-Fenton2019Modelling}{}%
 Neil, M., Fenton, N., Lagnado, D., \& Gill, R. D. (2019). Modelling
 competing legal arguments using bayesian model comparison and averaging.
 \emph{Artificial Intelligence and Law}. Retrieved from
 \url{https://doi.org/10.1007/s10506-019-09250-3}
 
-\hypertarget{ref-Nesson1979Reasonable-doub}{}
+\leavevmode\hypertarget{ref-neil2000BuildingLargescaleBayesian}{}%
+Neil, M., Fenton, N., \& Nielson, L. (2000). Building large-scale
+Bayesian Networks. \emph{The Knowledge Engineering Review},
+\emph{15}(3), 257--284.
+
+\leavevmode\hypertarget{ref-Nesson1979Reasonable-doub}{}%
 Nesson, C. R. (1979). Reasonable doubt and permissive inferences: The
 value of complexity. \emph{Harvard Law Review}, \emph{92}(6),
 1187--1225.
 
-\hypertarget{ref-pardo2018}{}
+\leavevmode\hypertarget{ref-pardo2018}{}%
 Pardo, M. S. (2018). Safety vs.~Sensitivity: Possible worlds and the law
 of evidence. \emph{Legal Theory}, \emph{24}(1), 50--75.
 
-\hypertarget{ref-pardo2019}{}
-Pardo, M. S. (2019). The paradoxes of legal proof: A critical guide.
-\emph{Boston University Law Review}, \emph{99}(1), 233--290.
-
-\hypertarget{ref-Pardo2008judicial}{}
+\leavevmode\hypertarget{ref-Pardo2008judicial}{}%
 Pardo, M. S., \& Allen, R. J. (2008). Judicial proof and the best
 explanation. \emph{Law and Philosophy}, \emph{27}(3), 223--268.
 
-\hypertarget{ref-Pennington1991}{}
+\leavevmode\hypertarget{ref-Pennington1991}{}%
 Pennington, N., \& Hastie, R. (1991a). A cognitive theory of juror
 decision making: The story model. \emph{Cardozo Law Review}, \emph{13},
 519--557.
 
-\hypertarget{ref-pennington1991cognitive}{}
+\leavevmode\hypertarget{ref-pennington1991cognitive}{}%
 Pennington, N., \& Hastie, R. (1991b). A cognitive theory of juror
 decision making: The story model. \emph{Cardozo Law Review}, \emph{13},
 519--557. HeinOnline.
 
-\hypertarget{ref-pennington1992explaining}{}
+\leavevmode\hypertarget{ref-pennington1992explaining}{}%
 Pennington, N., \& Hastie, R. (1992). Explaining the evidence: Tests of
 the story model for juror decision making. \emph{Journal of personality
 and social psychology}, \emph{62}(2), 189--204. American Psychological
 Association.
 
-\hypertarget{ref-Posner1973}{}
+\leavevmode\hypertarget{ref-Posner1973}{}%
 Posner, R. (1973). \emph{The economic analysis of law}. Brown \&
 Company.
 
-\hypertarget{ref-redmayne2008exploring}{}
+\leavevmode\hypertarget{ref-redmayne2008exploring}{}%
 Redmayne, M. (2008). Exploring the proof paradoxes. \emph{Legal Theory},
 \emph{14}(4), 281--309. Cambridge University Press.
 
-\hypertarget{ref-renooij2001ProbabilityElicitationBeliefa}{}
+\leavevmode\hypertarget{ref-renooij2001ProbabilityElicitationBeliefa}{}%
 Renooij, S. (2001). Probability elicitation for belief networks: Issues
 to consider. \emph{The Knowledge Engineering Review}, \emph{16}(3),
 255--269.
 
-\hypertarget{ref-Robertson1995evidence}{}
+\leavevmode\hypertarget{ref-Robertson1995evidence}{}%
 Robertson, B., \& Vignaux, G. A. (1995). DNA evidence: Wrong answers or
 wrong questions? \emph{Genetica}, \emph{96}, 145--152.
 
-\hypertarget{ref-Scutari2015Bayesian-Networ}{}
+\leavevmode\hypertarget{ref-Scutari2015Bayesian-Networ}{}%
 Scutari, M., \& Denis, J.-B. (2015). \emph{Bayesian networks in
-\textbf{R}}. CRC Press.
+\textbf{{r}}}. CRC Press.
 
-\hypertarget{ref-Smith_conviction_mind_2017}{}
+\leavevmode\hypertarget{ref-shen2007ScenariodrivenDecisionSupporta}{}%
+Shen, Q., Keppens, J., Aitken, C., Schafer, B., \& Lee, M. (2007). A
+scenario-driven decision support system for serious crime investigation.
+\emph{Law, Probability and Risk}, \emph{5}(2), 87--117.
+
+\leavevmode\hypertarget{ref-Shogenji2001Reply}{}%
+Shogenji, T. (2001). Reply to akiba on the probabilistic measure of
+coherence. \emph{Analysis}, \emph{61}(2), 147--150. Oxford University
+Press (OUP). Retrieved from
+\url{https://doi.org/10.1093/analys/61.2.147}
+
+\leavevmode\hypertarget{ref-siebel2006against}{}%
+Siebel, M. (2006). Against probabilistic measures of coherence. In
+\emph{Coherence, truth and testimony} (pp. 43--68). Springer.
+
+\leavevmode\hypertarget{ref-Smith_conviction_mind_2017}{}%
 Smith, M. (2017). When does evidence suffice for conviction?
 \emph{Mind}.
 
-\hypertarget{ref-taroni2006bayesian}{}
+\leavevmode\hypertarget{ref-taroni2006bayesian}{}%
 Taroni, F., Biedermann, A., Bozza, S., Garbolino, P., \& Aitken, C.
 (2014). \emph{Bayesian networks for probabilistic inference and decision
 analysis in forensic science} (2nd ed.). John Wiley \& Sons.
 
-\hypertarget{ref-Thomson86}{}
+\leavevmode\hypertarget{ref-Thomson86}{}%
 Thomson, J. J. (1986). Liability and individualized evidence. \emph{Law
 and Contemporary Problems}, \emph{49}(3), 199--219.
 
-\hypertarget{ref-Tillers2007}{}
+\leavevmode\hypertarget{ref-Tillers2007}{}%
 Tillers, P., \& Gottfried, J. (2007). Case comment--United States v.
 Copeland, 369 F. Supp. 2d 275 (E.D.N.Y. 2005): A collateral attack on
 the legal maxim that proof beyond a reasonable doubt is unquantifiable?
 \emph{Law, Probability and Risk}, \emph{5}(2), 135--157.
 
-\hypertarget{ref-tribe71}{}
+\leavevmode\hypertarget{ref-tribe71}{}%
 Tribe, L. H. (1971). Trial by mathematics: Precision and ritual in the
 legal process. \emph{Harvard Law Review}, \emph{84}(6), 1329--1393.
 
-\hypertarget{ref-Underwood1977The-thumb-on-th}{}
+\leavevmode\hypertarget{ref-Underwood1977The-thumb-on-th}{}%
 Underwood, B. D. (1977). The thumb on the scale of justice: Burdens of
 persuasion in criminal cases. \emph{Yale Law Journal}, \emph{86(7)},
 1299--1348.
 
-\hypertarget{ref-urbaniak2018narration}{}
+\leavevmode\hypertarget{ref-urbaniak2018narration}{}%
 Urbaniak, R. (2018). Narration in judiciary fact-finding: A
 probabilistic explication. \emph{Artificial Intelligence and Law},
 1--32.
 
-\hypertarget{ref-Urbaniak2019standards2}{}
+\leavevmode\hypertarget{ref-Urbaniak2019standards2}{}%
 Urbaniak, R. (2019). Probabilistic legal decision standards still fail.
 \emph{Journal of Applied Logics}, \emph{6}(5).
 
-\hypertarget{ref-Urbaniak2020Decision}{}
-Urbaniak, R., Kowalewska, A., Janda, P., \& Dziurosz-Serafinowicz, P.
-(2020). Decision-theoretic and risk-based approaches to naked
-statistical evidence: Some consequences and challenges. \emph{Law,
-Probability and Risk}.
-
-\hypertarget{ref-vanEemeren2017}{}
+\leavevmode\hypertarget{ref-vanEemeren2017}{}%
 van Eemeren, F., \& Verheij, B. (2017). Argumentation theory in formal
 and computational perspective. \emph{IFCoLog Journal of Logics and Their
 Applications}, \emph{4}(8), 2099--2181.
 
-\hypertarget{ref-verheij2014catch}{}
+\leavevmode\hypertarget{ref-verheij2014catch}{}%
 Verheij, B. (2014). To catch a thief with and without numbers:
 Arguments, scenarios and probabilities in evidential reasoning.
 \emph{Law, Probability and Risk}, \emph{13}(3-4), 307--325. Citeseer.
 
-\hypertarget{ref-verheijproof2017}{}
-Verheij, B. (2017). Proof with and without probabilities. correct
+\leavevmode\hypertarget{ref-verheijproof2017}{}%
+Verheij, B. (2017). Proof with and without probabilities. Correct
 evidential reasoning with presumptive arguments, coherent hypotheses and
 degrees of uncertainty. \emph{Artificial Intelligence and Law}, 1--28.
 Springer.
 
-\hypertarget{ref-vlek2014building}{}
+\leavevmode\hypertarget{ref-vlek2016stories}{}%
+Vlek, C. (2016). \emph{When stories and numbers meet in court:
+Constructing and explaining bayesian networks for criminal cases with
+scenarios}. Rijksuniversiteit Groningen.
+
+\leavevmode\hypertarget{ref-vlek2013modeling}{}%
+Vlek, C., Prakken, H., Renooij, S., \& Verheij, B. (2013). Modeling
+crime scenarios in a bayesian network. In \emph{Proceedings of the
+fourteenth international conference on artificial intelligence and law}
+(pp. 150--159). ACM.
+
+\leavevmode\hypertarget{ref-vlek2014building}{}%
 Vlek, C., Prakken, H., Renooij, S., \& Verheij, B. (2014). Building
 bayesian networks for legal evidence with narratives: A case study
 evaluation. \emph{Artificial Intelligence and Law}, \emph{22}, 375--421.
 Springer.
 
-\hypertarget{ref-wagenaar1993anchored}{}
+\leavevmode\hypertarget{ref-vlek2015}{}%
+Vlek, C. S., Prakken, H., Renooij, S., \& Bart Verheij. (2015).
+Representing the quality of crime scenarios in a bayesian network. In A.
+Rotolo (Ed.), \emph{Legal knowledge and information systems} (pp.
+133--140). IOS Press.
+
+\leavevmode\hypertarget{ref-wagenaar1993anchored}{}%
 Wagenaar, W., Van Koppen, P., \& Crombag, H. (1993). \emph{Anchored
 narratives: The psychology of criminal evidence.} St Martin's Press.
 
-\hypertarget{ref-Walton2002}{}
+\leavevmode\hypertarget{ref-Walton2002}{}%
 Walton, D. N. (2002). \emph{Legal argumentation and evidence}. Penn
 State University Press.
 
-\hypertarget{ref-wells1992naked}{}
+\leavevmode\hypertarget{ref-wells1992naked}{}%
 Wells, G. (1992). Naked statistical evidence of liability: Is subjective
 probability enough? \emph{Journal of Personality and Social Psychology},
 \emph{62}(5), 739--752. American Psychological Association.
 
-\hypertarget{ref-wigmore1901number}{}
+\leavevmode\hypertarget{ref-wigmore1901number}{}%
 Wigmore, J. H. (1901). Required numbers of witnesses; a brief history of
 the numerical system in england. \emph{Harvard Law Review},
 \emph{15}(2), 83--108.
 
-\hypertarget{ref-wixted2017RelationshipEyewitnessConfidence}{}
+\leavevmode\hypertarget{ref-wixted2017RelationshipEyewitnessConfidence}{}%
 Wixted, J. T., \& Wells, G. L. (2017). The Relationship Between
 Eyewitness Confidence and Identification Accuracy: A New Synthesis.
 \emph{Psychological Science in the Public Interest}, \emph{18}(1),
