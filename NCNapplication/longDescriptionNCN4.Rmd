@@ -1,0 +1,729 @@
+---
+title: "Rethinking legal probabilism"
+author: "Rafał Urbaniak"
+output:
+  pdf_document:
+    number_sections: true
+    df_print: kable 
+    keep_tex: true
+    includes:
+      in_header:
+        - Rafal_latex6.sty
+classoption: dvipsnames,enabledeprecatedfontcommands
+fontsize: 11pt
+documentclass: scrartcl
+urlcolor: blue
+bibliography: [LP-SEP-FINAL6.bib, munich4.bib]
+csl: apa-5th-edition.csl
+---
+
+
+
+
+```{r setup, include=FALSE}
+library(ggplot2)
+library(ggthemes)
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+
+\thispagestyle{empty}
+
+# Scientific goal
+
+<!-- (description of the problem to be solved, research questions and hypotheses) -->
+
+
+
+
+As many miscarriages of justice indicate, scientific evidence is easily misinterpreted in court. This happens partially due to miscommunication  between the parties involved, partially due to the usual probabilistic fallacies, but also because incorporating scientific evidence in the context of a whole case can be really hard.    While probabilistic tools for  piecemeal evaluation of scientific evidence and spotting probabilistic fallacies in legal contexts are quite well developed, the construction of a more general probabilistic model of incorporating such evidence in a wider context of a whole case useful for   theorizing about evidence evaluation and legal decision standards, remains a challenge. Legal probabilism (LP), for our purpose, is the view that this challenge can and should be met.  This project intends to contribute to further development of this enterprise in a philosophically motivated manner. 
+ 
+
+
+The assessment of evidence in the court of law can be viewed from at least three  perspectives: as an interplay of arguments, as an assessment of  probabilities involved, or as an interaction of competing narrations. Each  perspective presents an account of   legal reasoning [@vanEemeren2017; @di2018evidential]. Individually, each of these strains has been investigated. The probabilistic approach, while being fairly mature, is still underdeveloped  in light of various lines of criticism developed by the representatives of the other strains. 
+
+
+
+
+
+The \textbf{goal of this project} is to contribute to the  \emph{development of a probabilistic modelling method for the evidentiary interaction of various items of evidence and for narration-based and yet still probabilistic approach to decision making} in the court of law. This will be achieved  by formulating its variant that  accomodates important \textbf{insights provided by its critics}. A crucial point of criticism is that the fact-finding process  should  be conceptualized as \textbf{a competition of narrations}. I plan to develop methods that allow the probabilist to take this perspective,  explain how such methods allow the legal probabilist to address various objections present in the literature. The key idea is that once  \textbf{narrations are represented as bayesian networks, various criteria on,  features of  and operations on narrations can be explicated in terms of corresponding properties of and operations on bayesian networks}. Further, the hypothesis is that such an improved framework will do better than the existing elements of the legal probabilisist's toolkit. 
+
+Thus, the goals are three-fold:
+
+1.  Philosophical and conceptual improvement of legal probabilism by including a more  holistic perspective and adversarial character of evidence assessment, which are typically absent from probabilistic approaches. 
+
+2.  Formulation of a formal and computational probabilistic framework that incorporates features resulting from achieving goal 1.  This will be done using Bayesian networks, hierarchical Bayesian models and imprecise probabilities. (\textbf{\textsf{R}} code  capturing  the technical features developed will be made openly available.)
+
+
+3. Addressing the outstanding question of how evidence of different types can be aggregated. The research in 1. and 2. will help to address this very practical pressing question.
+
+Thus, the output will be a \textbf{unifying extended probabilistic model embracing key aspects of the narrative and argumentative approaches, susceptible to AI implementation.}  
+
+
+
+
+
+
+
+# Significance 
+
+
+
+## State of the art
+
+### Legal probabilism
+
+
+One of the functions of the trial is to  resolve disputes about  questions of facts. Did the defendant rob the bank? Who is the father of the child? Did this drug cause birth defects? 
+To answer such questions, the litigants will present evidence of different kinds: eyewitness testimonies, DNA matches, epidemiological studies, etc. The evidence presented will often be in conflict with other evidence. In a bank robbery case, for example, the prosecution may present eyewitness testimony that the defendant was seen driving a truck  near the bank a few minutes after the robbery took place.  The defense may respond that no traces were found at the crime scene that would match the defendant.  The fact-finders, judges or lay jurors, should address these conflicts by assessing and weighing the evidence,  and on that basis reach a final decision. This is a difficult task. The evidence presented at trial can be complex and open to multiple interpretations, and even when it is assessed carefully, it may still lead to an incorrect verdict.  How should judges and jurors respond to this uncertainty? 
+
+
+From among the three perspectives mentioned in the beginning, the probablistic approach will be  my point of departure, for the following key  reasons:
+
+- The project is to be informed by and reflect on the actual practice of legal evidence evaluation, and much of  scientific evidence in such contexts  has probabilistic form.
+
+- Probabilistic tools are fairly well-developed both for applications and within formal epistemology, reaching a state of fruition which  should inspire deeper reflection.
+
+- Statistical computing tools for such methods are available, which makes programming development and preliminary computational and data-driven evaluation of the ideas to be defended a viable enterprise. 
+
+
+Accoringly, the view in focus of this research is legal probabilism (LP)---an ongoing research program that comprises a variety of claims about evidence assessment and decision-making at trial. At its simplest, it comprises two core tenets: first, that the evidence presented at trial can be assessed, weighed and combined by means of probability theory; and second, that legal decision rules,  such as proof beyond a reasonable doubt in criminal cases, can be explicated in probabilistic terms. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+In the Middle Ages, before the advent of probability theory, 
+there existed an informal mathematics 
+of legal evidence [@wigmore1901number]. Formalistic procedures fixed the number of witnesses required to establish a claim. Lawyers would list  ways in which items of 
+evidence could be added or subtracted to  weaken or strengthen one's case. This formalistic system fell into disrepute as the Enlightenment principle of `free proof' gained wide acceptance [@damaska1996free].   Concurrently, the development of probability theory brought forth a new approach to weighing evidence and making decisions under uncertainty. The early  theorists of probability in the 17th and 18th century were as much interested in games of chance as they were interested in the uncertainty of trial decisions  [@Hacking1984; @daston1988; @Franklin2001]. 
+ @Bernoulli1713Ars-conjectandi  was  one 
+of the first to formulate probabilistic rules for combining different pieces of evidence in legal cases and assessing to what extent they supported a claim of interest. 
+ He was also one of the first to suggest that decision rules at trial could be understood 
+as probability thresholds.  Bernoulli's prescient insights attained greater popularity in the 20th century amidst the law and economics movement [@Calabresi1961; @becker1968crime; @Posner1973].  In a seminal article, @Finkelstein1970A gave one of the first systematic analyses of how probability theory, and Bayes' theorem in particular,  can help to weigh evidence at trial. @lempert1977modeling
+was one of the first to rely on probability theory, specifically likelihood ratios, 
+for assessing the relevance of evidence. Such contributions fueled what has been called the New Evidence  Scholarship, a rigorous way of studying the process of legal proof at trial [@Lempert1986]. 
+
+
+### Skeptical voices and challenges
+
+
+In response to such developments, @tribe71 attacked what he called `trial by mathematics'.  His critique ranged from listing well-known cases of misuse or probabilities in legal contexts and practical difficulties in assessing the probability of someone's criminal or civil liability to the dehumanization of trial decisions.  After Tribe, many have criticized legal probabilism on a variety of grounds, both theoretical and practical, arguing 
+that probabilistic  models are either inadequate or unhelpful [@Underwood1977The-thumb-on-th; @cohen86; @brilmayer1986;  @dant1988gambling, @Allen1986A-Reconceptuali].^[After the discovery of DNA fingerprinting in the eighties, many legal probabilists focused on how probability theory could be used to quantify the strength of a DNA match under various circumstances [@kaye1986admissibility; @NRCI1992; @Robertson1995evidence;  @Koehler1996On-Conveying-th; @Kaye2010The-Double-Heli].]
+
+
+
+Some legal scholars and practitioners have voiced their support for legal probabilism explicitly [@Tillers2007]. Yet skepticism about mathematical and quantitative models of legal evidence is still widespread among prominent legal scholars and practitioners [see, for example, @allen2007problematic].
+ Even among legal probabilists, 
+few would think it possible to quantify precisely the probability of someone's guilt or civil liability. In response, probabilistists such as @taroni2006bayesian suggest that the probabilistic formalism is still useful  as an aid to structure and guide one's inferences under uncertainty, rather than a way to reach precise numerical assessments. 
+
+
+Conceptually, the probabilistic approach together with decision-theoretic considerations, can be used to theorize about the standard of proof and its properties. But for this project to be successfull, a proper probabilist explication of such a standard needs to be agreed upon. Imagine you are a trier of fact in a legal proceeding in which the defendant’s guilt is identified as equivalent to a certain factual statement $G$ and that somehow you succeeded in properly evaluating  $\pr{G\vert E}$----the probability of  $G$  given the total evidence presented to you,
+ $E$.  One question that arises in such a situation is:
+ when should you decide against the defendant? When is the evidence good enough? 
+What we are after here is a condition $\Psi$, formulated in (primarily) probabilistic (and perhaps decision-theoretic) terms, such that the trier of fact, at least ideally, should accept any relevant claim $A$ (including
+ $G$) just in case $\Psi(A, E)$. One straightforward attempt might be to say: convict if 
+ $\pr{G\vert E}$ is above a certain threshold, otherwise acquit  [see, for example @Laplace1814;  @kaplan1968decision; @Dekay1996; @kaye79; @laudan2006truth].
+
+
+
+
+Perhaps the most difficult conceptual challenge to such  probabilistic explications---at least, one that has galvanized philosophical attention in recent years---comes from the paradoxes of legal proof or puzzles of naked statistical evidence. In  a number of seminal papers, @Nesson1979Reasonable-doub,  @Cohen81, and  @Thomson86 formulated  scenarios in which, even if the probability of guilt or civil liability, based on the available evidence, is particularly high, a verdict against the defendant seems unwarranted.  
+
+
+
+A variant of such a scenario---the gatecrasher paradox---goes as follows. Suppose our guilt threshold is high, say at 0.99. Consider the situation in which 1000 fans enter a football stadium, and 991 of them avoid paying for their tickets. A random spectator is tried for not paying. The probability that the spectator under trial did not pay exceeds 0.99. Yet, intuitively, a spectator cannot be considered liable on the sole basis of the number of people who did and did not pay. While recently some doubt the relevance of abstract philosophical examples for the actual practice [@hedden2019; @ross2020], at least conceptual challenges remain. 
+ 
+
+Another problem with the proposal is the so-called difficulty about conjunction. It  arises, because intuitively   there should be no difference between the trier’s acceptance of 
+ $A$ and  $B$
+ separately, and her acceptance of their conjunction, $A\wedge B$
+, that is, that
+ $\Psi(A,E)$  and $\Psi(B,E)$ just in case
+ $\Psi(A\wedge B, E)$. If $\Psi(H,E)$ is just the threshold criterion
+ requiring that $\pr{H\vert E}$ be sufficiently high, $\Psi$ in general fails to satisfy this equivalence, as the probability of a conjunction generally can be lower than the probability of any of the conjuncts. 
+ 
+ 
+ 
+
+
+
+Arguably, these problems underscore a theoretical difficulty with probabilistic accounts of legal standards of proof. How to define them, or whether they should be even defined in the first place, remains  contentious [@diamond90; @newman1993;  @Horowitz1996; @laudan2006truth; @walen2015]. Judicial opinions offer different paraphrases, sometimes conflicting, of what these standards mean. 
+  Many articles have been written on the topic, initially by legal scholars. In the last decade, philosophers have also joined the debate [for  critical surveys  see @redmayne2008exploring,  @gardiner2018 and @pardo2019]. Crucially, even fairly recent proposals to mend the situation [@dawid1987; @cheng2012reconceptualizing; @kaplow2014likelihood]   on the part of the legal probabilist, while they do bring some conceptual clarity,  have failed   [@Urbaniak2019standards2 contains a detailed analysis]. 
+
+
+
+At least \emph{prima facie}, then, it seems that some conditions other than high posterior probability of liability have to be satisfied for the decision to penalize (or to find liable) to be justified.  Accordingly, various informal notions  have been claimed to be essential for  a proper explication of judiciary decision standards [@wells1992naked; @haack2011legal]. For instance,  evidence is claimed to be insufficient for conviction if it is not \emph{sensitive} to the issue at hand: if it remained the same even if the accused was innocent [@enoch2015sense]. Or, to look at another approach,  evidence is claimed to be insufficient for conviction if it doesn't \emph{normically support} it: if---given the same evidence---no explanation would be needed even if the accused was innocent [@Smith_conviction_mind_2017].   A legal probabilist needs either to show that these notions are  unnecessary or inadequate for the purpose at hand, or to indicate how they can be explicated in probabilistic terms. 
+
+
+### The narrative approach
+
+
+
+More recently, alternative frameworks for modeling evidential reasoning and decision-making at trial have been proposed. They are based on inference  to the best explanation [@Pardo2008judicial; @Allen2010No-Plausible-Al; @schwartz2019WhatRelativePlausibility; @hastie2019CaseRelativePlausibilitya, @lai2019HowPlausibleRelative; @nance2019LimitationsRelativePlausibility], narratives and stories [@Pennington1991;
+@Allen1986A-Reconceptuali; @allen2001naturalized; @Allen2010No-Plausible-Al; @clermont2015TrialTraditionalProbability; @pardo2018], 
+and argumentation theory [@gordon2007; @Walton2002; @bex2011ArgumentsStoriesCriminal].  Those who favor a conciliatory stance have combined  legal probabilism with  other frameworks, 
+offering preliminary sketches of hybrid theories [@verheij2014catch; @urbaniak2018narration]. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+One important point of criticism of LP is that  legal proceedings are back-and-forth between opposing parties in which  cross-examination is of crucial importance,  reasoning goes not only evidence-to-hypothesis, but also hypotheses-to-evidence [@wells1992naked; @allen2007problematic] in a way that seems analogous to inference to the best explanation [@dant1988gambling], which notoriously is claimed to not be susceptible to probabilistic analysis [@Lipton2004-LIPITT].   An informal philosophical account inspired by such considerations---The \textbf{No Plausible Alternative Story (NPAS)} theory [@Allen2010No-Plausible-Al]---is that the courtroom is a confrontation of competing narrations [@wagenaar1993anchored; @ho2008philosophy] offered by the sides, and  the narrative to be selected should be the most plausible one. The view is conceptually plausible [@di2013statistics], and  finds  support  in psychological evidence [@pennington1991cognitive; @pennington1992explaining]. 
+
+
+
+It would be a great advantage of legal probabilism if it could  model phenomena captured by the narrative approach. But how is the legal probabilist to make sense of them?  From her perspective,  the key disadvantage of NPAS is that it abandons the rich toolbox of probabilistic methods and takes the key notion of plausibility to be a primitive notion which should be understood only intuitively. 
+
+
+###  Bayesian networks as a tool for legal probabilism
+
+
+The idea that Bayesian networks can be used for probabilistic reasoning in legal fact-finding started gaining traction in late eighties 
+<!-- [@Friedman1986A-diagrammatic-]  -->
+and early nineties
+[@Edwards1991Influence-diagr], and it found its way to nowadays standard textbooks on the topic  [@taroni2006bayesian; @Fenton2018risk].  
+A Bayesian network comprises two components: first, a directed acyclic graph of relations of dependence (represented by arrows) between variables (represented by nodes); second,  conditional probability tables. 
+Consider the graphical component first. The graph is acyclic because the arrows connecting the nodes do not form loops. 
+As an illustration,  let \(H\) be the claim that the suspect committed the murder, \(BT\) the presence of a blood type B match with a crime scene stain, and \(W\) the fact that an eyewitness observed the suspect near the scene around the time of the crime. The graphical component of the Bayesian network would look like this:
+
+
+\noindent
+\begin{tabular}{ll}
+\begin{minipage}[c]{0.15\linewidth}
+\begin{figure}[H]
+\scalebox{0.9}{
+\hspace{-10mm} \vspace{-5mm} \includegraphics{BNfiles/unnamed-chunk-2-1}
+}
+\end{figure} \end{minipage}& \begin{minipage}[c]{0.8\linewidth}
+The \emph{ancestors} of a node \(X\) are all those nodes from
+which we can reach \(X\) by following the arrows going forwards. The
+\textit{parents} of a node \(X\) are those for which we can do this in one step.
+The \textit{descendants} of \(X\) are all which can be reached from \(X\) by
+following the arrows going forward. The \textit{children} are those for
+which we can do this in one step. In the example,
+$H$ is the parent (and ancestor) of both $W$ and $BT$, which are its children (and descendants). There are no non-parent ancestors or non-children
+descendants. 
+\end{minipage}
+\end{tabular}
+
+\vspace{1mm}
+
+
+The variables, which are represented by nodes and are connected by arrows, stand in relation of probabilistic dependence. To describe these relations, 
+the graphical model is accompanied by conditional probability tables. 
+For parentless nodes such as $H$, the tables specify 
+the prior probabilities of all their possible states. Assuming $H$ stands for a binary random variable, with two possible states, 
+the prior probabilities 
+could be:
+
+\noindent
+\begin{tabular}{ll}
+\begin{minipage}[c]{0.25\linewidth}
+\begin{table}[H]
+\centering
+\begin{tabular}{lr}
+\toprule
+  & Prior\\
+\midrule
+H=murder & .01\\
+H=no.murder & .99\\
+\bottomrule
+\end{tabular}
+\end{table}
+\end{minipage}& \begin{minipage}[c]{0.7\linewidth}
+The .01 figure for H=murder rests on the assumption that, absent any incriminating evidence, the defendant is unlikely to be guilty. For children nodes, the tables specify their conditional probability given combinations of their parents' states. 
+\end{minipage}
+\end{tabular}
+
+\vspace{1mm}
+
+
+
+
+
+\noindent
+ If the variables are  binary, an assignment of values for them could be:
+\noindent
+\begin{tabular}{ll}
+\begin{minipage}[c]{0.45\linewidth}
+\begin{table}[H]
+\centering
+\begin{tabular}{lrr}
+\toprule
+  & H=murder & H=no.murder\\
+\midrule
+W=seen & .7 & .4\\
+W=not.seen & .3 & .6\\
+\bottomrule
+\end{tabular}
+\end{table}
+\end{minipage}& \begin{minipage}[c]{0.45\linewidth}
+\begin{table}[H]
+\centering
+\begin{tabular}{lrr}
+\toprule
+  & H=murder & H=no.murder\\
+\midrule
+BT=match & 1 & .063\\
+BT=no.match & 0 & .937\\
+\bottomrule
+\end{tabular}
+\end{table}
+\end{minipage}
+\end{tabular}
+
+\vspace{2mm}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\noindent
+According to the tables above, even if the defendant is not the culprit, the eyewitness testimony would still incriminate him with  probability of .4, while the blood evidence with  probability equal to only .063. The blood type frequency estimate is realistic [@lucy2013introduction], and so are the conditional probabilities for the eyewitness identification. 
+As expected, eyewitness testimony is assumed to be less trustworthy than blood match evidence  (for complications about assessing eyewitness testimony, see @wixted2017RelationshipEyewitnessConfidence and @Urbaniak2020Decision).
+
+The three probability tables above are all that is needed to define the probability distribution. The tables do not specify probabilistic dependencies between nodes that are not in a relation of child/parent, such as $BT$ and $W$. Since there is no arrow between them, nodes $BT$ and $W$ are assumed to be independent conditional on $H$, that is, $\pr{W \vert H}=\pr{W \vert H \wedge BT}$. This fact represents, as part of the structure of the network, the independence between eyewitness testimony and  blood evidence. A generalization of this fact
+is the so-called Markov condition. 
+While the Bayesian network above---comprising a directed acyclic graph along with probability tables---is simple, a correct intuitive assessment of
+the probability of the hypothesis given the
+evidence is already challenging. The reader is invited to try to estimate intuitively the probability that the defendant committed the murder (H=murder) given 
+the following states of the
+evidence:
+
+\begin{itemize} 
+\item The suspect's blood type matches the crime stain but  information about the witness is unavailable.
+\item The suspect's blood type matches the crime stain but the witness says they did not see the suspect near the crime scene.
+\item The suspect's blood type matches the crime stain and the witness says they saw the suspect near the crime scene.
+\end{itemize}
+
+ 
+ 
+ 
+ 
+ 
+\noindent
+\begin{tabular}{ll}
+\begin{minipage}[c]{0.4\linewidth}
+\begin{table}[H]
+\centering
+\begin{tabular}{lr}
+\toprule
+  & H=murder\\
+\midrule
+BT=match,W=? & .138\\
+BT=match,W=not.seen & .074\\
+BT=match, W=seen & .219\\
+\bottomrule
+\end{tabular}
+\end{table}
+\end{minipage}& \begin{minipage}[c]{0.55\linewidth}
+Already at this level of complexity, calculations by hand become cumbersome. In contrast,  software for Bayesian networks  will easily give the results visible on the left. Perhaps surprisingly, the posterior probability of $H$ is about .22 even when both pieces of evidence are incriminating (BT=match, W=seen).
+\end{minipage}
+\end{tabular}
+
+\vspace{2mm}
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+Simple graphical patterns (called \emph{idioms}) often recur while modeling the relationships between evidence and hypotheses. Complex graphical models can be created by combining these basic patters 
+in a modular way. Discussion of general methods for Bayesian network constructions can be found in [@neil2000BuildingLargescaleBayesian; @hepler2007ObjectorientedGraphicalRepresentations; @bovens2004bayesian; @friedman1974] and general idioms are discussed in [@fenton2013GeneralStructureLegal].
+
+
+ 
+\noindent
+\begin{tabular}{ll}
+\begin{minipage}[c]{0.2\linewidth}
+\begin{figure}[H]
+\scalebox{1}{\includegraphics{BNfiles/unnamed-chunk-6-1} }
+\end{figure}
+\end{minipage}& \begin{minipage}[c]{0.75\linewidth}
+As an example, consider the \emph{evidence idiom} is the most basic graphical representation of the relation between a hypothesis and a piece of evidence. 
+This directed graph suggests that the direction of influence---which could, but need not, be interpreted as causal influence---goes from hypothesis to evidence (though the probabilistic dependence goes both ways).  The hypothesis node and the evidence node can be binary variables, such as
+"The defendant was the
+source of the crime scene traces" (hypothesis) and "The defendant genetically matches the crime traces" (evidence). But the variables need not be binary. The hypothesis node might take values from the range of \(1-40\), say the distance in meters from which the gun was shot, and the evidence node might be a continuous variable representing the density of gun shot residues.
+\end{minipage}
+\end{tabular}
+
+\vspace{2mm}
+
+
+
+
+
+ 
+\noindent
+\begin{tabular}{ll}
+\begin{minipage}[c]{0.4\linewidth}
+\begin{figure}[H]
+\scalebox{1}{\includegraphics{BNfiles/unnamed-chunk-7-1} }
+\end{figure}
+\end{minipage}& \begin{minipage}[c]{0.55\linewidth}
+As an example of a more complex idiom, called the \emph{evidence accuracy
+idiom}, consists of two arrows going into the evidence node . One incoming arrow comes from the hypothesis node and the other from the accuracy node. This idiom can be used to model, say, 
+an alcohol test. The directions of the arrows indicate that the accuracy of the evidence (accuracy node) and the alcohol level (hypothesis node) influence the outcome of the test (evidence node). The graphical model represents different sources of uncertainty. The uncertainty associated with the sensitivity and specificity of the test---that is, the probability that the tests reports excessive alcohol level when the level is excessive (sensitivity) and the probability that the test reports normal alcohol level when the level is normal (specificity)---is captured by the arrow  going from the hypothesis node (\textsf{Excess alcohol level}) to the evidence node (\textsf{Evidence for excess}). Other sources of uncertainty comprise the possibility that the police officer lied about the test report or
+the possibility that the driver took medications which then affected the alcohol level. These possibilities can be taken into consideration by adding an accuracy node (or multiple accuracy nodes, if each factor is kept separate from the other).
+\end{minipage}
+\end{tabular}
+
+\vspace{2mm}
+
+
+
+
+
+
+
+
+
+The key poin there is that large steps have been made towards the development of BN-related tools for evidence evaluation. However, so far, most of them have to do with presentation and evaluation of various pieces of evidence, not with the development of a more general model to facilitate more general probabilistic reflection on legal decision standards. 
+
+
+
+
+ 
+## Pioneering nature of the project
+
+
+### Points of disagreement
+
+For the reasons already mentioned, Bayesian Networks and probabilistic methods will be in the focus of this project. It is quite clear that BNs are useful tool when it comes to piecemeal modeling and evaluation of scientific evidence in court. The question is, whether they can be useful for modeling whole cases and casting light on both the conceptual challenges that we already mention and for incorporating the points made by the representatives of other strains of research, most crucially,  NPAS. 
+
+Attempts have been made to use Bayesian networks to weigh and assess complex bodies of evidence consisting of multiple components. On one hand, we have serious reconstructions of real complex cases. @kadane2011probabilistic
+made one the first attempts to model an entire criminal case, Sacco \& Vanzetti from 1920, using probabilistic graphs. Here is another,   more recent, example by  @Fenton2018Risk, who constructed a Bayesian network for the famous Sally Clark case.
+
+
+
+
+
+
+\noindent
+\begin{tabular}{ll}
+\begin{minipage}[c]{0.6\linewidth}
+\begin{figure}[H]
+\scalebox{1}{\includegraphics{BNfiles/unnamed-chunk-11-1}  }
+\end{figure}
+\end{minipage}& \begin{minipage}[c]{0.35\linewidth}
+The arrows depict relationships of influence between variables. Whether Sally Clark's sons, call them \(A\) and \(B\), died by SIDS or murder (\textsf{A.cause} and \textsf{B.cause}) influences whether signs of disease (\textsf{A.disease} and \textsf{B.disease}) and bruising (\textsf{A.bruising} and \textsf{B.bruising})  were present. 
+Since son A died first, whether A was murdered or died by SIDS (\textsf{A.cause}) influences how son B died (\textsf{B.cause}). 
+How the sons died 
+determines how many sons were murdered (\textsf{No.murdered}), and how many sons were murdered decides whether Sally Clark is guilty (\textsf{guilty}). 
+\end{minipage}
+\end{tabular}
+
+\vspace{2mm}
+
+
+
+
+
+
+
+
+
+
+ 
+ 
+ 
+\noindent
+\begin{tabular}{ll}
+\begin{minipage}[c]{0.4\linewidth}
+\begin{table}[H]
+\centering
+\begin{tabular}{@{}ll@{}}
+\toprule
+Evidence (cumulative) & $\pr{\textrm{Clark guilty}}$ 
+\\ \midrule 
+A bruising& .2887\\
+A no signs of disease & .3093\\
+B bruising & .6913\\
+B no signs of disease  & .7019\\
+ \bottomrule
+\end{tabular}
+\end{table}
+\end{minipage}& \begin{minipage}[c]{0.55\linewidth}
+In the  original calculation, the prior probability of \textrm{Guilty = Yes} should be .0789. After taking into account the incriminating evidence presented at trial, such as that there were signs of bruising but no signs of a preexisting disease affecting the children, the posterior probabilities are as in the table on the left.
+\end{minipage}
+\end{tabular}
+
+\vspace{2mm}
+
+ 
+ 
+
+
+
+
+
+\begin{center}
+
+\end{center}
+
+\noindent 
+The incriminating evidence, combined, brings the probability of guilt from .0789 to .7019. This is a significant increase, but not quite enough for a conviction. If one wishes to perform sensitivity analysis by modifying some of the probabilities, this can be easily done.
+During the appeal trial, new evidence was discovered, in particular, evidence that son A was affected by a disease. 
+Once this evidence is taken into account, the probability of guilt drops to .00459  (and if signs of disease were also present on B, the guilt probability would drop even further to .0009). For a general discussion on how to elicit probabilities, see [@renooij2001ProbabilityElicitationBeliefa] and [@gaag2013elicit].
+
+
+On the other hand,  the literature contains examples  more general methodological reflection on the use of BNs for modeling whole cases.  The main idea is that once all the pieces of evidence and claims are represented as nodes, one should use the \textit{scenario idiom} to  model  complex hypotheses, consisting of a sequence of events organized in space and time: a scenario [@vlek2014building].^[A discussion
+of modelling crime scenarios by means of  graphical devices mixed with probabilities can be also found in the work of @shen2007ScenariodrivenDecisionSupporta}, @bex2011ArgumentsStoriesCriminal, @bex2015IntegratedTheoryCausal and
+@verheijproof2017. See also the survey by @di2018evidential.
+@dawid2018graphical  give a treatment of scenarios in terms of  BNs. @lacave2002ReviewExplanationMethodsa elaborate on how BNs can be used to construct explanations.]
+
+
+
+A graphical model that uses the scenario idiom would consist of the following components: first, nodes for the states and events in the scenario, with each node linked to the supporting evidence; second, a separate scenario node that has states and events as its children; finally, a node corresponding to the ultimate hypothesis as a child of the scenario node. A graphical 
+model could look like this:
+
+\begin{center}\includegraphics{BNfiles/unnamed-chunk-13-1} \end{center}
+
+
+\noindent
+ Note that the scenario node unifies the different events and states.   Because of this unifying role, increasing the probability of one part of the scenario (say \textsf{State/event 2}) will also increase the probability of the other parts (\textsf{State/event 1} and  \textsf{State/event 3}). This is intended to  capture the idea that  the different components   of a scenario form an interconnected sequence of events.
+ 
+
+One challenge that this strategy is supposed to help with is  the question of how  to make sense of the notion of the coherence of a scenario as different from its probability given the evidence. On this approach   [@vlek2013modeling; @vlek2014building; @vlek2015; @vlek2016stories],  coherence is identified with the prior probability of the scenario node. 
+ 
+
+Another challenge that the framework is supossed to meet is the question of how to formally represent reasoning with multiple scenarios on the table. On this approach (called scenario merging), given a class of narrations, all the nodes used in some of the separate BNs are to be used to build one large BN, and separate scenario nodes are to be added to it, so that one BN supposedly represents multiple scenarios at once. 
+
+Here are the key reasons why the existing stage of development of reflection on the topic is not satisfactory:
+
+
+  A.  The use of a scenario idiom is problematic. Adding a parent node by \emph{fiat} without any good reasons to think the nodes are connected other than being part of a single story,  introduces probabilistic dependencies between the elements of a narration. Merely saying that, say, the defenendant made jointly some claims  is not a good reason to assume they are probabilistically dependent.
+
+  B.  Another problem results from the identification of prior probability with coherence.  This does not add up intuitively. After all, it is quite coherent with my views  that if I win a lottery, I'll buy a large house in Auckland and move there, while both the prior and the posterior given the total available evidence  of this scenario are rather low. 
+
+  C.  In general, the legal probabilistic approach to coherence is very simple and fails to engage with rich philosophical literature exactly on this topic [@shogenji1999; @olsson2001;  @glass2002; @fitelson2003ProbabilisticTheoryCoherence; @fitelson2003comments; @meijs2007; @Douven2007measuring], including a long list of counterexamples to the existing proposals and desiderata that a probabilistic coherence measure should satisfy [@Merricks1995; @shogenji1999; @Akiba2000Shogenjis; @Shogenji2001Reply; @bovens2004bayesian; @Siebel2004On-Fitelsons-me;  @siebel2006against; @Shogenji2006Why; @crupi2007BayesianMeasuresEvidential; @koscholke2016evaluating; @Schippers2019General].
+
+  D. The merging procedure with scenario nodes assumes that for the nodes that are common to the networks to be merged, both the directions of the arrows in the DAGs and the conditional probability tables are the same across different narrations. This is suboptimal. Different sides in court might construe causal dependencies differently, and even if they agree about the direction of an arrow, they might disagree about the probability table associated with it. Even a single side might consider different scenarios with different probabilities, say, when there is some uncertaintly inolved in the probability assignment itself. 
+  
+
+
+
+A somewhat alternative approach to representation of and reasoning with multiple scenarios has been developed by @Fenton2019Modelling. They correctly criticize [@urbaniak2018narration]: the paper only sketches some theoretical moves in a second-order language and  makes no connection to BNs and  so it  "fails to offer a convincing and operational means to structure and compare competing narratives." They propose to represent separate narrations in terms of separate BNs, and to deploy bayesian model comparison and averaging as a tool for reasoning with multiple scenarios. That is, Bayes Theorem with hypotheses as models (BNs), yields:
+
+\vspace{-3mm}
+
+\begin{align}
+\pr{M=m_i\vert E} & = \frac{
+\pr{E\vert M = m_i}\pr{M= m_i}
+}
+{
+\sum_{i=1}^{n}\pr{E \vert M = m_i}\pr{M = m_i}
+}
+\end{align}
+
+\noindent Then, assuming equal priors, models with higher likelihoods will have higher posterior probabilities, and the most plausible model will be the one with the highest posterior (that is, with equal priors, with highest likelihood). Alternatively, they propose averaging the predictions for a given variable $\varphi$ by taking the ensemble model:
+
+
+\vspace{-3mm}
+
+\begin{align}
+\pr{\varphi \vert E} & = \sum_{i=1}^n \pr{\varphi \vert M=m_i, E} \pr{M=m_i\vert E}
+\end{align}
+
+\vspace{-2mm}
+
+\noindent where the priors are either equal or are identified with the posterior of the models given the evidence, and those posteriors are to be calculated assuming equal priors. 
+
+Here are the key problems with this approach:
+
+E.  The assumption of equal priors is highly debatable. For one thing, this approach would render prior probabilities quite sensitive to the choice of hypotheses and thus potentially arbitrary.  In addition, this approach seems particularly unsuitable for criminal cases. If the only two hypotheses/models on the table  ultimately say "the defendant is guilty" and "the defendant is innocent",  the prior probability  of each would be 50\%. But  defendants in criminal cases, however, should be presumed innocent until proven guilty. A 50\% prior probability of guilt seems excessive. Some [@williamson2010defence] try to defend a variant of the principle of indifference by reference to informational entropy, and a proposal along this line has been used in practical recommendation by expert committees [@ENFSI2006entropy]. However, this attempt has been  sensiblycriticized  by @Biedermann2007equal. The question remains, what should the proper application of informational entropy in the context of BN selection and averaging  look like, given that information entropy considerations independently are in epistemologically decent standing? Importantly, whatever conclusions in such contexts are epistemologically justified, how do they square with the presumption of innocence? Some take the presumption to mean  that the prior probability of guilt should be set to a small value [@friedmanEtAl1995; @Friedman2000], but it is not clear whether this interpretation can be justified on epistemological or decision-theoretic grounds.  
+
+F.  More recent models rely on relevant background information, for example, geographical information  about people's opportunities to commit crimes [@fenton2019OpportunityPriorProofbased. 
+ But even if these models are successful in giving well-informed assessments of prior probabilities any evidence-based assessment of prior probabilities, they are likely  to violate existing normative requirements of the trial system [@dahlman2017; @engel2012NeglectBaseRate; @schweizer2013LawDoesnSay]. For instance, if the assessment of prior probabilities relies on demographic information, people who belong to certain demographic groups will be regarded as having a higher prior probability of committing a wrong than others. This is what a well-informed assessment should amount to. Yet, if 
+ some people's priors are higher than other people's priors, 
+ it will be easier to convict or find liable those who are assigned higher priors, even if the evidence against them is the same as the evidence against those assigned lower priors.
+ This outcome can be seen as unfair  [@DiBelloONeil2020]. The question remains: what procedure of choosing the priors  both is justified by epistemological considerations and does not generate tension with fairness considerations?
+
+
+
+
+
+G. Model selection based on likelihood (given equal priors) or posterior model probabilities in general (if priors are not assumed to be equal) boils down to a variant of the threshold view, and so all the difficulties with the threshold view apply.
+
+H. Model averaging in the proposed form boils down to taking a weighted average of the probabilities provided by the models (weighted linear pooling). However, there is a rich literature on the difficulties that linear pooling runs into [see the surveys in @Dietrich2016Probabilistic, @dietrich2017probabilistic1; @dietrich2017probabilistic2]. One problem is that the method satisfies the unanimity assumption: whenever all models share a degree of belief in a claim, this is exactly the output degree for that belief. But clearly, a claim can receive additional boost from multiple agents with different pieces of evidence agreeing on something (for instance, in witness corroboration). Another problem is that linear pooling does not preserve probabilistic independence  [@List2011Group]: even if all models agree that certain nodes are independent, they might end up being dependent in the output. There is also a variety of impossibility theorems in the neighborhood.^[Here is a nice example. It turns out you can't at the same time hold the following: [@Gallow2018No]
+\begin{align}
+\pr{A=B} & <1\\
+\pr{r\vert A=a} & = a \\
+\pr{r\vert B=b} & = b \\
+\forall a,b \, \pr{r \vert A =a, B = b} & =  \alpha a + \beta b
+\end{align}
+
+\noindent This means that that it is impossible that two models $A$ and $B$ can disagree, we trust each of them separately if we only learn about one model, and we take a weighted average if we learn about both.]
+
+
+
+
+
+### Strategy and novelty
+
+
+\noindent
+\textbf{Representation.}  I will use BNs taken separately without scenario nodes to represent various narrations. Crucially, I will not assume the conditional probability tables or directions of edges are the same across the BNs, thus allowing for more realistic flexibility. To be able to accommodate insights provided by NPAS and other critics of LP, I will add another layer of information: for each BN one needs to specify a set of binary nodes such that a certain combination of their states counts as a narration, and a set of evidence nodes, which are supposed to support this narration. 
+
+\noindent
+ \textbf{BN-based coherence.} I have developed a coherence measure that  diverges from the known candidates in three important respects: (1) It is not a function of a probabilistic measure and a set of propositions alone, because it is also sensitive to the selection and direction of arrows in a Bayesian Network representing an agent's credal state. (2) Unlike in the case of quite a few coherence measures, it is not obtained by taking a mean of some list of intermediate values (such as confirmation levels between subsets of a narration). It  is sensitive also to the variance and the minimal values of the intermediate values. (3) The intermediate values used are not confirmation levels, but rather expected and weighted confirmation levels. Preliminary tests on  existing philosophical  counterexamples  suggests the  performance of the measure is much better than the existing coherence measures. Now, it needs to be deployed (implemented in \textbf{\textsf{R}} for BNs) and properly tested on real-life cases discussed in the LP literature.
+
+\noindent
+ \textbf{Divide and conquer.} In fact, dealing with multiple models is difficult in this context. On one hand, many machine learning methods are not available. For instance, one cannot evaluate models in terms of their performance with respect to the data. Whenever you want to use resampling methods (such as cross-validation), or some information criterion scoring (suchs as Akaike Information Criterion), you need to have a dataset with multiple datapoints to start with, and such datasets are usually not available (and often conceptually unimaginable) for the problems typically faced in the court of law.  On the other hand, averaging often doesn't make sense either. After all, often  no epistemological or decision-related progress might be gained based on averaging the prosecutor's and the defendant's stories. I propose that ensemble methods should be deployed for multiple narration variants available from one side (as in when, say, the prosecution story comes with uncertainty about the direction of an arrow or about a particular probability table), but selection methods should be used when final decision is to be made between narrations proposed by the opposing sides. 
+
+ \noindent
+\textbf{Ensemble methods.} One question that arises is whether the general concerns about linear pooling arise for such limited applications. If not, the remaining concern is what priors should be used. In light of the controversial nature of equal priors, I plan to study the consequences of rescaling coherence scores (already mentioned) to constitute model priors. The idea is that given that narrations are to be developed by the sides themselves, taking coherence of their narration as determining the prior might be more fair than using equal priors or relying on geographical or population statistics. If yes, perhaps some other methods boiling down to a variant of sensitivity analysis can be deployed: look at all BNs corresponding to some variant of the narration of one of the sides, find the strongest and the weakest one, and these give you a range of possible outcomes. 
+
+\noindent
+ \textbf{Selection criteria.} The so-called New Legal Probabilism  (NLP)   is an attempt to improve on the  underspecificity of NPAS [@di2013statistics]. While still being at most semi-formal, the approach is more specific about the conditions that a successful accusing narration is to satisfy for the conviction beyond reasonable doubt to be justified. Di Bello identifies four key requirements that a successful convicting narration should satisfy:
+
+\vspace{2mm}
+
+
+\begin{center}
+\begin{tabular}{@{}lp{11.5cm}@{}}
+\toprule
+ (Evidential support) &The defendant's guilt probability on the evidence should be sufficiently supported by the evidence, and a successful accusing narration should explain the relevant evidence. \\
+(Evidential completeness) &  The evidence available at trial should be complete as far as a reasonable fact-finders' expectations are concerned. \\
+(Resiliency)&  The prosecutor's narrative, based on the available evidence, should not be susceptible to revision given reasonably possible future arguments and evidence. \\
+(Narrativity) & The narrative offered by the prosecutor should answer all 
+the natural or reasonable questions one may have about what happened, given the content of the prosecutor's narration and the available evidence. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\vspace{2mm}
+
+ \emph{Prima facie,} it is far from obvious that such conditions are susceptible  to a Bayesian networks explication. However, I have already developed  a more expressive probabilistic framework (call it Narration-Friendly Probabilism (NFP)) capable of expressing such features within a formalized higher-order language [@Urbaniak2017Narration-in-ju]. On NFP, the notion of narration is quite wide: narrations not only contain factual statements about what happened, but also claims about evidence, about narrations,  about relations between evidence and various parts of various narrations etc. I extend the basic propositional language  with propositional operators $N_i$ and $E$ corresponding to 
+"\emph{\dots is part of narration $i$}" and "\emph{\dots is part of the evidence}," and  model  narrations as finite sets of sentences from this language. Due to this intuitive move, many important aspects of narrations normally discussed only informally, similar to those discussed by Di Bello, become expressible in terms of probabilistic measures for such a formal language.  Let's very briefly gesture towards a few examples:
+ 
+ \begin{itemize}\setlength\itemsep{-1.5mm}
+ \item A defending narration explains  a piece of evidence  $e$ just in case  if there is an  attacking narration whose posterior is raised conditional on $e$, the probability of $e$ conditional on this defending narration is above the negligibility threshold.
+ \item An attacking narration misses some evidence just in case there are some statements not in the evidence set such that the probability of the claim that at least one of them is part of evidence conditional on the existing evidence ($\{\varphi\vert \varphi \in \mbox{ Evidence}\}$), its description ($\{E\varphi\vert \varphi \in \mbox{ Evidence}\}$), and on this attacking narration is above the strong plausibility threshold. 
+ \item A narration contains gaps just in case there are some claims which are not part of it, but conditional on the content and the description of this narration and the evidence available, their disjunction is strongly plausible, and it is strongly plausible conditional on the content (but not on the description) of this narration and on evidence that at least one of these claims is part of the narration.
+ \item  A narration is dominant just in case it doesn't miss any evidence, it doesn’t contain any gap, and in light of all available information and evidence it is at least as likely any other accusing narration, and is strongly plausible.
+ \end{itemize}
+
+
+While threshold- or likelihood-ratio-based selection criteria for models are unlikely to succeed, as already discussed, I am convinced the criteria formulated in philosophical terms in  [@di2013statistics] and in higher-order terms in  [@urbaniak2018narration] are in better standing. The key hypothesis is that they can be recast  in terms of properties of BNs and that the existing BN programming tools can be extended to implement testing for these criteria. This will make them susceptible to programmatic implementation and further study by means of computational methods. The hope is that on one hand, they will do better than the existing proposals, and where they fail, further insights can be gained by studying the reasons behind such failures.   
+
+
+
+
+
+
+
+# Work plan 
+
+\vspace{1mm}
+\begin{center}
+\begin{tabular}{p{2.3cm}|p{12.2cm}}
+\footnotesize \textbf{$\mathtt{Stage  \,\, 1}$} \newline  \tiny Philosophical \&  formal \newline  unification & 
+Obtain a unifying extended  probabilistic framework by incorporating further insights  from philosophical and psychological accounts of legal narrations, and from the argumentation approach. Defend its philosophical plausibility. \scriptsize (6 months)
+\\
+\footnotesize \textbf{$\mathtt{Stage \,\, 2}$} \newline  \tiny AI implementation 
+ & Develop Bayesian Network Methods for the obtained formal framework, so that the insights from the argumentation approach and informal epistemology, mediated through it, can be incorporated in AI tools. \scriptsize (12 months)
+\\
+\footnotesize \textbf{$\mathtt{Stage  \,\, 3}$} \newline  \tiny    Case studies & 
+Evaluate the developed framework and AI tools  by conducting case studies from its perspective.    \scriptsize (6 months) 
+\\
+\footnotesize \textbf{$\mathtt{Stage  \,\, 4}$} \newline  \tiny    Back to challenges \& output & 
+Investigate the extent to which the new framework helps to handle the issues raised in points A.-H., finalize the book. \scriptsize (12 months)
+\end{tabular}
+\end{center}
+
+
+
+\vspace{2mm}
+
+
+
+ The  planned publication output is as follows:
+
+\begin{itemize}\setlength\itemsep{1mm}
+\item \textsf{Stage 1} will result in  one philosophical paper published in an  academic journal such as \emph{Synthese}, \emph{Mind} or \emph{Ratio Juris}. 
+
+\item \textsf{Stage 2} will lead to one   technical paper  published in a journal such as \emph{IfCoLog Journal of Logics and their Applications}, \emph{Law, Probability and Risk} or \emph{Artificial Intelligence and Law}.
+
+\item \textsf{Stage 3}  will lead to a publication of one paper  on  how the formal framework handles case studies and  a further paper  on how the developed AI tools handle real-life situations in   journals such as \emph{Artificial Intelligence} or \emph{Argument \& Computation}.
+
+\item Throughout the  whole project I plan to cooperate with Marcello Di Bello. Over the last year we co-authored the Stanford Encyclopedia of Philosophy entry on Legal Probabilism. We decided to continue our fruitful cooperation. For over two months we have been working on a book proposal to be submitted to Oxford University Press exactly on the issues to be studied in this research project.  During the last year of the research \textbf{I plan a six months' stay at Arizona University}, to work in person with Di Bello on finalizing the book that presents the results with special focus on issues investigated in \textsf{Stage 4}.
+\end{itemize}
+
+
+ Apart from publications, the results will be presented at various conferences devoted to legal reasoning. These include the yearly conferences of the \emph{International Association for Artificial Intelligence and Law} and of the \emph{Foundation for Legal Knowledge Based Systems (JURIX)}, and more general conferences gathering formal philosophers, so that the research is inspired by interaction not only with legal evidence scholars, computer scientists, but also philosophers. I am also already an invited speaker at the upcoming "Probability and Proof" conference that will  be part of an international conference on the philosophy of legal evidence ("The Michele Taruffo Girona Evidence Week") in Girona (Spain) May 23-27 2022.
+
+
+
+# Methodology
+
+
+
+
+Standard arguments for the legitimacy of Bayesianism^[See for example [@earman1992bayes; @Urbach1993-HOWSRT] for an early yet fairly comprehensive survey, or [@Pettigrew2011Epistemic-Utili] for a discussion of more recent contributions. See also [@Swinburne2001-SWIEJ; @bovens2004bayesian; @bradley2015critical].]   deploy usually rather  abstract pieces of reasoning to the effect that if one's degrees of beliefs satisfy certain  conditions, they also have to satisfy the probabilistic requirements.  My approach to thinking about the plausibility of Bayesian epistemology is rather unlike such approaches. Instead, I prefer the \emph{proof-of-the-pudding}  methodology.  I am convinced that an important part of the philosophical assessment of the Bayesian research program has to do with  its achievements or failures in contributing to debates in philosophy which are not themselves debates about the status of Bayesianism itself. In particular, it would be great news if insights from Bayesian epistemology could be used to further development of forensic AI and deepening our understanding of judiciary decision making.
+
+
+In this research I plan not only to use  methods used in formal philosophy (conceptual analysis and the  use of probabilistic tools), but also to help myself to tools made available by forensic AI (Data Analysis, Bayesian Networks and Probabilistic Graphical Models), and to include an empirical factor by using case studies to  test how well the developed framework can  model real cases, and how the obtained representation is related to the ones obtainable by means of existing representation methods. 
+
+
+A larger initiative involving reconstructing various cases using different representation methods and comparing the representations, called \emph{Probability and statistics in forensic science}, took place at the Isaac Newton Institute for Mathematical Sciences. My approach will be in the same vein.  
+
+I have extensive experience in analytic philosophy, conceptual analysis, philosophical logic (including non-monotonic logics, such as adaptive logics which have been developed at  Ghent University, where I spent quite a few years),  and probabilistic and decision-theoretic methods as deployed in philosophical contexts. I also have teaching and publishing record that involves statistical programming in the \textsf{\textbf{R}} language (my sample programming projects can be visited at \url{https://rfl-urbaniak.github.io/menu/projects.html}), and so am also competent to develop AI implementations and tests of the ideas to be developed. 
+
+
+
+
+
+
+One research risk is that it will turn out that some of the informal requirements cannot be spelled out in probabilistic terms, or expressed in terms of properties of Bayesian networks. In such an event, I will  study the reasons for this negative result. It might happen that there are independent reasons to abandoned a given condition, or it might be the case that probabilistic inexplicability of a given condition is an argument against the probabilistic approach. Either way, finding out which option holds and why would also lead to a deeper understanding of the framework and lead to a publication in academic journals. Another research risk is that the case studies will show that other methods are more efficient or transparent. This would itself constitute a result that could be used to further modify the framework so that its best aspects could be preserved, while the disadvantages discovered during case studies avoided. 
+
+
+
+
+# References
+
+\footnotesize 
+
