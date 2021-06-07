@@ -1,0 +1,835 @@
+\documentclass[11pt,dvipsnames,enabledeprecatedfontcommands]{scrartcl}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage[]{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\PassOptionsToPackage{hyphens}{url} % url is loaded by hyperref
+\usepackage[unicode=true]{hyperref}
+\PassOptionsToPackage{usenames,dvipsnames}{color} % color is loaded by hyperref
+\hypersetup{
+            colorlinks=true,
+            linkcolor=Maroon,
+            citecolor=Blue,
+            urlcolor=blue,
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{5}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+% set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+
+%\documentclass{article}
+
+% %packages
+ \usepackage{booktabs}
+
+\usepackage{multirow}
+\usepackage{multicol}
+
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{ragged2e}
+\usepackage{etex}
+%\usepackage{yfonts}
+\usepackage{marvosym}
+\usepackage[notextcomp]{kpfonts}
+\usepackage{nicefrac}
+\newcommand*{\QED}{\hfill \footnotesize {\sc Q.e.d.}}
+\usepackage{floatrow}
+
+
+
+\usepackage[textsize=scriptsize, textwidth = 1.5cm]{todonotes}
+%\linespread{1.5}
+
+
+\setlength{\parindent}{10pt}
+\setlength{\parskip}{1pt}
+
+
+%language
+\usepackage{times}
+\usepackage{t1enc}
+%\usepackage[utf8x]{inputenc}
+%\usepackage[polish]{babel}
+%\usepackage{polski}
+
+\usepackage{mathptmx}
+\usepackage[scaled=0.88]{helvet}
+
+
+%AMS
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage{mathtools}
+
+\usepackage{geometry}
+ \geometry{a4paper,left=20mm,top=15mm,bottom = 20mm, right = 20mm}
+
+
+%environments
+\newtheorem{fact}{Fact}
+
+
+
+%abbreviations
+\newcommand{\ra}{\rangle}
+\newcommand{\la}{\langle}
+\newcommand{\n}{\neg}
+\newcommand{\et}{\wedge}
+\newcommand{\jt}{\rightarrow}
+\newcommand{\ko}[1]{\forall  #1\,}
+\newcommand{\ro}{\leftrightarrow}
+\newcommand{\exi}[1]{\exists\, {_{#1}}}
+\newcommand{\pr}[1]{\mathsf{P}(#1)}
+\newcommand{\cost}{\mathsf{cost}}
+
+
+\newcommand{\odds}{\mathsf{Odds}}
+\newcommand{\ind}{\mathsf{Ind}}
+\newcommand{\nf}[2]{\nicefrac{#1\,}{#2}}
+\newcommand{\R}[1]{\texttt{#1}}
+\newcommand{\prr}[1]{\mbox{$\mathtt{P}_{prior}(#1)$}}
+\newcommand{\prp}[1]{\mbox{$\mathtt{P}_{posterior}(#1)$}}
+
+
+
+\newtheorem{q}{\color{blue}Question}
+\newtheorem{lemma}{Lemma}
+\newtheorem{theorem}{Theorem}
+
+
+
+%technical intermezzo
+%---------------------
+
+\newcommand{\intermezzoa}{
+	\begin{minipage}[c]{13cm}
+	\begin{center}\rule{10cm}{0.4pt}
+
+
+
+	\tiny{\sc Optional Content Starts}
+	
+	\vspace{-1mm}
+	
+	\rule{10cm}{0.4pt}\end{center}
+	\end{minipage}\nopagebreak 
+	}
+
+
+\newcommand{\intermezzob}{\nopagebreak 
+	\begin{minipage}[c]{13cm}
+	\begin{center}\rule{10cm}{0.4pt}
+
+	\tiny{\sc Optional Content Ends}
+	
+	\vspace{-1mm}
+	
+	\rule{10cm}{0.4pt}\end{center}
+	\end{minipage}
+	}
+%--------------------
+
+\DeclareUnicodeCharacter{0301}{*************************************}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\newtheorem*{reply*}{Reply}
+\usepackage{enumitem}
+\newcommand{\question}[1]{\begin{enumerate}[resume,leftmargin=0cm,labelsep=0cm,align=left]
+\item #1
+\end{enumerate}}
+
+\usepackage{float}
+
+% \setbeamertemplate{blocks}[rounded][shadow=true]
+% \setbeamertemplate{itemize items}[ball]
+% \AtBeginPart{}
+% \AtBeginSection{}
+% \AtBeginSubsection{}
+% \AtBeginSubsubsection{}
+% \setlength{\emergencystretch}{0em}
+% \setlength{\parskip}{0pt}
+
+
+
+
+
+
+\usepackage[authoryear]{natbib}
+
+%\bibliographystyle{apalike}
+
+\author{}
+\date{\vspace{-2.5em}}
+
+\begin{document}
+
+\begin{center}
+\large {\sc \textbf{Rethinking Legal Probabilism}}
+
+\large Rafa\l\, Urbaniak
+\end{center}
+
+\vspace{1mm}
+
+\thispagestyle{empty}
+
+\noindent \large \textbf{1. Scientific goal} \normalsize
+
+The \textbf{goal of this project} is to
+\textbf{develop  a probabilistic  modelling method of handling the multiplicity of items of evidence,  hypotheses and theories of what happened, and the resulting decisions in the court of law}.
+In light of the current criticism of the probabilistic approach to such
+issues, such a method should (1) be
+\textbf{sensitive to the argumentative structure} involved, and (2)
+capture the idea that in a legal context we are dealing with a
+\textbf{class of competing narrations}.
+
+The point of departure is to represent narrations as bayesian networks
+enriched with additional layer of information as to which nodes
+correspond to evidence, and which are binary narration nodes.
+\textbf{The key idea is that with such bayesian networks as building material, various features requested by the critics (such as coherence, resiliency, missing evidence,  explaining evidence, or ways to handle a multiplicity of proposed narrations) can be explicated in terms of corresponding properties of,  operations on, and relations between bayesian networks.}
+
+The output will be a
+\textbf{unifying extended probabilistic model embracing key aspects of the narrative and argumentative approaches, with  implementation in the programming language \textbf{\textsf{R}}.}
+What the project will uniquely bring to the table is joining the
+familiarity with epistemological debates, familiarity with the details
+of evidence assessment in legal cases and technical skill to
+programmatically implement, simulate and test various theoretical moves.
+
+\vspace{2mm}
+
+\noindent \large \textbf{2. Significance} \normalsize
+
+\noindent \large \textbf{2.1. State of the art.}
+\normalsize \textbf{Legal probabilism (LP)} comprises two core tenets:
+(1) the evidence presented at trial can be assessed, weighed and
+combined by means of probability theory; and (2) legal decision rules,
+such as proof beyond a reasonable doubt in criminal cases, can be
+explicated in probabilistic terms {[}21,35,45{]}. Skepticism about wider
+mathematical and quantitative models of legal evidence is still
+widespread among prominent legal scholars and practitioners, partially
+in light of conceptual difficulties with probabilitistic decision
+criteria and arising puzzles of naked statistical evidence
+{[}1,7,33,34,40,50{]}. Relatedly, various informal notions have been
+claimed to be essential for a proper explication of judiciary decision
+standards {[}17,27,30,48,58{]}. Recently, the No Plausible Alternative
+Story theory (NPAS) {[}2--4,4,6,42--44{]}, and argumentation theory
+{[}5,29,57{]} suggest that LP cannot capture the multiple-scenario based
+and argumentatively structured nature of legal evidence evaluation.
+However, LP has been defended against this objection by developing
+appropriate Bayesian Networks methods.
+
+A Bayesian network comprises a directed acyclic graph of relations of
+dependence between variables and conditional probability tables
+corresponding to these relations. Simple graphical patterns (called
+\emph{idioms}) often appear while modeling the relationships between
+evidence and hypotheses. Complex graphical models can be constructed by
+combining these in a modular way {[}15,20,31,38,49{]}. BNs have been
+used to reconstruct legal cases {[}18,32{]}, and to develop a general
+approach {[}55{]}. Once all the pieces of evidence and claims are
+represented as nodes, one should use the \textbf{scenario idiom}. A BN
+that uses the scenario idiom would consist of the nodes for the states
+and events in the scenario (with each node linked to the supporting
+evidence), a separate scenario node that has all states and events as
+its children, and a node corresponding to the ultimate hypothesis as a
+child of the scenario node. The scenario node in a sense unifies the
+different events and states: changing the probability of one part of the
+scenario will also usually change the probability of the other parts.
+This strategy is supposed to make sense of the notion of the
+\textbf{coherence of a scenario} as different from its probability given
+the evidence. On this approach {[}53--56{]}, coherence is identified
+with the prior probability of the scenario node. The approach is also
+supposed to model reasoning with multiple scenarios. Given a class of
+narrations, all the nodes used in some of the separate BNs that
+correspond to them are to be used to build one large BN, and all
+separate scenario nodes are to be included in the final large BN. An
+alternative approach to using BNs in legal context {[}39{]} starts with
+a criticizm a higher-order probabilistic approach to narrations I have
+developed in {[}51{]}. My approach so far has no connection to BNs and
+so it ``fails to offer a convincing and operational means to structure
+and compare competing narratives.'' The authors of {[}39{]} represent
+separate narrations in terms of separate BNs, and deploy
+\textbf{bayesian model comparison and averaging} as a tool for reasoning
+with multiple scenarios.
+
+\vspace{1mm}
+
+\noindent \large \textbf{2.2. Pioneering nature of the project.}
+\normalsize Here are the key reasons why I am convinced
+\textbf{the scenario node approach is not satisfactory}. (A) Adding a
+parent node by \emph{fiat} without any good reasons to think the nodes
+are connected other than being a part of a single story, introduces
+probabilistic dependencies between the elements of a narration. (B)
+Another problem is the identification of prior probability with
+coherence. This does not add up intuitively: there are coherent but
+unlikely stories. (C) In general, the legal probabilistic approach to
+coherence is very simple and fails to engage with rich philosophical
+literature exactly on this topic {[}14,22,23,28,37,41,47{]}. (D) The
+merging procedure with scenario nodes assumes that for the nodes that
+are common to the networks to be merged, both the directions of the
+arrows in the DAGs and the conditional probability tables are the same
+across different narrations. This is unrealistic.
+
+Here are the key
+\textbf{limitations of the model selection and averaging approach}. (E)
+The use equal priors is highly debatable. This approach would render
+prior probabilities quite sensitive to the choice of hypotheses and thus
+potentially arbitrary. Also, this approach seems particularly unsuitable
+for criminal cases. If the only two hypotheses/models on the table
+ultimately say ``the defendant is guilty'' and ``the defendant is
+innocent'', the prior probability of each would be 50\%. But defendants
+in criminal cases, however, should be presumed innocent until proven
+guilty. A 50\% prior probability of guilt seems excessive. Some take the
+presumption to mean that the prior probability of guilt should be set to
+a small value {[}24,25{]}, but it is not clear whether this
+interpretation can be justified on epistemological or decision-theoretic
+grounds. (F) More recent models rely on relevant background information
+about people's opportunities to commit crimes {[}19{]}. But even if
+these models are successful in giving well-informed assessments of prior
+probabilities any evidence-based assessment of prior probabilities, they
+are likely to violate existing normative requirements of the trial
+system {[}8,16,46{]}. People who belong to certain demographic groups
+will be regarded as having a higher prior probability of committing a
+wrong than others, and this outcome can be seen as unfair {[}9{]}. (G)
+Model selection based on likelihood (given equal priors) or posterior
+model probabilities in general (if priors are not assumed to be equal)
+boils down to a variant of the threshold view, and so all the
+difficulties with the threshold view apply. (H) There is a rich
+literature on the difficulties that linear pooling runs into
+{[}11--13{]}. One problem is that the method satisfies the unanimity
+assumption: whenever all models share a degree of belief in a claim,
+this is exactly the output degree for that belief. Another problem is
+that linear pooling does not preserve probabilistic independence
+{[}36{]}: even if all models agree that certain nodes are independent,
+they might end up being dependent in the output. There is also a variety
+of impossibility theorems in the neighborhood {[}26{]}.
+
+\vspace{1mm}
+
+\noindent \textbf{The key elements in my planned work are as follows.}
+\textbf{(1) Representation.} Use BNs taken separately without scenario
+nodes to represent various narrations. without assuming the conditional
+probability tables or directions of edges are the same across the BNs,
+adding another layer of information, dividing nodes into evidence and
+narration nodes. \textbf{(2) Dynamic BNs.} Averaging does not seem to be
+the right way to model cross-examination. To take the argumentative
+approach seriously and to be able to model relations such as
+``undercutting'' and ``rebutting'' I will consider another dimension:
+BNs changing through time in light of other BNs.
+\textbf{(3) BN-based coherence.} with Alicja Kowalewska I have
+formulated a BN-based coherence measure that is not a function of a
+probabilistic measure and a set of propositions alone, because it is
+also sensitive to the selection and direction of arrows in a Bayesian
+Network representing an agent's credal state. Now, it needs to be
+deployed (implemented in \textbf{\textsf{R}} for BNs) and properly
+tested on real-life cases discussed in the LP literature.
+\textbf{(4) Divide and conquer.} I propose that ensemble methods should
+be deployed for multiple narration variants available from one side (as
+in when, say, the prosecution story comes with uncertainty about the
+direction of an arrow or about a particular probability table), but
+selection methods should be used when final decision is to be made
+between narrations proposed by the opposing sides.
+\textbf{(5) Ensemble methods.} One question that arises is whether the
+general concerns about linear pooling arise for such limited
+applications. If not, the remaining concern is what priors should be
+used. In light of the controversial nature of equal priors, I plan to
+study the consequences of rescaling coherence scores (already mentioned)
+to constitute model priors. The idea is that given that narrations are
+to be developed by the sides themselves, taking coherence of their
+narration as determining the prior might be more fair than using equal
+priors or relying on geographical or population statistics. If yes,
+perhaps some other methods boiling down to a variant of sensitivity
+analysis can be deployed: look at all BNs corresponding to some variant
+of the narration of one of the sides, find the ones that give strongest
+(and the weakest) support to the final conclusion, and these give you a
+range of possible outcomes. \textbf{(6) Selection criteria.} The
+so-called New Legal Probabilism (NLP) is an attempt to improve on the
+underspecificity of NPAS {[}10{]}. While still being at most
+semi-formal, the approach is more specific about the conditions that a
+successful accusing narration is to satisfy for the conviction beyond
+reasonable doubt to be justified. Di Bello works out the philosophical
+details of requirements such as evidential support and completeness,
+resiliency, and narrativity. It is far from obvious that such conditions
+are susceptible to a Bayesian networks explication. I plan to rely on a
+more expressive probabilistic framework {[}51,52{]}, that is capable of
+expressing such features within a formalized higher-order language. The
+key hypothesis is that they can be recast in terms of properties of BNs
+and that the existing BN programming tools can be extended to implement
+testing for these criteria. This will make them susceptible to
+programmatic implementation and further study by means of computational
+methods. The hope is that on one hand, they will do better than the
+existing proposals, and where they fail, further insights can be gained
+by studying the reasons behind such failures.
+
+\vspace{1mm}
+
+\noindent \large \textbf{3. Work plan}
+
+\vspace{1mm} \normalsize
+
+Throughout the whole project I plan to cooperate with Marcello Di Bello
+(Arizona State University). Over the last year we co-authored the
+Stanford Encyclopedia of Philosophy entry on Legal Probabilism. We
+decided to continue our fruitful cooperation. For over two months we
+have been working on a book proposal to be submitted to Oxford
+University Press exactly on the issues to be studied in this research
+project. Marcello Di Bello is an excellent philsopher with extensive
+research experience in the philosophy of legal evidence, and he would
+bring his expertise to the table when working both on the book and on
+the papers, whereas I would be focused on the technical aspects and the
+underlying formal philosophy. During the last year of the research
+\textbf{I plan a six months' stay at Arizona State University}, to work
+in person with Di Bello on finalizing the book that presents the results
+of the project.
+
+Apart from publications, the results will be presented at various
+conferences devoted to legal reasoning. These include the yearly
+conferences of the
+\emph{International Association for Artificial Intelligence and Law} and
+of the \emph{Foundation for Legal Knowledge Based Systems (JURIX)}, and
+more general conferences gathering formal philosophers, so that the
+research is inspired by interaction not only with legal evidence
+scholars, computer scientists, but also philosophers. I am also already
+an invited speaker at the upcoming ``Probability and Proof'' conference
+that will be part of an international conference on the philosophy of
+legal evidence (``The Michele Taruffo Girona Evidence Week'') in Girona
+(Spain) May 23-27 2022. See the table at the end for the planned stages
+and output of research.
+
+\noindent \large \textbf{4. Methodology}
+
+\vspace{1mm} \normalsize
+
+I will be using four methods: (a) informal conceptual analysis; (b)
+formal conceptual analysis; (c) computational metods (R simulations,
+etc.); and (d) case studies. I will rethink and model the existing
+impliementations of whole-case-scale-BNs in legal evidence from the
+perspective of the new framework and reconstruct cases which extensively
+use probabilistic reasoning, but for which BNs have not been yet
+proposed. Both the literature already listed and many textbooks on
+quantitative evidence in forensics are great sources of such cases.
+
+What the project will uniquely bring to the table is joining the
+familiarity with epistemological debates on the nature of coherence
+(which legal probabilists ignore or are unaware of), familiarity with
+the details of evidence assessment in legal cases (which formal
+epistemologists seem to be unaware of) and technical skill to
+programmatically implement, simulate and test various theoretical moves.
+
+A larger initiative involving reconstructing various cases using
+different representation methods and comparing the representations,
+called \emph{Probability and statistics in forensic science}, took place
+at the Isaac Newton Institute for Mathematical Sciences. My approach
+will be in the same vein.
+
+I have extensive experience in analytic philosophy, conceptual analysis,
+philosophical logic and probabilistic and decision-theoretic methods as
+deployed in philosophical contexts. I also have teaching and publishing
+record that involves statistical programming in the \textsf{\textbf{R}}
+language (my sample programming projects can be visited at
+\url{https://rfl-urbaniak.github.io/menu/projects.html}), and so am also
+competent to develop AI implementations and tests of the ideas to be
+developed.
+
+One research risk is that it will turn out that some of the informal
+requirements cannot be spelled out in probabilistic terms, or expressed
+in terms of properties of Bayesian networks. In such an event, I will
+study the reasons for this negative result. It might happen that there
+are independent reasons to abandon a given condition, or it might be the
+case that probabilistic inexplicability of a given condition is an
+argument against the probabilistic approach. Either way, finding out
+which option holds and why would also lead to a deeper understanding of
+the framework and lead to a publication in academic journals. Another
+research risk is that the case studies will show that other methods are
+more efficient or transparent. This would itself constitute a result
+that could be used to further modify the framework so that its best
+aspects could be preserved, while the disadvantages discovered during
+case studies avoided.
+
+\vspace{1mm}
+
+\begin{center}
+\begin{tabular}{p{1.6cm}|p{14.8cm}}
+\footnotesize \textbf{$\mathtt{Stage  \,\, 1}$} \newline  \tiny Philosophical \&  formal   unification & 
+Obtain a unifying extended  probabilistic framework by incorporating further insights  from philosophical and psychological accounts of legal narrations, and from the argumentation approach. Defend its philosophical plausibility. \scriptsize (6 months)
+\\ 
+& \footnotesize A philosophical paper published in an  academic journal such as \emph{Synthese}, \emph{Mind} or \emph{Ratio Juris}. Working title: \emph{Why care about narration selection principles?}\\ \hline
+\footnotesize \textbf{$\mathtt{Stage \,\, 2}$} \newline  \tiny AI implementation 
+ & Develop Bayesian Network Methods for the obtained formal framework, so that the insights from the argumentation approach and informal epistemology, mediated through it, can be incorporated in AI tools. \scriptsize (12 months)
+\\ & \footnotesize A   technical paper  published in a journal such as \emph{IfCoLog Journal of Logics and their Applications}, \emph{Law, Probability and Risk} or \emph{Artificial Intelligence and Law}. Working title: \emph{Implementation of narration assessment criteria in Bayesian Networks with \textbf{\textsf{R}}}.
+\\ \hline
+\footnotesize \textbf{$\mathtt{Stage  \,\, 3}$} \newline  \tiny    Case studies & 
+Evaluate the developed framework and AI tools  by conducting case studies from its perspective.    \scriptsize (6 months)  \\
+& \footnotesize One paper  on  how the formal framework handles case studies and  one paper  on how the developed AI tools handle real-life situations in   journals such as \emph{Artificial Intelligence} or \emph{Argument \& Computation}. Working titles: \emph{Rethinking the famous BN-modeled cases within the narration framework} and \emph{BNarr, an \textbf{\textsf{R}} package to model narrations with Bayesian Networks}.
+\\ \hline
+\footnotesize \textbf{$\mathtt{Stage  \,\, 4}$} \newline  \tiny    Back to challenges  & 
+Investigate the extent to which the new framework helps to handle the issues raised in points A-H. \scriptsize (12 months) \\ 
+& \footnotesize Completion of the planned book.
+\end{tabular}
+\end{center}
+
+\vspace{-2mm}
+
+\section*{References}\label{references}
+\addcontentsline{toc}{section}{References}
+
+\vspace{-4mm}
+
+\footnotesize 
+
+\hypertarget{refs}{}
+\hypertarget{ref-allen2007problematic}{}
+{[}1{]} Ronald Allen and Michael Pardo. 2007. The problematic value of
+mathematical models of evidence. \emph{The Journal of Legal Studies} 36,
+1 (2007), 107--140. DOI:\url{https://doi.org/10.1086/508269}
+
+\hypertarget{ref-allen2001naturalized}{}
+{[}2{]} Ronald J Allen and Brian Leiter. 2001. Naturalized epistemology
+and the law of evidence. \emph{Virginia Law Review} 87, 8 (2001),
+1491--1550.
+
+\hypertarget{ref-Allen1986A-Reconceptuali}{}
+{[}3{]} Ronald J. Allen. 1986. A reconceptualization of civil trials.
+\emph{Boston University Law Review} 66, (1986), 401--437.
+
+\hypertarget{ref-Allen2010No-Plausible-Al}{}
+{[}4{]} Ronald J. Allen. 2010. No plausible alternative to a plausible
+story of guilt as the rule of decision in criminal cases. In
+\emph{Prueba y esandares de prueba en el derecho}, Juan Cruz and Larry
+Laudan (eds.). Instituto de Investigaciones Filosoficas-UNAM.
+
+\hypertarget{ref-bex2011ArgumentsStoriesCriminal}{}
+{[}5{]} Floris J. Bex. 2011. \emph{Arguments, stories and criminal
+evidence: A formal hybrid theory}. Springer, Dordrecht ; New York.
+
+\hypertarget{ref-clermont2015TrialTraditionalProbability}{}
+{[}6{]} Kevin M. Clermont. 2015. Trial by Traditional Probability,
+Relative Plausibility, or Belief Function? \emph{Case Western Reserve
+Law Review} 66, 2 (2015), 353--391.
+
+\hypertarget{ref-Cohen81}{}
+{[}7{]} Jonathan L. Cohen. 1981. Subjective probability and the paradox
+of the Gatecrasher. \emph{Arizona State Law Journal} (1981), 627--634.
+
+\hypertarget{ref-dahlman2017}{}
+{[}8{]} Christian Dahlman. 2017. Determining the base rate for guilt.
+\emph{Law, Probability and Risk} 17, 1 (2017), 15--28.
+
+\hypertarget{ref-DiBelloONeil2020}{}
+{[}9{]} Marcello Di Bello and Collin O'Neil. 2020. Profile evidence,
+fairness and the risk of mistaken convictions. \emph{Ethics} 130, 2
+(2020), 147--178.
+
+\hypertarget{ref-di2013statistics}{}
+{[}10{]} Marcello Di Bello. 2013. Statistics and probability in criminal
+trials. PhD thesis. University of Stanford.
+
+\hypertarget{ref-Dietrich2016Probabilistic}{}
+{[}11{]} F. Dietrich and C. List. 2016. Probabilistic opinion pooling.
+In \emph{Oxford handbook of philosophy and probability}, A. Hajek and C.
+Hitchcock (eds.). Oxford University Press.
+
+\hypertarget{ref-dietrich2017probabilistic1}{}
+{[}12{]} Franz Dietrich and Christian List. 2017. Probabilistic opinion
+pooling generalized. part one: General agendas. \emph{Social Choice and
+Welfare} 48, 4 (2017), 747--786.
+
+\hypertarget{ref-dietrich2017probabilistic2}{}
+{[}13{]} Franz Dietrich and Christian List. 2017. Probabilistic opinion
+pooling generalized. part two: The premise-based approach. \emph{Social
+Choice and Welfare} 48, 4 (2017), 787--814.
+
+\hypertarget{ref-Douven2007measuring}{}
+{[}14{]} Igor Douven and Wouter Meijs. 2007. Measuring coherence.
+\emph{Synthese} 156, 3 (April 2007), 405--425.
+DOI:\url{https://doi.org/10.1007/s11229-006-9131-z}
+
+\hypertarget{ref-Edwards1991Influence-diagr}{}
+{[}15{]} W. Edwards. 1991. Influence diagrams, bayesian imperialism, and
+the collins case: An appeal to reason. \emph{Cardozo Law Review} 13,
+(1991), 1025--1074.
+
+\hypertarget{ref-engel2012NeglectBaseRate}{}
+{[}16{]} Christoph Engel. 2012. Neglect the Base Rate: It's the Law!
+\emph{Preprints of the Max Planck Institute for Research on Collective
+Goods} 23, (2012). DOI:\url{https://doi.org/10.2139/ssrn.2192423}
+
+\hypertarget{ref-enoch2015sense}{}
+{[}17{]} David Enoch and Talia Fisher. 2015. Sense and sensitivity:
+Epistemic and instrumental approaches to statistical evidence.
+\emph{Stan. L. Rev.} 67, (2015), 557--611.
+
+\hypertarget{ref-Fenton2018Risk}{}
+{[}18{]} Norman Fenton and Martin Neil. 2018. \emph{Risk assessment and
+decision analysis with bayesian networks}. Chapman; Hall.
+
+\hypertarget{ref-fenton2019OpportunityPriorProofbased}{}
+{[}19{]} Norman Fenton, David Lagnado, Christian Dahlman, and Martin
+Neil. 2019. The opportunity prior: A proof-based prior for criminal
+cases. \emph{Law, Probability and Risk} (May 2019), {[}online first{]}.
+DOI:\url{https://doi.org/10.1093/lpr/mgz007}
+
+\hypertarget{ref-fenton2013GeneralStructureLegal}{}
+{[}20{]} Norman Fenton, Martin Neil, and David A. Lagnado. 2013. A
+General Structure for Legal Arguments About Evidence Using Bayesian
+Networks. \emph{Cognitive Science} 37, 1 (January 2013), 61--102.
+DOI:\url{https://doi.org/10.1111/cogs.12004}
+
+\hypertarget{ref-Finkelstein1970A}{}
+{[}21{]} Michael O. Finkelstein and William B. Fairley. 1970. A Bayesian
+approach to identification evidence. \emph{Harvard Law Review} 83, 3
+(1970), 489--517.
+
+\hypertarget{ref-fitelson2003ProbabilisticTheoryCoherence}{}
+{[}22{]} Branden Fitelson. 2003. A Probabilistic Theory of Coherence.
+\emph{Analysis} 63, 3 (2003), 194--199.
+
+\hypertarget{ref-fitelson2003comments}{}
+{[}23{]} Branden Fitelson. 2003. Comments on jim franklin's the
+representation of context: Ideas from artificial intelligence (or, more
+remarks on the contextuality of probability). \emph{Law, Probability and
+Risk} 2, 3 (2003), 201--204.
+
+\hypertarget{ref-Friedman2000}{}
+{[}24{]} Richard D. Friedman. 2000. A presumption of innocence, not of
+even odds. \emph{Stanford Law Review} 52, 4 (2000), 873--887.
+
+\hypertarget{ref-friedmanEtAl1995}{}
+{[}25{]} Richard D. Friedman, Ronald J. Allen, David J. Balding, Peter
+Donnelly, and David H. Kaye. 1995. Probability and proof in State v.
+Skipper: An internet exchange. \emph{Jurimetrics} 35, 3 (1995),
+277--310.
+
+\hypertarget{ref-Gallow2018No}{}
+{[}26{]} J. Gallow. 2018. No one can serve two epistemic masters.
+\emph{Philosophical Studies} 175, 10 (2018), 2389--2398.
+DOI:\url{https://doi.org/10.1007/s11098-017-0964-8}
+
+\hypertarget{ref-gardiner2018}{}
+{[}27{]} Georgi Gardiner. 2018. Legal burdens of proof and statistical
+evidence. In \emph{Routledge handbook of applied epistemology}, David
+Coady and James Chase (eds.). Routledge.
+
+\hypertarget{ref-glass2002}{}
+{[}28{]} David H. Glass. 2002. Coherence, Explanation, and Bayesian
+Networks. In \emph{Artificial Intelligence and Cognitive Science}, G.
+Goos, J. Hartmanis, J. van Leeuwen, Michael O'Neill, Richard F. E.
+Sutcliffe, Conor Ryan, Malachy Eaton and Niall J. L. Griffith (eds.).
+Springer Berlin Heidelberg, Berlin, Heidelberg, 177--182.
+DOI:\url{https://doi.org/10.1007/3-540-45750-X_23}
+
+\hypertarget{ref-gordon2007}{}
+{[}29{]} Thomas F. Gordon, Henry Prakken, and Douglas Walton. 2007. The
+Carneades model of argument and burden of proof. \emph{Artificial
+Intelligence} 171, 10-15 (2007), 875--896.
+
+\hypertarget{ref-haack2011legal}{}
+{[}30{]} Susan Haack. 2014. Legal probabilism: An epistemological
+dissent. In \emph{Haack2014-HAAEMS}. 47--77.
+
+\hypertarget{ref-hepler2007ObjectorientedGraphicalRepresentations}{}
+{[}31{]} A. B. Hepler, A. P. Dawid, and V. Leucari. 2007.
+Object-oriented graphical representations of complex patterns of
+evidence. \emph{Law, Probability and Risk} 6, 1-4 (October 2007),
+275--293. DOI:\url{https://doi.org/10.1093/lpr/mgm005}
+
+\hypertarget{ref-kadane2011probabilistic}{}
+{[}32{]} Joseph B Kadane and David A Schum. 2011. \emph{A probabilistic
+analysis of the sacco and vanzetti evidence}. John Wiley \& Sons.
+
+\hypertarget{ref-kaye79}{}
+{[}33{]} David H. Kaye. 1979. The laws of probability and the law of the
+land. \emph{The University of Chicago Law Review} 47, 1 (1979), 34--56.
+
+\hypertarget{ref-laudan2006truth}{}
+{[}34{]} Larry Laudan. 2006. \emph{Truth, error, and criminal law: An
+essay in legal epistemology}. Cambridge University Press.
+
+\hypertarget{ref-Lempert1986}{}
+{[}35{]} Richard O. Lempert. 1986. The new evidence scholarship:
+Analysing the process of proof. \emph{Boston University Law Review} 66,
+(1986), 439--477.
+
+\hypertarget{ref-List2011Group}{}
+{[}36{]} Christian List and Philip Pettit. 2011. \emph{Group agency: The
+possibility, design, and status of corporate agents}. Oxford University
+Press.
+
+\hypertarget{ref-meijs2007}{}
+{[}37{]} Wouter Meijs and Igor Douven. 2007. On the alleged
+impossibility of coherence. \emph{Synthese} 157, 3 (July 2007),
+347--360. DOI:\url{https://doi.org/10.1007/s11229-006-9060-x}
+
+\hypertarget{ref-neil2000BuildingLargescaleBayesian}{}
+{[}38{]} Martin Neil, Norman Fenton, and Lars Nielson. 2000. Building
+large-scale Bayesian Networks. \emph{The Knowledge Engineering Review}
+15, 3 (2000), 257--284.
+DOI:\url{https://doi.org/10.1017/S0269888900003039}
+
+\hypertarget{ref-Fenton2019Modelling}{}
+{[}39{]} Martin Neil, Norman Fenton, David Lagnado, and Richard David
+Gill. 2019. Modelling competing legal arguments using bayesian model
+comparison and averaging. \emph{Artificial Intelligence and Law} (March
+2019). DOI:\url{https://doi.org/10.1007/s10506-019-09250-3}
+
+\hypertarget{ref-Nesson1979Reasonable-doub}{}
+{[}40{]} Charles R. Nesson. 1979. Reasonable doubt and permissive
+inferences: The value of complexity. \emph{Harvard Law Review} 92, 6
+(1979), 1187--1225. DOI:\url{https://doi.org/10.2307/1340444}
+
+\hypertarget{ref-olsson2001}{}
+{[}41{]} Erik J. Olsson. 2001. Why Coherence Is Not Truth-Conducive.
+\emph{Analysis} 61, 3 (2001), 236--241.
+
+\hypertarget{ref-pardo2018}{}
+{[}42{]} Michael S. Pardo. 2018. Safety vs.~Sensitivity: Possible worlds
+and the law of evidence. \emph{Legal Theory} 24, 1 (2018), 50--75.
+
+\hypertarget{ref-Pardo2008judicial}{}
+{[}43{]} Michael S. Pardo and Ronald J. Allen. 2008. Judicial proof and
+the best explanation. \emph{Law and Philosophy} 27, 3 (2008), 223--268.
+
+\hypertarget{ref-Pennington1991}{}
+{[}44{]} Nancy Pennington and Reid Hastie. 1991. A cognitive theory of
+juror decision making: The story model. \emph{Cardozo Law Review} 13,
+(1991), 519--557.
+
+\hypertarget{ref-Posner1973}{}
+{[}45{]} Richard Posner. 1973. \emph{The economic analysis of law}.
+Brown \& Company.
+
+\hypertarget{ref-schweizer2013LawDoesnSay}{}
+{[}46{]} Mark Schweizer. 2013. The Law Doesn't Say Much About Base
+Rates. \emph{SSRN Electronic Journal} (2013).
+DOI:\url{https://doi.org/10.2139/ssrn.2329387}
+
+\hypertarget{ref-shogenji1999}{}
+{[}47{]} Tomoji Shogenji. 1999. Is Coherence Truth Conducive?
+\emph{Analysis} 59, 4 (1999), 338--345.
+
+\hypertarget{ref-Smith_conviction_mind_2017}{}
+{[}48{]} Martin Smith. 2017. When does evidence suffice for conviction?
+\emph{Mind} (2017). DOI:\url{https://doi.org/10.1093/mind/fzx026}
+
+\hypertarget{ref-taroni2006bayesian}{}
+{[}49{]} Franco Taroni, Alex Biedermann, Silvia Bozza, Paolo Garbolino,
+and Colin Aitken. 2014. \emph{Bayesian networks for probabilistic
+inference and decision analysis in forensic science} (2nd ed.). John
+Wiley \& Sons.
+
+\hypertarget{ref-Thomson86}{}
+{[}50{]} Judith J. Thomson. 1986. Liability and individualized evidence.
+\emph{Law and Contemporary Problems} 49, 3 (1986), 199--219.
+
+\hypertarget{ref-urbaniak2018narration}{}
+{[}51{]} Rafal Urbaniak. 2018. Narration in judiciary fact-finding: A
+probabilistic explication. \emph{Artificial Intelligence and Law}
+(2018), 1--32. DOI:\url{https://doi.org/10.1007/s10506-018-9219-z}
+
+\hypertarget{ref-Urbaniak2017Narration-in-ju}{}
+{[}52{]} Rafal Urbaniak. 2018. Narration in judiciary fact-finding: A
+probabilistic explication. \emph{Artificial Intelligence and Law}
+(2018), 1--32. DOI:\url{https://doi.org/10.1007/s10506-018-9219-z}
+
+\hypertarget{ref-vlek2015}{}
+{[}53{]} Charlotte S. Vlek, Henry Prakken, Silja Renooij, and and Bart
+Verheij. 2015. Representing the quality of crime scenarios in a bayesian
+network. In \emph{Legal knowledge and information systems}, IOS Press,
+133--140.
+
+\hypertarget{ref-vlek2013modeling}{}
+{[}54{]} Charlotte Vlek, Henry Prakken, Silja Renooij, and Bart Verheij.
+2013. Modeling crime scenarios in a bayesian network. In
+\emph{Proceedings of the fourteenth international conference on
+artificial intelligence and law}, ACM, 150--159.
+
+\hypertarget{ref-vlek2014building}{}
+{[}55{]} Charlotte Vlek, Henry Prakken, Silja Renooij, and Bart Verheij.
+2014. Building bayesian networks for legal evidence with narratives: A
+case study evaluation. \emph{Artificial Intelligence and Law} 22,
+(2014), 375--421.
+
+\hypertarget{ref-vlek2016stories}{}
+{[}56{]} Charlotte Vlek. 2016. \emph{When stories and numbers meet in
+court: Constructing and explaining bayesian networks for criminal cases
+with scenarios}. Rijksuniversiteit Groningen.
+
+\hypertarget{ref-Walton2002}{}
+{[}57{]} Douglas N. Walton. 2002. \emph{Legal argumentation and
+evidence}. Penn State University Press.
+
+\hypertarget{ref-wells1992naked}{}
+{[}58{]} Gary L. Wells. 1992. Naked statistical evidence of liability:
+Is subjective probability enough? \emph{Journal of Personality and
+Social Psychology} 62, 5 (1992), 739--752.
+DOI:\url{https://doi.org/10.1037/0022-3514.62.5.739}
+
+\end{document}
