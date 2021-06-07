@@ -1,3 +1,7 @@
+\PassOptionsToPackage{unicode=true}{hyperref} % options for packages loaded elsewhere
+\PassOptionsToPackage{hyphens}{url}
+\PassOptionsToPackage{dvipsnames,svgnames*,x11names*}{xcolor}
+%
 \documentclass[11pt,dvipsnames,enabledeprecatedfontcommands]{scrartcl}
 \usepackage{lmodern}
 \usepackage{amssymb,amsmath}
@@ -6,12 +10,9 @@
 \ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provides euro and other symbols
 \else % if luatex or xelatex
-  \ifxetex
-    \usepackage{mathspec}
-  \else
-    \usepackage{fontspec}
-  \fi
+  \usepackage{unicode-math}
   \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
 \fi
 % use upquote if available, for straight quotes in verbatim environments
@@ -21,12 +22,18 @@
 \usepackage[]{microtype}
 \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
 }{}
-\PassOptionsToPackage{hyphens}{url} % url is loaded by hyperref
-\usepackage[unicode=true]{hyperref}
-\PassOptionsToPackage{usenames,dvipsnames}{color} % color is loaded by hyperref
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\usepackage{xcolor}
+\usepackage{hyperref}
 \hypersetup{
             colorlinks=true,
             linkcolor=Maroon,
+            filecolor=Maroon,
             citecolor=Blue,
             urlcolor=blue,
             breaklinks=true}
@@ -40,12 +47,6 @@
 % margins by default, and it is still possible to overwrite the defaults
 % using explicit options in \includegraphics[width, height, ...]{}
 \setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
-\IfFileExists{parskip.sty}{%
-\usepackage{parskip}
-}{% else
-\setlength{\parindent}{0pt}
-\setlength{\parskip}{6pt plus 2pt minus 1pt}
-}
 \setlength{\emergencystretch}{3em}  % prevent overfull lines
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
@@ -242,13 +243,33 @@
 
 \thispagestyle{empty}
 
-Celem projektu jest rozwinięcie metody modelowania probabilistycznego
-zdolnej do poradzenia sobie z wielością dowodów, hipotez, teorii tego,
-co zaszło, i skutkujących decyzji w sądzie. W świetle obecnej krytyki
-podejścia probabilistycznego do takich problemów, take podejście powinno
-być (1) wrażliwe na strukturę argumentów, oraz (2) uchwytywać pomysł, że
-w prawnych kontekstach mamy do czynienia z klasą konkurujących ze sobą
-narracji.
+Probabilism prawny to projekt badawczy, który posługuje się teorią
+prawdopodobieństwa do analizy, modelowania i poprawy oceny dowodów i
+procesów decyzyjnych w sprawach sądowych. Probabilizm prawny jest
+podejściem reprezentowanym przez mniejszość, ale zyskał na popularności
+w drugiej połowie wieku dwudziestego w powiązaniu z ruchem ``prawo i
+ekonomia.''
+
+W sprawach prawnych, różne linie dowodowe mogą się zbiegać, jak na
+przykłady gdy dwoje świadków zeznaje, że widziano oskarżonego na miejscu
+przestępstwa, albo mogą iść w przeciwne strony, jak gdy świadkowie
+zeznają, iż widzieli oskarżonego na miejscu przestępstwa, ale test DNA
+pokazuje że nie ma zgodności między oskarżonym a materiałem z miejsca
+przestępstwa. Innym źródłem złożoności jest to, że hipotezy wysuwane
+przez różne strony mają nieraz dość złożoną strukturę. W jaki sposób
+rozmaite stwierdzenia i dowody je wspierające powinny być składane w
+jedność i oceniane?
+
+Probabilistyczne narzędzia fragmentarycznej oceny dowodów naukowych i
+narzędzia pomagające dostrzegać błędy probabilistyczne są całkiem dobrze
+rozwinięte. Jednakże, konstrukcja bardziej ogólnego modelu
+umieszczającego takie dowody w szerszym kontekście całej sprawy,
+przydatnego dla teoretyzowania o ocenie dowodów i stadnardach
+dowodowych, pozostaje wyzwaniem. Projekt zamierza przyczynić się do
+dalszego rozwoju tego przedsięwzięcia polegając na motywacjach
+pochodzących z różnych źródeł: epistemologii formalnej, rozwoju sieci
+bayeisańskich, praktyki oceny dowodów probabilistycznych i zastrzeżeń
+sformułowanych przez krytyków probabilizmu prawnego.
 
 Punktem wyjścia będzie reprezentacja narracji za pomocą sieci
 bayesiańskich z dodatkowymi informacjami na temat tego, które elementy
@@ -257,12 +278,5 @@ odpowiadają dowodom, a które narracjom. Kluczowy pomysł polega na tym,
 narracji wymagane prez krytyków (takie jak koherencja, odporność,
 brakujące dowody, wyjaśnianie dowodów, czy sposoby radzenia sobie z
 mnogością proponowanych narracji).
-
-Wynikiem będzie rozszerzony model probabilistyczny z wbudowanymi
-kluczowymi aspektami podejścia narracyjnego i argumentatywnego, wraz z
-implementacją w języku programowania \textbf{\textsf{R}}. Wyjątkowy
-wkład tego projektu będzie też polegał na połączeniu zaznajomienia z
-debatami epistemologicznymi, szczegółami oceny dowodów w sprawach
-prawnych, oraz techniczną zdolnością programistycznej implementacji.
 
 \end{document}
