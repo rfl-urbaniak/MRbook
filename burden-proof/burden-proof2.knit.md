@@ -20,9 +20,7 @@ csl: apa-5th-edition.csl
 
 
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
+
 
 
 
@@ -1236,41 +1234,10 @@ greater than the smallest of the two.
 
  
 \vspace{3mm} 
-```{r echo=FALSE}
-library(ggplot2)
-library("gridExtra")
-k <- 0.1
-t <- 0.2
-a <- ggplot(data.frame(x=c(0,1)), aes(x)) +   ylim(0, 5) +
-  stat_function(fun=function(x)(x/(1-x)), geom="line", aes(colour=" item of evidence a or b with LR= x/(1-x)=y/(1-y)")) +
-  stat_function(fun=function(x)((x^2)/(k*(1-t)*(x)*(1-x)+(1-k)*t*x*(1-x)+(1-k)*(1-t)*(1-x)*(1-x))), geom="line", aes(colour="two items combined Pr(A)=0.1, Pr(B)=0.2")) +
-  stat_function(fun=function(x)((x^2)/(k*(1-0.4)*(x)*(1-x)+(1-k)*0.4*x*(1-x)+(1-k)*(1-0.4)*(1-x)*(1-x))), geom="line", aes(colour="two items combined Pr(A)=0.1, Pr(B)=0.4")) +
-  stat_function(fun=function(x)((x^2)/(0.3*(1-0.4)*(x)*(1-x)+(1-0.3)*0.4*x*(1-x)+(1-0.3)*(1-0.4)*(1-x)*(1-x))), geom="line", aes(colour="two items combined Pr(A)=0.3, Pr(B)=0.4")) +
-    stat_function(fun=function(x)((x^2)/(0.6*(1-0.8)*(x)*(1-x)+(1-0.6)*0.8*x*(1-x)+(1-0.6)*(1-0.8)*(1-x)*(1-x))), geom="line", aes(colour="two items combined Pr(A)=0.6, Pr(B)=0.8")) +
-  xlab("x") + ylab("LR") +labs(colour="one versus many") +
-       ggtitle("Combined v individual support measured by LR assuming x=y")
-
-a
-```
+![](burden-proof2_files/figure-latex/unnamed-chunk-1-1.pdf)<!-- --> 
 
  
-```{r echo=FALSE}
-library(ggplot2)
-library("gridExtra")
-k <- 0.1
-t <- 0.2
-y <- 0.7
-b <- ggplot(data.frame(x=c(0,1)), aes(x)) +   ylim(0, 30) +
-  stat_function(fun=function(x)(x/(1-x)), geom="line", aes(colour="item of evidence a, LR-x=(1-x)")) +
-  stat_function(fun=function(x)(y/(1-y)), geom="line", aes(colour="item of evidence b, LR=y/(1-y)")) +
-  stat_function(fun=function(x)((x*y)/(k*(1-t)*(x)*(1-y)+(1-k)*t*y*(1-x)+(1-k)*(1-t)*(1-x)*(1-y))), geom="line", aes(colour="two items combined Pr(A)=0.1, Pr(B)=0.2")) +
-   stat_function(fun=function(x)((x*y)/(k*(1-0.4)*(x)*(1-x)+(1-k)*0.4*x*(1-x)+(1-k)*(1-0.4)*(1-x)*(1-x))), geom="line", aes(colour="two items combined Pr(A)=0.1, Pr(B)=0.4")) +
-    stat_function(fun=function(x)((x*y)/(0.3*(1-0.4)*(x)*(1-y)+(1-0.3)*0.4*y*(1-x)+(1-0.3)*(1-0.4)*(1-x)*(1-y))), geom="line", aes(colour="two items combined Pr(A)=0.3, Pr(B)=0.4")) +
-  xlab("x") + ylab("LR") +labs(colour="one versus many") +
-       ggtitle("Combined v individual support measured by LR with y=0.7")
-
-b
-```
+![](burden-proof2_files/figure-latex/unnamed-chunk-2-1.pdf)<!-- --> 
 
 
  
