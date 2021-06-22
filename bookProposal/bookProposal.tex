@@ -1,3 +1,7 @@
+\PassOptionsToPackage{unicode=true}{hyperref} % options for packages loaded elsewhere
+\PassOptionsToPackage{hyphens}{url}
+\PassOptionsToPackage{dvipsnames,svgnames*,x11names*}{xcolor}
+%
 \documentclass[10pt,dvipsnames]{scrartcl}
 \usepackage{lmodern}
 \usepackage{amssymb,amsmath}
@@ -6,12 +10,9 @@
 \ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provides euro and other symbols
 \else % if luatex or xelatex
-  \ifxetex
-    \usepackage{mathspec}
-  \else
-    \usepackage{fontspec}
-  \fi
+  \usepackage{unicode-math}
   \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
 \fi
 % use upquote if available, for straight quotes in verbatim environments
@@ -21,14 +22,20 @@
 \usepackage[]{microtype}
 \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
 }{}
-\PassOptionsToPackage{hyphens}{url} % url is loaded by hyperref
-\usepackage[unicode=true]{hyperref}
-\PassOptionsToPackage{usenames,dvipsnames}{color} % color is loaded by hyperref
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\usepackage{xcolor}
+\usepackage{hyperref}
 \hypersetup{
-            pdftitle={M\& R Book proposal},
+            pdftitle={Boosting Legal Probabilism (or Beyond Legal Probabilism 1.01)},
             pdfauthor={Marcello Di Bello and Rafal Urbaniak},
             colorlinks=true,
             linkcolor=Maroon,
+            filecolor=Maroon,
             citecolor=Blue,
             urlcolor=blue,
             breaklinks=true}
@@ -42,12 +49,6 @@
 % margins by default, and it is still possible to overwrite the defaults
 % using explicit options in \includegraphics[width, height, ...]{}
 \setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
-\IfFileExists{parskip.sty}{%
-\usepackage{parskip}
-}{% else
-\setlength{\parindent}{0pt}
-\setlength{\parskip}{6pt plus 2pt minus 1pt}
-}
 \setlength{\emergencystretch}{3em}  % prevent overfull lines
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
@@ -158,16 +159,18 @@
 % \setlength{\emergencystretch}{0em}
 % \setlength{\parskip}{0pt}
 
-\title{M\& R Book proposal}
+\title{Boosting Legal Probabilism (or Beyond Legal Probabilism 1.01)}
 \author{Marcello Di Bello and Rafal Urbaniak}
 \date{}
 
 \begin{document}
 \maketitle
 
-\section{The Book}\label{the-book}
+\hypertarget{the-book}{%
+\section{The Book}\label{the-book}}
 
-\subsection{Brief Description}\label{brief-description}
+\hypertarget{brief-description}{%
+\subsection{Brief Description}\label{brief-description}}
 
 \footnotesize In one or two paragraphs, describe the work, including its
 rationale, approach, and pedagogy. (This book is\ldots{} It does\ldots{}
@@ -175,17 +178,48 @@ Its distinguishing features are\ldots{})
 
 \normalsize
 
-This book contributes to the development of legal probabilism by
-formulating its variant that accomodates important insights provided by
-its critics. A crucial point of criticism is that the fact-finding
-process should be conceptualized as a competition of narrations. We
-develop methods that allow the probabilist to take this perspective, and
-explain how such methods allow the legal probabilist to address various
-other objections present in the literature. The key idea is that once
-narrations are represented as bayesian networks, various criteria on,
-features of and operations on narrations can be explicated in terms of
-corresponding properties of and operations on bayesian networks. The
-conceptual developments are accompanied by technical accounts.
+This book boosts legal probabilism to its limits. It begins with legal
+probabilism 1.01, the simplest version of the theory, and examines why
+it falls prey to several conceptual difficulties. The bulk of the book
+develops legal probabilism 1.02, a more sophisticated version that
+addresses many of the limitations of its simpler version. The book also
+examines to what extent certain difficulties cannot be met becasue of
+inherent limitations of legal robabilism.
+
+Legal probabilism 1.01 was developed in the 70ies and 80ies although its
+roots go back to the early days of probability theory to names such as
+Bernoulli, Laplace, Condorcet. The 1.01 version comprises a familiar
+repertoire: Bayes' theorem, likelihood ratios, reasoning fallacies,
+probability thresholds, expected utility maximization. This repertoire
+has proven useful in a number of ways, especially in the assessment of
+explicitly quantitative evidence such as DNA matches and expert evidence
+more generally. The assessment of nonquantitive evidence, such as
+eyewitness testimony, and the aggregation of quantitive and
+non-quantitive evidence have proven more challenging. Legal probabilism
+1.01 is also liable to a host of conceptual difficulties: the
+conjunction problem, the problem of priors, paradoxes of naked
+statistical evidence. These difficulties are well-known and have
+commanded the attention of philosophers and legal scholars. Other
+difficulties are less familiar: the problem of complexity, the problem
+of soft variables, the problem of corroboration. Familiar and unfamiliar
+difficulties parallel objections that Bayesianism faces in contemporary
+analytic epistemology: the lottery paradox, the preface paradox, the
+problem of coherence, holism, second-order evidence. Legal probabilism
+1.01 can hardly answer these challenges. Either we reject legal
+probabilism altogether or we move past its 1.01 version. This book takes
+the latter route.
+
+A prototype of legal probabilism 1.02 already exists in the literature
+in forensic science and artificial intelligence. Bayesian networks have
+been added to the repertoire. Bayesian networks can formalize in
+probabilistic language notions familiar in argumention theory such as
+undercutting and rebuttign defeaters, as well as notions such as
+plausibility and coherence familiar from the story of model of judicial
+fact-finding. Once stories (narrations or more generall explanation of
+the evidence) are represented as Bayesian networks, features of can be
+explicated in terms of corresponding formal properties of the network.
+
+The conceptual developments are accompanied by technical accounts.
 \textbf{\textsf{R}} code capturing to the technical features developed
 is made available to the reader.
 
@@ -197,9 +231,8 @@ them (rather than focusing only on abstract philosophical thought
 experiments) the reader can develop a proper assessment of the
 situation.
 
-\subsection{Outline}\label{outline}
-
-\todo{Before I start briefly describing each chapter, take a quick look. I updated the LR chapters given our work in progress, the rest is as in previous discussions. Thoughts? Revisions?}
+\hypertarget{outline-new-version}{%
+\subsection{Outline (new version)}\label{outline-new-version}}
 
 \renewcommand{\labelenumi}{\Roman{enumi}}
 \renewcommand{\labelenumii}{\arabic{enumii}}
@@ -216,6 +249,13 @@ situation.
   \item  Trial by mathematics
   \item  Some history
   \end{enumerate}
+  
+  
+  
+  
+  
+  
+  
 
   \item  A skeptical perspective
   \begin{enumerate}
@@ -232,6 +272,8 @@ situation.
 
 \end{enumerate}
 \item  Evidence assessment
+
+
 \begin{enumerate}
 
 
@@ -246,6 +288,8 @@ situation.
   \item  Case studies
   \end{enumerate}
 
+  
+  
   \item  Complications and caveats
   \begin{enumerate}
   \item  Complex hypotheses and complex bodies of evidence
@@ -255,6 +299,7 @@ situation.
   \item  Stories, explanations and coherence
   \end{enumerate}
 
+  
   \item  Likelihood Ratios and Relevance
   \begin{enumerate}
   \item Likelihood ratio as a measure of evidence strength
@@ -370,8 +415,9 @@ situation.
 \end{enumerate}
 \end{enumerate}
 
+\hypertarget{outstanding-features-of-the-book}{%
 \subsection{Outstanding Features of the
-Book}\label{outstanding-features-of-the-book}
+Book}\label{outstanding-features-of-the-book}}
 
 \begin{itemize}
 \item
@@ -388,7 +434,8 @@ Book}\label{outstanding-features-of-the-book}
 
 \todo{what else?}
 
-\subsection{Apparatus}\label{apparatus}
+\hypertarget{apparatus}{%
+\subsection{Apparatus}\label{apparatus}}
 
 \footnotesize a. Will the book include photographs, line drawings,
 cases, questions, problems, glossaries, bibliography, references,
@@ -396,7 +443,7 @@ appendices, etc.?
 
 \vspace{2mm}
 
-\normalsize 
+\normalsize
 
 Yes, the book will contain various plots, either of Bayesian networks,
 or some other data visualisations generated by \texttt{ggplot2}. The
@@ -413,7 +460,8 @@ solutions, answers, workbook, anthology, or other material.)
 The book will be accompanied by an online-only appendix detailing the
 use of the \texttt{R} code in the book and the source code we used.
 
-\subsection{Competition}\label{competition}
+\hypertarget{competition}{%
+\subsection{Competition}\label{competition}}
 
 \footnotesize a. Consider the existing books in this field and discuss
 specifically their strengths and weaknesses. Spell out how your book
@@ -421,7 +469,7 @@ will be similar to, as well as different from, competing works.
 
 \todo{For now, let's list competition, and discuss key differences}
 
-\normalsize 
+\normalsize
 
 Three types: BNs in the law, Philosophy \& law, Statistics in law and
 forensics
@@ -469,9 +517,11 @@ forensics
   due, and show how you can do it better.
 \end{enumerate}
 
-\section{Market Considerations}\label{market-considerations}
+\hypertarget{market-considerations}{%
+\section{Market Considerations}\label{market-considerations}}
 
-\subsection{The Primary Market}\label{the-primary-market}
+\hypertarget{the-primary-market}{%
+\subsection{The Primary Market}\label{the-primary-market}}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -491,7 +541,8 @@ forensics
   reader is your book intended?
 \end{enumerate}
 
-\section{Status of the Work}\label{status-of-the-work}
+\hypertarget{status-of-the-work}{%
+\section{Status of the Work}\label{status-of-the-work}}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -543,7 +594,8 @@ forensics
   protected by copyright notice on the material.)
 \end{enumerate}
 
-\section{Sample Chapters}\label{sample-chapters}
+\hypertarget{sample-chapters}{%
+\section{Sample Chapters}\label{sample-chapters}}
 
 Select one or two chapters of the manuscript that are an integral part
 of the book. They should be those you consider the best-written ones,
@@ -560,7 +612,8 @@ Please do not bind your manuscript, as we will have to unbind it in
 order to make photocopies for reviewers. Also be sure all pages are
 numbered either consecutively or double-numbered by chapter.
 
-\section{Reviews}\label{reviews}
+\hypertarget{reviews}{%
+\section{Reviews}\label{reviews}}
 
 If we are interested in your project, we will commission outside
 reviewers to read and evaluate your proposal. We will, of course, obtain
@@ -572,14 +625,16 @@ scholars to act as reviewers themselves, we may ask them for their
 suggestions for peer readers. Naturally, we do not reveal the names of
 reviewers without their permission.
 
-\section{Author Background}\label{author-background}
+\hypertarget{author-background}{%
+\section{Author Background}\label{author-background}}
 
 Please include a current CV or brief biography of your writing,
 teaching, and/or educational background and experience. Be sure to list
 any books that you have previously published, and any other information
 about yourself on why you are qualified to write this book.
 
-\section{Response Time}\label{response-time}
+\hypertarget{response-time}{%
+\section{Response Time}\label{response-time}}
 
 Please allow at least 6-10 weeks for the manuscript proposal evaluation
 and review process. We will contact you as soon as we have had a chance
