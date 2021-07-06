@@ -21,7 +21,7 @@ conjunctionTable$maxBF <- pmax(BFAs, BFBs)
 conjunctionTable$BFdifs <- conjunctionTable$BFABs - conjunctionTable$maxBF 
 
 ggplot(conjunctionTable)+geom_histogram(aes(x=BFdifs), bins= 90)+
-  xlim(c(-60,60))
+  xlim(c(-10,10))
 
 
 
@@ -38,7 +38,7 @@ conjunctionTable$maxLR <- pmax(LRAs, LRBs)
 conjunctionTable$LRdifs <- conjunctionTable$LRABs - conjunctionTable$maxLR 
 
 ggplot(conjunctionTable)+geom_histogram(aes(x=LRdifs), bins= 80)+
-  xlim(c(-100,100))
+  xlim(c(-10,10))
 
 
 
@@ -54,9 +54,13 @@ nrow(positiveLR)
 #note the joint support is positive
 mean(positiveLR$LRABs > 1)
 
+#is it always higher than the minumum?
+
+
 #however, it is not always higher than the max
 ggplot(positiveLR)+geom_histogram(aes(x=positiveLR$LRdifs), bins= 80)+
-  xlim(c(-100,100))
+  xlim(c(-10,10))
+
 
 mean(positiveLR$LRdifs>0)
 
@@ -69,16 +73,26 @@ mean((conjunctionTable$LRABs > conjunctionTable$LRAs &
           conjunctionTable$LRABs > conjunctionTable$LRBs))
 #no!
 
+mean((conjunctionTable$LRABs < conjunctionTable$LRAs) &
+       (conjunctionTable$LRABs < conjunctionTable$LRBs))
+#
+
+
 #is joint LR always between the individual LRs for positive support?
 mean((positiveLR$LRABs > positiveLR$LRAs &
         positiveLR$LRABs < positiveLR$LRBs)|
        (positiveLR$LRABs < positiveLR$LRAs &
           positiveLR$LRABs > positiveLR$LRBs))
+
 #also no!
 
+mean((positiveLR$LRABs < positiveLR$LRAs) &
+       (positiveLR$LRABs < positiveLR$LRBs))
+#yes!
 
 
 
+#if LR the same, being above minimum is above the both of them
 
 
 
@@ -92,6 +106,8 @@ nrow(positiveBF)
 #note the joint support is positive
 mean(positiveBF$BFABs > 1)
 
+mean(positiveBF$BFdifs > 0)
+
 #however, note BF is also always higher than the max
 ggplot(positiveBF)+geom_histogram(aes(x=positiveBF$BFdifs), bins= 80)+
   xlim(c(-100,100))
@@ -100,6 +116,7 @@ mean(positiveBF$BFdifs>0)
 
 
 
+#is joint LR sensitive to some priors?
 
 
 

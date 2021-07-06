@@ -56,6 +56,7 @@ ABProb <- array(c(1, 0, 0, 1, 0, 1, 0,1),
                                 B = c("1","0"), 
                                 A = c("1","0")))
 
+
 conjunctionCPT <- list(A = AProb, B = BProb, 
                        a = aProb, b = bProb, AB = ABProb)
 
