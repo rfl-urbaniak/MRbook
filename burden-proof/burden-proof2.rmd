@@ -13,7 +13,7 @@ classoption: dvipsnames,enabledeprecatedfontcommands
 fontsize: 10pt
 documentclass: scrartcl
 urlcolor: blue
-bibliography: LP-SEP-FINAL6.bib
+bibliography: [../references/referencesMRbook.bib]
 csl: apa-5th-edition.csl
 ---
 
@@ -1221,14 +1221,23 @@ $\pr{b |B}=y$ and $\pr{b | \neg B}=1-y$. Let $\pr{A}=k$ and $\pr{b}=t$.\todo{You
 
 \noindent
 The combined likelihood ratio is therefore:
-  \begin{align*}
+\begin{align}\label{eq:combinedLRMarcello}
 \frac{\pr{ a \et b |A \et B}}{\pr{a \et b | \neg (A \et B)}} & = \frac{xy}{\frac{(1-k)t(1-x)y + k(1-t)x(1-y) + (1-k)(1-t)(1-x)(1-y)}{ \left(1-k\right) t +\left(1-t\right) k+\left(1-k\right) \left(1-t\right) }}
- \end{align*}
+ \end{align}
+
 
 \noindent
+Let's make a further simplification  assuming $x=y$, and plot individual and  combined likelihood ratios against $x$.  \eqref{eq:combinedLRMarcello} reduces to:
+  \begin{align*}
+\frac{\pr{ a \et b |A \et B}}{\pr{a \et b | \neg (A \et B)}} & = \frac{xx}{\frac{(1-k)t(1-x)x + k(1-t)x(1-x) + (1-k)(1-t)(1-x)(1-x)}{ \left(1-k\right) t +\left(1-t\right) k+\left(1-k\right) \left(1-t\right) }}
+ \end{align*}
+
+
+
+
 The graph of the combined likelihood ratio 
  can be plotted against the single likelihood ratios, $x/(1-x)$ for $\frac{\pr{a |A}}{\pr{a | \neg A}}$ or
- $y/(1-y)$ for $\frac{\pr{b |B}}{\pr{b | \neg B}}$. The combined ratio 
+ $y/(1-y)$ for $\frac{\pr{b |B}}{\pr{b | \neg B}}$.\todo{Make clear the assumption that sensitivity equals specificity here is relied on.} The combined ratio 
  is always greater than the smallest of the individual likelihood ratios.
  Consider first the case in which the individual likelihoods are the same $x/(1-x)=y/(1-y)$. Even though the combined likelihood ratio varies depeding on the prior probabilities $\pr{A}$ and $\pr{B}$, it always 
 exceeds the individual likelihood ratios. Next consider a more comon case. Since pieces of evidence will often differ in reliability, their likelihood ratio will also be different. The combined likelihood ratio is not always 
@@ -1239,19 +1248,47 @@ greater than the smallest of the two.
 \vspace{3mm} 
 ```{r echo=FALSE}
 library(ggplot2)
-library("gridExtra")
-k <- 0.1
-t <- 0.2
+#library("gridExtra")
+library(ggthemes)
+
+combined <- function (x,k,t) {
+  (x^2)/
+(
+  (
+    (1-k)*t*(1-x)*x + k*(1-t)*x*(1-x) + (1-k)*(1-t)*(1-x)*(1-x)
+    )/(
+    (1-k)*t +(1-t)*k+(1-k)*(1-t)   
+    )
+)
+}
+
+combinedMarcello <- function(x,k,t){
+  (x^2)/(k*(1-t)*(x)*(1-x)+(1-k)*t*x*(1-x)+(1-k)*(1-t)*(1-x)*(1-x))
+}
+
+
+x <-seq(0,1,by=0.001)
+
+
 a <- ggplot(data.frame(x=c(0,1)), aes(x)) +   ylim(0, 5) +
-  stat_function(fun=function(x)(x/(1-x)), geom="line", aes(colour=" item of evidence a or b with LR= x/(1-x)=y/(1-y)")) +
-  stat_function(fun=function(x)((x^2)/(k*(1-t)*(x)*(1-x)+(1-k)*t*x*(1-x)+(1-k)*(1-t)*(1-x)*(1-x))), geom="line", aes(colour="two items combined Pr(A)=0.1, Pr(B)=0.2")) +
-  stat_function(fun=function(x)((x^2)/(k*(1-0.4)*(x)*(1-x)+(1-k)*0.4*x*(1-x)+(1-k)*(1-0.4)*(1-x)*(1-x))), geom="line", aes(colour="two items combined Pr(A)=0.1, Pr(B)=0.4")) +
-  stat_function(fun=function(x)((x^2)/(0.3*(1-0.4)*(x)*(1-x)+(1-0.3)*0.4*x*(1-x)+(1-0.3)*(1-0.4)*(1-x)*(1-x))), geom="line", aes(colour="two items combined Pr(A)=0.3, Pr(B)=0.4")) +
-    stat_function(fun=function(x)((x^2)/(0.6*(1-0.8)*(x)*(1-x)+(1-0.6)*0.8*x*(1-x)+(1-0.6)*(1-0.8)*(1-x)*(1-x))), geom="line", aes(colour="two items combined Pr(A)=0.6, Pr(B)=0.8")) +
-  xlab("x") + ylab("LR") +labs(colour="one versus many") +
-       ggtitle("Combined v individual support measured by LR assuming x=y")
+  stat_function(fun=function(x)(x/(1-x)), geom="line", aes(colour="LR(a)=LR(b)"))+
+  geom_line(aes(x = x, y =  combined(x,0.1, 0.2)))+
+  geom_line(aes(x = x, y =  combinedMarcello(x,0.1, 0.2),color = "joint LR for k = 0.1, t=0.2"))+
+  xlab("rel(a)=rel(b)")+ ylab("LR")+theme_tufte()
+
 
 a
+
+m <- ggplot(data.frame(x=c(0,1)), aes(x)) +   ylim(0, 5) +
+  stat_function(fun=function(x)(x/(1-x)), geom="line", aes(colour="LR(a)=LR(b)"))  +
+   stat_function(fun=function(x)((x^2)/(k*(1-t)*(x)*(1-x)+(1-k)*t*x*(1-x)+(1-k)*(1-t)*(1-x)*(1-x))), geom="line", aes(colour="two items combined Pr(A)=0.1, Pr(B)=0.2")) +
+   stat_function(fun=function(x)((x^2)/(k*(1-0.4)*(x)*(1-x)+(1-k)*0.4*x*(1-x)+(1-k)*(1-0.4)*(1-x)*(1-x))), geom="line", aes(colour="two items combined Pr(A)=0.1, Pr(B)=0.4")) +
+   stat_function(fun=function(x)((x^2)/(0.3*(1-0.4)*(x)*(1-x)+(1-0.3)*0.4*x*(1-x)+(1-0.3)*(1-0.4)*(1-x)*(1-x))), geom="line", aes(colour="two items combined Pr(A)=0.3, Pr(B)=0.4")) +
+     stat_function(fun=function(x)((x^2)/(0.6*(1-0.8)*(x)*(1-x)+(1-0.6)*0.8*x*(1-x)+(1-0.6)*(1-0.8)*(1-x)*(1-x))), geom="line", aes(colour="two items combined Pr(A)=0.6, Pr(B)=0.8")) +
+   xlab("x") + ylab("LR") +labs(colour="one versus many") +
+        ggtitle("Combined v. individual support measured by LR assuming x=y")
+ 
+m
 ```
 
  
