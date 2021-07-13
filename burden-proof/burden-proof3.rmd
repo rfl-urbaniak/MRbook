@@ -14,7 +14,7 @@ fontsize: 10pt
 documentclass: scrartcl
 urlcolor: blue
 bibliography: [../references/referencesMRbook.bib]
-csl: apa-5th-edition.csl
+csl: [../references/apa-6th-edition.csl]
 ---
 
 
@@ -1244,21 +1244,19 @@ exceeds the individual likelihood ratios. Next consider a more comon case. Since
 greater than the individual ratios, but it is always 
 greater than the smallest of the two.
 
- 
-\vspace{3mm} 
-```{r echo=FALSE}
+
+\begin{figure}
+
+```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "90%"}
 library(ggplot2)
-#library("gridExtra")
 library(ggthemes)
 
 combined <- function (x,k,t) {
   (x^2)/
 (
-  (
-    (1-k)*t*(1-x)*x + k*(1-t)*x*(1-x) + (1-k)*(1-t)*(1-x)*(1-x)
-    )/(
-    (1-k)*t +(1-t)*k+(1-k)*(1-t)   
-    )
+  ((1-k)*t*(1-x)*x + k*(1-t)*x*(1-x) + (1-k)*(1-t)*(1-x)*(1-x))
+  /
+    ((1-k)*t +(1-t)*k+(1-k)*(1-t))
 )
 }
 
@@ -1266,49 +1264,41 @@ combinedMarcello <- function(x,k,t){
   (x^2)/(k*(1-t)*(x)*(1-x)+(1-k)*t*x*(1-x)+(1-k)*(1-t)*(1-x)*(1-x))
 }
 
-
 x <-seq(0,1,by=0.001)
+y0102 <- combined(x,0.1,0.2)
+y0608 <- combined(x,0.6,0.8)
 
-
-a <- ggplot(data.frame(x=c(0,1)), aes(x)) +   ylim(0, 5) +
+ggplot() +
   stat_function(fun=function(x)(x/(1-x)), geom="line", aes(colour="LR(a)=LR(b)"))+
-  geom_line(aes(x = x, y =  combined(x,0.1, 0.2)))+
-  geom_line(aes(x = x, y =  combinedMarcello(x,0.1, 0.2),color = "joint LR for k = 0.1, t=0.2"))+
-  xlab("rel(a)=rel(b)")+ ylab("LR")+theme_tufte()
-
-
-a
-
-m <- ggplot(data.frame(x=c(0,1)), aes(x)) +   ylim(0, 5) +
-  stat_function(fun=function(x)(x/(1-x)), geom="line", aes(colour="LR(a)=LR(b)"))  +
-   stat_function(fun=function(x)((x^2)/(k*(1-t)*(x)*(1-x)+(1-k)*t*x*(1-x)+(1-k)*(1-t)*(1-x)*(1-x))), geom="line", aes(colour="two items combined Pr(A)=0.1, Pr(B)=0.2")) +
-   stat_function(fun=function(x)((x^2)/(k*(1-0.4)*(x)*(1-x)+(1-k)*0.4*x*(1-x)+(1-k)*(1-0.4)*(1-x)*(1-x))), geom="line", aes(colour="two items combined Pr(A)=0.1, Pr(B)=0.4")) +
-   stat_function(fun=function(x)((x^2)/(0.3*(1-0.4)*(x)*(1-x)+(1-0.3)*0.4*x*(1-x)+(1-0.3)*(1-0.4)*(1-x)*(1-x))), geom="line", aes(colour="two items combined Pr(A)=0.3, Pr(B)=0.4")) +
-     stat_function(fun=function(x)((x^2)/(0.6*(1-0.8)*(x)*(1-x)+(1-0.6)*0.8*x*(1-x)+(1-0.6)*(1-0.8)*(1-x)*(1-x))), geom="line", aes(colour="two items combined Pr(A)=0.6, Pr(B)=0.8")) +
-   xlab("x") + ylab("LR") +labs(colour="one versus many") +
-        ggtitle("Combined v. individual support measured by LR assuming x=y")
- 
-m
+  geom_line(aes(x = x, y = y0102,color = "joint LR for k = 0.1, t=0.2")) +
+  geom_line(aes(x = x, y = y0608,color = "joint LR for k = 0.6, t=0.8")) +
+        ylim(c(0,5))+
+  xlab("rel(a)=rel(b)")+ ylab("LR")+theme_tufte()+
+  theme(legend.position = c(0.8, 0.2))
 ```
 
- 
-```{r echo=FALSE}
-library(ggplot2)
-library("gridExtra")
-k <- 0.1
-t <- 0.2
-y <- 0.7
-b <- ggplot(data.frame(x=c(0,1)), aes(x)) +   ylim(0, 30) +
-  stat_function(fun=function(x)(x/(1-x)), geom="line", aes(colour="item of evidence a, LR-x=(1-x)")) +
-  stat_function(fun=function(x)(y/(1-y)), geom="line", aes(colour="item of evidence b, LR=y/(1-y)")) +
-  stat_function(fun=function(x)((x*y)/(k*(1-t)*(x)*(1-y)+(1-k)*t*y*(1-x)+(1-k)*(1-t)*(1-x)*(1-y))), geom="line", aes(colour="two items combined Pr(A)=0.1, Pr(B)=0.2")) +
-   stat_function(fun=function(x)((x*y)/(k*(1-0.4)*(x)*(1-x)+(1-k)*0.4*x*(1-x)+(1-k)*(1-0.4)*(1-x)*(1-x))), geom="line", aes(colour="two items combined Pr(A)=0.1, Pr(B)=0.4")) +
-    stat_function(fun=function(x)((x*y)/(0.3*(1-0.4)*(x)*(1-y)+(1-0.3)*0.4*y*(1-x)+(1-0.3)*(1-0.4)*(1-x)*(1-y))), geom="line", aes(colour="two items combined Pr(A)=0.3, Pr(B)=0.4")) +
-  xlab("x") + ylab("LR") +labs(colour="one versus many") +
-       ggtitle("Combined v individual support measured by LR with y=0.7")
+\label{fig:jointLRMarcello}
+\caption{Add caption.}
+\end{figure}
 
-b
-```
+\todo{I'm not sure the other one brought much additional information.}
+<!-- ```{r echo=FALSE} -->
+<!-- library(ggplot2) -->
+<!-- library("gridExtra") -->
+<!-- k <- 0.1 -->
+<!-- t <- 0.2 -->
+<!-- y <- 0.7 -->
+<!-- b <- ggplot(data.frame(x=c(0,1)), aes(x)) +   ylim(0, 30) + -->
+<!--   stat_function(fun=function(x)(x/(1-x)), geom="line", aes(colour="item of evidence a, LR-x=(1-x)")) + -->
+<!--   stat_function(fun=function(x)(y/(1-y)), geom="line", aes(colour="item of evidence b, LR=y/(1-y)")) + -->
+<!--   stat_function(fun=function(x)((x*y)/(k*(1-t)*(x)*(1-y)+(1-k)*t*y*(1-x)+(1-k)*(1-t)*(1-x)*(1-y))), geom="line", aes(colour="two items combined Pr(A)=0.1, Pr(B)=0.2")) + -->
+<!--    stat_function(fun=function(x)((x*y)/(k*(1-0.4)*(x)*(1-x)+(1-k)*0.4*x*(1-x)+(1-k)*(1-0.4)*(1-x)*(1-x))), geom="line", aes(colour="two items combined Pr(A)=0.1, Pr(B)=0.4")) + -->
+<!--     stat_function(fun=function(x)((x*y)/(0.3*(1-0.4)*(x)*(1-y)+(1-0.3)*0.4*y*(1-x)+(1-0.3)*(1-0.4)*(1-x)*(1-y))), geom="line", aes(colour="two items combined Pr(A)=0.3, Pr(B)=0.4")) + -->
+<!--   xlab("x") + ylab("LR") +labs(colour="one versus many") + -->
+<!--        ggtitle("Combined v individual support measured by LR with y=0.7") -->
+
+<!-- b -->
+<!-- ``` -->
 
 
  
