@@ -2,9 +2,11 @@ library(ggplot2)
 library(ggthemes)
 library(plot3D)
 
-conjunctionTable <- readRDS(file = "conjunctionTable.RDS")
+getwd() #this should be the project directory
 
+conjunctionTable <- readRDS(file = "datasets/conjunctionTable.RDS")
 
+nrow(conjunctionTable)
 colnames(conjunctionTable)
 attach(conjunctionTable)
 
