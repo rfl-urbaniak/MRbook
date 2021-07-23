@@ -6,7 +6,7 @@ source("scripts/CptCreate.R")
 
 conjunctionDAG <- model2network("[a|A][b|B][AB|A:B][A][B]")
 
-#graphviz.plot(conjunctionDAG)
+graphviz.plot(conjunctionDAG)
 
 set.seed(123)
 n <- 100000
