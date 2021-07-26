@@ -191,7 +191,7 @@ One notorious case involving a false positive is that of  Josiah Sutton (then 16
 
 This is only one example of quite a few  cases of DNA matching going awry, \todo{cite Inside the Cell, elaborate} and the existing anecdotal evidence suggests there are quite a few potential sources of error [see @thompson2012forensic for a more exhaustive treatment and multiple examples]:
 
-- \textbf{Cross-contamination of samples.} For instance, in Dwayne Johnson (2003) samples were accidentally swapped. In Lukis Anderson (2012) the material has been carried over by the responding paramedics. In one case, German police invested a considerable amount of time and effort searching for the so-called Phanotm of Heilbronn, whose DNA profile was found on evidence from a large variety of crimes. A bountly of 300k EUR was placed on hear head. It turned out she was an innocent employee involved in the production of cotton swabs used accross the country.
+- \textbf{Cross-contamination of samples.} For instance, in Dwayne Johnson (2003) samples were accidentally swapped. In Lukis Anderson (2012) the material has been carried over by the responding paramedics. In one case, German police invested a considerable amount of time and effort searching for the so-called Phantom of Heilbronn, whose DNA profile was found on evidence from a large variety of crimes. A bountly of 300k EUR was placed on hear head. It turned out she was an innocent employee involved in the production of cotton swabs used accross the country.
 
 - \textbf{Mislabeling of samples.} For instance, in 2011 the Las Vegas Metropolitan Police Department acknowledge that samples of two men suspected of a 2001 robbery were switched, leading to the exclusion of the perpetrator and four years of incarceration of the other suspect. The mistake came to light only because the perpetrator was later on arrested for an unrelated crime. In a high-profile case of a serial rapist, the notorious Night Stalker who committed more than 140 sexual assualts in London, the actual perpertrator came to the attention of the police quite soon, but a DNA test excluded him (falsely so, because the samples  had been mistakenly switched), and so his spree continued for months. 
 
@@ -209,7 +209,7 @@ DNA identification is to some extent prone to errors which are not measured by t
 
 \todo{M: How about fale negatives? Should this be mentioned as well?}
 
-Hopefully, having convinced the reader that the false positive probability is non-negligible, let us follow @aitken2003probability in investigating  its impact on the likelihood ratio of the DNA match. For simplicity we stil assume that the false negative probability is 0, that is, that if the match is real, it will be reported with certainty. We abbreviate:
+Hopefully, having convinced the reader that the false positive probability is non-negligible, let us follow @aitken2003probability in investigating  its impact on the likelihood ratio of the DNA match. We just add a bit more details to the derivation they present for the sake of clarity. For simplicity we stil assume that the false negative probability is 0, that is, that if the match is real, it will be reported with certainty. We abbreviate:
 
 \begin{center} \hspace{10mm}
 \begin{tabular}{lp{9cm}}
@@ -242,7 +242,7 @@ The formula we will end up with is:
 \pr{R \vert M} & = 1.
 \end{align}
 
-\todo{M: Is this derivation from Thompson and Taroni? Clarify}
+
 
 Here, for simplicity we take the probability of a false negative to be null; in fact, some of the reasons for taking false positives seriously are also reasons to take false negatives seriously, but let's deal with one problem at a time (and in the end, the impact of a false positive risk will be clear from the way the formula will be derived). Now, let us rewrite the numerator of the LR by extending the conversation, rewriting the probabilities of conjunctions in terms of conditional probability and simplifying: 
 
@@ -304,7 +304,7 @@ Now, let us illustrate this impact for the range of FPP between 0 and 0.05, for 
 \todo{M: Better to refer to Figure \ref{fig:fpplr}
  and elborate on this more. The upshot here feels too short and might go unoticed. Also, woudl be good to have a similar graph with the impact of false negative rates.}
 
-\todo{M: Compare this LR with other formules, for example, by Buckelton and plot them one against the other to see how/if they differ.}
+
 
 \todo{M: It's not clear what Figure \ref{fig:fpplr}
  says. Does it say that if FP rate is 5\%, then the LR (considering FP) is close to the LR (not considering FPs). Clarify. Try to make the figure concretely relevant. If so, FPs do not matter that much, right?}
@@ -332,6 +332,43 @@ ggplot(fppTableLong, aes(x=fpp,y=value, lty = line))+  geom_line()+ylim(c(0,400)
 \label{fig:fpplr}
 \caption{Impact of the false positive probability on the likelihood ratio for two values of RMP. The horizontal reference line is at 16.8, the likelihood reached at RMP=$10{^-3}$ for FPP=0.05. At the same value of FPP, the LR for RMP $10{^-9}$ is 20.}
 \end{figure}
+
+
+
+
+Interestingly, @buckleton2018forensic give a seemingly different formula for
+the impact of errors on likelihood ratio. Since the derivation is simpler and it turns out that in fact this is simply a more general formula, of which (FPP-LR) is just a particular instance, it worth taking a look.
+
+First, @buckleton2018forensic make the conceptual distinction between the probability that an error occurs ($E$) and the probability that a match is reported if it does. In terms of our notation, we have:
+\begin{align*}
+e & = \pr{E} = \pr{E \vert S} = \pr{E \vert \n S}
+\end{align*}
+\noindent That is, we denote the probability of error as $e$, and we assume it doesn't depend on whether the prosecution hypothesis is true (whether the suspect is the source).  
+
+Separately, the formula includes the probability of a reported match if an error occurs, also assumed to be independent of whether the prosecution hypothesis is true:
+\begin{align*}
+k =  \pr{R \vert E, S} = \pr{R \vert E, \n S}
+\end{align*}
+\noindent Further, it is assumed that the probability of false negatives is zero ($\pr{R \vert S, \n E} =1$) and the probability of reported match if no error occurs and the defense hypothesis is true is RMP ($\pr{R \vert \n E, \n S}=RMP$).
+
+Now the derivation:
+\begin{align*}
+LR & = \frac{\pr{R\vert S}}
+{\pr{R \vert \n S}}\\
+& = \frac{\pr{R \vert \n E, S}\pr{\n E \vert S} + \pr{R \vert E, S}\pr{E \vert S}}
+{\pr{R \vert \n E, \n S}\pr {\n E \vert \n S} + \pr{R \vert E, \n S}\pr{E \vert \n S}}\\
+& = \frac{1(1-e) + ke}
+{RMP(1-e)+ke}  = \frac{1-e+ke}{RMP  - e\times RMP + ke} \\
+& = \frac{1 - (1-k)e}{RMP(1-e)+ke}
+\end{align*}
+
+
+Note now that if you think of an error as something that guarantees a mistaken identification, $k$ becomes $1$ and $e$ becomes the false positive rate. On this assumption we have:
+\begin{align*}
+ \frac{1 - (1-k)e}{RMP(1-e)+ke} & = \frac{1-e+e}{RMP(1-e)+e}\\
+ & = \frac{1}{RMP - e\times RMP + e} = \frac{1}{1 + e(1-RMP)}
+\end{align*}
+\noindent which is the same as the formula obtained by  @aitken2003probability if we take $e$ to be FPP, as we should on the assumption that $k=1$.
 
 
 
@@ -974,6 +1011,67 @@ cold-hit cases,  despite the fact that  a cold-hit match alone is stronger evide
 
 
 \todo{M: What would strengthen the chapter  is to have another example of how LR can be used (or not used) to assess evidentiary value, namely for eyewitness testimonies. Otherwise it feels as though LRs are just good with quantitive evidence and that's it. What about other forms of evidence? We need to mention other evidence because we want a theory of the value of evidence in general, not just for DNA evidence.}
+
+
+
+
+
+# Confirmation measures
+
+At this point a philosophically minded reader might recall that there is an important notion in the vincinity---that of confirmation---and that there is a vast philosophical literature on probabilistic explication of that notion. Natural questions arise: how is the notion of confirmation related to the notion of evidence strength, and why none of the probabilistic explications of confirmation have not been deployed in legal probabilism?
+
+\todo{add some structure description}
+
+The key question behind the enterprise we are going to take a look at is: when does a piece of evidence confirm a theory, and how are these requirements ot be explicated probabilistically to be in agreement with both successful scientific practice and sensible philosophical principles? The hope is that having answered these questions would facilitate both rational reconstructions of various developments in the history of science, and a critical evaluation
+of various ongoing scientific investigations.
+
+The underlying probabilistic idea is  that the level of  confirmation of a theory ($T$)  by a piece of evidence ($E$) is a function of an agent’s  degrees of belief. The first stab might be, let's simply identify the confirmation level with $\pr{T \vert E}$. This, however, is way too quick. Multiple factors come into the assessment of this conditional probability, and two agents can agree on the extent to which $E$ confirms $T$ without agreeing on the posterior probability of $T$ (identified with $\pr{T \vert E}$), because the agents might disagree about the prior probability of $T$ and this might have impact on the posterior.
+
+However, there are some clear connections to the probabilities mentioned in the previous passage. One usual assumption [@sprenger2019bayesian]---called the \emph{prior-posterior dependence} is that the level of confirmation is to be a continuous function of $\pr{T}$ and $\pr{E\vert T}$ which is  non-decreasing in the first argument and non-increasing in the second argument. That is, increasing the prior,   should not lower the confirmation level, and increasing the likelihood shold not increase the confirmation level.
+
+One consequence of this assumption is that confirmation of $T$ by $E$, $c(T,E)$ should track the posterior order-wise, that is $c(T,E)>c(T,E')$ just in case $\pr{T\vert E} > \pr{T\vert E'}$ even though $c(T,E)$ should not be identified with $\pr{T\vert E}$. 
+
+Another requirement is that there should be a neutral point $n$ such that $E$ confirms (disconfirms) $T$ just in case $c(T,E)>n$ ($c(T,E)<n$) and is neutral exactly at $n$.  This is called the \emph{qualitative-quantitative bridge}.
+
+Yet another adequacy requirement is local equivalence. Theories that are logically equivalent given the evidence should receive equal confirmation from this evidence. Interestingly, all confirmation measures which satisfy prior-posterior dependence, qualitative-quantitative bridge and local equivalence are ordinally equivalent with the posterior probability $\pr{H\vert E}$. Measures that are so ordinally equivalent are said to explicate confirmation as \emph{firmness of belief}, especially if in the probabilities used implicitly rely on total available evidence.
+
+However, another notion of confirmation seems often at play. For instance, even if the posterior $T$ is low, one might still think that a given experiment still speaks strongly in favor of $T$. And relatedly, $E$ can lower the posterior of $T$ while still leading the posterior to be sufficiently high for the firmness confirmation measure to be above the neutrality threshold.  
+
+For this reason, following the second edition of [@carnap1962logical] it is customary to distinguish another notion in the vincinity: confirmation  as increase in firmness of belief. Here, the idea is rather than confirmation is positive (negative) if the posterior of $H$ is higher (lower) than the prior, and neutral otherwise. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
