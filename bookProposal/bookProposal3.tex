@@ -1,7 +1,3 @@
-\PassOptionsToPackage{unicode=true}{hyperref} % options for packages loaded elsewhere
-\PassOptionsToPackage{hyphens}{url}
-\PassOptionsToPackage{dvipsnames,svgnames*,x11names*}{xcolor}
-%
 \documentclass[10pt,dvipsnames,enabledeprecatedfontcommands]{scrartcl}
 \usepackage{lmodern}
 \usepackage{amssymb,amsmath}
@@ -10,9 +6,12 @@
 \ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
-  \usepackage{textcomp} % provides euro and other symbols
 \else % if luatex or xelatex
-  \usepackage{unicode-math}
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
   \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
 \fi
 % use upquote if available, for straight quotes in verbatim environments
@@ -22,20 +21,14 @@
 \usepackage[]{microtype}
 \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
 }{}
-\IfFileExists{parskip.sty}{%
-\usepackage{parskip}
-}{% else
-\setlength{\parindent}{0pt}
-\setlength{\parskip}{6pt plus 2pt minus 1pt}
-}
-\usepackage{xcolor}
-\usepackage{hyperref}
+\PassOptionsToPackage{hyphens}{url} % url is loaded by hyperref
+\usepackage[unicode=true]{hyperref}
+\PassOptionsToPackage{usenames,dvipsnames}{color} % color is loaded by hyperref
 \hypersetup{
             pdftitle={Boosting Legal Probabilism},
             pdfauthor={Marcello Di Bello and Rafal Urbaniak},
             colorlinks=true,
             linkcolor=Maroon,
-            filecolor=Maroon,
             citecolor=Blue,
             urlcolor=blue,
             breaklinks=true}
@@ -49,6 +42,12 @@
 % margins by default, and it is still possible to overwrite the defaults
 % using explicit options in \includegraphics[width, height, ...]{}
 \setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
 \setlength{\emergencystretch}{3em}  % prevent overfull lines
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
@@ -166,11 +165,9 @@
 \begin{document}
 \maketitle
 
-\hypertarget{the-book}{%
-\section{The Book}\label{the-book}}
+\section{The Book}\label{the-book}
 
-\hypertarget{brief-description}{%
-\subsection{Brief Description}\label{brief-description}}
+\subsection{Brief Description}\label{brief-description}
 
 \footnotesize In one or two paragraphs, describe the work, including its
 rationale, approach, and pedagogy. (This book is\ldots{} It does\ldots{}
@@ -196,51 +193,54 @@ address many, if not all, of these objections.
 We begin with the simple version of the theory. It comprises two key
 elements: first, Bayes' theorem for assessing the weight of the
 evidence, and second, probability thresholds as decision criteria. The
-simple version of legal probabilism has much to be reccomeded for, but
-also falls prey to several difficulties, including the problem of
-conjunction, puzzles of naked statistical evidence, the problem of
-priors. Some legal probabilists have attempted to dismiss these
-difficulties or downplay their significance. We confront them at face
-value and show that they cannot be addressed within the confines of
-simple legal probabilism. We then develop a more sophisticated theory,
-what we call legal probabilism 1.02, which takes advatange of Bayesian
-networks and other seminal ideas in the literature in forensic science
-and artificial intelligence. `Boosting Legal Probabilism' articulates
-the first comprehensive philosophical analysis of whether---and if so,
-to what extent---legal probabilism 1.02 can overcome the limitations of
-simple legal probabilism. We show that the more sophisticated version
-significantly improves on the simple version and rivals in explanatory
-power two competing accounts of judicial fact-finding: argumentation
-theory and relative plausibility. To add precision to the claims made in
-the book, the analytical argument is supplemented with an
-\textbf{\textsf{R}} code implementation.
+simple version of legal probabilism \todo{awkward phrase here:} has much
+to be reccomeded for, but also falls prey to several difficulties,
+including the problem of conjunction, puzzles of naked statistical
+evidence, or the problem of priors. Some legal probabilists have
+attempted to dismiss these difficulties or downplay their significance.
+We confront them at face value and show that they cannot be addressed
+within the confines of simple legal probabilism. We then develop a more
+sophisticated theory, what we call legal probabilism 1.02, which takes
+advatange of Bayesian networks and other seminal ideas in the literature
+in forensic science and artificial intelligence. `Boosting Legal
+Probabilism' articulates the first comprehensive philosophical analysis
+of whether---and if so, to what extent---legal probabilism 1.02 can
+overcome the limitations of simple legal probabilism.
+\todo{I had problems parsing this sentence, rewrite:} We show that the
+more sophisticated version significantly improves on the simple version
+and rivals in explanatory power two competing accounts of judicial
+fact-finding: argumentation theory and relative plausibility. To add
+precision to the claims made in the book, the analytical argument is
+supplemented with an \textbf{\textsf{R}} code implementation.
 
 `Boosting Legal Probabilism' is aimed at philosophers with an interest
 in legal epistemology and epistemology more generally. Many of the
 difficulties of legal probabilism resemble difficulties faced by
-Bayesianism in epistemology. The book will also draw attention outside
-philosophy from legal scholars who have championed applications of
-probability theory to evidence law as well as scholars who have resisted
-this trend. Another target audience includes computer scientists and
-psychologists interested in studying evidential reasoning and
-decision-making under uncertainty. Besides contributing to the
-literature about legal probabilism, the book aims to introduce
-unfamiliar readers to the rich interdisciplinary debate on the topic,
-often scattered throughout journals and books in philosophy, law,
-computer science, forensic science and psychology. So the book is aimed
-at scholars, advanced undergraduates and curios readers more generally.
-Some chapters present original research and require technical background
-in probability theory. Others are introductory, suitable for an advanced
-undergraduate course.
+Bayesianism in epistemology. The book will also
+\todo{This sounds awkward, rewrite:} draw attention outside philosophy
+from legal scholars who have championed applications of probability
+theory to evidence law as well as scholars who have resisted this trend.
+Another target audience includes computer scientists and psychologists
+interested in studying evidential reasoning and decision-making under
+uncertainty. Besides contributing to the literature about legal
+probabilism, the book aims to introduce unfamiliar readers to the rich
+interdisciplinary debate on the topic, often scattered throughout
+journals and books in philosophy, law, computer science, forensic
+science and psychology. So the book is aimed at scholars, advanced
+undergraduates and curious readers more generally. Some chapters present
+original research and require technical background in probability
+theory. Others are introductory, suitable for an advanced undergraduate
+course.
 
-\hypertarget{outline}{%
-\subsection{Outline}\label{outline}}
+\subsection{Outline}\label{outline}
 
-\noindent \textbf{Part I - Legal Probabilism and Its Foes}
+\noindent
+\textbf{Part I - Legal Probabilism and Its Foes}
 
-\noindent The first part of the book will instill interest in legal
-probabilism among unfamiliar readers and refresh seasoned readers about
-the main points of contention. \textbf{Chapter 1} outlines simple legal
+\noindent
+The first part of the book will instill interest in legal probabilism
+among unfamiliar readers and refresh seasoned readers about the main
+points of contention. \textbf{Chapter 1} outlines simple legal
 probabilism which comprises a familiar repertoire: Bayes' theorem,
 likelihood ratios, probability thresholds, expected utility
 maximization. This repertoire has proven useful in several ways,
@@ -248,9 +248,9 @@ especially in the assessment of explicitly quantitative evidence such as
 DNA matches and other expert evidence. At the same time, as
 \textbf{Chapter 2} shows, simple legal probabilism is liable to a host
 of conceptual difficulties: the conjunction problem, the problem of
-priors, paradoxes of naked statistical evidence. These difficulties are
-well-known. Others are less familiar: the problem of complexity, soft
-variables, the difficulty with corroboration.
+priors, and the paradoxes of naked statistical evidence. These
+difficulties are well-known. Others are less familiar: the problem of
+complexity, soft variables, and the difficulty with corroboration.
 
 The first two chapters provide the essential background for a deeper
 examination of legal probabilism and the development of its more
@@ -263,15 +263,15 @@ weighing) as well as a theory of decision-making at trial. These two
 topics are obviously intertwined in important ways, but are best kept
 separate for analytical clarity.
 
-\vspace{3mm}
+\vspace{3mm} \noindent
+\textbf{Part II - Evidence Assessment First Pass}
 
-\noindent \textbf{Part II - Evidence Assessment First Pass}
-
-\noindent The second part of the book discusses in great detail two
-formal tools that are essential for the legal probabilist: Bayes'
-theorem and likelihood ratios. We focus in particular on how these tools
-can help to assess, weigh and evaluate evidence at trial as well as what
-their limitations are.
+\noindent
+The second part of the book discusses in great detail two formal tools
+that are essential for the legal probabilist: Bayes' theorem and
+likelihood ratios. We focus in particular on how these tools can help to
+assess, weigh and evaluate evidence at trial as well as what their
+limitations are.
 
 \textbf{Chapter 3} begins with Bayes' theorem and surveys many of its
 applications, for example, as a tool to avoid reasoning fallacies such
@@ -292,26 +292,28 @@ hypothesis of interest. The problem is that assessing prior
 probabilities is notoriously difficult. Likelihood ratios, instead,
 offer a way to evaluate the evidence presented at trial without the need
 of assessing prior probabilities. We illustrate the applications of
-likelihood ratios focusing on the debate about cold-hit DNA matches. The
-chapter also examines the weaknesses of this approach. The choice of the
-competing hypotheses compared in the likelihood ratio is often a source
-of confusion, manipulation and subjective judgment. Another problem is
-that, like simple applications of Bayes' theorem, likelihood ratios are
-still unable to model complex bodies of evidence. A further problem, as
-critics have alleged, is that likelihood ratios cannot model the notion
-of evidential relevance.
+likelihood ratios focusing on the debate about cold-hit DNA matches and
+the impact of false positive probability. The chapter also examines the
+weaknesses of this approach. The choice of the competing hypotheses
+compared in the likelihood ratio is often a source of confusion,
+manipulation and subjective judgment. Another problem is that, like
+simple applications of Bayes' theorem, likelihood ratios are still
+unable to model complex bodies of evidence. A further problem, as
+critics have alleged, is that likelihood ratios
+\todo{This is a bit too strong, rephrase:} cannot model the notion of
+evidential relevance.
 
-\vspace{3mm}
+\vspace{3mm} \noindent
+\textbf{Part III - Evidence Assessment More and Better}
 
-\noindent \textbf{Part III - Evidence Assessment More and Better}
-
-\noindent Chapters 3 and 4 show that we need to move past simple legal
+\noindent
+Chapters 3 and 4 show that we need to move past simple legal
 probabilism. Chapter 5 shows that likelihood ratios, while useful in
 many ways, are still an unsatisfactory approach overall. The journey
 toward legal probabilism 1.02 is accomplished in Part III, Chapters 6
 through 10. Our analysis is informed by the following working
 hypothesis. An accusation of liability must be substantiated by
-providing a well-specified account -- a story or narrative -- of the
+providing a well-specified account---a story or narrative---of the
 alleged illegal act committed by the defendant. This account consists of
 several moving parts, each supported by different items of evidence. The
 defense may respond by attacking the supporting evidence, the internal
@@ -325,7 +327,7 @@ think holistically about the evidence, say in terms of coherent stories
 or explanations, without assessing the evidence by discrete applications
 of Bayes' theorem or likelihood ratios; second, different pieces of
 evidence interact in complex relationships, such as undercutting,
-rebutting, converging, corroborating evidence. We show that Bayesian
+rebutting, converging, or corroborating evidence. We show that Bayesian
 networks constitute the formal machinery necessary for developing a more
 sophisticated legal probabilism that is able to capture these phenomena.
 The key idea is that the coherence of a story as well as conflicts
@@ -369,21 +371,22 @@ evidential support of the competing stories.
 
 \textbf{Chapter 7} focuses on Vlek's story node approach as an account
 of coherence. The chapter contains a critical argument followed by a
-positive proposal. We show that adding a story node by fiat -- without
+positive proposal. We show that adding a story node by fiat---without
 any good reason for supposing that the different parts of the story are
-connected other than being part of one story -- introduces unnecessary
+connected other than being part of one story---introduces unnecessary
 probabilistic dependencies between the elements of a story. In addition,
 the story node approach is overly simplistic as an account of coherence
 and fails to engage with the rich philosophical literature on the topic.
 After the critical argument, the chapter articulates a more adequate
-probabilistic account of coherence. Instead of adding a story node, we
-show that it is more appropriate to assess the dependence between the
-different parts of a story on a case-by-case basis and build the
-Bayesian network accordingly. We then define a formal notion of `story
-coherence' that reflects properties of the Bayesian network used to
-model the evidence. We show that our formal notion of coherence
-addresses the objections against probabilistic accounts of coherence in
-the philosophical literature.
+probabilistic account of coherence.
+\todo{This sentence is too vague in its positive part:} Instead of
+adding a story node, we show that it is more appropriate to assess the
+dependence between the different parts of a story on a case-by-case
+basis and build the Bayesian network accordingly. We then define a
+formal notion of `story coherence' that reflects properties of the
+Bayesian network used to model the evidence. We show that our formal
+notion of coherence addresses the objections against probabilistic
+accounts of coherence in the philosophical literature.
 \todo{M: ANYTHING ELSE TO DESCRIBE THE POSITIVE ACCOUNT?}
 
 \textbf{Chapter 8} focuses on conflicts between pieces of evidence.
@@ -394,7 +397,7 @@ complex adversarial dialectic that takes place in a trial could be
 modeled by averaging different Bayesian networks (Fenton) or postulating
 relationships of incompatibility between different story nodes (Vlek).
 We need an account of more fine-grained notions, such as undercutting
-and rebutting evidence, and more generally we need an accounf of how
+and rebutting evidence, and more generally we need an account of how
 cross-examimation operates at trial. What cross-examination often
 accomplishes is not so much the creation of an alternative story, but
 rather, the reinterpretation of an existing story by supplying
@@ -416,10 +419,10 @@ difficulties of exisisting accounts.
 \todo{M: ANYTHING ELSE TO DESCRIBE THE POSITIVE ACCOUNT?}
 
 \textbf{Chapter 10} draws some general morals after comparing legal
-probabilism 1.02 -- as fomulated in the previous two chapters -- to
-other accounts of judicial fact-finding, in particular, argumentation
-theory and relative plausibility. Argumentation theory is well suited to
-model conflicts between evidence, but cannot easily model the fact that
+probabilism 1.02---as fomulated in the previous two chapters---to other
+accounts of judicial fact-finding, in particular, argumentation theory
+and relative plausibility. Argumentation theory is well suited to model
+conflicts between evidence, but cannot easily model the fact that
 evidence may conflict more or less strongly with other evidence. Unlike
 argumentation theory, legal probabilism 1.02 offers an account of
 evidential support, conflict and convergence that captures how these
@@ -443,19 +446,19 @@ posterior probability of a hypothesis given the evidence or the
 likelihood ratio. Legal probabilism 1.02, however, offers a richer
 account. In it, evidential support also depends on the degree of
 specificity and coherence of the story put forward, and the extent to
-which the supporting evidence withstands objections. These features --
-specificity and coherence, as well as resistance to objections -- can
-serve to formulate decision criteria that are not unidimensional
-thresholds. This point is discussed more extensively in the next part of
-the book.
+which the supporting evidence withstands objections. These
+features---specificity and coherence, as well as resistance to
+objections---can serve to formulate decision criteria that are not
+unidimensional thresholds. This point is discussed more extensively in
+the next part of the book.
 
-\vspace{3mm}
+\vspace{3mm} \noindent
+\textbf{Part IV - Decision-making}
 
-\noindent \textbf{Part IV - Decision-making}
-
-\noindent The third part of the book examines trial decision-making,
-specifically, to what extent standards of proof such as `preponderance
-of the evidence' and `proof beyond a reasonable doubt' can be understood
+\noindent
+The third part of the book examines trial decision-making, specifically,
+to what extent standards of proof such as `preponderance of the
+evidence' and `proof beyond a reasonable doubt' can be understood
 through the lenses of probability theory. There has been a spur of
 research arguing that legal probabilism is unfit to model standards of
 proof. But this research often holds a narrow view of legal probabilism.
@@ -476,45 +479,46 @@ criteria: the probability of liability, the specificity and coherence of
 the accusatory story, the comprehensiveness of the supporting evidence
 and its ability to withstand objections. In the following chapters, we
 show that our proposal outperforms the comparative strategy and the
-likelihood ratio strategy. We emphasize that these criteria --
-probability, specificity, etc. -- can be modeled using Bayesian
-networks. So our proposal lies within the confines of legal probabilism,
-though not the narrow version its critics have in mind.
+likelihood ratio strategy. We emphasize that these
+criteria---probability, specificity, etc. -- can be modeled using
+Bayesian networks. So our proposal lies within the confines of legal
+probabilism, though not the narrow version its critics have in mind.
 
 \textbf{Chapter 12} tackles the puzzles of naked statistical evidence.
 This is a topic of enormous scholarly attention in the recent
 philosophical literature. Our solution rests on two premises. First, an
 accusation of liability should be substantiated by a well-specified
-account -- or story, narrative -- whose moving parts are each supported
-by adequate evidence. In cases of naked statistical evidence, the
+account---or story, narrative---whose moving parts are each supported by
+adequate evidence. In cases of naked statistical evidence, the
 probability of liability is high, but the specificity of the
 accompanying narrative is suspiciously low. The second premise is that
 the supporting evidence should typically be `causally grounded'. This
 grounding contributes to a well-specified story and is achieved during
 cross-examination by eliciting additional information about the relation
-between the evidence and the alleged facts -- for example, information
-about the visibility conditions; the academic credential of an expert
-witness; the chain of custody of a document. Interestingly, naked
-statistical evidence blocks cross-examination because no undercutting
-evidence can in principle be brought against it.
+between the evidence and the alleged
+\todo{please remember to use dashes like this} facts---for example,
+information about the visibility conditions; the academic credential of
+an expert witness; the chain of custody of a document. Interestingly,
+naked statistical evidence blocks cross-examination because no
+undercutting evidence can in principle be brought against it.
 
 \textbf{Chapter 13} tackles another central problem for legal
 probabilism, the difficulty with conjunction. We first provide a
 detailed argument for why previous attempts in the literature on legal
-probabilism have failed. We focus on the likelihood ratio approach by
+probabilism have failed, focusing on the likelihood ratio approach by
 Dawid and the comparative strategy by Cheng. Our proposal follows the
 holistic approach by Allen and Pardo. As noted already, our working
-hypothesis is that the prosecution (or the plainitiffi in a civil trial)
+hypothesis is that the prosecution (or the plainitiff in a civil trial)
 should aim to establish a well-specified accusatory narrative whose
 moving parts are supported by adequate evidence. Once the prosecution
-has accomplished that -- and its case withstands criticism -- each
-element of the accusation is estalished to the required standard if and
-only if the conjunction of these elements (that is, the story as a
-whole) is estalished to the required standard. So long as legal
-probabilism can offer an account of evidenetial support that is
-sensitive to holistic notions such as coherence and specificity, as well
-as argument-based notions such as resistance to objections, legal
-probabilism can address the difficulty with conjunction.
+has accomplished that---and its case withstands criticism---each element
+of the accusation is estalished to the required standard if and only if
+the conjunction of these elements (that is, the story as a whole) is
+estalished to the required standard. So long as legal probabilism can
+offer an account of evidenetial support that is sensitive to holistic
+notions such as coherence and specificity, as well as argument-based
+notions such as resistance to objections, legal probabilism can address
+the difficulty with conjunction.
 \todo{M: THIS MIGHT NEED SOME WORK. WHAT TO ADD?}
 
 \textbf{Chapter 14} compares our probabilistic account of
@@ -526,21 +530,21 @@ This point applies to foundeherentism (Hack), normic support (Smith),
 argumentation theory (Sartor and Prakken) and to some extent relative
 plausibility (Allen and Pardo). The second criticism we make is that
 other accounts are engaged with what we might call `epistemology
-fetichism' -- that is, they borrow ideas that are popular in
-contemporary analytic epistemology and force them onto legal-decision
-making. This criticism applies in particular to knowledge accounts of
-legal proof.
+fetichism'---that is, they borrow ideas that are popular in contemporary
+analytic epistemology and force them onto legal-decision making. This
+criticism applies in particular to knowledge accounts of legal
+proof.\todo{How do we avoid probability fetishism though, one might ask?}
 
-\vspace{3mm}
+\vspace{3mm} \noindent
+\textbf{Part V - Accuracy and Fairness}
 
-\noindent \textbf{Part V - Accuracy and Fairness}
-
-\noindent Even if one did not agree that legal probabilism as we have
-articulated it is helpful for understanding evidence assessment and
-decision-making at trial, it can still play an analytical role in
-theorizing about trial decisions The fourth part of the book illustrates
-this point by discussing two important legaal values that should inform
-trial proceedings: accuracy and fairness.
+\noindent
+Even if one did not agree that legal probabilism as we have articulated
+it is helpful for understanding evidence assessment and decision-making
+at trial, it can still play an analytical role in theorizing about trial
+decisions The fourth part of the book illustrates this point by
+discussing two important legaal values that should inform trial
+proceedings: accuracy and fairness.
 
 \textbf{Chapter 15} DESCRIPTION. GENERAL TREATMENT OF WHAT VALUES SHOULD
 INFORM AND GUIDE TRIAL DECISIONS, SUCH AS FAIRNESS, ACCURACY,
@@ -548,15 +552,16 @@ JUSTIFICATION, PUBLIC ANSWERABILITY, DETERRENCE, RESPECT, HUMANITY, ETC.
 
 \textbf{Chapter 16} examines what it means for trial decisions to be
 accurate. Evene though many hold that trial decisions should be
-accurate, this claim leaves open what we mean by `that.'accuracy' There
-are in fact several distinct ways to understand accuracy in trial
-decisions, and probability theory offers a language to formulate them.
-Accuracy can be understood, among other things, as predictive accuracy
-or diagnostic accuracy. The former is the probability that if the
-defedant is found (not) liable at trial, the defendant is actually (not)
-liabile; the latter is the probability that if the defendant is (not)
-liable, the defendant would (not) be found liable at trial. The two
-notions are related but they are not equivalent. Distinguishing them has
+accurate, this claim leaves open what we mean by `accuracy' There are in
+fact several distinct ways to understand accuracy in trial decisions,
+and probability theory offers a language to formulate them.
+\todo{As I said, this paragraph seems too hasty:} Accuracy can be
+understood, among other things, as predictive accuracy or diagnostic
+accuracy. The former is the probability that if the defedant is found
+(not) liable at trial, the defendant is actually (not) liable; the
+latter is the probability that if the defendant is (not) liable, the
+defendant would (not) be found liable at trial. The two notions are
+related but they are not equivalent. Distinguishing them has
 implications for how we should understand standards of proof. We argue
 that diagnostic accuracy, rather than predictive accuracy, is the most
 adequate for trial decisions.
@@ -580,9 +585,10 @@ distributed unfairly via structural inequalities in society.
 \textbf{Chapter 18} draws some conclusions and points to open problems
 for legal probabilism. \todo{M: ANYTHING TO ADD HERE?}
 
-\vspace{3mm}
+\todo{Question: don't we plan to have a chapter on the priors?}
 
-\noindent \textbf{Table of contents}
+\vspace{3mm} \noindent
+\textbf{Table of contents}
 
 \renewcommand{\labelenumi}{\Roman{enumi}}
 \renewcommand{\labelenumii}{\arabic{enumii}}
@@ -801,9 +807,8 @@ for legal probabilism. \todo{M: ANYTHING TO ADD HERE?}
 \end{enumerate}
 \end{enumerate}
 
-\hypertarget{outstanding-features-of-the-book}{%
 \subsection{Outstanding Features of the
-Book}\label{outstanding-features-of-the-book}}
+Book}\label{outstanding-features-of-the-book}
 
 \begin{itemize}
 \item
@@ -836,8 +841,7 @@ Book}\label{outstanding-features-of-the-book}}
 
 \todo{what else?}
 
-\hypertarget{apparatus}{%
-\subsection{Apparatus}\label{apparatus}}
+\subsection{Apparatus}\label{apparatus}
 
 \footnotesize a. Will the book include photographs, line drawings,
 cases, questions, problems, glossaries, bibliography, references,
@@ -845,7 +849,7 @@ appendices, etc.?
 
 \vspace{2mm}
 
-\normalsize
+\normalsize 
 
 Yes, the book will contain various plots, either of Bayesian networks,
 or some other data visualisations generated by \texttt{ggplot2}. The
@@ -862,8 +866,7 @@ solutions, answers, workbook, anthology, or other material.)
 The book will be accompanied by an online-only appendix detailing the
 use of the \texttt{R} code in the book and the source code we used.
 
-\hypertarget{competition}{%
-\subsection{Competition}\label{competition}}
+\subsection{Competition}\label{competition}
 
 \footnotesize a. Consider the existing books in this field and discuss
 specifically their strengths and weaknesses. Spell out how your book
@@ -871,7 +874,7 @@ will be similar to, as well as different from, competing works.
 
 \todo{For now, let's list competition, and discuss key differences}
 
-\normalsize
+\normalsize 
 
 Three types: BNs in the law, Philosophy \& law, Statistics in law and
 forensics
@@ -886,6 +889,8 @@ forensics
 \item
   ``Bayesian Networks With Examples in R'' by Marco Scutari and
   Jean-Baptiste Denis.
+\item
+  Bayesian data analysis, Taroni
 \item
   Alex Stein, foundations of evidence law
 \item
@@ -919,11 +924,9 @@ forensics
   due, and show how you can do it better.
 \end{enumerate}
 
-\hypertarget{market-considerations}{%
-\section{Market Considerations}\label{market-considerations}}
+\section{Market Considerations}\label{market-considerations}
 
-\hypertarget{the-primary-market}{%
-\subsection{The Primary Market}\label{the-primary-market}}
+\subsection{The Primary Market}\label{the-primary-market}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -943,8 +946,7 @@ forensics
   reader is your book intended?
 \end{enumerate}
 
-\hypertarget{status-of-the-work}{%
-\section{Status of the Work}\label{status-of-the-work}}
+\section{Status of the Work}\label{status-of-the-work}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -996,8 +998,7 @@ forensics
   protected by copyright notice on the material.)
 \end{enumerate}
 
-\hypertarget{sample-chapters}{%
-\section{Sample Chapters}\label{sample-chapters}}
+\section{Sample Chapters}\label{sample-chapters}
 
 Select one or two chapters of the manuscript that are an integral part
 of the book. They should be those you consider the best-written ones,
@@ -1014,8 +1015,7 @@ Please do not bind your manuscript, as we will have to unbind it in
 order to make photocopies for reviewers. Also be sure all pages are
 numbered either consecutively or double-numbered by chapter.
 
-\hypertarget{reviews}{%
-\section{Reviews}\label{reviews}}
+\section{Reviews}\label{reviews}
 
 If we are interested in your project, we will commission outside
 reviewers to read and evaluate your proposal. We will, of course, obtain
@@ -1027,16 +1027,14 @@ scholars to act as reviewers themselves, we may ask them for their
 suggestions for peer readers. Naturally, we do not reveal the names of
 reviewers without their permission.
 
-\hypertarget{author-background}{%
-\section{Author Background}\label{author-background}}
+\section{Author Background}\label{author-background}
 
 Please include a current CV or brief biography of your writing,
 teaching, and/or educational background and experience. Be sure to list
 any books that you have previously published, and any other information
 about yourself on why you are qualified to write this book.
 
-\hypertarget{response-time}{%
-\section{Response Time}\label{response-time}}
+\section{Response Time}\label{response-time}
 
 Please allow at least 6-10 weeks for the manuscript proposal evaluation
 and review process. We will contact you as soon as we have had a chance
