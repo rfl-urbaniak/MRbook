@@ -1027,20 +1027,67 @@ of various ongoing scientific investigations.
 
 The underlying probabilistic idea is  that the level of  confirmation of a theory ($T$)  by a piece of evidence ($E$) is a function of an agent’s  degrees of belief. The first stab might be, let's simply identify the confirmation level with $\pr{T \vert E}$. This, however, is way too quick. Multiple factors come into the assessment of this conditional probability, and two agents can agree on the extent to which $E$ confirms $T$ without agreeing on the posterior probability of $T$ (identified with $\pr{T \vert E}$), because the agents might disagree about the prior probability of $T$ and this might have impact on the posterior.
 
-However, there are some clear connections to the probabilities mentioned in the previous passage. One usual assumption [@sprenger2019bayesian]---called the \emph{prior-posterior dependence} is that the level of confirmation is to be a continuous function of $\pr{T}$ and $\pr{E\vert T}$ which is  non-decreasing in the first argument and non-increasing in the second argument. That is, increasing the prior,   should not lower the confirmation level, and increasing the likelihood shold not increase the confirmation level.
+However, there are some clear connections to the probabilities mentioned in the previous passage. One usual assumption [@sprenger2019bayesian]---called the \emph{prior-posterior dependence} is that the level of confirmation is to be a continuous function of $\pr{T}$ and $\pr{E\vert T}$ which is  non-decreasing in the first argument and non-increasing in the second argument. That is, increasing the prior,   should not lower the confirmation level, and increasing the likelihood shold not increase the confirmation level.^[Some formulations [@crupi2015confirmation] are a bit more general and include background knowledge $K$. In that setting, the corresponding requirement is called \emph{Formality} and takes the confirmation to be a function of $\pr{H \et E \vert K}, \pr{H\vert K}$ and $\pr{E\vert K}$. For the sake of simplicity, we will suppress the reference to $K$, unless required by the context.]
 
-One consequence of this assumption is that confirmation of $T$ by $E$, $c(T,E)$ should track the posterior order-wise, that is $c(T,E)>c(T,E')$ just in case $\pr{T\vert E} > \pr{T\vert E'}$ even though $c(T,E)$ should not be identified with $\pr{T\vert E}$. 
+One consequence---called \emph{Final Probability Incrementality}--- of prior-posterior dependence is that confirmation of $T$ by $E$, $c(T,E)$ should track the posterior order-wise, that is $c(T,E)>c(T,E')$ just in case $\pr{T\vert E} > \pr{T\vert E'}$.
 
 Another requirement is that there should be a neutral point $n$ such that $E$ confirms (disconfirms) $T$ just in case $c(T,E)>n$ ($c(T,E)<n$) and is neutral exactly at $n$.  This is called the \emph{qualitative-quantitative bridge}.
 
-Yet another adequacy requirement is local equivalence. Theories that are logically equivalent given the evidence should receive equal confirmation from this evidence. Interestingly, all confirmation measures which satisfy prior-posterior dependence, qualitative-quantitative bridge and local equivalence are ordinally equivalent with the posterior probability $\pr{H\vert E}$. Measures that are so ordinally equivalent are said to explicate confirmation as \emph{firmness of belief}, especially if in the probabilities used implicitly rely on total available evidence.
-
-However, another notion of confirmation seems often at play. For instance, even if the posterior $T$ is low, one might still think that a given experiment still speaks strongly in favor of $T$. And relatedly, $E$ can lower the posterior of $T$ while still leading the posterior to be sufficiently high for the firmness confirmation measure to be above the neutrality threshold.  
-
-For this reason, following the second edition of [@carnap1962logical] it is customary to distinguish another notion in the vincinity: confirmation  as increase in firmness of belief. Here, the idea is rather than confirmation is positive (negative) if the posterior of $H$ is higher (lower) than the prior, and neutral otherwise. 
+Yet another  requirement is local equivalence. Theories that are logically equivalent given the evidence should receive equal confirmation from this evidence. Interestingly, all confirmation measures which satisfy prior-posterior dependence, qualitative-quantitative bridge and local equivalence are strictly increasing functions of $\pr{H \vert E}$. Such measures are said to explicate confirmation as \emph{firmness of belief}. Moreover, all functions satisfiying these three conditions are ordinally equivalent. 
 
 
 
+However, another notion of confirmation seems often at play. For instance, even if the posterior $T$ is low, one might still think that a given experiment still speaks strongly in favor of $T$. And relatedly, $E$ can lower the posterior of $T$ while still leading the posterior to be sufficiently high for the firmness confirmation measure to be above the neutrality threshold.  Another feature of confirmation as firmness is that is, in this sense, $T$ confirms $H$, then for any $H'$ that is excluded by $H$, $T$ disconfirms $H'$.  But now think of the small town murder scenario discussed in Section XXXX\todo{ref}: the fact that the suspect was seen in town seems to support both the prosecution hypothesis that he committed the murder, and the defense hypothesis, that he was in town to visit his mother. Confirmation as firmness cannot capture such intuitions, as relevance cannot be captured as a function of the posterior alone.
+
+
+
+For such reasons, following the second edition of [@carnap1962logical], it is customary to distinguish another notion in the vincinity: confirmation  as increase in firmness of belief. If we replace local equivalence with tautological equivalence $c(T, \top) = c(T', \top)$, where $\top$ is a logical tautology---the idea being that hypotheses are equally supported by empty evidence---we end up with another class of confirmation measures, those meant to capture probabilistic relevance. On this approach, $E$ confirms (disconfirms) $T$ just in case $\pr{H \vert E} > \pr{H}$ ($\pr{H \vert E} < \pr{H}$).
+
+
+
+
+
+
+
+
+Here is a list of standard confirmation measures available on the market [@sprenger2019bayesian], normalized so that they all have neutral points at 0:
+
+\begin{align}
+\tag{Difference}  D(T,E) & = \pr{T\vert E} - \pr{T}\\
+\tag{Log-ratio}  R(T,E) &  = log\left(\frac{\pr{T\vert E}}{\pr{T}} \right) \\
+\tag{Log-likelihood}   L(T,E) & = log\left(\frac{\pr{E \vert T}}{\pr{E \vert \n T}} \right)\\
+\tag{Kemeny-Oppenheim}  K(T,E) & = \frac{\pr{E\vert T} - \pr{E \vert \n T}}{\pr{E \vert T} + \pr{E \vert \n T}} \\
+\tag{Generalized entailment}  Z(T,E) & = \begin{cases}
+\frac{\pr{T\vert E - \pr{T}}}{1-\pr{T}} & \mbox{ if } \pr{T \vert E} \geq \pr{T}\\
+\frac{\pr{T\vert E - \pr{T}}}{\pr{T}} & \mbox{ if } \pr{T \vert E} < \pr{T}
+\end{cases} \\
+\tag{Christensen-Joyce} S(T,E) & = \pr{T \vert E} - \pr{T \vert \n E} \\
+\tag{Carnap}  C(T,E) & = \pr{E}(\pr{T\vert E} - \pr{T})\\
+\tag{Rips} R(T\vert E) & = 1 - \frac{\pr{\n T\vert E}}{\pr{-T}}
+\end{align}
+
+- (Log-likelihood), our good old likelihood ratio, and (Kemeny–Oppenheim) are ordinally equivalent (and no other pair on the list is).
+
+- Final probability incrementality with prior-posterior dependence exclude (Carnap) and (Christensen-Joyce).
+
+- (Carnap) and (Log-ratio) have the unintuitive consequence that $C(T,E)= C(E,T)$.
+
+- (Difference), (Generalized entailment), (Log-ratio), (Carnap) and (Rips) depend on the prior of $T$.
+
+
+Further grouping and assessment of the confirmation measures for a given puprose is falicitated by the following facts:
+
+- One might require that $E$ always confirms the disjunction of excluding hypotheses more than one of them just in case it also confirms the other one (\emph{disjunction of alternative hypotheses}). This can happen only if the confirmation measure is a strictly increasing function of the difference measure.  Whether this is an intuitive requirement in our context is debatable. After all,  'the suspect is the source or the suspect's brother is the source' is entailed by 'the suspect is the source' \todo{finish example? think again?}
+
+
+- One might require that confirmation should track likelihood---$c(T,E) > c(T,E')$ (\emph{Law of likelihood})---just in case $\pr{E\vert T} > \pr{E'\vert T}$. This can happen only if the measure is a strictly increasing function of the Bayes factor. 
+
+- One might require that if $E$ and $E'$ are conditionally independent given $T$ and $\neg T$, then $c(T,E)$ should be identical with $c(T,E\vert E')$ (the confirmation obtained when $E'$ is added to the background knowledge). This condition is called \emph{modularity}. This condition holds only if a confirmation measure is a strictly increasing function of the likelihood ratio. 
+
+
+- You might wish that confirmation be \emph{contrapositive} ($c(T,E) = c(\n E, \n T))$ and \emph{commutative} ($c(H,E) = c(E,H)$). The only measures that satisfy both are relative distance measures, that is, they are strictly increasing functions of the generalized entailment measure.
+
+Moreover, if you require strict additivity: $c(H, E\et E') = c(H, E) + c(H, E'\vert E)$, the only measure that satisfisfies the disjunction of alternative hypotheses is the difference measure, the only measure that satisfies the law of likelihood is the log-ratio measure, and the only one that satisfies modularity is the log-likelihood measure. 
 
 
 
