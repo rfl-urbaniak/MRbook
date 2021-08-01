@@ -1083,7 +1083,7 @@ in favor of a hypothesis $H$ should not be understood as a function of the condi
  
  \noindent
 Although Dawid does not provide a proof, his 
-strategy is clear: replace posterior probabilities with probabilistic measures of evidential support, such as the Bayes factor or the likelihood ratio. Does this strategy work?  By using the theory of Bayesian networks, we will first verify under what conditions Dawid's claim holds. Next, we will show -- perhpas surprisingly -- that the difficulty about conjuntion will not go away even after switching from posterior probabilities to measures of evidential support. 
+strategy is clear: replace posterior probabilities with probabilistic measures of evidential support, such as the Bayes factor or the likelihood ratio. Does this strategy work?  By using the theory of Bayesian networks, we will first verify under what conditions Dawid's claim holds. Next, we will show---perhpas surprisingly---that the difficulty about conjuntion will not go away even after switching from posterior probabilities to measures of evidential support. 
 
 
 ## Bayes factor threshold
@@ -1107,12 +1107,10 @@ to degree $s_A$ and $s_B$ respectively, that is, $\pr{a | A}/\pr{a}=s_A$ and
 $\pr{b | B}/\pr{b}=s_B$, where both $s_A$ and $s_B$ are greater than one. 
 Does the combined evidence $a \wedge b$ provide at least as much support 
 in favor of the combined claim $A \wedge B$ as the individual support by $a$ and $b$ 
-in favor of $A$ and $B$? The combined support should be 
-measured by the combined Bayes factor $\pr{a \wedge b| A\wedge B}/\pr{a \wedge b}$, and the latter,
-under suitable independence assumptions, equals the product of the individual 
-supports $s_{A}$ and $s_{B}$. By the probability calculus,
-
-
+in favor of $A$ and $B$ considered separately? The combined support should be 
+measured by the combined Bayes factor $\pr{a \wedge b| A\wedge B}/\pr{a \wedge b}$.
+The latter, under suitable independence assumptions, equals the product of the individual 
+supports $s_{A}$ and $s_{B}$.\footnote{By the probability calculus,
  \begin{align*}
 \frac{\pr{a \wedge b| A\wedge B}}{\pr{a \wedge b}} & =  \frac{\pr{A \et B| a\wedge b}}{\pr{A \et B}}\\
 & =  \frac{\frac{ \pr{A \et B \et a \wedge b }}{\pr{a \et b}}}{\pr{A \et B}} \\ 
@@ -1121,72 +1119,31 @@ supports $s_{A}$ and $s_{B}$. By the probability calculus,
 & =  \frac{\pr{a |A}}{\pr{a}} \times \frac{\pr{b |B}}{\pr{b}} \\
 s_{AB}& =  s_{A}\times s_{B} 
  \end{align*}
- \todo{To properly list all the independence assumptions you need to explicity rewrite in terms of chain rule and then eliminate explicitly.}
 
-<!--
-\begin{center}
-\begin{figure}[h!]
-\begin{tikzpicture}[
-  node distance=1cm and 1cm,
-  mynode/.style={draw,ellipse,text width=1cm,align=center}
-]
-\node[mynode] (h1) {$A$};
-\node[mynode,below right =of h1] (h3) {$A \wedge B$};
-\node[mynode,above right =of h3] (h2) {$B$};
-\node[mynode,below  =of h1] (e1) {$a$};
-\node[mynode,below  =of h2] (e2) {$b$};
-\path 
-(h3) edge[-latex] (h1)
-(h3) edge[-latex] (h2)
-(h1) edge[-latex] (e1)
-(h2) edge[-latex] (e2); 
-\end{tikzpicture}
-\caption{Bayesian network for two pieces of evidence and a combined hypothesis (second option).}
-\label{network-conjunction-alternative}
-\end{figure}
-\end{center}
--->
-
-
- \noindent 
-Since $s_{AB} =  s_{A}\times s_{B}$, the combined support $s_{AB}$ will always be higher 
-than the individual support so long as $s_{A}$ and $s_{B}$ are greater than one. 
-The step marked by the asterisk in the derivation above rests on a number of independence assumptions codified in the Bayesian network in Figure \ref{network-conjunction} (top).
-\todo{How about without independence? Can we find a counterexample? M: I dropped independence of hypotheses in Figure 1 (bottom). Check.} The structure of the nextwork is rather natural because each piece of evidence bears on its own hypothesis. 
-One might wonder, however, why the arrows go from $A$ and $B$ into the node representing the conjunction $A\wedge B$. This setting ensures that $A$ and $B$ are probabilistically independent, an assumption often made in the formulation of the conjunction paradox.\footnote{Another reason why the arrow is incoming into node $A\wedge B$ is that this setting can capture the meaning of the conjunction. The constraint that, for the conjunction to be true, both $A$ and $B$ have to be true, can be defined using conditional probability tables.} However, to drop the independence of $A$ and $B$, an arrow can be drawn between them. The resulting Bayesian network is depicted in Figure \ref{network-conjunction} (bottom). Given this network, the following holds:
-
-
+\noindent
+The step marked by the asterisk rests on the 
+independence assumptions codified in the Bayesian network 
+in Figure \ref{network-conjunction} (top). 
+This result can be generalized 
+beyond two pieces of evidence and holds generally.} That is, 
  \begin{align*}
-\frac{\pr{a \wedge b| A\wedge B}}{\pr{a \wedge b}} & =  \frac{\pr{A \et B| a\wedge b}}{\pr{A \et B}}\\
-& =  \frac{\frac{ \pr{A \et B \et a \wedge b }}{\pr{a \et b}}}{\pr{A \et B}} \\ 
-& =  \frac{\frac{ \pr{A} \times \pr{B|A} \times \pr{a | A \wedge B} \times \pr{b | A \wedge B \wedge a} }{\pr{a} \times \pr{b | a}}}{\pr{A \et B}} \\ 
-& =^*  \frac{\frac{\pr{A} \times \pr{B|A} \times \pr{a | A} \times \pr{b | B}}{\pr{a} \times \pr{b |a}}}{\pr{A} \times \pr{B | A}} \\ 
-& =  \frac{\pr{a |A}}{\pr{a}} \times \frac{\pr{b |B}}{\pr{b|a}} \\
-s^{'}_{AB}& =  s_{A}\times s^{'}_{B} 
+\frac{\pr{a \wedge b| A\wedge B}}{\pr{a \wedge b}} & =  \frac{\pr{a |A}}{\pr{a}} \times \frac{\pr{b |B}}{\pr{b}} \\
+s_{AB}& =  s_{A}\times s_{B}.
  \end{align*}
 
  \noindent 
-Note that factor $s_{B}= \frac{\pr{b |B}}{\pr{b}}$ was replaced by
-$s^{'}_{B}=\frac{\pr{b |B}}{\pr{b|a}}$. Arguably, $s^{'}_{B}$ is usually lower than $s_{B}$ 
-because $\pr{b | a} > \pr{b}$ (assuming, at least, $a$ and $b$ are convergent pieces 
-of evidence; SEE DISCUSSION IN EARLIER CHAPTERS). But $s^{'}_{B}$ should 
-still be greater than one since $b$, by assumption, positively 
-supports $B$ even in combination with $a$.\footnote{Note that 
-$\frac{\pr{b |B}}{\pr{b|a}}=\frac{\pr{b |B \wedge a}}{\pr{b|a}}$ 
-(by the probabilistic independence of $a$ and $b$ given $B$). 
-So the claim that $\frac{\pr{b |B}}{\pr{b|a}}>1$ is 
-equivalent $\pr{B | b \wedge a}> \pr{B|a}$ since by Bayes' theorem 
-$\pr{B | b \wedge a} = \frac{\pr{b |B \wedge a}}{\pr{b|a}} \times \pr{B|a}$.
-Presumably, evidence $b$ should still raise the probability of $B$ 
-even in cojunction with $a$, or else $b$ would be useless evidence. \textbf{M: THIS CLAIM NEEDS 
-TO BE PROVEN MORE RIGOROUSLY BUT I THINK IT'S CORRECT. BASIC INTUITION IS THAT EVIDENCE a 
-RAISES THE PROBABILITY OF CLAIM A (OR B) AND THEN EVIDENCE 
-b FURTHER RAISES THE PROBABILITY OF CLAIM A (OR B). THIS HAPPENS WHEN WE HAVE CONVERGENT 
-EVIDENCE.}}
-Thus, the combined support $s_{AB}$ or $s^{'}_{AB}$  should execeed the 
-support supplied by the individual 
-pieces of evidence whether or not $A$ and $A$ are probabilistically independent. This result can be generalized 
-beyond two pieces of evidence and holds generally.\footnote{M: DOES THIS NEED A FORMAL PROOF OR IS GOOD ENOUGH?} 
+ Thus, the combined support $s_{AB}$ will always be higher 
+than the individual support so long as $s_{A}$ and 
+$s_{B}$ are greater than one. This vindicates Dawid's claim that  `the support supplied 
+by the conjunction of several independent testimonies exceeds 
+that supplied by any of its constituents'.
+
+Crucially, if we rely on the Bayes factor as 
+ a measure of evidential support, Dawid's claim holds in 
+ the class of cases characterized by the relationships of probabilistic 
+ independence encoded in the  Bayesian network in Figure \ref{network-conjunction} (top). 
+The structure of the network is rather natural because each piece of evidence bears on its hypothesis and is probabilistically independent conditional on one of the hypotheses. This captures the fact that $a$ and $b$ are independent lines of evidence, each supporting their respective hypothesis (SEE DISCUSSION IN EARLIER CHAPTERS).  One might wonder, however, why the arrows go from $A$ and $B$ into the node representing the conjunction $A\wedge B$. This arrangement ensures that $A$ and $B$ are probabilistically independent, an assumption often made in the formulation of the conjunction paradox.\footnote{Another reason why the arrow is incoming into node $A\wedge B$ is that this setting can capture the meaning of the conjunction. The constraint that, for the conjunction to be true, both $A$ and $B$ have to be true, can be defined using conditional probability tables.}
+
 
 
 \begin{center}
@@ -1228,24 +1185,63 @@ beyond two pieces of evidence and holds generally.\footnote{M: DOES THIS NEED A 
 \end{figure}
 \end{center}
 
+ But what happens if $A$ and $B$ are not probabilistically independent? 
+To drop independence, an arrow can be drawn between the variables representing the two claims. 
+The resulting Bayesian network is depicted in Figure \ref{network-conjunction} (bottom). 
+Given this network, the following holds:
 
-The argument so far vindicates Dawid's claim that  `the support supplied by the conjunction of several independent 
- testimonies exceeds that supplied by any of its constituents'. Relying on the Bayes factor as 
- a measure of evidential support, Dawid's claim holds in 
- a sufficiently large class of cases, characterized by the relationships of probabilistic independence encoded in the two Bayesian networks in Figure \ref{network-conjunction}. Both networks capture the fact that $a$ and $b$ are independent lines 
- of evidence that support claim $A$ and $B$ respectively. The only difference between the two networks 
- is whether $A$ and $B$ should be thought as probabilistically independent or not. 
+ \begin{align*}
+\frac{\pr{a \wedge b| A\wedge B}}{\pr{a \wedge b}} & =  \frac{\pr{a |A}}{\pr{a}} \times \frac{\pr{b |B}}{\pr{b|a}} \\
+s^{'}_{AB}& =  s_{A}\times s^{'}_{B} 
+ \end{align*}
+
+\noindent 
+Note that factor $s_{B}= \frac{\pr{b |B}}{\pr{b}}$ was replaced by
+$s^{'}_{B}=\frac{\pr{b |B}}{\pr{b|a}}$.\footnote{Given the second Bayesian network, 
+$b$ need not be probabilistically independent of $a$, and thus there is no guarantee that 
+$\pr{b \vert a}=\pr{a}$.} Now, $s^{'}_{B}$ is usually lower than $s_{B}$ 
+because $\pr{b | a} > \pr{b}$ (assuming, at least, $a$ and $b$ are convergent pieces 
+of evidence; SEE DISCUSSION IN EARLIER CHAPTERS). At the same time, $s^{'}_{B}$ should 
+still be greater than one since $b$, by assumption, positively 
+supports $B$ even in combination with $a$.\footnote{Note that 
+$\frac{\pr{b |B}}{\pr{b|a}}=\frac{\pr{b |B \wedge a}}{\pr{b|a}}$ 
+(by the probabilistic independence of $a$ and $b$ given $B$). 
+So the claim that $\frac{\pr{b |B}}{\pr{b|a}}>1$ is 
+equivalent $\pr{B | b \wedge a}> \pr{B|a}$ since by Bayes' theorem 
+$\pr{B | b \wedge a} = \frac{\pr{b |B \wedge a}}{\pr{b|a}} \times \pr{B|a}$.
+Presumably, evidence $b$ should still raise the probability of $B$ 
+even in cojunction with $a$, or else $b$ would be useless evidence. \textbf{M: THIS CLAIM NEEDS 
+TO BE PROVEN MORE RIGOROUSLY BUT I THINK IT'S CORRECT. BASIC INTUITION IS THAT EVIDENCE a 
+RAISES THE PROBABILITY OF CLAIM A (OR B) AND THEN EVIDENCE 
+b FURTHER RAISES THE PROBABILITY OF CLAIM A (OR B). THIS HAPPENS WHEN WE HAVE CONVERGENT 
+EVIDENCE.}} Hence, $s^{'}_{AB}$ should still be greater than one provided $s_A$ and $S_B$ are both 
+greater than one, but it might not always exceed the support supplied by $s_A$ and $s_B$ individually. For suppose $s_A=2$ 
+and $s_B=3$, but $s^{'}_B=1.2$. Then, $s^{'}_{AB}=2\times 1.2=2.4$, which is below 
+the individual support $s_B$, but still above $s_A$.  In general, 
+Dawid's claim should be amended as follows. Even though the support supplied by the conjunction of several independent testimonies need not always exceed that supplied by any of its constituents, it is always at least as great as the smallest support supplied by its constituents.\footnote{DO WE NEED A PROOF OF THIS? THIS SHOULD BE CLEAR BY PLOTTING. IN PLITTING THIS, WE SHOULD ENSURE THAT BOTH BF ARE GREATER THAN ONE, THEN THE COMBINED ONE WILL BE GREATER THAN THE SMALLEST EVEN WHEN A AND B ARE DEPENDENT.}
+
+
+<!-- 
+Full derivation:
+ \begin{align*}
+\frac{\pr{a \wedge b| A\wedge B}}{\pr{a \wedge b}} & =  \frac{\pr{A \et B| a\wedge b}}{\pr{A \et B}}\\
+& =  \frac{\frac{ \pr{A \et B \et a \wedge b }}{\pr{a \et b}}}{\pr{A \et B}} \\ 
+& =  \frac{\frac{ \pr{A} \times \pr{B|A} \times \pr{a | A \wedge B} \times \pr{b | A \wedge B \wedge a} }{\pr{a} \times \pr{b | a}}}{\pr{A \et B}} \\ 
+& =^*  \frac{\frac{\pr{A} \times \pr{B|A} \times \pr{a | A} \times \pr{b | B}}{\pr{a} \times \pr{b |a}}}{\pr{A} \times \pr{B | A}} \\ 
+& =  \frac{\pr{a |A}}{\pr{a}} \times \frac{\pr{b |B}}{\pr{b|a}} \\
+s^{'}_{AB}& =  s_{A}\times s^{'}_{B} 
+ \end{align*}
+ -->
 
 If the combined support equals $s_{A}\times s_{B}$ or
-$s_{A}\times s^{'}_{B}$---where the individual support are all greater than one---does 
+$s_{A}\times s^{'}_{B}$, does 
 the difficulty about conjunction evaporate, as Dawid thought? 
 <!---To some extent 
 it does. The crux of the matter here is whether the conjunction of two or more claims 
  satisfies a given standard of proof just in case the individual conjuncts do. 
  --->
- One hurdle here is that, for the Bayes factor strategy to work, 
- the standard of proof should no longer be formalized as a posterior probability threshold, but instead as a threshold about the Bayes factor. In criminal trials, for example, the rule of decision would be: Guilt is proven beyond a reasonable doubt if and only if the evidential support in favor of $G$---as measured by the Bayes factor $\frac{\pr{E | G}}{\pr{E}}$---meets a suitably high threshold $t$. The threshold will no longer be a probability between 0% and 100%, but rather 
-a number somewhere above 1. The greater this number, the more stringent the standard of proof, for any value above one. The 
+ One hurdle here is that
+ the standard of proof would no longer be formalized as a posterior probability threshold, but instead as a threshold about the Bayes factor. The threshold would no longer be a probability between 0% and 100%, but rather a number somewhere above 1. The greater this number, the more stringent the standard of proof, for any value above one. In criminal trials, for example, the rule of decision would be: guilt is proven beyond a reasonable doubt if and only if the evidential support in favor of $G$---as measured by the Bayes factor $\frac{\pr{E | G}}{\pr{E}}$---meets a suitably high threshold $t$. The 
 obvious question at this point is, how do we identify the appropriate threshold?\todo{good question, will think about it, will need to take a look at "Bayesian Choice", also need to think about a counterexample}\footnote{QUESTION: CAN DECISION THEORY BE APPLIED TO THE BAYESIAN FACTOR OR IS IT ALWAYS ABOUT POSTERIOR PROBABILITIES? IF THERE IS NO DECISION THEORY APPLICABLE HERE, THAT WOULD BE A FURTHER DIFFICULTY.} We will not discuss this question for now. As it turns out, even if this question can be satisfactorily answered, this  approach gives rise to a complication that proves fatal. 
 
 
@@ -1259,8 +1255,9 @@ Guilt is proven beyond a reasonable doubt if and only if the evidential support 
  \noindent
 -->
 
-At issue here is whether the conjunction principle can be formalized in a plausible manner using Bayes factor. Unfortuantely, the answer to this question is negative. 
-To see why, first recall the conjunction principle, as stated earlier:
+At issue here is whether the conjunction principle can be formalized in 
+a plausible manner with the Bayes factor. Unfortuantely, the answer is negative. 
+To see why, first recall the conjunction principle:
  
  \[\text{S[$a, A$] and S[$b, B$] iff S[$a \wedge b, A\wedge B$]},\]
 
@@ -1272,52 +1269,49 @@ where $\text{S}[E, H]$ means that evidence $E$ supports hypothesis $H$ by standa
 \noindent
 The left-to-right direction---call it aggregation---is likely to hold for 
 any threhsold $t$ greater than one. As shown earlier, the combined evidential support is greater than 
-the individual evidential support because $\frac{\pr{a \et b | A \et B}}{\pr{a \et b}}$ 
-equals $\frac{\pr{a |A}}{\pr{a}} \times \frac{\pr{b |B}}{\pr{b}}$ (if A and B are independent) 
-or $\frac{\pr{a |A}}{\pr{a}} \times \frac{\pr{b |B}}{\pr{b \vert a}}$ (if A and B are dependent).
-Aggregation could not be justified using posterior probabilities $\pr{A | a}$ and $\pr{B | b}$. 
-So it is an advantage of the Bayes factor that it can justify 
+the individual evidential support 
+<!---
+because $\frac{\pr{a \et b | A \et B}}{\pr{a \et b}}$ 
+equals $\frac{\pr{a |A}}{\pr{a}} \times \frac{\pr{b |B}}{\pr{b}}$
+-->
+if A and B are independent, or greater than the smallest individual support 
+<!---or $\frac{\pr{a |A}}{\pr{a}} \times \frac{\pr{b |B}}{\pr{b \vert a}}$ -->
+if A and B are dependent. Aggregation could not be justified using posterior probabilities $\pr{A | a}$ and $\pr{B | b}$. So it is an advantage of the Bayes factor that it can justify 
 this direction of the conjunction principle. 
 
-However, the right-to-left direction---call it extrapolation---has now become problematic. 
+However, the right-to-left direction---call it distribution---has now become problematic. 
 For suppose the combined evidential support, $\frac{\pr{a \et b | A \et B}}{\pr{a \et b}}$, barely meets 
 the threshold. This implies that the individual support, say $\frac{\pr{a |A}}{\pr{a}}$, 
-would often be below the threshold unless $\frac{\pr{b |B}}{\pr{b}}=1$
-\todo{Not always true; just give a specific numerical counterexample. M: I added 'often'. Is this enough?} (which should not happen if $b$ positively supports $B$). So, curiously, there would be cases in which, even though the conjunction $A\et B$ is established to the desired standard of proof, the individual claims still fail to meet the standard. This is odd. More specifically, the following extrapolation principle fails in some cases:
+could be be below the threshold unless $\frac{\pr{b |B}}{\pr{b}}=1$
+\todo{Not always true; just give a specific numerical counterexample. M: I added 'often'. Is this enough?} (which should not happen if $b$ positively supports $B$). So, curiously, there would be cases in which, even though the conjunction $A\et B$ is established to the desired standard of proof, one of the individual claims  fails to meet the standard. This is odd. More specifically, the following distribution 
+principle fails in some cases:
 
-\[\text{If S[$a \wedge b, A\wedge B$], then S[$a, A$] and S[$b, B$].} \tag{EXT1}\]
+\[\text{If S[$a \wedge b, A\wedge B$], then S[$a, A$] and S[$b, B$].} \tag{DIS1}\]
 
 \noindent
-This principle might not be as essential as we think. 
-Since the evidence is not held constant, 
-the support supplied by $a\wedge b$ could be stronger than 
+Could this principle be rejected? Perhaps, it is not as essential as we thought at first. Since 
+the evidence is not held constant, the support supplied by $a\wedge b$ could be stronger than 
 that supplied by $a$ and $b$ individually. So even when the conjunction 
 $A \wedge B$ is established to the requisite standard given evidence 
 $a\wedge b$, it might still be that $A$ does not meet the requisite 
 standard (given $a$) nor does $B$ (given $b$). 
 
-But now consider a less controversial version of 
-extrapolation. If the evidence is held constant, 
-the extrapolation principle would become: 
+But consider a less controversial version, holding the evidence constant:
 
- \[\text{If S[$a \wedge b, A\wedge B$], then S[$a \wedge b, A$] and S[$b \wedge b, B$].} \tag{EXT2}\]
+ \[\text{If S[$a \wedge b, A\wedge B$], then S[$a \wedge b, A$] and S[$b \wedge b, B$].} \tag{DIS2}\]
 
 \noindent
-This principle is much harder to deny. That is, one would not want 
+This principle is harder to deny. That is, one would not want 
 to claim that, holding fixed evidence $a\wedge b$, establishing the conjunction 
 might not be enough for establishing one of the conjuncts. 
 One cannot be willing to assent to the 
 conjunction without being willing to assent to one of the conjuncts 
 against a fixed body of evidence. Certainly any formalization of the standard of proof should obey 
-the extrapolation principle (EXT2) above. 
-And yet, it is this very principle that we should deny if we understand 
-the standard of proof using the Bayes factor. The intuitive reason for this---perhaps surprising---result is that 
-$A \wedge B$ has a much lower prior probability than $A$ (or $B$) considered separately. Thus, the same body 
-of evidence is going to have a larger impact on a hypothesis 
-with a lower prior probability, other things being equal.\footnote{To show that (EXT2) fails, it is enough to show that $\frac{\pr{B \vert a\wedge b \wedge A}}{\pr{B \vert A}}>1$ because $S[a\wedge b, A\wedge B]>S[a\wedge b, A]$ iff $\frac{\pr{a\wedge b \vert A \wedge B}}{\pr{a\wedge b}}>\frac{\pr{a\wedge b \vert A}}{\pr{a\wedge b}}$ iff $\frac{\pr{A\wedge B \vert a \wedge b}}{\pr{A\wedge B}}>\frac{\pr{A \vert a \wedge b }}{\pr{A}}$ iff $\frac{\pr{A \vert a \wedge b} \times \pr{B \vert a\wedge b\wedge A}}{\pr{A} \times \pr{B \vert A}}>\frac{\pr{A \vert a \wedge b }}{\pr{A}}$. Now, $\frac{\pr{B \vert a\wedge b \wedge A}}{\pr{B \vert A}}>1$ so long as $a\wedge b$ positively supports $B$ even under the assumption of $A$, unless $A$ entailed $B$. We naturally exclude the situation in which one claim entails the other because otherwise there would be no need to establish the two claims. Establishing one claim alone would suffice. To see why $a\wedge b$ positively supports $B$ (or $A$), note that $S[a, A]=\frac{\pr{a |A}}{\pr{a}} \leq \frac{\pr{a |A} \times \pr{b | A \wedge a}}{\pr{a}\times \pr{b | a}}=\frac{\pr{a \wedge b |A}}{\pr{a\wedge b}}=S[a \wedge b, A]$. The key step here is $\frac{\pr{a |A}}{\pr{a}} \leq \frac{\pr{a |A} \times \pr{b | A \wedge a}}{\pr{a}\times \pr{b | a}}$. The latter holds because $\frac{\pr{b | A \wedge a}}{\pr{b | a}}\geq 1$. It is useful to distinguish two cases. First, if $A$ and $B$ are probabilistically independent, as in the Bayesian network in Figure \ref{network-conjunction} (top), then $\frac{\pr{b | A \wedge a}}{\pr{b | a}}= \frac{\pr{b}}{\pr{b}} = 1$. Second, if $A$ and $B$ are probabilistically dependent, as in the Bayesian network in Figure \ref{network-conjunction} (bottom), evidence $b$ positively supports claim $A$ (even conditional on $a$) so long as $b$ positively supports $B$. The assumption is that claim $A$ and $B$ are positively correlated, and thus, any evidence that supports one of the claims is going to support the other claim, as well. \textbf{SEE EARLIER CHAPTERS FOR A MORE RIGOROUS PROOF OF THIS LAST POINT.}} 
+(DIS2). And yet, it is this very principle that we should deny if we understand 
+the standard of proof using the Bayes factor. \footnote{To show that (DIS2) fails, it is enough to show that $\frac{\pr{B \vert a\wedge b \wedge A}}{\pr{B \vert A}}>1$ because $S[a\wedge b, A\wedge B]>S[a\wedge b, A]$ iff $\frac{\pr{a\wedge b \vert A \wedge B}}{\pr{a\wedge b}}>\frac{\pr{a\wedge b \vert A}}{\pr{a\wedge b}}$ iff $\frac{\pr{A\wedge B \vert a \wedge b}}{\pr{A\wedge B}}>\frac{\pr{A \vert a \wedge b }}{\pr{A}}$ iff $\frac{\pr{A \vert a \wedge b} \times \pr{B \vert a\wedge b\wedge A}}{\pr{A} \times \pr{B \vert A}}>\frac{\pr{A \vert a \wedge b }}{\pr{A}}$. Now, $\frac{\pr{B \vert a\wedge b \wedge A}}{\pr{B \vert A}}>1$ so long as $a\wedge b$ positively supports $B$ even under the assumption of $A$, unless $A$ entailed $B$. We naturally exclude the situation in which one claim entails the other because otherwise there would be no need to establish the two claims. Establishing one claim alone would suffice. To see why $a\wedge b$ positively supports $B$ (or $A$), note that $S[a, A]=\frac{\pr{a |A}}{\pr{a}} \leq \frac{\pr{a |A} \times \pr{b | A \wedge a}}{\pr{a}\times \pr{b | a}}=\frac{\pr{a \wedge b |A}}{\pr{a\wedge b}}=S[a \wedge b, A]$. The key step here is $\frac{\pr{a |A}}{\pr{a}} \leq \frac{\pr{a |A} \times \pr{b | A \wedge a}}{\pr{a}\times \pr{b | a}}$. The latter holds because $\frac{\pr{b | A \wedge a}}{\pr{b | a}}\geq 1$. It is useful to distinguish two cases. First, if $A$ and $B$ are probabilistically independent, as in the Bayesian network in Figure \ref{network-conjunction} (top), then $\frac{\pr{b | A \wedge a}}{\pr{b | a}}= \frac{\pr{b}}{\pr{b}} = 1$. Second, if $A$ and $B$ are probabilistically dependent, as in the Bayesian network in Figure \ref{network-conjunction} (bottom), evidence $b$ positively supports claim $A$ (even conditional on $a$) so long as $b$ positively supports $B$. The assumption is that claim $A$ and $B$ are positively correlated, and thus, any evidence that supports one of the claims is going to support the other claim, as well. \textbf{SEE EARLIER CHAPTERS FOR A MORE RIGOROUS PROOF OF THIS LAST POINT.}}  The intuitive reason for this---perhaps surprising---result is that $A \wedge B$ has a much lower prior probability than $A$ (or $B$) considered separately. Thus, the same body of evidence is going to have a larger impact on a hypothesis with a lower prior probability, other things being equal.
 
 All in all, using Bayes factor to understad the standard of proof 
-has counterintuitive consequences, what we will call the extrapolation paradox. 
+has counterintuitive consequences, what we will call the distribution paradox. 
 For suppose the prosecution provided evidence for claim $A$, but this evidence still falls short of the threshold $t$ (a certain number above 1). Just by tagging an additional claim $B$ and without doing any further evidentiary work, the prosecution could provide sufficiently strong evidence (which meets the threshold $t$) in favor of claim $A \wedge B$. So, it could well happen that, while the prosecution failed to prove beyond a reasonable doubt that the defendant injured the victim, the prosecution could nevertheless prove beyond a reasonable doubt that the defendant injured the victim and did so intentionally. This is odd. 
 
 
@@ -1365,13 +1359,13 @@ We discussed extensively the advatanges and
 limitations of this account in \textbf{REFERENCE TO EARLIER CHAPTER}.
 Like the Bayes factor, the likelihood ratio can be used 
 to formalize the standard of proof by equating the standard 
-to a threshold $t$ above one. In criminal trials, for example, the rule of decision would be: Guilt is proven beyond a reasonable doubt if and only if the evidential support in favor of $G$---as measured by the likelihood ratio 
+to a threshold $t$ above one. The greater the threshold, the more stringent the standard. In criminal trials, for example, the rule of decision would be: guilt is proven beyond a reasonable doubt if and only if the evidential support in favor of $G$---as measured by the likelihood ratio 
 $\frac{\pr{E \vert  G}}{\pr{E \vert \neg G}}$---meets a suitably high threshold $t$ above one.
-The greater the threshold, the more stringent the standard. Setting aside the problem of how ot identify 
+Setting aside the problem of how ot identify 
 the appropriate threshold, we will see that this approach 
 is able to justify one direction of the conjunction principle---what we 
 called aggregation---but still fails to justify the other direction---what we 
-called extrapolation. So the extrapolation 
+called distribution So the distribution 
 paradox arises here again. 
 
 Consider aggregation first. Say both individual likelihood 
@@ -1695,9 +1689,215 @@ Another problem with this approach is that much of the heavy lifting here is don
  
  
  
+ REPEAT SAME ARGUMENT USING LR AND COMPARATIVE STRATEGY
  
  
+## Which Measure of (Combined) Evidential Support?
+ 
+The discussion so far renews the question about the adequate 
+measure of evidential support or evidential strength. Our focus has been on the 
+Bayes factor and the likelihood ratio. As we argued earlier in Chapter
+(\textbf{REFRENCE TO EARLIER CHAPTER}), the Bayes factor is too sensitive 
+to the prior probability of the hypothesis (see the graph below). 
 
+\todo{M: Not sure what's wrong with this R graph...}
+
+\begin{figure}
+
+```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "90%"}
+library(ggplot2)
+library(ggthemes)
+
+bf <- function (x, s1, s2){
+    (
+      s1/
+        (s1*x+(1-s2)*(1-x))
+     )
+}
+
+
+x <-seq(0,1,by=0.00001)
+bfnull <- bf(x, 0.5, 0.5)
+bf0807 <- bf(x, 0.8, 0.7)
+bf0909 <- bf(x, 0.999, 0.999)
+
+
+ggplot() +
+  geom_line(aes(x = x, y = bfnull,color = "BF, sensitivity=specificity=0.5")) +
+  geom_line(aes(x = x, y = bf0807,color = "BF, sensitivity=0.8, specificity=0.7")) +
+  geom_line(aes(x = x, y = bf0909,color = "BF, sensitivity=0.999, specificity=0.999")) +
+        ylim(c(1,10))+
+  xlab("prior")+ ylab("BF")+theme_tufte()+
+  theme(legend.position = c(0.8, 0.5))
+```
+
+\label{fig:strength-prior-post}
+\end{figure}
+
+Intuitively, the strenght of the evidence should not depend on the prior probability of the hypothesis, but solely on the quality of the evidence itself. The prior probability of the hypothesis seems extrinsic to the quality of the evidence since the latter should solely depend on the sensitivity and specificity of the evidence relative to the hypothesis of interest. Stil, strenght of evidence determines how much the evidence changes, upwards or downwards, the probability of a hypothesis. However, as the prior probability increases, the smaller the impact that the evidence will have on the probability of the hypothesis. If the prior is  close to one, the evidence would have marginal if not null impact. But this does not mean that the evidence weakens as the prior probability of the hypothesis goes up. For consider the same hypothesis which in one context has a very high prior probability and in another has a moderate prior probability (say a disease is common in a  population but rare in another). The outcome of the same diagnostic test (say a positive test result) performed on two people, each drawn from two populations, should not count as stronger evidence in one case than in the other. After all, it is the same test that was performed and thus the quality of the evidence should be the same. (This intuition turns out to be incorrect empirically, however. This is a point we will return to later on.)
+
+To capture the intuition that evidential strength should be independent of the prior, evidential strength can be thought as a general measure of the relationship between prior and posterior. The graph in Figure \ref{fig:strength-prior-post}
+below represents to what extent the evidence changes the prior probability of a select hypothesis for any value of the prior. The graph compares the 'base line' (representing no the change from prior to posterior) and the 'posterior line' (representing the posterior as a function of the prior for a given assignment of sensitivity and specificity of the evidence). Roughly, the larger the area between the two base line and the posterior line, the stronger the evidence. Crucially, this area does not depend on the prior probability of the hypothesis, but solely on the sensitivity and specificity of the evidence. As expected, any improvement in sensitivity or specificity will increase the area between the base line and the posterior line. 
+
+
+
+\begin{figure}
+
+
+```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "90%"}
+library(ggplot2)
+library(ggthemes)
+
+
+post <- function (x, s1, s2){
+  (x)*
+    (
+      s1/
+        (s1*x+(1-s2)*(1-x))
+     )
+}
+
+x <-seq(0,1,by=0.001)
+y0906 <- post(x, 0.9, 0.6)
+y0609 <- post(x, 0.6, 0.9)
+y0909 <- post(x, 0.999, 0.999)
+
+ggplot() +
+  stat_function(fun=function(x)(x), geom="line", aes(colour="null, sensitivity=specificity=0.5"))+
+  geom_line(aes(x = x, y = y0906,color = "sensitivity=0.9, specificity=0.6")) +
+  geom_line(aes(x = x, y = y0609,color = "sensitivity=0.6, specificity=0.9")) +
+  geom_line(aes(x = x, y = y0909,color = "sensitivity=0.999, specificity=0.999")) +
+        ylim(c(0,1))+
+  xlab("prior")+ ylab("posterior")+theme_tufte()+
+  theme(legend.position = c(0.8, 0.2))
+```
+
+\caption{Strength of evidence as a relationship between prior and posterior. 
+The further away the posterior line from the null line, the stronger the evidence irrespective 
+of the prior probability of the hypothesis.}
+\label{fig:strength-prior-post}
+\end{figure}
+
+
+The same approch can be used to model the joint evidential strength of two items of evidence, $a \wedge b$, 
+relative to the combined hypothesis, $A \wedge B$. For simplicity, assume $a$ and $b$ are independent 
+lines of evidence supporting their respective hypothesis $A$ and $B$ 
+probabilistically independent of the other, as in the Bayesian network 
+in Figure \ref{network-conjunction} (top). The graph in Figure 
+\label{fig:strength-indiv-joint} shows how the prior probabilities 
+are impacted by one piece of evidence in support of a single hypothesis---say $a$ supports $A$---versus 
+two pieces of evidence in support of a joint hypthesis---say $a\wedge b$ supports $A \wedge B$.
+The base line is lower in in the latter case than in the former case, simply because the prior probability of 
+$A \wedge B$ is lower than the prior probability of $A$. The prior 
+of $A$ equals $x$ and the prior of $A\wedge B$ equals $x^2$. The assumption here 
+is that $A$ and $B$ have the same prior probability, and as noted before, 
+are probabilistically independent of one another. 
+
+
+
+
+
+\begin{figure}
+
+```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "90%"}
+library(ggplot2)
+library(ggthemes)
+
+
+post <- function (x, s1, s2){
+  (x)*
+    (
+      s1/
+        (s1*x+(1-s2)*(1-x))
+     )
+}
+
+
+post2 <- function (x, s1, s2){
+  (x*x)*
+    (
+      s1/
+        (s1*x+(1-s2)*(1-x))
+     )*
+    (
+      s1/
+        (s1*x+(1-s2)*(1-x))
+     )
+}
+
+x <-seq(0,1,by=0.001)
+y0908 <- post(x, 0.9, 0.8)
+y0909 <- post(x, 0.99, 0.99)
+yy0908 <- post2(x, 0.9, 0.8)
+yy0909 <- post2(x, 0.99, 0.99)
+yynull <- post2(x, 0.5, 0.5)
+
+ggplot() +
+  stat_function(fun=function(x)(x), geom="line", aes(colour="1, sensitivity=0.5, specificity=0.5"))+
+  geom_line(aes(x = x, y = yynull,color = "2, sensitivity=0.5, specificity=0.5")) +
+  geom_line(aes(x = x, y = y0908,color = "1, sensitivity=0.8, specificity=0.7")) +
+  geom_line(aes(x = x, y = y0909,color = "1, sensitivity=0.99, specificity=0.99")) +
+  geom_line(aes(x = x, y = yy0908,color = "2, sensitivity=0.8, specificity=0.7")) +
+  geom_line(aes(x = x, y = yy0909,color = "2, sensitivity=0.99, specificity=0.99")) +
+        ylim(c(0,1))+
+  xlab("prior")+ ylab("posterior")+theme_tufte()+
+  theme(legend.position = c(0.8, 0.2))
+```
+
+```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "90%"}
+library(ggplot2)
+library(ggthemes)
+
+
+post <- function (x, s1, s2){
+  (x)*
+    (
+      s1/
+        (s1*x+(1-s2)*(1-x))
+     )
+}
+
+
+post2 <- function (x, s1, s2){
+  (x)*
+    (
+      s1/
+        (s1*sqrt(x)+(1-s2)*(1-sqrt(x)))
+     )*
+    (
+      s1/
+        (s1*sqrt(x)+(1-s2)*(1-sqrt(x)))
+     )
+}
+
+x <-seq(0,1,by=0.001)
+y0908 <- post(x, 0.9, 0.8)
+y0909 <- post(x, 0.99, 0.99)
+yy0908 <- post2(x, 0.9, 0.8)
+yy0909 <- post2(x, 0.99, 0.99)
+yynull <- post2(x, 0.5, 0.5)
+
+ggplot() +
+  stat_function(fun=function(x)(x), geom="line", aes(colour="1, null"))+
+  geom_line(aes(x = x, y = y0908,color = "1, sensitivity=0.8, specificity=0.7")) +
+  geom_line(aes(x = x, y = y0909,color = "1, sensitivity=0.99, specificity=0.99")) +
+  geom_line(aes(x = x, y = yy0908,color = "2, sensitivity=0.8, specificity=0.7")) +
+  geom_line(aes(x = x, y = yy0909,color = "2, sensitivity=0.99, specificity=0.99")) +
+        ylim(c(0,1))+
+  xlab("prior")+ ylab("posterior")+theme_tufte()+
+  theme(legend.position = c(0.8, 0.2))
+```
+
+\caption{Strenght of evidence as a general relationship between prior 
+and posterior. The comparison here is betwen individual support and joint support. 
+Top graph: The null line for joint support ($y=x*x$) is 
+much below the null line for individual support ($y=x$).
+Bottom graph: the two null lines are equalized and the 
+posterior lines adjusted accordingly. The posterior lines for individual 
+and joint support get much closer especially for 
+high posterior probability values.}
+\label{fig:strength-indiv-joint}
+\end{figure}
 
 
 ## Specific Narratives [IDEAS OF A SOLUTION]
