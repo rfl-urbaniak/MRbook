@@ -1745,7 +1745,7 @@ combined evidence \(a\et b\). By the probability calculus,
 
 \noindent The second equality holds assuming certain relationships of
 independence, specifically, the independence of \(A\) from \(b\) given
-\(a\), and of \(B\) from \(a \wedge A\) given \(b\). These relantioships
+\(a\), and of \(B\) from \(a \wedge A\) given \(b\). These relationships
 of independence do not always hold, but they do sometimes. For example,
 in an aggraveted assault case, evidence \(a\) could be a witness
 testimony that the defendant physically injured the victim (claim
@@ -1780,26 +1780,168 @@ often be the case since (i) evidence is fallible and (ii) one hypothesis
 does not usually entail the other. So even though \(A\) and \(B\) are
 established to the required probability, the conjunction is not.
 
-But something has gone unnoticed so far. The support of a piece of
-evidence \(E\) in favor of a hypothesis \(H\) should not be understood
-as a function of the conditional probability \(\pr{H | E}\). We
-discussed this point in earlier chapters (REFER TO EARLIER CHAPTERS) and
-we should keep it in mind while examining the difficulty about
-conjunction. In this vein, Dawid (1987) offers one of the earlier
-attempts at a solution using probability theory:
+\hypertarget{independencies}{%
+\subsection{Independencies}\label{independencies}}
 
-\begin{quote} When the problem is analysed carefully, the `paradox' evaporates: suitably measured, the support supplied by the conjunction of several independent 
- testimonies exceeds that supplied by any of its constituents.
+EXPLAIN RELATIONSHIP OF DEPENDENCE USED HERE:
+
+\begin{itemize}
+\item
+  BETWEEN CLAIMS
+\item
+  BETWEEN PIECES OF EVIDENCE
+\item
+  USE BAYESIAN NETWORK TO EXPLAIN
+\end{itemize}
+
+\hypertarget{prior-probabilities}{%
+\subsection{Prior probabilities}\label{prior-probabilities}}
+
+One of the troubling consequences of the difficulty about conjunction is
+that, the more constituent claims, the higher the posterior probability
+for each claim needed to meet the requisite probability threhsold.
+Assume, for the sake of illustration, the independence and
+equiprobability of the constituent claims. If a composite claim
+constists of \(k\) individual claims \(I_1 \wedge I_2 \dots I_k\), these
+individual claims will have to be established with proabilility
+\(>t^{1/k}\), where \(t\) is the applicable threhsold. For example, if
+there are ten constituent claims, they will have to be proven with
+\(0.5^{1/10}=0.93\) even if the standard of proof is only \(>0.5\). If
+the standard is more stringent, as is appropriate in criminal cases, say
+\(>0.95\), each individual claim will have to be proven with near
+certainity, which would make the task extremely demanding on the
+prosecution. For example, if there are ten constituent claims, they will
+have to be proven with \(0.95^{1/10}=0.995\). The alternative, of
+course, would be to allow the prosecution (or the plaintiff in a civil
+case) to establish the individual claims by the probability threshold
+applicable to the case as a whole. If so, the reverse problem would
+arise. The composite claim representing the case as a whole would often
+be established with a probability below the required threshold. For
+example, if each constituent claim is established with 95\% probability,
+the composite claim---assuming, as usual, probabilistic independence
+between individual claims---would only be established with 59\%
+probability, a far cry from proof beyond a reasonable doubt. So we have
+a dilemma here: either the standard is too demanding on the prosecution
+(or the plantiff) or the standard is too lax and thus it is too easy to
+establish someone's criminal or civil liability.
+
+\begin{verbatim}
+## [1] 0.933033
+\end{verbatim}
+
+\begin{verbatim}
+## [1] 0.9948838
+\end{verbatim}
+
+\begin{verbatim}
+## [1] 0.5987369
+\end{verbatim}
+
+But something has gone unnoticed so far. A composite claim such as
+\(A\wedge B\) will have, other things being equal, a much lower prior
+probability than an individual claim such as \(A\) or \(B\). In general,
+a composite claim consists of \(k\) individual claims. If the composite
+claim has a prior probability of \(\pi\), each constituent claim,
+assuming they are independent and equiprobable, will have a prior
+probability of \(\pi^{1/n}\). The prior probability of the individual
+claims will approach one as the number of constituent claims increases.
+This observation led Dawid (1987), in one of the earliest attempts to
+solve the conjunction paradox from a probabilistic perspective, to
+write:
+
+\begin{quote}
+\dots it is not asking too much of the plaintiff to establish the case as a whole with a posterior probability exceeding one half, even though this means  that the several component issues must be established with much larger posterior probabilities; for the \textit{prior}  probabilities of the components will also be correspondingly larger, compared with that of their conjunction. The overall effect of subdiving a case into more and more component issues is not very large, and, if anything, is to give an advantage to the plaintiff, even though he has to establish each with a high probability. (p. 97)
  \end{quote}
 
-\noindent Although Dawid does not provide a proof, his strategy is
-clear: replace posterior probabilities with probabilistic measures of
-evidential support, such as the Bayes factor or the likelihood ratio.
-Does this strategy work? By using the theory of Bayesian networks, we
-will first verify under what conditions Dawid's claim holds. Next, we
-will show---perhpas surprisingly---that the difficulty about conjuntion
-will not go away even after switching from posterior probabilities to
-measures of evidential support.
+Following Dawid's insight, it is instructive to compare the impact of
+one item of evidence on the probability of an individual claim, for
+different level of sensitivity and specificity of the evidence, with the
+impact of \(k\) items of evidence on the probability of a composite
+claim that consists of \(k\) individual claims, again for different
+levals of specificity and sensitivity of the evidence. Figure
+\ref{fig:strength-indiv-joint} (top) compares one item of evidence
+supporting an individual claim and five items of evidence suporting a
+composite claim consisting of five claims. There is a significant
+difference in posterior probabilities, as expected, but there is a also
+a significant difference in prior probabilities. Since the composite
+claim starts out less likely than any individual clai, it is
+natural---other things being equal---that the posterior probability of
+the composite claim will be correspondingly lower.
+
+\begin{figure}
+
+
+\begin{center}\includegraphics[width=0.9\linewidth]{burden-proof3_files/figure-latex/unnamed-chunk-4-1} \end{center}
+
+
+\begin{center}\includegraphics[width=0.9\linewidth]{burden-proof3_files/figure-latex/unnamed-chunk-5-1} \end{center}
+
+\caption{The comparison here is betwen individual support and joint support. 
+Top graph: The null line for joint support ($y=x*x$) is 
+much below the null line for individual support ($y=x$).
+Bottom graph: the two null lines are equalized and the 
+posterior lines adjusted accordingly. The posterior lines for individual 
+and joint support get much closer especially for 
+high posterior probability values.}
+\label{fig:strength-indiv-joint}
+\end{figure}
+
+What happens if we make the same comparison between individual and
+composite claims by equalizing their prior probability so that the role
+of prior probabilities is factored out? If the claims are independent
+and equiprobable, let \(x\) be the prior probability of an individual
+claim 9when it is considered in isolation) and let \(x^{1/k}\) the prior
+probability of the same individual claim when it considered as a
+constituen claim of a composite claim that consosts of \(k\) claim, so
+that the prior probability of the composite claim equals
+\((x^{1/k})^k=x\) as desired. Figure \ref{fig:strength-indiv-joint}
+(bottom) shows the result of this process of equalization. We note two
+differences. First, the difference in posterior probability, albeit
+still present, is much less apparent. Second, the difference in
+posterior probability is npw reversed, that is, a composite claim
+suported by several items of evidence has a higher posterior probability
+compared to an individual claim supported by one item of evidence.
+
+Has the conjunction paradox disappared, then? To some extent, it has.
+Arguably, what worried Cohen was that, as the number of constituent
+claims increases, the prosection or the plaintiff would see their case
+against the defendant progressively weaken and thus it would become
+impposisble for them to establish liability. But this worry is an
+exageration, as we have just seen. As the number of constituent claims
+increases, it is not true that the case against teh defedant would
+automatically weaken. If teh role of prior probabilities is
+appropruately taken into into, the case against the defene could
+actually turn stronger, not weaker, if several constituent claims are
+each supported by an indeoedent line of evidence.
+
+This strategy for addressing the difficulty about conjuctiom is a
+reminscent of a familiar point. The support of a piece of evidence
+\(E\)---or its evidentila strength---in favor of a hypothesis \(H\)
+should not be understood as a function of the conditional probability
+\(\pr{H | E}\), but rather as a function of thigns like teh Bayes fctor
+or the likelihood ratio. We discussed this point in earlier chapters
+(REFER TO EARLIER CHAPTERS) and we should keep it in mind while
+examining the difficulty about conjunction. In this vein, Dawid (1987)
+observes:
+
+\begin{quote} When the problem is analysed carefully, the `paradox' evaporates: suitably measured, the support supplied by the conjunction of several independent testimonies exceeds that supplied by any of its constituents.
+ \end{quote}
+
+\noindent
+
+This claim should not be surprising. Under certain conditions, a
+composite claim supported by several lines of evidence can receive
+stronger support than an indivudual claim (see Figure
+\label{fig:strength-indiv-joint} at the bottom). Although Dawid does not
+provide a general proofof this claim, he seems to be suggesting that
+posterior probabilities should be replaced with probabilistic measures
+of evidential support, such as the Bayes factor or the likelihood ratio.
+Does this strategy yktimately solve the conjunction paradox? By using
+the theory of Bayesian networks, we will first verify under what
+conditions Dawid's claim holds. Next, we will show---perhpas
+surprisingly---that the difficulty about conjuntion will not go away
+even after switching from posterior probabilities to measures of
+evidential support.
 
 \hypertarget{bayes-factor-threshold}{%
 \subsection{Bayes factor threshold}\label{bayes-factor-threshold}}
@@ -2049,6 +2191,13 @@ injured the victim, the prosecution could nevertheless prove beyond a
 reasonable doubt that the defendant injured the victim and did so
 intentionally. This is odd.
 
+EXPLORE WHETHER DIFFERENCE IN BAYESIAN FACTOR IS NUMERICALLY SIGNIFICANT
+OR NOT. USE GRAPH AND PLOT RESULTS. TRY TO FACTOR OUT THE IMPACT OF
+PRIORS BUT STRESS THAT BF DOES DEPEND ON PRIORS AND THUS THE DIFFERENCE
+IN BF IS ARTFICIAL AND DEPENDS ON PRIOR, SO BF BEHAVES AGAIN LIKE THE
+POSTERIORS THAT ARE DEPENDENT ON PRIORS. NEED TO FACTOR OUT ROLE OF
+PRIORS OTEHRWISE IT'S JUST LIKE COMPARING APPLES AND ORANGES.
+
 \hypertarget{likelihood-ratio-threshold}{%
 \subsection{Likelihood ratio
 threshold}\label{likelihood-ratio-threshold}}
@@ -2141,7 +2290,7 @@ greater than one.
 \begin{figure}
 
 
-\begin{center}\includegraphics[width=0.9\linewidth]{burden-proof3_files/figure-latex/unnamed-chunk-1-1} \end{center}
+\begin{center}\includegraphics[width=0.9\linewidth]{burden-proof3_files/figure-latex/unnamed-chunk-6-1} \end{center}
 
 \caption{Combined likelihood ratios exceeds individual Likelihood ratios. Changes in the prior 
 probabilities $t$ and $k$ do not invalidate this result.}
@@ -2370,7 +2519,7 @@ below).
 ## Warning: Removed 9910 rows containing missing values (geom_path).
 \end{verbatim}
 
-\begin{center}\includegraphics[width=0.9\linewidth]{burden-proof3_files/figure-latex/unnamed-chunk-2-1} \end{center}
+\begin{center}\includegraphics[width=0.9\linewidth]{burden-proof3_files/figure-latex/unnamed-chunk-7-1} \end{center}
 
 \label{fig:strength-prior-post} \textbackslash{}end\{figure\}
 
@@ -2415,7 +2564,7 @@ posterior line.
 
 
 
-\begin{center}\includegraphics[width=0.9\linewidth]{burden-proof3_files/figure-latex/unnamed-chunk-3-1} \end{center}
+\begin{center}\includegraphics[width=0.9\linewidth]{burden-proof3_files/figure-latex/unnamed-chunk-8-1} \end{center}
 
 \caption{Strength of evidence as a relationship between prior and posterior. 
 The further away the posterior line from the null line, the stronger the evidence irrespective 
@@ -2443,10 +2592,10 @@ before, are probabilistically independent of one another.
 \begin{figure}
 
 
-\begin{center}\includegraphics[width=0.9\linewidth]{burden-proof3_files/figure-latex/unnamed-chunk-4-1} \end{center}
+\begin{center}\includegraphics[width=0.9\linewidth]{burden-proof3_files/figure-latex/unnamed-chunk-9-1} \end{center}
 
 
-\begin{center}\includegraphics[width=0.9\linewidth]{burden-proof3_files/figure-latex/unnamed-chunk-5-1} \end{center}
+\begin{center}\includegraphics[width=0.9\linewidth]{burden-proof3_files/figure-latex/unnamed-chunk-10-1} \end{center}
 
 \caption{Strenght of evidence as a general relationship between prior 
 and posterior. The comparison here is betwen individual support and joint support. 
