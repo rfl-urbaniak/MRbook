@@ -1638,21 +1638,180 @@ below 100\%. Consequently, in this case, the probability of the
 conjunction \(A \et B\) would be below the 95\%
 threhsold.\todo{False in whole generality, give a counterexample with more specific numbers. M: I changed things a bit. Maybe not it's clear now. The counterexample is basically P(A)=P(B)=0.95, but P(AB)=Pr(A)*P(A|B) and since P(A|B) is below 1, then P(AB) is below 0.95.}
 
-How could a supporter of legal probabilism respond? The conjunction
-paradox is a difficult problem, as the vast literature on the topic
-attests. Before we offer our solution to it, we will explore a number of
-probability-based proposals, and understand why they, albeit promising,
-ultimately fail.
+\hypertarget{aggregating-hypotheses-and-evidence}{%
+\subsection{Aggregating hypotheses and
+evidence}\label{aggregating-hypotheses-and-evidence}}
+
+So far the discussion proceeded without mentioning explicitly the
+evidence proferred in support of the different claims that constitute
+the allegation of wrongdoing. This is, however, a simplification. Say
+evidence \(a\) establishes claim \(A\) and other evidence \(b\)
+establishes a distinct claim \(B\). The question now is whether the
+combination of \(a\) and \(b\) establishes the conjunction \(A \et B\),
+and viceversa. In other words, the question is whether the following
+conjunction principle holds:
+\[\text{S[$a, A$] and S[$b, B$] iff S[$a \wedge b, A\wedge B$]},\]
+
+\noindent where \(\text{S}[e, H]\) means that evidence \(e\) establishes
+hypothesis \(H\) by standard \(S\). This conjunction principle differs
+from the earlier one since it mentions explicitly the evidence \(a\) and
+\(b\).
+
+Understood in terms of posterior probability, the conjunction principle
+above fails in some cases. For suppose that \(\pr{A | a}>t\) and
+\(\pr{B | b}>t\), for a threshold \(t\), or in other words, given the
+evidence \(a\) and \(b\), both \(A\) and \(B\) are sufficiently probable
+(for a fixed threshold). It does not generally follow that \(A \et B\)
+is sufficienlty probable given the combined evidence \(a\et b\). By the
+probability calculus, \begin{align*}
+\pr{A \wedge  B | a \wedge b}& =\pr{A |a \wedge b} \times \pr{B | a \wedge b \wedge A}\\
+ & = \pr{A |a} \times \pr{B | b}
+ \end{align*}
+
+\noindent The second equality holds assuming certain relationships of
+independence, specifically, the independence of \(A\) from \(b\) given
+\(a\), and of \(B\) from \(a \wedge A\) given \(b\). These relationships
+of independence do not always hold, but they do sometimes. For example,
+in an aggravated assault case, evidence \(a\) could be a witness
+testimony that the defendant physically injured the victim (claim
+\(A\)), and \(b\) evidence that the defendant knew that the victim was a
+firefighter (claim \(B\)), for example, another testimony that the
+defendant earlier called the firefighther for help. Presumably,
+\(\pr{A \vert a}=\pr{A \vert a \wedge b}\) because the fact that the
+defendant called a firefighter for help (\(b\)) does not make it more
+(or less) likely that he would physically injure him (\(A\)). Further,
+\(\pr{B \vert b}=\pr{B \vert a \wedge b \wedge A}\) because the fact
+that the defendant injured the victim (\(A\)) and there is a testimony
+to that effect (\(a\)) does not make it more (or less) likely that the
+victim was a firefighter (\(B\)). Given these assumptions, if---as is
+normally the case---neither \(\pr{A \vert a}\) nor \(\pr{B \vert b}\)
+equal 1, then
+\[\pr{A \wedge B \vert a \wedge b}< \pr{A \vert a} \;\ \& \;\ \pr{A \wedge B \vert a \wedge b} < \pr{B \vert b}. \]
+
+\noindent This is another manifestation of the difficulty about
+conjuction. If each piece of evidence \(a\) and \(b\) establishes claims
+\(A\) and \(B\) with 95\% probability, the combined evidence \(a\et b\)
+need not establish the conjuction \(A\et B\) with 95\% probability. The
+conjunction principle fails here.
+
+Interestingly, even if the independence assumptions are dropped, the
+difficulty about conjunction still arises in a number of circumstances.
+Suppose evidence \(a\et b\) establishes claim \(A\) and also claim
+\(B\), separately, right above the probability threshold \(t\). Since
+\(\pr{A \wedge B | a \wedge b} =\pr{A |a \wedge b} \times \pr{B | a \wedge b \wedge A}\),
+it follows that \(\pr{A \wedge B | a \wedge b}\) would be below \(t\) so
+long as \(\pr{B | a \wedge b \wedge A}\) is below 100\%, which would
+often be the case since (i) evidence is fallible and (ii) one hypothesis
+does not usually entail the other. So even though \(A\) and \(B\) are
+established to the required probability, the conjunction is not.
+
+\hypertarget{probabilistic-independencies}{%
+\subsection{Probabilistic
+(in)dependencies}\label{probabilistic-independencies}}
+
+The conjunction paradox is a difficult problem, as the vast literature
+on the topic attests. Before we move on, it is important to become clear
+about the assumptions underlying the formulation of the paradox, in
+particular, the assumptions of probabilistic independence. We will then
+explore a number of probability-based proposals and distinguish the
+promising ones from those that ultimately fail.
+
+One assumption often made in the formulation of the paradox is that
+claims \(A\) and \(B\) are probabilistically independent. This is not
+always the case, but we have seen that the paradox does subside if the
+two claims are dependent of one another. So the assumption, in
+formulating the paradox, should be that either the two claims are fully
+probabilistically independent or positively probabilistically dependent.
+We exclude cases in which the claim are negatively probabilistically
+dependent. For it would be odd if the prosecution or the plaintiff would
+try to combine two claims where one makes the other less probable.
+
+The other assumption---which is not always stated upfront in the
+presentation of the paradox---is that the supporting items of evidence
+are also independent. They are not, however, unconditionally
+probabilistically independent. They are independent conditionally on the
+claim they support. This notion of conditional independence captures
+formally the thought that two or more items of evidence constitute
+\textit{independent lines of evidence} (SEE DISCUSSION IN EARLIER
+CHAPTERS).
+
+Bayesian network are useful for representing graphically these
+relationships of independence. Consider the networks in Figure
+\ref{network-conjunction}. The structure of the networks is rather
+natural because each piece of evidence bears on its hypothesis and is
+probabilistically independent conditional on one of the hypotheses. One
+might wonder, however, why the arrows go from \(A\) and \(B\) into the
+node representing the conjunction \(A\wedge B\). This setting can
+capture the meaning of the conjunction. The constraint that, for the
+conjunction to be true, both \(A\) and \(B\) have to be true, can be
+defined using conditional probability tables. The two networks only
+differ in one detail, whether or not an arrow exist between claims \(A\)
+and \(B\). If there is no arrow, \(A\) and \(B\) are probabilistically
+independent since \(A\wedge B\) is a collider node (SEE DISCUSSION IN
+EARLIER CHAPTERS). To eliminate the independence of the two claims,
+while holding everything else fixed, it is enough to draw an arrow
+between \(A\) and \(B\). See the network in Figure
+\ref{network-conjunction} (bottom). Arrows cab be drawn between the
+evidence nodes themselves, but this modification would undermine them
+being independent lines of evidence.
+
+\begin{center}
+\begin{figure}[h!]
+\begin{tikzpicture}[
+  node distance=1cm and 1cm,
+  mynode/.style={draw,ellipse,text width=1cm,align=center}
+]
+\node[mynode] (h1) {$A$};
+\node[mynode,below right =of h1] (h3) {$A \wedge B$};
+\node[mynode,above right =of h3] (h2) {$B$};
+\node[mynode,below  =of h1] (e1) {$a$};
+\node[mynode,below  =of h2] (e2) {$b$};
+\path 
+(h1) edge[-latex] (h3)
+(h2) edge[-latex] (h3)
+(h1) edge[-latex] (e1)
+(h2) edge[-latex] (e2); 
+\end{tikzpicture}
+
+\begin{tikzpicture}[
+  node distance=1cm and 1cm,
+  mynode/.style={draw,ellipse,text width=1cm,align=center}
+]
+\node[mynode] (h1) {$A$};
+\node[mynode,below right =of h1] (h3) {$A \wedge B$};
+\node[mynode,above right =of h3] (h2) {$B$};
+\node[mynode,below  =of h1] (e1) {$a$};
+\node[mynode,below  =of h2] (e2) {$b$};
+\path 
+(h1) edge[-latex] (h2)
+(h1) edge[-latex] (h3)
+(h2) edge[-latex] (h3)
+(h1) edge[-latex] (e1)
+(h2) edge[-latex] (e2); 
+\end{tikzpicture}
+\caption{Two Bayesian networks for two pieces of evidence and a composite hypothesis.}
+\label{network-conjunction}
+\end{figure}
+\end{center}
+
+The two Bayesian networks above provide a compact representation of the
+class of models we will be concerned with. We will assume throughout
+that the items of evidence are independent lines of evidence. Often, we
+will also assume that the claims themselves are independent, and
+occasionally consider the situation in which they are positively
+probabilistically dependent.
 
 \hypertarget{a-closer-look-at-the-conjunction-principle}{%
 \subsection{A closer look at the conjunction
 principle}\label{a-closer-look-at-the-conjunction-principle}}
 
-The conjunction paradox would not arise without the conjunction
-principle. So could legal probabilists reject this principle and let the
-paradox disappear? In current discussions in epistemology, an analogous
-principle about knowledge or justification has been contested because it
-appears to deny the fact that risks of error accumulate (CITE).
+Let's now turn to possisble solutions to the conjunction paradox within
+the probabilistic framework. The first thing to note is that the paradox
+would not arise without the conjunction principle. So could legal
+probabilists reject this principle and let the paradox disappear? In
+current discussions in epistemology, an analogous principle about
+knowledge or justification has been contested because it appears to deny
+the fact that risks of error accumulate (CITE).
 \todo{Hey, we can quote a paper that's out by Alicja!:) Also, I guess you want me to find the right refs? M: Yes, if you can}
 If one is justifiably sure about the truth of each claim considered
 seperataly, one should not be equally sure of their conjunction. You
@@ -1671,20 +1830,28 @@ defective product.
 
 Suppose the legal probabilist does away with the conjunction principle.
 Now what? How should they define standards of proof? Two immediate
-options come to mind, but neither is without problems. One option
-stipulates that, in order to establish the defendant's guilt beyond a
-reasonable doubt (or civil liability by preponderance of the evidence),
-the party making the accusation should establish each claim, separately,
-to the requisite probability, say at least 95\%, without needing to
-establish the conjunction to the requisite probability. Call this the
-\textit{atomistic account}. On this view, the prosecution could be in a
-position to establish guilt beyond a reasonable doubt without
+options come to mind, but neither is without problems.
+
+One option stipulates that, in order to establish the defendant's guilt
+beyond a reasonable doubt (or civil liability by preponderance of the
+evidence), the party making the accusation should establish each claim,
+separately, to the requisite probability, say at least 95\%, without
+needing to establish the conjunction to the requisite probability. Call
+this the \textit{atomistic account}. On this view, the prosecution could
+be in a position to establish guilt beyond a reasonable doubt without
 estalishing the conjunction of different claims with a sufficiently high
 probability. This account would allow convictions in cases in which the
 probability of the defendant's guilt, call it \(G\), is low, just
 because \(G\) is a conjunction of several independent claims that
-separately satisfy the standard of proof. This is counterintuitve as it
-would allow convictions when the defendant is most likely innocent.
+separately satisfy the standard of proof. For example, if each
+constituent claim is established with 95\% probability, the composite
+claim---assuming, as usual, probabilistic independence between
+individual claims---would only be established with 59\% probability, a
+far cry from proof beyond a reasonable doubt. This is counterintuitve as
+it would allow convictions when the defendant is most likely innocent.
+Under the atomistic account, the composite claim representing the case
+as a whole would often be established with a probability below the
+required threshold.
 
 The other option is to require that the prosecution in a criminal case
 (or the plantiff in a civil case) establish the accusation as a
@@ -1695,135 +1862,22 @@ higher requirement on the separate probabilities of the conjuncts. If
 the conjunction \(A\et B\) is to be proven with at least 95\%
 probability, the individual conjuncts should be established with
 probability higher than the 95\% threshold. So the more conjuncts, the
-higher their required probability. Moreover, the standard that applies
-to one of the conjuncts would depend on what has been achieved for the
-other conjuncts. For instance, assuming independence, if \(\pr{A}\) is
-\(96\%\), then \(\pr{B}\) must be at least \(99\%\) so that
-\(\pr{A\et B}\) is above a \(95\%\) threshold. But if \(\pr{A}\) is
-\(99.99\%\), then \(\pr{B}\) must only be greater than \(95\%\) to reach
-the same threshold. Thus, the holistic account would require that the
-elements of an accusation be proven to different probabilities depeding
-on how well other claims have been established.
-
-Denying the conjunction principle, then, is not without difficulties of
-its own. Legal probabilists should still explain how individual claims
-relate to larger claims in the process of legal proof. So it is worth
-exploring in some detail whether legal probabilists, instead of
-rejecting it, could in fact vidicate on probabilistic grounds the
-conjunction principle.
-
-\hypertarget{aggregating-hypotheses-and-evidence}{%
-\subsection{Aggregating hypotheses and
-evidence}\label{aggregating-hypotheses-and-evidence}}
-
-So far the discussion proceeded without mentioning explicitly the
-evidence proferred in support of the different claims that constitute
-the allegation of wrongdoing. This is, however, a simplification. Say
-evidence \(a\) supports claim \(A\) and other evidence \(b\) supports a
-distinct claim \(B\). The question now is whether the combination of
-\(a\) and \(b\) supports the conjunction \(A \et B\), and viceversa. In
-other words, the question is whether the following conjunction principle
-holds:
-\[\text{S[$a, A$] and S[$b, B$] iff S[$a \wedge b, A\wedge B$]},\]
-
-\noindent where \(\text{S}[e, H]\) means that evidence \(e\) supports
-hypothesis \(H\) by standard \(S\). This conjunction principle differs
-from the earlier one since it mentions explicitly the supporting
-evidence \(a\) and \(b\).
-
-If we think of evidential support in terms of conditional probability,
-the conjunction principle above would fail in some cases. For suppose
-that \(\pr{A | a}>t\) and \(\pr{B | b}>t\), for a threshold \(t\), or in
-other words, given the supporting evidence \(a\) and \(b\), both \(A\)
-and \(B\) are sufficiently probable (for a fixed threshold). It does not
-generally follow that \(A \et B\) is sufficienlty probable given the
-combined evidence \(a\et b\). By the probability calculus,
-\begin{align*}
-\pr{A \wedge  B | a \wedge b}& =\pr{A |a \wedge b} \times \pr{B | a \wedge b \wedge A}\\
- & = \pr{A |a} \times \pr{B | b}
- \end{align*}
-
-\noindent The second equality holds assuming certain relationships of
-independence, specifically, the independence of \(A\) from \(b\) given
-\(a\), and of \(B\) from \(a \wedge A\) given \(b\). These relationships
-of independence do not always hold, but they do sometimes. For example,
-in an aggraveted assault case, evidence \(a\) could be a witness
-testimony that the defendant physically injured the victim (claim
-\(A\)), and \(b\) evidence that the defendant knew that the victim was a
-firefighter (claim \(B\)), for example, another testimony that the
-defendant earlier called the firefighther for help. Presumably,
-\(\pr{A \vert a}=\pr{A \vert a \wedge b}\) because the fact that the
-defendant called a firefighter for help (\(b\)) does not make it more
-(or less) likely that he would physically injure him (\(A\)). Further,
-\(\pr{B \vert b}=\pr{B \vert a \wedge b \wedge A}\) because the fact
-that the defendant injured the victim (\(A\)) and there is a testimony
-to that effect (\(a\)) does not make it more (or less) likely that the
-victim was a firefighter (\(B\)). Given these assumptions, if---as is
-normally the case---neither \(\pr{A \vert a}\) nor \(\pr{B \vert b}\)
-equal 1, then
-\[\pr{A \wedge B \vert a \wedge b}< \pr{A \vert a} \;\ \& \;\ \pr{A \wedge B \vert a \wedge b} < \pr{B \vert b}. \]
-
-\noindent This is another manifestation of the difficulty about
-conjuction. If each piece of evidence \(a\) and \(b\) supports claims
-\(A\) and \(B\) with 95\% probability, the combined evidence \(a\et b\)
-need not support the conjuction \(A\et B\) with 95\% probability. The
-conjunction principle fails here.
-
-Interestingly, even if the independence assumptions are dropped, the
-difficulty about conjunction still arises in a number of circumstances.
-Suppose evidence \(a\et b\) establishes claim \(A\) and also claim
-\(B\), separately, right above the probability threshold \(t\). Since
-\(\pr{A \wedge B | a \wedge b} =\pr{A |a \wedge b} \times \pr{B | a \wedge b \wedge A}\),
-it follows that \(\pr{A \wedge B | a \wedge b}\) would be below \(t\) so
-long as \(\pr{B | a \wedge b \wedge A}\) is below 100\%, which would
-often be the case since (i) evidence is fallible and (ii) one hypothesis
-does not usually entail the other. So even though \(A\) and \(B\) are
-established to the required probability, the conjunction is not.
-
-\hypertarget{independencies}{%
-\subsection{Independencies}\label{independencies}}
-
-EXPLAIN RELATIONSHIP OF DEPENDENCE USED HERE:
-
-\begin{itemize}
-\item
-  BETWEEN CLAIMS
-\item
-  BETWEEN PIECES OF EVIDENCE
-\item
-  USE BAYESIAN NETWORK TO EXPLAIN
-\end{itemize}
-
-\hypertarget{prior-probabilities}{%
-\subsection{Prior probabilities}\label{prior-probabilities}}
-
-One of the troubling consequences of the difficulty about conjunction is
-that, the more constituent claims, the higher the posterior probability
-for each claim needed to meet the requisite probability threhsold.
-Assume, for the sake of illustration, the independence and
-equiprobability of the constituent claims. If a composite claim
-constists of \(k\) individual claims \(I_1 \wedge I_2 \dots I_k\), these
-individual claims will have to be established with proabilility
-\(>t^{1/k}\), where \(t\) is the applicable threhsold. For example, if
-there are ten constituent claims, they will have to be proven with
-\(0.5^{1/10}=0.93\) even if the standard of proof is only \(>0.5\). If
-the standard is more stringent, as is appropriate in criminal cases, say
-\(>0.95\), each individual claim will have to be proven with near
-certainity, which would make the task extremely demanding on the
-prosecution. For example, if there are ten constituent claims, they will
-have to be proven with \(0.95^{1/10}=0.995\). The alternative, of
-course, would be to allow the prosecution (or the plaintiff in a civil
-case) to establish the individual claims by the probability threshold
-applicable to the case as a whole. If so, the reverse problem would
-arise. The composite claim representing the case as a whole would often
-be established with a probability below the required threshold. For
-example, if each constituent claim is established with 95\% probability,
-the composite claim---assuming, as usual, probabilistic independence
-between individual claims---would only be established with 59\%
-probability, a far cry from proof beyond a reasonable doubt. So we have
-a dilemma here: either the standard is too demanding on the prosecution
-(or the plantiff) or the standard is too lax and thus it is too easy to
-establish someone's criminal or civil liability.
+higher their required probability. The more constituent claims, the
+higher the posterior probability for each claim needed to meet the
+requisite probability threhsold. Assume, for the sake of illustration,
+the independence and equiprobability of the constituent claims. If a
+composite claim consists of \(k\) individual claims, these individual
+claims will have to be established with proabilility of at least
+\(t^{1/k}\), where \(t\) is the threhsold applicable to the composite
+claim.\footnote{Let $p$ the probability of each consitutuent claim. To meet threshold $t$, the probability of the composite claim, $p^k$, should satisfy the constraint $p^k>t$, or in other words, $p>t^{1/k}$.}
+For example, if there are ten constituent claims, they will have to be
+proven with \(0.5^{1/10}=0.93\) even if the standard of proof is only
+\(>0.5\). If the standard is more stringent, as is appropriate in
+criminal cases, say \(>0.95\), each individual claim will have to be
+proven with near certainity, which would make the task extremely
+demanding on the prosecution. For example, if there are ten constituent
+claims, they will have to be proven with
+\(0.95^{1/10}=0.995\).\footnote{Moreover, the standard that applies to one of the conjuncts would depend on what has been achieved for the other conjuncts. For instance, assuming independence, if  $\pr{A}$ is $96\%$, then $\pr{B}$ must be at least $99\%$ so that $\pr{A\et B}$ is above a $95\%$ threshold. But if $\pr{A}$ is $99.99\%$, then $\pr{B}$ must only be greater than $95\%$ to reach the same threshold. Thus, the holistic account would require that the elements of an accusation be proven to different probabilities depeding on how well other claims have been established.}
 
 \begin{verbatim}
 ## [1] 0.933033
@@ -1837,36 +1891,111 @@ establish someone's criminal or civil liability.
 ## [1] 0.5987369
 \end{verbatim}
 
-But something has gone unnoticed so far. A composite claim such as
-\(A\wedge B\) will have, other things being equal, a much lower prior
-probability than an individual claim such as \(A\) or \(B\). In general,
+We have a dilemma here: either (under the holistic approach) the
+standard is too demanding on the prosecution (or the plantiff) because
+it would require the individual claims to be established to extremely
+high probabilities, or (under the atomistic approach) the standard is
+too lax because it would allow findings of liability when the defendant
+most likely committed no wrong. Denying the conjunction principle, then,
+is not without difficulties of its own. Absent the conjuction principle,
+legal probabilists should still explain how individual claims relate to
+larger claims in the process of legal proof.
+
+\hypertarget{prior-probabilities-and-evidential-support}{%
+\subsection{Prior probabilities and evidential
+support}\label{prior-probabilities-and-evidential-support}}
+
+It is worth examining the holistic account more closely, focusing in
+particular on the role of prior probabilities, an aspect that has gone
+unnoticed so far. The problem with the holistic approach is that it
+would require, especially in criminal cases, individual claims to be
+established with a very high probability, often making the task
+unsurmountable for the prosecution. Or so it would seem. But a composite
+claim such as \(A\wedge B\) will have, other things being equal, a lower
+prior probability than any individual claim \(A\) or \(B\). In general,
 a composite claim consists of \(k\) individual claims. If the composite
 claim has a prior probability of \(\pi\), each constituent claim,
 assuming they are independent and equiprobable, will have a prior
 probability of \(\pi^{1/n}\). The prior probability of the individual
 claims will approach one as the number of constituent claims increases.
-This observation led Dawid (1987), in one of the earliest attempts to
-solve the conjunction paradox from a probabilistic perspective, to
-write:
+
+Is this enough to eliminate the conjunction paradox? Perhpas so. Cohen
+worried that, as the number of constituent claims increases, the
+prosection or the plaintiff would see their case against the defendant
+become progressively weaker and it would become impossisble for them to
+establish liability. But this worry is an exaggeration. The paradox, as
+is commonly formulated, starts by assuming that the constituent claims
+are established by the required probability threshold and then shows
+that the probability of the conjuction may fall below the threshold.
+However, following the holistic approach, the order of presentation can
+be reversed. Start by assuming that the composite claim is established
+by the required probability threshold. No doubt the individual claims
+will have to be established with a higher probability, a violation of
+the conjuction principle. Yet, this violation is not as counterintuitive
+as it might first appear for two reasons. First, since risks aggregate,
+it is natural that the probability of a conjunction would be lower than
+the probability of the conjunct. Second, the prior probabilities of the
+conjuncts will be higher than the prior probability of the conjunction.
+Thus, establishing the conjuncts with a higher probability will not be
+exceedingly demanding.
+
+Along this lines, Dawid (1987), in one of the earliest attempts to solve
+the conjunction paradox from a probabilistic perspective, wrote:
 
 \begin{quote}
-\dots it is not asking too much of the plaintiff to establish the case as a whole with a posterior probability exceeding one half, even though this means  that the several component issues must be established with much larger posterior probabilities; for the \textit{prior}  probabilities of the components will also be correspondingly larger, compared with that of their conjunction. The overall effect of subdiving a case into more and more component issues is not very large, and, if anything, is to give an advantage to the plaintiff, even though he has to establish each with a high probability. (p. 97)
+\dots it is not asking too much of the plaintiff to establish the case as a whole with a posterior probability exceeding one half, even though this means  that the several component issues must be established with much larger posterior probabilities; for the \textit{prior}  probabilities of the components will also be correspondingly larger, compared with that of their conjunction. The overall effect of subdiving a case into more and more component issues ... [gives] an advantage to the plaintiff, even though he has to establish each with a high probability. (p. 97)
  \end{quote}
 
-Following Dawid's insight, it is instructive to compare the impact of
-one item of evidence on the probability of an individual claim, for
-different level of sensitivity and specificity of the evidence, with the
-impact of \(k\) items of evidence on the probability of a composite
-claim that consists of \(k\) individual claims, again for different
-levals of specificity and sensitivity of the evidence. Figure
-\ref{fig:strength-indiv-joint} (top) compares one item of evidence
-supporting an individual claim and five items of evidence suporting a
-composite claim consisting of five claims. There is a significant
-difference in posterior probabilities, as expected, but there is a also
-a significant difference in prior probabilities. Since the composite
-claim starts out less likely than any individual clai, it is
-natural---other things being equal---that the posterior probability of
-the composite claim will be correspondingly lower.
+\noindent  The price of this strategy, however, is the denial of the
+conjunction principle, the very motivation behind the conjunction
+paradox. Cohen could insist that this solution amounts to denying the
+paradox itself. To satisfy Cohen, legal probabilists should offer a
+justification of the conjunction principle in probabilistic terms,
+something that Cohen maintains cannot be done. Or can it be done?
+
+Dawid observed that the prior probabilities of the conjuncts are
+correspondingly higher than the prior probability of the conjunction.
+The conjunction principle, instead, ignores the role of prior
+probabilities and treat the conjuncts and the conjuction only in
+relation to the evidence, irrespective of the prior probabilities. So,
+in order to capture the conjunction principle, legal probabilists should
+rely on probabilistic measures that are not heavily depend on prior
+probabilities.
+
+To this end, it is instructive to compare the impact of one item of
+evidence on the probability of an individual claim, for different level
+of sensitivity and specificity of the evidence, with the impact of \(k\)
+items of evidence on the probability of a composite claim that consists
+of \(k\) individual claims, again for different levels of specificity
+and sensitivity of the evidence. More specifically, let \(c_i\) be a
+constituent claim and \(e_i\) its supporting evidence. The comparison is
+between prior probabilities \(\pr{C_i}\) and
+\(\pr{C_1 \wedge C_2 \wedge \dots \wedge C_k}\), contrasted with the
+posterior probabilities \(\pr{C_i \vert E_i}\) and
+\(\pr{C_1 \wedge C_2 \wedge \dots \wedge C_k \vert E_1 \wedge E_2 \wedge \dots \wedge E_k}\).
+Figure \ref{fig:post-indiv-joint} (top) compares one item of evidence
+supporting an individual claim and five items of evidence supporting a
+composite claim consisting of five claims. As is customary, the items of
+evidence and constituent claims are independent. In addition, for the
+sake of simplicity, the prior probabilities of the constituent claims
+are assumed to be the same. There is a significant difference in
+posterior probabilities, as expected, but there is a also a significant
+difference in prior probabilities. Since the composite claim starts out
+less likely than any individual claim, it is natural---other things
+being equal---that its posterior probability would be correspondingly
+lower.
+
+What happens if we make the same comparison between individual and
+composite claims by equalizing their prior probability? If the claims
+are independent and equiprobable, let \(x\) be the prior probability of
+an individual claim (when it is considered in isolation) and let
+\(x^{1/k}\) the prior probability of the same individual claim when it
+is part of a composite claim that consists of \(k\) claims. In this way,
+the prior probability of the composite claim equals the prior
+probability of the individual claim since \((x^{1/k})^k=x\), as desired.
+Figure \ref{fig:post-indiv-joint} (bottom) shows the result of this
+process of equalization. Here we are explicitly factoring out the role
+of prior probabilities.
 
 \begin{figure}
 
@@ -1883,65 +2012,98 @@ Bottom graph: the two null lines are equalized and the
 posterior lines adjusted accordingly. The posterior lines for individual 
 and joint support get much closer especially for 
 high posterior probability values.}
-\label{fig:strength-indiv-joint}
+\label{fig:post-indiv-joint}
 \end{figure}
 
-What happens if we make the same comparison between individual and
-composite claims by equalizing their prior probability so that the role
-of prior probabilities is factored out? If the claims are independent
-and equiprobable, let \(x\) be the prior probability of an individual
-claim 9when it is considered in isolation) and let \(x^{1/k}\) the prior
-probability of the same individual claim when it considered as a
-constituen claim of a composite claim that consosts of \(k\) claim, so
-that the prior probability of the composite claim equals
-\((x^{1/k})^k=x\) as desired. Figure \ref{fig:strength-indiv-joint}
-(bottom) shows the result of this process of equalization. We note two
-differences. First, the difference in posterior probability, albeit
-still present, is much less apparent. Second, the difference in
-posterior probability is npw reversed, that is, a composite claim
-suported by several items of evidence has a higher posterior probability
-compared to an individual claim supported by one item of evidence.
+We note two things. First, the difference in posterior probability,
+though still present, is less significant, especially for values above
+the 50\% threshold or even more clearly above the 95\% threshold.
+Second, whatever remaining difference in posterior probability is now
+reversed, that is, a composite claim supported by several items of
+evidence has a higher posterior probability compared to an individual
+claim supported by one item of evidence. These obervations establish
+that, by factorig out prior probabilities and under certain independence
+assumptions, whenever the individual claims meet the applicable
+threhsold, so does the composite claim, and conversely, whenever the
+composite claim, say \(A \wedge B\), meets the appliacable threshold, so
+do the individual claims (at least for relatively high values above 50\%
+or higher). Both directions of the conjunction principle have been, to
+some approximation, justified using Figure \ref{fig:post-indiv-joint}
+(bottom).
 
-Has the conjunction paradox disappared, then? To some extent, it has.
-Arguably, what worried Cohen was that, as the number of constituent
-claims increases, the prosection or the plaintiff would see their case
-against the defendant progressively weaken and thus it would become
-impposisble for them to establish liability. But this worry is an
-exageration, as we have just seen. As the number of constituent claims
-increases, it is not true that the case against teh defedant would
-automatically weaken. If teh role of prior probabilities is
-appropruately taken into into, the case against the defene could
-actually turn stronger, not weaker, if several constituent claims are
-each supported by an indeoedent line of evidence.
+This is a promising strategy for the legal probabilist to develop.
+Failure of the conjunction principle could be an artifact caused by the
+fact that the prior probabilities of the individual claims differ from
+the prior probability of the composite claim. So, once the prior
+probabilities are factored out, the conjunction might be validated in
+the probabilistic framework, and with that, the conjunction paradox
+would go away. For this strategy to succeed, however, the standard of
+proof should be understood in a manner that is not prior sensitive. This
+is quite natural. The standard of proof is a sufficiency criterion for
+how strong the evidence should be in order to justify a finding of
+criminal or civil liability against the defendant. The strength of the
+evidence in favor of a hypothesis---say the defendant is guilty of
+murder---need not depend on the prior probability of the hypothesis. In
+fact, it should solely depend on the quality of the evidence supporting
+the hypothesis, or else very good evidence in favor of an unlikely
+hypothesis could be regarded as worse evidence than otherwise poor
+evidence in favor of likely hypothesis.
 
-This strategy for addressing the difficulty about conjuctiom is a
-reminscent of a familiar point. The support of a piece of evidence
-\(E\)---or its evidentila strength---in favor of a hypothesis \(H\)
-should not be understood as a function of the conditional probability
-\(\pr{H | E}\), but rather as a function of thigns like teh Bayes fctor
-or the likelihood ratio. We discussed this point in earlier chapters
-(REFER TO EARLIER CHAPTERS) and we should keep it in mind while
-examining the difficulty about conjunction. In this vein, Dawid (1987)
-observes:
+As we will see in detail in what follows, this strategy cannot succeed.
+To preview, the basic argument is this. Suppose the standard of proof is
+no longer understood as a threshold on the posterior probability given
+the evidence, but rather, as threshold on evidential strength. Two
+common probabilistic measures of evidential strength are the Bayes
+factor or the likelihood ratio. We discussed this topic in earlier
+chapters (REFER TO EARLIER CHAPTERS). Under plausible assumptions, these
+measures of evidential strength validate one direction of the
+conjunction principle, what we call aggregation. If \(a\) is
+sufficiently strong evidence in favor of \(A\) and \(b\) is sufficiently
+strong evidence in favor of \(B\), then \(a\wedge b\) is sufficiently
+strong evidence in favor of the conjunction \(A \wedge B\). In fact, the
+evidential support for the conjunction will often exceed that for the
+individual claims, a point already made by Dawid (1987):
 
-\begin{quote} When the problem is analysed carefully, the `paradox' evaporates: suitably measured, the support supplied by the conjunction of several independent testimonies exceeds that supplied by any of its constituents.
+\begin{quote} suitably measured, the support  supplied by the conjunction of several independent testimonies exceeds that supplied by any of its constituents.
  \end{quote}
 
-\noindent
+\noindent Dawid thought this fact was enough for the conjuction paradox
+to `evaporate'. To some extent, this is true since we are vindicating
+one direction of the conjunction principle. However, the other direction
+does not hold, what we call distribution. If \(a \wedge b\) is
+sufficiently strong evidence in favor of \(A \wedge B\), it does not
+follow that \(a\) is sufficiently strong evidence in favor of \(A\) or
+\(b\) sufficiently strong evidence in favor of \(B\). It is not even
+true that, if \(a \wedge b\) is sufficiently strong evidence in favor of
+\(A \wedge B\), then \(a\wedge b\) is sufficiently strong evidence in
+favor of \(A\) or \(B\). This is odd. It would mean that, given a body
+of evidence, one can establish beyond a reasonable doubt that
+\(A \wedge B\) (say the defendant killed the victim \textit{and} did so
+intentionally) while failing to establish by the same standard one of
+the conjuncts.
 
-This claim should not be surprising. Under certain conditions, a
-composite claim supported by several lines of evidence can receive
-stronger support than an indivudual claim (see Figure
-\label{fig:strength-indiv-joint} at the bottom). Although Dawid does not
-provide a general proofof this claim, he seems to be suggesting that
-posterior probabilities should be replaced with probabilistic measures
-of evidential support, such as the Bayes factor or the likelihood ratio.
-Does this strategy yktimately solve the conjunction paradox? By using
-the theory of Bayesian networks, we will first verify under what
-conditions Dawid's claim holds. Next, we will show---perhpas
-surprisingly---that the difficulty about conjuntion will not go away
-even after switching from posterior probabilities to measures of
-evidential support.
+Interestingly, if instead of probabilistic measures of evidential
+strength such as the Bayes factor or the likelihood ratio, we use
+posterior probabilities, the other direction of conjuction
+principle---aggregation, not distribition---fails. So we are in a
+dilemma. If the standard of proof is understood as a threshold relative
+to the posterior probability, the conjunction principle fails becaue
+aggregation fails while distribution succeeds. If, on the other hand,
+the standard of proof is understood as a threshold relative to measures
+of evidential strength, the conjuction principle fails because
+distribution fails while aggregation succeeds. From a probabilistic
+perspective, it seems impossible to capture both directions of the
+conjunction principle into one unified account.
+
+The arguemnt taht follows is somewhat tedious. The reader can take our
+word for it and jump ahead or dive into it at their own peril! In what
+follows, by using the theory of Bayesian networks, we will first verify
+under what conditions Dawid's claim that `suitably measured, the support
+supplied by the conjunction of several independent testimonies exceeds
+that supplied by any of its constituents' holds. Next, we will
+show---perhpas surprisingly---that the difficulty about conjunction does
+not subside even after switching from posterior probabilities to
+measures of evidential support.
 
 \hypertarget{bayes-factor-threshold}{%
 \subsection{Bayes factor threshold}\label{bayes-factor-threshold}}
@@ -1983,79 +2145,54 @@ s_{AB}& =  s_{A}\times s_{B}
 \noindent
 The step marked by the asterisk rests on the 
 independence assumptions codified in the Bayesian network 
-in Figure \ref{network-conjunction} (top). 
-This result can be generalized 
-beyond two pieces of evidence and holds generally.} That is,
-\begin{align*}
+in Figure \ref{network-conjunction} (top).} That is, \begin{align*}
 \frac{\pr{a \wedge b| A\wedge B}}{\pr{a \wedge b}} & =  \frac{\pr{a |A}}{\pr{a}} \times \frac{\pr{b |B}}{\pr{b}} \\
 s_{AB}& =  s_{A}\times s_{B}.
  \end{align*}
 
 \noindent  Thus, the combined support \(s_{AB}\) will always be higher
 than the individual support so long as \(s_{A}\) and \(s_{B}\) are
-greater than one. This vindicates Dawid's claim that `the support
-supplied by the conjunction of several independent testimonies exceeds
-that supplied by any of its constituents'.
+greater than one. This result can be generalized beyond two pieces of
+evidence and holds generally. Figure REFERENCE TO FIGURE BELOW compares
+the Bayes factor of one item of evidence, say
+\(\frac{\pr{a \vert A}}{\pr{a}}\) with the combined Bayes factor for
+five item of evidence, say
+\(\frac{\pr{a_1 \wedge \dots a_5 \vert A_1 \wedge \dots A_5}}{\pr{a_1\wedge \dots a_5}}\),
+for dfferent values of sensitivity and specificity of the evidence. The
+latter always exceeds the fomer.
 
-Crucially, if we rely on the Bayes factor as a measure of evidential
-support, Dawid's claim holds in the class of cases characterized by the
-relationships of probabilistic independence encoded in the Bayesian
-network in Figure \ref{network-conjunction} (top). The structure of the
-network is rather natural because each piece of evidence bears on its
-hypothesis and is probabilistically independent conditional on one of
-the hypotheses. This captures the fact that \(a\) and \(b\) are
-independent lines of evidence, each supporting their respective
-hypothesis (SEE DISCUSSION IN EARLIER CHAPTERS). One might wonder,
-however, why the arrows go from \(A\) and \(B\) into the node
-representing the conjunction \(A\wedge B\). This arrangement ensures
-that \(A\) and \(B\) are probabilistically independent, an assumption
-often made in the formulation of the conjunction
-paradox.\footnote{Another reason why the arrow is incoming into node $A\wedge B$ is that this setting can capture the meaning of the conjunction. The constraint that, for the conjunction to be true, both $A$ and $B$ have to be true, can be defined using conditional probability tables.}
+\textbackslash{}begin\{figure\}
 
-\begin{center}
-\begin{figure}[h!]
-\begin{tikzpicture}[
-  node distance=1cm and 1cm,
-  mynode/.style={draw,ellipse,text width=1cm,align=center}
-]
-\node[mynode] (h1) {$A$};
-\node[mynode,below right =of h1] (h3) {$A \wedge B$};
-\node[mynode,above right =of h3] (h2) {$B$};
-\node[mynode,below  =of h1] (e1) {$a$};
-\node[mynode,below  =of h2] (e2) {$b$};
-\path 
-(h1) edge[-latex] (h3)
-(h2) edge[-latex] (h3)
-(h1) edge[-latex] (e1)
-(h2) edge[-latex] (e2); 
-\end{tikzpicture}
+\begin{verbatim}
+## Warning: Removed 91 rows containing missing values (geom_path).
+\end{verbatim}
 
-\begin{tikzpicture}[
-  node distance=1cm and 1cm,
-  mynode/.style={draw,ellipse,text width=1cm,align=center}
-]
-\node[mynode] (h1) {$A$};
-\node[mynode,below right =of h1] (h3) {$A \wedge B$};
-\node[mynode,above right =of h3] (h2) {$B$};
-\node[mynode,below  =of h1] (e1) {$a$};
-\node[mynode,below  =of h2] (e2) {$b$};
-\path 
-(h1) edge[-latex] (h2)
-(h1) edge[-latex] (h3)
-(h2) edge[-latex] (h3)
-(h1) edge[-latex] (e1)
-(h2) edge[-latex] (e2); 
-\end{tikzpicture}
-\caption{Two Bayesian networks for two pieces of evidence and a combined hypothesis.}
-\label{network-conjunction}
-\end{figure}
-\end{center}
+\begin{verbatim}
+## Warning: Removed 526 rows containing missing values (geom_path).
+\end{verbatim}
 
-But what happens if \(A\) and \(B\) are not probabilistically
-independent? To drop independence, an arrow can be drawn between the
-variables representing the two claims. The resulting Bayesian network is
-depicted in Figure \ref{network-conjunction} (bottom). Given this
-network, the following holds:
+\begin{verbatim}
+## Warning: Removed 628 rows containing missing values (geom_path).
+\end{verbatim}
+
+\begin{center}\includegraphics[width=0.9\linewidth]{burden-proof3_files/figure-latex/unnamed-chunk-6-1} \end{center}
+
+\textbackslash{}end\{figure\}
+
+Dawid's claim that `the support supplied by the conjunction of several
+independent testimonies exceeds that supplied by any of its
+constituents' is therefore vindicated. The claim holds in the class of
+cases characterized by the relationships of probabilistic independence
+encoded in the Bayesian network in Figure \ref{network-conjunction}
+(top). As noted before, this network ensures that claim \(A\) and \(B\)
+are probabilistically independent, as well as that items of evidence
+\(a\) and \(b\) are conditionally independent (which captures formally
+the fact that they are independent lines of evidence).
+
+What happens if \(A\) and \(B\) are not necessarily probabilistically
+independent as in the Bayesian network in Figure
+\ref{network-conjunction} (bottom)? Given this network, the following
+holds:
 
 \begin{align*}
 \frac{\pr{a \wedge b| A\wedge B}}{\pr{a \wedge b}} & =  \frac{\pr{a |A}}{\pr{a}} \times \frac{\pr{b |B}}{\pr{b|a}} \\
@@ -2087,11 +2224,12 @@ provided \(s_A\) and \(S_B\) are both greater than one, but it might not
 always exceed the support supplied by \(s_A\) and \(s_B\) individually.
 For suppose \(s_A=2\) and \(s_B=3\), but \(s^{'}_B=1.2\). Then,
 \(s^{'}_{AB}=2\times 1.2=2.4\), which is below the individual support
-\(s_B\), but still above \(s_A\). In general, Dawid's claim should be
-amended as follows. Even though the support supplied by the conjunction
-of several independent testimonies need not always exceed that supplied
-by any of its constituents, it is always at least as great as the
-smallest support supplied by its
+\(s_B\), but still above \(s_A\). For the case in which \(A\) and \(B\)
+are probabilistically dependent, Dawid's claim should be amended as
+follows. Even though the support supplied by the conjunction of several
+independent testimonies need not always exceed that supplied by any of
+its constituents, it is always at least as great as the smallest support
+supplied by its
 constituents.\footnote{DO WE NEED A PROOF OF THIS? THIS SHOULD BE CLEAR BY PLOTTING. IN PLITTING THIS, WE SHOULD ENSURE THAT BOTH BF ARE GREATER THAN ONE, THEN THE COMBINED ONE WILL BE GREATER THAN THE SMALLEST EVEN WHEN A AND B ARE DEPENDENT.}
 
 If the combined support equals \(s_{A}\times s_{B}\) or
@@ -2105,17 +2243,33 @@ stringent the standard of proof, for any value above one. In criminal
 trials, for example, the rule of decision would be: guilt is proven
 beyond a reasonable doubt if and only if the evidential support in favor
 of \(G\)---as measured by the Bayes factor
-\(\frac{\pr{E | G}}{\pr{E}}\)---meets a suitably high threshold \(t\).
-The obvious question at this point is, how do we identify the
-appropriate
-threshold?\todo{good question, will think about it, will need to take a look at "Bayesian Choice", also need to think about a counterexample}\footnote{QUESTION: CAN DECISION THEORY BE APPLIED TO THE BAYESIAN FACTOR OR IS IT ALWAYS ABOUT POSTERIOR PROBABILITIES? IF THERE IS NO DECISION THEORY APPLICABLE HERE, THAT WOULD BE A FURTHER DIFFICULTY.}
-We will not discuss this question for now. As it turns out, even if this
-question can be satisfactorily answered, this approach gives rise to a
-complication that proves fatal.
+\(\frac{\pr{E | G}}{\pr{E}}\)---meets a suitably high threshold
+\(t_{BF}\). The obvious question at this point is, how do we identify
+the appropriate
+threshold?\todo{good question, will think about it, will need to take a look at "Bayesian Choice", also need to think about a counterexample}
 
-At issue here is whether the conjunction principle can be formalized in
-a plausible manner with the Bayes factor. Unfortuantely, the answer is
-negative. To see why, first recall the conjunction principle:
+One strategy is to derive the Bayes factor threshold, call it
+\(t_{BF}\), from the posterior threshold \(t\). Since
+\(\textit{posterior }=\textit{ Bayes factor }\times \textit{ prior}\),
+the Bayes factor threshold can be determined as follows:
+
+\[\frac{t}{\textit{prior}}=t_{BF}\]
+
+\noindent The higher the prior probability, the lower \(t_{BF}\).
+Whether this is a desirable property for a decision threshold can be
+questioned, but the same can be said about the posterior threshold
+\(t\). The higher the prior probability, the easier to meet the
+posterior threshold.
+
+Presumably, the threshold \(t_{BF}\) should be applied to individual as
+well as composite claims. Since the threshold varies depending on the
+priors, the thresholds for the individual claims \(A\) and \(B\),
+denoted by \(t_{BF}^A\) and \(t_{BF}^B\), will differ from the threshold
+for the composite claim \(A \wedge B\), denoted by
+\(t_{BF}^{A\wedge B}\). At issue here is whether the conjunction
+principle can be formalized in a plausible manner with the Bayes factor.
+Unfortuantely, the answer is negative. To see why, first recall the
+conjunction principle:
 
 \[\text{S[$a, A$] and S[$b, B$] iff S[$a \wedge b, A\wedge B$]},\]
 
@@ -2124,16 +2278,100 @@ hypothesis \(H\) by standard \(S\). If the standard of proof is
 formalized using the Bayes factor, the conjunction principle would boil
 down to:
 
-\[  \text{ $\frac{\pr{a | A }}{\pr{a}}>t$ and $\frac{\pr{ b | B}}{\pr{b}}>t$ iff $\frac{\pr{a \et b | A \et B}}{\pr{a \et b}}>t$ } \]
+\[  \text{ $\frac{\pr{a | A }}{\pr{a}}>t^A_{BF}$ and $\frac{\pr{ b | B}}{\pr{b}}>t^B_{BF}$ iff $\frac{\pr{a \et b | A \et B}}{\pr{a \et b}}>t^{A\wedge B}_{BF}$ } \]
+
+\noindent Consider a posterior threshold \(t=0.95\), as might be
+appropriate in a criminal case. If \(A\) and \(B\) both have a prior
+probability of \(10\%\), the threshold
+\(t^A_{BF}=t_{BF}^B=0.95/0.1=9.5\) for \(A\) or \(B\) individually.
+Assuming independence of \(A\) and \(B\), the composite claim
+\(A \wedge B\) will be associated with the threshold
+\(t^{A\wedge B}_{BF}=0.95/(0.1*0.1)=95\), a much higher value. But if
+each individual claim meets its Bayes factor threshold of 9.5 and the
+two claims are independent, the joint Bayes factor would equal the
+multiplication of the individual Bayer factors, that is,
+\(9.5*9.5=90.25\). This is not quite enough to meet
+\(t^{A\wedge B}_{BF}=95\), but is fairly close. The difference in
+absolute terms grows as the prior probability of the individual claims
+becomes lower, but the combined Bayes factor remains only \(5\%\) below
+the value needed to meet
+\(t_{BF}^{A\wedge B}\).\footnote{The difference at here is between $t_{BF}^{A\wedge B}=0.95/p^2$ and $t_{BF}^{A}*t_{BF}^{B}=(0.5/p)^{2}$. Note that $\frac{0.95/p^2 - (0.5/p)^{2}}{0.95/p^2}=5\%$, for any value of the prior $p$.}
+Perhaps this is a good enough approximation. However, as the number of
+constituent claims grows, the difference becomes
+larger.\footnote{Given five constituent claims, $\frac{0.95/p^5 - (0.95/p)^{5}}{0.95/p^5}=18\%$.}
+In addition, the difference becomes larger with a lower posterior
+probability threshold, say \(0.5\). Even with just two claims,
+\(t^{A\wedge B}_{BF}=0.5/(0.1*0.1)=50\), but
+\(t^A_{BF}*t_{BF}^B=(0.5/0.1)*(0.5/0.1)=25\), only half the required
+value. The conjunction principle therefore fails in a large number of
+cases even using the Bayes factor threshold.
+
+\begin{verbatim}
+## [1] 9.5
+\end{verbatim}
+
+\begin{verbatim}
+## [1] 95
+\end{verbatim}
+
+\begin{verbatim}
+## [1] 90.25
+\end{verbatim}
+
+\begin{verbatim}
+## [1] 95
+\end{verbatim}
+
+\begin{verbatim}
+## [1] 9500
+\end{verbatim}
+
+\begin{verbatim}
+## [1] 9025
+\end{verbatim}
+
+\begin{verbatim}
+## [1] 950000
+\end{verbatim}
+
+\begin{verbatim}
+## [1] 902500
+\end{verbatim}
+
+\begin{verbatim}
+## [1] 5
+\end{verbatim}
+
+\begin{verbatim}
+## [1] 50
+\end{verbatim}
+
+\begin{verbatim}
+## [1] 25
+\end{verbatim}
+
+The alternative here is to fix the Bays factor threshold regardless of
+the prior probability of the claim of interest. This raises the
+difficult question of how to fix the Bayesian factor threshold
+irrespective of the priors. Standard decision theory can no longer be
+used. As it turns out, even if the question can be satisfactorily
+answered, the fixed threshold approach gives rise to a complication that
+proves fatal. If the standard of proof is formalized using a fixed Bayes
+factor threshold \(t_{BF}\), the conjunction principle would boil down
+to:
+
+\[  \text{ $\frac{\pr{a | A }}{\pr{a}}>t_{BF}$ and $\frac{\pr{ b | B}}{\pr{b}}>t_{BF}$ iff $\frac{\pr{a \et b | A \et B}}{\pr{a \et b}}>t_{BF}$ } \]
 
 \noindent The left-to-right direction---call it aggregation---is likely
-to hold for any threhsold \(t\) greater than one. As shown earlier, the
-combined evidential support is greater than the individual evidential
-support if A and B are independent, or greater than the smallest
-individual support if A and B are dependent. Aggregation could not be
-justified using posterior probabilities \(\pr{A | a}\) and
-\(\pr{B | b}\). So it is an advantage of the Bayes factor that it can
-justify this direction of the conjunction principle.
+to hold for any threshold \(t_{BF}\) greater than one. As shown earlier,
+the combined evidential support is greater than the individual
+evidential support if A and B are independent, or greater than the
+smallest individual support if A and B are dependent. Aggregation could
+not be justified using posterior probabilities \(\pr{A | a}\) and
+\(\pr{B | b}\) nor could it be justified generally using a variable
+Bayesian factor threshold. So it is an advantage of the fixed Bayes
+factor threshold that it can justify this direction of the conjunction
+principle.
 
 However, the right-to-left direction---call it distribution---has now
 become problematic. For suppose the combined evidential support,
@@ -2161,7 +2399,7 @@ the requisite standard (given \(a\)) nor does \(B\) (given \(b\)).
 But consider a less controversial version, holding the evidence
 constant:
 
-\[\text{If S[$a \wedge b, A\wedge B$], then S[$a \wedge b, A$] and S[$b \wedge b, B$].} \tag{DIS2}\]
+\[\text{If S[$a \wedge b, A\wedge B$], then S[$a \wedge b, A$] and S[$a \wedge b, B$].} \tag{DIS2}\]
 
 \noindent This principle is harder to deny. That is, one would not want
 to claim that, holding fixed evidence \(a\wedge b\), establishing the
@@ -2172,11 +2410,15 @@ Certainly any formalization of the standard of proof should obey (DIS2).
 And yet, it is this very principle that we should deny if we understand
 the standard of proof using the Bayes factor.
 \footnote{To show that (DIS2) fails, it is enough to show that $\frac{\pr{B \vert a\wedge b \wedge A}}{\pr{B \vert A}}>1$ because $S[a\wedge b, A\wedge B]>S[a\wedge b, A]$ iff $\frac{\pr{a\wedge b \vert A \wedge B}}{\pr{a\wedge b}}>\frac{\pr{a\wedge b \vert A}}{\pr{a\wedge b}}$ iff $\frac{\pr{A\wedge B \vert a \wedge b}}{\pr{A\wedge B}}>\frac{\pr{A \vert a \wedge b }}{\pr{A}}$ iff $\frac{\pr{A \vert a \wedge b} \times \pr{B \vert a\wedge b\wedge A}}{\pr{A} \times \pr{B \vert A}}>\frac{\pr{A \vert a \wedge b }}{\pr{A}}$. Now, $\frac{\pr{B \vert a\wedge b \wedge A}}{\pr{B \vert A}}>1$ so long as $a\wedge b$ positively supports $B$ even under the assumption of $A$, unless $A$ entailed $B$. We naturally exclude the situation in which one claim entails the other because otherwise there would be no need to establish the two claims. Establishing one claim alone would suffice. To see why $a\wedge b$ positively supports $B$ (or $A$), note that $S[a, A]=\frac{\pr{a |A}}{\pr{a}} \leq \frac{\pr{a |A} \times \pr{b | A \wedge a}}{\pr{a}\times \pr{b | a}}=\frac{\pr{a \wedge b |A}}{\pr{a\wedge b}}=S[a \wedge b, A]$. The key step here is $\frac{\pr{a |A}}{\pr{a}} \leq \frac{\pr{a |A} \times \pr{b | A \wedge a}}{\pr{a}\times \pr{b | a}}$. The latter holds because $\frac{\pr{b | A \wedge a}}{\pr{b | a}}\geq 1$. It is useful to distinguish two cases. First, if $A$ and $B$ are probabilistically independent, as in the Bayesian network in Figure \ref{network-conjunction} (top), then $\frac{\pr{b | A \wedge a}}{\pr{b | a}}= \frac{\pr{b}}{\pr{b}} = 1$. Second, if $A$ and $B$ are probabilistically dependent, as in the Bayesian network in Figure \ref{network-conjunction} (bottom), evidence $b$ positively supports claim $A$ (even conditional on $a$) so long as $b$ positively supports $B$. The assumption is that claim $A$ and $B$ are positively correlated, and thus, any evidence that supports one of the claims is going to support the other claim, as well. \textbf{SEE EARLIER CHAPTERS FOR A MORE RIGOROUS PROOF OF THIS LAST POINT.}}
-The intuitive reason for this---perhaps surprising---result is that
+In case \(A\) and \(B\) are probabilistically independent, (DIS1) and
+(DIS2) are in fact equivalent, so rejectign one requires rejecting the
+other.\footnote{$\frac{\pr{a\wedge b \vert A}}{\pr{a\wedge b}}=\frac{\pr{a \vert A}\pr{b \vert A}}{\pr{a}\pr{b}}=\frac{\pr{a \vert A}}{\pr{a}}$. In other words, $S[a \wedge b, A]=S[a, A]$.}
+The intuitive reason for this--- perhpas surprising---result is that
 \(A \wedge B\) has a much lower prior probability than \(A\) (or \(B\))
 considered separately. Thus, the same body of evidence is going to have
 a larger impact on a hypothesis with a lower prior probability, other
-things being equal.
+things being equal. This larger impact on the prior is reflected in a
+larger Bayes factor.
 
 All in all, using Bayes factor to understad the standard of proof has
 counterintuitive consequences, what we will call the distribution
@@ -2191,13 +2433,6 @@ injured the victim, the prosecution could nevertheless prove beyond a
 reasonable doubt that the defendant injured the victim and did so
 intentionally. This is odd.
 
-EXPLORE WHETHER DIFFERENCE IN BAYESIAN FACTOR IS NUMERICALLY SIGNIFICANT
-OR NOT. USE GRAPH AND PLOT RESULTS. TRY TO FACTOR OUT THE IMPACT OF
-PRIORS BUT STRESS THAT BF DOES DEPEND ON PRIORS AND THUS THE DIFFERENCE
-IN BF IS ARTFICIAL AND DEPENDS ON PRIOR, SO BF BEHAVES AGAIN LIKE THE
-POSTERIORS THAT ARE DEPENDENT ON PRIORS. NEED TO FACTOR OUT ROLE OF
-PRIORS OTEHRWISE IT'S JUST LIKE COMPARING APPLES AND ORANGES.
-
 \hypertarget{likelihood-ratio-threshold}{%
 \subsection{Likelihood ratio
 threshold}\label{likelihood-ratio-threshold}}
@@ -2211,70 +2446,83 @@ hypothesis is true, that is,
 \(\frac{\pr{E \vert H}}{\pr{E \vert \neg H}}\). The greater the
 likelihood ratio (for values above one), the stronger the evidential
 support in favor of the hypothesis (as contrasted to the its negation).
-We discussed extensively the advatanges and limitations of this account
-in \textbf{REFERENCE TO EARLIER CHAPTER}. Like the Bayes factor, the
-likelihood ratio can be used to formalize the standard of proof by
-equating the standard to a threshold \(t\) above one. The greater the
-threshold, the more stringent the standard. In criminal trials, for
-example, the rule of decision would be: guilt is proven beyond a
-reasonable doubt if and only if the evidential support in favor of
-\(G\)---as measured by the likelihood ratio
-\(\frac{\pr{E \vert G}}{\pr{E \vert \neg G}}\)---meets a suitably high
-threshold \(t\) above one. Setting aside the problem of how ot identify
-the appropriate threshold, we will see that this approach is able to
-justify one direction of the conjunction principle---what we called
-aggregation---but still fails to justify the other direction---what we
-called distribution So the distribution paradox arises here again.
+We discussed extensively the advantages and limitations of this account
+in \textbf{REFERENCE TO EARLIER CHAPTER}.
 
-Consider aggregation first. Say both individual likelihood ratios
-\(\frac{\pr{a |A}}{\pr{a | \neg A}}\) and
-\(\frac{\pr{b |B}}{\pr{b | \neg B}}\) are above the requisite threshold
-\(t\) for meeting the standard of proof. Will the combined likelihood
-ratio \(\frac{\pr{ a \et b |A \et B}}{\pr{a \et b | \neg (A \et B)}}\)
-also be above the threshold? The answer is affirmative. To see why,
-consider numerator and denominator separately. The numerator can be
-computed easily: \begin{align*}
+We can think of the the likelihood rato as the following:
+
+\[\frac{\textit{sensitivity}}{\textit{1- specificity}}\]
+
+\noindent Unlike the Bayes factor, the likleihood ratio is not sensitive
+to the priors so long as sensitivity and specificity are not. In this
+sense, it is a more suitable measure if we want to factor out the
+effects that priors may have on the assessment of evidential strength.
+But this advantage is short lived. Even the likelihood ratio is
+sensitive to priors when one considers a composite claim instead of an
+individual claim.
+
+To see why, consider the combined ikelihood ratio
+\(\frac{\pr{ a \et b |A \et B}}{\pr{a \et b | \neg (A \et B)}}\). The
+numerator can be computed easily:\footnote{ \begin{align*}
 \pr{a \wedge b| A\wedge B} & =  \frac{\pr{A \et B \et a\et b}}{\pr{A \et B}}\\
 &= \frac{   \pr{A} \times \pr{B|A} \times \pr{a | A \wedge B} \times \pr{b | A \wedge B \wedge a} }{\pr{A} \times \pr{B \vert A}}\\
 & =^* \frac{\pr{A} \times \pr{B | A} \times \pr{a | A} \times \pr{b | B}}{\pr{A}  \times \pr{B | A}} \\
 & = \pr{a | A} \times \pr{b | B} 
  \end{align*}
+  The asterisk marks the step that requires the indepedence assumptions in Figure \ref{network-conjunction}.
+  }
 
+\[ \pr{a \wedge b| A\wedge B} = \pr{a | A} \times \pr{b | B} \]
 \noindent The equality requires the independence assumptions codified in
-either one of the Bayesian networks in Figure \ref{network-conjunction}.
-The asterisk marks the step that requires such indepedence assumptions.
-The denominator is more involved: \begin{align*}
+the Bayesian networks in Figure \ref{network-conjunction}. That is, the
+two items of evidence should be independent of one another conditional
+on the hypothesis they support. The numerator does not depend on the
+priors associated with \(A\wedge B\). Call it
+\textit{combined sensitivity}, simply resulting from multiplying the
+sensitivity of the individual items of evidence, \(a\) and \(b\),
+relative to their respective hyptheses, \(A\) and \(B\).
+
+The denominator is more involved:\footnote{   \begin{align*}
 \pr{a \et b| \neg (A\et B)} & = \frac{\pr{a \et b \et \neg (A\et B)}}{\pr{\neg (A \et B)}} \\
 & = \frac{\pr{a \et b \et \neg A\et B} +  \pr{a \et b \et A\et \neg B} + \pr{a \et b \et \neg A\et \neg B}  }{\pr{\neg A \et B} + \pr{A \et \neg B} + \pr{\neg A \et \neg B} } \\
 & =^* \frac{\pr{\neg A}\pr{B \vert \neg A} \pr{a | \neg A}\pr{b | B} + \pr{A}\pr{\neg B \vert A} \pr{a | A }\pr{b | \neg B} + \pr{\neg A}\pr{\neg B \vert \neg A } \pr{a | \neg A}\pr{b | \neg B}}{\pr{\neg A}\pr{B \vert \neg A} + \pr{A}\pr{\neg B \vert A } + \pr{\neg A}\pr{\neg B \vert \neg A} }  
  \end{align*}
+   The asterisk marks the step that requires the indepedence assumptions in Figure \ref{network-conjunction}.
+   }
 
-\noindent  The same independence assumptions invoked before are
-needed\todo{I am not convinced, we should be more careful here. M: It'd be great to run the program that checks for independencies, though I am pretty sure.}
-marked by the asterisk in the derivation. Combining numerator and
-denominator yields the formula for the combined likelihood ratio:
+\[\pr{a \et b| \neg (A\et B)} = \frac{\pr{\neg A}\pr{B \vert \neg A} \pr{a | \neg A}\pr{b | B} + \pr{A}\pr{\neg B \vert A} \pr{a | A }\pr{b | \neg B} + \pr{\neg A}\pr{\neg B \vert \neg A } \pr{a | \neg A}\pr{b | \neg B}}{\pr{\neg A}\pr{B \vert \neg A} + \pr{A}\pr{\neg B \vert A } + \pr{\neg A}\pr{\neg B \vert \neg A} } \]
+
+\noindent  The same independence assumptions invoked before are needed
+here. Unlike the numerator, the denominator---call it
+\textit{combined specificity}---depends on the priors of \(A\) and \(A\)
+and thus on the priors of \(A\wedge B\). Putting numerator and
+denominator together yields the formula for the combined likelihood
+ratio.
 
 \begin{align*}
 \frac{\pr{a \wedge b \vert A\wedge B}}{\pr{a \et b| \neg (A\et B)}} & = \frac{\pr{a | A} \times \pr{b | B}}{\frac{\pr{\neg A}\pr{B \vert \neg A} \pr{a | \neg A}\pr{b | B} + \pr{A}\pr{\neg B \vert A} \pr{a | A }\pr{b | \neg B} + \pr{\neg A}\pr{\neg B \vert \neg A } \pr{a | \neg A}\pr{b | \neg B}}{\pr{\neg A}\pr{B \vert \neg A} + \pr{A}\pr{\neg B \vert A } + \pr{\neg A}\pr{\neg B \vert \neg A} } }
  \end{align*}
 
-\noindent It is a cumbersome formula. Becasue of the many variables at
-play, it is not easy to show whether the combined evidential support
-exceeds the individual support supplied by \(a\) and \(b\) towards \(A\)
-and \(B\). To circumvent this difficulty, we provide two arguments. One
-argument is analytical, but rests on a few simplifying assumptions. The
-second is based on a computer simulation and is more general.
+As with the Bayes factor, under suitable independence assumptions, the
+combined likelihood ratio exceeds the individual likelihood ratio so
+logn as the two pieces of evidence have the same sensitivity and
+specificity. If they have differnt levels of sensitivity and
+specificity, the combined likelihood ratio never goes below the lowest
+of the two individual likelihood ratios.
 
-In the analytical argument, we make three simplifying assumptions.
-First, the sensitivity of a piece of evidence, say \(\pr{a |A}\), is the
-same as its specificity, \(\pr{\neg a | \neg A}\). Let \(\pr{a |A}=x\)
-and \(\pr{b |B}=y\). So \(\pr{a |\neg A}=1-x\) and
-\(\pr{b | \neg B}=1-y\). Second, claims \(A\) and \(B\) are independent
-of one another, a common stipulation in discussions on the difficulty
-about conjunction as noted before. Finally, the sensitivity (and thus
-the specificity) of the two pieces of evidence is the same, that is,
-\(\pr{a |A}=x=\pr{b |B}=y\). The combined likelihood ratio therefore
-reduces to the following, where \(\pr{A}=k\) and \(\pr{B}=t\):
+Becasue of the many variables at play, it is not easy to compare the
+combined evidential support and the individual support supplied by \(a\)
+and \(b\) towards \(A\) and \(B\), as measured by the individual and
+combined likelihood ratio. To circumvent this difficulty, we make three
+simplifying assumptions. First, the sensitivity of a piece of evidence,
+say \(\pr{a |A}\), is the same as its specificity,
+\(\pr{\neg a | \neg A}\). Let \(\pr{a |A}=x\) and \(\pr{b |B}=y\). So
+\(\pr{a |\neg A}=1-x\) and \(\pr{b | \neg B}=1-y\). Finally, the
+sensitivity (and thus the specificity) of the two pieces of evidence is
+the same, that is, \(\pr{a |A}=x=\pr{b |B}=y\). Finally, as is
+customary, claims \(A\) and \(B\) are independent of one another. The
+combined likelihood ratio therefore reduces to the following, where
+\(\pr{A}=k\) and \(\pr{B}=t\):
 
 \begin{align*}
 \frac{\pr{a \wedge b \vert A\wedge B}}{\pr{a \et b| \neg (A\et B)}} & = \frac{xx}{\frac{(1-k)t(1-x)x + k(1-t)x(1-x) + (1-k)(1-t)(1-x)(1-x)}{ \left(1-k\right) t +\left(1-t\right) k+\left(1-k\right) \left(1-t\right)}}
@@ -2283,14 +2531,15 @@ reduces to the following, where \(\pr{A}=k\) and \(\pr{B}=t\):
 \noindent The graph of the combined likelihood ratio can now be easily
 plotted against the single likelihood ratios. As Figure
 \ref{fig:jointLRMarcello} shows, the combined likelihood ratio varies
-depeding on the prior probabilities \(\pr{A}\) and \(\pr{B}\), but
-always execeeds the individual likelihood ratios whenever they are
-greater than one.
+depeding on the prior probabilities \(\pr{A}\) and \(\pr{B}\), as
+expected, but always execeeds the individual likelihood ratios whenever
+they are greater than one (that is, the two piece of evidence provides
+positive support for their respective hypothesis)
 
 \begin{figure}
 
 
-\begin{center}\includegraphics[width=0.9\linewidth]{burden-proof3_files/figure-latex/unnamed-chunk-6-1} \end{center}
+\begin{center}\includegraphics[width=0.9\linewidth]{burden-proof3_files/figure-latex/unnamed-chunk-8-1} \end{center}
 
 \caption{Combined likelihood ratios exceeds individual Likelihood ratios. Changes in the prior 
 probabilities $t$ and $k$ do not invalidate this result.}
@@ -2306,38 +2555,198 @@ the individual likelihood ratios are greater than one.
 \textbf{M: what about dropping other assumptions?}
 
 \todo{M: Need to add simuation results to make this argument 
-fully general and drop all the simplifying assumptions.}
+fully general and drop all the simplifying assumptions. For example, what if the two 
+hyptheses are not independent?}
 
-The argument so far verified Dawid's claim that `the support supplied by
-the conjunction of several independent testimonies exceeds that supplied
-by any of its constituents'. One caveat here is that, if evidential
-support is measured by the likelihood ratio, the support supplied by the
-conjunction of different independent pieces of evidence always exceeds
-the smallest of the support supplied by its consitituents, but there are
-cases in which it does not exceeds the support supplied by some of its
-constituents. This detail aside, the likelihood ratio faces another
-problem, the same problem that plagues the Bayes factor. That is,
-likelihood ratios still fail to capture the other direction of the
-conjunction principle, what we called extrapolation.
+The argument, once again, verified Dawid's claim that `the support
+supplied by the conjunction of several independent testimonies exceeds
+that supplied by any of its constituents'. One caveat is that, if
+evidential support is measured by the likelihood ratio, the support
+supplied by the conjunction of different independent pieces of evidence
+always exceeds the smallest of the support supplied by its
+consitituents, but there are cases in which it does not exceed the
+support supplied by some of its constituents.
+
+Like the Bayes factor, the likelihood ratio can be used to formalize the
+standard of proof by equating the standard to a threshold \(t\) above
+one. The greater the threshold, the more stringent the standard. In
+criminal trials, for example, the rule of decision would be: guilt is
+proven beyond a reasonable doubt if and only if the evidential support
+in favor of \(G\)---as measured by the likelihood ratio
+\(\frac{\pr{E \vert G}}{\pr{E \vert \neg G}}\)---meets a suitably high
+threshold \(t\) above one.
+
+By the ratio version of Bayes' theorem,
+
+\[\textit{posterior ratio} = \textit{likelihood ratio} \times \textit{prior ratio},\]
+
+and thus
+
+\[\frac{\textit{posterior ratio}}{\textit{prior ratio}} = \textit{likelihood ratio}.\]
+
+If the posterior ratio is fixed at, say \(t/1-t\), the threshold on the
+likelihood ratio, call it \(t_{LR}\) is defined as:
+
+\[\frac{t/1-t}{\textit{prior ratio}} = t_{LR}.\]
+
+\noindent The likelihood ratio threshold will vary depending on the
+prior. The higher the prior, the lower the likelihood ratio threshold.
+So
+
+Consider the individual claim \(A\) and \(B\) and compared them with the
+composite claim \(A \wedge B\). Suppose the two claims are independent.
+Consider a posterior threshold of \(95\%\) as might be appropriate in a
+criminal case. Assuming \(A\) and \(B\) have a prior probability of
+\(20\%\) and \(30\%\) respectively, the likelihood ratio threshold for
+\(A\) and \(B\) will be \(t_{LR}^{A}\approx 76\) and
+\(t_{LR}^{B}a\approx 44\). The likelihood ratio threshold for the
+composite claim \(A \wedge B\) will be
+\(t^{A\wedge B}_{LR}\approx 297\).
+
+\begin{verbatim}
+## [1] 76
+\end{verbatim}
+
+\begin{verbatim}
+## [1] 44.33333
+\end{verbatim}
+
+\begin{verbatim}
+## [1] 297.6667
+\end{verbatim}
+
+Consider a posterior threshold of 50\% as might be appropriate in a
+civil case. Assuming \(A\) and \(B\) have a prior probability of 20\%
+and 30\% respectively, the likelihood ratio threshold for \(A\) and
+\(B\) will be \(t_{LR}^{A}\approx 4\) and \(t_{LR}^{B}a\approx 2\). The
+likelihood ratio threshold for the composite claim \(A \wedge B\) will
+be \(t^{A\wedge B}_{LR}\approx 15\).
+
+\begin{verbatim}
+## [1] 4
+\end{verbatim}
+
+\begin{verbatim}
+## [1] 2.333333
+\end{verbatim}
+
+\begin{verbatim}
+## [1] 15.66667
+\end{verbatim}
+
+As expected, other things being equal, the likelihood ratio threshold is
+lower for civil than criminal cases. The threshold is variable and
+depends on then prior, so claim that have higher priors are asociated
+with lower likelihood ratio threshold, such as \(A\) and \(B\), than
+claims associated with lower priors such as \(A \wedge B\).
+
+Now suppoose the individual likelihood ratios meet the threshold
+\(t_{LR}^{A}\) and \(t_{LR}^{B}\) give a posterior threshold of
+\(0.95\). To ensure that \(t_{LR}^{A}\) is met, evidence \(a\) should
+have a sensitivity of at least (roughly) 0.99 (and a specificity of
+1-sensitivity). To ensure that \(t_{LR}^{B}\) is met, evidence \(b\)
+should have a sensitivity of at least (roughly) 0.98 (and a specificity
+of 1-sensitivity). Holding fixed the values for sensitivity and
+specificity, does the combined likelihood ratio meet the threshold
+\(t_{LR}^{A\wedge B}\)? Not quite. The combined likelihood ratio equals
+about 145, far short that what the threshold \(t^{A\wedge B}_{LR}\)
+requires, namely a likelihood ratio of 297
+
+\begin{verbatim}
+## [1] 76
+\end{verbatim}
+
+\begin{verbatim}
+## [1] 75.92308
+\end{verbatim}
+
+\begin{verbatim}
+## [1] 44.33333
+\end{verbatim}
+
+\begin{verbatim}
+## [1] 44.45455
+\end{verbatim}
+
+\begin{verbatim}
+## [1] 145.1446
+\end{verbatim}
+
+Things do not look any better for a lower threshold. Now suppoose the
+individual likelihood ratios meet the threshold \(t_{LR}^{A}\) and
+\(t_{LR}^{B}\) give a posterior threshold of \(0.5\). To ensure that
+\(t_{LR}^{A}\) is met, evidence \(a\) should have a sensitivity of at
+least 0.8 (and a specificity of 1-sensitivity). To ensure that
+\(t_{LR}^{B}\) is met, evidence \(b\) should have a sensitivity of at
+least 0.7 (and a specificity of 1-sensitivity). To ensure that
+\(t_{LR}^{B}\) is met, evidence \(b\) should have a sensitivity of at
+least 0.7 (and a specificity of 1-sensitivity). Holding fixed the values
+for sensitivity and specificity, does the combined likelihood ratio meet
+the threshold \(t_{LR}^{A\wedge B}\)? Note quite. The combined
+likelihood ratio equals about 5, far short that what the threshold
+\(t^{A\wedge B}_{LR}\) requires, namely a likelihood ratio of 15.
+
+\begin{verbatim}
+## [1] 4
+\end{verbatim}
+
+\begin{verbatim}
+## [1] 4
+\end{verbatim}
+
+\begin{verbatim}
+## [1] 2.333333
+\end{verbatim}
+
+\begin{verbatim}
+## [1] 2.333333
+\end{verbatim}
+
+\begin{verbatim}
+## [1] 5.222222
+\end{verbatim}
+
+By using a likelihood ratio threshold that is prior dependent, the
+conjunction principle--in particular, what we called
+aggregation---fails. The alternative is to fix a likelihood ratio
+threshold irrespective of the prior. Setting aside the problem of how ot
+identify the appropriate threshold, we will see that this approach is
+able to justify one direction of the conjunction principle---what we
+called aggregation---but still fails to justify the other
+direction---what we called distribution So the distribution paradox
+arises here again.
+
+Consider aggregation first. Say both individual likelihood ratios
+\(\frac{\pr{a |A}}{\pr{a | \neg A}}\) and
+\(\frac{\pr{b |B}}{\pr{b | \neg B}}\) are above the requisite threshold
+\(t\) for meeting the standard of proof. Will the combined likelihood
+ratio \(\frac{\pr{ a \et b |A \et B}}{\pr{a \et b | \neg (A \et B)}}\)
+also be above the threshold? The answer is affirmative. As we argued
+earlier, the combined likelihood ratio is never below the lowest of the
+individual likelihood ratio. If both individual likelihood ratios meet
+the threhsold, so does the combined likelihood ratio. But this approach
+faces another problem, the same problem that plagues the Bayes factor.
+That is, likelihood ratios still fail to capture the other direction of
+the conjunction principle, what we called distribution.
 
 For suppose evidence \(a \et b\) supports \(A \et B\) to the required
 threshold \(t\). If evidential support is measured by the likelihood
 ratio, the threshold in this case should be some order of magnitude
 greater than one. If the combined likelihood ratio meets the threshold
-\(t\), one of the individual likelihood ratios may well be below the
-threshold. So---if the standard of proof is interpreted using evidential
+\(t_{LR}\), one of the individual likelihood ratios may well be below
+\(t_{LR}\) So---if the standard of proof is interpreted using evidential
 support measured by the likelihood ratio---even though the conjuction
 \(A \et B\) was proven according to the desired standard, one of
 individual claims might not. The right-to-left direction of the
 conjunction principle---that is, if \(S[a \et b, A \et B]\), then
-\(S[a, A] \et S[b, B]\), what we called earlier the extrapolation
-principle (EXT1)---fails.
+\(S[a, A] \et S[b, B]\), what we called earlier the distribution
+principle (DIS1)---fails.
 
 Consider now the second and less objectionale extrapolation principle
 discussed earlier. This is the principle that holds the evidence fixed
 throughout, repeated below for convenience:
 
-\[\text{If S[$a \wedge b, A\wedge B$], then S[$a \wedge b, A$] and S[$b \wedge b, B$].} \tag{EXT2}\]
+\[\text{If S[$a \wedge b, A\wedge B$], then S[$a \wedge b, A$] and S[$b \wedge b, B$].} \tag{DIS2}\]
 
 \noindent Here again, the support of \(a\wedge b\) in favor of
 \(A\wedge B\) could exceed that of \(a\wedge b\) in favor of \(A\) alone
@@ -2353,16 +2762,311 @@ in Figure \ref{network-conjunction},  $S[a\wedge b, A]=\frac{\pr{a \wedge b \ver
  $S[a\wedge b, A]=\frac{\pr{a \vert A}}{\pr{a \vert \neg A}}=S[a, A]$. Since $S[a, A]< S[a\wedge b, A\wedge B]$ (see Figure \ref{fig:jointLRMarcello}), it follows $S[a\wedge b, A]<S[a\wedge b, A\wedge B]$. \textbf{What if A and B are dependent? Need simulation data here.}}
 Even this second, seemingly unobjectionable version of extrapolation
 fails. The same counterintuitive consequences that arose with Bayes
-factor manifest themselves here. The extrapolation paradox persists.
+factor manifest themselves here. The distribution paradox persists.
 
 \todo{M: This whole section should be generalized to the case in which A and B are not 
-independent using the simulation dara.}
+independent using the simulation data.}
 
 \textbf{M: Might be goot to emphasize how devastaing this finding is for legal probabilists 
 who endorsed likelihood ratios as the solution to many problems with legal probabilism.}
 
-\hypertarget{the-comparative-stratgey}{%
-\subsection{The comparative stratgey}\label{the-comparative-stratgey}}
+\hypertarget{should-evidential-strength-be-sensitive-to-priors}{%
+\subsection{Should evidential strength be sensitive to
+priors?}\label{should-evidential-strength-be-sensitive-to-priors}}
+
+Neither the Bayes factor nor the likelihood ratio managed to fully
+justify both directions of the conjunction principle. One direction,
+aggregation, was justified. So the original concern that was driving
+Cohen's formulation of the conjuction paradox was addressed. But the
+other direction, distribution, failed. The failure of distribution
+creates a paradox of its own, what we called distribution paradox. It is
+odd that one could have sufficiently strong evidence in support of
+\(A\wedge B\), while not having sufficiently strong evidence for \(A\)
+or \(B\). This occurs even when \(A\) and \(B\) are probabilistically
+independent. If they were dependent of one another--say \(A\) and \(B\)
+were mutually reinforcing---it is possible the evidence would strongly
+support the conjunction, but not one of the conjuncts in isolation
+(becuase the additional support from the other claim, \(A\) or \(B\),
+would be missing). But the failure of distribution manifests itself even
+when \(A\) and \(A\) are independent. What should we make of this? This
+problem exists for both the Bayes factor and the likelihood ratio.
+
+Start by noticing that the larger Bayes factor associated with the
+composite claim, holding the evidence fixed, need not be a sign of
+stronger evidence, but merely an artifact of the lower prior probability
+of the composite claim. The same can be said for the combined likelihood
+ratio. Holding fixed the sensitivty and specificity of \(a\) and \(b\),
+the combined likelihood ratio can be changed by varying the priors of
+\(A\) and \(B\). The lower the priors, the stronger the likelihood
+ratio. So, arguably, the same body of evidence may strongly suport the
+composite hypothesis \(A\wedge B\), while failing to stronggly support
+\(A\) or \(B\) simply because \(A\wedge B\) has a lower prior
+probability and this lower prior probability, everything else being
+equal, inflates the likelihood ratio or the Bayes factor qua measures of
+evidential strength.
+
+To circumvent the phenomenon of prior sensitivity, evidential strength
+can be thought as a general measure of the relationship between prior
+and posterior. The graph in Figure \ref{fig:strength-prior-post} below
+represents to what extent the evidence changes the prior probability of
+a select hypothesis for any value of the prior. The graph compares the
+`base line' (representing no the change from prior to posterior) and the
+`posterior line' (representing the posterior as a function of the prior
+for a given assignment of sensitivity and specificity of the evidence).
+Roughly, the larger the area between the two base line and the posterior
+line, the stronger the evidence. Crucially, this area does not depend on
+the prior probability of the hypothesis, but solely on the sensitivity
+and specificity of the evidence. As expected, any improvement in
+sensitivity or specificity will increase the area between the base line
+and the posterior line. To be precise, what matters is the ratio of
+sensitivity to to 1-specificity, not their abosolute values. So evidence
+with sensitivity and specificity at 0.9 and 0.9 would the same as
+evidence evidence with sensitivity and specificity at 0.09 and 0.09
+becaue \(0.9/(1-0.9) = 0.09/(1-0.99)\).
+
+\begin{figure}
+
+
+\begin{center}\includegraphics[width=0.9\linewidth]{burden-proof3_files/figure-latex/unnamed-chunk-13-1} \end{center}
+
+\caption{Strength of evidence as a relationship between prior and posterior. 
+The further away the posterior line from the null line, the stronger the evidence irrespective 
+of the prior probability of the hypothesis.}
+\label{fig:strength-prior-post}
+\end{figure}
+
+The same approch can model the joint evidential strength of two items of
+evidence, \(a \wedge b\), relative to the combined hypothesis,
+\(A \wedge B\). For simplicity, assume \(a\) and \(b\) are independent
+lines of evidence supporting their respective hypothesis \(A\) and \(B\)
+probabilistically independent of the other, as in the Bayesian network
+in Figure \ref{network-conjunction} (top). The graph in Figure
+\label{fig:strength-indiv-joint} shows how the prior probabilities are
+impacted by one piece of evidence in support of a single
+hypothesis---say \(a\) supports \(A\)---versus two pieces of evidence in
+support of a joint hypthesis---say \(a\wedge b\) supports
+\(A \wedge B\). The base line is lower in in the latter case than in the
+former case, simply because the prior probability of \(A \wedge B\) is
+lower than the prior probability of \(A\). The prior of \(A\) equals
+\(x\) and the prior of \(A\wedge B\) equals \(x^2\). The assumption here
+is that \(A\) and \(B\) have the same prior probability, and as noted
+before, are probabilistically independent of one another.
+
+\begin{figure}
+
+
+\begin{center}\includegraphics[width=0.9\linewidth]{burden-proof3_files/figure-latex/unnamed-chunk-14-1} \end{center}
+
+
+\begin{center}\includegraphics[width=0.9\linewidth]{burden-proof3_files/figure-latex/unnamed-chunk-15-1} \end{center}
+
+\caption{Strenght of evidence as a general relationship between prior 
+and posterior. The comparison here is betwen individual support and joint support. 
+Top graph: The null line for joint support ($y=x*x$) is 
+much below the null line for individual support ($y=x$).
+Bottom graph: the two null lines are equalized and the 
+posterior lines adjusted accordingly. The posterior lines for individual 
+and joint support get much closer especially for 
+high posterior probability values.}
+\label{fig:strength-indiv-joint}
+\end{figure}
+
+Note the difference between the graph on top and the one at the bottom
+where the base line for the individual and the composite case are
+equalized. TWe should ensure that a composiite claim such as
+\(A \wedge B\) is given the same probability as an indiividual claim
+such as \(A\) or \(B\). If the claims are independent and equiprobable,
+let \(x\) be the prior probability of an individual claim (when it is
+considered in isolation) and let \(x^{1/k}\) the prior probability of
+the same individual claim when it is part of a composite claim that
+consists of \(k\) claims. In this way, the prior probability of the
+composite claim equals the prior probability of the individual claim
+since \((x^{1/k})^k=x\), as desired. These different claims are then
+plotted having the same priors. We can then see the impact the evidence
+has on the individual claim versus the impact it has on the composite
+claim. The impact is roughly the same for high values of sensitivity and
+specificity, but still different for lower values, especially if the
+priors are below 50\%. The same equalization can be done with the Bayes
+factor, yielding similar results. Compare the difference betwen teh
+graph (top) in which teh Bayes factor has not been equalized relative to
+the priors and the graph (bottom) in which it has. In the latter case,
+individual Bayes factor and joint Bayes factor tend to converge
+especially for relatively high values of sensitivity and specificity SEE
+FIGURE BELOW.
+
+\textbackslash{}begin\{figure\}
+
+\begin{verbatim}
+## Warning: Removed 91 rows containing missing values (geom_path).
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: Removed 526 rows containing missing values (geom_path).
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: Removed 628 rows containing missing values (geom_path).
+\end{verbatim}
+
+\begin{center}\includegraphics[width=0.9\linewidth]{burden-proof3_files/figure-latex/unnamed-chunk-16-1} \end{center}
+
+\begin{verbatim}
+## Warning: Removed 91 rows containing missing values (geom_path).
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: Removed 41 rows containing missing values (geom_path).
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: Removed 98 rows containing missing values (geom_path).
+\end{verbatim}
+
+\begin{center}\includegraphics[width=0.9\linewidth]{burden-proof3_files/figure-latex/unnamed-chunk-17-1} \end{center}
+
+\label{fig:bf-indiv-joint} \textbackslash{}end\{figure\}
+
+The approach we have just dscribed---equalizing the prior probabilities
+across different hypotheses---does not entirely eliminate the
+distribution paradox but would reduce its scope significantly. There
+would still be cases in which a composite hypothesis, say
+\(A \wedge B\), receives stronger support than an individual hypothesis,
+given the body of evidence. So factoring out prior reduces the incidence
+of the distribition paradox but does not eliminate it entirely.
+Sensitivity to priors does play a role in the paradox, but it seems that
+it is not the only factor at play? What else is responsible for the
+distribution paradox?
+
+NOT SURE HOW TO ANSWER THIS QUESTION
+
+A more general question here is whether we should seek a measure of the
+strength of evidence---especially, combined evidence for a composite
+hypothesis---that is not sensitive to priors? Intuitively, the strength
+of the evidence should not depend on the prior probability of the
+hypothesis, but solely on the quality of the evidence itself. The prior
+probability of the hypothesis seems extrinsic to the quality of the
+evidence since the latter should solely depend on the sensitivity and
+specificity of the evidence relative to the hypothesis of interest.
+Strength of evidence determines how much the evidence changes, upwards
+or downwards, the probability of a hypothesis. However, as the prior
+probability increases, the smaller the impact that the evidence will
+have on the probability of the hypothesis. If the prior is close to one,
+the evidence would have marginal if not null impact. But this does not
+mean that the evidence weakens as the prior probability of the
+hypothesis goes up. For consider the same hypothesis which in one
+context has a very high prior probability and in another has a moderate
+prior probability (say a disease is common in a population but rare in
+another). The outcome of the same diagnostic test (say a positive test
+result) performed on two people, each drawn from two populations, should
+not count as stronger evidence in one case than in the other. After all,
+it is the same test that was performed and thus the quality of the
+evidence should be the same.
+
+This intuition turns out to be incorrect empirically, however. One study
+in the medical literature has shown, surprisingly, that the sensitivity
+of a diagnostic test is independent of the prior of the hypothesis beign
+tested---say whether the patient has a medical condition. However,
+specificity is dependent on the prior of the hypothesis:
+
+\begin{quote}
+Overall, specificity tended to be
+lower with higher disease prevalence; there
+was no such systematic effect for sensitivity (page E537).
+Source: Variation of a test’s sensitivity and specificity with disease prevalence Mariska M.G. Leeflang, Anne W.S. Rutjes, Johannes B. Reitsma, Lotty Hooft and Patrick M.M. Bossuyt
+CMAJ August 06, 2013 185 (11) E537-E544; DOI: https://doi.org/10.1503/cmaj.121286
+\end{quote}
+
+\noindent The authors of the study, however, caution that
+
+\begin{quote}
+ Because sensitivity is estimated in
+people with the disease of interest and specificity
+in people without the disease of interest, changing the relative number of people 
+with and without the disease of interest should not introduce
+systematic differences. Therefore, the effects that
+we found may be generated by other mechanisms that affect 
+both prevalence and accuracy.
+\end{quote}
+
+So, according to the authors, changes in prevalence need not directly
+affect specificity since variations in prevalence and variation in
+specificity may have a common cause. Our earlier calculations about
+combined specificity and sensitivity agree with experimental results,
+namely, only specificity depends on the priors. Our calculations, in
+fact, show that different priors for the individual claim do affect
+specificity. The variation of specificity in the result of of splitting
+the negation of the composite hypthesis \(\neg (A \wedge B)\) into three
+further scenarios, \(\neg A \wedge B\), \(B \wedge \neg A\) and
+\(\neg A \wedge neg B\). This prior sensitivity, of course, only applies
+to composite hyotheses, but to some extent, any hypothesis can be
+analyzed as a composite hypothesis. The claim that the defedant was
+running down 5th avnue can be broken down in the conjuction that the
+defendant was running and that the defendant was at 5th avenue. Any
+claim, under some level of description, is a composite hypothesis. So,
+perhpas, the quality or strength of the evidence should depend on the
+the priors whether the hypothesis is composite or not. Is this another
+example of base rate neglect?
+\todo{M: Might be good to have a simulation here that makes vidid why combined specificity is in fact dependent on the priors. Maybe it is, after all, a fallacy 
+to think that the quality/strength of the evidence should be independent of the priors.}
+
+Let's grant that the quality of the evidence should depend, contrary to
+our initial intuition, on the prior probability of the hypotheses. If
+that is so, it would not be natural to see that evidence -- the same
+evidence -- strongly favors \(A\wedge B\) without strongly favoring
+\(A\) or \(B\). Perhaps we can make sense of this if we keep in mind the
+comparison between hypothesis we are making here.
+
+NOT SURE HOW TO CONTIBUE HERE THOUGH!
+
+TO DO:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  NOTE THAT EVEN BY EQUALIZING PRIORS, TE DISTRBUTION PARADOX DOES NOT
+  GO AWAY. SO WHAT ELSE IS GOING ON HERE? NEED TO MAKE COMPATISON
+  BETWEEN HYPOTHESES. NEED TO FIGURE THIS OUT!
+\item
+  TRY TO MAKE SENSE OF THIS, IT IS INTITVELY ACCEPTABLE THAT SUPPORT FOR
+  COMBINED CLAIM, EVEN HOLDING FIXED THE SAME EVIDENCE, SHOULD BE
+  STRONGER THEN SUPPORT FOR INDIVIDUAL CLAIM? THAT IS CLEARLY ODD AND
+  GOES AGAINST COMMON ASSUMPTIONS.
+\end{enumerate}
+
+\hypertarget{which-measure-of-combined-evidential-support}{%
+\subsection{Which Measure of (Combined) Evidential
+Support?}\label{which-measure-of-combined-evidential-support}}
+
+THIGNS TO ADD:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  THE MIN SEEMS TO BE THE MEASURE FOR COMPSUTE CLAIMS TAHT CAPTURE
+  AGGREGATION AND DISRIBUTION BEST. SO THE QUESTION IS WHAT
+  PROBABILISTIC MEASURE CAPTURES MIN?
+\item
+  CAN USE LR SEEMS IT IS INDEFFERENCT TO PRIORS, BUT THIS IS NOT THE
+  CASE FOR THE COMPOSITE CLAIM. SO SAME PROBLEM AS WITH BF.
+\item
+  IS DEPEDENCY ON PRIOR ANOTHER EXAMPLE OF BASE RATE NEGLECT. WE NEGLECT
+  BAE RATE IN CALCULATING POSTERIOR BUT ALSO IN CALCULATING STRENGHT OF
+  EVIDENCE? WE JUST NEED TO LIVE WITH THE FACT THAT WE HAVE A POOR
+  UNDERSTAND OF EVIDENE THOUGHT PERHPAS GOOD ENOUGH TO GET BY IN THE
+  WORLD. CONNECT TO POINT 1 AND MIN FUNCTION.
+\item
+  RUN SIMULATION TO SHOW THAT, ACTUALLY, ONE TEST FOR COMPOSITE CLAIM
+  WOULD PERFORM BETTER (BETTER LR) THEN TEH SAME TEST FOR INDIVIDUAL
+  CLAIM (WORSE LR). SO TEST COUDL PASS QUALITY CRONTROL IN ONE CASE BUT
+  NOT IN THE OTHER.
+\item
+  ANY DIFFERENCE BETWEEN AREA UNDER TEH CURVE REPRESENTATION OF EVIDENCE
+  STRENGHT AND LR. WHAT IF WE DECRESES SENSITIVITY AND SPECIFICITY. WHAT
+  WOULD HAPPEN TO THE TWO MEASURES.
+\end{enumerate}
+
+\hypertarget{the-comparative-strategy}{%
+\subsection{The comparative strateGy}\label{the-comparative-strategy}}
 
 Instead of thinking in terms of absolute thresholds---whether relative
 to posterior probabilities, the Bayes factor or the likelihood
@@ -2499,114 +3203,6 @@ take this approach seriously, the more elements a case has, the more at
 disadvantage the defense is. This seems undesirable.
 
 REPEAT SAME ARGUMENT USING LR AND COMPARATIVE STRATEGY
-
-\hypertarget{which-measure-of-combined-evidential-support}{%
-\subsection{Which Measure of (Combined) Evidential
-Support?}\label{which-measure-of-combined-evidential-support}}
-
-The discussion so far renews the question about the adequate measure of
-evidential support or evidential strength. Our focus has been on the
-Bayes factor and the likelihood ratio. As we argued earlier in Chapter
-(\textbf{REFRENCE TO EARLIER CHAPTER}), the Bayes factor is too
-sensitive to the prior probability of the hypothesis (see the graph
-below).
-
-\todo{M: Not sure what's wrong with this R graph...}
-
-\textbackslash{}begin\{figure\}
-
-\begin{verbatim}
-## Warning: Removed 9910 rows containing missing values (geom_path).
-\end{verbatim}
-
-\begin{center}\includegraphics[width=0.9\linewidth]{burden-proof3_files/figure-latex/unnamed-chunk-7-1} \end{center}
-
-\label{fig:strength-prior-post} \textbackslash{}end\{figure\}
-
-Intuitively, the strenght of the evidence should not depend on the prior
-probability of the hypothesis, but solely on the quality of the evidence
-itself. The prior probability of the hypothesis seems extrinsic to the
-quality of the evidence since the latter should solely depend on the
-sensitivity and specificity of the evidence relative to the hypothesis
-of interest. Stil, strenght of evidence determines how much the evidence
-changes, upwards or downwards, the probability of a hypothesis. However,
-as the prior probability increases, the smaller the impact that the
-evidence will have on the probability of the hypothesis. If the prior is
-close to one, the evidence would have marginal if not null impact. But
-this does not mean that the evidence weakens as the prior probability of
-the hypothesis goes up. For consider the same hypothesis which in one
-context has a very high prior probability and in another has a moderate
-prior probability (say a disease is common in a population but rare in
-another). The outcome of the same diagnostic test (say a positive test
-result) performed on two people, each drawn from two populations, should
-not count as stronger evidence in one case than in the other. After all,
-it is the same test that was performed and thus the quality of the
-evidence should be the same. (This intuition turns out to be incorrect
-empirically, however. This is a point we will return to later on.)
-
-To capture the intuition that evidential strength should be independent
-of the prior, evidential strength can be thought as a general measure of
-the relationship between prior and posterior. The graph in Figure
-\ref{fig:strength-prior-post} below represents to what extent the
-evidence changes the prior probability of a select hypothesis for any
-value of the prior. The graph compares the `base line' (representing no
-the change from prior to posterior) and the `posterior line'
-(representing the posterior as a function of the prior for a given
-assignment of sensitivity and specificity of the evidence). Roughly, the
-larger the area between the two base line and the posterior line, the
-stronger the evidence. Crucially, this area does not depend on the prior
-probability of the hypothesis, but solely on the sensitivity and
-specificity of the evidence. As expected, any improvement in sensitivity
-or specificity will increase the area between the base line and the
-posterior line.
-
-\begin{figure}
-
-
-
-\begin{center}\includegraphics[width=0.9\linewidth]{burden-proof3_files/figure-latex/unnamed-chunk-8-1} \end{center}
-
-\caption{Strength of evidence as a relationship between prior and posterior. 
-The further away the posterior line from the null line, the stronger the evidence irrespective 
-of the prior probability of the hypothesis.}
-\label{fig:strength-prior-post}
-\end{figure}
-
-The same approch can be used to model the joint evidential strength of
-two items of evidence, \(a \wedge b\), relative to the combined
-hypothesis, \(A \wedge B\). For simplicity, assume \(a\) and \(b\) are
-independent lines of evidence supporting their respective hypothesis
-\(A\) and \(B\) probabilistically independent of the other, as in the
-Bayesian network in Figure \ref{network-conjunction} (top). The graph in
-Figure \label{fig:strength-indiv-joint} shows how the prior
-probabilities are impacted by one piece of evidence in support of a
-single hypothesis---say \(a\) supports \(A\)---versus two pieces of
-evidence in support of a joint hypthesis---say \(a\wedge b\) supports
-\(A \wedge B\). The base line is lower in in the latter case than in the
-former case, simply because the prior probability of \(A \wedge B\) is
-lower than the prior probability of \(A\). The prior of \(A\) equals
-\(x\) and the prior of \(A\wedge B\) equals \(x^2\). The assumption here
-is that \(A\) and \(B\) have the same prior probability, and as noted
-before, are probabilistically independent of one another.
-
-\begin{figure}
-
-
-\begin{center}\includegraphics[width=0.9\linewidth]{burden-proof3_files/figure-latex/unnamed-chunk-9-1} \end{center}
-
-
-\begin{center}\includegraphics[width=0.9\linewidth]{burden-proof3_files/figure-latex/unnamed-chunk-10-1} \end{center}
-
-\caption{Strenght of evidence as a general relationship between prior 
-and posterior. The comparison here is betwen individual support and joint support. 
-Top graph: The null line for joint support ($y=x*x$) is 
-much below the null line for individual support ($y=x$).
-Bottom graph: the two null lines are equalized and the 
-posterior lines adjusted accordingly. The posterior lines for individual 
-and joint support get much closer especially for 
-high posterior probability values.}
-\label{fig:strength-indiv-joint}
-\end{figure}
 
 \hypertarget{specific-narratives-ideas-of-a-solution}{%
 \subsection{Specific Narratives {[}IDEAS OF A
