@@ -6,6 +6,7 @@ output:
     number_sections: true
     df_print: kable 
     keep_tex: true
+    toc: true
     includes:
       in_header:
         - Rafal_latex6.sty
@@ -35,15 +36,14 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Introduction
 
-Our goal in this chapter is to take a closer look at an important tool of evidence evaluation proposed by legal probabilists: the likelihood ratio. In Section \ref{sec:lr} we explain what this measure of evidential strength is, how it compares to another one, sometimes called the Bayes factor, and why it is preferable to it.  In Section \ref{sec:fp} we given an example of its utility. We explain the reasons to take the risk of false positives and use likelihood ratio to illustrate the impact of such a risk on the value of DNA evidence. 
+Our goal in this chapter is to take a closer look at an important tool of evidence evaluation proposed by legal probabilists: the likelihood ratio. In Section \ref{sec:lr} we explain what this measure of evidential strength is, how it compares to another one, sometimes called the Bayes factor, and why it is preferable to it.  In Section \ref{sec:fp} we give an example of its utility. We explain the reasons to take the risk of false positives in DNA identification seriously and use likelihood ratio to illustrate the impact of such a risk on the value of DNA evidence. 
 
 Likelihood ratio, while useful, is sometimes hard to interpret in practice, as it depends on the choice of the hypotheses involved. We discuss this problem in Section \ref{sec:hchoice}. One reason why many hypotheses can be considered in such contexts is that they admit different levels: we discuss this phenomenon in Section \ref{sec:lhTwoSTain}, illustrating it with the example of the so-called two-stain problem.  The general lesson from these sections is that likelihood ratio, while a very useful measure of evidential value, when presented alone without proper attention paid to hypothesis formulation and the impact of the choice of the hypotheses on the likelihood ratio itself, might be misleading. 
 
-Next, in Section \ref{sec:relevance} we discuss another problem put forward against the utility of likelihood ratios: the problem of relevance. On this objection, likelihood ratio sometimes fails to identify all the relevant items of evidence. We explain what the objection is, and why it is misled. However, the discussion leads us to another reason why likelihood ratio when presented alone might be unhelpful. Indeed, it might be the  case that a piece of evidence is irrelevant with respect to a certain choice of hypotheses, but relevant to another, and all of these hypotheses might play an important role in the fact-finding process. As relevance is to be established in connection with various elements of a complex case, instead of a single likelihood ratio, one should consider various likelihood ratios arising for various selection of hypotheses at play, and so a readable representation of such complexities involved in   a given case would be useful for putting various likelihood ratios to a proper use. 
+Next, in Section \ref{sec:relevance} we discuss another problem put forward against the utility of likelihood ratios: the problem of relevance. On this objection, likelihood ratio sometimes fails to identify all the relevant items of evidence. We explain what the objection is, and why it is misled. However, the discussion leads us to another reason why likelihood ratio when presented alone might be unhelpful. Indeed, it might be the  case that a piece of evidence is irrelevant with respect to a certain choice of hypotheses, but relevant to another, and all of these hypotheses might play an important role in the fact-finding process. As relevance is to be established in connection with various elements of a complex case, instead of a single likelihood ratio, one should consider various likelihood ratios arising for various selections of hypotheses at play, and so a readable representation of such complexities involved in   a given case would be useful for putting various likelihood ratios to a proper use. 
 
 
-
-Then we go over a debate about  the value of cold-hit DNA matches in which various agencies studying  or performing  DNA evaluation have still failed to reach agreement (Section  \ref{sec:coldHitConfusion}), and argue that a proper use of likelihood ratios leads to a fairly clear resolution (Section \ref{sec:cold-hit}).
+To illustrate the utility of thinking in terms of likelihood ratios in theorizing about the value of evidence, we go over a debate about  the value of cold-hit DNA matches in which various agencies studying  or performing  DNA evaluation have still failed to reach agreement (Section  \ref{sec:coldHitConfusion}), and argue that a proper use of likelihood ratios leads to a fairly clear resolution (Section \ref{sec:cold-hit}).
 
 We end this chapter with two digressions. One is meant to remove the impression that likelihood ratios are useful only for clearly quantitative evidence such as DNA evidence. We talk about the insights that probabilistic thinking can bring into eyewitness evidence evaluation and incorporation in Section \ref{sec:eyewitness}. Another is meant for a more philosophically minded reader, who might recall that there are quite a few probabilistic confirmation measures in the vincinity and might wonder why almost none of them were discussed in the chapter. In Section \ref{sec:confirmation} we explain why we think these other measures are not fit for the particular purpose at hand:  evidence evaluation in legal-fact finding.    
 
@@ -60,8 +60,9 @@ The fallacies  we considered earlier in the book \todo{add crossref}--- such as 
 speaks  against $H$.  Now, let's turn to  the blood stain example from \ref{sec:fallacies}.\todo{Fix crossref.} The posterior probability given the match turned out to be an unimpressive $.17$ (assuming a  prior probability of $.1$). This does not mean that the  incriminating evidence was weak.  While   the match   was not not strong enough to make it very likely  that      the defendant was the source of the traces,   the posterior probability is  seventeen times larger than the prior.   Similarly, in the Collins case, the posterior probability jumped from the $\nicefrac{1}{6 \times 10^6}$ prior to $.7$ after taking the match into account. Still not enough for a conviction, but a remarkable increase nonetheless. These examples illustrate how measuring the strength of evidence in terms of the posterior it leads to seems  inappropriate. 
 
 
-So how do we capture  the strength of an item of evidence so that the measure does not depend on the priors and reflects the impact the evidence has  on the posterior probability? \todo{M: Up to this point, you just want a measure of the impact of the evidence onto the priors and leading to new posteriors, you do not necessarily want a measure that is independent of the priors.} One measure of the strength of evidence  is the likelihood of the evidence compared to the prior of the evidence (this measure is sometimes called the \emph{Bayes factor}: 
+So how do we capture  the strength of an item of evidence that  reflects the impact the evidence   on the posterior probability?  One measure of the strength of evidence  is the likelihood of the evidence compared to the prior of the evidence (this measure is sometimes called the \emph{Bayes factor}: 
 \begin{align}\label{eq:BF}
+\tag{BF}
 \mathsf{BF}(E,H) & = \frac{\pr{E \vert H}}{\pr{E}}.
 \end{align}
 \noindent The Bayes factor is one probabilistic measure of the extent to which the evidence, regardless of the absolute posterior probability, supports or does not support the hypothesis.   It seem to be an  intuitively plausible measure of evidential strength. Note that by Bayes' theorem
@@ -74,12 +75,12 @@ So how do we capture  the strength of an item of evidence so that the measure do
 \end{align*}
 
 
-\noindent and so the Bayesian factor is greater than one if and only if
+\noindent and so the Bayes factor is greater than one if and only if
 the posterior probability $\pr{H \vert E}$ is higher than the prior probability $\pr{H}$, $\pr{H}<\pr{H\vert E}$. So $E$ \textit{positively} supports $H$ whenever the Bayes factor is greater than one. 
 The greater the Bayes factor (for values above one), the greater the upward shift from prior to posterior probability, the more strongly $E$ positively supports $H$.
-In line with the motivating examples, the posterior probability of $H$ given $E$ could still be  low even if the Bayes factor is significantly above one. Conversely, again by Bayes' theorem,  the probability of $H$ given $E$ is lower than the probability of $H$, $\pr{H}>\pr{H\vert E}$ just in case the Bayes factor is less than one. So $E$ \textit{negatively} supports $H$ whenever the Bayesian factor is less than one. In general, the smaller the Bayesian factor (for values below one), the greater the downward shift from prior to posterior probability, the more strongly $E$ negatively supports $H$. If $\pr{H}=\pr{H\vert E}$, the evidence  has no impact on the  probability of $H$. 
+In line with the motivating examples, the posterior probability of $H$ given $E$ could still be  low even if the Bayes factor is significantly above one. Conversely, again by Bayes' theorem,  the probability of $H$ given $E$ is lower than the probability of $H$, $\pr{H}>\pr{H\vert E}$ just in case the Bayes factor is less than one. So $E$ \textit{negatively} supports $H$ whenever the Bayes factor is less than one. In general, the smaller the Bayes factor (for values below one), the greater the downward shift from prior to posterior probability, the more strongly $E$ negatively supports $H$. If $\pr{H}=\pr{H\vert E}$, the evidence  has no impact on the  probability of $H$. 
 
-\todo{M: I changed several instances of Bayesian factor into Bayes factor, but I might have miessed some.}
+
 
 One reason to think the Bayes Factor is a useful measure of evidential strength is that it appropriately deviates from 1, its point of neutrality. But let us pause a moment to think about the denominator in \eqref{eq:BF}. It can be calculated following the law of total probability:
 
@@ -97,9 +98,10 @@ One reason to think the Bayes Factor is a useful measure of evidential strength 
 \begin{align}\label{eq:BFlotp}
 \mathsf{BF}(E,H) & = \frac{\pr{E \vert H}}{\pr{E \vert H} \pr{H}+\pr{E \vert \neg H} \pr{\neg H}}.
 \end{align}
-\noindent What should be clear from this formulation is that the Bayesian factor fails to satisfy one of our requirements: that the measure of evidential strength should not depend on the prior probability of the hypothesis.  Indeed, suppose $\pr{E \vert H} = 1$ and $\pr{E \vert \neg H} = .1$. If $\pr{H}=.1$, $\pr{E}$, the denominator, is $.19$ and so the Bayesian Factor is approximately $5.26$. If, however, $\pr{H} =.2$, the denominator is $.28$ and the Bayesian Factor is approximately $3.57$. In fact, a more general look (Figure \ref{fig:BayesFactorPrior}) shows the prior probability can have larger impact on the Bayes factor than the likelihood $\pr{E \vert \n H}$.
+\noindent What should be clear from this formulation is that the Bayes factor depends on the prior probabilities. Indeed, suppose $\pr{E \vert H} = 1$ and $\pr{E \vert \neg H} = .1$. If $\pr{H}=.1$, $\pr{E}$, the denominator, is $.19$ and so the Bayes Factor is approximately $5.26$. If, however, $\pr{H} =.2$, the denominator is $.28$ and the Bayes Factor is approximately $3.57$. In fact, a more general look (Figure \ref{fig:BayesFactorPrior}) shows the prior probability can have larger impact on the Bayes factor than the likelihood $\pr{E \vert \n H}$.
 
-\todo{M: Ok, good, but you might want to motivate philosophIcally why we do not want to have dependency on priors. The strenght of the evidence should be the same regardless ofpriors. Why? The strenght of a test result should be the same regardless whether or not a certain condition is prevalent in a population. Plausible, but I think this needs some more careful discussion. Diagnostic properties of medical tests might change depeding on base rate.}
+
+This seems to be a reason against using the Bayes factor as a measure of evidential strength in the context of legal fact-finding. After all, in such contexts, we would like the expert's assessment not to depend on the expert's prior convictions about the hypothesis, and for  all the agents involved in legal fact-finding to understand  the expert's statement in  the same way, even if they assign different priors to the hypothesis. \todo{Think about this again later. Plausible, but I think this needs some more careful discussion. Diagnostic properties of medical tests might change depeding on base rate?}
 
 \footnotesize
 ```{r,echo=FALSE,eval=FALSE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%"}
@@ -140,14 +142,16 @@ scatter3D(options$pH,options$EifNH,options$BF,pch=3,cex=0.3,byt="g",alpha=0.8,th
 
  
 
-\noindent A related reason to worry about the denominator of \eqref{eq:BFlotp} is that   assessing  the strength of evidence using the Bayesian factor seems to  impose too great a cognitive  burden on an agent,  since it would require estimating $\pr{E}$.  This rarely can be done directly, and estimation using the denominator of \eqref{eq:BFlotp} or \eqref{eq:lotpLong} (in a more complex case) not only requires  that the agent sifts through the entire space of possibilities, but also that the agent uses as weights a sensible selection of priors for the hypotheses involved. 
+\noindent A related reason to worry about the denominator of \eqref{eq:BFlotp} is that   assessing  the strength of evidence using the Bayes factor  seems to  impose too great a cognitive  burden on an agent,  since it would require estimating $\pr{E}$.  This rarely can be done directly, and estimation using the denominator of \eqref{eq:BFlotp} or \eqref{eq:lotpLong} (in a more complex case) not only requires  that the agent sifts through the entire space of possibilities, but also that the agent uses as weights a sensible selection of priors for the hypotheses involved. 
 
-Here is another reason to hestitate about measuring evidential support with \textsf{BF}, stemming from   [@Gillies1986defense].^[See also [@Fitelson1999plurality] for a discussion.]  Consider the  hypothesis $H =:$ "the suspect is guilty" and suppose it is already known that $E =:$ "the suspect killed the victim" (say here guilt requires both \emph{actus reus}, the killing, and \emph{mens rea}, the intention). Clearly, $H$ entails $E$, and $E$ provides positive support for $H$. Now consider a composite hypothesis $H'=:$ "the suspect is guilty and we live in a simulation built by aliens." We hope the reader shares the intuition that the support $E$ provides for $H'$ is somewhat weaker than it does  for $H$. This feature, however, cannot be captured by \textsf{BF}. In general, suppose $H\models E$ (and so, also, $H \et X \models E$). Then both $\pr{E\vert H}$  and $\pr{E \vert H \et X}$ equal 1. But this means that $\mathsf{BF}(H,E) = \mathsf{BF}(H \et X, E) = \nicefrac{1}{\pr{E}}$, and so the Bayes factors for the two support relations are equal. 
+Here is another reason to hestitate about measuring evidential support with \textsf{BF}, stemming from   [@Gillies1986defense].^[See also [@Fitelson1999plurality] for a discussion.]  Consider the  hypothesis $H =:$ "the suspect is guilty" and suppose it is already known that $E =:$ "the suspect killed the victim" (say here guilt requires both \emph{actus reus}, the killing, and \emph{mens rea}, the intention). Clearly, $H$ entails $E$, and $E$ provides positive support for $H$. Now consider a composite hypothesis $H'=:$ "the suspect is guilty and we live in a simulation built by aliens." We hope the reader shares the intuition that the support $E$ provides for $H'$ is somewhat weaker than it does  for $H$ (yes, the example of $H'$ is really far-fetched, but this is the point: addition of far-fetched hypotheses should decrease the support). This feature, however, cannot be captured by \textsf{BF}. In general, suppose $H\models E$ (and so, also, $H \et X \models E$). Then both $\pr{E\vert H}$  and $\pr{E \vert H \et X}$ equal 1. But this means that $\mathsf{BF}(H,E) = \mathsf{BF}(H \et X, E) = \nicefrac{1}{\pr{E}}$, and so the Bayes factors for the two support relations are equal. 
 
-\todo{M: Interesting. Does the same objection apply to LR? Also, is there a better, less far-fetched example to use? Finally, are there more philosophical objections to BF and other measures of confirmation such as LR? Would be good to have a wider discussion here, say, general properties/desiderata for evidential support and check that proposed measure satisfies them.]}
+We will paint a  more complex picture of various confirmation measures and the conditions they satisfy in Section \ref{sec:confirmation}. For now, we will focus on motivating and investigationg the one that has been actually used by legal probabilists: the likelihood ratio.
 
 
-For the above reasons, a measure that does not depend on priors, puts no such cognitive requirements on an agent, and is sensitive to the addition of irrelevant conjuncts would be preferrable. Clearly, we should not simply use $\pr{E\vert H}$. For one thing, in most interesting cases this conditional probability will be very close to one and will not allow us to distinguish between the strenghts of pieces of evidence that we should distinguish. For instance, what is the probability that the blood types match if the accussed is the source? Well, one, pretty much. What is the probability that the DNA profiles match if the accussed is the source? Again, one. But obviously a DNA profile match is not on par with a blood type match insofar as strength of evidence is involved. 
+Suppose we are after a measure that does not depend on priors, puts no such cognitive requirements on an agent, and is sensitive to the addition of irrelevant conjuncts. Clearly, we should not simply use $\pr{E\vert H}$. For one thing, in many interesting cases this conditional probability will be very close to one and will not allow us to distinguish between the strenghts of pieces of evidence that we should distinguish. For instance, what is the probability that the blood types match if the accussed is the source? Well, one, pretty much. What is the probability that the DNA profiles match if the accussed is the source? Again, one, pretty much. But obviously a DNA profile match is not on par with a blood type match insofar as strength of evidence is involved.
+
+Even if this conditional probability is not close to one, there are reasons not to use it as a measure of evidential strength. 
 Consider an example by @triggsCommentWhyEffect. In a child abuse case, the prosecutor offers \label{text:rock} evidence that a couple's child rocks and that only 3\% of non-abused children rock, $\pr{\textsf{child rocks} \vert \textsf{no abuse}}=.3$. If it is unlikely that a non-abused child would rock, the fact that this child rocks might seem strong evidence of abuse. But this reading of the 3\% figure is mistaken. It could well be that 
 3\% of abused children rock, $\pr{\textsf{child rocks} \vert \textsf{abuse}}=.3$. Note that  the two probabilities need not add up to 1. Similarly,  learning only  that    $\pr{\textsf{child rocks} \vert \textsf{abuse}}=.3$ does not provide full information needed for evidence evaluation, and one also needs information about  $\pr{\textsf{child rocks} \vert \textsf{no abuse}}=.3$. In our particular case, 
 given that  rocking is equally unlikely under either hypothesis, rocking cannot count as evidence of abuse, and any  of the low conditional probabilities involved alone does not allow us to notice this. Thus, in order to avoid exaggerations of the evidence both conditional probabilities need  to be involved in the evidence strength evaluation [@Royall1997; @triggsCommentWhyEffect; @enfs2015]. 
@@ -159,43 +163,47 @@ One issue that  these considerations illustrate is that what matters is also the
 One straightforward way to implement this  is to use the \textbf{likelihood ratio}, a comparative measure of whether evidence $E$ supports a hypothesis $H$ more than a competing hypothesis $H'$, in symbols:
 \begin{align}
 \label{eq:LR}
+\tag{LR}
 \mathsf{LR}(E,H,H') & = \frac{\pr{E \vert H}}{\pr{E \vert H'}}.
 \end{align}
 
-If the evidence supports $H$ more than $H'$, the ratio would be above one, and if the evidence supports $H'$ more than $H$, the ratio would be below one.  So, as with the Bayesian factor, support levels correspond to deviations from one.  The greater the likelihood ratio (for values above one), the stronger the evidence in favor of $H$ as contrasted with $H'$. The smaller the likelihood ratio (for values below one), the stronger the evidence in favor of the competing hypothesis $H'$ as contrasted with $H$.  The likelihood ratio is a simpler and more workable measure than the Bayesian factor, since it does not require one to think about the probability of the evidence in general, namely $\pr{E}$. This apparent simplicity, however, can often give rise to errors in the assessment of the evidence, especially if the two hypotheses are not chosen carefully. As it will transpire, the choice of the hypotheses that are conditioned upon is crucial. In the most straightforward case, $H'$ is simply the negation of $H$. In many practical contexts such a simplistic set-up, however, is not viable. We will discuss these issues in detail in this chapter later on.^[Note that \textsf{LR} is not susceptible to the alien simulation counterexample. Even if $\pr{E\vert H} = \pr{E\vert H \et X} = 1$, we have that $\mathsf{LR}(E,H) = \nicefrac{1}{\pr{E \vert \n H}}$, while $\mathsf{LR}(E, H \et X) =  \nicefrac{1}{\pr{E \vert \n H \vee \n X}}$. Crucially, the denominators might differ and so might the resulting likelihoods.]
+\noindent If the evidence supports $H$ more than $H'$, the ratio would be above one, and if the evidence supports $H'$ more than $H$, the ratio would be below one.  So, as with the Bayes factor , support levels correspond to deviations from one.  The greater the likelihood ratio (for values above one), the stronger the evidence in favor of $H$ as contrasted with $H'$. The smaller the likelihood ratio (for values below one), the stronger the evidence in favor of the competing hypothesis $H'$ as contrasted with $H$.
 
-\todo{M: Might want to bring the footnote to the main text since it is about the counterexample against BF but not LR. Also motivate this  more or add other examples.}
+One reason to prefer \textsf{LR} to \textsf{BF} is that  \textsf{LR} is not susceptible to the addition of irrelevant hypotheses. Even if $\pr{E\vert H} = \pr{E\vert H \et X} = 1$, we have that $\mathsf{LR}(E,H) = \nicefrac{1}{\pr{E \vert \n H}}$, while $\mathsf{LR}(E, H \et X) =  \nicefrac{1}{\pr{E \vert \n H \vee \n X}}$. Crucially, the denominators might differ and so might the resulting likelihoods.
 
-The relationship between likelihood ratio $\nicefrac{\pr{E \vert H}}{\pr{E \vert H'}}$ and  posterior odds $\nicefrac{\pr{H \vert E}}{\pr{H' \vert E}}$ is apparent in 
+The likelihood ratio does not depend on the priors, and is a simpler and more workable measure than the Bayes factor, since it does not require one to think about the probability of the evidence in general, namely $\pr{E}$. Think of blood match evidence. To calculate the Bayes factor, we need two things: $\pr{E\vert H}$, which here---say---is close to one, and $\pr{E}$, which is the probability of a blood match \emph{not} conditional on whether the suspect is the source. Yet, direct and reliable estimation of this probability  seems to be quite hard. Of course, one could try to use the law of total probability, as in \eqref{eq:lotpSimple}, but then they would need to use $\pr{E\vert \n H}$ which, with $\pr{E\vert H}$, would already suffice for the calculation of \textsf{LR},  and additional information about other probabilities used in the right-hand side. In this sense, it seems that the calculation of \textsf{BF} is more committing and requires more information than the calculation of \textsf{LR}.
+
+
+This apparent simplicity of \textsf{LR}, however, can often give rise to errors in the assessment of the evidence, especially if the two hypotheses are not chosen carefully. As it will transpire, the choice of the hypotheses that are conditioned upon is crucial. In the most straightforward case, $H'$ is simply the negation of $H$. In many practical contexts such a simplistic set-up, however, is not viable. We will discuss these issues in detail in this chapter later on.
+
+Moreover, \textsf{LR} allows for a clearer separation of the impact of the priors from the impact of the evidence on the posterior probability.  The relationship between likelihood ratio $\nicefrac{\pr{E \vert H}}{\pr{E \vert H'}}$ and  posterior odds $\nicefrac{\pr{H \vert E}}{\pr{H' \vert E}}$ is apparent in 
 the odds version of Bayes' theorem:
 \begin{align}\label{eq:BTodds}
 \frac{\pr{H \vert E}}{\pr{H' \vert E}}= \frac{\pr{E \vert H}}{\pr{E \vert H'}}\times \frac{\pr{H}}{\pr{H'}}.
 \end{align}
 \noindent If the likelihood ratio is greater (lower) than one, the posterior odds will be greater (lower) than the prior odds of $H$. The likelihood ratio, then, is a measure of the upward or downward impact of the evidence on the prior odds of two hypotheses $H$ and $H'$. 
 
+Moreover, the division of labour in legal fact-finding  also seems to recommend \textsf{LR} over \textsf{BF}.  A prominent forensic scientist recommends that 'in criminal adjudication, the values of the prior odds and the posterior odds are matters for the judge and jury, in accordance with
+the normal division of labour in forensic fact-finding.' [@aitken2008fundamentals, p. 194] and that the experts should  `not trespass on the province of the jury by commenting directly on the accused's guilt or innocence, 
+\dots and should generally confine their testimony to presenting the likelihood of their evidence under competing propositions' [@aitken2010fundamentals, p. 42].  If however, the expert were to report \textsf{BF}, this would mean they are competent to estimate $\pr{E}$ directly, which is unlikely, or that they implicitly estimate it relying on their estimation of $\pr{H}$ in the background (if they use the law of total probability). In contrast, \textsf{LR} is one way to describe the value of evidence while abiding by these constraints, and it in fact is used in  practice. Experts sometimes do testify by offering the likelihood ratio as a measure of the strength of the evidence.  An expert, for instance, may testify that the blood-staining on the jacket of the defendant is ten times more likely to be seen if the wearer of the jacket hit the victim (prosecutor's hypothesis) rather than if he did not (defense's hypothesis) [@aitken2010fundamentals, p. 38].  
 
-Experts sometimes testify by offering the likelihood ratio as a measure of the strength of the evidence.  An expert, for instance, may testify that the blood-staining on the jacket of the defendant is ten times more likely to be seen if the wearer of the jacket hit the victim (prosecutor's hypothesis) rather than if he did not (defense's hypothesis) [@aitken2010fundamentals, p. 38].  Experts are typically 
-advised not to comment  on the posterior odds given the evidence.
-As this formulation of the Bayes's theorem makes clear, an assessment of the posterior odds will require a judgment about the prior odds, and the latter lies beyond the competence of an expert. A prominent forensic scientist recommends that  experts `not trespass on the province of the jury by commenting directly on the accused's guilt or innocence, 
-\dots and should generally confine their testimony to presenting the likelihood of their evidence under competing propositions' [@aitken2010fundamentals, p. 42]. 
-\todo{M: This paragraph about experts is off topic. How does this relate to the BF v. LR comparison?}
 
-The idea that both conditional probabilities involved in likelihood ratio should be used in evidence strength evaluation applies generally to all forms of evidence, inclusive of DNA evidence, although it might not always make a practical difference.
 
- For suppose an expert testifies that the crime traces genetically 
+
+The idea that both conditional probabilities involved in likelihood ratio should be used in evidence strength evaluation applies generally to all forms of evidence, inclusive of DNA evidence, although it might not always make a practical difference.  For suppose an expert testifies that the crime traces genetically 
  match the defendant and  that the \textbf{random match probability} is extremely low, say 1 in 100 million. Is the match strong evidence that the defendant is the source of the traces? The random match probability---often interpreted as the probability that someone who is not the source would coincidentally match, $\pr{\textsf{match} \vert \neg \textsf{source}}$---is a common measure of the strength of a DNA match. The lower this probability, the more strongly incriminating the match. This is sensible because a low random match probability suggests it is  unlikely two people could share the same DNA profile. This is, however, also in agreement with the use of likelihood ratio in evidence evaluation, because  $\pr{\textsf{match} \vert \textsf{source}}$ is practically equal to one, so neglecting in in evidence strength reporting does not make any real difference.
 That $\pr{\textsf{match} \vert \neg \textsf{source}}$ is low  is in such contexts  enough to ensure that the likelihood ratio is significantly above one.  For practical purposes, then, a suitably low random match probability  does capture the idea that the evidence is strongly incriminating evidence. The conceptual point still stands, though. If $\pr{\textsf{match} \vert \textsf{source}}$ was significantly different from one, reporting only   $\pr{\textsf{match} \vert \neg \textsf{source}}$ would be misleading.
-To better appreciate the theoretical virtues of
-likelihood ratios, 
-it is instructive to look 
-at DNA evidence, focusing on the impact of false positive risk first, and  on the so-called cold-hit matches later on. 
+
+
+Our goal in this chapter is to reach a balanced view of the utility of \textsf{LR}. On one hand, we want to motivate its use and appreciate its utility. On the other, we want to point out reasons why \textsf{LR} might be misleading or unhelpful. In the next subsection, we will focus on a part of the positive task. A good example of the positive role of textsf{LR} in theorizing about fact-finding is its the use in studying  the impact of false positive risk. We will take a look at this example now, in  Section \ref{sec:fp}. Later on (Section \ref{sec:coldHitConfusion}), we will take a more detailed look at another positive example, the use of \textsf{LR} in studying the value of  the so-called cold-hit matches.^[In principle, it would be possible to go over analogous considerations in terms of \textsf{BF}, however, as we already argued, there are reasons to prefer the use \textsf{LR}, and calculations in terms of \textsf{LR} are simpler and assume that less information is available to the agent than those in terms of \text{BF}.]
+
 
 
 
 # The risk of false positive and its impact \label{sec:fp}
 
 
-\todo{M: It is not clear why you switch to the topic of false positives? Is this an illustration of why LR is better than BF? What does this section do?}
+
 
 One context in which probabilities are extensively used is the use of DNA evidence.  In testifying about the DNA match at trial, experts  often assess the probability that a random person, unrelated to the crime, would coincidentally match the crime stain profile (random match probability). RMP  is often an impressively low number, say 1 in 100 million or lower. Usually, such a match is taken to constitute strong evidence against the defendant. We will have more to say about the interpretation of DNA evidence later on. \todo{add crossref} For now, we will illustrate the utility of likelihood ratios by using to explain how this apparent strength of DNA evidence can be mitigated by the probability of a false positive.
 \todo{M: Can you use BF to include false positives or no?}
@@ -212,19 +220,18 @@ This is only one example of quite a few  cases of DNA matching going awry, \todo
 
 - \textbf{Mislabeling of samples.} For instance, in 2011 the Las Vegas Metropolitan Police Department acknowledge that samples of two men suspected of a 2001 robbery were switched, leading to the exclusion of the perpetrator and four years of incarceration of the other suspect. The mistake came to light only because the perpetrator was later on arrested for an unrelated crime. In a high-profile case of a serial rapist, the notorious Night Stalker who committed more than 140 sexual assualts in London, the actual perpertrator came to the attention of the police quite soon, but a DNA test excluded him (falsely so, because the samples  had been mistakenly switched), and so his spree continued for months. 
 
-- \textbf{Misinterpretation of test results.} While single-source sample comparison is not too prone to this sort of error, the interpretation of mixtures---which is usually what is needed in  sexual assault cases---is quite complicated. Here is an illustration of this fact. @Dror2011subjectivity re-examined a 2002 Georgia rape trial in which two forensic scientists had concluded that the defendant could not be excluded as a contributor to the mixture of sperm from inside the victim (the defendant was found guilty). The evidence---DNA mixture and the DNA profiles of the victim and three suspects together those pieces of information that were highly relevant (such as the DNA amplification conditions) was sent to  17  lab technicians for examination.  One of them agreed that the defendant could not be excluded as a contributor. Twelve considered the DNA exclusionary, and four found it  inconclusive. If the quantity of DNA is limited, there is uncertainty about the number of contributors and about whetehr any alleles are missing, determining which alleles to assign to which contributor to some extent involves educated guesses on the part of the analysts. 
-This suggests there is an element of subjectivity in mixed DNA interpretation,
-\todo{M: Very nice list. This is good. Very detailed. }
+- \textbf{Misinterpretation of test results.} While single-source sample comparison is not too prone to this sort of error, the interpretation of mixtures---which is usually what is needed in  sexual assault cases---is quite complicated. Here is an illustration of this fact. @Dror2011subjectivity re-examined a 2002 Georgia rape trial in which two forensic scientists had concluded that the defendant could not be excluded as a contributor to the mixture of sperm from inside the victim (the defendant was found guilty). The evidence---DNA mixture and the DNA profiles of the victim and three suspects together those pieces of information that were highly relevant (such as the DNA amplification conditions) was sent to  17  lab technicians for examination.  One of them agreed that the defendant could not be excluded as a contributor. Twelve considered the DNA exclusionary, and four found it  inconclusive. If the quantity of DNA is limited, there is uncertainty about the number of contributors and about whetehr any alleles are missing, determining which alleles to assign to which contributor to some extent involves educated guesses on the part of the analysts.  This suggests there is an element of subjectivity in mixed DNA interpretation.
 
 
-Moreover, such errors are not easy to detect. Since DNA evidence carries so much weight in the fact-finders mind, it is very unusual  to procceed with additional time- and cost-consuming DNA tests.  It is also unusal that the suspect or their family can on their own afford further tests. For instance, an additional test exonerated Timothy Durham, sentenced to 3000 years for the rape of a young girl in Oklahoma City. So far there are two more cases known in the US where re-testing exonerated the accussed: Josiah Sutton, whose case we already mentioned, and Gilbert Alejandro. Even more troubling is that errors from contamination or mislabeling of samples often cannot be detected with further DNA testing, because they will simply replicate the same misdentification.  Sometimes, a lab discovers their own error and reports it, but this is a rather unlikely turn of events. 
-\todo{M: References?}
+
+Moreover, such errors are not easy to detect. Since DNA evidence carries so much weight in the fact-finders mind, it is very unusual  to procceed with additional time- and cost-consuming DNA tests.  It is also unusal that the suspect or their family can on their own afford further tests. For instance, an additional test exonerated Timothy Durham, sentenced to 3000 years for the rape of a young girl in Oklahoma City. So far there are two more cases known in the US where re-testing exonerated the accussed: Josiah Sutton, whose case we already mentioned, and Gilbert Alejandro. Even more troubling is that errors from contamination or mislabeling of samples often cannot be detected with further DNA testing, because they will simply replicate the same misdentification.  Sometimes, a lab discovers their own error and reports it, but this is a rather unlikely turn of events [@thompson2012forensic]. 
 
 
-DNA identification is to some extent prone to errors which are not measured by the random match probability, and  no serious attempts to systematically quantify error rates in DNA testing. \todo{M: Check grammar of 'no serious attempts to systematically quantify error rates in DNA testing' -- missing verb?} Anecdotal reports about false matches suggest that errors take place more often than RMP would entail, but how often we should expect them remains unclear [@thompson2012forensic]. Regular proficiency tests used in accreddited DNA laboratories involve comparison of samples from known sources, but they are criticized for being unrealistically easy (yet, it happens that analysts fail them). Sometimes, corrective action files are made available, and then they aren't too impressive. For instance, the Santa Clara County district attorney's crime laboratory between 2003 and 2007 caught 14 instances of evidence cross-contamination with staff DNA, three of contamination by unknown person, and six of DNA contamination from other samples, three cases of DNA sample switch, one mistake in which the analyst reported an incorrect result, and three errors in the computation of the statistics to be reported. Of course, these are errors that were caught, and so one might argue that they show that labs are pretty good at catching their own errors. This, however, is an optimistic intepretation. These errors have been discovered due to unusual circumstances that led to the double-checking of the results. These circumstances, however, do not normally arise. It is not always the case that when a mistake is made the result implicates a staff member or an unknown person who was too young at the time of the crime to have committed it, for instance. Crucially, a match with a person whom  the analyst might  already know is a suspect is not an outcome that would raise an eyebrow and lead to a double-check. 
+
+DNA identification is to some extent prone to errors which are not measured by the random match probability, and  no serious attempts to systematically quantify error rates in DNA testing have been made. Anecdotal reports about false matches suggest that errors take place more often than RMP would entail, but how often we should expect them remains unclear [@thompson2012forensic]. Regular proficiency tests used in accreddited DNA laboratories involve comparison of samples from known sources, but they are criticized for being unrealistically easy (yet, it happens that analysts fail them). Sometimes, corrective action files are made available, and then they aren't too impressive. For instance, the Santa Clara County district attorney's crime laboratory between 2003 and 2007 caught 14 instances of evidence cross-contamination with staff DNA, three of contamination by unknown person, and six of DNA contamination from other samples, three cases of DNA sample switch, one mistake in which the analyst reported an incorrect result, and three errors in the computation of the statistics to be reported. Of course, these are errors that were caught, and so one might argue that they show that labs are pretty good at catching their own errors. This, however, is an optimistic intepretation. These errors have been discovered due to unusual circumstances that led to the double-checking of the results. These circumstances, however, do not normally arise. It is not always the case that when a mistake is made the result implicates a staff member or an unknown person who was too young at the time of the crime to have committed it, for instance. Crucially, a match with a person whom  the analyst might  already know is a suspect is not an outcome that would raise an eyebrow and lead to a double-check. 
 
 
-\todo{M: How about fale negatives? Should this be mentioned as well?}
+
 
 Hopefully, having convinced the reader that the false positive probability is non-negligible, let us follow @aitken2003probability in investigating  its impact on the likelihood ratio of the DNA match. We just add a bit more details to the derivation they present for the sake of clarity. For simplicity we stil assume that the false negative probability is 0, that is, that if the match is real, it will be reported with certainty. We abbreviate:
 
@@ -316,15 +323,18 @@ Finally, \eqref{eq:fnNull} yields:
 Once we abbreviate $\pr{M\vert \n S}$ as RMP, $\pr{R \vert \n M}$ as FPP and $\pr{\n M \vert \n S}$, we arrive at the desired formula.
 
 
-Now, let us illustrate this impact for the range of FPP between 0 and 0.05, for two values of RMP: $10^{-9}$ (often reported in the case of two single source samples over ten or more loci) and $10{^-3}$ (sometimes obtained by means of less discriminating tests when the comparison involves a mixed sample). 
-
-\todo{M: Better to refer to Figure \ref{fig:fpplr}
- and elborate on this more. The upshot here feels too short and might go unoticed. Also, woudl be good to have a similar graph with the impact of false negative rates.}
+In Figure \ref{fig:fpplr} we illustrate this impact for the range of FPP between 0 and 0.05, for two values of RMP: $10^{-9}$ (often reported in the case of two single source samples over ten or more loci) and $10{^-3}$ (sometimes obtained by means of less discriminating tests when the comparison involves a mixed sample). The upshot is that even a small increase in FPP can lower the likelihood ratio dramatically, which is yet another reason not to ignore FPP in DNA evidence evaluation. In our illustration, we look at two pieces of DNA evidence with the two RMP rates at  $1*10^8$  and $100$, respectively. If the false positive probability reaches 0.02, they fall down to $\approx 49.99$ and $\approx 33.55$, and they get fairly close to each other already at $FPP=0.05$, where they are  $\approx 20$ and   $\approx 16.8$. 
 
 
 
-\todo{M: It's not clear what Figure \ref{fig:fpplr}
- says. Does it say that if FP rate is 5\%, then the LR (considering FP) is close to the LR (not considering FPs). Clarify. Try to make the figure concretely relevant. If so, FPs do not matter that much, right?}
+
+
+
+
+
+
+
+
 
 \begin{figure}
 ```{r fig-fpplr,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%", message = FALSE, warning = FALSE}
@@ -335,16 +345,16 @@ fpp <- seq(0,0.05, by = 0.001)
 lr9 <- 1/(rmp9 + (fpp * (1-rmp9)))
 lr3 <- 1/(rmp3 + (fpp * (1-rmp3)))
 
+
 fppTable <- data.frame(fpp,   lr9,  lr3, ref = rep(16.8, length(fpp)))
 
 library(tidyr)
 fppTableLong <- gather(fppTable,line,value,c(lr9,lr3,ref), factor_key=TRUE)
 
 
-
 ggplot(fppTableLong, aes(x=fpp,y=value, lty = line))+  geom_line()+ylim(c(0,400))+theme_tufte()+ylim(c(0,400))+ylab("Likelihood ratio")+xlab("False positive probability") +scale_linetype_manual(values = c(1,2,3),labels = 
               c(expression(paste("RMP=",10^{-9})),expression(paste("RMP=",10^{-3})),"reference at 16.8"))+ggtitle("Impact of false positive probability on likelihood ratio")+ 
-  theme(legend.position = c(0.85,.7))
+  theme(legend.position = c(0.85,.7))+ labs(lty = "RMP") 
 ```
 \label{fig:fpplr}
 \caption{Impact of the false positive probability on the likelihood ratio for two values of RMP. The horizontal reference line is at 16.8, the likelihood reached at RMP=$10{^-3}$ for FPP=0.05. At the same value of FPP, the LR for RMP $10{^-9}$ is 20.}
@@ -386,6 +396,63 @@ Note now that if you think of an error as something that guarantees a mistaken i
  & = \frac{1}{RMP - e\times RMP + e} = \frac{1}{1 + e(1-RMP)}
 \end{align*}
 \noindent which is the same as the formula obtained by  @aitken2003probability if we take $e$ to be FPP, as we should on the assumption that $k=1$.
+
+
+An analogous reasoning can be used to study the impact of false negative probability on the value of exculpator DNA evidence. Consider the probability of no match being reported if an error has been made, anaologus to $k$ above:
+\begin{align*}
+l & = \pr{\n R \vert E, S} = \pr{\n R \vert E, \n S} = \pr{\n R\vert E}
+\end{align*}
+\noindent Now, the likelihood ratio calculations, assuming $l = 1$, go as follows:
+
+\begin{align*}
+\mathsf{LR}(\n R, S, \n S) & = \frac{\pr{\n R \vert S}}{\pr{\n R \vert \n S}} \\
+& = \frac{\pr{\n R \vert \n E, S}\pr{\n E \vert S} + \pr{\n R \vert E, S}\pr{E \vert S}}
+{\pr{\n R \vert \n E, \n S}\pr{\n E \vert \n S} + \pr{\n R \vert E,\n S}\pr{E \vert \n S}} \\
+& = \frac{0 (1-e) +  le}
+{(1-RMP)(1-e) + le} \\
+& = \frac{le}
+{1- RMP - e + eRMP + le} = \frac{le}{1-RMP + e(l + RMP -1)}\\
+& = \frac{e}{1 - RMP + eRMP} = \frac{e}{1+(e-1)RMP}
+\end{align*}
+
+\noindent If the error rate is 0, then the numerator is 0 and so is the \textsf{LR}, as it should. In such a case, the evidence is completely exculpatory, the posterior probability that the suspect is the source will be also 0. If the error rate is not 0, the numerator simply is the probability of error, and the numerator takes values between $1-RMP$ and $1$, depending on the value of $e$.
+Quite crucially, 1 in the denominator is decreased by $(1-e)RMP$, which with usually very low RMP in the case of DNA evidence is a very small change as compared to one, so the denominator stays very close to 1 even if $e$ is very high, and the \textsf{LR} effectively simply is $\approx \nicefrac{e}{1} = e$. The lines in Figure \ref{fig:fnplr}, strictly speaking, do not overlap, but the difference between them (with $RMP$ being fairly low) is negligible.
+
+
+\begin{figure}
+```{r fig-fnplr,echo=FALSE,eval=TRUE,fig.align = "center",cache=FALSE, fig.show = "hold", out.width = "100%", message = FALSE, warning = FALSE}
+rmp9 <- 10e-16
+rmp3 <- 10e-3
+fnp <- seq(0,0.5, by = 0.001)
+
+lr9n <- fnp/(1 + ((fnp -1) * rmp9))
+lr3n <- fnp/(1 + ((fnp -1) * rmp3))
+
+fnpTable <- data.frame(fnp,   lr9n,  lr3n)
+
+library(tidyr)
+fnpTableLong <- gather(fnpTable,line,value,c(lr9n,lr3n), factor_key=TRUE)
+
+
+ggplot(fnpTableLong, aes(x=fnp,y=value, color = line))+  geom_line()+theme_tufte()+ylab("Likelihood ratio")+xlab("False negative probability") +scale_color_manual(values = c(1,2),labels =
+              c(expression(paste("RMP=",10^{-16})),expression(paste("RMP=",10^{-3}))))+ggtitle("Impact of false negative probability on likelihood ratio")+ theme(legend.position = c(0.9,.7))+ylim(c(0,0.5))+ labs(color = "RMP") 
+```
+\label{fig:fnplr}
+\caption{Impact of the false negative probability on the likelihood ratio of exculpatory evidence for two values of RMP.}
+\end{figure}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1249,8 +1316,9 @@ scenarioJoint2 <- data.frame(prior,priorOdds,posteriorOddsMinJoint2,posteriorMin
                              posteriorOddsMaxJoint2, posteriorMaxJoint2)
 
 sJoint2 <- ggplot(scenarioJoint2)+
-  geom_ribbon(aes(x = prior, ymin=posteriorMinJoint2,ymax=posteriorMaxJoint2), fill="darkblue", alpha=1)+theme_tufte()+
+  geom_ribbon(aes(x = prior, ymin=posteriorMinJoint2,ymax=posteriorMaxJoint2), fill="skyblue", alpha=1)+theme_tufte()+
   ggtitle("Joint impact of conflicting evidence", subtitle = ("suboptimal conditions"))+ylab("posterior")+xlim(c(0,0.9))
+
 ```
 \normalsize
 
@@ -1260,6 +1328,7 @@ sJoint2 <- ggplot(scenarioJoint2)+
 
 \begin{figure}[h]
 ```{r eyewitness4,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%", warning = FALSE, message = FALSE}
+library(ggpubr)
 ggarrange(ggarrange(sNeg1+theme_tufte(base_size=8),sNeg2+theme_tufte(base_size=8), ncol =2 ),
 sDNA+theme_tufte(base_size=8),
 ggarrange(sJoint1+theme_tufte(base_size=8),sJoint2+theme_tufte(base_size=8), ncol = 2), ncol = 1)
