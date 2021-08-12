@@ -1483,8 +1483,8 @@ What happens if we make the same comparison between individual and composite cla
 We observe two things. First, the difference in posterior probability, though still present, is less significant, especially for values above the 50\% threshold or even more clearly above the 95\% threshold. Second, whatever remaining difference in posterior probability is now reversed, that is, a composite claim supported by several items of evidence has a higher posterior probability compared to an individual claim supported by one item of evidence. This second observation 
 agrees with the analysis based on the Bayes factor and the likelihood ratio in the earlier section. Thet analysis showed that the support for a composite claim by a joint body of evidence often exceeds the support for an individual claim. 
 
-These two observations establish that, by factorig out prior probabilities and under certain independence assumptions, whenever the individual claims meet the applicable threhsold, so does the composite claim. This verifies the aggregation. 
-Conversely, whenever the composite claim, say $A \wedge B$, meets the appliacable threshold, the individual claims also meet the applicable threhsold so long as the threshold is 75\%. This verifies the other direction of the conjuction principle, what we called distribution, to some approximation in a limited class of cases. 
+These two observations establish that, by factorig out prior probabilities and under certain independence assumptions, whenever the individual claims meet the applicable posterior threhsold, so does the composite claim. This verifies aggregation. 
+Conversely, whenever the composite claim, say $A \wedge B$, meets the appliacable posterior threshold, so do the individual claims insofar as the threshold is about 75\% or higher. This verifies---to some approximation and in a limited class of cases---the other direction of the conjunction principle, what we called distribution. 
 
 
 <!---
@@ -1584,50 +1584,44 @@ ggplot() +
 Has the distribution paradox be eliminated then? The approach we have just 
 described---equalizing the prior probabilities across individual and composite claims---does 
 not entirely eliminate the paradox. There are still cases in which a composite hypothesis, say $A \wedge B$, receives stronger support than an individual hypothesis, given the same body of evidence. Sensitivity to priors seems to play a role. 
-But it cannot be the only factor at play, or else the process of equalization of the prior probabilities would have elimited the paradox entirely. So what else is going on?
+But it cannot be the only factor at play, or else the equalization of the prior probabilities would have elimited the paradox entirely. So what else is going on?
 
 
 ## Weaker Claims Weaken Sensitivity 
 
 Let's examine more closely the Bayes factor and the likelihood ratio as measures 
-of evidential strength. Likelihood ratios are comparative in nature. Say we compare claim $A$ and claim $A\wedge B$ relative to the same body of evidence $a\wedge b$, as before. Which claim will receive more support?  Intuitively, one might think that $A$ should receive more support than $A\wedge B$ relative to the same body of evidence. After all, $A\wedge B$ is a stronger claim than $A$ and is less likely to be true than $A$, other things being equal. But this intuition, on closer scrutnity, does not hold water.  Formally, the question is whether $\frac{\pr{a\wedge b \vert A}}{\pr{a\wedge b \vert A \wedge B}}>1$ or $\frac{\pr{a\wedge b \vert A}}{\pr{a\wedge b \vert A \wedge B}}<1$. Note that the role of priors here has been eliminated.
-Given the usual independencies between evidence and hypotheses, we know that:
+of evidential strength. Likelihood ratios are comparative in nature. Say we compare claim $A$ and claim $A\wedge B$ relative to the same body of evidence $a\wedge b$. Which claim will receive more support?  Intuitively, one might think that $A$ should receive more support than $A\wedge B$ relative to the same body of evidence. After all, $A\wedge B$ is a stronger claim than $A$ and thus more difficult to establish than $A$, other things being equal. But this intuition, on closer scrutnity, does not hold water.  Formally, the question is whether $\frac{\pr{a\wedge b \vert A}}{\pr{a\wedge b \vert A \wedge B}}>1$ or $\frac{\pr{a\wedge b \vert A}}{\pr{a\wedge b \vert A \wedge B}}<1$. Note that the role of priors---at least on its face---has been eliminated. Given the usual independencies between evidence and hypotheses (see Bayesian networks in Figure \ref{network-conjunction}
+), we know that:
 
 \[\frac{\pr{a\wedge b \vert A}}{\pr{a\wedge b \vert A \wedge B}}=\frac{\pr{a \vert A} \pr{b \vert A}}{\pr{a \vert A} \pr{b \vert B}}=\frac{\pr{b \vert A}}{\pr{b \vert B}}<1\]
 
 \noindent
 The reason is that $\pr{b \vert A} < \pr{b \vert B}$ since the sensitivity of $b$ relative to $B$ should be higher than the sensitivity of $b$ relative to $A$.\footnote{GIVE PROOF OF THIS} Thus, $a\wedge b$ supports $A\wedge B$ more than it supports $A$ alone. This is not what one would expect intuitively.
 
-This result agrees with the claim defened in the previous section. That is, even when $a\wedge b$ strongly supports $A \wedge B$, the same evidence need \textit{not} strongly support $A$. Formally, 
+But if $\frac{\pr{a\wedge b \vert A}}{\pr{a\wedge b \vert A \wedge B}}<1$, the sensitivity of $a\wedge b$ must be worse relative to $A$ than the composite claim $A \wedge B$. Sensitivity is a crucial property of the quality of the evidence. Eveyrthing else being equal, the lower the sensitivity of the evidence, the lower its evidential strength. The importance of sensitivity as a factor for asessing the strength of the evidence is hard to dispute. So why is the sensitivity of $a\wedge b$ worse relative to $A$ than $A \wedge B$? Suppose $A$ is the case. If $A$ is the case, in order for $a\wedge b$ to arise, both $a$ and $b$ should pick up on $A$. If $b$ fails to pick up on $A$, then $A \wedge b$ would not arise even if $a$ pick up on $A$.\footnote{The occurrance of $a\wedge b$ is less likely to occur than just $a$ alone picking up on $A$ because $b$ may fail---and fail more often than $a$ would---in picking up on $A$.} Suppose instead $A\wedge B$ holds. In this case, $a\wedge b$ would arise even if $b$ fails to pick up on $A$ so long $a$ picks up on $A$ and $b$ picks up on $B$. Now of course $b$ could also fail to pick on $B$ just like $a$ could fail to pick up on $B$. But we are assuming that $b$ is better than $a$ at tracking $B$. So $b$ will fail less often than $a$ at picking up on $B$. Thus, the sensitivity of $a\wedge b$ relative to $A\wedge B$ is better than the sensitivity of $a$ relative to $A$ alone. This is a subtle point that probability theory helps to bring out clearly. 
 
-\[\frac{\pr{a\wedge b \vert A}}{\pr{a\wedge b \vert \neg A}} < \frac{\pr{a\wedge b \vert A \wedge B}}{\pr{a\wedge b \vert \neg (A \wedge B)}}\]
-
-\noindent
-In other words, even if $a\wedge b$ favors $A\wedge B$ over its negation to a very high degree, it need not favor equally strongly $A$ over its negation. This is a comparative claim about two compartive claims, and as such, it may not be easy to parse. Evidential support, when it is formalized by the likelihoo ratio, is always relative to a contrast class, such as $A$ versus $\neg A$ or $A\wedge B$ versus $\neg (A\wedge B)$. In comparing the support that the same body of evidence provides to $A$ as contrasted to $A\wedge B$, it might be better to include these two hypotheses in the contrast class. So, in this sense, the expression $\frac{\pr{a\wedge b \vert A}}{\pr{a\wedge b \vert A \wedge B}}$ is more straightforward. 
-
-But no matter how we state the claim we reach the same conclusion. The exact same body of evidence supports $A\wedge B$ more than it supports the weaker claim $A$, even assuming that $A$ and $B$ are independent of one another and thus not mutually reinforcing,. This seems paradoxical. At first, we thought the paradox could be due to prior dependency since the combined likelihood ratio $\frac{\pr{a\wedge b \vert A \wedge B}}{\pr{a\wedge b \vert \neg (A \wedge B)}}$  varies depending on the priors of $A$ and $B$. But this argument no longer goes through in case of $\frac{\pr{a\wedge b \vert A}}{\pr{a\wedge b \vert A \wedge B}}$ where any prior dependency has been eliminated. What else is going on here? 
-
-Now, if $\frac{\pr{a\wedge b \vert A}}{\pr{a\wedge b \vert A \wedge B}}<1$, the sensitivity of $a\wedge b$ must be worse relative to $A$ than the composite claim $A \wedge B$. Sensitivity is a crucial property of the quality of the evidence. Eveyrthing else being equal, the lower the sensitivity of the evidence, the lower its evidential strength. This is hard to dispute. Let's try to understand, intuitively, why the sensitivity of $a\wedge b$ is worse relative to $A$ than $A \wedge B$. Suppose $A$ is the case. If $A$ is the case, in order for $a\wedge b$ to arise, both $a$ and $b$ should pick up on $A$. 
-If $b$ fails to pick up on $A$, then $A \wedge b$ would not arise even if $a$ pick up on $A$.\footnote{The occurrance of $a\wedge b$ is less likely to occur than just $a$ alone picking up on $A$ because $b$ may fail---and fail more often than $a$ would---in picking up on $A$.} Suppose instead $A\wedge B$ holds. In this case, $a\wedge b$ would arise even if $b$ fails to pick up on $A$ so long $a$ picks up on $A$ and $b$ picks up on $B$. So the sensitivity of $a\wedge b$ relative to $A\wedge B$ is better than the sensitivity of $a$ relative to $A$ alone. This is a subtle point that probability theory helps to bring out clearly. 
-
-How about the Bayes factor? The same observation applies here.  The Bayes factor is not contrastive because it requires to compare  $\pr{a\wedge b \vert A}$ or $\pr{a\wedge b \vert A\wedge B}$ to the baseline $\pr{a\wedge b}$. We have:
-
-\[\pr{a\wedge b \vert A}=\pr{a\vert A} \pr{b \vert A} < \pr{a\wedge b \vert A \wedge B}=\pr{a\vert A} \pr{b \vert B},\]
-
-\noindent
-because, as before, $\pr{b \vert A} < \pr{b \vert B}$ since the sensitivity of $b$ relative to $B$ must be higher than the sensitivity of $b$ relative to $A$. This means that
+The same holds for  the Bayes factor. This is a non-contrastive measures of evidential support. 
+If the sensitivity of $a\wedge b$ is better relative to $A \wedge B$ than relative to $A$, then 
 
 \[\frac{\pr{a\wedge b \vert A}}{\pr{a\wedge b}} < \frac{\pr{a\wedge b \vert A \wedge B}}{\pr{a\wedge b}}   \]
 
 \noindent
-Thus, evidence $a\wedge b$ better supports, even on an abolute scale, $A \wedge B$ compared to $A$. The reason is as before. Everything else  equal, the sensitivity of $a\wedge b$ is better relative to $A \wedge B$ than relative to $A$ alone. 
-
-How big are these variations? \textbf{PLOT GRAPH TO GET A SENSE OF VARIATIONS OF SENSITIVITY}
+Thus, evidence $a\wedge b$ better supports, even on an absolute scale, $A \wedge B$ compared to $A$. Note that, even if the Baye factor depends on the priors, the difference here is not due to the difference between the priors of $A$ and the priors of $A\wedge B$ since the denominator is simply $\pr{a\wedge b}$ and $\pr{a\wedge b \vert A}\pr{A}+ \pr{a\wedge b \vert \neg A}\pr\neg {A}$ is the same as $\pr{a\wedge b \vert (A\wedge B)}\pr{A\wedge B}+ \pr{a\wedge b \vert \neg (A\wedge B)}\pr{\neg (A\wedge B)}$.\footnote{NEED A PROOF FOR THIS BUT IT SHOULD HOLD, RIGHT?}
 
 Another way to convince ourselves this is the case is to run a simulation. Suppose we are deciding about the truth of $A$ and the the truth of $A\wedge B$, and we have a fixed body of evidence, say, $a\wedge b$ that speaks in favor of both claims.  \textbf{RUN SIMULATION TO SHOW THAT, ACTUALLY, ONE DIAGNOSTIC TEST FOR COMPOSITE CLAIM WOULD PERFORM BETTER 
 THEN THE SAME DIAGNOSTIC TEST FOR INDIVIDUAL CLAIM (WORSE LR). SO TEST COUDL PASS QUALITY CRONTROL IN ONE CASE BUT NOT IN THE OTHER.} 
 
-So the fallacy here seems to to to assume that the sensitivity of $a\wedge b$ relative to $A$ cannot be lower than the senstivity of $a\wedge b$ relative to $A\wedge B$. The thought would be something like this: if $a \wedge b$ tracks $A\wedge B$ to some degree, it surely must be able to track $A$ alone, at least as well. So, let's assume, for the sake of illustration, that $\pr{a\wedge b \vert A}=\pr{a\wedge b \vert A\wedge B}$.
+How big are these variations? \textbf{PLOT GRAPH TO GET A SENSE OF VARIATIONS OF SENSITIVITY}
+
+
+
+
+
+
+
+
+So the fallacy seems to be to assume that the sensitivity of $a\wedge b$ relative to $A$ cannot be lower than the senstivity of $a\wedge b$ relative to $A\wedge B$. The thought would be something like this: if $a \wedge b$ tracks $A\wedge B$ to some degree, it surely must be able to track $A$ alone, at least as well. But we have just shown that we cannot assume that $\pr{a\wedge b \vert A} \geq \pr{a\wedge b \vert A\wedge B}$ and in fact the opposite is the case,
+$\pr{a\wedge b \vert A} < \pr{a\wedge b \vert A\wedge B}$.
 
 We should circumscribe the point we just made. It does not always hold. 
 It is important to understand when it holds and when it does not hold. Suppose $H$ is a claim completely unrelated to $A$. We have evidence $a$ that supports $A$. Would the composite claim $A\wedge H$ be better supported by $a$ than $A$ alone? It would not. Mere tagging an unrelated hypothesis does not magically strengthen the evidence. Note that $\pr{a \vert A}=\pr{a \vert A \wedge H}$ because 
@@ -1650,14 +1644,29 @@ The moral here is two fold. First, tagging an irrelevant hypothesis---a hypothes
 
 
 
-## Does Evidential Strength Depend on Priors?
+## But Sensitivity Depends On Prior Probabilities
+
+What we have said so far agrees with the claim defended in the previous section. That is, even when $a\wedge b$ strongly supports $A \wedge B$, the same evidence need \textit{not} strongly support $A$. Formally, 
+
+\[\frac{\pr{a\wedge b \vert A}}{\pr{a\wedge b \vert \neg A}} < \frac{\pr{a\wedge b \vert A \wedge B}}{\pr{a\wedge b \vert \neg (A \wedge B)}}\]
+
+\noindent
+In other words, even if $a\wedge b$ favors $A\wedge B$ over its negation to a very high degree, it need not favor equally strongly $A$ over its negation. This is a comparative claim about two compartive claims, and as such, it may not be easy to parse. Evidential support, when it is formalized by the likelihoo ratio, is always relative to a contrast class, such as $A$ versus $\neg A$ or $A\wedge B$ versus $\neg (A\wedge B)$. In comparing the support that the same body of evidence provides to $A$ as contrasted to $A\wedge B$, it might be better to include these two hypotheses in the contrast class. So the expression $\frac{\pr{a\wedge b \vert A}}{\pr{a\wedge b \vert A \wedge B}}$ is more straightforward. 
+
+No matter the formulation, the conclusion holds. The same body of evidence, $a\wedge b$, supports the composite claim $A\wedge B$ more than it supports the weaker claim $A$, even assuming that $A$ and $B$ are independent of one another and thus not mutually reinforcing. This seems paradoxical. At first, we thought the paradox could be due to prior dependency since the combined likelihood ratio $\frac{\pr{a\wedge b \vert A \wedge B}}{\pr{a\wedge b \vert \neg (A \wedge B)}}$  varies depending on the priors of $A$ and $B$. But this argument seems to no longer holds since in case of $\frac{\pr{a\wedge b \vert A}}{\pr{a\wedge b \vert A \wedge B}}$ any prior dependency has been eliminated. Or has it been?
 
 
-A more general question here is whether we should seek a measure of the strength of evidence---especially, combined evidence 
-for a composite hypothesis---that is not sensitive to priors?  Intuitively, the strength of 
-the evidence should not depend on the prior probability of the hypothesis, but solely on the quality of the evidence itself. The prior probability of the hypothesis seems extrinsic to the quality of the evidence since the latter should solely depend on the sensitivity and specificity of the evidence relative to the hypothesis of interest. Strength of evidence determines how much the evidence changes, upwards or downwards, the probability of a hypothesis. However, as the prior probability increases, the smaller the impact that the evidence will have on the probability of the hypothesis. If the prior is  close to one, the evidence would have marginal if not null impact. But this does not mean that the evidence weakens as the prior probability of the hypothesis goes up. For consider the same hypothesis which in one context has a very high prior probability and in another has a moderate prior probability (say a disease is common in a  population but rare in another). The outcome of the same diagnostic test (say a positive test result) performed on two people, each drawn from two populations, should not count as stronger evidence in one case than in the other. After all, it is the same test that was performed and thus the quality of the evidence should be the same. 
 
-This intuition turns out to be incorrect empirically, however. 
+We have shown, given a suitable number of assumptions, that the sensitivity of $a\wedge b$ can 
+be greater relative to $A \wedge B$ than $A$ alone. This explains why the evidential support 
+of $a\wedge b$ is greater in favor of $A \wedge B$ than alone $A$. Therefore---one 
+might conclude---even factoring out differences in priors probabiliies coudl still lead to difference 
+in evidential strength simply due to difference in sensitivity. But note that this argument 
+assumes that sensitivity---or specificity---have nothign to do with prior probabilities.
+
+Intuitively, the strength of the evidence should not depend on the prior probability of the hypothesis, but solely on the quality of the evidence itself. The prior probability of the hypothesis seems extrinsic to the quality of the evidence since the latter should solely depend on the sensitivity and specificity of the evidence relative to the hypothesis of interest. Strength of evidence determines how much the evidence changes, upwards or downwards, the probability of a hypothesis. However, as the prior probability increases, the smaller the impact that the evidence will have on the probability of the hypothesis. If the prior is  close to one, the evidence would have marginal if not null impact. But this does not mean that the evidence weakens as the prior probability of the hypothesis goes up. For consider the same hypothesis which in one context has a very high prior probability and in another has a moderate prior probability (say a disease is common in a  population but rare in another). The outcome of the same diagnostic test (say a positive test result) performed on two people, each drawn from two populations, should not count as stronger evidence in one case than in the other. After all, it is the same test that was performed and thus the quality of the evidence should be the same.  For just on eitem of evidence, Bayes factor does not capture this intuition, but the likelihood ratio does, which can be considered an argument in favor of the latter and against the former measure of evidenetial support. However, we have seen that, for more than one item of evidence, teh Bayes factor as well as the likelihood ratio are prior dependent.  
+
+Interestingly, the intuition that characteristics of the evidence such as sensitivity and specificity should be indepedent of the probability of the hypothesis of iterest turns out to be incorrect empirically, however. 
 One study in the medical literature has shown, surprisingly, that the sensitivity of 
 a diagnostic test is independent of the prior of the hypothesis beign tested---say whether the patient 
 has a medical condition. However, specificity is dependent on the prior of the hypothesis:
@@ -1727,19 +1736,28 @@ SO THE QUESTION IS WHAT PROBABILISTIC MEASURE CAPTURES MIN?
 5. ANY DIFFERENCE BETWEEN AREA UNDER TEH CURVE REPRESENTATION OF EVIDENCE STRENGHT AND LR. WHAT IF WE DECRESES SENSITIVITY AND SPECIFICITY. WHAT WOULD HAPPEN TO THE TWO MEASURES. 
 
  
-# Specific Narratives [IDEAS OF A SOLUTION]
+# Revising the Holistic Approach
+
+The other route for legal probabilist is to reject aggregation and 
+hold on to distribution. This can be accomplished by understading the 
+standard of proof as a posterior probability threshold. Following Dawid, rejecting aggregation does 
+not make legal probabilism an unworkable theory. The conjunction paradox begins with the assumption 
+that each element of the of the alleged worongful act has been established by the required standard. Then, one 
+shows that it does not follow that the conjunction has been established by the required standard. Aggreation fails. This is teh paradox. But the force of this paradox---as Dwid showed---can be limited by noting 
+that each element will be established by higher probability than the conjunction 
+because each element will have a higher prior probability, other things being equal.
+We think this is the right strategy. We offer in this section a revised version 
+of the holistic approahc elaborating on Dawid's initial insights. 
 
 So far we have assumed the most natural probabilistic interpretation of proof standards, one that 
-posits a threshold on the posterior probabilities of a generic hypothesis such as guilt or civil liability. In criminal cases, the requirement is formulated as follows: guilt is proven beyond a reasonable doubt provided  $\Pr(G | E)$ is above a suitable threshold, say 95\%. The threshold is lower in civil trials. 
-Civil liability is proven by preponderance provided  $\Pr(L | E)$ is above a suitable threshold, say 50\%. 
+posits a threshold on the posterior probabilities of a generic hypothesis such as guilt or civil liability. In criminal cases, the requirement is formulated as follows: guilt is proven beyond a reasonable doubt provided  $\Pr(G | E)$ is above a suitable threshold, say 95\%. The threshold is lower in civil trials. Civil liability is proven by preponderance provided  $\Pr(L | E)$ is above a suitable threshold, say 50\%. The general claim $G$ or $L$ is split into several consituent claims, depending on the defintion of the wrongful act in the governing law. But this framing misses a crucial ingredient. 
+
 The claim that the defendant is guilty or civilly liable can be replaced by a more fine-grained hypothesis, call it $H_p$, the hypothesis put foward by the prosecutor (or the plaintiff in a civil case), for example, the hypothesis 
 that the defendant killed the victim with a firearm while bulglarizing the victim's apartment.  $H_p$ can be any hypothesis which, if true, would entail the defendanat is civilly or criminally liable (according to the governing law). Hypothesis $H_p$ is a more precise description of what happened that establishes, if true, the defendant's guilt or civil liability. In defining proof standards, instead of saying -- somewhat generically -- that $\pr{G | E}$ or $\pr{L | E}$ should be above a suitable threshold, a probabilistic interpretation could read: civil or criminal liabbility is proven beyond a reasonable doubt provided $\Pr(H_d | E)$ is above a suitable threshold. 
 
-This variation may appear inconsequential. But we argue -- perhpas surprisingly -- it can address the naked statistical evidence problem and the difficulty about conjunction. Consider the prisoner hypothetical. It is true that the naked statistics make him 99\% likely to be guilty, that is, $\pr{G | E_s}$. It is 99\% likely that he is one the prisoners who attacked and killed the guard. Notice that this a generic claim. It is odd for the prosecution to simply assert that the prisoner was one of those who killed the guard, without saying what he did, how he partook in the killing, what role he played in the attack, etc. If the prosecution offerred a more specific incriminating hypothesis, call it $H_p$, the probability $\pr{H_p | E_{s}}$ of this hypothesis based on the naked statistical evidence $E_s$ would be well below 99\%, even though $\pr{G | E_s}=99\%$. The fact the prisoner on trial is most likely guilty is an artifact of the choice of a generic hypothesis $G$. When this hypthesis is made more specific -- as it should be -- this probability drops significantly. A more detailed defense of this argument is provided in CHAPTER XYZ.
+This variation may appear inconsequential. But we argue -- perhpas surprisingly -- it can address the naked statistical evidence problem and the difficulty about conjunction. We have consudsred the naked statistical evidence problem in another chapter \textbf{REFERENCE TO EARLIER HAPER} . The basic argument was this. Consider the prisoner hypothetical. It is true that the naked statistics make him 99\% likely to be guilty, that is, $\pr{G | E_s}$. It is 99\% likely that he is one the prisoners who attacked and killed the guard. Notice that this a generic claim. It is odd for the prosecution to simply assert that the prisoner was one of those who killed the guard, without saying what he did, how he partook in the killing, what role he played in the attack, etc. If the prosecution offerred a more specific incriminating hypothesis, call it $H_p$, the probability $\pr{H_p | E_{s}}$ of this hypothesis based on the naked statistical evidence $E_s$ would be well below 99\%, even though $\pr{G | E_s}=99\%$. The fact the prisoner on trial is most likely guilty is an artifact of the choice of a generic hypothesis $G$. When this hypthesis is made more specific -- as it should be -- this probability drops significantly. 
 
-Consider now the difficulty about conjunction, focusing again on criminal cases for the sake of concreteness. 
-This difficulty assumes that prosecutors should establish each element of a crime in isolation. If they manage to prove each element to the desired standard, they have meet their burden. This is an artificial 
-view of legal proof. Consider a Washington statute about negligent driving:
+The same approach can address the difficulty about conjunction. The tacic assumption is that prosecutors or plaintiffs should establish each element in isolation. If they manage to prove each element to the desired standard, they have meet their burden. This is artificial. What prosecutor or plaintiffi should do instead is to establish a specific hypothesis from which the constitutent elements follow (almost) deductively. To illustrate, consider a Washington statute about negligent driving:
 
 \begin{quote}
 (1)(a) A person is guilty of negligent driving in the first degree if he or she operates a motor vehicle in a manner that is both negligent and endangers or is likely to endanger any person or property, and exhibits the effects of having consumed liquor or marijuana or any drug or exhibits the effects of having inhaled or ingested any chemical, whether or not a legal substance, for its intoxicating or hallucinatory effects. RCW 46.61.5249
@@ -1750,14 +1768,53 @@ In other words, a prosecutor who wishes to establish beyond a reasonable doubt t
 defendant is guilty of negligent driving should establish:
 
 \begin{quote}
-(a) the the defendant operated a vehicle
+(a) that the defendant operated a vehicle
 (b) that, in operating a vehicle, the defendant did so in  negligente manner
 (c) that, in operating a vechicle, the defendant did so in a manner likely to endanger a person pr property
 (d) that the defendant -- presumably, immediately after the incident -- exihibited the signs of intoxication by liquor or drugs
 \end{quote}
 
 \noindent
-These four claims form a common narratives about what happenned. NEED TO COMPLETe THIS. BASIC IDEA IS THAT, FIRST, YOU ESTABLISH THE NARTRATIVES, AND, SECOND, THE NARRATIVE IF TRUE PROVES EACH ELEMENT. SO TO PROVE EACH ELEMENT SIMPLY MEANS TO PROVE A NARRARTIVE FROM WHICH ALL ELEMENTS FOLLOW DEDUCTIVELY. THERE IS NO PINT IN THIKING ABOUT WHETHER EACH ELEMENT HAS BEEN PROVEN. 
+It would be odd for the prosecutor to go about establishig each claim in isolation, especially because 
+these four claims are specific to a time and place. Clearly, the prosecutor cannot simply establish that the defendant was operating a vehicle at some point in time and at some other point in time the defedant exhibited signs of intoxication.
+That would establish nothing. The elements to be established must be combined in a coherent spatio-temporal narrative. So establishing them in isolation makes little sense. Prosecutors could establish, say, that the defendant was driving on a busy Highway 1 north San Francisco at about 8:30 PM; the car was moving erratically left and right, cutting across other lanes; the defedant was stopped by a police officer who conducted a field sobriety test and tested alchoool level with a brethylizer, both tests showing a higher-than-normal quantited of alchool ingested. This narrative, if true, establishes each element of the offense. The prosecutor's task would be to establish the narrative as a whole. Presumably, the prosecutor could establish item (a) and (b) separately, but then, would have to show that they happen as part of the same driving episode. So they would have to be connected through a narratie. The same applies to the other elements of the offense. 
+
+Suppose the prosecutor has established a narrative $N$ to a very high 
+probability, say above the required threshold for proof beyond a reaosnabke doubt.  Then,
+
+\[\text{ $\pr{C_a\wedge C_b \wedge C_c\wedge C_d \vert N}=\pr{C_i \vert N}=1$ for any $i=\{a, b, c, d\}$}.\]
+
+Both direction of the conjunction principle, aggregation and distribitin, are now trivially 
+satisfied. Once we condition on the narrative $N$, each individual claim has a probability of one and thus their conjunction also has a probability of one. The narrartive, however, has a probability short of one, up to 
+whatever value is required to meet the governing standard of proof.
+
+To be sure, not all wrongoful acts, in civil or criminal cases, require the prosecutor 
+or the plaintiff to establish a spatio-temporal narrative.  It might not be necessary to show that all elements of an offense occurred at the same point in time or in close succession one after the other. Some wrongful acts may consist of a pattern of acts that stretches for several days, months or even years. There may be temporal and spatial gaps that cannot not be filled. Be that as it may, an accusation of wrongdoing in a criminal or civil case should still have a degree of cohesive unity. The  acts and occurences that constitute the wrongdoing should belong to the same wrongful act. It is this unity which the plaintiff and the prosecution must establish when they make their case. One way to establish this unity is by providing a unifying narrative, but this need not be the only way. Perhaps the expresion 'theory' or 'explanation' are better and more general than 'narrative'.
+
+One upshot of this holistic approach is that it higlights a distinction that is often made, between statements of fact and  statements of law. That the defendant was driving on highway 1 and the car was moving erratically left and right is a statement of fact. That such an occurrence counts as `negligent driving' is a statement of law.  The instance 'car moving erratically' is subsumed under the category 'driving erratically'. A defense lawyer could challange the inference. Perhaps the car was moving erratically because of other reasons, say, mulfunctioning of the brakes due to manifacturing defects not attributable to the driver.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
