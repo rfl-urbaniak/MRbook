@@ -1,39 +1,53 @@
-\documentclass[10pt,dvipsnames,enabledeprecatedfontcommands]{scrartcl}
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\PassOptionsToPackage{dvipsnames,svgnames*,x11names*}{xcolor}
+%
+\documentclass[
+  10pt,
+  dvipsnames,enabledeprecatedfontcommands]{scrartcl}
+\usepackage{amsmath,amssymb}
 \usepackage{lmodern}
-\usepackage{amssymb,amsmath}
 \usepackage{ifxetex,ifluatex}
-\usepackage{fixltx2e} % provides \textsubscript
 \ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
-\else % if luatex or xelatex
-  \ifxetex
-    \usepackage{mathspec}
-  \else
-    \usepackage{fontspec}
-  \fi
-  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
 \fi
-% use upquote if available, for straight quotes in verbatim environments
+% Use upquote if available, for straight quotes in verbatim environments
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
-% use microtype if available
-\IfFileExists{microtype.sty}{%
-\usepackage[]{microtype}
-\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
 }{}
-\PassOptionsToPackage{hyphens}{url} % url is loaded by hyperref
-\usepackage[unicode=true]{hyperref}
-\PassOptionsToPackage{usenames,dvipsnames}{color} % color is loaded by hyperref
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
 \hypersetup{
-            pdftitle={Boosting Legal Probabilism},
-            pdfauthor={Marcello Di Bello and Rafal Urbaniak},
-            colorlinks=true,
-            linkcolor=Maroon,
-            citecolor=Blue,
-            urlcolor=blue,
-            breaklinks=true}
-\urlstyle{same}  % don't use monospace font for urls
-\usepackage{graphicx,grffile}
+  pdftitle={Boosting Legal Probabilism},
+  pdfauthor={Marcello Di Bello and Rafal Urbaniak},
+  colorlinks=true,
+  linkcolor=Maroon,
+  filecolor=Maroon,
+  citecolor=Blue,
+  urlcolor=blue,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage{graphicx}
 \makeatletter
 \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
 \def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
@@ -42,31 +56,14 @@
 % margins by default, and it is still possible to overwrite the defaults
 % using explicit options in \includegraphics[width, height, ...]{}
 \setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
-\IfFileExists{parskip.sty}{%
-\usepackage{parskip}
-}{% else
-\setlength{\parindent}{0pt}
-\setlength{\parskip}{6pt plus 2pt minus 1pt}
-}
-\setlength{\emergencystretch}{3em}  % prevent overfull lines
-\providecommand{\tightlist}{%
-  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
-\setcounter{secnumdepth}{5}
-% Redefines (sub)paragraphs to behave more like sections
-\ifx\paragraph\undefined\else
-\let\oldparagraph\paragraph
-\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
-\fi
-\ifx\subparagraph\undefined\else
-\let\oldsubparagraph\subparagraph
-\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
-\fi
-
-% set default figure placement to htbp
+% Set default figure placement to htbp
 \makeatletter
 \def\fps@figure{htbp}
 \makeatother
-
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{5}
 %\documentclass{article}
 
 % %packages
@@ -158,6 +155,15 @@
 % \setlength{\emergencystretch}{0em}
 % \setlength{\parskip}{0pt}
 
+
+
+
+
+
+\ifluatex
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+
 \title{Boosting Legal Probabilism}
 \author{Marcello Di Bello and Rafal Urbaniak}
 \date{}
@@ -165,13 +171,15 @@
 \begin{document}
 \maketitle
 
-\section{The Book}\label{the-book}
+\hypertarget{the-book}{%
+\section{The Book}\label{the-book}}
 
-\subsection{Brief Description}\label{brief-description}
+\hypertarget{brief-description}{%
+\subsection{Brief Description}\label{brief-description}}
 
 \footnotesize In one or two paragraphs, describe the work, including its
 rationale, approach, and pedagogy. (This book is\ldots{} It does\ldots{}
-Its distinguishing features are\ldots{})
+Its distinguishing features are\ldots)
 
 \normalsize
 
@@ -232,15 +240,14 @@ original research and require technical background in probability
 theory. Others are introductory, suitable for an advanced undergraduate
 course.
 
-\subsection{Outline}\label{outline}
+\hypertarget{outline}{%
+\subsection{Outline}\label{outline}}
 
-\noindent
-\textbf{Part I - Legal Probabilism and Its Foes}
+\noindent \textbf{Part I - Legal Probabilism and Its Foes}
 
-\noindent
-The first part of the book will instill interest in legal probabilism
-among unfamiliar readers and refresh seasoned readers about the main
-points of contention. \textbf{Chapter 1} outlines simple legal
+\noindent The first part of the book will instill interest in legal
+probabilism among unfamiliar readers and refresh seasoned readers about
+the main points of contention. \textbf{Chapter 1} outlines simple legal
 probabilism which comprises a familiar repertoire: Bayes' theorem,
 likelihood ratios, probability thresholds, expected utility
 maximization. This repertoire has proven useful in several ways,
@@ -263,15 +270,15 @@ weighing) as well as a theory of decision-making at trial. These two
 topics are obviously intertwined in important ways, but are best kept
 separate for analytical clarity.
 
-\vspace{3mm} \noindent
-\textbf{Part II - Evidence Assessment First Pass}
+\vspace{3mm}
 
-\noindent
-The second part of the book discusses in great detail two formal tools
-that are essential for the legal probabilist: Bayes' theorem and
-likelihood ratios. We focus in particular on how these tools can help to
-assess, weigh and evaluate evidence at trial as well as what their
-limitations are.
+\noindent \textbf{Part II - Evidence Assessment First Pass}
+
+\noindent The second part of the book discusses in great detail two
+formal tools that are essential for the legal probabilist: Bayes'
+theorem and likelihood ratios. We focus in particular on how these tools
+can help to assess, weigh and evaluate evidence at trial as well as what
+their limitations are.
 
 \textbf{Chapter 3} begins with Bayes' theorem and surveys many of its
 applications, for example, as a tool to avoid reasoning fallacies such
@@ -303,11 +310,11 @@ critics have alleged, is that likelihood ratios
 \todo{This is a bit too strong, rephrase:} cannot model the notion of
 evidential relevance.
 
-\vspace{3mm} \noindent
-\textbf{Part III - Evidence Assessment More and Better}
+\vspace{3mm}
 
-\noindent
-Chapters 3 and 4 show that we need to move past simple legal
+\noindent \textbf{Part III - Evidence Assessment More and Better}
+
+\noindent Chapters 3 and 4 show that we need to move past simple legal
 probabilism. Chapter 5 shows that likelihood ratios, while useful in
 many ways, are still an unsatisfactory approach overall. The journey
 toward legal probabilism 1.02 is accomplished in Part III, Chapters 6
@@ -345,7 +352,7 @@ and argument-based notions such as conflicts between pieces of evidence.
 Chapter 6 surveys this literature focusing on the work of Charlotte Vlek
 and Norman Fenton. Vlek, together with Bart Verheij and Henry Prakken,
 proposed to model the coherence of a story by adding a node in the
-Bayesian network, call it a `story node'. The story node has other nodes
+Bayesian network, call it a `story node.' The story node has other nodes
 as its children corresponding to the events that make up the story. In
 turn, these events are linked to their supporting evidence. An example
 of a Bayesian network with a story node (or scenario node to use Vlek's
@@ -452,13 +459,13 @@ objections---can serve to formulate decision criteria that are not
 unidimensional thresholds. This point is discussed more extensively in
 the next part of the book.
 
-\vspace{3mm} \noindent
-\textbf{Part IV - Decision-making}
+\vspace{3mm}
 
-\noindent
-The third part of the book examines trial decision-making, specifically,
-to what extent standards of proof such as `preponderance of the
-evidence' and `proof beyond a reasonable doubt' can be understood
+\noindent \textbf{Part IV - Decision-making}
+
+\noindent The third part of the book examines trial decision-making,
+specifically, to what extent standards of proof such as `preponderance
+of the evidence' and `proof beyond a reasonable doubt' can be understood
 through the lenses of probability theory. There has been a spur of
 research arguing that legal probabilism is unfit to model standards of
 proof. But this research often holds a narrow view of legal probabilism.
@@ -492,7 +499,7 @@ account---or story, narrative---whose moving parts are each supported by
 adequate evidence. In cases of naked statistical evidence, the
 probability of liability is high, but the specificity of the
 accompanying narrative is suspiciously low. The second premise is that
-the supporting evidence should typically be `causally grounded'. This
+the supporting evidence should typically be `causally grounded.' This
 grounding contributes to a well-specified story and is achieved during
 cross-examination by eliciting additional information about the relation
 between the evidence and the alleged
@@ -535,16 +542,16 @@ analytic epistemology and force them onto legal-decision making. This
 criticism applies in particular to knowledge accounts of legal
 proof.\todo{How do we avoid probability fetishism though, one might ask?}
 
-\vspace{3mm} \noindent
-\textbf{Part V - Accuracy and Fairness}
+\vspace{3mm}
 
-\noindent
-Even if one did not agree that legal probabilism as we have articulated
-it is helpful for understanding evidence assessment and decision-making
-at trial, it can still play an analytical role in theorizing about trial
-decisions The fourth part of the book illustrates this point by
-discussing two important legaal values that should inform trial
-proceedings: accuracy and fairness.
+\noindent \textbf{Part V - Accuracy and Fairness}
+
+\noindent Even if one did not agree that legal probabilism as we have
+articulated it is helpful for understanding evidence assessment and
+decision-making at trial, it can still play an analytical role in
+theorizing about trial decisions The fourth part of the book illustrates
+this point by discussing two important legaal values that should inform
+trial proceedings: accuracy and fairness.
 
 \textbf{Chapter 15} DESCRIPTION. GENERAL TREATMENT OF WHAT VALUES SHOULD
 INFORM AND GUIDE TRIAL DECISIONS, SUCH AS FAIRNESS, ACCURACY,
@@ -587,8 +594,9 @@ for legal probabilism. \todo{M: ANYTHING TO ADD HERE?}
 
 \todo{Question: don't we plan to have a chapter on the priors?}
 
-\vspace{3mm} \noindent
-\textbf{Table of contents}
+\vspace{3mm}
+
+\noindent \textbf{Table of contents}
 
 \renewcommand{\labelenumi}{\Roman{enumi}}
 \renewcommand{\labelenumii}{\arabic{enumii}}
@@ -807,8 +815,9 @@ for legal probabilism. \todo{M: ANYTHING TO ADD HERE?}
 \end{enumerate}
 \end{enumerate}
 
+\hypertarget{outstanding-features-of-the-book}{%
 \subsection{Outstanding Features of the
-Book}\label{outstanding-features-of-the-book}
+Book}\label{outstanding-features-of-the-book}}
 
 \begin{itemize}
 \item
@@ -825,7 +834,7 @@ Book}\label{outstanding-features-of-the-book}
   The analytical, theoretical argument in defense of legal probabilism
   is accompanied by an \textbf{\textsf{R}} code implementation. This
   underscores the theoretical, practical and computational aspiration of
-  `Boosting Legal Probabilism'.
+  `Boosting Legal Probabilism.'
 \item
   The book is suitable for different audiences with different interests.
   It is partly introductory and partly describing original research by
@@ -841,7 +850,8 @@ Book}\label{outstanding-features-of-the-book}
 
 \todo{what else?}
 
-\subsection{Apparatus}\label{apparatus}
+\hypertarget{apparatus}{%
+\subsection{Apparatus}\label{apparatus}}
 
 \footnotesize a. Will the book include photographs, line drawings,
 cases, questions, problems, glossaries, bibliography, references,
@@ -849,7 +859,7 @@ appendices, etc.?
 
 \vspace{2mm}
 
-\normalsize 
+\normalsize
 
 Yes, the book will contain various plots, either of Bayesian networks,
 or some other data visualisations generated by \texttt{ggplot2}. The
@@ -866,7 +876,8 @@ solutions, answers, workbook, anthology, or other material.)
 The book will be accompanied by an online-only appendix detailing the
 use of the \texttt{R} code in the book and the source code we used.
 
-\subsection{Competition}\label{competition}
+\hypertarget{competition}{%
+\subsection{Competition}\label{competition}}
 
 \footnotesize a. Consider the existing books in this field and discuss
 specifically their strengths and weaknesses. Spell out how your book
@@ -874,7 +885,7 @@ will be similar to, as well as different from, competing works.
 
 \todo{For now, let's list competition, and discuss key differences}
 
-\normalsize 
+\normalsize
 
 Three types: BNs in the law, Philosophy \& law, Statistics in law and
 forensics
@@ -924,9 +935,11 @@ forensics
   due, and show how you can do it better.
 \end{enumerate}
 
-\section{Market Considerations}\label{market-considerations}
+\hypertarget{market-considerations}{%
+\section{Market Considerations}\label{market-considerations}}
 
-\subsection{The Primary Market}\label{the-primary-market}
+\hypertarget{the-primary-market}{%
+\subsection{The Primary Market}\label{the-primary-market}}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -946,7 +959,8 @@ forensics
   reader is your book intended?
 \end{enumerate}
 
-\section{Status of the Work}\label{status-of-the-work}
+\hypertarget{status-of-the-work}{%
+\section{Status of the Work}\label{status-of-the-work}}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -998,7 +1012,8 @@ forensics
   protected by copyright notice on the material.)
 \end{enumerate}
 
-\section{Sample Chapters}\label{sample-chapters}
+\hypertarget{sample-chapters}{%
+\section{Sample Chapters}\label{sample-chapters}}
 
 Select one or two chapters of the manuscript that are an integral part
 of the book. They should be those you consider the best-written ones,
@@ -1015,7 +1030,8 @@ Please do not bind your manuscript, as we will have to unbind it in
 order to make photocopies for reviewers. Also be sure all pages are
 numbered either consecutively or double-numbered by chapter.
 
-\section{Reviews}\label{reviews}
+\hypertarget{reviews}{%
+\section{Reviews}\label{reviews}}
 
 If we are interested in your project, we will commission outside
 reviewers to read and evaluate your proposal. We will, of course, obtain
@@ -1027,14 +1043,16 @@ scholars to act as reviewers themselves, we may ask them for their
 suggestions for peer readers. Naturally, we do not reveal the names of
 reviewers without their permission.
 
-\section{Author Background}\label{author-background}
+\hypertarget{author-background}{%
+\section{Author Background}\label{author-background}}
 
 Please include a current CV or brief biography of your writing,
 teaching, and/or educational background and experience. Be sure to list
 any books that you have previously published, and any other information
 about yourself on why you are qualified to write this book.
 
-\section{Response Time}\label{response-time}
+\hypertarget{response-time}{%
+\section{Response Time}\label{response-time}}
 
 Please allow at least 6-10 weeks for the manuscript proposal evaluation
 and review process. We will contact you as soon as we have had a chance
