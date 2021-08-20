@@ -233,7 +233,7 @@ DNA identification is to some extent prone to errors which are not measured by t
 
 
 
-Hopefully, having convinced the reader that the false positive probability is non-negligible, let us follow @aitken2003probability in investigating  its impact on the likelihood ratio of the DNA match. We just add a bit more details to the derivation they present for the sake of clarity. For simplicity we stil assume that the false negative probability is 0, that is, that if the match is real, it will be reported with certainty. We abbreviate:
+Hopefully, having convinced the reader that the false positive probability is non-negligible, let us follow @aitken2003probability in investigating  its impact on the likelihood ratio of the DNA match. We just add a bit more details to the derivation they present for the sake of clarity. For simplicity, we still assume that the false negative probability is 0, that is, that if the match is real, it will be reported with certainty. We abbreviate:
 
 \begin{center} \hspace{10mm}
 \begin{tabular}{lp{9cm}}
@@ -323,7 +323,7 @@ Finally, \eqref{eq:fnNull} yields:
 Once we abbreviate $\pr{M\vert \n S}$ as RMP, $\pr{R \vert \n M}$ as FPP and $\pr{\n M \vert \n S}$, we arrive at the desired formula.
 
 
-In Figure \ref{fig:fpplr} we illustrate this impact for the range of FPP between 0 and 0.05, for two values of RMP: $10^{-9}$ (often reported in the case of two single source samples over ten or more loci) and $10{^-3}$ (sometimes obtained by means of less discriminating tests when the comparison involves a mixed sample). The upshot is that even a small increase in FPP can lower the likelihood ratio dramatically, which is yet another reason not to ignore FPP in DNA evidence evaluation. In our illustration, we look at two pieces of DNA evidence with the two RMP rates at  $1*10^8$  and $100$, respectively. If the false positive probability reaches 0.02, they fall down to $\approx 49.99$ and $\approx 33.55$, and they get fairly close to each other already at $FPP=0.05$, where they are  $\approx 20$ and   $\approx 16.8$. 
+In Figure \ref{fig:fpplr} we illustrate this impact for the range of FPP between 0 and 0.05, for two values of RMP: $10^{-9}$ (often reported in the case of two single-source samples over ten or more loci) and $10{^-3}$ (sometimes obtained by means of less discriminating tests when the comparison involves a mixed sample). The upshot is that even a small increase in FPP can lower the likelihood ratio dramatically, which is yet another reason not to ignore FPP in DNA evidence evaluation. In our illustration, we look at two pieces of DNA evidence with the two RMP rates at  $1*10^8$  and $100$, respectively. If the false positive probability reaches 0.02, they fall down to $\approx 49.99$ and $\approx 33.55$, and they get fairly close to each other already at $FPP=0.05$, where they are  $\approx 20$ and   $\approx 16.8$. 
 
 
 
@@ -430,6 +430,7 @@ lr3n <- fnp/(1 + ((fnp -1) * rmp3))
 
 fnpTable <- data.frame(fnp,   lr9n,  lr3n)
 
+
 library(tidyr)
 fnpTableLong <- gather(fnpTable,line,value,c(lr9n,lr3n), factor_key=TRUE)
 
@@ -442,7 +443,7 @@ ggplot(fnpTableLong, aes(x=fnp,y=value, color = line))+  geom_line()+theme_tufte
 \end{figure}
 
 
-
+Interestingly, the situation is not symmetric when we compare FPP to FNP. With FPP, the LR is 50 when $e=0.01$ for RMP$=10^{-3}$, while for the same $e$ and RMP it is $0.01$ for FNP, an hundredfold decrease. This illustrates that the exculpatory value of DNA evidence is higher than its incriminating value, even if the error rates and random match probabilities are the same. 
 
 
 
@@ -464,7 +465,12 @@ ggplot(fnpTableLong, aes(x=fnp,y=value, color = line))+  geom_line()+theme_tufte
 
 # Hypothesis choice \label{sec:hchoice}
 
-As the preceding discussion shows, the likelihood ratio is a fruitful conceptual framework for assessing the strength of the evidence, even in complex cases such as cold-hits. 
+The discussion so far suggests that the likelihood ratio is a fruitful conceptual framework for assessing the strength of the evidence, even in complex cases such as cold-hits.   Now, however, we turn to a problem with the use of likelihood ratio in the context of legal fact-finding: it is sensitive to the hypothesis choice. We discuss this problem in general in this section, (i) showing how an ad hoc hypothesis can always lead to a useless likelihood ratio, (ii) discussing a real case in which the choice of hypothesis was fairly confusing and had impact on evidence evaluation, (iii) indicating that the problem doesn't arise if the hypotheses as exclusive and exhaustive, and (iv) arguing that this theoretical resolution may be unhelpful in practice, as there seem often to be good reasons why experts do not use such pairs of hypotheses. Further, in Section \ref{sec:lhTwoSTain} we further illustrate how large shifts in the likelihood ratio can take place even if the hypotheses chosen seem reasonable, and argue that another clear source of variability of likelihood ratio is the choice of hypothesis levels. The two sections taken together paint a difficulty with using likelihood ratio alone as a measure of evidential strength. 
+
+
+
+
+
 
 One major difficulty, however,  is the choice of  the hypotheses $H$ and $H'$ that should be compared. Generally speaking, the hypotheses should in some sense compete with one another---say, in a criminal trial, $H$ is the hypothesis put forward by the prosecution and $H'$ is the hypothesis put forward by the defense.  Presumably, the two hypotheses should be something that the two parties disagree about.  But this minimal constraint offers too little guidance and leaves open the possibility for manipulations and misinterpretations of the evidence. What follows outlines some of the main arguments in the literature on this topic. 
 
@@ -473,11 +479,13 @@ Consider a stylized DNA evidence case. Suppose the prosecutor puts forward the h
 The defense, however, responds by putting forward the following \textit{ad hoc} hypothesis:  `The crime stain was left by some unknown person who happened to have the same genotype as the suspect.' Since the probability of the DNA match given either hypothesis is 1, the likelihood ratio equals 1 [@evett2000MoreHierarchyPropositions]. The problem generalizes. For any item of evidence and any given prosecutor's hypothesis $H$, there is an \textit{ad hoc} competing hypothesis $H^*$ such that $\nicefrac{\pr{E \vert H}}{\pr{E \vert H^*}}=1$.
 
 Hypothesis $H^*$ is simply a just-so hypothesis, one that is selected only because it explains the evidence just as well as hypothesis $H$ does [@mayo2018]. If no further constraints are placed on the choice of the competing hypotheses---it would seem---no evidence could ever  incriminate a defendant. This is  unsettling. 
-But this conclusion need not be so damning in practice. 
 
-\todo{Do we have a response to the "ad hoc hypothesis choice" objection that is not just `in practice it does not really matter'. If the objection is sound and we have no response to it, this is no good for LR.}
 
-Judges and jurors, however, will often recognize \textit{ad hoc} hypotheses for what they are---artificial theories that should not be taken seriously. Perhaps, the reasonable expectations of the participants in a trial will suffice to constrain the choice of hypotheses in just the right way. At the same time, real cases can be quite complex, and it is not always obvious whether a certain choice of competing hypotheses, which are not obviously \textit{ad hoc}, is legitimate or not.
+One reply might be that  this phenomenon need not be so damning in practice. 
+Judges and jurors, after all, will often recognize \textit{ad hoc} hypotheses for what they are---artificial theories that should not be taken seriously. Perhaps, the reasonable expectations of the participants in a trial will suffice to constrain the choice of hypotheses in just the right way. 
+
+One issue with this reply is that it is not principled. Fair enough, maybe in practice fact-finders will avoid ad-hoc hypotheses. But why should they avoid them, other than because otherwise the resulting likelihood ratio will be useless?  Moreover, as we will soon see, hypothesis choice has impact on likelihood ratio even if no ad hoc hypothesis seems to be used. Moreover,
+real cases tend to be quite complex, and it is not always obvious whether a certain choice of competing hypotheses, none of which are is obviously \textit{ad hoc}, is legitimate or not. In what follows we will illustrate some of these issues, and argue that due to this sensitivty, likelihood ratio alone is not informative enough, if not supplied by careful considerations of hypothesis choice. 
 
 Here is an example that illustrates how  even when the competing hypotheses are not obviously \textit{ad hoc}, the absence of a clear rationale for their choice may create confusions in the assessment of the evidence.  In R.\ v.\ Barry 
 George (2007 EWCA Crim 2722). Barry George was accused of murdering TV celebrity Jill Dando.  A key piece of evidence at play was:
@@ -551,13 +559,15 @@ The probability of a DNA match given this hypothesis would be 1.
 
 
 So, it seems, the choice of competing hypotheses 
-lies between two extremes. Exclusive and exhaustive hypotheses guard against arbitrary comparisons and ensure a more objective assessment of the evidence. Unfortunately, exhaustive and exclusive hypothesis cover the entire space of possibilities, and sifting through this space is cognitively unfeasible. So, in this respect, comparing more circumscribed hypotheses is preferable. The danger of doing so, however, is slipping into arbitrariness as likelihood ratios heavily depend on the hypotheses that are compared. The more latitude in the choice of the hypotheses,
+lies between two extremes. Exclusive and exhaustive hypotheses guard against ad hoc hypotheses, arbitrary comparisons and ensure a more objective assessment of the evidence. Unfortunately, exhaustive and exclusive hypothesis cover the entire space of possibilities, and sifting through this space may be cognitively unfeasible. So, in this respect, comparing more circumscribed hypotheses is preferable. The danger of doing so, however, is slipping into arbitrariness as likelihood ratios heavily depend on the hypotheses that are compared. The more latitude in the choice of the hypotheses,
 the more variable the likelihood ratio as a measure of evidentiary value. 
 This  is a particularly troubling 
 phenomenon, as competing hypotheses can concern any factual dispute, from minute details such as whether the cloth used to suffocate the victim was red or blue, to ultimate questions such as whether the defendant stabbed the victim.  
 
 To add another complication, the likelihood ratio varies across hypotheses formulated at different levels of granularity: offense, activity and source level hypotheses. It is even possible that, at the source level, the likelihood ratio  favors one side, say the prosecution, but at the offence level, the likelihood ratio  favors the other side, say the defense, even though the hypotheses at the two levels are quite similar. Further, a likelihood ratio that equals 1 when source level hypotheses are compared may tip in favor of one side or the other when offence level hypotheses are compared  [@fenton2014WhenNeutralEvidence].
 This variability makes the likelihood ratio a seemingly  arbitrary---and easily manipulable---measure of evidentiary value.
+
+
 The likelihood ratio can be  misleading, but this risk is mitigated  when its assessment is accompanied by a careful discussion of a number of issues, such as: which hypotheses are being compared; how they are formulated; their level of granularity (that is, source, activity and offense level); why the hypotheses are (or are not) exclusive and exhaustive, and why other hypotheses are ruled out as unworthy of consideration. 
 
 
@@ -797,7 +807,7 @@ database of profiles and  find a match, a so-called  \textbf{cold-hit}.
 Cold-hit DNA matches have been the focus of intense discussion in recent years. Since in cold-hit cases there is little or no other evidence, cold-hit matches are often the primary item of evidence against the defendant. Some believe that this circumstance weakens the case. Others disagree.  This debate illustrates how probability theory---in particular, the likelihood ratio---can help to assess the strength of evidence at trial. What follows examines some of the main arguments.
 
 For concreteness, consider the California rape and  murder case of Diana Sylvester. In 2008, many years after the crime, John Puckett was identified as a unique 9-loci match through a database search  of 338,000 profiles. He was the only individual in the database who matched the traces collected from the victim Diana Sylvester in 1972. According to an expert witness,  the   particular pattern of alleles present in the material was (conservatively) expected to occur randomly among Caucasian men with a frequency of 1 in 1.1 million. This is the \textbf{random match probability} (\textbf{RMP}).  The random match probability---often interpreted as the probability that someone who is not the source would coincidentally match, $\pr{\textsf{match} \vert \neg \textsf{source}}$---is a common measure of the strength of a DNA match.
-The lower the RMP, the more strongly incriminating the match. The rationale here is that a low random match probability suggests that it is unlikely that two people would share the same DNA profile.  In line with what we already discussed, strictly speaking, a match  is strong evidence that the defendant is the source only if  the probability that the person who left the traces (the `source') would match is significantly greater than RMP. In practice, when it comes to DNA evidence, it is often assumed that  $\pr(\textsf{match} \vert \textsf{source})$ is very high.
+The lower the RMP, the more strongly incriminating the match. The rationale here is that a low random match probability suggests that it is unlikely that two people would share the same DNA profile.  In line with what we already discussed, strictly speaking, a match  is a strong evidence that the defendant is the source only if  the probability that the person who left the traces (the `source') would match is significantly greater than RMP. In practice, when it comes to DNA evidence, it is often assumed that  $\pr(\textsf{match} \vert \textsf{source})$ is very high.
 
  Although clearly 1 in 1.1 million should not be confused with the probability of Puckett's innocence (see \ref{sec:fallacies} for details),\todo{check crossref later} the small figure indicates it is very unlikely that a random person unrelated to the crime would match. The match is therefore strong evidence of Puckett's guilt. Assuming that the probability of a match if Puckett indeed was the source was (practically) 1, the likelihood ratio is simply $1.1 \times 10^6$.
 
@@ -810,7 +820,7 @@ lr
 ```
 
 
-During the pretrial hearing, however, Bicka Barlow, the DNA expert  for the defense, pointed out that  this was a cold-hit case. No evidence tied Puckett to the crime other than the cold-hit match, Puckett's previous rape convictions and the fact that he was in the area at the time of the murder. In order to correctly assess the probative value of the cold-hit match, Barlow argued, the random match probability should 
+During the pretrial hearing, however, Bicka Barlow, the DNA expert  for the defense, pointed out that  this was a cold-hit case. No evidence tied Puckett to the crime other than the cold-hit match, Puckett's previous rape convictions, and the fact that he was in the area at the time of the murder. In order to correctly assess the probative value of the cold-hit match, Barlow argued, the random match probability should 
  be multiplied by the size of the database. The result of such a  multiplication is called  the \textbf{database match probability}  (\textbf{DMP}). In Puckett's case, the multiplication of $\nicefrac{1}{1.1\times 10^6}$  by $338,000$ resulted in 
 a database match probability of approximately .3.
 
@@ -827,7 +837,7 @@ dmp <- 1/1.1e6 * 338e3
 
 Barlow followed a 1996 report by the National Research Council called NRC II 
 [@NRCII1996],   preceded by an earlier report on DNA evidence called NRC I [@NRCI1992].  NRC II  recommended precisely what Balrow did: that in cold-hit cases RMP 
-should be multiplied by the database size, yielding DMP.  The underlying idea was that the larger the size of the dataset, the higher the database match probability, and the lower the strength of the match. This correction was meant to guard against the heightened risk of mistaken matches  for  the innocent people in the database.   To see however, if this was sound advice, we need to look under the hood.
+should be multiplied by the database size, yielding DMP.  The underlying idea was that the larger the size of the dataset, the higher the database match probability, and the lower the strength of the match. This correction was meant to guard against the heightened risk of mistaken matches  for  the innocent people in the database.   To see, however, if this was sound advice, we need to look under the hood.
 
 
 The NRC formed the Committee on DNA Technology in Forensic Science, which issued its first report in 1992.  In that report they advised against using cold hit results as evidence, and insisted that only the frequencies related to loci not used in the original identification should be presented at trial, that is, that the evidence used to identify the suspect should not be used as evidence against the suspect.
