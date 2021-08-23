@@ -22,6 +22,10 @@ csl: [../references/apa-6th-edition.csl]
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(bnlearn)
+library(Rgraphviz)
+library(gRain)
+library(kableExtra)
 ```
 
 
@@ -33,7 +37,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 
 
-A theoretical difficulty that any theory of the standard of proof should 
+A theoretical difficulty that any theory \todo{here you say "any theory" but then you switch to the probabilistic ones. Is it a problem for non-probabilistic theories or not? } of the standard of proof should 
 address is the the conjunction paradox or difficulty about conjunction. First formulated by @Cohen1977The-probable-an, the difficulty about conjunction has enjoyed a great deal of scholarly attention every since [@Allen1986A-Reconceptuali; @Stein05; @allen2013; @haack2011legal; @schwartz2017ConjunctionProblemLogic; @AllenPardo2019relative]. 
 This difficulty arises when an accusation of wrongdoing, in a civil or criminal proceeding, 
 is broken down into its constituent elements. The basic problem is that the probability of a conjuction 
@@ -45,7 +49,7 @@ and how legal probabilists can respond.
 
 
 Suppose that in order to prevail in a 
-criminal trial, the prosecution should establish by the required standard, first, that the defendant caused harm to the victim (call it claim $A$), and second, that the defendant had premeditated the harmful act (call it claim $B$). @Cohen1977The-probable-an argues that common law systems subscribe to a conjunction principle, that is, if $A$ and $B$ are established according to the governing standard of proof, so is their conjunction (and vice versa).  If the conjunction principle holds, the following must be equivalent, where $S$ is a placeholder for the standard of proof:
+criminal trial, the prosecution should establish by the required standard, first, that the defendant caused harm to the victim (call it claim $A$), and second, that the defendant had premeditated the harmful act (call it claim $B$). @Cohen1977The-probable-an argues that common law systems subscribe to a conjunction principle, that is,\todo{Here you first fix $A$ and $B$ as abbreviations, and then make a general claim using those variables; this makes it seem like the conjunction principle is about two very specific sentences, which is not what you meant.} if $A$ and $B$ are established according to the governing standard of proof, so is their conjunction (and vice versa).  If the conjunction principle holds, the following must be equivalent, where $S$ is a placeholder for the standard of proof: 
 
 \begin{center}
 \begin{tabular}
@@ -58,12 +62,12 @@ criminal trial, the prosecution should establish by the required standard, first
 \end{center}
 
 \noindent
-If we generalize to more than just two constituent claims, the conjunction principle requires that:
+If we generalize to more than just two constituent claims, the conjunction principle requires that:\todo{You need to be clearer about what this equivalence symbol is supposed to mean; further, later you title a subsection saying the principle is false; but if it is normative, I don't understand what you mean by saying its false.}
 \[S[C_1 \wedge C_2  \wedge \dots \wedge  C_k] \Leftrightarrow S[C_1] \wedge S[C_2]  \wedge \dots \wedge  S[C_k].\]
 
 \noindent
 where $S[C_i]$ means that claim or hypothesis $C_i$ is established according 
-to standard $S$.
+to standard $S$. In what follows it will be useful to distinguish between the two directions involved: the implication from right to left will be called \textbf{distribution}, and the opposite direction will be called \textbf{aggregation}. The problem that will be discussed in this subsection is a one with aggregation, but we will later on discuss approaches which fail to satisfy distribution.
 
 The conjunction principle is 
 consistent with---perhaps even required by---the case 
@@ -71,7 +75,7 @@ law. For example, the United States Supreme Court
 writes that in criminal cases 
 
 \begin{quote}
-the accused [is protected] against conviction except upon proof beyond a reasonable doubt of \textit{every fact} necessary to constitute the crime with which he is charged. In re Winship (1970), 397 U.S. 358, 364. 
+the accused [is protected] against conviction except upon proof beyond a reasonable doubt of \textit{every fact} necessary to constitute the crime with which he is charged. \todo{cite properly} In re Winship (1970), 397 U.S. 358, 364. 
 \end{quote}
 
 \noindent
@@ -95,30 +99,289 @@ One could quibble with this intepretation. Perhpas, what the law requires is onl
 
 
 The problem for the legal probabilist is that the conjunction principle conflicts 
-with a threshold-based probabilistic interpretation 
-of the standard of proof. For suppose the prosecution presents evidence that establishes claims $A$ and $B$, separately, to the required probability, say about 95\% each. Has the prosecution met its burden of proof? Each claim was established to the requisite probability threshold, and thus it was established to the requisite standard (assuming the threshold-based interpretation of the standard of proof). And if each claim was established to the requisite standard, then (i) guilt as a whole was established to the requisite standard (assuming the conjunction principle). But even though each claim was established to the requisite probability threshold, the probability of their conjunction---assuming the two claims are independent---is only $95\%\times95\%=90.25\%$, below the required 95\% threshold. So (ii) guilt as a whole was \textit{not} established to the requisite standard (assuming a threshold-based  probabilistic interpretation of the standard). 
+with a threshold-based\todo{you didn't introduce this notion yet} probabilistic interpretation 
+of the standard of proof. For suppose the prosecution presents evidence that establishes claims $A$ and $B$, separately, to the required probability, say about 95\% each.\todo{I thought we agreed to use .95 notation for probabilities and keep percentages for population frequencies only, as in SEP. This is also what I have done in the LR chapter, so perhaps we should stick to this convention throughout this chapter as well.} Has the prosecution met its burden of proof? Each claim was established to the requisite probability threshold, and thus it was established to the requisite standard (assuming the threshold-based interpretation of the standard of proof). And if each claim was established to the requisite standard, then (i) guilt as a whole was established to the requisite standard (assuming the conjunction principle). But even though each claim was established to the requisite probability threshold, the probability of their conjunction---assuming the two claims are independent---is only $95\%\times95\%=90.25\%$, below the required 95\% threshold. So (ii) guilt as a whole was \textit{not} established to the requisite standard (assuming a threshold-based  probabilistic interpretation of the standard). 
 Hence, we arrive at two contradictory conclusions: (i) that the prosecution met its burden of proof 
 and (ii) that it did not meet its burden.
 
 The difficulty about conjunction---the fact that a probabilistic interpretation of the standard of proof conflicts with the conjunction principle---does not subside when the number of constituent claims increases. If anything, the difficulty becomes more apparent. Say the prosecution has established three separate claims to 95\% probability. Their conjunction---again if the claims are independent---would be about 85\% probable, even further below the 95\% threshold.  Nor does the difficulty about conjunction subside if the claims are no longer regarded as independent.
-The probabilty of the conjunction $A \et B$, without the assumption of independence, equals $\pr{A | B} \times \pr{B}$. 
+The probabilty of the conjunction $A \et B$, without the assumption of independence, equals $\pr{A \vert B} \times \pr{B}$. 
 But if claims $A$ and $B$, separately, have been established to 95\% probability, enough for 
 each to meet the threshold, the probability of $A \et B$ could still be below 
-the 95\% threshold unless $\pr{A | B}=100\%$. 
-For example, that someone premediated a harmful act against another (claim $B$) makes it more likely that they did cause harm in the end (claim $A$). Since $\pr{A | B} > \pr{A}$, the two claims are not independent. 
-Still, premeditation does not always lead to harm, so $\pr{A | B}$ will often be below 100\%. Consequently, in this case, the probability of the conjunction $A \et B$ would often be below the 95\% threhsold.\todo{False in whole generality, give a counterexample with more specific numbers. M: I changed things a bit. Maybe it's clear now. The counterexample is basically P(A)=P(B)=0.95, but P(AB)=Pr(A)*P(A|B) and since P(A|B) is below 1, then P(AB) is below 0.95.}
+the 95\% threshold unless $\pr{A \vert B}=100\%$. 
+For example, that someone premediated a harmful act against another (claim $B$) makes it more likely that they did cause harm in the end (claim $A$). Since $\pr{A \vert B} > \pr{A}$, the two claims are not independent. 
+Still, premeditation does not always lead to harm, so $\pr{A \vert B}$ will often be below 100\%. Consequently, in this case, the probability of the conjunction $A \et B$ would often be below the 95\% threhsold.\todo{False in whole generality, give a counterexample with more specific numbers. M: I changed things a bit. Maybe it's clear now. The counterexample is basically P(A)=P(B)=0.95, but P(AB)=Pr(A)*P(A|B) and since P(A|B) is below 1, then P(AB) is below 0.95.}
+
+\todo{some flow is needed here.}
+\todo{moved up the independencies section }
+
+
+## Probabilistic (in)dependencies and Bayesian networks used
+
+The conjunction paradox is a difficult problem, as the vast literature on the topic attests. 
+Before we move on, it is important to become clear about the assumptions underlying the formulation of the paradox, in particular, the assumptions of probabilistic independence. 
+
+The reason why we need to be careful here is that there are various types of independence in the vincinity, and various arguments that we will look at often use some but not all of them, and we need to be clear about which assumptions are involved. Here are the main types of independence, with issues that we have to pay attention to:
+
+- $A$ and $B$ can simply be independent, $A \indep B$. This happens iff $\pr{A \vert B} = \pr{A}\pr{B}$, and is equivalent to $\pr{A\vert B} = \pr{A}$ if $\pr{A}, \pr{B} \neq 0$. If $A\indep B$, then so are all their literals (that is, adding a negation in front of either of them doesn't remove the independence).
+
+- Three events $A$, $B$, $C$, are independent if (1) they are all pairwise independent, and moreover (2) $\pr{A}\pr{B}\pr{C} = \pr{A \et B \et C}$. Interestingly, pairwise independencies alone do not entail (2). Imagine tossing a coin twice, let $A$='heads in the first toss', $B$='heads in the second toss', and $C$='the two results are the same'. These are pairwise independent, but fail to satisfy (2), because once you know two of them, the third one is determined.  Nor does (2) entail (1). If $\pr{A}=0$, condition (2) will be satisfied no matter what happens with $B$ and $C$. The notion and non-entailment generalizes to more events.
+
+- $A$ and $B$ are conditionally independent given $C$, $A\indep B \vert C$ iff $\pr{A\et B \vert C} = \pr{A\vert C }\pr{B \vert C}$. Conditional independence does not entail independence. Say you have two coins, one fair, one biased. Conditional on which coin you have chosen, the results of subsequent tosses are independent. But if you don't know which coin you have chosen, the result of previous tosses give you some information about which coin it is, and this has impact on your estimate of the probability of heads in the next toss. Nor does not independence entail conditional independence. For instance, suppose there are two reasons for your fire alarm to go off: malfunction, or real fire. There is a plausible scenario in which they are independent, unconditionally. However, if you conditionalize on the alarm going off and find out there is no real fire, the probability of a malfunction goes up.  Morever, conditional independence given $C$ does not entail conditional independence given $\n C$. For instance, suppose your taking classes and in some of them  bad teachers give grades that don't depend on how much you work. Then your work and grade are independent conditional on the instructor being a bad teacher, but they are not independent conditional on the instructor not being a bad teacher.   
+
+
+ 
+
+One assumption often made in the formulation 
+of the paradox is that claims $A$ and $B$ are probabilistically independent. This is not always the case --- we have seen that the paradox does subside even if the two claims are dependent. However, we will rely on some independence assumptions in our arguments for the same of simplicity. This has a two-fold justification. One, if we are formulating a counterexample to a claim (as is the case with the conjunction paradox), even if it satisfises a further condition (independence), it still remains a counterexample to this claim. Of course, the question remain if a weaker claim that assumes the lack of independence, but it is a different claim to be evaluated in a different way. Second, if we are making a positive claim about, say, the behavior of likelihood ratios, this is purely for illustrative purposes to make calculations and proofs easier, and the reader needs to keep in mind that either the claim is restricted to situations in which independence assumptions are satisfied, or needs additional support when these assumptions are lifted.   
 
 
 
-## Aggregating hypotheses and evidence
+<!--  We should exclude cases in which the claims are negatively probabilistically dependent. It would be odd if the prosecution or the plaintiff would combine two claims where one makes the other less probable.  -->
+
+In what follows we will be using a set up in which  evidence $a$ is meant to support claim $A$ and another piece of evidence, $b$ is pur forward in support of claim $B$. The key questions then will be   about the support that   the combination of $a$ and $b$ gives to  the conjunction $A \et B$ and its relation to the individual support relations. 
+
+In our considerations we will sometimes use at least some of these independence assumptions, either assuming that which of these are involved is clear from the way the derivation proceeds, or being explicit about which assumptions are relied on. WE take the situation to be symmetric, that is we don't list assumptions obtained by simultaneously switching $A$ with $B$ and $a$ with $b$.
+
+\todo{Make a complete and clear list of all independence assumptions used}
+
+
+\begin{align} A\indep B  \label{eq:indAB}\\
+A \indep b \vert a   \label{eq:I1}\\
+B \indep a \et A \vert b \label{eq:I2}\\
+a\indep b \vert A\et B \label{eq:I3}  \\             
+a\indep B \vert A \label{eq:I4}  \\
+b\indep A \et a \vert B \label{eq:I5}  \\
+\end{align} \todo{Double check if we in fact use I3.}
+
+
+
+
+
+<!-- The other assumption---which is not always stated explicitly in the presentation of the paradox---is that the supporting items of evidence are also independent of each other. They are not, however, unconditionally probabilistically independent. They are independent conditionally on the claim they support. This notion of conditional independence captures formally the thought that two or more items of evidence constitute \textit{independent lines of evidence} (SEE DISCUSSION IN EARLIER CHAPTERS).  -->
+
+
+
+Directed Acyclic Graphs (DAGs) are useful for representing graphically these relationships of independence. 
+The edges, intuitively, are meant to capture direct influence between the nodes. The role that such direct influence plays is that in a Bayesian network built over a DAG any node is conditionaly independent of its nondescentants (including ancestors), given its parents. If this is the case for a given probabilistic measure $\pr{}$ and a given DAG, we say that $\pr{}$ is compatible with $\mathsf{G}$, and they can be put together to constitute a Bayesian network. 
+
+
+The graphical counterpart of probabilistic independence is the so-called \emph{d-separation}, $\indep_d$.  We say that two nodes, $X$ and $Y$, are d-separated given a set of nodes $\mathsf{Z}$---$X\indep_d Y \vert \mathsf{Z}$ --- iff for every undirected path from $X$ to $Y$ there is a node $Z'$ on the path such that either:
+\begin{itemize} 
+\item $Z' \in \mathsf{Z}$ and there is a \emph{serial} connection, $\rightarrow Z' \rightarrow$, on the path,
+\item  $Z'\in \mathsf{Z}$ and there is a diverging connection, $\leftarrow Z' \rightarrow $, on the path,
+\item There is a connection $\rightarrow Z' \leftarrow$ on the path, and neither $Z'$ nor its descendants are in $\mathsf{Z}$.
+\end{itemize}
+Finally, two sets of nodes, $\mathsf{X}$ and $\mathsf{Y}$, are d-separated given $\mathsf{Z}$ if every node in $\mathsf{X}$ is d-separated from every node in $\mathsf{Y}$ given $\mathsf{Z}$. With serial connection, for instance, if:
+\footnotesize 
+\begin{center}
+\begin{tabular}{@{}lp{4.3cm}@{}}\toprule
+Node & Proposition \\ \midrule 
+$G$ & The suspect is guilty. \\
+$B$ & The blood stain comes from the suspect.\\
+$M$ & The crime scene stain and the suspect's blood share their DNA profile.\\
+\bottomrule
+\end{tabular}
+\end{center}
+\normalsize
+\noindent We naturally would like to have the connection $G \rightarrow B \rightarrow M$. If we don't know whether $B$ holds, $G$ seems to have an indirect impact on the probability of $M$. Yet, once we find out that $B$ is true, we expect the profile match, and whether $G$ holds has no further impact on the probability of $M$.
+
+
+The case of diverging connections has already been discussed when we talked about idependence. Whether a coin is fair, $F$, or not has impact on the result of the first toss, $H1$, and the result of the second toss, $H2$, and as long as we don't know whether $F$, $H1$ increases the probability of $H2$. So $H1 \leftarrow F \rightarrow H2$ seems to be appropriate. Once we know that $F$, though, $H1$ and $H2$ become independent.
+
+
+
+For converging connections, let  $G$ and $B$ be as above, and let:
+\begin{center}
+\begin{tabular}{@{}lp{4.3cm}@{}}\toprule
+Node & Proposition \\ \midrule 
+$O$ & The crime scene stain comes from the offender.\\
+\bottomrule
+\end{tabular}
+\end{center}
+\normalsize
+
+\noindent Both $G$ and $O$ influence $B$. If he's guilty, it's more likely that the blood stain comes from him, and if the blood crime stain comes from the offender it is more likely to come from the suspect (for instance, more so than if it comes from the victim). Moreover, $G$ and $O$ seem independent -- whether the suspect is guilty doesn't have any bearing on whether the stain comes from the offender. Thus, a converging connection $G\rightarrow B \leftarrow O$ seem appropriate. However, if you do find out that $B$ is true, that the stain comes from the suspect, whether the crime stain comes from the offender becomes relevant for whether the suspect is guilty. 
+
+One important reason why d-separation matters is that it can be proven that if two sets of nodes are d-separated given a third one, then they are independent given the third one, for any probabilistic measures compatible with a given DAG. Interestingly, lack of d-separation doesn't entail dependence for any probabilistic measure compatible with a given DAG. Rather, it only allows for it: if nodes are d-separated, there is at least one probabilistic measure fitting the DAG according to which they are independent.   So, at least, no false  independence can be inferred  from the DAG, and  all the dependencies are built into it.
+
+
+
+
+
+
+
+
+
+
+
+
+
+Now, back to the independence assumptions in our take on the conjunction problem. Consider the DAG in Figure \ref{fig:conjunctionDAG}. 
+
+
+\todo{Please use this method of drawing DAGs, it's simple, uniform and requires less work.}
+\begin{figure}[h]
+```{r fig:conjunctionDAG,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "60%"}
+conjunctionDAG <- model2network("[a|A][b|B][AB|A:B][A][B]")
+graphviz.plot(conjunctionDAG)
+```
+\caption{DAG of the conjunction set-up, with the usual independence assumptions built in.}
+\label{fig:conjunctionDAG}
+\end{figure}
+
+
+
+
+
+The structure of the network is rather natural because each piece of evidence bears on its hypothesis and is probabilistically independent conditional on one of the hypotheses. One might wonder, however, why the arrows go from $A$ and $B$ into the node representing the conjunction $A\wedge B$. This setting  captures the meaning of the conjunction. The constraint that, for the conjunction to be true, both $A$ and $B$ have to be true, can be defined using the appropriate conditional probability table (Table \ref{tab:CPTconjunction}).
+
+
+\begin{table}
+```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%"}
+source("../scripts/CptCreate.R")
+source("../scripts/kableCPTs.R")
+conjunctionDAG <- model2network("[a|A][b|B][AB|A:B][A][B]")
+As <- runif(1,0,1)
+Bs <- runif(1,0,1)
+
+aifAs <-runif(1,0,1)
+aifnAs <- runif(1,0,1)
+bifBs <-runif(1,0,1)
+bifnBs <- runif(1,0,1)
+
+
+AProb <-prior.CPT("A","1","0",As)
+BProb <- prior.CPT("B","1","0",Bs)
+aProb <- single.CPT("a","A","1","0","1","0",aifAs,aifnAs)
+bProb <- single.CPT("b","B","1","0","1","0",bifBs,bifnBs)
+
+
+ABProb <- array(c(1, 0, 0, 1, 0, 1, 0,1), 
+                dim = c(2, 2, 2),
+                dimnames = list(AB = c("1","0"),
+                                B = c("1","0"), 
+                                A = c("1","0")))
+
+conjunctionCPT <- list(A = AProb, B = BProb, 
+                       a = aProb, b = bProb, AB = ABProb)
+
+
+conjunctionBN <- custom.fit(conjunctionDAG,conjunctionCPT)
+
+CPkable2("conjunctionBN","AB")
+```
+\caption{Conditional probability table for the conjunction node.}
+\label{tab:CPTconjunction}
+\end{table}
+
+
+\todo{Please use the same format for tables so that it's uniform throughout the paper; I also removed the corners, it's too much fuss}
+
+<!-- \begin{center} -->
+<!-- \begin{tabular}{@{}lp{4.3cm}@{}}\toprule -->
+<!-- $A\wedge B$  & $A$  & $B$\\ -->
+<!-- \hline -->
+<!-- $1$  & $1$  & $1$\\ -->
+<!-- $0$  & $1$  & $0$\\ -->
+<!-- $0$  & $0$  & $1$\\ -->
+<!-- $0$  & $0$  & $0$\\ -->
+<!-- \end{tabular} -->
+<!-- \end{center} -->
+
+\noindent
+This conditional probability table looks, essentially, like the truth table for conjunction. The difference is that  the values $1$ and $0$ stand for two different things depending on where they are in the table. In the columns corresponding to the nodes they represent node states: true and false; in the $\textsf{Pr}$ column they represent the conditional probability of a given state of $AB$ given the states of $A$ and $B$ listed in the same row. For instance, take a look at row two. It says: if $A$ and $B$ are both in states 1, then the probability of $AB$ being in state 0 is 0. In principle we could use 'true' and 'false' instead of 1 and 0 to represent states, but the numeric representation is easier to use in programming, which we do quite a bit in the background, so the reader might as well get used to this harmless ambiguity. For binary nodes, we will consistently  use '1' and '0' for the states, it's just probabilities that in this case end up being extreme.
+
+
+
+To eliminate the assumption of independence between  the two claims, while holding everything else fixed, it is enough to draw an arrow between $A$ and $B$ (Figure \ref{fig:conjunctionDAG2}). The two Bayesian networks  provide a compact representation of  the class of models we will be concerned with in this chapter.
+<!--    Often, we will also assume that the  -->
+<!-- claims themselves are independent, and occasionally  -->
+<!-- consider the situation in which they are positively  -->
+<!-- probabilistically dependent.\footnote{If we use the top Bayesian network, we can justify the claim -->
+<!-- $\pr{B \vert b}=\pr{B \vert b \wedge a \wedge A}$. Note that  -->
+
+<!-- \[\pr{B \vert b \wedge a \wedge A}= \frac{\pr{B \wedge b \wedge a \wedge A}}{\pr{b \wedge a \wedge A}} -->
+<!-- =\frac{\pr{B}\pr{b\vert B}\pr{a \vert A} \pr{A}}{\pr{b} \pr{a \vert A}\pr{A}}=\pr{B \vert b}.\] -->
+
+<!-- }  -->
+
+
+
+
+
+
+\begin{figure}[h]
+```{r fig:conjunctionDAG2,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "60%"}
+conjunctionDAG2 <- model2network("[a|A][b|B][AB|A:B][A][B|A]")
+graphviz.plot(conjunctionDAG2)
+```
+\caption{DAG of the conjunction set-up, without independence between $A$ and $B$.}
+\label{fig:conjunctionDAG2}
+\end{figure}
+
+
+
+
+
+
+
+
+<!-- \begin{center} -->
+<!-- \begin{figure}[h!] -->
+<!-- \begin{tikzpicture}[ -->
+<!--   node distance=1cm and 1cm, -->
+<!--   mynode/.style={draw,ellipse,text width=1cm,align=center} -->
+<!-- ] -->
+<!-- \node[mynode] (h1) {$A$}; -->
+<!-- \node[mynode,below right =of h1] (h3) {$A \wedge B$}; -->
+<!-- \node[mynode,above right =of h3] (h2) {$B$}; -->
+<!-- \node[mynode,below  =of h1] (e1) {$a$}; -->
+<!-- \node[mynode,below  =of h2] (e2) {$b$}; -->
+<!-- \path  -->
+<!-- (h1) edge[-latex] (h3) -->
+<!-- (h2) edge[-latex] (h3) -->
+<!-- (h1) edge[-latex] (e1) -->
+<!-- (h2) edge[-latex] (e2);  -->
+<!-- \end{tikzpicture} -->
+
+<!-- \begin{tikzpicture}[ -->
+<!--   node distance=1cm and 1cm, -->
+<!--   mynode/.style={draw,ellipse,text width=1cm,align=center} -->
+<!-- ] -->
+<!-- \node[mynode] (h1) {$A$}; -->
+<!-- \node[mynode,below right =of h1] (h3) {$A \wedge B$}; -->
+<!-- \node[mynode,above right =of h3] (h2) {$B$}; -->
+<!-- \node[mynode,below  =of h1] (e1) {$a$}; -->
+<!-- \node[mynode,below  =of h2] (e2) {$b$}; -->
+<!-- \path  -->
+<!-- (h1) edge[-latex] (h2) -->
+<!-- (h1) edge[-latex] (h3) -->
+<!-- (h2) edge[-latex] (h3) -->
+<!-- (h1) edge[-latex] (e1) -->
+<!-- (h2) edge[-latex] (e2);  -->
+<!-- \end{tikzpicture} -->
+<!-- \caption{Two Bayesian networks for two pieces of evidence and a composite hypothesis.} -->
+<!-- \label{network-conjunction} -->
+<!-- \end{figure} -->
+<!-- \end{center} -->
+
+
+
+
+
+
+
+
+
+
+## Conjunction principle with hypotheses and evidence
 
 
 So far the discussion proceeded without mentioning explicitly 
 the evidence proferred in support of the different claims that 
 constitute the allegation of wrongdoing. 
-This is, however, a simplification. Say evidence $a$ establishes claim $A$ and other evidence 
-$b$ establishes a distinct claim $B$. The question now is whether 
-the combination of $a$ and $b$ establishes the conjunction $A \et B$, and viceversa. 
+This is, however, a simplification, as no evidential relations were involved. Once we pay attention to them, a plausible candidate for the conjunction principle seems to be as follows:
 <!--The answer to this question can well be affirmative---and without denying 
 that the risks of error accumulate. 
 No doubt the possible presence of a defeater $D_a$ would undermine 
@@ -126,15 +389,11 @@ the support of $a$ in favor of $A$, and another defeater $D_b$ would
 undermine the support of $b$ in favor of $B$. But, absent any defeater $D_a$ or $D_b$, the combination of
 items of evidence $a$ and $b$ should jointly support (again, defeasibly or to whatever suitable standard is required) the combined hypothesis $A \wedge B$. \todo{Should we talk more about what we mean by defeaters, perhaps with examples of what the defeaters in this example might be?}
 -->
-In other words, the question is whether 
-the following instance of the conjunction principle holds:
+
 \[\text{S[$a, A$] and S[$b, B$] $\Leftrightarrow$ S[$a \wedge b, A\wedge B$]},\]
 
-\noindent
-where $\text{S}[e, H]$ means that evidence $e$ establishes hypothesis 
-$H$ by standard $S$.  This formulation of the conjunction principle 
-differs from the earlier one since it mentions explicitly the 
-supporting evidence.
+\noindent where $\text{S}[e, H]$ means that evidence $e$ establishes hypothesis 
+$H$ by standard $S$.  
 
 <!---
 This new formulation of the conjunction principle is compatible 
@@ -147,23 +406,18 @@ a probabilistic version of the conjunction principle
 for the aggregation of evidence and hypotheses. 
 Can this challenge be met? \todo{It's at this point unclear how the probabilistic version of support is supposed to be related to the whole defeasibility buisness. In other words, if probabilistic support is what we're after, why would/should things that hold for defeasible support be our guide?}
 -->
-Understood in terms of posterior probability, 
-the conjunction principle above fails 
-in some cases. For suppose that $\pr{A | a}>t$ and $\pr{B | b}>t$, 
-for a probability threshold $t$. In other words, given evidence $a$ and $b$, both claims $A$ and $B$ are 
-sufficiently probable (for a fixed threshold $t$). It does not generally follow that $A \et B$ 
-is sufficiently probable given combined evidence $a\et b$. By the probability calculus,
- \begin{align*}
-\pr{A \wedge  B | a \wedge b}& =\pr{A |a \wedge b} \times \pr{B | a \wedge b \wedge A}\\
- & = \pr{A |a} \times \pr{B | b}
- \end{align*}
 
-\noindent
-\todo{M: These relationships of independence are confusing. 
-Any way to make them more plausible and stremalined? HELP!}
-The second equality holds assuming certain relationships of independence, 
-specifically, the independence of $A$ from $B$ (as before) and, in addition, the independence of 
-each claim from the evidence in support of the other claim. These relationships of independence do 
+
+Understood in terms of a threshold put on posterior probability, 
+the conjunction principle above fails  in some cases.\todo{Please use vert for conditional probability. I changed this here.} 
+For suppose that given their respective pieces of evidence $a$ and $b$, both claims $A$ and $B$ are 
+sufficiently probable (for a fixed threshold $t$), $\pr{A \vert a}>t$ and $\pr{B \vert b}>t$. It does not generally follow that $A \et B$ 
+is sufficiently probable given combined evidence $a\et b$. With suitable indepedence assumptions (\eqref{eq:I1} and \eqref{eq:I2}) we have:
+ \begin{align*}
+\pr{A \wedge  B \vert a \wedge b}& =\pr{A \vert a \wedge b} \times \pr{B \vert  a \wedge b \wedge A}\\
+ & = \pr{A \vert a} \times \pr{B \vert  b}
+ \end{align*}
+\noindent Of course, these relationships of independence do 
 not always hold, but they do sometimes. For example, 
 in an aggravated assault case, evidence $a$ could be a witness testimony that the defendant 
 physically injured the victim (claim $A$), and $b$ evidence that the defendant 
@@ -172,9 +426,24 @@ defendant earlier called the firefighther for help.  Presumably, $\pr{A \vert a}
 because the fact that the defendant called a firefighter for help ($b$) does not make it more (or less) likely that 
 he would physically injure him ($A$). Further, $\pr{B \vert b}=\pr{B \vert a \wedge b \wedge A}$ because the fact that
 the defendant injured the victim ($A$) and there is a testimony to that effect ($a$) does not make it more (or less) 
-likely that the victim was a firefighter ($B$). A more formal jusstification 
-of these relationships of independence 
-is given in the next subsection. 
+likely that the victim was a firefighter ($B$). 
+
+
+
+Given these assumptions,  if---as is normally the case---neither $\pr{A \vert a}$ 
+nor $\pr{B \vert b}$ equal 1, then
+\[\pr{A \wedge B \vert a \wedge b}< \pr{A \vert a} \;\ \& \;\ \pr{A \wedge B \vert a \wedge b} < \pr{B \vert b}. \]
+This is another manifestation of the difficulty about conjuction.  If each piece of 
+evidence $a$ and $b$ establishes claims $A$ and $B$ with  probability .95, the combined 
+evidence $a\et b$ may fail establish the conjuction $A\et B$ with probability .95. 
+The conjunction principle  fails here, if the standard of proof is to be formulated in terms of a threshold on posterior probability. 
+
+
+
+
+<!-- A more formal jusstification  -->
+<!-- of these relationships of independence  -->
+<!-- is given in the next subsection.  -->
 <!-- the hypotheses $A$ and $B$,  -->
 <!-- and the independence of $A$ from $b$, and  -->
 <!-- of $B$ from $a$. In other words, the two hypotheses  -->
@@ -184,287 +453,23 @@ is given in the next subsection.
 <!---These assumptions are codified in the Bayesian 
 network in Figure \ref{network-conjunction}.---> 
 
-Given these assumptions,  if---as is normally the case---neither $\pr{A \vert a}$ 
-nor $\pr{B \vert b}$ equal 1, then
-\[\pr{A \wedge B \vert a \wedge b}< \pr{A \vert a} \;\ \& \;\ \pr{A \wedge B \vert a \wedge b} < \pr{B \vert b}. \]
 
-\noindent
-This is another manifestation of the difficulty about conjuction.  If each piece of 
-evidence $a$ and $b$ establishes claims $A$ and $B$ with 95\% probability, the combined 
-evidence $a\et b$ need not establish the conjuction $A\et B$ with 95% probability. 
-The conjunction principle fails here. 
 
-Interestingly, even if the independence assumptions are dropped, the difficulty about conjunction still arises in a number of circumstances.  Suppose evidence $a\et b$ establishes claim $A$ and also claim $B$, separately, right above the probability threshold $t$. Since $\pr{A \wedge  B | a \wedge b} =\pr{A |a \wedge b} \times \pr{B | a \wedge b \wedge A}$, it follows that $\pr{A \wedge  B | a \wedge b}$ would be below $t$ so long as $\pr{B | a \wedge b \wedge A}$ is below 100\%, which would often be the case since (i) evidence is fallible and (ii) one hypothesis does not usually entail the other. So even though $A$ and $B$ are established to the required probability, the conjunction is not. 
+Even if the independence assumptions are dropped, the difficulty about conjunction still arises in a number of circumstances.  Suppose evidence $a\et b$ establishes claim $A$ and also claim $B$, separately, right above the probability threshold $t$. Since $\pr{A \wedge  B \vert  a \wedge b} =\pr{A \vert a \wedge b} \times \pr{B \vert a \wedge b \wedge A}$, it follows that $\pr{A \wedge  B \vert a \wedge b}$ might be below $t$ if the factors on the right-hand side are below 1 and separate posteriors are very close to $t$.
 
 
 
-## Probabilistic (in)dependencies
-
-The conjunction paradox is a difficult problem, as the vast literature on the topic attests. 
-Before we move on, it is important to become clear about the assumptions underlying the formulation 
-of the paradox, in particular, the assumptions of probabilistic independence. 
-
-One assumption often made in the formulation 
-of the paradox is that claims $A$ and $B$ are probabilistically independent. This is not always the case, but we have seen that the paradox does subside even if the two claims are dependent. So, in formulating the paradox, we can assume that the two claims are either fully probabilistically independent or positively probabilistically dependent. We should exclude cases in which the claims are negatively probabilistically dependent. It would be odd if the prosecution or the plaintiff would combine two claims where one makes the other less probable. 
-
-The other assumption---which is not always stated explicitly in the presentation of the paradox---is that the supporting items of evidence are also independent. They are not, however, unconditionally probabilistically independent. They are independent conditionally on the claim they support. This notion of conditional independence captures formally the thought that two or more items of evidence constitute \textit{independent lines of evidence} (SEE DISCUSSION IN EARLIER CHAPTERS). 
-
-Bayesian networks are useful for representing graphically these relationships of independence. Consider the networks in Figure \ref{network-conjunction}. The structure of the networks is rather natural because each piece of evidence bears on its hypothesis and is probabilistically independent conditional on one of the hypotheses. One might wonder, however, why the arrows go from $A$ and $B$ into the node representing the conjunction $A\wedge B$. This setting can capture the meaning of the conjunction. The constraint that, for the conjunction to be true, both $A$ and $B$ have to be true, can be defined using the appropriate conditional probability table, as follows:
-
-
-\begin{center}
-\begin{tabular}{ c | c c}
-$\ulcorner A\wedge B \urcorner$  & $A$  & $B$\\
-\hline
-$1$  & $1$  & $1$\\
-$0$  & $1$  & $0$\\
-$0$  & $0$  & $1$\\
-$0$  & $0$  & $0$\\
-\end{tabular}
-\end{center}
-
-\noindent
-This conditional probability table is, essentially, a truth table, where 
-the values $0$ and $1$ stand for the conditional probabilities of expressions 
-such as $\pr{\ulcorner A\wedge B \urcorner \vert A \wedge B}$, where 
-$\ulcorner A\wedge B \urcorner$ denotes the conjunction node in the network, whereas
-$A \wedge B$ is simply the conjunction of $A$ and $B$. \todo{M: Not sure how to write this. I used $\ulcorner A\wedge B \urcorner$  to represent the conjunction in the language (as a node in the network) as distinct from 
-the conjunction in the conditional probability (not as a node in the network). They seem two different things. Confusing. HELP!}
-
-The two networks only differ in one detail, whether or not an arrow exist between claims $A$ and $B$. If there is no arrow, $A$ and $B$ are fully probabilistically independent since $A\wedge B$ is a collider node (SEE DISCUSSION IN EARLIER CHAPTERS). 
-To eliminate the independence of the two claims, while holding everything else fixed, it is enough to draw an arrow between $A$ and $B$. See the network in Figure \ref{network-conjunction} (bottom). Arrows cab be drawn between the evidence nodes themselves, but this modification would undermine them being independent lines of evidence. 
 
 
 
-\begin{center}
-\begin{figure}[h!]
-\begin{tikzpicture}[
-  node distance=1cm and 1cm,
-  mynode/.style={draw,ellipse,text width=1cm,align=center}
-]
-\node[mynode] (h1) {$A$};
-\node[mynode,below right =of h1] (h3) {$A \wedge B$};
-\node[mynode,above right =of h3] (h2) {$B$};
-\node[mynode,below  =of h1] (e1) {$a$};
-\node[mynode,below  =of h2] (e2) {$b$};
-\path 
-(h1) edge[-latex] (h3)
-(h2) edge[-latex] (h3)
-(h1) edge[-latex] (e1)
-(h2) edge[-latex] (e2); 
-\end{tikzpicture}
-
-\begin{tikzpicture}[
-  node distance=1cm and 1cm,
-  mynode/.style={draw,ellipse,text width=1cm,align=center}
-]
-\node[mynode] (h1) {$A$};
-\node[mynode,below right =of h1] (h3) {$A \wedge B$};
-\node[mynode,above right =of h3] (h2) {$B$};
-\node[mynode,below  =of h1] (e1) {$a$};
-\node[mynode,below  =of h2] (e2) {$b$};
-\path 
-(h1) edge[-latex] (h2)
-(h1) edge[-latex] (h3)
-(h2) edge[-latex] (h3)
-(h1) edge[-latex] (e1)
-(h2) edge[-latex] (e2); 
-\end{tikzpicture}
-\caption{Two Bayesian networks for two pieces of evidence and a composite hypothesis.}
-\label{network-conjunction}
-\end{figure}
-\end{center}
-
-The two Bayesian networks above provide a compact representation of 
-the class of models 
-we will be concerned with.  We will assume throughout that the 
-items of evidence are independent lines of evidence. 
-Often, we will also assume that the 
-claims themselves are independent, and occasionally 
-consider the situation in which they are positively 
-probabilistically dependent.\footnote{If we use the top Bayesian network, we can justify the claim
-$\pr{B \vert b}=\pr{B \vert b \wedge a \wedge A}$. Note that 
-
-\[\pr{B \vert b \wedge a \wedge A}= \frac{\pr{B \wedge b \wedge a \wedge A}}{\pr{b \wedge a \wedge A}}
-=\frac{\pr{B}\pr{b\vert B}\pr{a \vert A} \pr{A}}{\pr{b} \pr{a \vert A}\pr{A}}=\pr{B \vert b}.\]
-
-} 
 
 
-
-# Rejecting the Conjunction Principle?
-
-Let's now turn to possible strategies that legal probabilists 
-can pursue to address the conjunction paradox. 
-The first thing to note is that the 
-paradox would not arise without 
-the conjunction principle. So could legal 
-probabilists reject this principle and let 
-the paradox disappear? 
-<!-- On its face, the conjunction principle is no different from closure principles 
-used in epistemic logic. Let $\Box$ the modal operator for belief or knowledge.
-The conjunction principle is a special version 
-of the closure principle $\Box A \wedge \Box B \leftrightarrow \Box (A \et B)$. (CITE MODAL LOGICS THAT ADOPT THIS PRINCIPLE.) \todo{Ok, I will add a footnote about this.}
---> 
-
-
-## Risk Accumulation
-
-In current discussions in epistemology about knowledge or justification, a principle similar to the conjunction principle 
-has been contested because it appears to deny the fact that risks of error accumulate (CITE). \todo{Hey, we can quote a paper that's out by Alicja!:) Also, I guess you want me to find the right refs? M: Yes, if you can} If one is justifiably sure about the truth of each claim considered seperataly, one should not be equally sure of their conjunction. You have checked 
-each page of a book and found no error. So, for each page, you are nearly sure there is no error. Having checked each page and found no error, can you be sure that the book as a whole contains no error? Not really. As the number of pages grow, it becomes virtually certain that there is at least one error in the book you have overlooked, although for each page you are nearly sure there is no error. (ADD CITATION ABOUT PREFACE PARADOX) The same applies to other contexts, say product quality control. You may be sure, for each product you checked, that it is free from defects. But you cannot, on this basis alone, be sure that all products you checked are free from defects. Since the risks of error accumulate, you must have missed at least one defective product. 
-
-Risk accumulation challenges one direction of the conjunction principle, call it 
-\textit{aggregation}:
-\[S[C_1 \wedge C_2  \wedge \dots \wedge  C_k] \Leftarrow S[C_1] \wedge S[C_2]  \wedge \dots \wedge  S[C_k].\]
-
-\noindent
-Even if the probability of several claims, considered individually, is above a threhsold $t$,
-their conjuction need not be above $t$. Risk accumulation, howvere, does not challenge 
-the other direction of the conjunction principle, call it \textit{distribution}:
-\[S[C_1 \wedge C_2  \wedge \dots \wedge  C_k] \Rightarrow S[C_1] \wedge S[C_2]  \wedge \dots \wedge  S[C_k].\]
-
-\noindent
-Probability theory ensures that, if the probabiliity of the conjunction 
-of several claims is above $t$, so is the probability of each individual claim. 
-
-
-## Atomistic and Holistic Approches
-
-Suppose the legal probabilist does away with the conjunction principle. Now what?
-How should they define standards of proof? Two immediate options come to mind, but neither is without problems.  
-
-Let's stipulates that, in order to establish the defendant's guilt beyond a reasonable doubt (or civil liability by preponderance of the evidence), the party making the accusation should establish each claim, separately, to the requisite probability, say at least 95\%, without needing to establish the conjunction to the requisite probability. Call this the \textit{atomistic account}.  On this view, the prosecution could be in a position to establish guilt beyond a reasonable doubt without estalishing the conjunction of different claims with a sufficiently high probability. This account would allow convictions in cases in which the probability of the defendant's guilt is relatively low, just because guilt is a conjunction of several independent claims that separately satisfy the standard of proof. For example, if each constituent claim is established with 95\% probability, a composite claim consisting of five subclaims---assuming, as usual, probabilistic independence between individual claims---would only be established with 77% probability, a far cry from proof beyond a reasonable doubt. This is counterintuitve as it would allow convictions when the defendant is not very likely to be guilty. Under the atomistic account, the composite claim representing the case as a whole would often be established with a probability below the required threshold. The atomistic approach is a non-starter. 
-
-The other option is to require that the prosecution in a criminal case (or the plantiff in a civil case) establish the accusation as a whole---say the cojunction of $A$ and $B$---to the requisite probability. Call this the \textit{holistic account}. This account is not without problems either. The proof of $A\et B$ would impose a higher requirement on the separate probabilities of the conjuncts. If the conjunction $A\et B$ is to be proven with at least 95\% probability, the individual conjuncts should be established with probability higher than 95\%. So the more constituent claims, the higher the posterior probability for each claim needed to meet the requisite probability threhsold. 
-
-We can get a sense of the difficulty by running in some numbers. Assume, for the sake of illustration, the independence and equiprobability of the constituent claims. If a composite claim consists of $k$ individual claims, these individual claims will have to be established with proabilility of at least
-$t^{1/k}$, where $t$ is the threhsold applicable to the composite claim.\footnote{Let $p$ the probability of each consitutuent claim. To meet threshold $t$, the probability of the composite claim, $p^k$, should satisfy the constraint $p^k>t$, or in other words, $p>t^{1/k}$.} For example, if there are ten constituent claims, they will have to be proven with $0.5^{1/10}=0.93$ even if the probability threshold is only $50\%$. If the threshold is more stringent, as is appropriate in criminal cases, say $95\%$, each individual claim will have to be proven with near certainity. This would make the task extremely demanding on the prosecution. If there are ten constituent claims, they will have to be proven with $0.95^{1/10}=0.995$. So the plaintiff or the prosecution would face the demanding task of establishing each element of the accusation beyond what the standard of proof would seem to require.
-
-Another problem with the holistic account is that the standard that applies to one of the conjuncts would depend on what has been achieved for the other conjuncts. For instance, assuming independence, if  $\pr{A}$ is $96\%$, then $\pr{B}$ must be at least $99\%$ so that $\pr{A\et B}$ is above a $95\%$ threshold. But if $\pr{A}$ is $99.99\%$, then $\pr{B}$ must only be greater than $95\%$ to reach the same threshold. Thus, the holistic account would require that the elements of an accusation be proven to different probabilities---and thus different standards---depeding on how well other claims have been established.
-This result runs counter to the tacit assumption that each element should be established to the same standard of proof. 
-
-
-
-```{r, echo=FALSE}
-0.5^(1/10)
-```
-
-```{r, echo=FALSE}
-0.95^(1/10)
-```
-
-
-```{r, echo=FALSE}
-0.95^(10)
-```
-
-
-
-We have a dilemma here: either (under the holistic approach) the standard is too demanding on the prosecution (or the plantiff) because it would require the individual claims to be established to extremely high probabilities, or (under the atomistic approach) the standard is too lax because it would allow findings of liability when the defendant most likely committed no wrong. Denying the conjunction principle, then, is not without difficulties of its own. Absent the conjuction principle, legal probabilists should still explain how individual claims relate to larger claims in the process of legal proof. 
-
-
-## Prior Probabilities
-
-It is worth examining the holistic account more closely, 
-focusing in particular on the role of prior 
-probabilities, an aspect that has gone unnoticed so far. 
-The main problem with the holistic approach is that it would require, especially in 
-criminal cases, individual claims to 
-be established with a very high probability, often making the task unsurmountable 
-for the prosecution. Or so it would seem. But a composite claim such as $A\wedge B$ will have, 
-other things being equal, a lower prior probability than any individual claim $A$ or $B$.
-Say a composite claim consists of $k$ individual claims. If its prior probability is $\pi$, each constituent claim, assuming they are independent and equiprobable, will have a prior probability of $\pi^{1/k}$. The prior probability of the individual claims will approach one as the number of constituent claims increases.  
- 
-<!--
-Compare the impact of one item of evidence on the probability of an individual claim, for different level of sensitivity and specificity of the evidence, with the impact of $k$ items of evidence on the probability of a composite claim that consists of $k$ individual claims, again for different levels of specificity and sensitivity of the evidence. More specifically, let $c_i$ be a constituent claim and $e_i$ its supporting evidence. The comparison is between prior probabilities $\pr{C_i}$ and
-$\pr{C_1 \wedge C_2 \wedge \dots \wedge C_k}$, contrasted with the posterior probabilities $\pr{C_i \vert E_i}$ and
-$\pr{C_1 \wedge C_2 \wedge \dots \wedge C_k \vert E_1 \wedge E_2 \wedge \dots \wedge E_k}$. Figure \ref{fig:post-indiv-joint-first} (top) compares one item of evidence supporting an individual claim and five items of evidence supporting a composite claim consisting of five claims. As is customary, the items of evidence and constituent claims are independent. In addition, for the sake of simplicity, the prior probabilities of the constituent claims are assumed to be the same. There is a significant difference in posterior probabilities, as expected, but there is a also a significant difference in prior probabilities. Since the composite claim starts out less likely than any individual claim, it is natural---other things being equal---that its posterior probability would be correspondingly lower. 
- 
- \begin{figure}
-```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "90%"}
-library(ggplot2)
-library(ggthemes)
-
-
-post <- function (x, s1, s2){
-  (x)*
-    (
-      s1/
-        (s1*x+(1-s2)*(1-x))
-     )
-}
-
-
-postn <- function (x, s1, s2, n){
-  ((x)^n)*
-    ((
-      s1/
-        (s1*x+(1-s2)*(1-x))
-     )^n)
-    
-}
-
-x <-seq(0,1,by=0.001)
-y0908 <- post(x, 0.9, 0.8)
-y0909 <- post(x, 0.99, 0.99)
-yy0908 <- postn(x, 0.9, 0.8, 2)
-yy0909 <- postn(x, 0.99, 0.99, 2)
-yynull <- postn(x, 0.5, 0.5, 2)
-y50908 <- postn(x, 0.9, 0.8, 5)
-y50909 <- postn(x, 0.99, 0.99, 5)
-y5null <- postn(x, 0.5, 0.5, 5)
-
-
-ggplot() +
-  stat_function(fun=function(x)(x), geom="line", aes(colour="1, sens=0.5, spec=0.5"))+
-  #geom_line(aes(x = x, y = yynull,color = "2, sens=0.5, spec=0.5")) +
-  geom_line(aes(x = x, y = y0908,color = "1, sens=0.9, spec=0.8")) +
-  geom_line(aes(x = x, y = y0909,color = "1, sens=0.99, spec=0.99")) +
-  #geom_line(aes(x = x, y = yy0908,color = "2, sens=0.9, spec=0.8")) +
-  # geom_line(aes(x = x, y = yy0909,color = "2, sens=0.99, spec=0.99")) +
-  geom_line(aes(x = x, y = y50908,color = "5, sens=0.9, spec=0.8")) +
-  geom_line(aes(x = x, y = y50909,color = "5, sens=0.99, spec=0.99")) +
-  geom_line(aes(x = x, y = y5null, color = "5, sens=0.5, spec=0.5")) +
-        ylim(c(0,1))+
-  xlab("prior")+ ylab("posterior")+theme_tufte()+
-  theme(legend.position = c(0.9, 0.2), legend.title = element_blank())
-```
-\caption{The comparison here is betwen individual support and joint support. 
-The null line for joint support ($y=x*x$) is 
-much below the null line for individual support ($y=x$).}
-\label{fig:post-indiv-joint-first}
-\end{figure}
- -->
- 
-Cohen worried that, as the number of constituent claims increases, the prosection or the plaintiff
-would see their case against the defendant become progressively weaker and it would 
-become impossisble for them to establish liability. But this worry is an 
-exaggeration. The paradox, as is commonly formulated, starts by assuming that the constituent claims are
-established by the required probability threshold and then shows that the probability of the conjuction may fall below the threshold. However, following the holistic approach, the order of presentation can be reversed. Start by assuming that the composite claim is established by the required probability threshold. No doubt the individual claims will have to be established with a higher probability, a violation of the conjuction principle. Yet, this violation is not as counterintuitive as it might first appear for two reasons. First, since risks aggregate, it is natural that the probability of a conjunction would be lower than the probability of the conjuncts. Second, the prior probabilities of the conjuncts will be higher than the prior probability of the conjunction. Thus, establishing the conjuncts with a higher probability will not be exceedingly demanding.
- 
-Along this lines, @dawid1987difficulty, in one of the earliest attempts to solve the conjunction 
- paradox from a probabilistic perspective, wrote:
-
-\begin{quote}
-\dots it is not asking too much of the plaintiff to establish the case as a whole with a posterior probability exceeding one half, even though this means  that the several component issues must be established with much larger posterior probabilities; for the \textit{prior}  probabilities of the components will also be correspondingly larger, compared with that of their conjunction (p. 97).
- \end{quote}
- 
- <!--- The overall effect of subdiving a case into more and more component issues ... [gives] an advantage to the plaintiff, even though he has to establish each with a high probability. -->
- 
-\noindent 
-The price of this strategy is the denial of the conjunction principle, specifically aggregation, the very motivation behind the conjunction paradox. Cohen could insist that this solution 
-amounts to denying the paradox. To address the paradox, legal probabilists 
-should offer a justification of the conjunction principle in probabilistic terms, 
-something Cohen maintains cannot be done. Or can it be done? 
-
-
-## Evidential Strength 
+# Evidential Strength approach to the conjunction problem
 
 We have seen that aggregation fails if the standard of proof is understood as a posterior probability threshold.
 So legal probabilists cannot justify aggregation if they equate the standard of proof to such threshold.
 The alternative is to think of proof standards as sufficiency criteria for how strong the evidence should be in order to justify a finding of criminal or civil liability.So, instead of a posterior probability threhsold, legal probabilists 
-could formalize the standard of proof using a probabilistic measure of evidential strength.
+could try formalize the standard of proof using a probabilistic measure of evidential strength.
 Will this move vindicate the cojunction principle on probabilistic grounds contrary 
 to what Cohen thought? As we shall see, the answer to this question is complicated. 
 
@@ -473,28 +478,40 @@ Suppose the standard of proof is no longer understood as a threshold on
 the posterior probability given the evidence, but rather, as a threshold on evidential strength. 
 From a probabilistic perspective, the notion of the strength of the evidence in favor of a hypothesis should not be understood as the posterior probability of the hypothesis given the evidence.
 Two common probabilistic measures of evidential strength are the Bayes factor and the likelihood ratio.
-We discussed this topic in earlier chapters (REFER TO EARLIER CHAPTERS).  As we will show in detail later, under plausible assumptions, these measures of evidential strength validate one direction of the conjunction principle, namely aggregation. If $a$ is sufficiently strong evidence in favor of $A$ and $b$ is sufficiently strong evidence in favor of $B$, then $a\wedge b$ is sufficiently strong evidence in favor of the conjunction $A \wedge B$. In fact, the evidential support for the conjunction will often exceed that for the individual claims, a point already made by @dawid1987difficulty:
+We discussed this topic in earlier chapters (REFER TO EARLIER CHAPTERS).  As we will show in detail later, under plausible assumptions, these measures of evidential strength validate one direction of the conjunction principle:aggregation. If $a$ is sufficiently strong evidence in favor of $A$ and $b$ is sufficiently strong evidence in favor of $B$, then $a\wedge b$ is sufficiently strong evidence in favor of the conjunction $A \wedge B$. In fact, the evidential support for the conjunction will often exceed that for the individual claims, a point already made by @dawid1987difficulty:
 
  \begin{quote} suitably measured, the support  supplied by the conjunction of several independent testimonies exceeds that supplied by any of its constituents.
  \end{quote}
 
 \noindent
-Dawid thought this fact was enough for the conjuction paradox to 'evaporate'. To some extent, this is true since we are vindicating one direction of the conjunction principle, aggregation. That is, probability theory justifies this claim: if distinct items of evidence $a$ and $b$ constitute sufficiently strong evidence for claims $A$ and $B$, so does the conjunction $a\wedge b$ for the composite claim $A\wedge B$. 
+Dawid thought this fact was enough for the conjuction paradox to 'evaporate'. To some extent, this is true since we are vindicating one direction of the conjunction principle, aggregation. That is, probability theory justifies this claim: if distinct items of evidence $a$ and $b$ constitute sufficiently strong evidence for claims $A$ and $B$, so does the conjunction $a\wedge b$ for the composite claim $A\wedge B$ (although, there are some caveats and extra assumptions for this to hold). 
 
-Unfortunately, we will show that the other direction of the cojunction principle does not hold, what we call distribution.
-If $a \wedge b$ is sufficiently strong evidence in favor of $A \wedge B$, it does not follow that $a$ is sufficiently strong evidence in favor of $A$ or $b$ sufficiently strong evidence in favor of $B$. It is not even true that, if $a \wedge b$ is sufficiently strong evidence in favor of $A \wedge B$, then $a\wedge b$ is sufficiently strong evidence in favor of $A$ or $B$. This is  odd.  It would mean that, given a body of evidence, one can establish beyond a reasonable doubt that $A \wedge B$ (say the defendant killed the victim \textit{and} did so intentionally) while failing to establish by the same standard one of the conjuncts. 
+Unfortunately, we will show that on the evidential strength reading, the other direction of the cojunction principle, distribution, does not hold. If $a \wedge b$ is sufficiently strong evidence in favor of $A \wedge B$, it does not follow that $a$ is sufficiently strong evidence in favor of $A$ or $b$ sufficiently strong evidence in favor of $B$. It is not even true that, if $a \wedge b$ is sufficiently strong evidence in favor of $A \wedge B$, then $a\wedge b$ is sufficiently strong evidence in favor of $A$ or $B$. This is  odd.  It would mean that, given a body of evidence, one can establish beyond a reasonable doubt that $A \wedge B$ (say the defendant killed the victim \textit{and} did so intentionally) while failing to establish by the same standard one of the conjuncts. 
 
-Interestingly, if instead of probabilistic measures of evidential strength such as the Bayes factor or the likelihood ratio, we use posterior probabilities, the other direction of conjuction principle---aggregation, not distribition---fails. So we are in a dilemma. If the standard of proof is understood as a threshold relative to the posterior probability, the conjunction principle fails because aggregation fails while distribution succeeds. If, on the other hand, the standard of proof is understood as a threshold relative to measures of evidential strength, the conjuction principle fails because distribution fails while aggregation succeeds. From a probabilistic perspective, it seems impossible to capture both directions of the conjunction principle into one unified account. So, ultimately, Cohen was right that legal probabilists cannot justify the conjuction principle. But, as we shall explain, legal probabilists have very good reasons to reject one or the other direction of the conjunction principle. So Cohen was wrong in holding on to the conjunction principle.  
+So we seem to be in a dilemma. If the standard of proof is understood as a threshold relative to the posterior probability, the conjunction principle fails because aggregation fails while distribution succeeds. If, on the other hand, the standard of proof is understood as a threshold relative to standard  measures of evidential strength, the conjuction principle fails because distribution fails while aggregation succeeds. From a probabilistic perspective, it might seems impossible to capture both directions of the conjunction principle into one unified account. 
 
-All in all, legal probabilists have two routes for addressing the conjunction paradox: deny aggregation (and understand the standard of proof in terms of posterior probabilities) or deny distribution (and understand the standard of proof in terms of evidential strength). For reasons we shall explain, we think the former option is preferrable.
+Before we discuss this more general challenge, let us explore how aggregation succeeds and distribution fails on the evidential strength approaches.    We will first investigate to what extent Dawid's was right in claiming that `suitably measured, the support supplied by the conjunction of several independent testimonies exceeds that supplied by any of its constituents'. Next, we will show---perhaps surprisingly---that after switching from posterior probabilities to measures of evidential support, another paradox, what we call the \textit{distribution paradox}, arises. The argument for these two claims is somewhat tedious.  The reader should arm themselves with patience or take our word for it and jump ahead to the next section. 
 
 
-# Aggregation succeeds, distribution fails
 
-This section will establish two claims, which were announced without proof 
-in the previous section: first, that aggregation can be vindicated probabilistically if the standard of proof is understood in terms of evidential stregth instead of posterior probabilities; second, that under the same approach distribution ultimately fails. By using the theory of Bayesian networks, we will first verify to what extent Dawid's was right in claiming that `suitably measured, the support supplied by the conjunction of several independent testimonies exceeds that supplied by any of its constituents'. Next, we will show---perhpas surprisingly---that after switching from posterior probabilities to measures of evidential support, another paradox, what we call the \textit{distribution paradox}, arises. The argument for these two claims is somewhat tedious.  The reader should arm themselves with patience or take our word for it and jump ahead to the next section. 
 
-## Bayes factor threshold
+
+
+
+
+
+
+\todo{Some bits hidden, they need to be discussed elsewhere I think.}
+<!-- So, ultimately, Cohen was right that legal probabilists cannot justify the conjuction principle. But, as we shall explain, legal probabilists have very good reasons to reject one or the other direction of the conjunction principle. So Cohen was wrong in holding on to the conjunction principle.   -->
+
+<!-- All in all, legal probabilists have two routes for addressing the conjunction paradox: deny aggregation (and understand the standard of proof in terms of posterior probabilities) or deny distribution (and understand the standard of proof in terms of evidential strength). For reasons we shall explain, we think the former option is preferrable. -->
+
+
+
+## Bayes factor and aggregation
+
+
+
 
 A common probabilistic measure of the support of $E$ in 
 favor of $H$ is the Bayes factor $\pr{E \vert H}/\pr{E}$. Since by Bayes' theorem
@@ -507,38 +524,48 @@ a piece of evidence increases the probability
 of a hypothesis. The greater the Bayes factor (for values above one), the stronger 
 the support of $E$ in favor of $H$. Putting aside reservations about this measure 
 of evidential support (discussed earlier in Chapter CROSSREF), 
-the Bayes factor $\pr{E | H}/\pr{E}$, unlike the conditional probability 
-$\pr{H | E}$, offers a potential way to overcome 
+the Bayes factor $\pr{E \vert H}/\pr{E}$, unlike the conditional probability 
+$\pr{H \vert E}$, offers a potential way to overcome 
 the difficulty about conjunction.
 
 
-### Aggregating evidence 
 
 
-Say  $a$ and $b$, separately, support $A$ and $B$
-to degree $s_A$ and $s_B$ respectively, that is, $\pr{a | A}/\pr{a}=s_A$ and 
-$\pr{b | B}/\pr{b}=s_B$, where both $s_A$ and $s_B$ are greater than one. 
+Say  $a$ and $b$, separately, support $A$ and $B$ \todo{use nicefrac for inline fractions}
+to degree $s_A$ and $s_B$ respectively, that is, $\nicefrac{\pr{a \vert A}}{\pr{a}}=s_A$ and 
+$\nicefrac{\pr{b \vert B}}{\pr{b}=s_B}$, where both $s_A$ and $s_B$ are greater than one. 
 Does the combined evidence $a \wedge b$ provide at least as much support 
 in favor of the combined claim $A \wedge B$ as the individual support by $a$ and $b$ 
-in favor of $A$ and $B$ considered separately? The combined support should be 
-measured by the combined Bayes factor $\pr{a \wedge b| A\wedge B}/\pr{a \wedge b}$.
+in favor of $A$ and $B$ considered separately? The combined support here is 
+measured by the combined Bayes factor $\nicefrac{\pr{a \wedge b\vert A\wedge B}}{\pr{a \wedge b}}$.
 The latter, under suitable independence assumptions, equals the product of the individual 
-supports $s_{A}$ and $s_{B}$.\footnote{By the probability calculus,
+supports $s_{A}$ and $s_{B}$. Here is the argument:
+
  \begin{align*}
-\frac{\pr{a \wedge b| A\wedge B}}{\pr{a \wedge b}} & =  \frac{\pr{A \et B| a\wedge b}}{\pr{A \et B}}\\
-& =  \frac{\frac{ \pr{A \et B \et a \wedge b }}{\pr{a \et b}}}{\pr{A \et B}} \\ 
-& =  \frac{\frac{ \pr{A} \times \pr{B|A} \times \pr{a | A \wedge B} \times \pr{b | A \wedge B \wedge a}}{\pr{a} \times \pr{b | a}}}{\pr{A \et B}} \\ 
-& =^*  \frac{\frac{\pr{A} \times \pr{B} \times \pr{a | A} \times \pr{b | B}}{\pr{a} \times \pr{b}}}{\pr{A} \times \pr{B}} \\ 
-& =  \frac{\pr{a |A}}{\pr{a}} \times \frac{\pr{b |B}}{\pr{b}} \\
+\frac{\pr{a \wedge b\vert A\wedge B}}{\pr{a \wedge b}} & =  \frac{\pr{A \et B\vert a\wedge b}}{\pr{A \et B}}
+&\mbox{\,\,\,\,\,\,\,\,\,\,\,\,\, (Bayes's theorem)}
+\\
+& =  \frac{\frac{ \pr{A \et B \et a \wedge b }}{\pr{a \et b}}}{\pr{A \et B}} 
+&\mbox{\,\,\,\,\,\,\,\,\,\,\,\,\, (definition of conditional probability)}\\ 
+& =  \frac{\frac{ \pr{A} \times \pr{B|A} \times \pr{a \vert A \wedge B} \times \pr{b \vert A \wedge B \wedge a}}{\pr{a} \times \pr{b \vert a}}}{\pr{A \et B}} 
+&\mbox{\,\,\,\,\,\,\,\,\,\,\,\,\, (chain rule)}
+\\ 
+& =^*  \frac{\frac{\pr{A} \times \pr{B} \times \pr{a \vert A} \times \pr{b \vert B}}{\pr{a} \times \pr{b}}}{\pr{A} \times \pr{B}} 
+&\mbox{\,\,\,\,\,\,\,\,\,\,\,\,\, (independencies)}\\ 
+& =  \frac{\pr{a |A}}{\pr{a}} \times \frac{\pr{b |B}}{\pr{b}} 
+&\mbox{\,\,\,\,\,\,\,\,\,\,\,\,\, (algebraic manipulation)} \\
 s_{AB}& =  s_{A}\times s_{B} 
  \end{align*}
+
 
 \noindent
 The step marked by the asterisk rests on the 
 independence assumptions codified in the Bayesian network 
-in Figure \ref{network-conjunction} (top).} That is, 
+in Figure \ref{fig:conjunctionDAG}.
+
+That is, 
  \begin{align*}
-\frac{\pr{a \wedge b| A\wedge B}}{\pr{a \wedge b}} & =  \frac{\pr{a |A}}{\pr{a}} \times \frac{\pr{b |B}}{\pr{b}} \\
+\frac{\pr{a \wedge b\vert A\wedge B}}{\pr{a \wedge b}} & =  \frac{\pr{a |A}}{\pr{a}} \times \frac{\pr{b \vert B}}{\pr{b}}    \\
 s_{AB}& =  s_{A}\times s_{B}.
  \end{align*}
 
@@ -625,7 +652,7 @@ in Figure \ref{network-conjunction} (bottom)?
 Given this network, the following holds:
 
  \begin{align*}
-\frac{\pr{a \wedge b| A\wedge B}}{\pr{a \wedge b}} & =  \frac{\pr{a |A}}{\pr{a}} \times \frac{\pr{b |B}}{\pr{b|a}} \\
+\frac{\pr{a \wedge b\vert A\wedge B}}{\pr{a \wedge b}} & =  \frac{\pr{a |A}}{\pr{a}} \times \frac{\pr{b |B}}{\pr{b|a}} \\
 s^{'}_{AB}& =  s_{A}\times s^{'}_{B} 
  \end{align*}
 
@@ -634,15 +661,15 @@ Note that factor $s_{B}= \frac{\pr{b |B}}{\pr{b}}$ was replaced by
 $s^{'}_{B}=\frac{\pr{b |B}}{\pr{b|a}}$.\footnote{Given the second Bayesian network, 
 $b$ need not be probabilistically independent of $a$, and thus there is no guarantee that 
 $\pr{b \vert a}=\pr{a}$.} Now, $s^{'}_{B}$ is usually lower than $s_{B}$ 
-because $\pr{b | a} > \pr{b}$ (assuming, at least, $a$ and $b$ are convergent pieces 
+because $\pr{b \vert a} > \pr{b}$ (assuming, at least, $a$ and $b$ are convergent pieces 
 of evidence; SEE DISCUSSION IN EARLIER CHAPTERS). At the same time, $s^{'}_{B}$ should 
 still be greater than one since $b$, by assumption, positively 
 supports $B$ even in combination with $a$.\footnote{Note that 
 $\frac{\pr{b |B}}{\pr{b|a}}=\frac{\pr{b |B \wedge a}}{\pr{b|a}}$ 
 (by the probabilistic independence of $a$ and $b$ given $B$). 
 So the claim that $\frac{\pr{b |B}}{\pr{b|a}}>1$ is 
-equivalent $\pr{B | b \wedge a}> \pr{B|a}$ since by Bayes' theorem 
-$\pr{B | b \wedge a} = \frac{\pr{b |B \wedge a}}{\pr{b|a}} \times \pr{B|a}$.
+equivalent $\pr{B \vert b \wedge a}> \pr{B|a}$ since by Bayes' theorem 
+$\pr{B \vert b \wedge a} = \frac{\pr{b |B \wedge a}}{\pr{b|a}} \times \pr{B|a}$.
 Presumably, evidence $b$ should still raise the probability of $B$ 
 even in cojunction with $a$, or else $b$ would be useless evidence. \textbf{M: THIS CLAIM NEEDS 
 TO BE PROVEN MORE RIGOROUSLY BUT I THINK IT'S CORRECT. BASIC INTUITION IS THAT EVIDENCE a 
@@ -659,10 +686,10 @@ Dawid's claim should be amended as follows. Even though the support supplied by 
 <!-- 
 Full derivation:
  \begin{align*}
-\frac{\pr{a \wedge b| A\wedge B}}{\pr{a \wedge b}} & =  \frac{\pr{A \et B| a\wedge b}}{\pr{A \et B}}\\
+\frac{\pr{a \wedge b\vert A\wedge B}}{\pr{a \wedge b}} & =  \frac{\pr{A \et B\vert a\wedge b}}{\pr{A \et B}}\\
 & =  \frac{\frac{ \pr{A \et B \et a \wedge b }}{\pr{a \et b}}}{\pr{A \et B}} \\ 
-& =  \frac{\frac{ \pr{A} \times \pr{B|A} \times \pr{a | A \wedge B} \times \pr{b | A \wedge B \wedge a} }{\pr{a} \times \pr{b | a}}}{\pr{A \et B}} \\ 
-& =^*  \frac{\frac{\pr{A} \times \pr{B|A} \times \pr{a | A} \times \pr{b | B}}{\pr{a} \times \pr{b |a}}}{\pr{A} \times \pr{B | A}} \\ 
+& =  \frac{\frac{ \pr{A} \times \pr{B|A} \times \pr{a \vert A \wedge B} \times \pr{b \vert A \wedge B \wedge a} }{\pr{a} \times \pr{b \vert a}}}{\pr{A \et B}} \\ 
+& =^*  \frac{\frac{\pr{A} \times \pr{B|A} \times \pr{a \vert A} \times \pr{b \vert B}}{\pr{a} \times \pr{b |a}}}{\pr{A} \times \pr{B \vert A}} \\ 
 & =  \frac{\pr{a |A}}{\pr{a}} \times \frac{\pr{b |B}}{\pr{b|a}} \\
 s^{'}_{AB}& =  s_{A}\times s^{'}_{B} 
  \end{align*}
@@ -679,7 +706,7 @@ it does. The crux of the matter here is whether the conjunction of two or more c
  satisfies a given standard of proof just in case the individual conjuncts do. 
  --->
  One hurdle here is that
- the standard of proof would no longer be formalized as a posterior probability threshold, but instead as a threshold about the Bayes factor. The threshold would no longer be a probability between 0% and 100%, but rather a number somewhere above 1. The greater this number, the more stringent the standard of proof, for any value above one. In criminal trials, for example, the rule of decision would be: guilt is proven beyond a reasonable doubt if and only if the evidential support in favor of $G$---as measured by the Bayes factor $\frac{\pr{E | G}}{\pr{E}}$---meets a suitably high threshold $t_{BF}$. The 
+ the standard of proof would no longer be formalized as a posterior probability threshold, but instead as a threshold about the Bayes factor. The threshold would no longer be a probability between 0% and 100%, but rather a number somewhere above 1. The greater this number, the more stringent the standard of proof, for any value above one. In criminal trials, for example, the rule of decision would be: guilt is proven beyond a reasonable doubt if and only if the evidential support in favor of $G$---as measured by the Bayes factor $\frac{\pr{E \vert G}}{\pr{E}}$---meets a suitably high threshold $t_{BF}$. The 
 obvious question at this point is, how do we identify the appropriate threshold?\todo{good question, will think about it, will need to take a look at "Bayesian Choice", also need to think about a counterexample}
 
 One strategy is to derive the Bayes factor threshold, call it $t_{BF}$, from the posterior threshold $t$. Since $\textit{posterior }=\textit{ Bayes factor }\times \textit{ prior}$, the Bayes factor threshold can be determined as follows:
@@ -700,7 +727,7 @@ At issue here is whether the conjunction principle can be formalized in a plausi
 \noindent
 where $\text{S}[E, H]$ means that evidence $E$ establishes hypothesis $H$ by standard $S$.  If the standard of proof is formalized using the Bayes factor, the conjunction principle would boil down to:
 
-\[  \text{ $\frac{\pr{a | A }}{\pr{a}}>t^A_{BF}$ and $\frac{\pr{ b | B}}{\pr{b}}>t^B_{BF}$ iff $\frac{\pr{a \et b | A \et B}}{\pr{a \et b}}>t^{A\wedge B}_{BF}$ } \]
+\[  \text{ $\frac{\pr{a \vert A }}{\pr{a}}>t^A_{BF}$ and $\frac{\pr{ b \vert B}}{\pr{b}}>t^B_{BF}$ iff $\frac{\pr{a \et b \vert A \et B}}{\pr{a \et b}}>t^{A\wedge B}_{BF}$ } \]
 
 \noindent
 Consider a posterior threshold $t=0.95$, as might be appropriate in a criminal case. If $A$ and $B$ both have a prior probability of $10\%$, the threshold $t^A_{BF}=t_{BF}^B=0.95/0.1=9.5$ for $A$ or $B$ individually. Assuming independence of $A$ and $B$, the composite claim $A \wedge B$ will be associated with the threshold $t^{A\wedge B}_{BF}=0.95/(0.1*0.1)=95$, a much higher value. But if each individual claim meets its Bayes factor threshold of 9.5 and the two claims are independent, the joint Bayes factor would equal the multiplication of the individual Bayer factors, that is, $9.5*9.5=90.25$. This is not quite enough to meet $t^{A\wedge B}_{BF}=95$, but is fairly close. The difference in absolute  terms grows as the prior probability of the individual claims becomes lower, but the combined Bayes factor remains only $5\%$ below the value needed to meet $t_{BF}^{A\wedge B}$.\footnote{The difference at here is between $t_{BF}^{A\wedge B}=0.95/p^2$ and $t_{BF}^{A}*t_{BF}^{B}=(0.5/p)^{2}$. Note that $\frac{0.95/p^2 - (0.5/p)^{2}}{0.95/p^2}=5\%$, for any value of the prior $p$.} Perhaps this is a good enough approximation. However, as the number of constituent claims grows, the difference becomes larger.\footnote{Given five constituent claims, $\frac{0.95/p^5 - (0.95/p)^{5}}{0.95/p^5}=18\%$.} In addition, the difference becomes larger with a lower posterior probability threshold, say $0.5$. Even with just two claims, $t^{A\wedge B}_{BF}=0.5/(0.1*0.1)=50$, but $t^A_{BF}*t_{BF}^B=(0.5/0.1)*(0.5/0.1)=25$, only half the required value. The conjunction principle therefore fails in a large number of cases even using the Bayes factor threshold. 
@@ -726,7 +753,7 @@ Consider a posterior threshold $t=0.95$, as might be appropriate in a criminal c
 If the conjunction principle holds,\todo{In which direction? Note that at least in one direction the principle still fails. For instance, if your threshold is 15, $14*25$ is 350 but still one of the elements fails to be sufficiently supported.}  the statement above would be equivalent \todo{not sure about the equivalence; at best, this would be a sufficient condition, no? you do talk about this later so putting it this way is a bit misleading} to:
   \begin{quote}
 Guilt is proven beyond a reasonable doubt if and only if the evidential support in favor of each constituent claim 
- $C_i$ suported by evidence $E_i$---as measured by the Bayes factor $\frac{\pr{E_i | C_i}}{\pr{E_i}}$---meets a suitably high threshold $t$.
+ $C_i$ suported by evidence $E_i$---as measured by the Bayes factor $\frac{\pr{E_i \vert C_i}}{\pr{E_i}}$---meets a suitably high threshold $t$.
  \end{quote}
  \noindent
 -->
@@ -744,26 +771,26 @@ If the standard of proof is formalized using a fixed Bayes
 factor threshold $t_{BF}$, the conjunction principle 
 would boil down to:
 
-\[  \text{ $\frac{\pr{a | A }}{\pr{a}}>t_{BF}$ and $\frac{\pr{ b | B}}{\pr{b}}>t_{BF}$ iff $\frac{\pr{a \et b | A \et B}}{\pr{a \et b}}>t_{BF}$ } \]
+\[  \text{ $\frac{\pr{a \vert A }}{\pr{a}}>t_{BF}$ and $\frac{\pr{ b \vert B}}{\pr{b}}>t_{BF}$ iff $\frac{\pr{a \et b \vert A \et B}}{\pr{a \et b}}>t_{BF}$ } \]
 
 \noindent
 The left-to-right direction---aggregation---is likely to hold for 
 any threshold $t_{BF}$ greater than one. As shown earlier, the combined evidential 
 support is greater than the individual evidential support 
 <!---
-because $\frac{\pr{a \et b | A \et B}}{\pr{a \et b}}$ 
+because $\frac{\pr{a \et b \vert A \et B}}{\pr{a \et b}}$ 
 equals $\frac{\pr{a |A}}{\pr{a}} \times \frac{\pr{b |B}}{\pr{b}}$
 -->
 if A and B are independent, or greater than the smallest individual support 
 <!---or $\frac{\pr{a |A}}{\pr{a}} \times \frac{\pr{b |B}}{\pr{b \vert a}}$ -->
 if A and B are dependent. Aggregation could not be justified using posterior probabilities 
-$\pr{A | a}$ and $\pr{B | b}$ nor could it be justified generally 
+$\pr{A \vert a}$ and $\pr{B \vert b}$ nor could it be justified generally 
 using a variable Bayes factor threshold. 
 So it is an advantage of the fixed Bayes factor threshold 
 that it can justify this direction of the conjunction principle. 
 
 However, the right-to-left direction---distribution---has now become problematic. 
-For suppose the combined evidential support, $\frac{\pr{a \et b | A \et B}}{\pr{a \et b}}$, barely meets 
+For suppose the combined evidential support, $\frac{\pr{a \et b \vert A \et B}}{\pr{a \et b}}$, barely meets 
 the threshold. This implies that the individual support, say $\frac{\pr{a |A}}{\pr{a}}$, 
 could be be below the threshold unless $\frac{\pr{b |B}}{\pr{b}}=1$
 \todo{Not always true; just give a specific numerical counterexample. M: I added 'often'. Is this enough?} (which should not happen if $b$ positively supports $B$). So, curiously, there would be cases in which, even though the conjunction $A\et B$ is established to the desired standard of proof, one of the individual claims  fails to meet the standard. This is odd. More specifically, the following distribution 
@@ -791,7 +818,7 @@ One cannot be willing to assent to the
 conjunction without being willing to assent to one of the conjuncts 
 against a fixed body of evidence. Certainly any formalization of the standard of proof should obey 
 (DIS2). And yet, it is this very principle that we should deny if we understand 
-the standard of proof using the Bayes factor. \footnote{To show that (DIS2) fails, it is enough to show that $\frac{\pr{B \vert a\wedge b \wedge A}}{\pr{B \vert A}}>1$ because $S[a\wedge b, A\wedge B]>S[a\wedge b, A]$ iff $\frac{\pr{a\wedge b \vert A \wedge B}}{\pr{a\wedge b}}>\frac{\pr{a\wedge b \vert A}}{\pr{a\wedge b}}$ iff $\frac{\pr{A\wedge B \vert a \wedge b}}{\pr{A\wedge B}}>\frac{\pr{A \vert a \wedge b }}{\pr{A}}$ iff $\frac{\pr{A \vert a \wedge b} \times \pr{B \vert a\wedge b\wedge A}}{\pr{A} \times \pr{B \vert A}}>\frac{\pr{A \vert a \wedge b }}{\pr{A}}$. Now, $\frac{\pr{B \vert a\wedge b \wedge A}}{\pr{B \vert A}}>1$ so long as $a\wedge b$ positively supports $B$ even under the assumption of $A$, unless $A$ entailed $B$. We naturally exclude the situation in which one claim entails the other because otherwise there would be no need to establish the two claims. Establishing one claim alone would suffice. To see why $a\wedge b$ positively supports $B$ (or $A$), note that $S[a, A]=\frac{\pr{a |A}}{\pr{a}} \leq \frac{\pr{a |A} \times \pr{b | A \wedge a}}{\pr{a}\times \pr{b | a}}=\frac{\pr{a \wedge b |A}}{\pr{a\wedge b}}=S[a \wedge b, A]$. The key step here is $\frac{\pr{a |A}}{\pr{a}} \leq \frac{\pr{a |A} \times \pr{b | A \wedge a}}{\pr{a}\times \pr{b | a}}$. The latter holds because $\frac{\pr{b | A \wedge a}}{\pr{b | a}}\geq 1$. It is useful to distinguish two cases. First, if $A$ and $B$ are probabilistically independent, as in the Bayesian network in Figure \ref{network-conjunction} (top), then $\frac{\pr{b | A \wedge a}}{\pr{b | a}}= \frac{\pr{b}}{\pr{b}} = 1$. Second, if $A$ and $B$ are probabilistically dependent, as in the Bayesian network in Figure \ref{network-conjunction} (bottom), evidence $b$ positively supports claim $A$ (even conditional on $a$) so long as $b$ positively supports $B$. The assumption is that claim $A$ and $B$ are positively correlated, and thus, any evidence that supports one of the claims is going to support the other claim, as well. \textbf{SEE EARLIER CHAPTERS FOR A MORE RIGOROUS PROOF OF THIS LAST POINT.}}  In case $A$ and $B$ are probabilistically independent, (DIS1) and (DIS2) are in fact equivalent, so rejectign one requires rejecting the other.\footnote{$\frac{\pr{a\wedge b \vert A}}{\pr{a\wedge b}}=\frac{\pr{a \vert A}\pr{b \vert A}}{\pr{a}\pr{b}}=\frac{\pr{a \vert A}}{\pr{a}}$. In other words, $S[a \wedge b, A]=S[a, A]$.} The intuitive reason for this--- perhpas surprising---result is that $A \wedge B$ has a much lower prior probability than $A$ (or $B$) considered separately. Thus, the same body of evidence is going to have a larger impact on a hypothesis with a lower prior probability, other things being equal. This larger impact on the prior is reflected in a larger Bayes factor. We will examine this point in greater detail in later sections. 
+the standard of proof using the Bayes factor. \footnote{To show that (DIS2) fails, it is enough to show that $\frac{\pr{B \vert a\wedge b \wedge A}}{\pr{B \vert A}}>1$ because $S[a\wedge b, A\wedge B]>S[a\wedge b, A]$ iff $\frac{\pr{a\wedge b \vert A \wedge B}}{\pr{a\wedge b}}>\frac{\pr{a\wedge b \vert A}}{\pr{a\wedge b}}$ iff $\frac{\pr{A\wedge B \vert a \wedge b}}{\pr{A\wedge B}}>\frac{\pr{A \vert a \wedge b }}{\pr{A}}$ iff $\frac{\pr{A \vert a \wedge b} \times \pr{B \vert a\wedge b\wedge A}}{\pr{A} \times \pr{B \vert A}}>\frac{\pr{A \vert a \wedge b }}{\pr{A}}$. Now, $\frac{\pr{B \vert a\wedge b \wedge A}}{\pr{B \vert A}}>1$ so long as $a\wedge b$ positively supports $B$ even under the assumption of $A$, unless $A$ entailed $B$. We naturally exclude the situation in which one claim entails the other because otherwise there would be no need to establish the two claims. Establishing one claim alone would suffice. To see why $a\wedge b$ positively supports $B$ (or $A$), note that $S[a, A]=\frac{\pr{a |A}}{\pr{a}} \leq \frac{\pr{a |A} \times \pr{b \vert A \wedge a}}{\pr{a}\times \pr{b \vert a}}=\frac{\pr{a \wedge b |A}}{\pr{a\wedge b}}=S[a \wedge b, A]$. The key step here is $\frac{\pr{a |A}}{\pr{a}} \leq \frac{\pr{a |A} \times \pr{b \vert A \wedge a}}{\pr{a}\times \pr{b \vert a}}$. The latter holds because $\frac{\pr{b \vert A \wedge a}}{\pr{b \vert a}}\geq 1$. It is useful to distinguish two cases. First, if $A$ and $B$ are probabilistically independent, as in the Bayesian network in Figure \ref{network-conjunction} (top), then $\frac{\pr{b \vert A \wedge a}}{\pr{b \vert a}}= \frac{\pr{b}}{\pr{b}} = 1$. Second, if $A$ and $B$ are probabilistically dependent, as in the Bayesian network in Figure \ref{network-conjunction} (bottom), evidence $b$ positively supports claim $A$ (even conditional on $a$) so long as $b$ positively supports $B$. The assumption is that claim $A$ and $B$ are positively correlated, and thus, any evidence that supports one of the claims is going to support the other claim, as well. \textbf{SEE EARLIER CHAPTERS FOR A MORE RIGOROUS PROOF OF THIS LAST POINT.}}  In case $A$ and $B$ are probabilistically independent, (DIS1) and (DIS2) are in fact equivalent, so rejectign one requires rejecting the other.\footnote{$\frac{\pr{a\wedge b \vert A}}{\pr{a\wedge b}}=\frac{\pr{a \vert A}\pr{b \vert A}}{\pr{a}\pr{b}}=\frac{\pr{a \vert A}}{\pr{a}}$. In other words, $S[a \wedge b, A]=S[a, A]$.} The intuitive reason for this--- perhpas surprising---result is that $A \wedge B$ has a much lower prior probability than $A$ (or $B$) considered separately. Thus, the same body of evidence is going to have a larger impact on a hypothesis with a lower prior probability, other things being equal. This larger impact on the prior is reflected in a larger Bayes factor. We will examine this point in greater detail in later sections. 
 
 
 All in all, using Bayes factor to understad the standard of proof 
@@ -813,7 +840,7 @@ the following equalities hold:
 \noindent
 If so, (EXT1) and (EXT2) are equivalent, and 
 denying one extrapolation principle implies denying the other.\footnote{To show that 
-S[$a \wedge b, A$] = S[$a, A$], note that $S[a, A]=\frac{\pr{a |A}}{\pr{a}}=\frac{\pr{a |A} \times \pr{b}}{\pr{a}\times \pr{b}}=\frac{\pr{a |A} \times \pr{b | A \wedge a}}{\pr{a}\times \pr{b | a}}=\frac{\pr{a \wedge b |A}}{\pr{a\wedge b}}=S[a \wedge b, A]$. The key step here is the unconditional probabilistic independence of $a$ and $b$ encoded in the Bayesian network in Figure \ref{network-conjunction} (top). The same reasoning applies for $B$. A related claim is that
+S[$a \wedge b, A$] = S[$a, A$], note that $S[a, A]=\frac{\pr{a |A}}{\pr{a}}=\frac{\pr{a |A} \times \pr{b}}{\pr{a}\times \pr{b}}=\frac{\pr{a |A} \times \pr{b \vert A \wedge a}}{\pr{a}\times \pr{b \vert a}}=\frac{\pr{a \wedge b |A}}{\pr{a\wedge b}}=S[a \wedge b, A]$. The key step here is the unconditional probabilistic independence of $a$ and $b$ encoded in the Bayesian network in Figure \ref{network-conjunction} (top). The same reasoning applies for $B$. A related claim is that
 $S[a, A] = S[a, A\wedge B]$ because $S[a, A]=\frac{\pr{a |A}}{\pr{a}}=\frac{\pr{a |A \wedge B}}{\pr{a}}=S[a, A \wedge B]$, and similarly for $S[b, B] = S[b, A\wedge B]$.} Thus, if the standard of proof is formalized 
 using Bayes factor, the extremely plausible, almost undeniable, extrapolation principle (EXT2) would have to go. 
 
@@ -854,17 +881,17 @@ considers a composite claim instead of an individual claim.
 ### Aggregating evidence
 
 To see why, consider the combined 
-ikelihood ratio $\frac{\pr{ a \et b |A \et B}}{\pr{a \et b | \neg (A \et B)}}$.
+ikelihood ratio $\frac{\pr{ a \et b |A \et B}}{\pr{a \et b \vert \neg (A \et B)}}$.
 The numerator can be computed easily:\footnote{ \begin{align*}
-\pr{a \wedge b| A\wedge B} & =  \frac{\pr{A \et B \et a\et b}}{\pr{A \et B}}\\
-&= \frac{   \pr{A} \times \pr{B|A} \times \pr{a | A \wedge B} \times \pr{b | A \wedge B \wedge a} }{\pr{A} \times \pr{B \vert A}}\\
-& =^* \frac{\pr{A} \times \pr{B | A} \times \pr{a | A} \times \pr{b | B}}{\pr{A}  \times \pr{B | A}} \\
-& = \pr{a | A} \times \pr{b | B} 
+\pr{a \wedge b\vert A\wedge B} & =  \frac{\pr{A \et B \et a\et b}}{\pr{A \et B}}\\
+&= \frac{   \pr{A} \times \pr{B|A} \times \pr{a \vert A \wedge B} \times \pr{b \vert A \wedge B \wedge a} }{\pr{A} \times \pr{B \vert A}}\\
+& =^* \frac{\pr{A} \times \pr{B \vert A} \times \pr{a \vert A} \times \pr{b \vert B}}{\pr{A}  \times \pr{B \vert A}} \\
+& = \pr{a \vert A} \times \pr{b \vert B} 
  \end{align*}
   The asterisk marks the step that requires the indepedence assumptions in Figure \ref{network-conjunction}.
   }
 
-\[ \pr{a \wedge b| A\wedge B} = \pr{a | A} \times \pr{b | B} \]
+\[ \pr{a \wedge b\vert A\wedge B} = \pr{a \vert A} \times \pr{b \vert B} \]
  \noindent
  The equality requires the independence assumptions 
  codified in the Bayesian networks 
@@ -876,14 +903,14 @@ the sensitivity of the individual items of evidence, $a$ and $b$,
 relative to their respective hyptheses, $A$ and $B$.
 
 The denominator is more involved:\footnote{   \begin{align*}
-\pr{a \et b| \neg (A\et B)} & = \frac{\pr{a \et b \et \neg (A\et B)}}{\pr{\neg (A \et B)}} \\
+\pr{a \et b\vert \neg (A\et B)} & = \frac{\pr{a \et b \et \neg (A\et B)}}{\pr{\neg (A \et B)}} \\
 & = \frac{\pr{a \et b \et \neg A\et B} +  \pr{a \et b \et A\et \neg B} + \pr{a \et b \et \neg A\et \neg B}  }{\pr{\neg A \et B} + \pr{A \et \neg B} + \pr{\neg A \et \neg B} } \\
-& =^* \frac{\pr{\neg A}\pr{B \vert \neg A} \pr{a | \neg A}\pr{b | B} + \pr{A}\pr{\neg B \vert A} \pr{a | A }\pr{b | \neg B} + \pr{\neg A}\pr{\neg B \vert \neg A } \pr{a | \neg A}\pr{b | \neg B}}{\pr{\neg A}\pr{B \vert \neg A} + \pr{A}\pr{\neg B \vert A } + \pr{\neg A}\pr{\neg B \vert \neg A} }  
+& =^* \frac{\pr{\neg A}\pr{B \vert \neg A} \pr{a \vert \neg A}\pr{b \vert B} + \pr{A}\pr{\neg B \vert A} \pr{a \vert A }\pr{b \vert \neg B} + \pr{\neg A}\pr{\neg B \vert \neg A } \pr{a \vert \neg A}\pr{b \vert \neg B}}{\pr{\neg A}\pr{B \vert \neg A} + \pr{A}\pr{\neg B \vert A } + \pr{\neg A}\pr{\neg B \vert \neg A} }  
  \end{align*}
    The asterisk marks the step that requires the indepedence assumptions in Figure \ref{network-conjunction}.
    }
 
-\[\pr{a \et b| \neg (A\et B)} = \frac{\pr{\neg A}\pr{B \vert \neg A} \pr{a | \neg A}\pr{b | B} + \pr{A}\pr{\neg B \vert A} \pr{a | A }\pr{b | \neg B} + \pr{\neg A}\pr{\neg B \vert \neg A } \pr{a | \neg A}\pr{b | \neg B}}{\pr{\neg A}\pr{B \vert \neg A} + \pr{A}\pr{\neg B \vert A } + \pr{\neg A}\pr{\neg B \vert \neg A} } \]
+\[\pr{a \et b\vert \neg (A\et B)} = \frac{\pr{\neg A}\pr{B \vert \neg A} \pr{a \vert \neg A}\pr{b \vert B} + \pr{A}\pr{\neg B \vert A} \pr{a \vert A }\pr{b \vert \neg B} + \pr{\neg A}\pr{\neg B \vert \neg A } \pr{a \vert \neg A}\pr{b \vert \neg B}}{\pr{\neg A}\pr{B \vert \neg A} + \pr{A}\pr{\neg B \vert A } + \pr{\neg A}\pr{\neg B \vert \neg A} } \]
 
 \noindent 
 The same independence assumptions 
@@ -895,7 +922,7 @@ for the combined likelihood ratio.
 
 
   \begin{align*}
-\frac{\pr{a \wedge b \vert A\wedge B}}{\pr{a \et b| \neg (A\et B)}} & = \frac{\pr{a | A} \times \pr{b | B}}{\frac{\pr{\neg A}\pr{B \vert \neg A} \pr{a | \neg A}\pr{b | B} + \pr{A}\pr{\neg B \vert A} \pr{a | A }\pr{b | \neg B} + \pr{\neg A}\pr{\neg B \vert \neg A } \pr{a | \neg A}\pr{b | \neg B}}{\pr{\neg A}\pr{B \vert \neg A} + \pr{A}\pr{\neg B \vert A } + \pr{\neg A}\pr{\neg B \vert \neg A} } }
+\frac{\pr{a \wedge b \vert A\wedge B}}{\pr{a \et b\vert \neg (A\et B)}} & = \frac{\pr{a \vert A} \times \pr{b \vert B}}{\frac{\pr{\neg A}\pr{B \vert \neg A} \pr{a \vert \neg A}\pr{b \vert B} + \pr{A}\pr{\neg B \vert A} \pr{a \vert A }\pr{b \vert \neg B} + \pr{\neg A}\pr{\neg B \vert \neg A } \pr{a \vert \neg A}\pr{b \vert \neg B}}{\pr{\neg A}\pr{B \vert \neg A} + \pr{A}\pr{\neg B \vert A } + \pr{\neg A}\pr{\neg B \vert \neg A} } }
  \end{align*}
 
 
@@ -904,11 +931,11 @@ the individual likelihood ratio so logn as the two pieces of evidence have the s
 below the lowest of the two individual likelihood ratios. 
 
 Becasue of the many variables at play, it is not easy to compare the combined evidential support and 
-the individual support supplied by $a$ and $b$ towards $A$ and $B$, as measured by the individual and combined likelihood ratio. To circumvent this difficulty, we make three simplifying assumptions. First, the sensitivity of a piece of evidence, say $\pr{a |A}$, is the same as its specificity, $\pr{\neg a | \neg A}$. Let $\pr{a |A}=x$ and $\pr{b |B}=y$. So $\pr{a |\neg A}=1-x$ and $\pr{b | \neg B}=1-y$. Finally, the sensitivity (and thus the specificity) of the two pieces of evidence is the same, that is, $\pr{a |A}=x=\pr{b |B}=y$. Finally, as is customary, 
+the individual support supplied by $a$ and $b$ towards $A$ and $B$, as measured by the individual and combined likelihood ratio. To circumvent this difficulty, we make three simplifying assumptions. First, the sensitivity of a piece of evidence, say $\pr{a |A}$, is the same as its specificity, $\pr{\neg a \vert \neg A}$. Let $\pr{a |A}=x$ and $\pr{b |B}=y$. So $\pr{a |\neg A}=1-x$ and $\pr{b \vert \neg B}=1-y$. Finally, the sensitivity (and thus the specificity) of the two pieces of evidence is the same, that is, $\pr{a |A}=x=\pr{b |B}=y$. Finally, as is customary, 
 claims $A$ and $B$ are independent of one another.  The combined likelihood ratio therefore reduces to the following, where $\pr{A}=k$ and $\pr{B}=t$:
 
   \begin{align*}
-\frac{\pr{a \wedge b \vert A\wedge B}}{\pr{a \et b| \neg (A\et B)}} & = \frac{xx}{\frac{(1-k)t(1-x)x + k(1-t)x(1-x) + (1-k)(1-t)(1-x)(1-x)}{ \left(1-k\right) t +\left(1-t\right) k+\left(1-k\right) \left(1-t\right)}}
+\frac{\pr{a \wedge b \vert A\wedge B}}{\pr{a \et b\vert \neg (A\et B)}} & = \frac{xx}{\frac{(1-k)t(1-x)x + k(1-t)x(1-x) + (1-k)(1-t)(1-x)(1-x)}{ \left(1-k\right) t +\left(1-t\right) k+\left(1-k\right) \left(1-t\right)}}
  \end{align*}
 
 \noindent
@@ -958,14 +985,14 @@ probabilities $t$ and $k$ do not invalidate this result.}
 \noindent
 The combined likelihood ratio is therefore:
 \begin{align}\label{eq:combinedLRMarcello}
-\frac{\pr{ a \et b |A \et B}}{\pr{a \et b | \neg (A \et B)}} & = \frac{xy}{\frac{(1-k)t(1-x)y + k(1-t)x(1-y) + (1-k)(1-t)(1-x)(1-y)}{ \left(1-k\right) t +\left(1-t\right) k+\left(1-k\right) \left(1-t\right) }}
+\frac{\pr{ a \et b |A \et B}}{\pr{a \et b \vert \neg (A \et B)}} & = \frac{xy}{\frac{(1-k)t(1-x)y + k(1-t)x(1-y) + (1-k)(1-t)(1-x)(1-y)}{ \left(1-k\right) t +\left(1-t\right) k+\left(1-k\right) \left(1-t\right) }}
  \end{align}
 
 
 \noindent
 
   \begin{align*}
-\frac{\pr{ a \et b |A \et B}}{\pr{a \et b | \neg (A \et B)}} & = \frac{xx}{\frac{(1-k)t(1-x)x + k(1-t)x(1-x) + (1-k)(1-t)(1-x)(1-x)}{ \left(1-k\right) t +\left(1-t\right) k+\left(1-k\right) \left(1-t\right) }}
+\frac{\pr{ a \et b |A \et B}}{\pr{a \et b \vert \neg (A \et B)}} & = \frac{xx}{\frac{(1-k)t(1-x)x + k(1-t)x(1-x) + (1-k)(1-t)(1-x)(1-x)}{ \left(1-k\right) t +\left(1-t\right) k+\left(1-k\right) \left(1-t\right) }}
  \end{align*}
 
 -->
@@ -1133,9 +1160,9 @@ called aggregation---but still fails to justify the other direction---what we
 called distribution So the distribution paradox arises here again. 
 
 Consider aggregation first. Say both individual likelihood 
- ratios $\frac{\pr{a |A}}{\pr{a | \neg A}}$ and $\frac{\pr{b |B}}{\pr{b | \neg B}}$ are above the requisite 
+ ratios $\frac{\pr{a |A}}{\pr{a \vert \neg A}}$ and $\frac{\pr{b |B}}{\pr{b \vert \neg B}}$ are above the requisite 
  threshold $t$ for meeting the standard of proof. Will the combined likelihood 
- ratio $\frac{\pr{ a \et b |A \et B}}{\pr{a \et b | \neg (A \et B)}}$ also 
+ ratio $\frac{\pr{ a \et b |A \et B}}{\pr{a \et b \vert \neg (A \et B)}}$ also 
  be above the threshold? The answer is affirmative. As we argued earlier, the combined likelihood ratio is never below the lowest of the individual likelihood ratio. If both individual likelihood ratios meet the threhsold, so does the combined likelihood ratio.  But this approach faces another problem, the same problem that plagues the Bayes factor. That is, likelihood ratios still fail to capture the other direction of the conjunction principle, what we called distribution. 
 
 For suppose evidence $a \et b$ supports $A \et B$ to 
@@ -1196,14 +1223,14 @@ amount to an admission of criminal or civil liability.
 Setting aside this controversy for the time being, 
 let's first work out the comparative strategy 
 using posterior probabilities. More specifically, given a body of evidence $E$ and two competing hypotheses 
-$H_p$ and $H_d$, the probability $\pr{H_p | E}$ should be suitably higher 
-than $\pr{H_d | E}$, or in other words, the ratio $\frac{\Pr{H_p | E}}{\Pr{H_d | E}}$ should 
+$H_p$ and $H_d$, the probability $\pr{H_p \vert E}$ should be suitably higher 
+than $\pr{H_d \vert E}$, or in other words, the ratio $\frac{\Pr{H_p \vert E}}{\Pr{H_d \vert E}}$ should 
 be above a suitable threshold. Presumably, the ratio threshold shoud be higher 
 for criminal than civil cases.  In fact, in civil cases it seems enough to require that the 
-ratio $\frac{\Pr{H_p | E}}{\Pr{H_d | E}}$ be avove 1, or in other words, 
-$\pr{H_p | E}$ should be higher than $\pr{H_d | E}$. Note that $H_p$ and $H_d$ need not be one the negation of the other. 
-Whenever two hypotheses are one the negation of the other, $\frac{\pr{H_p | E}}{\pr{H_d | E}}>1$ 
-implies that $\pr{H_p | E}>50\%$, the standard probabilistic intepretation of the preponderemca standard. 
+ratio $\frac{\Pr{H_p \vert E}}{\Pr{H_d \vert E}}$ be avove 1, or in other words, 
+$\pr{H_p \vert E}$ should be higher than $\pr{H_d \vert E}$. Note that $H_p$ and $H_d$ need not be one the negation of the other. 
+Whenever two hypotheses are one the negation of the other, $\frac{\pr{H_p \vert E}}{\pr{H_d \vert E}}>1$ 
+implies that $\pr{H_p \vert E}>50\%$, the standard probabilistic intepretation of the preponderemca standard. 
 
 One advantage of this approach---as Cheng shows---is that expected utility theory can 
 set the appropriate comparative threshold $t$ as a function of the costs and benefits 
@@ -1322,6 +1349,196 @@ Assuming independence between $C$ and $S$, we have
 Another problem with this approach is that much of the heavy lifting here is done by the strategic splitting of the defense line into multiple scenarios. Now suppose $\pr{H_p\vert E}=0.37$ and the probability of each of the defense lines given $E$ is $0.21$. This means that $H_p$ wins with each of the scenarios, so we should find against the defendant. But should we? Given the evidence, the accusation is very likely to be false, because $\pr{\n H_p \vert E}=0.63$?  The problem generalizes. If, as here, we individualize scenarios by boolean combinations of elements of a case, the more elements there are, into more  scenarios $\n H_p$ needs to be divided. This normally would lead to the probability of each of them being even lower  (because now $\pr{\n H_p}$ needs to be ``split'' between more scenarios). So, if we take this approach seriously, the more elements a case has, the more at disadvantage the defense is. This seems undesirable. 
 
   REPEAT SAME ARGUMENT USING LR AND COMPARATIVE STRATEGY
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Rejecting the Conjunction Principle?
+
+Let's now turn to possible strategies that legal probabilists 
+can pursue to address the conjunction paradox. 
+The first thing to note is that the 
+paradox would not arise without 
+the conjunction principle. So could legal 
+probabilists reject this principle and let 
+the paradox disappear?  \todo{add more flow once section is complete}
+<!-- On its face, the conjunction principle is no different from closure principles 
+used in epistemic logic. Let $\Box$ the modal operator for belief or knowledge.
+The conjunction principle is a special version 
+of the closure principle $\Box A \wedge \Box B \leftrightarrow \Box (A \et B)$. (CITE MODAL LOGICS THAT ADOPT THIS PRINCIPLE.) \todo{Ok, I will add a footnote about this.}
+--> 
+
+
+## Risk Accumulation
+
+In current discussions in epistemology about knowledge or justification, a principle similar to the conjunction principle 
+has been contested because it appears to deny the fact that risks of error accumulate (CITE). \todo{Hey, we can quote a paper that's out by Alicja!:) Also, I guess you want me to find the right refs? M: Yes, if you can} If one is justifiably sure about the truth of each claim considered seperataly, one should not be equally sure of their conjunction. You have checked 
+each page of a book and found no error. So, for each page, you are nearly sure there is no error. Having checked each page and found no error, can you be sure that the book as a whole contains no error? Not really. As the number of pages grow, it becomes virtually certain that there is at least one error in the book you have overlooked, although for each page you are nearly sure there is no error. (ADD CITATION ABOUT PREFACE PARADOX) The same applies to other contexts, say product quality control. You may be sure, for each product you checked, that it is free from defects. But you cannot, on this basis alone, be sure that all products you checked are free from defects. Since the risks of error accumulate, you must have missed at least one defective product. 
+
+Risk accumulation challenges one direction of the conjunction principle, call it 
+\textit{aggregation}:
+\[S[C_1 \wedge C_2  \wedge \dots \wedge  C_k] \Leftarrow S[C_1] \wedge S[C_2]  \wedge \dots \wedge  S[C_k].\]
+
+\noindent
+Even if the probability of several claims, considered individually, is above a threhsold $t$,
+their conjuction need not be above $t$. Risk accumulation, howvere, does not challenge 
+the other direction of the conjunction principle, call it \textit{distribution}:
+\[S[C_1 \wedge C_2  \wedge \dots \wedge  C_k] \Rightarrow S[C_1] \wedge S[C_2]  \wedge \dots \wedge  S[C_k].\]
+
+\noindent
+Probability theory ensures that, if the probabiliity of the conjunction 
+of several claims is above $t$, so is the probability of each individual claim. 
+
+
+## Atomistic and Holistic Approches
+
+Suppose the legal probabilist does away with the conjunction principle. Now what?
+How should they define standards of proof? Two immediate options come to mind, but neither is without problems.  
+
+Let's stipulates that, in order to establish the defendant's guilt beyond a reasonable doubt (or civil liability by preponderance of the evidence), the party making the accusation should establish each claim, separately, to the requisite probability, say at least 95\%, without needing to establish the conjunction to the requisite probability. Call this the \textit{atomistic account}.  On this view, the prosecution could be in a position to establish guilt beyond a reasonable doubt without estalishing the conjunction of different claims with a sufficiently high probability. This account would allow convictions in cases in which the probability of the defendant's guilt is relatively low, just because guilt is a conjunction of several independent claims that separately satisfy the standard of proof. For example, if each constituent claim is established with 95\% probability, a composite claim consisting of five subclaims---assuming, as usual, probabilistic independence between individual claims---would only be established with 77% probability, a far cry from proof beyond a reasonable doubt. This is counterintuitve as it would allow convictions when the defendant is not very likely to be guilty. Under the atomistic account, the composite claim representing the case as a whole would often be established with a probability below the required threshold. The atomistic approach is a non-starter. 
+
+The other option is to require that the prosecution in a criminal case (or the plantiff in a civil case) establish the accusation as a whole---say the cojunction of $A$ and $B$---to the requisite probability. Call this the \textit{holistic account}. This account is not without problems either. The proof of $A\et B$ would impose a higher requirement on the separate probabilities of the conjuncts. If the conjunction $A\et B$ is to be proven with at least 95\% probability, the individual conjuncts should be established with probability higher than 95\%. So the more constituent claims, the higher the posterior probability for each claim needed to meet the requisite probability threhsold. 
+
+We can get a sense of the difficulty by running in some numbers. Assume, for the sake of illustration, the independence and equiprobability of the constituent claims. If a composite claim consists of $k$ individual claims, these individual claims will have to be established with proabilility of at least
+$t^{1/k}$, where $t$ is the threhsold applicable to the composite claim.\footnote{Let $p$ the probability of each consitutuent claim. To meet threshold $t$, the probability of the composite claim, $p^k$, should satisfy the constraint $p^k>t$, or in other words, $p>t^{1/k}$.} For example, if there are ten constituent claims, they will have to be proven with $0.5^{1/10}=0.93$ even if the probability threshold is only $50\%$. If the threshold is more stringent, as is appropriate in criminal cases, say $95\%$, each individual claim will have to be proven with near certainity. This would make the task extremely demanding on the prosecution. If there are ten constituent claims, they will have to be proven with $0.95^{1/10}=0.995$. So the plaintiff or the prosecution would face the demanding task of establishing each element of the accusation beyond what the standard of proof would seem to require.
+
+Another problem with the holistic account is that the standard that applies to one of the conjuncts would depend on what has been achieved for the other conjuncts. For instance, assuming independence, if  $\pr{A}$ is $96\%$, then $\pr{B}$ must be at least $99\%$ so that $\pr{A\et B}$ is above a $95\%$ threshold. But if $\pr{A}$ is $99.99\%$, then $\pr{B}$ must only be greater than $95\%$ to reach the same threshold. Thus, the holistic account would require that the elements of an accusation be proven to different probabilities---and thus different standards---depeding on how well other claims have been established.
+This result runs counter to the tacit assumption that each element should be established to the same standard of proof. 
+
+
+
+```{r, echo=FALSE}
+0.5^(1/10)
+```
+
+```{r, echo=FALSE}
+0.95^(1/10)
+```
+
+
+```{r, echo=FALSE}
+0.95^(10)
+```
+
+
+
+We have a dilemma here: either (under the holistic approach) the standard is too demanding on the prosecution (or the plantiff) because it would require the individual claims to be established to extremely high probabilities, or (under the atomistic approach) the standard is too lax because it would allow findings of liability when the defendant most likely committed no wrong. Denying the conjunction principle, then, is not without difficulties of its own. Absent the conjuction principle, legal probabilists should still explain how individual claims relate to larger claims in the process of legal proof. 
+
+
+## Prior Probabilities
+
+It is worth examining the holistic account more closely, 
+focusing in particular on the role of prior 
+probabilities, an aspect that has gone unnoticed so far. 
+The main problem with the holistic approach is that it would require, especially in 
+criminal cases, individual claims to 
+be established with a very high probability, often making the task unsurmountable 
+for the prosecution. Or so it would seem. But a composite claim such as $A\wedge B$ will have, 
+other things being equal, a lower prior probability than any individual claim $A$ or $B$.
+Say a composite claim consists of $k$ individual claims. If its prior probability is $\pi$, each constituent claim, assuming they are independent and equiprobable, will have a prior probability of $\pi^{1/k}$. The prior probability of the individual claims will approach one as the number of constituent claims increases.  
+ 
+<!--
+Compare the impact of one item of evidence on the probability of an individual claim, for different level of sensitivity and specificity of the evidence, with the impact of $k$ items of evidence on the probability of a composite claim that consists of $k$ individual claims, again for different levels of specificity and sensitivity of the evidence. More specifically, let $c_i$ be a constituent claim and $e_i$ its supporting evidence. The comparison is between prior probabilities $\pr{C_i}$ and
+$\pr{C_1 \wedge C_2 \wedge \dots \wedge C_k}$, contrasted with the posterior probabilities $\pr{C_i \vert E_i}$ and
+$\pr{C_1 \wedge C_2 \wedge \dots \wedge C_k \vert E_1 \wedge E_2 \wedge \dots \wedge E_k}$. Figure \ref{fig:post-indiv-joint-first} (top) compares one item of evidence supporting an individual claim and five items of evidence supporting a composite claim consisting of five claims. As is customary, the items of evidence and constituent claims are independent. In addition, for the sake of simplicity, the prior probabilities of the constituent claims are assumed to be the same. There is a significant difference in posterior probabilities, as expected, but there is a also a significant difference in prior probabilities. Since the composite claim starts out less likely than any individual claim, it is natural---other things being equal---that its posterior probability would be correspondingly lower. 
+ 
+ \begin{figure}
+```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "90%"}
+library(ggplot2)
+library(ggthemes)
+
+
+post <- function (x, s1, s2){
+  (x)*
+    (
+      s1/
+        (s1*x+(1-s2)*(1-x))
+     )
+}
+
+
+postn <- function (x, s1, s2, n){
+  ((x)^n)*
+    ((
+      s1/
+        (s1*x+(1-s2)*(1-x))
+     )^n)
+    
+}
+
+x <-seq(0,1,by=0.001)
+y0908 <- post(x, 0.9, 0.8)
+y0909 <- post(x, 0.99, 0.99)
+yy0908 <- postn(x, 0.9, 0.8, 2)
+yy0909 <- postn(x, 0.99, 0.99, 2)
+yynull <- postn(x, 0.5, 0.5, 2)
+y50908 <- postn(x, 0.9, 0.8, 5)
+y50909 <- postn(x, 0.99, 0.99, 5)
+y5null <- postn(x, 0.5, 0.5, 5)
+
+
+ggplot() +
+  stat_function(fun=function(x)(x), geom="line", aes(colour="1, sens=0.5, spec=0.5"))+
+  #geom_line(aes(x = x, y = yynull,color = "2, sens=0.5, spec=0.5")) +
+  geom_line(aes(x = x, y = y0908,color = "1, sens=0.9, spec=0.8")) +
+  geom_line(aes(x = x, y = y0909,color = "1, sens=0.99, spec=0.99")) +
+  #geom_line(aes(x = x, y = yy0908,color = "2, sens=0.9, spec=0.8")) +
+  # geom_line(aes(x = x, y = yy0909,color = "2, sens=0.99, spec=0.99")) +
+  geom_line(aes(x = x, y = y50908,color = "5, sens=0.9, spec=0.8")) +
+  geom_line(aes(x = x, y = y50909,color = "5, sens=0.99, spec=0.99")) +
+  geom_line(aes(x = x, y = y5null, color = "5, sens=0.5, spec=0.5")) +
+        ylim(c(0,1))+
+  xlab("prior")+ ylab("posterior")+theme_tufte()+
+  theme(legend.position = c(0.9, 0.2), legend.title = element_blank())
+```
+\caption{The comparison here is betwen individual support and joint support. 
+The null line for joint support ($y=x*x$) is 
+much below the null line for individual support ($y=x$).}
+\label{fig:post-indiv-joint-first}
+\end{figure}
+ -->
+ 
+Cohen worried that, as the number of constituent claims increases, the prosection or the plaintiff
+would see their case against the defendant become progressively weaker and it would 
+become impossisble for them to establish liability. But this worry is an 
+exaggeration. The paradox, as is commonly formulated, starts by assuming that the constituent claims are
+established by the required probability threshold and then shows that the probability of the conjuction may fall below the threshold. However, following the holistic approach, the order of presentation can be reversed. Start by assuming that the composite claim is established by the required probability threshold. No doubt the individual claims will have to be established with a higher probability, a violation of the conjuction principle. Yet, this violation is not as counterintuitive as it might first appear for two reasons. First, since risks aggregate, it is natural that the probability of a conjunction would be lower than the probability of the conjuncts. Second, the prior probabilities of the conjuncts will be higher than the prior probability of the conjunction. Thus, establishing the conjuncts with a higher probability will not be exceedingly demanding.
+ 
+Along this lines, @dawid1987difficulty, in one of the earliest attempts to solve the conjunction 
+ paradox from a probabilistic perspective, wrote:
+
+\begin{quote}
+\dots it is not asking too much of the plaintiff to establish the case as a whole with a posterior probability exceeding one half, even though this means  that the several component issues must be established with much larger posterior probabilities; for the \textit{prior}  probabilities of the components will also be correspondingly larger, compared with that of their conjunction (p. 97).
+ \end{quote}
+ 
+ <!--- The overall effect of subdiving a case into more and more component issues ... [gives] an advantage to the plaintiff, even though he has to establish each with a high probability. -->
+ 
+\noindent 
+The price of this strategy is the denial of the conjunction principle, specifically aggregation, the very motivation behind the conjunction paradox. Cohen could insist that this solution 
+amounts to denying the paradox. To address the paradox, legal probabilists 
+should offer a justification of the conjunction principle in probabilistic terms, 
+something Cohen maintains cannot be done. Or can it be done? 
+
+
  
  
 # The Conjunction Principle Is False
@@ -1348,13 +1565,13 @@ evidence, irrespective of the prior probabilities. So, in order to capture the c
 should rely on probabilistic measures that are not heavily depend on prior probabilities. But, as we have seen, neither the Bayes factor nor the likelihood ratio are such measures. 
 
 
-We have seen that the joint Bayes factor $\pr{a \wedge b| A\wedge B}/\pr{a \wedge b}$, 
+We have seen that the joint Bayes factor $\pr{a \wedge b\vert A\wedge B}/\pr{a \wedge b}$, 
 under suitable independence assumptions, is greter than the individual Bayes factors
-$\pr{a | A}/\pr{a}$ and $\pr{b|B}/\pr{b}$. This inequality holds even 
+$\pr{a \vert A}/\pr{a}$ and $\pr{b|B}/\pr{b}$. This inequality holds even 
 if the evidence is held constant. The joint Bayes factor
-$\pr{a \wedge b| A\wedge B}/\pr{a \wedge b}$, 
+$\pr{a \wedge b\vert A\wedge B}/\pr{a \wedge b}$, 
 under suitable independence assumptions, is still greter than the individual Bayes factors 
-(for composite evidence) $\pr{a \wedge b | A}/\pr{a\wedge b}$ and $\pr{a\wedge b|B}/\pr{a\wedge b}$.
+(for composite evidence) $\pr{a \wedge b \vert A}/\pr{a\wedge b}$ and $\pr{a\wedge b|B}/\pr{a\wedge b}$.
 But the larger Bayes factor associated with the 
 composite claim, holding the evidence fixed, need not be a sign of 
 stronger evidence, but merely an artifact 
@@ -1847,12 +2064,12 @@ We think this is the right strategy. Here we offer a revised version
 of the holistic approahc elaborating on Dawid's insight. 
 
 So far we have assumed the most natural probabilistic interpretation of proof standards, one that 
-posits a threshold on the posterior probabilities of a generic hypothesis such as guilt or civil liability. In criminal cases, the requirement is formulated as follows: guilt is proven beyond a reasonable doubt provided  $\pr{G | E}$ is above a suitable threshold, say 95\%. The threshold is lower in civil trials. Civil liability is proven by preponderance provided  $\pr{L | E}$ is above a suitable threshold, say 50\%. The general claim $G$ or $L$ is split into several consituent claims, depending on the defintion of the wrongful act in the governing law. But this framing misses a crucial ingredient. 
+posits a threshold on the posterior probabilities of a generic hypothesis such as guilt or civil liability. In criminal cases, the requirement is formulated as follows: guilt is proven beyond a reasonable doubt provided  $\pr{G \vert E}$ is above a suitable threshold, say 95\%. The threshold is lower in civil trials. Civil liability is proven by preponderance provided  $\pr{L \vert E}$ is above a suitable threshold, say 50\%. The general claim $G$ or $L$ is split into several consituent claims, depending on the defintion of the wrongful act in the governing law. But this framing misses a crucial ingredient. 
 
 The claim that the defendant is guilty or civilly liable can be replaced by a more fine-grained hypothesis, call it $H_p$, the hypothesis put foward by the prosecutor (or the plaintiff in a civil case), for example, the hypothesis 
-that the defendant killed the victim with a firearm while bulglarizing the victim's apartment.  $H_p$ can be any hypothesis which, if true, would entail the defendanat is civilly or criminally liable (according to the governing law). Hypothesis $H_p$ is a more precise description of what happened that establishes, if true, the defendant's guilt or civil liability. In defining proof standards, instead of saying -- somewhat generically -- that $\pr{G | E}$ or $\pr{L | E}$ should be above a suitable threshold, a probabilistic interpretation could read: civil or criminal liabbility is proven beyond a reasonable doubt provided $\Pr(H_d | E)$ is above a suitable threshold. 
+that the defendant killed the victim with a firearm while bulglarizing the victim's apartment.  $H_p$ can be any hypothesis which, if true, would entail the defendanat is civilly or criminally liable (according to the governing law). Hypothesis $H_p$ is a more precise description of what happened that establishes, if true, the defendant's guilt or civil liability. In defining proof standards, instead of saying -- somewhat generically -- that $\pr{G \vert E}$ or $\pr{L \vert E}$ should be above a suitable threshold, a probabilistic interpretation could read: civil or criminal liabbility is proven beyond a reasonable doubt provided $\Pr(H_d \vert E)$ is above a suitable threshold. 
 
-This variation may appear inconsequential. But we argue -- perhpas surprisingly -- it can address the naked statistical evidence problem and the difficulty about conjunction. We have examined the naked statistical evidence problem in another chapter \textbf{REFERENCE TO EARLIER HAPER}. The basic argument was this. Consider the prisoner hypothetical. It is true that the naked statistics make him 99\% likely to be guilty, that is, $\pr{G | E_s}$. It is 99\% likely that he is one the prisoners who attacked and killed the guard. Notice that this a generic claim. It is odd for the prosecution to simply assert that the prisoner was one of those who killed the guard, without saying what he did, how he partook in the killing, what role he played in the attack, etc. If the prosecution offerred a more specific incriminating hypothesis, call it $H_p$, the probability $\pr{H_p | E_{s}}$ of this hypothesis based on the naked statistical evidence $E_s$ would be well below 99\%, even though $\pr{G | E_s}=99\%$. The fact the prisoner on trial is most likely guilty is an artifact of the choice of a generic hypothesis $G$. When this hypthesis is made more specific -- as it should be -- this probability drops significantly. 
+This variation may appear inconsequential. But we argue -- perhpas surprisingly -- it can address the naked statistical evidence problem and the difficulty about conjunction. We have examined the naked statistical evidence problem in another chapter \textbf{REFERENCE TO EARLIER HAPER}. The basic argument was this. Consider the prisoner hypothetical. It is true that the naked statistics make him 99\% likely to be guilty, that is, $\pr{G \vert E_s}$. It is 99\% likely that he is one the prisoners who attacked and killed the guard. Notice that this a generic claim. It is odd for the prosecution to simply assert that the prisoner was one of those who killed the guard, without saying what he did, how he partook in the killing, what role he played in the attack, etc. If the prosecution offerred a more specific incriminating hypothesis, call it $H_p$, the probability $\pr{H_p \vert E_{s}}$ of this hypothesis based on the naked statistical evidence $E_s$ would be well below 99\%, even though $\pr{G \vert E_s}=99\%$. The fact the prisoner on trial is most likely guilty is an artifact of the choice of a generic hypothesis $G$. When this hypthesis is made more specific -- as it should be -- this probability drops significantly. 
 
 The same approach can address the difficulty about conjunction. The tacit assumption is that prosecutors or plaintiffs should establish each element in isolation. If they manage to prove each element to the desired standard, they have meet their burden. This is artificial. What prosecutors or plaintiffs should do instead is to establish a specific hypothesis from which the constituent elements follow (almost) deductively. To illustrate, consider a Washington statute about negligent driving:
 
@@ -1906,12 +2123,12 @@ posterior probabilities is not the only approach that legal probabilists
 can pursue. By Bayes' theorem, the following holds, using $G$ and $I$ 
 as competing hypotheses:
 
-\[ \frac{\Pr(G | E)}{\Pr(I | E)} = \frac{\Pr(E | G)}{\Pr(E | I)} \times \frac{\Pr(G)}{\Pr(I)},\]
+\[ \frac{\Pr(G \vert E)}{\Pr(I \vert E)} = \frac{\Pr(E \vert G)}{\Pr(E \vert I)} \times \frac{\Pr(G)}{\Pr(I)},\]
 
 or using $H_p$ and $H_d$ as competing hypotheses,
 
 
-\[ \frac{\Pr(H_p | E)}{\Pr(H_d | E)} = \frac{\Pr(E | H_p)}{\Pr(E | H_d)} \times \frac{\Pr(H_p)}{\Pr(H_d)},\]
+\[ \frac{\Pr(H_p \vert E)}{\Pr(H_d \vert E)} = \frac{\Pr(E \vert H_p)}{\Pr(E \vert H_d)} \times \frac{\Pr(H_p)}{\Pr(H_d)},\]
 
 or in words
 
@@ -1935,15 +2152,15 @@ At its simplest, this stratgey will look as follows. Recall our discussion
 of expected utility theory:
 
 
-\[ \text{convict provided}  		 \frac{cost(CI)}{cost(AG)} < \frac{\Pr(H_p | E)}{\Pr(H_d | E )}, \]
+\[ \text{convict provided}  		 \frac{cost(CI)}{cost(AG)} < \frac{\Pr(H_p \vert E)}{\Pr(H_d \vert E )}, \]
 
 which is equivalent to
 
-\[ \text{convict provided}  		 \frac{cost(CI)}{cost(AG)} < \frac{\Pr(E | H_p)}{\Pr(E | H_d)} \times \frac{\Pr(H_p)}{\Pr(H_d)}.\]
+\[ \text{convict provided}  		 \frac{cost(CI)}{cost(AG)} < \frac{\Pr(E \vert H_p)}{\Pr(E \vert H_d)} \times \frac{\Pr(H_p)}{\Pr(H_d)}.\]
 
 By rearraing the terms,
 
-\[ \text{convict provided}  \frac{\Pr(E | H_p)}{\Pr(E | H_d)} >	\frac{\Pr(H_d)}{\Pr(H_p)} \times 	 \frac{cost(CI)}{cost(AG)} .\]
+\[ \text{convict provided}  \frac{\Pr(E \vert H_p)}{\Pr(E \vert H_d)} >	\frac{\Pr(H_d)}{\Pr(H_p)} \times 	 \frac{cost(CI)}{cost(AG)} .\]
 
 Then, on this intepretation, the likelihood ratio should be above a suitable threshold 
 that is a function of the cost ratio and the prior ratio. The outstanding question 

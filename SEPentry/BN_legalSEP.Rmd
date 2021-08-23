@@ -1,0 +1,719 @@
+---
+title: "Bayesian Networks for legal fact-finding"
+author: "Rafal Urbaniak"
+output:
+  pdf_document:
+    number_sections: true
+    df_print: kable 
+    keep_tex: true
+    includes:
+      in_header:
+        - Rafal_latex2.sty
+fontsize: 10pt
+documentclass: scrartcl
+---
+
+While Bayes's Theorem is of immense use when it comes to calculating various conditional probabilities, if we're interested in the interaction of multiple hypotheses at various levels and multiple pieces of evidence, calculations quickly become inconvenient, to say the least. Moreover, if such considerations are to be presented to a fact-finder, it is rather unlikely that they would be transparent and easily understood. Luckily, a tool exist to make such tasks easier. Bayesian networks (BNs) can be used for a fairly transparent and computationally more manageable evalation and presentation of the interaction of multiple pieces of evidence and hypotheses. We'll start with a general presentation of BNs, and then go over a few main methods of employing BNs in presentation, aggregation and evaluation of evidence in legal fact-finding.  
+
+
+
+\section{Bayesian Networks: a crashcourse}
+
+A \emph{random variable} (RV) $X$ is a function from the elements of a sample space into $\mathbb{R}$, the set of real numbers. For instance, if our sample space is the set of all potential outcomes of tossing a fair coin four times (each such outcome can be represented as a sequence, for instance  $HHHT$, or $HTHT$), $X$ can be the number of heads among the tosses.  
+
+Given a probability measure $\pr$, two events $A$ and $B$ are conditionally independent given another event $C$, $I_{\pr}(A,B\vert C)$, just in case $\pr(A\et B\vert C) = \pr(A\vert C)\pr(B \vert C)$. Conditional and unconditional independence don't have to coincide. If you toss twice a coin which is fair with probability $\nicefrac{1}{2}$, and $\nicefrac{3}{4}$ biased towards heads with probability $\nicefrac{1}{2}$, the result of the second toss is not independent of the first one. After all, if the first result is heads, this increases the probability that the coin is biased, and so increases the probability of heads in the second toss. On the other hand, conditionally on knowledge whether the coin is fair, the results are independent. If the coin is fair, the probability of heads in the second toss is $\nicefrac{1}{2}$ and if the coin is biased, it is $\nicefrac{3}{4}$, no matter what the first result was. And in the opposite direction, indepedence can disappear when we condition. Say I have two friends, Alice and Peter, who call me regularly, but they decide to do so independently. Then, whether they call in five minutes is independent. Now, suppose the phone rings. Conditional on the phone ringing, I know that if it isn't Alice, it's Peter, and so the identities of the callers are no longer independent. 
+
+
+
+
+
+Two RVs $X$ and $Y$ are conditonally independent given another RV $Z$, $I_{\pr}(X,Y\vert Z)$ just in case for any combination of values of these RVs $x,y,z$ it is the case that $I_{\pr}(X=x \et Y=y \vert Z=z)$ (notice: $X,Y$ and $Z$ are RVs, while $x,y$ and $z$ are some particular values they can take). The notion naturally generalizes to sets of RVs.
+Often, instead of saying things like $\pr(X_1 = x_1\et Y_5=y_5 \vert Z_3=z_3)$ we'll rather say $\pr(x_1,y_5\vert z_3)$.  
+
+
+Now, if we have $n$ RVs, even if we assume for simplicity that they're binary (that is, they can take only one of two values), there are $2^n$ possible combinations of values they could take, and so a direct description of a probability measure for them would require $2^n-1$ numbers. This would be a highly unfeasible method of specifying a probability distribution for a set of random variables. 
+
+
+\hrulefill
+
+Optional material starts
+
+\vspace{-2mm}
+
+\hrulefill
+
+\footnotesize 
+
+Moreover, even if we had specified the joint probability distribution for all our combinations of values of Rvs $X, Y, Z$, using it wouldn't be the most efficient way of calculating conditional probabilities or the probability that a certain selected RV takes a certain particular value. For instance, we would have to rely on:
+\begin{align*} 
+x\pr(x_1\vert y_1) & =  \frac{\pr{x_1,y_1}}{\pr{y_1}} \\ &  = \frac{\sum_{i}\pr(x_1,y_1,Z=z_i)}{
+\sum_{i,j}\pr(X=x_j,y_1,Z=Z_i)
+} 
+\end{align*}
+\noindent in which calculations we'd have to travel through all possible values of $Z$ and $X$ -- this would become even less feasible as the number of RVs and their possible values increase. With 100 binary RVs we'd need 2^{99} terms in the sum in the denominator, so it seems that to be able to calculate a single conditional probability we'd have to elicit quite a few uncoditional ones. 
+
+\normalsize
+
+\hrulefill
+
+Optional material ends
+
+\vspace{-2mm}
+
+\hrulefill
+
+Instead, we start with representing dependencies between RVs in such a set by means of a \emph{directed acyclic graph} (DAG). A DAG is a collection of \emph{nodes} (called also \emph{vertices}) -- think of them as corresponding to the RVs, \emph{directed edges} (also called \emph{arcs}; they  can be thought of as ordered pairs of nodes), such that there is no sequence of nodes $v_0,\dots, v_k$ with edges from $v_i$ to $v_{i+1}$ for $0\leq i\leq k-1$ with $v_0=v_k$.\footnote{Sometimes it is also required that the graph should be connected: that for any two nodes there is an undirected path between them.} A \emph{qualitative BN} (QBN) is a DAG with nodes labeled by RVs. Here's one example of a QBN:
+
+
+
+```{r,echo=FALSE,eval=TRUE, fig.width=3, fig.height=3, fig.align = "center",cache=TRUE,warning=FALSE,message=FALSE}
+library(bnlearn)
+library(Rgraphviz)
+library(knitr)
+library(kableExtra)
+options(kableExtra.latex.load_packages = FALSE)
+```
+
+
+```{r,echo=FALSE,eval=TRUE, fig.width=2, fig.height=2, fig.align = "center",cache=TRUE}
+cancer1 <- empty.graph(nodes = c("PS","SH","S","C"))
+cancer1.arcs <- matrix(c("PS", "SH",
+                   "PS", "S",
+                   "SH", "C",
+                    "S", "C"),
+                 byrow = TRUE, ncol = 2,
+                 dimnames = list(NULL, c("from", "to")))
+arcs(cancer1) = cancer1.arcs
+graphviz.plot(cancer1)
+```
+
+
+For instance, we can think of nodes as corresponding to binary random variables capturing the truth-values of the following propositions:
+
+<!-- \begin{center} -->
+<!-- \begin{tabular}{@{}lp{3cm}@{}}\toprule -->
+<!-- RV & Proposition \\ -->
+<!-- \midrule -->
+<!-- PS & At least one parent smokes. \\ -->
+<!-- SH & The subject is a second-hand smoker.\\ -->
+<!-- S & The subject smokes.\\ -->
+<!-- C & The subject develops cancer. \\ -->
+<!-- \bottomrule -->
+<!-- \end{tabular} -->
+<!-- \end{center} -->
+
+\footnotesize
+\begin{center}
+\begin{tabular}{@{}lp{4.3cm}@{}}\toprule
+RV & Proposition \\ \midrule 
+PS & At least one parent smokes. \\
+SH & The subject is a second-hand smoker.\\
+S & The subject smokes.\\
+C & The subject develops cancer. \\ \bottomrule
+\end{tabular}
+\end{center}
+
+
+\normalsize
+\noindent The \emph{ancestors} of $C$ are all the other RVs, the  parents of $C$ are $SH$ and $S$, the descentants of $PS$ are all the other RVs, and the children of $PS$ are $SH$ and $S$. 
+
+The edges, intuitively, are meant to capture direct influence between RVs. The role that such direct influence plays is that in a BN any RV is conditionaly independent of its nondescentants (including ancestors), given its parents. If this is the case for a given probabilistic measure $\pr{}$ and a given DAG $\mathsf{G}$, we say that $\pr{}$ is compatible with $\mathsf{G}$, or that it satisfies the \emph{Markov condition}.
+
+
+\hrulefill
+
+Optional material starts
+
+\vspace{-2mm}
+
+\hrulefill
+
+\footnotesize
+
+The \emph{chain rule} tells us that $\pr(A\et B) = \pr(A\vert B)\pr(B)$. Its application to RVs (say the RVs in G are $X_1,\dots X_n$) yields:
+\begin{align}
+\label{eq:chainRV}
+\pr(x_1,\cdots,x_n) & = \pr(x_n\vert x_1,\cdots,x_{n-1})\times \\ \nonumber
+& \pr(x_{n-1}\vert x_1,\cdots,x_{n-2})\times \\ \nonumber
+& \times \cdots \times \pr(x_2 \vert x_1) \pr(x_1)
+\end{align}
+
+So, if $\pr$ is compatible with $\mathsf{G}$, we don't have to represent it directly by listing all the $2^n-1$ values. Instead, the joint probability $\pr(X_1\dots,X_n)$ (note: this is really an assignment of probability values to \emph{all} possible combinations of the values of these RVs), can be represented using the conditional probabilities on the right-hand side of \eqref{eq:chainRV}, and moreover, for each conditional probability of an RVs $X$ given some other RVs, non-parents of $X$ can be removed from the condition, since RVs are independent of them. 
+Let's slow down and take a look at the argument. Pick an ancestral ordering $X_1, \dots, X_n$, of the RVs, that is, an ordering in which if $Z$ is a descendant of $X$, $Z$ follows $Y$ in the ordering. Take any selection of values of these variables, $x_1, \dots, x_n$. Let $\mathsf{pa_i}$ be the set cotaining all the values of the parents of $X_i$ that belong to this sequence. Since this is an ancestral ordering, the parents have to occur before $x_i$. We need to prove \scriptsize
+\begin{align}\pr(x_n, x_{n-1}, \dots, x_1) = \pr(x_n\vert \mathsf{pa_n})\pr(x_{n-1}\vert \mathsf{pa_{n-1}})\cdots \pr(x_1)\label{eq:markoproof1}\end{align} \footnotesize
+We prove it by induction on the length of the sequence. The basic case comes for free. Now assume: \scriptsize
+\begin{align}\pr(x_i, x_{i-1}, \dots, x_1 = \pr(x_i\vert \mathsf{pa_i})\pr(x_{i-1}\vert \mathsf{pa_{i-1}})\cdots \pr(x_1)\label{eq:markoproof2}\end{align} \footnotesize
+\noindent we need to show: \scriptsize
+\begin{align}\pr(x_{i+1}, x_{i}, \dots, x_1) = \pr(x_{i+1}\vert \mathsf{pa_{i+1}})\pr(x_{i}\vert \mathsf{pa_{i}})\cdots \pr(x_1)\label{eq:markoproof3}\end{align}\footnotesize
+One option is that $\pr(x_i,x_{i-1},\dots,x)=0$. Then, also  $\pr(x_{i+1}, x_{i}, \dots, x_1)=0$, and by the induction hypothesis, there is a $1\leq k\leq i$ such that $\pr(x_k\vert \mathsf{pa_k})=0$, and so also the right-hand side of \eqref{eq:markoproof3} equals 0 and so \eqref{eq:markoproof3} holds.
+
+Another option is that  $\pr(x_i,x_{i-1},\dots,x)\neq 0$.
+Then we reason: \scriptsize
+\begin{align*}\pr(x_{i+1}, x_{i}, \dots, x_1) &= \pr(x_{i+1}\vert x_i, \dots, x_1) \pr(x_i, \dots, x_1)\\
+& = \pr(x_{i+1}\vert \mathsf{pa_{i+1}}) \pr(x_i, \dots, x_1)\\
+& = \pr(x_{i+1}\vert \mathsf{pa_{i+1}})  \pr(x_{i}\vert \mathsf{pa_{i}})\cdots \pr(x_1)\end{align*}\footnotesize 
+
+
+\noindent The first step is by the chain rule. The second is by the Markov  condition and the fact that we employed an ancestral ordering. The third one uses \eqref{eq:markoproof2}. This ends the proof. 
+
+\normalsize 
+
+\hrulefill
+
+Optional material ends
+
+\vspace{-2mm}
+
+\hrulefill
+
+
+
+In contrast, BN representation significantly simplifies the information that needs to be stored and calculated. If RVs are binary and each node has at most $k$ parents, at most $2^kn$ values are needed to determine the distribution.
+
+
+
+Continuing our example, we now only need to assign prior probabilities to parentless nodes and \emph{conditional probability tables} (CPTs) to edges. If $X$ has $m$ possible states and is the parent of $Y$ with $n$ possible states, the CPTs for their connection is an $m\times n$ table containing conditional probabilities for $\pr(Y= y\vert X=x)$. In general, once we have defined CPTs for each node given its parents, the product of these conditional probabilities yields a joint probability distribution satisfying the Markov condition, if we're dealing with discrete RVs (the claim also holds for normally distributed RVs, but not universally for any type of continuous RVs).
+
+\normalsize 
+
+\hrulefill
+
+Optional material starts
+
+\vspace{-2mm}
+
+\hrulefill
+
+\footnotesize
+
+The argument for the discrete case is as follows. Fix an ancestral ordering of the RVs and treat \label{eq:markoproof1} as a definition of a joint probability in terms of the conditional probabilities determined by the CPTs. We need to show it indeed is a probabilistic measure. Since the conditional probabilites are between 0 and 1, clearly so is their product. Then we need to show that the sum of $\pr(x_1,x_2,\dots,x_n)$ for all combinations of values of $X_1,X_2,\dots, X_n$ is 1. This can be shown by moving summation symbols around, the calculations start as follows:
+\scriptsize 
+\begin{align*} 
+\sum_{x_1,\dots,x_n}\pr(x_1,\dots, x_n)  =  \\  = \sum_{x_1,\dots,x_n} \pr(x_n\vert \mathsf{pa_n})\pr(x_{n-1}\vert \mathsf{pa_{n-1}})\cdots \pr(x_1)\\
+= \sum_{x_1,\dots,x_{n-1}}\left[\sum_{x_n}\pr(x_n\vert \mathsf{pa_n})\right] 
+\pr(x_{n-1}\vert \mathsf{pa_{n-1}})\cdots \pr(x_1)\\
+= \sum_{x_1,\dots,x_{n-1}}\pr(x_1,\dots, x_{n-1})\left[1\right] \dots 
+\pr(x_{n-1}\vert \mathsf{pa_{n-1}})\cdots \pr(x_1)\\
+\end{align*}
+\footnotesize
+\noindent when we continue this way, all the factors reduce to 1. 
+
+
+
+To show that the Markov condition holds in the resulting joint distribution we have to show that for any $x_k$ we have $\pr(x_k\vert \mathsf{nd_k})= \pr(x_k \vert \mathsf{pa_k})$, where $nd_k$ is any combination of values for all the nondescendants of $X_k$, $\mathsf{ND_k}$. So take any $k$, order the nodes so that all and only the nondescendants of $X_k$ precede it. Let $\widehat{x}_k,\widehat{nd}_k$ be some particular values of $X_k$ and $\mathsf{ND_k}$. $\mathsf{d_k}$ ranges over combinations of values of the descendants of $X_K$. The reasoning goes:
+
+\scriptsize
+\begin{align*}
+\pr(\widehat{x}_k\vert \widehat{nd}_k) 
+= \frac{\pr(\widehat{x}_k,\widehat{nd}_k)}{\pr(\widehat{nd}_k)}\\
+= \frac{\sum_{\mathsf{d_k}}\pr(\widehat{x}_1,\dots,\widehat{x}_k,x_{k+1},\dots, x_n)}{
+\sum_{\mathsf{d_k}\cup\{x_k\}}\pr(\widehat{x}_1,\dots,\widehat{x}_{k-1},x_{k},\dots, x_n)}
+\\
+= \frac{\sum_{\mathsf{d_k}}\pr(x_n\vert \mathsf{pa_n})\cdots 
+\pr(x_{k+1}\vert \mathsf{pa_{k+1}})\pr(\widehat{x}_{k}\vert \mathsf{\widehat{pa}_{k}})\cdots \pr(\widehat{x}_1)
+}{
+\sum_{\mathsf{d_k}\cup\{x_k\}}\pr(x_n\vert \mathsf{pa_n})\cdots 
+\pr(x_{k}\vert \mathsf{pa_{k}})\pr(\widehat{x}_{k-1}\vert \mathsf{\widehat{pa}_{k-1}})\cdots \pr(\widehat{x}_1)
+} \\
+= \frac{\pr(\widehat{x}_{k}\vert \mathsf{\widehat{pa}_{k}})\cdots \pr(\widehat{x}_1)\sum_{\mathsf{d_k}}\pr(x_n\vert \mathsf{pa_n})\cdots 
+\pr(x_{k+1}\vert \mathsf{pa_{k+1}})
+}{
+\pr(\widehat{x}_{k-1}\vert \mathsf{\widehat{pa}_{k-1}})\cdots \pr(\widehat{x}_1)\sum_{\mathsf{d_k}\cup\{x_k\}}\pr(x_n\vert \mathsf{pa_n})\cdots 
+\pr(x_{k}\vert \mathsf{pa_{k}})
+} 
+\end{align*}
+\footnotesize
+Now, the sums in the fractions sum both to 1 (for reasons clear from the previous step of the proof), and $\pr(\widehat{x}_{k-1}\vert \mathsf{\widehat{pa}_{k-1}})\cdots \pr(\widehat{x}_1)$ are both in the numerator and the denominator, so we are left with $\pr(\widehat{x}_{k}\vert \mathsf{\widehat{pa}_{k}})$, as desired.
+
+\normalsize 
+
+\hrulefill
+
+Optional material ends
+
+\vspace{-2mm}
+
+\hrulefill
+
+
+Looking at our examples, one possible combination of CPTs is:
+
+
+\begin{center}
+\begin{tabular}{@{}l@{}}\toprule
+PS \\ \midrule
+0.3 \\ \bottomrule
+\end{tabular} \hspace{3mm}
+\begin{tabular}{@{}ll@{}}
+\toprule PS & S\\
+\midrule
+1 & 0.4 \\
+0 & 0.2 \\
+\bottomrule
+\end{tabular}
+\hspace{3mm}
+\begin{tabular}{@{}ll@{}}
+\toprule PS & SH\\
+\midrule
+1 & 0.8 \\
+0 & 0.3 \\
+\bottomrule
+\end{tabular}\hspace{3mm}
+\begin{tabular}{@{}lll@{}}
+\toprule S & SH & C\\
+\midrule
+1 & 1& 0.6 \\
+1 & 0& 0.4 \\
+0 & 1& 0.1 \\
+0 & 0& 0.01 \\
+\bottomrule
+\end{tabular}
+
+\end{center}
+
+
+
+
+\noindent This encodes, intuitively, the information about the strength of direct influences: that the prior probability that at least one parent smokes is $0.3$, that the probability that one is a second-hand smoker if at least one parent smokes is 0.8 and 0.3 if no parent smokes, that the probability of cancer if one smokes and is a second-hand smoker is 0.6, etc. 
+
+A quantitative BN (further on, simply BN) is a DAG with CPTs, and we say that it \emph{represents} a probabilistic measure $\pr$ quantitatvely just in case they are compatible, and $\pr$ agrees with its assignment of CPTs. 
+
+It can be shown that any quantitative BN represents a unique probabilistic measure. However, any probabilistic measure can be represented by multiple BNs.
+
+
+\normalsize 
+
+\hrulefill
+
+Optional material starts
+
+\vspace{-2mm}
+
+\hrulefill
+
+
+\footnotesize
+Here's a sketch of the argument. Take any permutation of the RVs under consideration, obtaining $X_1, \dots, X_k$. For each $i$ find a minimal subset $P_i$ such that $I_{\pr{}}(\{X_1,\dots,x_{i-1}\},X_i\vert P_i)$ --- that is, a minimal set of RVs which are earlier in the squence, which makes $X_i$ independent of all the (other) RVs which are earlier in the squence. Such a set always exists, in the worst-case scenario, it is the set of all $X_1,\dots,X_{i-1}$. Next, make $P_i$ the parents of $X_i$ in the DAG and copy the values of $\pr$ into the CPTs.
+
+Computation in BNs is easier than direct calculations, but this doesn't mean it's easy. In general, the problem is NP-hard, but  efficient algorithms exist for exact calculations and for Monte Carlo estimations (which employ simulations) for certain groups of BNs. More importantly, humans are decent at identifying features of reality that seem important for a given problem, but terrible at aggregating the information they have about all of them. This is where BNs come to the rescue: a human reasoner constructs a DAG according to their theoretical preconceptions, separately specifies what they think about parent nodes and their children, and automated calculation with a BN does the rest of the job. 
+
+\normalsize 
+
+\hrulefill
+
+Optional material ends
+
+\vspace{-2mm}
+
+\hrulefill
+
+
+Since information about which RVs are independent is important (they can be dropped in calculations), so is identifying the graphical counterpart of probabilistic independence, the so-called \emph{d-separation}.  We say that two RVs, $X$ and $Y$, are d-separated given a set of RVs $\mathsf{Z}$ --- $D(X,Y\vert \mathsf{Z})$ --- iff for every undirected path from $X$ to $Y$ there is a node $Z'$ on the path such that either:
+\begin{itemize} 
+\item $Z' \in \mathsf{Z}$ and there is a \emph{serial} connection, $\rightarrow Z' \rightarrow$, on the path,
+\item  $Z'\in \mathsf{Z}$ and there is a diverging connection, $\leftarrow Z' \rightarrow $, on the path,
+\item There is a connection $\rightarrow Z' \leftarrow$ on the path, and neither $Z'$ nor its descendants are in $\mathsf{Z}$.
+\end{itemize}
+Finally, two sets of RVs, $\mathsf{X}$ and $\mathsf{Y}$ are d-separated given $\mathsf{Z}$ if every node in $\mathsf{X}$ is d-separated from every node in $\mathsf{Y}$ given $\mathsf{Z}$.
+
+
+With serial connection, for instance, if:
+\footnotesize 
+\begin{center}
+\begin{tabular}{@{}lp{4.3cm}@{}}\toprule
+RV & Proposition \\ \midrule 
+$G$ & The suspect is guilty. \\
+$B$ & The blood stain comes from the suspect.\\
+$M$ & The crime scene stain and the suspect's blood share their DNA profile.\\
+\bottomrule
+\end{tabular}
+\end{center}
+\normalsize
+\noindent We naturally would like to have the connection $G \rightarrow B \rightarrow M$. If we don't know whether $B$ holds, $G$ seems to have an indirect impact on the probability of $M$. Yet, once we find out that $B$ is true, we expect the profile match, and whether $G$ holds has no further impact on the probability of $M$.
+
+
+The case of diverging connections has already been discussed when we talked about idependence. Whether a coin is fair, $F$, or not has impact on the result of the first toss, $H1$, and the result of the second toss, $H2$, and as long as we don't know whether $F$, $H1$ increases the probability of $H2$. So $H1 \leftarrow F \rightarrow H2$ seems to be appropriate. Once we know that $F$, though, $H1$ and $H2$ become independent.
+
+
+
+For converging connections, let  $G$ and $B$ be as above, and let:
+\begin{center}
+\begin{tabular}{@{}lp{4.3cm}@{}}\toprule
+RV & Proposition \\ \midrule 
+$O$ & The crime scene stain comes from the offender.\\
+\bottomrule
+\end{tabular}
+\end{center}
+\normalsize
+
+\noindent Both $G$ and $O$ influence $B$. If he's guilty, it's more likely that the blood stain comes from him, and if the blood crime stain comes from the offender it is more likely to come from the suspect (for instance, more so than if it comes from the victim). Moreover, $G$ and $O$ seem independent -- whether the suspect is guilty doesn't have any bearing on whether the stain comes from the offender. Thus, a converging connection $G\rightarrow B \leftarrow O$ seem appropriate. However, if you do find out that $B$ is true, that the stain comes from the suspect, whether the crime stain comes from the offender becomes relevant for whether the suspect is guilty. 
+
+
+
+
+
+
+
+
+
+Coming back to the cancer example, $\{SH, S\}$ d-separates $PS$ from $C$, because of the first condition used in the definition of d-separation. $\{PS\}$ d-esparates $SH$ from $S$. There are two paths between these RVs. The top one goes through $PS$ and fits our second condition.  The bottom one goes through $C$ and fits the third condition. On the other hand, $\{PS, C\}$ does not d-separate $SH$ from $S$. While there is a path throuth $PS$ which satisfies the second condition, the other path  contains a connection converging on $C$, and yet $C$ is in the set on which we're conditioning. 
+
+One important reason why d-separation matters is that it can be proven that if two sets of RVs are d-separated given a third one, then they are independent given the third one, for any probabilistic measures compatible with a given DAG. Interestingly, lack of d-separation doesn't entail dependence for any compatible probabilistic measure. Rather, it only allows for it: if RVs are d-separated, there is at least one probabilistic measure according to which they are independent.   So, at least, no false  independence can be inferred  from the DAG, and  all the dependencies are built into it.
+
+
+
+
+
+
+\section{BNs for evidential reasoning in law}
+
+The idea that BNs can be used for probabilistic reasoning in legal fact-finding started gaining traction in late eighties \citep{Friedman1986A-diagrammatic-}
+
+
+
+
+Edwards W 1991 Influence diagrams, Bayesian imperialism, and the Collins case: an appeal to reason.
+Cardozo Law Review 13, 1025–1074.
+
+
+Edwards (1991) provided an outstanding argument for the use of BNs in which he said of this technology: ‘‘I assert that we now have a technology that is ready for use, not just by the scholars of evidence, but by trial lawyers.
+
+
+
+object-oriented structuring as given. We refer to commonly recurring patterns as idioms. A set of generic BN idioms was first introduced in Neil, Fenton, and Nielsen (2000).
+
+Neil M, Fenton N and Nielsen L 2000 Building large-scale Bayesian networks. The Knowledge
+Engineering Review 15, 257–284.
+
+
+Hepler, Dawid, and Leucari (2007)
+
+
+
+
+
+Fenton and Neil (2011).
+In contrast to the object-oriented approach proposed by Hepler et al. (2007), we emphasize the causal underpinnings of the basic idioms. 
+
+
+
+One reccuring pattern captures the relation between a hypothesis and a piece of evidence:
+
+
+```{r,echo=FALSE,eval=TRUE, fig.width=2, fig.height=2, fig.align = "center",cache=TRUE}
+HE <- empty.graph(nodes = c("Hypothesis","Evidence"))
+HE.arcs <- matrix(c("Hypothesis", "Evidence"
+                  ),
+                 byrow = TRUE, ncol = 2,
+                 dimnames = list(NULL, c("from", "to")))
+arcs(HE) = HE.arcs
+graphviz.plot(HE)
+```
+
+For instance, $H$ might take values from the range of $1-40$, the distance in meters from which the gun has been shot, and $E$ might be a continuous variable representing the density of gun shot residues. (This example also indicates that RVs don't have to be binary for legal applications.) 
+
+<!-- Cite Taroni here -->
+
+Another example, this time with binary variables, takes $H$ to be the claim that the supect is guilty and $E$ the presence of a DNA match with a crime scene stain. One way the CPTs could look like in this case is this:
+
+```{r,echo=FALSE,eval=TRUE, fig.width=2, fig.height=2, fig.align = "center",cache=TRUE,message=FALSE,warning=FALSE}
+Hypothesis.prob <-  array(c(0.01, 0.99), dim = 2, dimnames = list(HP =  c("guilty","not guilty")))
+
+Evidence.prob <- array(c( 0.99999, 0.00001, 0, 1), dim = c(2,2),dimnames = list(Evidence = c("DNA match","no match"),
+      Hypothesis = c("guilty","not guilty")))
+
+HEcpt <- list(Hypothesis=Hypothesis.prob,Evidence=Evidence.prob)
+HE_bn = custom.fit(HE,HEcpt)
+Evidence.frame <- as.data.frame(Evidence.prob)
+row.names(Evidence.frame) <- c("DNA match","No match")
+kable(Evidence.frame,col.names = c("guilty","not guilty"))
+```
+
+
+The true power of BNs, however, appears when we go beyond a simple two-node situations for which calculations can be done by hand. For instance, imagine we have two pieces of evidence: a DNA match, and a witness testimony. The DAG might look like this:
+
+```{r,echo=FALSE,eval=TRUE, fig.width=2, fig.height=2, fig.align = "center",cache=TRUE}
+HEE.dag <- model2network("[H][W|H][DNA|H]")
+graphviz.plot(HEE.dag)
+```
+
+The CPTs can be as follows:
+
+```{r,echo=FALSE,eval=TRUE, fig.width=2.5, fig.height=2.5, fig.align = "center",cache=TRUE}
+H.prob <- array(c(0.01, 0.99), dim = 2, 
+                dimnames = list(h = c("murder","no.murder")))
+
+W.prob <- array(c( 0.7, 0.3, 0.4, 0.6), dim = c(2,2),dimnames = list(W=              c("seen","not.seen"), H = c("murder","no.murder")))
+
+DNA.prob <- array(c( 1, 0, 0.001, 0.999), dim = c(2,2),
+                  dimnames = list(DNA =c("dna.match","no.match"),
+                                  H = c("murder","no.murder")))
+
+
+HEE.cpt <- list(H=H.prob,W=W.prob,DNA = DNA.prob)
+
+HEE_bn <- custom.fit(HEE.dag,HEE.cpt)
+
+kable(as.data.frame(H.prob),col.names="Pr(H)")
+W.frame <- as.data.frame(W.prob)
+row.names(W.frame) <- c("W=seen","W=not.seen")
+kable(W.frame,col.names = c("H=murder","H=no.murder"))
+DNA.frame <- as.data.frame(DNA.prob)
+row.names(DNA.frame) <- c("DNA=match","DNA=no.match")
+kable(DNA.frame,col.names = c("H=murder","H=no.murder"))
+```
+
+The CPT for the hypothesis contains the prior probability that a murder has been commited by the suspect. The CPTs for the other variables include (made up) probabilities of a DNA match and of a witness seeing the suspect near the crime scene at an appropriate time conditional on various states of the murder hypothesis:  $\pr(\textrm{W=seen}\vert \textrm{H=murder})=0.7, \pr(\textrm{W=seen}\vert \textrm{H=no.murder})=0.4$ etc. 
+
+
+This BN is fairly simple, yet correct intuitive assessment of how the probability of the hypothesis depends on various states of the evidence is already rather difficult. Moreover, already at this level of complexity formula-based calculations by hand also become cumbersome. In contrast, a fairly  straightforward use of a dedicated piece of software to the BN will easily lead to the following results:
+
+\begin{center}
+\begin{tabular}{@{}lll@{}}
+\toprule
+DNA & W & $\Pr(H)$\\
+\midrule
+match & seen & 0.9464 \\
+match & not.seen & 0.8347 \\
+no.match & either & 0 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{General idioms for BNs}
+
+
+Another reason why BNs provide a rather natural framework for reasoning with uncertainty is that there is a fairly small number of clear patters of reasoning that can be reused when building a larger BN. On one hand, there are some general \emph{idioms} that appear in BNs in various domains, and on the other there are idioms to be used specifically in legal contexts. We'll start with the former and then move to the latter.
+
+The \emph{Cause-Consequence Idiom} models a causal process in terms of the relationship between a cause and its consequence. 
+
+
+```{r,echo=FALSE,eval=TRUE, fig.width=2, fig.height=2, fig.align = "center",cache=TRUE}
+Cause.Con <-  model2network("[Cause][Consequence|Cause]")
+graphviz.plot(Cause.Con)
+```
+
+In fact, a BN fragment for a hypothesis-evidence relationship often instantiates this idiom, because often there is a causal relationship between the hypothesis and the evidence. 
+
+The \emph{Measurement Idiom} is used to represent the uncertainty arising from the way a given variable is measured. 
+
+```{r,echo=FALSE,eval=TRUE, fig.width=2, fig.height=2, fig.align = "center",cache=TRUE}
+Measurement <- model2network("[Accuracy][Actual value][Observed value|Accuracy:Actual value]")
+graphviz.plot(Measurement)
+```
+
+\emph{Definitional/Synthesis Idiom} is used in situations in which a node is defined in terms of its parents nodes. For instance:
+
+```{r,echo=FALSE,eval=TRUE, fig.width=2, fig.height=2, fig.align = "center",cache=TRUE}
+Definitional <- model2network("[Distance][Time][Velocity|Distance:Time]")
+graphviz.plot(Definitional)
+```
+
+
+The \emph{Explaining Away Idiom} has to do with a situation in which a certain node can be caused by two different parents separately. In such circumstances, often, 
+
+\section{Legal idioms}
+
+We already discussed one idiom: \emph{The Evidence Idiom}, which simply consists of a hypothesis node, and various pieces of evidence related to it as its children. 
+The legal variant of the Measurement Idiom is called the \emph{Evidence Accuracy Idiom}, and its instantiation might look like this:
+
+
+```{r,echo=FALSE,eval=TRUE, fig.width=3.5, fig.height=3.5, fig.align = "center",cache=TRUE}
+evidence.accuracy <-  model2network("[Accuracy of evidence][Excess alcohol level][Evidence for excess|Accuracy of evidence:Excess alcohol level]")
+graphviz.plot(evidence.accuracy)
+```
+
+
+A novelty appears, however, when we think about the notion of opportunity understood as a necessary requirement for the defendat's guilt (such as being present at the scene). Oppotrunity is built in as a parent of the guilt hypothesis, here's an example with a few moving elements:
+
+```{r,echo=FALSE,eval=TRUE, fig.width=2, fig.height=2, fig.align = "center",cache=TRUE}
+opportunity <- model2network("[H1][H2|H1][A1][A2][E1|H1:A1][E2|H1:A2]")
+graphviz.plot(opportunity)
+```
+
+\begin{center}
+\begin{tabular}{@{}ll@{}}
+\toprule
+Node &  Proposition\\
+\midrule
+H1 &  Defendant present at the scene \\
+H2 &  Defendant guilty \\
+A1 & Accuracy of eyewitness evidence\\
+A2 & Accuracy of security camera evidence \\
+E1 & Eyewitness testimony \\
+E2 & Evidence from security camera\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+
+\noindent The same structure is used to build in a node for a motive.
+
+One useful aspect of BN representation is that we can clearly visualise and take under consideration the dependency between pieces of evidence. For instance, if one of  two security cameras captured an image of someone matching the suspect, it might be very likely that so did the second one. In such cases, additional evidence might be practically useless and presenting it as independent might lead to gross overestimation of its importance. 
+
+```{r,echo=FALSE,eval=TRUE, fig.width=2, fig.height=2, fig.align = "center",cache=TRUE}
+cameras <- model2network("[H][D][C1|H][C2|H:C1:D]")
+graphviz.plot(cameras)
+```
+
+
+\begin{center}
+\begin{tabular}{@{}lp{4.5cm}@{}}
+\toprule
+Node &  Proposition\\
+\midrule
+H &  Defendant present at the scene \\
+C1 & Camera 1 captures image of a matching person \\
+C2 & Camera 2 captures image of a matching person\\
+D &  What cameras capture is dependent \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+
+The \emph{Alibi Idiom}, on the other hand, is used to model alibi evidence which seems to directly contradict the prosecution hypothesis. Crucially, the hypothesis itself may have impact on the accuracy of the evidence:
+
+```{r,echo=FALSE,eval=TRUE, fig.width=2.5, fig.height=2.5, fig.align = "center",cache=TRUE}
+alibi <- model2network("[S present][S guilty|S present][Alibi accuracy|S guilty][Alibi|Alibi accuracy:S present]")
+graphviz.plot(alibi)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\section{BNs for legal evidential reasoning}
+
+One type of legal applications of BNs is to evaluate DNA evidence. At each locus (a small region of the DNA) there occur short sequences of base pairs repeated multiple times. The number of times that the sequences are repeated varies between individuals. The length of a repeated sequences expressed as the number of repeats in the sequence is called an allele. At each locus there are two alleles, iherited from the parents. So a particular locus can be described in terms of two numbers, the genotype of that locus. The pairs can be the same (the person is then homozygous at that locus) or diferent (the person is then heterozygous). Normally, a genotype at a given locus is shared by 5-15\% of the population. A DNA profiling system consists of a selection of loci (often 17 or 20). Information about genotypes at those loci together with their frequencies is then used to estimate the frequency of a given DNA profile. On the rather uncontroversial assumption of the independence of the loci used in DNA profiling, this is usually done by multiplying probabilities for each particular genotype. 
+
+However, in practice, there are complications. If people are related, they are more likely to share genotypes. Moreover, sometimes a sample from the crime scene is of low quality and only a subset of the usual loci can be used. Finally, a profile can be mixed and involve DNA sample containing material from more than one individual. For instance, if three different alleles are found at locu TH01  (say, 7,8,9), it is clear that the profile is mixed. Say now the suspect S has genotype (7,7). The complication now is that there are many possible combinations  of the DNA (and only one of them doesn't exclude the suspect):
+
+
+
+\begin{center}
+\begin{tabular}{@{}ll@{}}
+\toprule
+Contributor 1 (C1) & Contributor 2  (C2)
+\\ \midrule (7,7) & (8,9)\\
+(7,8) & (8,9)\\
+(7,8) & (9,9)\\
+(7,8) & (9,9)\\
+(8,8) & (7,9)\\ \bottomrule
+\end{tabular}
+\end{center}
+
+To properly evaluate this piece of evidence, the following BN can be used
+
+```{r,echo=FALSE,eval=TRUE, fig.width=3, fig.height=3, fig.align = "center",cache=TRUE}
+DNA789 <- model2network("[S is C1][S is C2][Genotype of C1|S is C1][Genotype of C2|S is C2][S is the source|S is C1:S is C2][(7,8,9) found|Genotype of C1:Genotype of C2]")
+graphviz.plot(DNA789)
+```
+\noindent to establish that such evidence causes only a small increase of the source hypothesis, from 50\% to 62.5\%.
+
+
+
+A BN can be used also at a more general level, to clearly investigate the interaction between various pieces of evidence involved in a case. For instance, a simple BN for the Sally Clark original trial looks like this:
+
+```{r,echo=FALSE,eval=TRUE, fig.width=3.5, fig.height=3.5, fig.align = "center",cache=TRUE}
+SallyClark <- model2network("[A.bruising|A.cause][A.disease|A.cause][B.bruising|B.cause][B.disease|B.cause][A.cause][B.cause|A.cause][No.murdered|A.cause:B.cause][Guilty|No.murdered]")
+graphviz.plot(SallyClark)
+```
+
+The BN contains node for whether bruising was found on children A and B, whether any signs of disease that could've caused their death were observed, whether they have been murdered or died of SIDS, the number of children murdered (0-2), and the main prosecution hypothesis. If we  rely on the original \nicefrac{1}{8500} statistics, the prior marginal for \textrm{Clark guilty} is 7.89\%. Adding subsequent pieces of evidence presented in the original trial results in the following updates:
+
+
+\begin{center}
+\begin{tabular}{@{}ll@{}}
+\toprule
+Evidence (cumulative) & $\pr(\textrm{Clark guilty})$ (\%)
+\\ \midrule 
+A bruising& 28.87\\
+A no signs of disease & 30.93\\
+B bruising & 69.13\\
+B no signs of disease  & 70.19\\
+ \bottomrule
+\end{tabular}
+\end{center}
+
+
+Quite crucially, the succesful appeal relied on the evidence of disease for Child A, and once we incorporate this evidence, the probability of guilt drops to 4.59\% (and if signs of disease were present on Child B, it would drop to 0.09\%).
+
+
+
+\section{Scenarios with BNs}
+
+
+Arguably, in legal contexts, it is not only individual pieces of evidence that need to be assessed, but also whole scenarios which make sense of all them and connect them to hypotheses about what happened and about the guilt of the suspect. A method for developing BNs for that purpose is has been provided by [ADD REFS].
+
+Start with collecting all relevant scenarios and deciding which guilt hypothesis node they support (making sure you use binary guilt nodes are either the same, or exclude each other). For each state and event mentioned in a scenario, and for each piece of evidence, include a binary node in the BN and connect them as appropriate. 
+
+Next, add a binary scenario node as a parent of all the elements of the narration, and a guilt hypothesis node as its child. This is the \emph{Scenario idiom}. 
+The CPT for the scenario node is such that the probability of each of its child is 1 given the scenario node takes value \textrm{true}, and equals the prior probability of a given node if its \textrm{false}. The CPT for the guilt node is such that it takes value \textrm{true} if the scenario node is \textrm{true} and \textrm{false} otherwise. A simple example might look like this.
+
+
+```{r,echo=FALSE,eval=TRUE, fig.width=3, fig.height=3, fig.align = "center",cache=TRUE}
+ScenarioBN <- model2network("[Scenario][State/event 1|Scenario][State/event 2|Scenario:State/event 1][State/event 3|Scenario:State/event 2][Guilt|Scenario][Evidence 1|State/event 1][Evidence 2|State/event 2][Evidence 3|State/event 3]")
+graphviz.plot(ScenarioBN)
+```
+
+The advantage of adding a scenario node, supposedly, is that it keeps a narration as a coherent whole, so that now increasing the probability of one elements of the narration propagates to increase the probability of other elements of the scenario, and that it makes it possible to built a larger BN in which the interaction of multiple different narrations can be studied. 
+
+To merge two scenarios, first  put their corresponding BNs together. Then, if some of the nodes in the scenarios are identical, replace them with a single node (including the guilt hypothesis node), and for any nodes which exclude each other add a constraint node:
+
+```{r,echo=FALSE,eval=TRUE, fig.width=3, fig.height=3, fig.align = "center",cache=TRUE}
+constraint <- model2network("[Constraint|Node 1:Node 2][Node 1][Node 2]")
+```
+
+\noindent with values \textrm{allowed} and \textrm{not allowed}, setting the CPT such that the node takes value 1 just in case exatly one of the nodes takes value \textrm{true} and 0 otherwise. 
+
+
+```{r,echo=FALSE,eval=TRUE, fig.width=3, fig.height=3, fig.align = "center",cache=TRUE}
+ScenarioMerged <- model2network("[Scenario 1][Scenario 2][Event 1|Scenario 1][Event 2|Scenario 1:Event 1][Event 3|Scenario 2][Event 4|Scenario 2][Guilt|Scenario 1:Scenario 2][Evidence 1|Event 1][Evidence 2|Event 2][Evidence 3|Event 3][Evidence 4|Event 4]")
+graphviz.plot(ScenarioMerged)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Aplications:  (e.g., see Aitken et al., 1995; Dawid & Evett, 1997; Huygen, 2002; Jowett, 2001; Kadane & Schum, 1996; Taroni, Aitken, Garbolino, & Biedermann, 2006; Zukerman & George, 2005; Zukerman, 2010)
+ 
+
+
+
+
