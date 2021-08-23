@@ -559,52 +559,59 @@ s_{AB}& =  s_{A}\times s_{B}
 
 
 \noindent
-The step marked by the asterisk rests on the 
+The step marked by the asterisk rests on some of the 
 independence assumptions codified in the Bayesian network 
-in Figure \ref{fig:conjunctionDAG}.
+in Figure \ref{fig:conjunctionDAG}, namely: \eqref{eq:indAB}, \eqref{eq:I4}, and \eqref{eq:I5}.
 
-That is, 
- \begin{align*}
-\frac{\pr{a \wedge b\vert A\wedge B}}{\pr{a \wedge b}} & =  \frac{\pr{a |A}}{\pr{a}} \times \frac{\pr{b \vert B}}{\pr{b}}    \\
-s_{AB}& =  s_{A}\times s_{B}.
- \end{align*}
+<!-- That is,  -->
+<!--  \begin{align*} -->
+<!-- \frac{\pr{a \wedge b\vert A\wedge B}}{\pr{a \wedge b}} & =  \frac{\pr{a |A}}{\pr{a}} \times \frac{\pr{b \vert B}}{\pr{b}}    \\ -->
+<!-- s_{AB}& =  s_{A}\times s_{B}. -->
+<!--  \end{align*} -->
 
  \noindent 
- Thus, the combined support $s_{AB}$ will always be higher 
+ Thus, given the independence assumptions the combined support $s_{AB}$ will always be higher 
 than the individual support so long as $s_{A}$ and 
-$s_{B}$ are greater than one. This result can be generalized 
-beyond two pieces of evidence. Figure REFERENCE TO FIGURE BELOW compares the Bayes 
+$s_{B}$ are greater than one, that is if the individual piece of evidence in fact support their relevant hypotheses.
+
+
+This result can be generalized 
+beyond two pieces of evidence. Figure \ref{fig:bfconjunction5} compares the Bayes 
 factor of one item of evidence, say $\frac{\pr{a \vert A}}{\pr{a}}$ with the 
-combined Bayes factor for five items of evidence, say $\frac{\pr{a_1 \wedge \dots a_5 \vert A_1 \wedge \dots A_5}}{\pr{a_1\wedge \dots a_5}}$, 
-for dfferent values of sensitivity and specificity of the evidence. The latter always exceeds the fomer. 
+combined Bayes factor for five items of evidence, say $\frac{\pr{a_1 \wedge \dots \wedge a_5 \vert A_1 \wedge \dots \wedge A_5}}{\pr{a_1\wedge \dots \wedge a_5}}$, 
+for different values of sensitivity and specificity of the evidence. The latter always exceeds the fomer. 
 
 
 \todo{M: Need to fix graph here. HELP!}
 
-\begin{figure}
-
-```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "90%", warning = FALSE, message = FALSE}
+\todo{please use meaningful variable names, I revised s1 and s2 to sensitivity and specificity}
+\begin{figure}[h]
+```{r bfconjunction5,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "90%", warning = FALSE, message = FALSE}
 library(ggplot2)
 library(ggthemes)
 
-
-bf <- function (x, s1, s2){
-  
+bf <- function (x, sensitivity, specificity){
     (
-      s1/
-        (s1*x+(1-s2)*(1-x))
+      sensitivity/
+        (sensitivity*x+(1-specificity)*(1-x))
      )
 }
 
 
-bfn <- function (x, s1, s2, n){
-  
-    (
-      s1/
-        (s1*x+(1-s2)*(1-x))
-     )^n
-    
+bfn <- function(x, sensitivity, specificity, n){
+  bf(x, sensitivity, specificity)^n
 }
+
+# bfn <- function (x, s1, s2, n){
+#   
+#     (
+#       s1/
+#         (s1*x+(1-s2)*(1-x))
+#      )^n
+#     
+# }
+
+
 
 x <-seq(0,1,by=0.001)
 y0908 <- bf(x, 0.9, 0.8)
@@ -617,8 +624,21 @@ y50909 <- bfn(x, 0.99, 0.99, 5)
 y5null <- bfn(x, 0.5, 0.5, 5)
 
 
+y0908
+
+
 ggplot() +
-  stat_function(fun=function(x)(x), geom="line", aes(colour="1, sens=0.5, spec=0.5"))+
+  xlab("prior")+ ylab("Bayes factor")+theme_tufte()+
+  theme(legend.position = c(0.9, 0.8), legend.title = element_blank())  + geom_line(aes(x = x, y = y0908,color = "sens=0.9, spec=0.8", lty = "single"))+
+geom_line(aes(x = x, y = yy0908,color = "sens=0.9, spec=0.8", lty = "joint"))
+  
+                                                                                    
+                                                                                    
+  
+
+  
+   stat_function(fun=function(x)(x), geom="line", aes(colour="1, sens=0.5, spec=0.5"))+
+    stat_function(fun=function(x)(x), geom="line", aes(colour="1, sens=0.5, spec=0.5"))+
   geom_line(aes(x = x, y = y0908,color = "1, sens=0.9, spec=0.8")) +
   geom_line(aes(x = x, y = y0909,color = "1, sens=0.99, spec=0.99")) +
   geom_line(aes(x = x, y = y50908,color = "5, sens=0.9, spec=0.8")) +
@@ -630,7 +650,8 @@ ggplot() +
 
 
 ```
-
+\caption{BF for }
+\ref{fig:bfconjunction5}
 \end{figure}
 
 <!-- #geom_line(aes(x = x, y = yynull,color = "2, sens=0.5, spec=0.5")) + -->
