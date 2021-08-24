@@ -198,6 +198,8 @@ That $\pr{\textsf{match} \vert \neg \textsf{source}}$ is low  is in such context
 Our goal in this chapter is to reach a balanced view of the utility of \textsf{LR}. On one hand, we want to motivate its use and appreciate its utility. On the other, we want to point out reasons why \textsf{LR} might be misleading or unhelpful. In the next subsection, we will focus on a part of the positive task. A good example of the positive role of textsf{LR} in theorizing about fact-finding is its the use in studying  the impact of false positive risk. We will take a look at this example now, in  Section \ref{sec:fp}. Later on (Section \ref{sec:coldHitConfusion}), we will take a more detailed look at another positive example, the use of \textsf{LR} in studying the value of  the so-called cold-hit matches.^[In principle, it would be possible to go over analogous considerations in terms of \textsf{BF}, however, as we already argued, there are reasons to prefer the use \textsf{LR}, and calculations in terms of \textsf{LR} are simpler and assume that less information is available to the agent than those in terms of \text{BF}.]
 
 
+\vspace{3mm}
+\textbf{Marcello: These first two sections are fine, more or less. They make a clear overall case in favor of LR. Perhpas the second section should come first and then the intro after. The second section motivates looking into LR more closely, which is what we do in the rest of the chapter. The bit about irrelevant conjuction and LR is not clearly explained and needs further elaboration. }
 
 
 # The risk of false positive and its impact \label{sec:fp}
@@ -229,8 +231,6 @@ Moreover, such errors are not easy to detect. Since DNA evidence carries so much
 
 
 DNA identification is to some extent prone to errors which are not measured by the random match probability, and  no serious attempts to systematically quantify error rates in DNA testing have been made. Anecdotal reports about false matches suggest that errors take place more often than RMP would entail, but how often we should expect them remains unclear [@thompson2012forensic]. Regular proficiency tests used in accreddited DNA laboratories involve comparison of samples from known sources, but they are criticized for being unrealistically easy (yet, it happens that analysts fail them). Sometimes, corrective action files are made available, and then they aren't too impressive. For instance, the Santa Clara County district attorney's crime laboratory between 2003 and 2007 caught 14 instances of evidence cross-contamination with staff DNA, three of contamination by unknown person, and six of DNA contamination from other samples, three cases of DNA sample switch, one mistake in which the analyst reported an incorrect result, and three errors in the computation of the statistics to be reported. Of course, these are errors that were caught, and so one might argue that they show that labs are pretty good at catching their own errors. This, however, is an optimistic intepretation. These errors have been discovered due to unusual circumstances that led to the double-checking of the results. These circumstances, however, do not normally arise. It is not always the case that when a mistake is made the result implicates a staff member or an unknown person who was too young at the time of the crime to have committed it, for instance. Crucially, a match with a person whom  the analyst might  already know is a suspect is not an outcome that would raise an eyebrow and lead to a double-check. 
-
-
 
 
 Hopefully, having convinced the reader that the false positive probability is non-negligible, let us follow @aitken2003probability in investigating  its impact on the likelihood ratio of the DNA match. We just add a bit more details to the derivation they present for the sake of clarity. For simplicity, we still assume that the false negative probability is 0, that is, that if the match is real, it will be reported with certainty. We abbreviate:
@@ -266,7 +266,8 @@ The formula we will end up with is:
 \pr{R \vert M} & = 1.
 \end{align}
 
-
+\todo{M: The derivation is fine. It can be relegated to a footnote. We need to explain, intuitively,
+what is going on here. Formula (13) at the end is instructive. It shows that a reported match (given not-S) can happen  when there is a true match and when there is no true match, so we need to explain the notion of true match. Can BN help here? There is a path from source to true match to reported math.}
 
 Here, for simplicity we take the probability of a false negative to be null; in fact, some of the reasons for taking false positives seriously are also reasons to take false negatives seriously, but let's deal with one problem at a time (and in the end, the impact of a false positive risk will be clear from the way the formula will be derived). Now, let us rewrite the numerator of the LR by extending the conversation, rewriting the probabilities of conjunctions in terms of conditional probability and simplifying: 
 
@@ -361,7 +362,7 @@ ggplot(fppTableLong, aes(x=fpp,y=value, lty = line))+  geom_line()+ylim(c(0,400)
 \end{figure}
 
 
-
+\todo{M: I wonder if there is a deeper point here. That is, extremely low RMP values are meaningless when they cannot be accompanied by equally low FPP. See Alex's comment via email.}
 
 Interestingly, @buckleton2018forensic give a seemingly different formula for
 the impact of errors on likelihood ratio. Since the derivation is simpler and it turns out that in fact this is simply a more general formula, of which (FPP-LR) is just a particular instance, it worth taking a look.
@@ -371,6 +372,8 @@ First, @buckleton2018forensic make the conceptual distinction between the probab
 e & = \pr{E} = \pr{E \vert S} = \pr{E \vert \n S}
 \end{align*}
 \noindent That is, we denote the probability of error as $e$, and we assume it doesn't depend on whether the prosecution hypothesis is true (whether the suspect is the source).  
+
+\todo{M:Using E for error is confusing as we typically use E for evidence.}
 
 Separately, the formula includes the probability of a reported match if an error occurs, also assumed to be independent of whether the prosecution hypothesis is true:
 \begin{align*}
@@ -397,6 +400,9 @@ Note now that if you think of an error as something that guarantees a mistaken i
 \end{align*}
 \noindent which is the same as the formula obtained by  @aitken2003probability if we take $e$ to be FPP, as we should on the assumption that $k=1$.
 
+\todo{M: I could  not follow the derivation. We need to give 
+an intuitive explanation and then relegate the 
+proof to a footnote or appendix.}
 
 An analogous reasoning can be used to study the impact of false negative probability on the value of exculpator DNA evidence. Consider the probability of no match being reported if an error has been made, anaologus to $k$ above:
 \begin{align*}
@@ -445,12 +451,11 @@ ggplot(fnpTableLong, aes(x=fnp,y=value, color = line))+  geom_line()+theme_tufte
 
 Interestingly, the situation is not symmetric when we compare FPP to FNP. With FPP, the LR is 50 when $e=0.01$ for RMP$=10^{-3}$, while for the same $e$ and RMP it is $0.01$ for FNP, an hundredfold decrease. This illustrates that the exculpatory value of DNA evidence is higher than its incriminating value, even if the error rates and random match probabilities are the same. 
 
+\todo{M: This is a very interesting point, worth thinking about for a bit more. 
+Is it true? Is there an intuitive explanation?}
 
-
-
-
-
-
+\vspace{3mm}
+\textbf{Marcello: The role of this section is not completely clear yet. Is it meant to illustrate why LR are useful?  Is it because FP and FN cannot ne incorporated into other measures of evidential strength such as RMP? But what about the BF? We should be clearer about the role of this section in defeding the LR approach.}
 
 
 
@@ -1122,6 +1127,8 @@ cold-hit cases,  despite the fact that  a cold-hit match alone is stronger evide
 # Eyewitness identification and likelihood ratio \label{sec:eyewitness}
 
 
+\textbf{Marcello: perhaps this section could come right after the discusison of false positive in DNA evidence, just to give a second illustrration of how LR can be used to weigh evidence, and not just quantitive evidence.}
+
   
 So far in this chapter, a lot of attention has been paid to  DNA evidence, which rather uncontroversially is quantitative. This might give the impression that likelihood ratio is useful only for thinking about clearly quantitative evidence of this sort.  In this section, we discuss how likelihood ratio is still useful for reflecting on evidence which, at leat seemingly, is not quantitative: eyewitness evidence. 
 
@@ -1129,6 +1136,9 @@ We will argue that a quantitative perspective on eyewitness evidence is not only
 
 
 The perspective we take here is that there is no magical barrier between quantitative and qualitative evidence. A certain type of evidence can become numerical if sufficient amount of evidence about its reliability has been collected and statistically analyzed. Eyewitness testimony is not only no exception, but also a good example of this.
+
+
+\todo{M: These numbers are interesting, but unless we use them later to help us fill out the values of the probabilities, this is besides the point. Get to the point -- i.e. how weuse LR to weigh eyewitness evidence.}
 
 First of all, quantitative analyses might lead to a more sensible assessment of evidence than merely intuitive judgments. In the case of eyewitness testimony, this is crucial because eyewitness evidence tends to be overvalued, and it is the quantitative information that can and should be used to stop this madness. Field studies indicate  filler identification rates of 20-24\% [@klobuchar2006improving] in eyewitness identifications. That is, around 20\% of the time, an innocent presented to an eyewitness is going to be 'identified' by the eyewitness (the situation is a bit more complicated, read on for details). 
 
@@ -1165,6 +1175,7 @@ are factors which trump the role of the estimator variables.
 Ideally, properly formatted data  about all the factors we disussed could, with appropriate effort, be used to develop a multivariate model which would   lead to  quantitative eyewitness reliability estimates, including some estimation of the uncertainty involved. While we are far from reaching the state of such maturity, it should be clear that even with the current state of knowledge, and expert in eyewitness testimony evaluation aware of the literature some of which we have cited, aware of the circumstances of the case and identification could express their evaluation of the witness' reliability quantitatively.   Claiming that an  untrained jury member can do better by just intuitively evaluating what the eyewitness said instead is at least hasty.
 
 
+\todo{M: Where do these probabilities come from? Here you can cite emprical research to justify those values.}
 So consider two scenarios. In one, such an expert recognizes the identification conditions as pristine and testifies: the probability of the testimony if the suspect in fact is the perpetrator ($\pr{E\vert H}$) is $.9\% \pm .05$, and the false positive probability ($\pr{E \vert \n H}$) is $.1\pm .03$. In scenario two, the conditions were not pristine, and the expert testifies that   $\pr{E\vert H}=.8 \pm .05$ and $\pr{E\vert \n H}=.25 \pm .05$. We get two different \emph{ranges} of likelihood ratios, $lr_1$ and $lr_2$. In the first case, the minimum and the maximum are as follows:
 \begin{align*}
 \mathsf{min}(lr_1) = \nicefrac{.95}{.07} \approx 13.57  & \,\,\,\,\,\,\,\,  \mathsf{max}(lr_1) = \nicefrac{.85}{.13} \approx 6.53  
@@ -1352,8 +1363,8 @@ ggarrange(sJoint1+theme_tufte(base_size=8),sJoint2+theme_tufte(base_size=8), nco
 The key observation here is that whether exculpatory eyewitness testimony can in fact be sufficient
 to acquit in light of incriminating DNA evidence depends on the particulars: both on the quality of the eyewitness testimony and on the realistic assessment of the likelihood ratio for the DNA evidence (incorporating the probability of false positives), and on what priors other pieces of evidence led us to so far prior to the evaluation of such items of evidence. The devil is in the detail, and it is not always the case that one should trump the other.
 
-
-
+\vspace{3mm}
+\textbf{M: This discussion delivers  litle insight. As readers, we were sold the idea that LR would help clarify things or  block mistakes, but we are just left with the thought that "it depends". This is hardly progress. Perhaps this section needs an example to make it more exiciting. If not, we need to be clear  there isa lot of work to be done in this area. And how about the claim that DNA evidence is stronger than eyewitness evidence, see the Rush decision I gave you? Is this claim correct?Does LR help?}
 
 
 

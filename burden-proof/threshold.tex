@@ -1,46 +1,53 @@
-\PassOptionsToPackage{unicode=true}{hyperref} % options for packages loaded elsewhere
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
 \PassOptionsToPackage{hyphens}{url}
 \PassOptionsToPackage{dvipsnames,svgnames*,x11names*}{xcolor}
 %
-\documentclass[10pt,dvipsnames,enabledeprecatedfontcommands]{scrartcl}
+\documentclass[
+  10pt,
+  dvipsnames,enabledeprecatedfontcommands]{scrartcl}
+\usepackage{amsmath,amssymb}
 \usepackage{lmodern}
-\usepackage{amssymb,amsmath}
 \usepackage{ifxetex,ifluatex}
-\usepackage{fixltx2e} % provides \textsubscript
 \ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
-  \usepackage{textcomp} % provides euro and other symbols
-\else % if luatex or xelatex
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
   \usepackage{unicode-math}
-  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
 \fi
-% use upquote if available, for straight quotes in verbatim environments
+% Use upquote if available, for straight quotes in verbatim environments
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
-% use microtype if available
-\IfFileExists{microtype.sty}{%
-\usepackage[]{microtype}
-\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
 }{}
-\IfFileExists{parskip.sty}{%
-\usepackage{parskip}
-}{% else
-\setlength{\parindent}{0pt}
-\setlength{\parskip}{6pt plus 2pt minus 1pt}
-}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
 \usepackage{xcolor}
-\usepackage{hyperref}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
 \hypersetup{
-            pdftitle={Probability Thresholds},
-            pdfauthor={Marcello Di Bello and Rafal Urbaniak},
-            colorlinks=true,
-            linkcolor=Maroon,
-            filecolor=Maroon,
-            citecolor=Blue,
-            urlcolor=blue,
-            breaklinks=true}
-\urlstyle{same}  % don't use monospace font for urls
-\usepackage{graphicx,grffile}
+  pdftitle={Probability Thresholds},
+  pdfauthor={Marcello Di Bello and Rafal Urbaniak},
+  colorlinks=true,
+  linkcolor=Maroon,
+  filecolor=Maroon,
+  citecolor=Blue,
+  urlcolor=blue,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage{graphicx}
 \makeatletter
 \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
 \def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
@@ -49,25 +56,14 @@
 % margins by default, and it is still possible to overwrite the defaults
 % using explicit options in \includegraphics[width, height, ...]{}
 \setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
-\setlength{\emergencystretch}{3em}  % prevent overfull lines
-\providecommand{\tightlist}{%
-  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
-\setcounter{secnumdepth}{5}
-% Redefines (sub)paragraphs to behave more like sections
-\ifx\paragraph\undefined\else
-\let\oldparagraph\paragraph
-\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
-\fi
-\ifx\subparagraph\undefined\else
-\let\oldsubparagraph\subparagraph
-\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
-\fi
-
-% set default figure placement to htbp
+% Set default figure placement to htbp
 \makeatletter
 \def\fps@figure{htbp}
 \makeatother
-
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{5}
 %\documentclass{article}
 
 % %packages
@@ -88,6 +84,7 @@
 
 \usepackage[textsize=footnotesize]{todonotes}
 %\linespread{1.5}
+\newcommand{\indep}{\!\perp \!\!\! \perp\!}
 
 
 \setlength{\parindent}{10pt}
@@ -232,6 +229,30 @@
 \usepackage{tikz}
 \usetikzlibrary{positioning,shapes,arrows}
 
+\ifluatex
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\newlength{\cslhangindent}
+\setlength{\cslhangindent}{1.5em}
+\newlength{\csllabelwidth}
+\setlength{\csllabelwidth}{3em}
+\newenvironment{CSLReferences}[2] % #1 hanging-ident, #2 entry spacing
+ {% don't indent paragraphs
+  \setlength{\parindent}{0pt}
+  % turn on hanging indent if param 1 is 1
+  \ifodd #1 \everypar{\setlength{\hangindent}{\cslhangindent}}\ignorespaces\fi
+  % set entry spacing
+  \ifnum #2 > 0
+  \setlength{\parskip}{#2\baselineskip}
+  \fi
+ }%
+ {}
+\usepackage{calc}
+\newcommand{\CSLBlock}[1]{#1\hfill\break}
+\newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{#1}}
+\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{#1}\break}
+\newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
+
 \title{Probability Thresholds}
 \author{Marcello Di Bello and Rafal Urbaniak}
 \date{}
@@ -269,7 +290,7 @@ further broken down into three chapters:
   A chapter that formally addresses the two theoretical difficulties,
   perhaps using Bayesian Networks. This need not be included in the
   sample chapters we sent out. Title: ``Adressing the Proof Paradoxes
-  with Bayesian Networks''.
+  with Bayesian Networks.''
 \end{enumerate}
 
 \section*{SAMPLE CHAPTER PLAN}
@@ -368,14 +389,14 @@ someone should be committed to a hospital facility.
 
 How to define standards of proof---and whether they should be even
 defined in the first place---remains contentious (Diamond, 1990;
-Horowitz \& Kirkpatrick, 1996; Laudan, 2006; Newman, 1993; Walen, 2015).
-Judicial opinions offer different, sometimes conflicting, paraphrases of
-what these standards mean. The meaning of `proof beyond a reasonable
-doubt' is the most controversial. It has been equated with `moral
-certainty' or `abiding conviction' (Commonwealth v. Webster, 59 Mass.
-295, 320, 1850) or with `proof of such a convincing character that a
-reasonable person would not hesitate to rely and act upon it in the most
-important of his own affairs' (US Federal Jury Practice and
+Horowitz \& Kirkpatrick, 1996; Larry Laudan, 2006; Newman, 1993; Walen,
+2015). Judicial opinions offer different, sometimes conflicting,
+paraphrases of what these standards mean. The meaning of `proof beyond a
+reasonable doubt' is the most controversial. It has been equated with
+`moral certainty' or `abiding conviction' (Commonwealth v. Webster, 59
+Mass. 295, 320, 1850) or with `proof of such a convincing character that
+a reasonable person would not hesitate to rely and act upon it in the
+most important of his own affairs' (US Federal Jury Practice and
 Instructions, 12.10, at 354, 4th ed.~1987). But courts have also
 cautioned that there is no need to define the term because `jurors know
 what is reasonable and are quite familiar with the meaning of doubt' and
@@ -446,9 +467,9 @@ guilt beyond a reasonable doubt.
 Legal probabilists have proposed to interpret proof beyond a reasonable
 doubt as the requirement that the defendant's probability of guilt,
 given the evidence presented at trial, meet a threshold (see Bernoulli,
-1713; Dekay, 1996; Kaplan, 1968; Kaye, 1979a; Laplace, 1814; Laudan,
-2006). On this interpretation, so long as the defendant's guilt is
-established with a sufficiently high probability, say 95\%, guilt is
+1713; Dekay, 1996; Kaplan, 1968; Kaye, 1979a; Laplace, 1814; Larry
+Laudan, 2006). On this interpretation, so long as the defendant's guilt
+is established with a sufficiently high probability, say 95\%, guilt is
 proven beyond a reasonable doubt and the defendant should be convicted.
 If the probability of guilt does not reach the requisite threshold, the
 defendant should be acquitted. This intepretation can be spelled out
@@ -504,7 +525,7 @@ Anna Anderson had no relationship with the Tsar family.) Anderson
 appealed to Germany's Federal Court, complaining that the Regional Court
 had set too demanding a proof standard. Siding with the lower court, the
 Federal Court made clear that `{[}t{]}he law does not presuppose a
-belief free of all doubts', thus recognizing the inevitable fallibility
+belief free of all doubts,' thus recognizing the inevitable fallibility
 of trial decisions. The Court warned, however, that it would be `wrong'
 to think that a trial decision could rest on `a probability bordering on
 certainty' (Federal Court of Justice, February 17, 1970; III ZR 139/67).
@@ -520,7 +541,7 @@ high its probability, cannot amount to a full belief. One is left
 wondering, however. If a high probability of guilt short of 100\% isn't
 enough and certainty cannot be required either, how else could the
 standard of proof be met? The question becomes more pressing in civil
-cases if we replace `guilt' with `civil liability'. Anticipating this
+cases if we replace `guilt' with `civil liability.' Anticipating this
 worry, Germany's Federal Court in the Anderson case endorsed a
 conception of proof standards that acknowledges the inveitable
 fallibility of trial decisions while at the same time maintaining the
@@ -546,7 +567,7 @@ criminal trials should be a blend of probability and certainty. But what
 this blend of probability and certainty should be like is unclear. At
 best, Beccaria's suggestion brings us back to paraphrases of proof
 beyond a reasonable doubt such as `moral certainty' or `abiding
-conviction'.
+conviction.'
 
 Not all legal practitioners, however, resist a probabilistic
 interpretation of standards of proof. Some actually find such
@@ -569,7 +590,7 @@ Although the phrases 'preponderance of the evidence' and 'proof beyond a reasona
 Second Circuit proposes a similar definition. He worries that words such
 as `probability' or `likelihood' may confuse jurors, as these words
 often qualify predictions about future events that may or may not occur.
-Instead, Newman prefers the expression `degree of certainity'. In
+Instead, Newman prefers the expression `degree of certainity.' In
 chracterizing proof beyond a reasonable doubt, he writes:
 
 \begin{quote}
@@ -594,7 +615,7 @@ the Legal Maxim That Proof Beyond a Reasonable Doubt Is Unquantifiable?
 Law, Probability and Risk, 5, 135-157.
 
 WEINSTEIN, J. B. and DEWSBURY, I. (2006) Comment on the meaning of
-`proof beyond a reasonable doubt'. Law, Probability and Risk, 5,
+`proof beyond a reasonable doubt.' Law, Probability and Risk, 5,
 167-173.
 
 \hypertarget{implementation-and-idealization}{%
@@ -627,7 +648,7 @@ FOR BAYESIAN NETWORK.
 
 To alleviate the force of these worries, the probabilistic interpretion
 of proof standards can be broken down into two separate claims, what we
-might call the `quantification claim' and the `threshold claim'. In a
+might call the `quantification claim' and the `threshold claim.' In a
 criminal trial, these claims would look as follows:
 
 \begin{tabular}{lp{8.5cm}}
@@ -694,7 +715,7 @@ interpretation of the threshold claim---which fits well with the
 `idealization interpretation' of the quantification claim---is less
 likely to encounter resistance.
 
-Lawrence Tribe, in his famous 1971 article `Trial by Mathematics',
+Lawrence Tribe, in his famous 1971 article `Trial by Mathematics,'
 expresses disdain for a trial process that were mechanically governed by
 numbers and probabilities. He claims that under this scenario judges and
 jurors would forget their humanizing function. He writes:
@@ -858,9 +879,9 @@ The analysis provided so far is limited since it only weighs the costs
 of mistaken decisions, but leaves out the benefits of correct decisions.
 A more comprehensive analysis should consider both. Even though the
 basic idea is the same---that is, trial decision-making is viewed as an
-instrument for maximizing overall social welfare (Dekay, 1996; Laudan,
-2016; Posner, 1973)--- a mre comprehensive analysis would afford a more
-nuanced understanding. It is therefore instructive to explore the
+instrument for maximizing overall social welfare (Dekay, 1996; L.
+Laudan, 2016; Posner, 1973)--- a mre comprehensive analysis would afford
+a more nuanced understanding. It is therefore instructive to explore the
 implications of weighing the costs of incorrect decisions as well as the
 benefits of correct decisions.
 
@@ -986,7 +1007,7 @@ speaking, did committ a crime. At the same time, the above analysis also
 takes into account the negative consequences that result from failing to
 apprehend the actual perpetrator, such as hightened crime victimization
 for others, a point often made by people on the right who are concerned
-with so-called ``law and order''.
+with so-called ``law and order.''
 
 Suppose someone is extremely concerned about risk of victimization for
 different reasons, such as more conservative political views or having
@@ -1231,7 +1252,7 @@ assigned a probability of, say, 80\%, there should be a corresponding
 proportion of 80\% guilty people and 20\% innocent people. These are of
 coruse expected values, not actual values. Say you are throwing a fair
 six-faced die. In the long run, you would expect that in 1/6 of the
-throws the die would land, say on ``4''.
+throws the die would land, say on ``4.''
 
 The expected proportion of guilty and innocent defendants on trial, out
 of all defendants, can be inferred from the density distribution
@@ -1377,14 +1398,14 @@ think that, say, a 99\% threshold guarantees a 1:99 ratio between false
 convictions and false acquittals. But this would be hasty for at least
 two reasons. First, probabilistic thresholds affect the expected rate of
 mistaken decisions. The actual rate may deviate from its expected value
-({\textbf{???}}-). Second, if the threshold is \(99\%\),
-\textit{at most} 1\% of decision against defendants are expected to be
-mistaken (false convictions) and \textit{at most} 99\% of the decisions
-in favor of the defendant are expected to be mistaken (false
-acquittals). The exact ratio will depend on the probabilities assigned
-to defendants and how they are distributed \citep{allen2014}. The
-(expected) rate of false positives and false negatives---and thus their
-ratio---depend on where the threshold is located but also on the
+(\textbf{Kaye1999Clarifying-the?}-). Second, if the threshold is
+\(99\%\), \textit{at most} 1\% of decision against defendants are
+expected to be mistaken (false convictions) and \textit{at most} 99\% of
+the decisions in favor of the defendant are expected to be mistaken
+(false acquittals). The exact ratio will depend on the probabilities
+assigned to defendants and how they are distributed \citep{allen2014}.
+The (expected) rate of false positives and false negatives---and thus
+their ratio---depend on where the threshold is located but also on the
 distribution of the liability probability as given by the density
 function \(f(x)\).
 
@@ -1392,15 +1413,15 @@ function \(f(x)\).
 \subsection{Interval thresholds
 (Finkelstein)}\label{interval-thresholds-finkelstein}}
 
-The prior probability cannot be easily determined (Friedman, 2000). Even
-if it can be determined, arriving at a posterior probability might be
-impractical because of lack of adequate quantitative information.
-Perhaps, decision thresholds should not rely on a unique posterior
-probability but on an interval of admissible probabilities given the
-evidence (Finkelstein \& Fairley, 1970). Perhaps, the assessment of the
-posterior probability of guilt can be viewed as an idealized process, a
-regulative ideal which can improve the precision of legal reasoning.
-(CITE BIEDERMAN TARONI).
+The prior probability cannot be easily determined (R. D. Friedman,
+2000). Even if it can be determined, arriving at a posterior probability
+might be impractical because of lack of adequate quantitative
+information. Perhaps, decision thresholds should not rely on a unique
+posterior probability but on an interval of admissible probabilities
+given the evidence (Finkelstein \& Fairley, 1970). Perhaps, the
+assessment of the posterior probability of guilt can be viewed as an
+idealized process, a regulative ideal which can improve the precision of
+legal reasoning. (CITE BIEDERMAN TARONI).
 
 --\textgreater{}
 
@@ -1498,7 +1519,8 @@ high as 99.9\% or higher, people's intuitive resistance to convicting
 should subside (Roth, 2010). A more general problem is that intuitions
 in such hypothetical scenarios are removed from real cases and thus are
 potentially unreliable as a guide to theorize about standards of proof
-(Allen \& Leiter, 2001; Hedden \& Colyvan, 2019; Lempert, 1986).
+(Ronald J. Allen \& Leiter, 2001; Hedden \& Colyvan, 2019; Lempert,
+1986).
 
 Another reason to be suspicious of these hypotheticals is that they seem
 to amplify biases in human reasoning. Say an eyewitness was present
@@ -1510,13 +1532,14 @@ liability based on testimonial evidence compared to judgments based on
 statistical evidence. This preference has been experimentally verified
 (Arkes, Shoots-Reinhard, \& Mayes, 2012; Niedermeier, Kerr, \& Messeé,
 1999; Wells, 1992) and exists outside the law (Ebert, Smith, \& Durbach,
-2018; Friedman \& Turri, 2015; Sykes \& Johnson, 1999). But testimonial
-evidence is no less prone to error than statistical evidence. In fact,
-it may well be more prone to error. The unreliability of eyewitness
-testimony is well-known, especially when the environmental conditions
-are not optimal (Loftus, 1996). So are we justified in exhibiting an
-intuitive preference for eyewitness testimony as opposed to statistical
-evidence, or is this preference a cognitive bias to avoid?
+2018; O. Friedman \& Turri, 2015; Sykes \& Johnson, 1999). But
+testimonial evidence is no less prone to error than statistical
+evidence. In fact, it may well be more prone to error. The unreliability
+of eyewitness testimony is well-known, especially when the environmental
+conditions are not optimal (Loftus, 1996). So are we justified in
+exhibiting an intuitive preference for eyewitness testimony as opposed
+to statistical evidence, or is this preference a cognitive bias to
+avoid?
 
 These reservations notwithstanding, the puzzles about naked statistical
 evidence cannot be easily dismissed. Puzzles about statistical evidence
@@ -1539,14 +1562,15 @@ Another theoretical difficulty that any theory of the standard of proof
 should address is the the conjunction paradox or difficulty about
 conjunction. First formulated by Cohen (1977), the difficulty about
 conjunction has enjoyed a great deal of scholarly attention every since
-(Allen, 1986; Allen \& Stein, 2013; Allen \& Pardo, 2019; Haack, 2014;
-Schwartz \& Sober, 2017; Stein, 2005). This difficulty arises when an
-accusation of wrongdoing, in a civil or criminal proceeding, is broken
-down into its constituent elements. The basic problem is that the
-probability of a conjuction is often lower than the probability of the
-conjuncts. Thus, even if each conjunct meets the requisite probability
-threshold, the conjunction does not. This chapter examines the
-difficulty about conjuction and how legal probabilists can respond.
+(Ronald J. Allen, 1986; Ronald J. Allen \& Stein, 2013; R. Allen \&
+Pardo, 2019; Haack, 2014; Schwartz \& Sober, 2017; Stein, 2005). This
+difficulty arises when an accusation of wrongdoing, in a civil or
+criminal proceeding, is broken down into its constituent elements. The
+basic problem is that the probability of a conjuction is often lower
+than the probability of the conjuncts. Thus, even if each conjunct meets
+the requisite probability threshold, the conjunction does not. This
+chapter examines the difficulty about conjuction and how legal
+probabilists can respond.
 
 \hypertarget{the-problem}{%
 \subsection{The problem}\label{the-problem}}
@@ -1643,21 +1667,22 @@ threhsold.\todo{False in whole generality, give a counterexample with more speci
 \addcontentsline{toc}{section}{References}
 
 \hypertarget{refs}{}
+\begin{CSLReferences}{1}{0}
 \leavevmode\hypertarget{ref-Allen1986A-Reconceptuali}{}%
-Allen, R. J. (1986). A reconceptualization of civil trials. \emph{Boston
-University Law Review}, \emph{66}, 401--437.
+Allen, Ronald J. (1986). A reconceptualization of civil trials.
+\emph{Boston University Law Review}, \emph{66}, 401--437.
 
 \leavevmode\hypertarget{ref-allen2001naturalized}{}%
-Allen, R. J., \& Leiter, B. (2001). Naturalized epistemology and the law
-of evidence. \emph{Virginia Law Review}, \emph{87}(8), 1491--1550.
+Allen, Ronald J., \& Leiter, B. (2001). Naturalized epistemology and the
+law of evidence. \emph{Virginia Law Review}, \emph{87}(8), 1491--1550.
 
 \leavevmode\hypertarget{ref-allen2013}{}%
-Allen, R. J., \& Stein, A. (2013). Evidence, probability and the burden
-of proof. \emph{Arizona Law Journal}, \emph{55}, 557--602.
+Allen, Ronald J., \& Stein, A. (2013). Evidence, probability and the
+burden of proof. \emph{Arizona Law Journal}, \emph{55}, 557--602.
 
 \leavevmode\hypertarget{ref-AllenPardo2019relative}{}%
 Allen, R., \& Pardo, M. (2019). Relative plausibility and its critics.
-\emph{The International Journal of Evidence \& Proof}, \emph{23}(1-2),
+\emph{The International Journal of Evidence {\&} Proof}, \emph{23}(1-2),
 5--59. \url{https://doi.org/10.1177/1365712718813781}
 
 \leavevmode\hypertarget{ref-arkesEtAl2012}{}%
@@ -1669,16 +1694,16 @@ Disjunction between probability and verdict in juror decision making.
 Bernoulli, J. (1713). \emph{Ars conjectandi}.
 
 \leavevmode\hypertarget{ref-BlomeTillmann2017}{}%
-Blome-Tillmann, M. (2017). ``More likely than not'' --- Knowledge first
-and the role of bare statistical evidence in courts of law. In A.
+Blome-Tillmann, M. (2017). {`{M}ore likely than not'} --- {K}nowledge
+first and the role of bare statistical evidence in courts of law. In A.
 Carter, E. Gordon, \& B. Jarvi (Eds.), \emph{Knowledge
 first---approaches in epistemology and mind} (pp. 278--292). Oxford
 University Press.
 \url{https://doi.org/10.1093/oso/9780198716310.003.0014}
 
 \leavevmode\hypertarget{ref-bolinger2018rational}{}%
-Bolinger, R. (2018). The rational impermissibility of accepting (some)
-racial generalizations. \emph{Synthese}, 1--17.
+Bolinger, R. J. (2018). The rational impermissibility of accepting
+(some) racial generalizations. \emph{Synthese}, 1--17.
 
 \leavevmode\hypertarget{ref-buchak2014belief}{}%
 Buchak, L. (2014). Belief, credence, and norms. \emph{Philosophical
@@ -1689,13 +1714,13 @@ Cheng, E. (2012). Reconceptualizing the burden of proof. \emph{Yale LJ},
 \emph{122}, 1254.
 
 \leavevmode\hypertarget{ref-Cohen1977The-probable-an}{}%
-Cohen, J. (1977). \emph{The probable and the provable}. Oxford
+Cohen, J. L. (1977). \emph{The probable and the provable}. Oxford
 University Press. \url{https://doi.org/10.2307/2219193}
 
 \leavevmode\hypertarget{ref-Dekay1996}{}%
-Dekay, M. L. (1996). The difference between Blackstone-like error ratios
-and probabilistic standards of proof. \emph{Law and Social Inquiry},
-\emph{21}, 95--132.
+Dekay, M. L. (1996). The difference between {B}lackstone-like error
+ratios and probabilistic standards of proof. \emph{Law and Social
+Inquiry}, \emph{21}, 95--132.
 
 \leavevmode\hypertarget{ref-dhamiEtAl2015}{}%
 Dhami, M. K., Lundrigan, S., \& Mueller-Johnson, K. (2015). Instructions
@@ -1703,13 +1728,13 @@ on reasonable doubt: Defining the standard of proof and the jurors task.
 \emph{Psychology, Public Policy, and Law, 21(2), 169178}, \emph{21}(2),
 169--178.
 
-\leavevmode\hypertarget{ref-diamond90}{}%
-Diamond, H. A. (1990). Reasonable doubt: To define, or not to define.
-\emph{Columbia Law Review}, \emph{90}(6), 1716--1736.
-
 \leavevmode\hypertarget{ref-diBello2019}{}%
 Di Bello, M. (2019). Trial by statistics: Is a high probability of guilt
 enough to convict? \emph{Mind}.
+
+\leavevmode\hypertarget{ref-diamond90}{}%
+Diamond, H. A. (1990). Reasonable doubt: To define, or not to define.
+\emph{Columbia Law Review}, \emph{90}(6), 1716--1736.
 
 \leavevmode\hypertarget{ref-ebert2018}{}%
 Ebert, P. A., Smith, M., \& Durbach, I. (2018). Lottery judgments: A
@@ -1739,7 +1764,7 @@ Friedman, R. D. (2000). A presumption of innocence, not of even odds.
 
 \leavevmode\hypertarget{ref-haack2011legal}{}%
 Haack, S. (2014). Legal probabilism: An epistemological dissent. In
-\emph{Haack2014-HAAEMS} (pp. 47--77).
+\emph{{Haack2014-HAAEMS}} (pp. 47--77).
 
 \leavevmode\hypertarget{ref-hamer2004}{}%
 Hamer, D. (2004). Probabilistic standards of proof, their complements
@@ -1778,14 +1803,14 @@ Kaye, D. H. (1979a). The laws of probability and the law of the land.
 \emph{The University of Chicago Law Review}, \emph{47}(1), 34--56.
 
 \leavevmode\hypertarget{ref-Kaye79gate}{}%
-Kaye, D. H. (1979b). The paradox of the Gatecrasher and other stories.
+Kaye, D. H. (1979b). The paradox of the {G}atecrasher and other stories.
 \emph{The Arizona State Law Journal}, 101--110.
 
 \leavevmode\hypertarget{ref-Laplace1814}{}%
-Laplace, P. (1814). \emph{Essai philosophique sur les probabilités}.
+Laplace, P.-S. (1814). \emph{Essai philosophique sur les probabilités}.
 
 \leavevmode\hypertarget{ref-laudan2006truth}{}%
-Laudan, L. (2006). \emph{Truth, error, and criminal law: An essay in
+Laudan, Larry. (2006). \emph{Truth, error, and criminal law: An essay in
 legal epistemology}. Cambridge University Press.
 
 \leavevmode\hypertarget{ref-laudan2016law}{}%
@@ -1812,13 +1837,13 @@ value of complexity. \emph{Harvard Law Review}, \emph{92}(6),
 1187--1225. \url{https://doi.org/10.2307/1340444}
 
 \leavevmode\hypertarget{ref-newman1993}{}%
-Newman, J. O. (1993). Beyon ``reasonable doub''. \emph{New York
+Newman, J. O. (1993). Beyon {``reasonable doub.''} \emph{New York
 University Law Review}, \emph{68}(5), 979--1002.
 
 \leavevmode\hypertarget{ref-niedermeierEtAl1999}{}%
 Niedermeier, K. E., Kerr, N. L., \& Messeé, L. A. (1999). Jurors' use of
 naked statistical evidence: Exploring bases and implications of the
-Wells effect. \emph{Journal of Personality and Social Psychology},
+{Wells} effect. \emph{Journal of Personality and Social Psychology},
 \emph{76}(4), 533--542.
 
 \leavevmode\hypertarget{ref-nunn2015}{}%
@@ -1851,14 +1876,14 @@ Redmayne, M. (2008). Exploring the proof paradoxes. \emph{Legal Theory},
 \emph{14}(4), 281--309.
 
 \leavevmode\hypertarget{ref-Roth2010}{}%
-Roth, A. (2010). Safety in numbers? Deciding when DNA alone is enough to
-convict. \emph{New York University Law Review}, \emph{85}(4),
+Roth, A. (2010). Safety in numbers? {D}eciding when {DNA} alone is
+enough to convict. \emph{New York University Law Review}, \emph{85}(4),
 1130--1185.
 
 \leavevmode\hypertarget{ref-schwartz2017ConjunctionProblemLogic}{}%
-Schwartz, D. S., \& Sober, E. R. (2017). The Conjunction Problem and the
-Logic of Jury Findings. \emph{William \& Mary Law Review}, \emph{59}(2),
-619--692.
+Schwartz, D. S., \& Sober, E. R. (2017). The {Conjunction Problem} and
+the {Logic} of {Jury Findings}. \emph{William \& Mary Law Review},
+\emph{59}(2), 619--692.
 
 \leavevmode\hypertarget{ref-smith2017}{}%
 Smith, M. (2018). When does evidence suffice for conviction?
@@ -1870,7 +1895,7 @@ Press.
 
 \leavevmode\hypertarget{ref-sykes1999}{}%
 Sykes, D. L., \& Johnson, J. T. (1999). Probabilistic evidence versus
-the representation of an event: The curious case of Mrs. Prob's dog.
+the representation of an event: The curious case of {Mrs.} {Prob}'s dog.
 \emph{Basic and Applied Social Psychology}, \emph{21}(3), 199--212.
 
 \leavevmode\hypertarget{ref-taroni2006bayesian}{}%
@@ -1887,7 +1912,7 @@ Tribe, L. H. (1971). Trial by mathematics: Precision and ritual in the
 legal process. \emph{Harvard Law Review}, \emph{84}(6), 1329--1393.
 
 \leavevmode\hypertarget{ref-voloch1997}{}%
-Volokh, A. (1997). N guilty men. \emph{University of Pennsylvania Law
+Volokh, A. (1997). {N} guilty men. \emph{University of Pennsylvania Law
 Review}, \emph{146}(2), 173--216.
 
 \leavevmode\hypertarget{ref-walen2015}{}%
@@ -1900,8 +1925,11 @@ Wasserman, D. T. (1991). The morality of statistical proof and the risk
 of mistaken liability. \emph{Cardozo L. Rev.}, \emph{13}, 935.
 
 \leavevmode\hypertarget{ref-wells1992naked}{}%
-Wells, G. (1992). Naked statistical evidence of liability: Is subjective
-probability enough? \emph{Journal of Personality and Social Psychology},
-\emph{62}(5), 739--752. \url{https://doi.org/10.1037/0022-3514.62.5.739}
+Wells, G. L. (1992). Naked statistical evidence of liability: Is
+subjective probability enough? \emph{Journal of Personality and Social
+Psychology}, \emph{62}(5), 739--752.
+\url{https://doi.org/10.1037/0022-3514.62.5.739}
+
+\end{CSLReferences}
 
 \end{document}

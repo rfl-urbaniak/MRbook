@@ -1,45 +1,52 @@
-\PassOptionsToPackage{unicode=true}{hyperref} % options for packages loaded elsewhere
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
 \PassOptionsToPackage{hyphens}{url}
 \PassOptionsToPackage{dvipsnames,svgnames*,x11names*}{xcolor}
 %
-\documentclass[10pt,dvipsnames,enabledeprecatedfontcommands]{scrartcl}
+\documentclass[
+  10pt,
+  dvipsnames,enabledeprecatedfontcommands]{scrartcl}
+\usepackage{amsmath,amssymb}
 \usepackage{lmodern}
-\usepackage{amssymb,amsmath}
 \usepackage{ifxetex,ifluatex}
-\usepackage{fixltx2e} % provides \textsubscript
 \ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
-  \usepackage{textcomp} % provides euro and other symbols
-\else % if luatex or xelatex
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
   \usepackage{unicode-math}
-  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
 \fi
-% use upquote if available, for straight quotes in verbatim environments
+% Use upquote if available, for straight quotes in verbatim environments
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
-% use microtype if available
-\IfFileExists{microtype.sty}{%
-\usepackage[]{microtype}
-\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
 }{}
-\IfFileExists{parskip.sty}{%
-\usepackage{parskip}
-}{% else
-\setlength{\parindent}{0pt}
-\setlength{\parskip}{6pt plus 2pt minus 1pt}
-}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
 \usepackage{xcolor}
-\usepackage{hyperref}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
 \hypersetup{
-            pdftitle={Likelihood ratio and evidence strength},
-            pdfauthor={Marcello Di Bello and Rafal Urbaniak},
-            colorlinks=true,
-            linkcolor=Maroon,
-            filecolor=Maroon,
-            citecolor=Blue,
-            urlcolor=blue,
-            breaklinks=true}
-\urlstyle{same}  % don't use monospace font for urls
+  pdftitle={Likelihood ratio and evidence strength},
+  pdfauthor={Marcello Di Bello and Rafal Urbaniak},
+  colorlinks=true,
+  linkcolor=Maroon,
+  filecolor=Maroon,
+  citecolor=Blue,
+  urlcolor=blue,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
 \usepackage{color}
 \usepackage{fancyvrb}
 \newcommand{\VerbBar}{|}
@@ -80,7 +87,7 @@
 \newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
 \newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
 \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
-\usepackage{graphicx,grffile}
+\usepackage{graphicx}
 \makeatletter
 \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
 \def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
@@ -89,32 +96,21 @@
 % margins by default, and it is still possible to overwrite the defaults
 % using explicit options in \includegraphics[width, height, ...]{}
 \setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
-\setlength{\emergencystretch}{3em}  % prevent overfull lines
-\providecommand{\tightlist}{%
-  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
-\setcounter{secnumdepth}{5}
-% Redefines (sub)paragraphs to behave more like sections
-\ifx\paragraph\undefined\else
-\let\oldparagraph\paragraph
-\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
-\fi
-\ifx\subparagraph\undefined\else
-\let\oldsubparagraph\subparagraph
-\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
-\fi
-
-% set default figure placement to htbp
+% Set default figure placement to htbp
 \makeatletter
 \def\fps@figure{htbp}
 \makeatother
-
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{5}
 %\documentclass{article}
 
 % %packages
  \usepackage{booktabs}
 
 \usepackage{multirow}
-
+\usepackage{ amssymb }
 \usepackage{graphicx}
 \usepackage{longtable}
 \usepackage{ragged2e}
@@ -125,7 +121,7 @@
 \usepackage{nicefrac}
 \newcommand*{\QED}{\hfill \footnotesize {\sc Q.e.d.}}
 \usepackage{floatrow}
-
+\usepackage{color, colortbl}
 \usepackage[textsize=footnotesize]{todonotes}
 %\linespread{1.5}
 
@@ -266,6 +262,29 @@
 \usepackage[authoryear]{natbib}
 
 %\bibliographystyle{apalike}
+\ifluatex
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\newlength{\cslhangindent}
+\setlength{\cslhangindent}{1.5em}
+\newlength{\csllabelwidth}
+\setlength{\csllabelwidth}{3em}
+\newenvironment{CSLReferences}[2] % #1 hanging-ident, #2 entry spacing
+ {% don't indent paragraphs
+  \setlength{\parindent}{0pt}
+  % turn on hanging indent if param 1 is 1
+  \ifodd #1 \everypar{\setlength{\hangindent}{\cslhangindent}}\ignorespaces\fi
+  % set entry spacing
+  \ifnum #2 > 0
+  \setlength{\parskip}{#2\baselineskip}
+  \fi
+ }%
+ {}
+\usepackage{calc}
+\newcommand{\CSLBlock}[1]{#1\hfill\break}
+\newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{#1}}
+\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{#1}\break}
+\newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
 
 \title{Likelihood ratio and evidence strength}
 \author{Marcello Di Bello and Rafal Urbaniak}
@@ -392,11 +411,11 @@ the Bayesian Factor is approximately
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{EifH <-}\StringTok{ }\DecValTok{1}
-\NormalTok{EifNH <-}\StringTok{ }\FloatTok{.1}
-\NormalTok{H <-}\StringTok{ }\FloatTok{.1}
+\NormalTok{EifH }\OtherTok{\textless{}{-}} \DecValTok{1}
+\NormalTok{EifNH }\OtherTok{\textless{}{-}}\NormalTok{ .}\DecValTok{1}
+\NormalTok{H }\OtherTok{\textless{}{-}}\NormalTok{ .}\DecValTok{1}
 
-\NormalTok{E <-}\StringTok{ }\NormalTok{EifH }\OperatorTok{*}\StringTok{ }\NormalTok{H }\OperatorTok{+}\StringTok{ }\NormalTok{EifNH }\OperatorTok{*}\StringTok{ }\NormalTok{(}\DecValTok{1}\OperatorTok{-}\NormalTok{H)}
+\NormalTok{E }\OtherTok{\textless{}{-}}\NormalTok{ EifH }\SpecialCharTok{*}\NormalTok{ H }\SpecialCharTok{+}\NormalTok{ EifNH }\SpecialCharTok{*}\NormalTok{ (}\DecValTok{1}\SpecialCharTok{{-}}\NormalTok{H)}
 \NormalTok{E}
 \end{Highlighting}
 \end{Shaded}
@@ -407,7 +426,7 @@ the Bayesian Factor is approximately
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{BF <-}\StringTok{ }\NormalTok{EifH}\OperatorTok{/}\NormalTok{E}
+\NormalTok{BF }\OtherTok{\textless{}{-}}\NormalTok{ EifH}\SpecialCharTok{/}\NormalTok{E}
 \NormalTok{BF}
 \end{Highlighting}
 \end{Shaded}
@@ -418,11 +437,11 @@ the Bayesian Factor is approximately
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{EifH <-}\StringTok{ }\DecValTok{1}
-\NormalTok{EifNH <-}\StringTok{ }\FloatTok{.1}
-\NormalTok{H2 <-}\StringTok{ }\FloatTok{.2}
+\NormalTok{EifH }\OtherTok{\textless{}{-}} \DecValTok{1}
+\NormalTok{EifNH }\OtherTok{\textless{}{-}}\NormalTok{ .}\DecValTok{1}
+\NormalTok{H2 }\OtherTok{\textless{}{-}}\NormalTok{ .}\DecValTok{2}
 
-\NormalTok{E2 <-}\StringTok{ }\NormalTok{EifH }\OperatorTok{*}\StringTok{ }\NormalTok{H2 }\OperatorTok{+}\StringTok{ }\NormalTok{EifNH }\OperatorTok{*}\StringTok{ }\NormalTok{(}\DecValTok{1}\OperatorTok{-}\NormalTok{H2)}
+\NormalTok{E2 }\OtherTok{\textless{}{-}}\NormalTok{ EifH }\SpecialCharTok{*}\NormalTok{ H2 }\SpecialCharTok{+}\NormalTok{ EifNH }\SpecialCharTok{*}\NormalTok{ (}\DecValTok{1}\SpecialCharTok{{-}}\NormalTok{H2)}
 \NormalTok{E2}
 \end{Highlighting}
 \end{Shaded}
@@ -433,7 +452,7 @@ the Bayesian Factor is approximately
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{BF2 <-}\StringTok{ }\NormalTok{EifH}\OperatorTok{/}\NormalTok{E2}
+\NormalTok{BF2 }\OtherTok{\textless{}{-}}\NormalTok{ EifH}\SpecialCharTok{/}\NormalTok{E2}
 \NormalTok{BF2}
 \end{Highlighting}
 \end{Shaded}
@@ -482,7 +501,7 @@ hypothesis, rocking cannot count as evidence of abuse, and any of the
 low conditional probabilities involved alone does not allow us to notice
 this. Thus, in order to avoid exaggerations of the evidence both
 conditional probabilities need to be involved in the evidence strength
-evaluation (Royall, 1997, @triggsCommentWhyEffecta, @enfs2015).
+evaluation ENFSI (2015).
 
 One issue that these considerations illustrate is that what matters is
 also the probability of the evidence if the hypothesis is false. If the
@@ -545,7 +564,7 @@ prominent forensic scientist recommends that experts `not trespass on
 the province of the jury by commenting directly on the accused's guilt
 or innocence, \dots and should generally confine their testimony to
 presenting the likelihood of their evidence under competing
-propositions' (Aitken et al., 2010, p. 42).
+propositions' (Aitken, Roberts, \& Jackson, 2010, p. 42).
 
 The idea that both conditional probabilities involved in likelihood
 ratio should be used in evidence strength evaluation applies generally
@@ -558,19 +577,29 @@ of the traces? The random match probability---often interpreted as the
 probability that someone who is not the source would coincidentally
 match, \(\pr{\textsf{match} \vert \neg \textsf{source}}\)---is a common
 measure of the strength of a DNA match. The lower this probability, the
-more strongly incriminating the match. This is sensible because a low
-random match probability suggests it is unlikely two people could share
-the same DNA profile. This is, however, also in agreement with the use
-of likelihood ratio in evidence evaluation, because
-\(\pr{\textsf{match} \vert \textsf{source}}\) is practically equal to
-one, so neglecting in in evidence strength reporting does not make any
-real difference. That \(\pr{\textsf{match} \vert \neg \textsf{source}}\)
-is low is in such contexts enough to ensure that the likelihood ratio is
-significantly above one. For practical purposes, then, a suitably low
-random match probability does capture the idea that the evidence is
-strongly incriminating evidence. The conceptual point still stands,
-though. If \(\pr{\textsf{match} \vert \textsf{source}}\) was
-significantly different from one, reporting only
+more strongly incriminating the match.\footnote{A DNA profile consists
+  of pairs of alleles at several loci. Individual allele probabilities
+  are used to calculate the expected frequency of a given profile
+  \(\Gamma\) in a relevant population, so that we obtain the genotype
+  probability \(\gamma\). Assuming the so-called Hardy-Weinberg
+  equilibrium, \(\gamma\) can be obtained by multiplying the allele
+  probabilities. Very roughly, the probability of a match at any
+  particular locus is around \(\nicefrac{1}{10}\), and so the
+  probability of a match on all 20 loci used by the FBI CODIS system
+  should be \(\left(\nicefrac{1}{10}\right)^{20}\).} This is sensible
+because a low random match probability suggests it is unlikely two
+people could share the same DNA profile. This is, however, also in
+agreement with the use of likelihood ratio in evidence evaluation,
+because \(\pr{\textsf{match} \vert \textsf{source}}\) is practically
+equal to one, so neglecting in in evidence strength reporting does not
+make any real difference. That
+\(\pr{\textsf{match} \vert \neg \textsf{source}}\) is low is in such
+contexts enough to ensure that the likelihood ratio is significantly
+above one. For practical purposes, then, a suitably low random match
+probability does capture the idea that the evidence is strongly
+incriminating evidence. The conceptual point still stands, though. If
+\(\pr{\textsf{match} \vert \textsf{source}}\) was significantly
+different from one, reporting only
 \(\pr{\textsf{match} \vert \neg \textsf{source}}\) would be misleading.
 
 To better appreciate the theoretical virtues of likelihood ratios, it is
@@ -638,9 +667,9 @@ the probability of a match if Puckett indeed was the source was
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{eIfh <-}\StringTok{ }\DecValTok{1}
-\NormalTok{eIfnH <-}\StringTok{ }\NormalTok{(}\DecValTok{1}\OperatorTok{/}\FloatTok{1.1e6}\NormalTok{)}
-\NormalTok{lr <-}\StringTok{ }\NormalTok{eIfh}\OperatorTok{/}\NormalTok{eIfnH}
+\NormalTok{eIfh }\OtherTok{\textless{}{-}} \DecValTok{1}
+\NormalTok{eIfnH }\OtherTok{\textless{}{-}}\NormalTok{ (}\DecValTok{1}\SpecialCharTok{/}\FloatTok{1.1e6}\NormalTok{)}
+\NormalTok{lr }\OtherTok{\textless{}{-}}\NormalTok{ eIfh}\SpecialCharTok{/}\NormalTok{eIfnH}
 \NormalTok{lr}
 \end{Highlighting}
 \end{Shaded}
@@ -665,8 +694,8 @@ by \(338,000\) resulted in a database match probability of approximately
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{dmp <-}\StringTok{ }\DecValTok{1}\OperatorTok{/}\FloatTok{1.1e6} \OperatorTok{*}\StringTok{ }\FloatTok{338e3}
-\DecValTok{1}\OperatorTok{/}\NormalTok{dmp}
+\NormalTok{dmp }\OtherTok{\textless{}{-}} \DecValTok{1}\SpecialCharTok{/}\FloatTok{1.1e6} \SpecialCharTok{*} \FloatTok{338e3}
+\DecValTok{1}\SpecialCharTok{/}\NormalTok{dmp}
 \end{Highlighting}
 \end{Shaded}
 
@@ -813,6 +842,36 @@ more profiles in more databases. Even if all the additional profiles are
 excluded (intuitively, pointing even more clearly to the defendant as
 the perpetrator), the NRC II recommendation would require to devalue the
 cold-hit match even further. This, again, is highly counter-intuitive.
+
+The NRC II approach and the database-dependency of the hypotheses has
+been used in a defendce of the NRC II recommendation by Stockmarr
+(1999). He insists that hypotheses such as
+\emph{Smith was one of the crime scene donors} are evidence-dependent in
+the case of database search, ``since we had no way of knowing prior to
+the search that Smith would be the person that matched'\,' (p.~672).
+Instead, Stockmarr insists, we should evaluate LR using hypotheses that
+can be formulated prior to the search, such as
+\emph{the true perpetrator is among the suspects identified from the database}.
+And indeed, the likelihood of this hypothesis is as NRC II suggests,
+\(\nicefrac{k}{np}\), where \(k\) is the number of matching profiles,
+\(n\) the database size, and \(p\) the random match probability
+\citep[see][for a derivation]{stockmarr1999LikelihoodRatiosEvaluating}.
+\todo{Do you want me to go over the derivation here?}
+
+Dawid, in a discussion with Stockmarr (Dawid \& Stockmarr, 2001) points
+out that Stockmarr's hypotheses, while not depending on the result of
+the search, depend on the data themselves (because they change with the
+database size), and so they do not avoid data dependency. More
+importantly, he also indicates that Stockmarr's hypotheses are composite
+and the assessment of LR therefore requires additional assumptions about
+the priors. Once these are used with Stocmarr's own LR, the posterior is
+the same as the one obtained using the methods proposed by the critics
+of NCR II. The phenomenon is a particular case of a pheonomenon that we
+will discuss later on\todo{Crossref}: Stockmarr's hypothesis and the one
+originally used in the database search problem are equivalent
+conditional on the evidence. The pheonomenon is interesting, because it
+suggests that LR on its own might be insufficiently informative,
+especially when it is unclear what the involved hypotheses are.
 
 Perhaps a somewhat more sensible answer is obtained by assuming the
 independence of \(\mathsf{no match}\) for the members of the database
@@ -1077,7 +1136,7 @@ the likelihood ratio would be data-dependent. For instance, he insists
 that hypotheses such as \emph{JS was one of the crime scene donors} are
 evidence-dependent in the case of database search, ``since we had no way
 of knowing prior to the search that Smith would be the person that
-matched'' (p.~672). Instead, Stockmarr claims, we should evaluate LR
+matched'\,' (p.~672). Instead, Stockmarr claims, we should evaluate LR
 using hypotheses that can be formulated prior to the search, such as
 \emph{the true perpetrator is among the suspects identified from the database}.
 And indeed, the likelihood of this hypothesis is as NRC II suggests,
@@ -1125,8 +1184,8 @@ hypothesis \(H_d\) be
 the DNA match between the crime stain and the suspect (included in the
 database) and \(D\) the information that none of the \(n-1\) profiles in
 the database matches the crime stain. The likelihood ratio associated
-with \(E\) and \(D\) should be (Balding \& Donnelly, 1996; Taroni,
-Biedermann, Bozza, Garbolino, \& Aitken, 2014): \begin{align*}
+with \(E\) and \(D\) should be (David J. Balding \& Donnelly, 1996;
+Taroni, Biedermann, Bozza, Garbolino, \& Aitken, 2014): \begin{align*}
 V & = \frac{\pr{E,D\vert H_p}}{\pr{E,D\vert H_d}}.
 \end{align*} Since \(\pr{A\wedge B}=\pr{A\vert B}\pr{B}\), for any
 statement \(A\) and \(B\), this ratio can be rewritten as:
@@ -1365,7 +1424,100 @@ transcript suggests that the expert had in mind the hypotheses
 \textsf{The integrity of George's coat was corrupted.} But these
 hypotheses are neither exhaustive nor exclusive, and Keeley gave no
 clear criterion for why these hypotheses should be compared in the
-likelihood ratio (see Fenton et al., 2014 for further details).
+likelihood ratio (see Fenton, Berger, Lagnado, Neil, \& Hsu, 2014 for
+further details).
+
+\textless\textless\textless\textless\textless\textless\textless{} HEAD
+One source of the confusion in the Barry George case is the absence of
+clear rules for choosing the hypotheses in the likelihood ratio. One
+rule worth consideration is: pick competing hypotheses that are
+exclusive (they cannot be both true) and exhaustive (they cannot be both
+false). In this way, the parties would not be able to easily pick
+\textit{ad hoc} hypotheses and skew the assessment of the evidence in
+their own favor.
+
+Besides blocking easily partisan interpretations of the evidence, there
+are other principled reasons to follow the exclusive-and-exhaustive
+rule.\\
+One reason is that when the hypotheses are not exclusive or exhaustive,
+the likelihood ratio may deliver counterintuitive results and lead to
+confusion in the assessment of the strength of the evidence.
+
+If two competing hypotheses \%\(H_p\) and \(H_d\) are not mutually
+exclusive, it is possible that they both make the evidence equally
+likely (the likelihood ratio is one), and yet the posterior
+probabilities of the hypotheses given the evidence are higher than their
+prior probabilities. For instance, let \(H_p\) stand for
+\texttt{The\ defendant\ is\ guilty\textquotesingle{}\ and\ \$H\_d\$\ for}The
+defendant was not at the crime scene.' Both hypotheses might be true.
+Let \(E\) stand for `Ten minutes before the crime took place the
+defendant---seen at a different location---was overheard on the phone
+saying \emph{go ahead and kill him}.' \%\(E\) supports both \(H_p\) and
+\(H_d\), and it is conceivable that the likelihood ratio should equal
+one in this context. Yet, the posterior probabilities of each
+hypothesis, given \(E\), should be higher than its prior probability.
+So, intuitively, the evidence should positively support each hypothesis,
+contrary to what the likelihood ratio would suggest.
+
+Further, when the two competing hypotheses are not exhaustive, the
+likelihood ratio might then equal one even though the evidence lowers
+their posterior probability. For example, suppose Fred and Bill
+attempted to rob a man. The victim resisted, was struck on the head and
+died. Say \(H_p\) stand for
+\texttt{Fred\ struck\ the\ fatal\ blow\textquotesingle{}\ and\ \$H\_d\$\ stand\ for}Bill
+struck the fatal blow.' The hypotheses are not exhaustive. A missing
+hypothesis is `The man did not die from the blow.' Suppose \(E\) is the
+information that the victim had a heart attack six months earlier. The
+likelihood ratio \(\nicefrac{\pr(E \vert H_p)}{\pr(E \vert H_d)}\)
+equals one since \(\pr(E\vert H_p)=\pr(E\vert H_d)\). Yet \(E\) reduces
+the probability of both \(H_p\) and \(H_d\), because it increases the
+probability that the victim had a heart attack during the attack, and
+this was the fatal factor. So, in this case, the evidence should
+negatively support each hypothesis, contrary to what the likelihood
+ratio suggests.
+
+Despite these reasons, however, always requiring that the hypotheses
+involved be exclusive and exhaustive is not without complications
+either. For consider an expert who decides to formulate the defense
+hypothesis by negating the prosecution hypothesis, say, `the defendant
+did not hit the victim in the head.' This choice of defense hypothesis
+can be unhelpful in assessing the evidence, because the required
+probabilities are hard to estimate. For instance, what is the
+probability that the suspect would carry such and such blood stain if he
+did not hit the victim in the head? This depends on whether he was
+present at the scene, what he was doing at the time and many other
+circumstances. Similarly, in a rape case, it might be hard to estimate
+the probability of the matching evidence if the suspect did not have the
+intercourse with the victim, because the hypothesis leaves open multiple
+different scenarios. Instead, what is considered is the hypothesis that
+someone else, unrelated to the suspect, had intercourse with the victim.
+\todo{I know you cut the rape example, but I think it is important; do you find it in  any way offensive or controversial?}
+
+As \citet{evett2000MoreHierarchyPropositions} point out, in real-life
+difficult cases the choice of a particular hypothesis to be used in the
+evaluation of the strength of the evidence will depend on contextual
+factors. For instance, the lack of semen in a rape case can be sometimes
+evaluated using the hypothesis
+\emph{ the intercourse did not take place}, and sometimes using
+\emph{the intercourse took place, but the complainant used a vagina douche},
+or \emph{another sexual act took place}, depending on what is known
+about the case at hand. More often than not, the hypotheses chosen will
+not be mutually exclusive.
+
+\hypertarget{moreover-comparing-exclusive-and-exhaustive-hypotheses-can-also-be-unhelpful-for-jurors-or-judges-making-a-decision-at-trial.-in-a-paternity-case-for-example-the-expert-should-not-compare-the-hypotheses-the-accused-is-the-father-of-the-child-and-its-negation-but-ratherthe-accused-is-the-father-of-the-child-and-the-father-of-the-child-is-a-man-unrelated-to-the-putative-father-.-the-choice-of-the-latter-pair-of-competing-hypotheses-is-preferable.-even-though-theoretically-the-relatives-of-the-accused-are-potential-fathers-considering-such-a-far-fetched-possibility-would-make-the-assessment-of-the-evidence-more-difficult-than-needed.}{%
+\section{\texorpdfstring{Moreover, comparing exclusive and exhaustive
+hypotheses can also be unhelpful for jurors or judges making a decision
+at trial. In a paternity case, for example, the expert should not
+compare the hypotheses
+\texttt{The\ accused\ is\ the\ father\ of\ the\ child\textquotesingle{}\ and\ \ its\ negation,\ but\ rather,}The
+accused is the father of the child' and `The father of the child is a
+man unrelated to the putative father'
+\citep{biedermann2014UseLikelihoodRatio}. The choice of the latter pair
+of competing hypotheses is preferable. Even though, theoretically, the
+relatives of the accused are potential fathers, considering such a
+far-fetched possibility would make the assessment of the evidence more
+difficult than
+needed.}{Moreover, comparing exclusive and exhaustive hypotheses can also be unhelpful for jurors or judges making a decision at trial. In a paternity case, for example, the expert should not compare the hypotheses The accused is the father of the child' and  its negation, but rather,The accused is the father of the child' and `The father of the child is a man unrelated to the putative father' . The choice of the latter pair of competing hypotheses is preferable. Even though, theoretically, the relatives of the accused are potential fathers, considering such a far-fetched possibility would make the assessment of the evidence more difficult than needed.}}\label{moreover-comparing-exclusive-and-exhaustive-hypotheses-can-also-be-unhelpful-for-jurors-or-judges-making-a-decision-at-trial.-in-a-paternity-case-for-example-the-expert-should-not-compare-the-hypotheses-the-accused-is-the-father-of-the-child-and-its-negation-but-ratherthe-accused-is-the-father-of-the-child-and-the-father-of-the-child-is-a-man-unrelated-to-the-putative-father-.-the-choice-of-the-latter-pair-of-competing-hypotheses-is-preferable.-even-though-theoretically-the-relatives-of-the-accused-are-potential-fathers-considering-such-a-far-fetched-possibility-would-make-the-assessment-of-the-evidence-more-difficult-than-needed.}}
 
 The confusion in the Barry George case is attributable to the absence of
 clear rules for choosing the hypotheses in the likelihood ratio. One
@@ -1426,12 +1578,12 @@ circumstances. Similarly, in a rape case, it is hard to estimate the
 probability of the matching evidence if the suspect did not have the
 intercourse with the victim. Instead, what is considered is the
 hypothesis that someone else, unrelated to the suspect, had intercourse
-with the victim. As (Evett et al., 2000) point out, in many real life
-rape cases the choice of a particular hypothesis to be used by the
-expert in the evaluation of the strength of the evidence (of, say, the
-lack of semen in a rape case), will depend on contextual factors.
-Sometimes it will be \emph{intercourse did not take place}, sometimes it
-will be
+with the victim. As (Evett, Jackson, \& Lambert, 2000) point out, in
+many real life rape cases the choice of a particular hypothesis to be
+used by the expert in the evaluation of the strength of the evidence
+(of, say, the lack of semen in a rape case), will depend on contextual
+factors. Sometimes it will be \emph{intercourse did not take place},
+sometimes it will be
 \emph{the intercourse took place, but the complainant used a vagina douche},
 or sometimes \emph{another sexual act took place}. More often than not,
 the hypotheses chosen will not be mutually exclusive.
@@ -1459,7 +1611,7 @@ stain was left by the suspect,' is also 1. This would result in a rather
 uninformative likelihood ratio of 1. Another feature of such specific
 explanations is that it's hard to reasonably estimate their prior
 probability, and so hard to use them in arguments between opposing
-sides. (Evett et al., 2000).
+sides. (Evett, Jackson, \& Lambert, 2000).
 
 So, it seems, the choice of competing hypotheses lies between two
 extremes. Exclusive and exhaustive hypotheses guard against arbitrary
@@ -1471,11 +1623,36 @@ is preferable. The danger of doing so, however, is slipping into
 arbitrariness as likelihood ratios heavily depend on the hypotheses that
 are compared. The more latitude in the choice of the hypotheses, the
 more variable the likelihood ratio as a measure of evidentiary value.
+\textgreater\textgreater\textgreater\textgreater\textgreater\textgreater\textgreater{}
+76c774c027dd1a7096ac4510fb3d2b01deef8816
 
-Here is a particularly troubling phenomenon. Competing hypotheses can
-concern any factual dispute, from minute details such as whether the
-cloth used to suffocate the victim was red or blue, to ultimate
-questions such as whether the defendant stabbed the victim.\\
+At the same time, if the defense hypothesis is too specific,
+\textit{ad hoc} and entails the evidence, it won't be of much use
+either. For example, take
+\texttt{The\ crime\ stain\ was\ left\ by\ some\ unknown\ person\ who\ happened\ to\ have\ the\ same\ genotype\ as\ the\ suspect.\textquotesingle{}\ The\ probability\ of\ a\ DNA\ match\ given\ this\ hypothesis\ would\ be\ 1.\ \ \ But\ usually\ the\ probability\ of\ the\ DNA\ match\ given\ the\ prosecution\textquotesingle{}s\ hypothesis,\ say}The
+crime stain was left by the suspect,' is also 1. This would result in a
+rather uninformative likelihood ratio of 1
+\citep{evett2000MoreHierarchyPropositions}.
+
+\textless\textless\textless\textless\textless\textless\textless{} HEAD
+
+Any choice of competing hypotheses lies between two extremes. For one
+thing, exclusive and exhaustive hypotheses help the decision-makers to
+avoid arbitrary comparisons and ensure a more objective assessment of
+the evidence. The drawback is that exhaustive and exclusive hypothesis
+cover the entire space of possibilities, and sifting through this space
+might be cognitively unfeasible. So, in this respect, comparing more
+circumscribed hypotheses is preferable, especially if the context
+provides further information that suggests more specific alternative
+hypotheses. The danger of not using exclusive and exhaustive hypotheses,
+however, is slipping into arbitrariness, as likelihood ratios heavily
+depend on the hypotheses that are compared. The more latitude in the
+choice of the hypotheses, the more variable the likelihood ratio as a
+measure of evidentiary value. ======= Here is a particularly troubling
+phenomenon. Competing hypotheses can concern any factual dispute, from
+minute details such as whether the cloth used to suffocate the victim
+was red or blue, to ultimate questions such as whether the defendant
+stabbed the victim.\\
 As it turns out, the likelihood ratio varies across hypotheses
 formulated at different levels of granularity: offense, activity and
 source level hypotheses. It is even possible that, at the source level,
@@ -1484,9 +1661,9 @@ offence level, the likelihood ratio favors the other side, say the
 defense, even though the hypotheses at the two levels are quite similar.
 Further, a likelihood ratio that equals 1 when source level hypotheses
 are compared may tip in favor of one side or the other when offence
-level hypotheses are compared (Fenton et al., 2014). This variability
-makes the likelihood ratio a seemingly arbitrary---and easily
-manipulable---measure of evidentiary value.
+level hypotheses are compared (Fenton, Berger, Lagnado, Neil, \& Hsu,
+2014). This variability makes the likelihood ratio a seemingly
+arbitrary---and easily manipulable---measure of evidentiary value.
 
 The likelihood ratio can be misleading, but this risk is mitigated when
 its assessment is accompanied by a careful discussion of a number of
@@ -1495,10 +1672,135 @@ formulated; their level of granularity (that is, source, activity and
 offense level); why the hypotheses are (or are not) exclusive and
 exhaustive; why other hypotheses are ruled out as unworthy of
 consideration.
+\textgreater\textgreater\textgreater\textgreater\textgreater\textgreater\textgreater{}
+76c774c027dd1a7096ac4510fb3d2b01deef8816
 
-\hypertarget{levels-of-hypotheses-abd-the-two-stain-problem}{%
-\section{Levels of Hypotheses abd the two-stain
-problem}\label{levels-of-hypotheses-abd-the-two-stain-problem}}
+Here is a particularly troubling phenomenon. Competing hypotheses can
+concern any factual dispute, from minute details such as whether the
+cloth used to suffocate the victim was red or blue, to ultimate
+questions such as whether the defendant stabbed the victim. As it turns
+out, the likelihood ratio varies across hypotheses formulated at
+different levels of granularity: offense, activity and source level
+hypotheses (read on for more on this distinction). It is even possible
+that, at the source level, the likelihood ratio favors one side, say the
+prosecution, but at the offence level, the likelihood ratio favors the
+other side, say the defense, even though the hypotheses at the two
+levels are quite similar. Further, a likelihood ratio that equals 1 when
+source level hypotheses are compared may tip in favor of one side or the
+other when offence level hypotheses are compared
+\citep{fenton2014WhenNeutralEvidence}. This variability makes the
+likelihood ratio a seemingly arbitrary---and easily
+manipulable---measure of evidentiary value. This is not to say that it
+is unhelpful.
+
+Since expert witnesses often rely on the likelihood ratio when they
+assess the probative value of many forms of evidence \citep{enfs2015}
+and the likelihood ratio can be misleading given its sensitivity to
+hypothesis choice. One framework meant to mitigate the difficulty is
+provided by the notion of the level of a hypothesis.
+
+\hypertarget{levels-of-hypotheses}{%
+\section{\texorpdfstring{Levels of hypotheses
+\label{subsec:levelsHypotheses}}{Levels of hypotheses }}\label{levels-of-hypotheses}}
+
+\textless\textless\textless\textless\textless\textless\textless{} HEAD
+Difficulties in assessing probabilities go hand in hand with the choice
+of the hypotheses of interest. To some approximation, hypotheses can be
+divided into three levels: offence, activity, and source level
+hypotheses. At the offence level, the issue is one of guilt or
+innocence, as in the statement
+\texttt{Smith\ intentionally\ attacked\ the\ victim\ with\ a\ knife\textquotesingle{}.\ \ At\ the\ activity\ level,\ hypotheses\ \ do\ not\ include\ information\ about\ intent,\ but\ simply\ describe\ what\ happened\ and\ what\ those\ involved\ did\ or\ did\ not\ do.\ An\ example\ of\ activity\ level\ hypothesis\ is}Smith
+bled at the scene.' Finally, source level hypotheses describe the source
+of the traces, such as `Smith left the stains at the crime scene,'
+without specifying how the traces got there. Overlooking differences in
+hypothesis level can lead to serious confusions.
+
+To illustrate, consider a case in which a DNA match is the primary
+incriminating evidence. In testifying about the DNA match at trial,
+experts will often assess the probability that a random person,
+unrelated to the crime, would coincidentally match the crime stain
+profile.\^{}{[}For a survey of developments and complications of this
+model, see (Foreman et al., 2003). The random match probability (RMP) is
+often an impressively low number, say 1 in 100 million or lower, at
+least excluding the possibility that relatives or identical twins would
+coincidentally match (Donnelly, 1995). =======
+
+\begin{quote}
+\begin{quote}
+\begin{quote}
+\begin{quote}
+\begin{quote}
+\begin{quote}
+\begin{quote}
+76c774c027dd1a7096ac4510fb3d2b01deef8816
+\end{quote}
+\end{quote}
+\end{quote}
+\end{quote}
+\end{quote}
+\end{quote}
+\end{quote}
+
+To avoid a straightforward confusion, it is important to remember that
+RMP is not the posterior probability of innocence since
+\(\pr(\textsf{match} \vert \textsf{innocence})\) should not be confused
+with \(\pr(\textsf{innocence} \vert \textsf{match})\). The random match
+probability---to some extent---speaks to the former, not the latter
+probability. To confuse the two would be to commit the prosecutor's
+fallacy.
+
+\textless\textless\textless\textless\textless\textless\textless{} HEAD
+Second, since low RMP indicates that it is extremely unlikely that a
+random person would match, it is tempting to equate RMP to
+\(\pr(\textsf{match} \vert \textsf{innocence})\) and together with the
+prior \(\pr(\textsf{innocence})\) use Bayes' theorem to calculate\\
+the posterior probability of innocence
+\(\pr(\textsf{innocence} \vert \textsf{match})\).
+
+But this also would be a mistake. Equating the random match probability
+with \(\pr(\textsf{match} \vert \textsf{innocence})\) overlooks the
+difference between offense, activity and source level hypothesis. It is
+hasty to assume that, in one way or another, a DNA match can speak
+directly to the question of guilt or innocence. Even if the suspect
+actually left the genetic material at the scene---source level
+proposition---the match does not establish guilt. Even if the defendant
+did visit the scene and came into contact with the victim, it does not
+follow that he committed the crime he was accused of---the offence level
+hypothesis.
+
+Few forms of evidence can speak directly to offense level hypotheses.
+Circumstantial evidence that is more amenable to a probabilistic
+quantification, such as DNA matches and other trace evidence, does not.
+Eyewitness testimony may speak more directly to offense level
+hypotheses, but it is also less easily amenable to a probabilistic
+quantification. This makes it difficult to assign probabilities to
+offense level hypotheses. Experts are usually not supposed to comment
+directly on offense level hypotheses, but they often comment on activity
+level and source level hypotheses. In moving from source to activity
+level, however, additional sources of uncertainty come into play.
+
+Even the assessment of activity level hypotheses depends on additional
+variables other than those on which the assessment of source level
+hypotheses depends. For example, the probability of finding such and
+such quantity of matching glass if the suspect smashed the window
+depends on how the window was smashed, when it was smashed, and what the
+suspect did after the action. Another problem arises due to recent
+improvements in DNA profiling technology \citep{Cook1998hierarchy}.
+Since today investigators are able to obtain profiles from minimal
+amounts of genetic material, transfer probabilities become more
+difficult to assess as more opportunities of transfer arise. If small
+traces such as dust speckles can be used as evidence, the possibility
+that the traces were brought to the scene accidentally becomes more
+likely. For this reason, moving beyond source level hypotheses requires
+a close collaboration between scientists, investigators and attorneys
+\citep[see][for a discussion]{Cook1998hierarchy}. Since the hypotheses
+themselves are up for revision as evidence is obtained or facts about
+what happened are accepted \citep{evett2000MoreHierarchyPropositions},
+the likelihood ratio might change with the choice of the hypotheses, the
+clarity on the choice of the hypotheses, and their level in particular,
+is crucial.
+
+======= \# Levels of Hypotheses abd the two-stain problem
 
 Difficulties in assessing probabilities go hand in hand with the choice
 of the hypotheses of interest. To some approximation, hypotheses can be
@@ -1513,6 +1815,8 @@ hypotheses describe the source of the traces, such as `Smith left the
 stains at the crime scene,' without specifying how the traces got there.
 Overlooking differences in hypothesis level can lead to serious
 confusions.
+\textgreater\textgreater\textgreater\textgreater\textgreater\textgreater\textgreater{}
+76c774c027dd1a7096ac4510fb3d2b01deef8816
 
 To illustrate, consider a case in which a DNA match is the primary
 incriminating evidence. In testifying about the DNA match at trial,
@@ -1582,7 +1886,8 @@ likely. For this reason, moving beyond source level hypotheses requires
 a close collaboration between scientists, investigators and attorneys
 (see Cook, Evett, Jackson, \& Jones, 1998 for a discussion). The choice
 and formulation of the hypotheses are up for revision as new evidence is
-obtained or facts about what happened are accepted (Evett et al., 2000).
+obtained or facts about what happened are accepted (Evett, Jackson, \&
+Lambert, 2000).
 
 A case study that further illustrates both advatanges and limitations of
 the likelihood ratio as a measure of evidentiary strength is the
@@ -1743,24 +2048,25 @@ hypotheses chosen. This strategy concedes that likelihood ratios, in and
 of themselves, are insufficiently informative, and that they should be
 combined with other information, such as a range of priors, to allow for
 an adequate assessment of\todo{crossref in fn} the evidence.\footnote{The
-  reference class problem is lurking in the background. Balding (2004)
-  argues that, in order to calculate the probability of a match given
-  the evidence, the class of possible culprits should be identified, and
-  different choices of such a class might lead to different likelihood
-  ratios. On the problem of priors see. On the reference class problem,
-  see \ref{sec:reference}.}
+  reference class problem is lurking in the background. David J. Balding
+  (2004) argues that, in order to calculate the probability of a match
+  given the evidence, the class of possible culprits should be
+  identified, and different choices of such a class might lead to
+  different likelihood ratios. On the problem of priors see. On the
+  reference class problem, see \ref{sec:reference}.}
 
 The sensitivity of the likelihood ratio to the choice of hypotheses is
 not confined to the two-stain problem or alike scenarios. Recall our
 disussion of DNA matches in cold-hit cases. When the suspect is
-identified through a database search of different profiles, Taroni et
-al. (2014) and Balding \& Donnelly (1996) have argued that the
-likelihood ratio of the match---which usually equals 1/\(\gamma\) where
-\(\gamma\) is the random match probability---should be adjusted by the
-database search ratio (seeearlier in \todo{crossref} for details). This
-proposal tacitly assumes that the hypothesis of interest is something
-like `the defendant is the true source of the crime traces.' This
-assumption is eminently plausible but not uncontroversial.\\
+identified through a database search of different profiles, Taroni,
+Biedermann, Bozza, Garbolino, \& Aitken (2014) and David J. Balding \&
+Donnelly (1996) have argued that the likelihood ratio of the
+match---which usually equals 1/\(\gamma\) where \(\gamma\) is the random
+match probability---should be adjusted by the database search ratio
+(seeearlier in \todo{crossref} for details). This proposal tacitly
+assumes that the hypothesis of interest is something like `the defendant
+is the true source of the crime traces.' This assumption is eminently
+plausible but not uncontroversial.\\
 As we already discussed, the National Research Council (NRC II)
 recommended in 1996 that that the likelihood ratio of the match
 1/\(\gamma\) be divided by the size of the database. In defending this
@@ -1929,15 +2235,15 @@ Lagnado, 2019), for exclusive and exhaustive hypotheses,
 \(LR(E,H_p, \neg H_p)=1.75\), since \(P(E\vert H_d)=0.7\) and
 \(P(E\vert \neg H_d)=0.4\). The likelihood ratio of the evidence, if it
 is measured against exclusive and exhaustive hypotheses, is not equal to
-one.\^{}{[} de Zoete et al. (2019) offer a slightly different solution
-to the problem. They construct a Bayesian network with three hypotheses,
-also exhaustive and exclusive: in town to visit mother, in town to
-murder, out of town.\} Such considerations should also generalize to
-other paradoxes of relevance.
+one.\^{}{[} de Zoete, Fenton, Noguchi, \& Lagnado (2019) offer a
+slightly different solution to the problem. They construct a Bayesian
+network with three hypotheses, also exhaustive and exclusive: in town to
+visit mother, in town to murder, out of town.\} Such considerations
+should also generalize to other paradoxes of relevance.
 
 For instance, in the twins problem, the LR is 1 if the hypotheses are:
-`the suspect committed the crime', and `the suspect's twin brother
-committed the crime', but is not 1 f we consider the fairly natural
+`the suspect committed the crime,' and `the suspect's twin brother
+committed the crime,' but is not 1 f we consider the fairly natural
 hypothesis that the defendant is innocent.
 
 Similarly, in the food tray example, Bayesian network analysis shows
@@ -1959,34 +2265,37 @@ recognizable probabilistic impact on the prosecutor's or defense's
 ultimate hypotheses. When this happens, it is relevant, in agreement
 with Rule 401 of the Federal Rules of Evidence. Bayesian networks help
 to see how pieces of evidence can increase or decrease the probability
-of different sub-hypotheses (de Zoete et al., 2019).
+of different sub-hypotheses (de Zoete, Fenton, Noguchi, \& Lagnado,
+2019).
 
 \hypertarget{references}{%
 \section*{References}\label{references}}
 \addcontentsline{toc}{section}{References}
 
 \hypertarget{refs}{}
+\begin{CSLReferences}{1}{0}
 \leavevmode\hypertarget{ref-aitken2010fundamentals}{}%
 Aitken, C., Roberts, P., \& Jackson, G. (2010). Fundamentals of
 probability and statistical evidence in criminal proceedings
-(Practitioner Guide No. 1), Guidance for judges, lawyers, forensic
-scientists and expert witnesses. \emph{Royal Statistical Society's
-Working Group on Statistics and the Law}.
+({P}ractitioner {G}uide {N}o. 1), {G}uidance for judges, lawyers,
+forensic scientists and expert witnesses. \emph{Royal Statistical
+Society's Working Group on Statistics and the Law}.
 
 \leavevmode\hypertarget{ref-balding2004comment}{}%
-Balding, D. J. (2004). Comment on: Why the effect of prior odds should
-accompany the likelihood ratio when reporting dna evidence. \emph{Law,
-Probability and Risk}, \emph{3}(1), 63--64. Oxford Univ Press.
+Balding, David J. (2004). Comment on: Why the effect of prior odds
+should accompany the likelihood ratio when reporting DNA evidence.
+\emph{Law, Probability and Risk}, \emph{3}(1), 63--64. Oxford Univ
+Press.
 
 \leavevmode\hypertarget{ref-balding1996EvaluatingDNAProfilea}{}%
-Balding, D. J., \& Donnelly, P. (1996). Evaluating DNA Profile Evidence
-When the Suspect Is Identified Through a Database Search. \emph{Journal
-of Forensic Sciences}, \emph{41}(4), 13961J.
+Balding, David J., \& Donnelly, P. (1996). Evaluating {DNA Profile
+Evidence When} the {Suspect Is Identified Through} a {Database Search}.
+\emph{Journal of Forensic Sciences}, \emph{41}(4), 13961J.
 
 \leavevmode\hypertarget{ref-biedermann2014UseLikelihoodRatio}{}%
 Biedermann, A., Hicks, T., Taroni, F., Champod, C., \& Aitken, C.
 (2014). On the use of the likelihood ratio for forensic evaluation:
-Response to Fenton et al. \emph{Science \& Justice}, \emph{54}(4),
+{Response} to {Fenton} et al. \emph{Science \& Justice}, \emph{54}(4),
 316--318.
 
 \leavevmode\hypertarget{ref-Cook1998hierarchy}{}%
@@ -1996,43 +2305,43 @@ propositions: Deciding which level to address in casework. \emph{Science
 
 \leavevmode\hypertarget{ref-dawid1994island}{}%
 Dawid, A. P. (1994). The island problem: Coherent use of identification
-evidence. In P. Freeman \& A. Smith (Eds.), \emph{Aspects of
-uncertainty: A tribute to D. V. Lindley} (pp. 159--170). John Wiley \&
+evidence. In P. R. Freeman \& A. F. M. Smith (Eds.), \emph{Aspects of
+uncertainty: A tribute to {D. V. Lindley}} (pp. 159--170). John Wiley \&
 Sons, New York.
 
 \leavevmode\hypertarget{ref-dawid2004likelihood}{}%
-Dawid, A. P. (2004). Which likelihood ratio? (Comment on ``Why the
+Dawid, A. P. (2004). Which likelihood ratio? (Comment on {`{W}hy the
 effect of prior odds should accompany the likelihood ratio when
-reporting DNA evidence'', by Ronald Meester and Marjan Sjerps).
-\emph{Law, probability and risk}, \emph{3}(1), 65--71. Oxford Univ
-Press.
+reporting {DNA} evidence,'} by {R}onald {M}eester and {M}arjan
+{S}jerps). \emph{Law, probability and risk}, \emph{3}(1), 65--71. Oxford
+Univ Press.
 
 \leavevmode\hypertarget{ref-dawid1996CoherentAnalysisForensic}{}%
-Dawid, A. P., \& Mortera, J. (1996). Coherent Analysis of Forensic
-Identification Evidence. \emph{Journal of the Royal Statistical Society.
-Series B (Methodological)}, \emph{58}(2), 425--443.
+Dawid, A. P., \& Mortera, J. (1996). Coherent {Analysis} of {Forensic
+Identification Evidence}. \emph{Journal of the Royal Statistical
+Society. Series B (Methodological)}, \emph{58}(2), 425--443.
 
 \leavevmode\hypertarget{ref-dawid2001CommentStockmarrLikelihood}{}%
-Dawid, A. P., \& Stockmarr, A. (2001). Comment on Stockmarr's
-``Likelihood Ratios for Evaluating DNA Evidence When the Suspect Is
-Found through a Database Search''. \emph{Biometrics}, \emph{57}(3),
-976--980.
+Dawid, A. P., \& Stockmarr, A. (2001). Comment on {Stockmarr}'s
+{``{Likelihood Ratios} for {Evaluating DNA Evidence When} the {Suspect
+Is Found} through a {Database Search}.''} \emph{Biometrics},
+\emph{57}(3), 976--980.
 
 \leavevmode\hypertarget{ref-dezoete2019ResolvingSocalledProbabilistic}{}%
 de Zoete, J. C., Fenton, N., Noguchi, T., \& Lagnado, D. (2019).
-Resolving the so-called ``probabilistic paradoxes in legal reasoning''
-with Bayesian networks. \emph{Science \& Justice}, \emph{59}(4),
+Resolving the so-called {``probabilistic paradoxes in legal reasoning''}
+with {Bayesian} networks. \emph{Science \& Justice}, \emph{59}(4),
 367--379.
 
 \leavevmode\hypertarget{ref-donnelly1995NonindependenceMatchesDifferent}{}%
-Donnelly, P. (1995). Nonindependence of matches at different loci in DNA
-profiles: Quantifying the effect of close relatives on the match
+Donnelly, P. (1995). Nonindependence of matches at different loci in
+{DNA} profiles: Quantifying the effect of close relatives on the match
 probability. \emph{Heredity}, \emph{75}(1), 26--34.
 
 \leavevmode\hypertarget{ref-donnelly1999DNADatabaseSearches}{}%
-Donnelly, P., \& Friedman, R. D. (1999). DNA Database Searches and the
-Legal Consumption of Scientific Evidence. \emph{Michigan Law Review},
-\emph{97}(4), 931.
+Donnelly, P., \& Friedman, R. D. (1999). {DNA Database Searches} and the
+{Legal Consumption} of {Scientific Evidence}. \emph{Michigan Law
+Review}, \emph{97}(4), 931.
 
 \leavevmode\hypertarget{ref-eggleston1978evidence}{}%
 Eggleston, R. (1978). \emph{Evidence, proof and probability} (Vol. 2).
@@ -2043,20 +2352,21 @@ ENFSI. (2015). \emph{Guidelines for evaluative reporting in forensic
 sciences}.
 
 \leavevmode\hypertarget{ref-Evett1987}{}%
-Evett, I. (1987). On meaningful questions: A two-trace transfer problem.
-\emph{Journal of the Forensic Science Society}, \emph{27}(6), 375--381.
-Elsevier BV. Retrieved from
+Evett, I. W. (1987). On meaningful questions: A two-trace transfer
+problem. \emph{Journal of the Forensic Science Society}, \emph{27}(6),
+375--381. Elsevier {BV}. Retrieved from
 \url{https://doi.org/10.1016/s0015-7368(87)72785-6}
 
 \leavevmode\hypertarget{ref-evett2000MoreHierarchyPropositions}{}%
-Evett, I., Jackson, G., \& Lambert, J. (2000). More on the hierarchy of
-propositions: Exploring the distinction between explanations and
-propositions. \emph{Science \& Justice}, \emph{40}(1), 3--10.
+Evett, I. W., Jackson, G., \& Lambert, J. A. (2000). More on the
+hierarchy of propositions: Exploring the distinction between
+explanations and propositions. \emph{Science \& Justice}, \emph{40}(1),
+3--10.
 
 \leavevmode\hypertarget{ref-fenton2014WhenNeutralEvidence}{}%
 Fenton, N., Berger, D., Lagnado, D., Neil, M., \& Hsu, A. (2014). When
-``neutral'' evidence still has probative value (with implications from
-the Barry George Case). \emph{Science \& Justice}, \emph{54}(4),
+{`neutral'} evidence still has probative value (with implications from
+the {Barry George Case}). \emph{Science \& Justice}, \emph{54}(4),
 274--287.
 
 \leavevmode\hypertarget{ref-finkelstein2009basic}{}%
@@ -2065,7 +2375,7 @@ statistics in the law}. Springer.
 
 \leavevmode\hypertarget{ref-foreman2003interpreting}{}%
 Foreman, L., Champod, C., Evett, I. W., Lambert, J., Pope, S., \&
-others. (2003). Interpreting dna evidence: A review. \emph{International
+others. (2003). Interpreting DNA evidence: A review. \emph{International
 Statistical Review}, \emph{71}(3), 473--495. International Statistical
 Institute.
 
@@ -2079,31 +2389,32 @@ Cambridge University Press.
 
 \leavevmode\hypertarget{ref-meester2004WhyEffectPriora}{}%
 Meester, R., \& Sjerps, M. (2004a). Why the effect of prior odds should
-accompany the likelihood ratio when reporting DNA evidence. \emph{Law,
+accompany the likelihood ratio when reporting {DNA} evidence. \emph{Law,
 Probability and Risk}, \emph{3}(1), 51--62.
 
 \leavevmode\hypertarget{ref-meester2004ResponseDawidBalding}{}%
-Meester, R., \& Sjerps, M. (2004b). Response to Dawid, Balding, Triggs
-and Buckleton. \emph{Law, Probability and Risk}, \emph{3}(1), 83--86.
+Meester, R., \& Sjerps, M. (2004b). Response to {Dawid}, {Balding},
+{Triggs} and {Buckleton}. \emph{Law, Probability and Risk}, \emph{3}(1),
+83--86.
 
 \leavevmode\hypertarget{ref-NRCI1992}{}%
-National Research Council. (1992). \emph{DNA technology in forensic
-science \textup{{[}NRC I{]}}}. Committee on DNA technology in Forensic
-Science, National Research Council.
+National Research Council. (1992). \emph{{DNA} technology in forensic
+science {\emph{{[}NRC I{]}}}}. Committee on {DNA} technology in
+{F}orensic {S}cience, {N}ational {R}esearch {C}ouncil.
 
 \leavevmode\hypertarget{ref-NRCII1996}{}%
-National Research Council. (1996). \emph{The evaluation of forensic DNA
-evidence \textup{{[}NRC II{]}}}. Committee on DNA technology in Forensic
-Science, National Research Council.
+National Research Council. (1996). \emph{The evaluation of forensic
+{DNA} evidence {\emph{{[}NRC II{]}}}}. Committee on {DNA} technology in
+{F}orensic {S}cience, {N}ational {R}esearch {C}ouncil.
 
 \leavevmode\hypertarget{ref-pardo2013NaturePurposeEvidence}{}%
-Pardo, M. S. (2013). The Nature and Purpose of Evidence Theory.
+Pardo, M. S. (2013). The {Nature} and {Purpose} of {Evidence Theory}.
 \emph{Vanderbilt Law Review}, \emph{66}, 547--613.
 
 \leavevmode\hypertarget{ref-park2010BayesWarsRedivivus}{}%
 Park, R. C., Tillers, P., Moss, F. C., Risinger, D. M., Kaye, D. H.,
-Allen, R. J., Gross, S. R., et al. (2010). Bayes Wars Redivivus -- An
-Exchange. \emph{International Commentary on Evidence}, \emph{8}(1).
+Allen, R. J., Gross, S. R., et al. (2010). Bayes {Wars Redivivus} -- {An
+Exchange}. \emph{International Commentary on Evidence}, \emph{8}(1).
 
 \leavevmode\hypertarget{ref-robertson2016interpreting}{}%
 Robertson, B., Vignaux, G., \& Berger, C. (2016). \emph{Interpreting
@@ -2115,9 +2426,9 @@ Royall, R. M. (1997). \emph{Statistical evidence: A likelihood
 paradigm}. Chapman; Hall/CRC.
 
 \leavevmode\hypertarget{ref-stockmarr1999LikelihoodRatiosEvaluating}{}%
-Stockmarr, A. (1999). Likelihood Ratios for Evaluating DNA Evidence When
-the Suspect is Found Through a Database Search. \emph{Biometrics},
-\emph{55}(3), 671--677.
+Stockmarr, A. (1999). Likelihood {Ratios} for {Evaluating DNA Evidence
+When} the {Suspect} is {Found Through} a {Database Search}.
+\emph{Biometrics}, \emph{55}(3), 671--677.
 
 \leavevmode\hypertarget{ref-taroni2006bayesian}{}%
 Taroni, F., Biedermann, A., Bozza, S., Garbolino, P., \& Aitken, C.
@@ -2125,8 +2436,10 @@ Taroni, F., Biedermann, A., Bozza, S., Garbolino, P., \& Aitken, C.
 analysis in forensic science} (2nd ed.). John Wiley \& Sons.
 
 \leavevmode\hypertarget{ref-triggsCommentWhyEffecta}{}%
-Triggs, C. M., \& Buckleton, J. S. (2004). Comment on: Why the effect of
-prior odds should accompany the likelihood ratio when reporting DNA
+Triggs, C. M., \& Buckleton, J. S. (2004). Comment on: {Why} the effect
+of prior odds should accompany the likelihood ratio when reporting {DNA}
 evidence. \emph{Law, Probability and Risk}, \emph{3}, 73--82.
+
+\end{CSLReferences}
 
 \end{document}
