@@ -6,6 +6,9 @@ getwd() #this should be the project directory
 
 conjunctionTable <- readRDS(file = "datasets/conjunctionTable.RDS")
 
+
+conjunctionTable
+
 nrow(conjunctionTable)
 colnames(conjunctionTable)
 attach(conjunctionTable)
