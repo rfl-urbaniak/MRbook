@@ -805,7 +805,7 @@ The simplification of the other two summanda is analogous (albeit with slightly 
 
 <!-- \[\pr{a \et b\vert \neg (A\et B)} = \frac{\pr{\neg A}\pr{B \vert \neg A} \pr{a \vert \neg A}\pr{b \vert B} + \pr{A}\pr{\neg B \vert A} \pr{a \vert A }\pr{b \vert \neg B} + \pr{\neg A}\pr{\neg B \vert \neg A } \pr{a \vert \neg A}\pr{b \vert \neg B}}{\pr{\neg A}\pr{B \vert \neg A} + \pr{A}\pr{\neg B \vert A } + \pr{\neg A}\pr{\neg B \vert \neg A} } \] -->
 
-\noindent  \eqref{eq:jointLR2} is easily obtained from \eqref{eq:jointLR}  by  \label{eq:indAB} and  \label{eq:indAB2}. 
+\noindent  \eqref{eq:jointLR2} is easily obtained from \eqref{eq:jointLR}  by  \label{eq:indAB}.  
 \textbf{Argument ends.}
 
 
@@ -909,7 +909,7 @@ fully general and drop all the simplifying assumptions (.e.g. independence or eq
 Notice that even if the composite likelihood ratio behaves somewhat differently than the Bayes factor in being greater than the lower of the individual likelihood ratios, rather than being greater than both of them,  Dawid's claim that  `the support supplied by the conjunction of several independent testimonies exceeds that supplied by any of its constituents', restricted to situations in which the invidual support levels are in fact positive, still holds.
 
 
-This also entails that any likelihood ratio threshold decision standard still satisfies aggregation. After all, it both individual LRs are above a threshold, then so will be the composite LR.
+This also entails that any likelihood ratio threshold decision standard still satisfies aggregation: if both individual LRs are above a threshold, then so will be the composite LR, as long as one and the same threshold is to be used for the conjunction and for the conjuncts. However, whether a single threshold should be used here is soemwhat unclear, and this is an issue to which we will now turn.
 
 
 
@@ -919,60 +919,164 @@ This also entails that any likelihood ratio threshold decision standard still sa
 
 
 
+# Variable evidential strength thresholds
 
+<!-- If the combined support equals $s_{A}\times s_{B}$ or -->
+<!-- $s_{A}\times s^{'}_{B}$, does  -->
+<!-- the difficulty about conjunction evaporate, as Dawid thought?  -->
 
-### Variable Threshold
+ Once we formulate the decision standard in terms of evidential strength instead of posterior probabilities,  the standard of proof would no longer be formalized as a posterior probability threshold, but instead as a threshold for the Bayes factor or for the likelihood ratio. The threshold would no longer be a probability between 0 and 1, but rather a number somewhere above 1. The greater this number, the more stringent the standard of proof, for any value above one. In criminal trials, for example, the rule of decision would be: guilt is proven beyond a reasonable doubt if and only if the evidential support in favor of $H$---as measured by the Bayes factor $\nicefrac{\pr{E \vert H}}{\pr{E}}$ (or by the likelihood ratio $\nicefrac{\pr{E\vert H}}{\pr{E \vert \n H}}$)---meets a suitably high threshold $t_{BF}$ ($t_{LR}$).  The 
+obvious question at this point is, how do we identify the appropriate threshold?\todo{will at some point take a look at "Bayesian Choice"}
 
-If the combined support equals $s_{A}\times s_{B}$ or
-$s_{A}\times s^{'}_{B}$, does 
-the difficulty about conjunction evaporate, as Dawid thought? 
-<!---To some extent 
-it does. The crux of the matter here is whether the conjunction of two or more claims 
- satisfies a given standard of proof just in case the individual conjuncts do. 
- --->
- One hurdle here is that
- the standard of proof would no longer be formalized as a posterior probability threshold, but instead as a threshold about the Bayes factor. The threshold would no longer be a probability between 0% and 100%, but rather a number somewhere above 1. The greater this number, the more stringent the standard of proof, for any value above one. In criminal trials, for example, the rule of decision would be: guilt is proven beyond a reasonable doubt if and only if the evidential support in favor of $G$---as measured by the Bayes factor $\frac{\pr{E \vert G}}{\pr{E}}$---meets a suitably high threshold $t_{BF}$. The 
-obvious question at this point is, how do we identify the appropriate threshold?\todo{good question, will think about it, will need to take a look at "Bayesian Choice", also need to think about a counterexample}
+One advantage of the posterior probability threshold was that in its choice one could avoid, at least to some extent, the charge of arbitrariness by plugging in decision-theoretic considerations and deriving a threshold from a cost-benefit analysis. 
 
-One strategy is to derive the Bayes factor threshold, call it $t_{BF}$, from the posterior threshold $t$. Since $\textit{posterior }=\textit{ Bayes factor }\times \textit{ prior}$, the Bayes factor threshold can be determined as follows:
+Can we do something analogous for BF or LR? Well, in a sense, yes. If we are able to derive $t_BF$ or $t_LR$ thresholds from a  posterior probability threshold, they---it seems--will be as justified by decision theoretic-considerations that the threshold we started with. How to go about it?
+\todo{I'm now thinking: wouldn't this make $t$ movable as well though? Need to discuss.}
 
-\[\frac{t}{\textit{prior}}=t_{BF}\]
-
-\noindent
-The higher the prior probability, the lower $t_{BF}$. Whether this is a desirable property for a decision threshold can be questioned, but the same can be said about the posterior threshold $t$. The higher the prior probability, the easier to meet the posterior threshold.  
-
-Presumably, the threshold $t_{BF}$ should be applied to individual as well as composite claims. Since the threshold varies 
-depending on the priors, the thresholds for the individual claims $A$ and $B$, denoted by
-$t_{BF}^A$ and $t_{BF}^B$, will differ from the threshold for the composite claim $A \wedge B$, denoted by $t_{BF}^{A\wedge B}$. 
-
-At issue here is whether the conjunction principle can be formalized in a plausible manner with the Bayes factor. Unfortuantely, the answer is negative. To see why, first recall the conjunction principle:
- 
- \[\text{S[$a, A$] and S[$b, B$] iff S[$a \wedge b, A\wedge B$]},\]
+First, Bayes factor. \todo{Use textsf, or even better mathsf for text inside math}
+Since $\textsf{posterior }=\textsf{ Bayes factor }\times \textsf{ prior}$, the Bayes factor threshold can be determined as follows:
+\begin{align*}t_{BF} & = \frac{t}{\textsf{prior}}
+\end{align*}
 
 \noindent
-where $\text{S}[E, H]$ means that evidence $E$ establishes hypothesis $H$ by standard $S$.  If the standard of proof is formalized using the Bayes factor, the conjunction principle would boil down to:
+The higher the prior probability, the lower $t_{BF}$. Whether this is a desirable property for a decision threshold can be questioned, but a similar point holds about the posterior threshold $t$: the higher the prior probability, the easier to meet the posterior threshold.  
 
-\[  \text{ $\frac{\pr{a \vert A }}{\pr{a}}>t^A_{BF}$ and $\frac{\pr{ b \vert B}}{\pr{b}}>t^B_{BF}$ iff $\frac{\pr{a \et b \vert A \et B}}{\pr{a \et b}}>t^{A\wedge B}_{BF}$ } \]
+Now, likelihood ratio. By the odds version of Bayes' theorem, 
+\begin{align*}
+\textsf{posterior odds} & = \textsf{likelihood odds} \times \textsf{prior odds},
+\end{align*}
+and thus
+\begin{align*}\frac{\textsf{posterior odds}}{\textsf{prior odds}} = \textsf{likelihood ratio}.
+\end{align*}
+If the posterior ratio is fixed at, say $t/1-t$, $t_{LR}$ can be obtained as follows:
+\begin{align*}t_{LR} & = \frac{\nicefrac{t}{1-t}}{\textsf{prior odds}}.
+\end{align*}
 
 \noindent
-Consider a posterior threshold $t=0.95$, as might be appropriate in a criminal case. If $A$ and $B$ both have a prior probability of $10\%$, the threshold $t^A_{BF}=t_{BF}^B=0.95/0.1=9.5$ for $A$ or $B$ individually. Assuming independence of $A$ and $B$, the composite claim $A \wedge B$ will be associated with the threshold $t^{A\wedge B}_{BF}=0.95/(0.1*0.1)=95$, a much higher value. But if each individual claim meets its Bayes factor threshold of 9.5 and the two claims are independent, the joint Bayes factor would equal the multiplication of the individual Bayer factors, that is, $9.5*9.5=90.25$. This is not quite enough to meet $t^{A\wedge B}_{BF}=95$, but is fairly close. The difference in absolute  terms grows as the prior probability of the individual claims becomes lower, but the combined Bayes factor remains only $5\%$ below the value needed to meet $t_{BF}^{A\wedge B}$.\footnote{The difference at here is between $t_{BF}^{A\wedge B}=0.95/p^2$ and $t_{BF}^{A}*t_{BF}^{B}=(0.5/p)^{2}$. Note that $\frac{0.95/p^2 - (0.5/p)^{2}}{0.95/p^2}=5\%$, for any value of the prior $p$.} Perhaps this is a good enough approximation. However, as the number of constituent claims grows, the difference becomes larger.\footnote{Given five constituent claims, $\frac{0.95/p^5 - (0.95/p)^{5}}{0.95/p^5}=18\%$.} In addition, the difference becomes larger with a lower posterior probability threshold, say $0.5$. Even with just two claims, $t^{A\wedge B}_{BF}=0.5/(0.1*0.1)=50$, but $t^A_{BF}*t_{BF}^B=(0.5/0.1)*(0.5/0.1)=25$, only half the required value. The conjunction principle therefore fails in a large number of cases even using the Bayes factor threshold. 
+Just as the Bayes factor, the likelihood ratio threshold will therefore  varywith the prior. The higher the prior, 
+the lower the likelihood ratio threshold. 
 
 
-```{r, echo=FALSE}
-0.95/0.1
-0.95/(0.1)^2
-(0.95/0.1)^2
-0.95/0.01
-0.95/(0.01)^2
-(0.95/0.01)^2
-0.95/(0.001)^2
-(0.95/0.001)^2
-0.5/0.1
-0.5/(0.1)^2
-(0.5/0.1)^2
-```
 
 
+
+Now, we would like  a standard of proof to be in principle applicable to all factual claims under consideration. In particular, if we consider a conjunction $A\et B$, we should have a standard that makes sense not only when applied to $A\et B$, but also when applied to $A \et B$. But now notice that in the current set-up evidential strength  thresholds vary  with  priors, and clearly the priors for $A$ and $B$ will differ from the priors on $A\et B$. This suggests that as long as we want $t_{BF}$ and $t_{LR}$ to be decision-theoretically justified by being derived from a decision-theoretically justified posterior probability threshold, the threhsolds for individual claims ($t_{BF}^A$ and $t_{LR}^A$) will differ from the thresholds for the composite claim, $t_{BF}^{A\wedge B}$ and $t_{LR}^{A\wedge B}$ . 
+
+ The conjunction principles formulated in terms of BF and LR  would boil down to:
+ \begin{align*} \frac{\pr{a \vert A }}{\pr{a}}>t^A_{BF} &\mbox{ and } 
+\frac{\pr{ b \vert B}}{\pr{b}}>t^B_{BF} \mbox{ iff } 
+\frac{\pr{a \et b \vert A \et B}}{\pr{a \et b}}>t^{A\wedge B}_{BF} \\
+ \frac{\pr{a \vert A }}{\pr{a \vert \n A}}>t^A_{LR} &\mbox{ and } 
+\frac{\pr{ b \vert B}}{\pr{b\vert B}}>t^B_{LR} \mbox{ iff } 
+\frac{\pr{a \et b \vert A \et B}}{\pr{a \et b\vert \n (A \et B)}}>t^{A\wedge B}_{LR} \\
+\end{align*}
+
+Now, consider the individual claims $A$ and $B$ and their conjunction $A \wedge B$, assuming the independence relations required for Facts \ali{REF} and \ali{REF} hold.  Consider a posterior threshold of $.95$ as might be appropriate
+in a criminal case. 
+
+\todo{please use nicefrac for inline fractions}
+If $A$ and $B$ both have a prior probability of, say $.1$, the threshold $t^A_{BF}=t_{BF}^B=\nicefrac{.95}{.1}=9.5$ for $A$ or $B$ individually. The composite claim $A \wedge B$ will be associated with the threshold $t^{A\wedge B}_{BF}=\nicefrac{.95}{(.1\times .1)}=95$, a much higher value. But if each individual claim meets its Bayes factor threshold of 9.5 and the two claims are independent, the joint Bayes factor would result from the multiplication of the individual Bayes factors, that is, $9.5 \times 9.5=90.25$. This is not quite enough to meet $t^{A\wedge B}_{BF}=95$.
+
+The difference  grows as (i) the prior probability of the individual claims decreases, (ii)  as the posterior threshold $t$  decreases, and  (iii) as the number of constituents claims increases. For two constituents, the combined Bayes factor remains only $5\%$ below the value needed to meet $t_{BF}^{A\wedge B}$. The difference at here is between $t_{BF}^{A\wedge B}=\nicefrac{.95}{p^2}$ and $t_{BF}^{A}*t_{BF}^{B}=(\nicefrac{.5}{p})^{2}$. Note that $\frac{\nicefrac{.95}{p^2} - (\nicefrac{.5}{p})^{2}}{\nicefrac{.95}{p^2}}=.05$, for any value of the prior $p$. Given five constituent claims, $\frac{\nicefrac{.95}{p^5} - (\nicefrac{.95}{p})^{5}}{\nicefrac{.95}{p^5}}=.18$.  Now, say $t=.5$. Even with just two claims, $t^{A\wedge B}_{BF}=.5/(.1*.1)=50$, but $t^A_{BF}*t_{BF}^B=(.5/.1)*(.5/.1)=25$, only half of the required value. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- The conjunction principle therefore fails in a large number of cases even using the Bayes factor threshold.  -->
+
+
+<!-- ```{r, echo=FALSE, EVAL=FALSE} -->
+<!-- 0.95/0.1 -->
+<!-- 0.95/(0.1)^2 -->
+<!-- (0.95/0.1)^2 -->
+<!-- 0.95/0.01 -->
+<!-- 0.95/(0.01)^2 -->
+<!-- (0.95/0.01)^2 -->
+<!-- 0.95/(0.001)^2 -->
+<!-- (0.95/0.001)^2 -->
+<!-- 0.5/0.1 -->
+<!-- 0.5/(0.1)^2 -->
+<!-- (0.5/0.1)^2 -->
+<!-- ``` -->
+
+
+
+An analogous point will hold for the likelihood ratio.  Say $A$ and $B$ have  prior probabilities of 
+$.2$ and $.3$ respectively. On this approach, the likelihood ratio threshold for $A$ and $B$ will be  $t_{LR}^{A}\approx 76$ and $t_{LR}^{B}a\approx 44$. The likelihood ratio threshold for  the composite claim $A \wedge B$ will be $t^{A\wedge B}_{LR}\approx 297$.  Now suppose the individual likelihood ratios meet their  threshold and respective sensitivities and specificities are identical. For $t_{LR}^{A}$ to be met, 
+evidence $a$ should have sensitivity of at least 0.988. For $t_{LR}^{B}$ to be met,  evidence $b$ should have  sensitivity  0.978. Now with these separate sensitivies, The combined likelihood ratio equals about 145, far short that what the threshold $t^{A\wedge B}_{LR}$ requires, namely a likelihood ratio of 297. 
+
+Things don't get better with a lower posterior threshold. Say $t= .5$, as might be appropriate 
+in a civil case. The likelihood ratio thresholds for $A$ and $B$ will be 
+$t_{LR}^{A}\approx 4$ and $t_{LR}^{B}a\approx 2.3$. The likelihood ratio threshold for  the composite claim $A \wedge B$ will be $t^{A\wedge B}_{LR}\approx 15.6$.    To ensure that $t_{LR}^{A}$ is met, 
+evidence $a$ should have a sensitivity of at least 0.8, and  to ensure that $t_{LR}^{B}$ is met, 
+evidence $b$ should have a  sensitivity of at least 0.7. To ensure that $t_{LR}^{B}$ is met, 
+evidence $b$ should have a sensitivity of at least 0.7. With these parameters, the combined likelihood ratio equals about 5, far short that what the threshold $t^{A\wedge B}_{LR}$ requires, namely a likelihood ratio of 15.
+
+
+
+<!-- ```{r, echo=FALSE} -->
+<!-- (0.5/(1-0.5))/(0.2/(1-0.2)) -->
+<!-- (0.82/(1-0.82)) -->
+
+<!-- (0.5/(1-0.5))/(0.3/(1-0.3)) -->
+<!-- (0.7/(1-0.7)) -->
+
+
+<!-- (0.8*0.7)/ -->
+<!-- ( -->
+<!--   ((1-0.2)*(1-0.8)*0.3*0.7+0.2*0.8*(1-0.3)*(1-0.7)+(1-0.8)*(1-0.2)*(1-0.7)*(1-0.3))/ -->
+<!--   ((1-0.2)*0.3+0.2*(1-0.3)+(1-0.2)*(1-0.3)) -->
+<!-- ) -->
+<!-- ``` -->
+
+
+
+
+
+<!-- ```{r, echo=FALSE, eval = FALSE} -->
+<!-- (0.5/(1-0.5))/(0.2/(1-0.2)) -->
+<!-- (0.5/(1-0.5))/(0.3/(1-0.3)) -->
+<!-- (0.5/(1-0.5))/((0.3*0.2)/(1-(0.3*0.2))) -->
+<!-- ``` -->
+
+<!-- ```{r, echo=FALSE, eval = FALSE} -->
+<!-- (0.95/(1-0.95))/(0.2/(1-0.2)) -->
+<!-- (0.987/(1-0.987)) -->
+
+<!-- (0.95/(1-0.95))/(0.3/(1-0.3)) -->
+<!-- (0.978/(1-0.978)) -->
+
+<!-- (0.987*0.978)/ -->
+<!-- ( -->
+<!--   ((1-0.2)*(1-0.987)*0.3*0.978+0.2*0.987*(1-0.3)*(1-0.978)+(1-0.987)*(1-0.2)*(1-0.978)*(1-0.3))/ -->
+<!--   ((1-0.2)*0.3+0.2*(1-0.3)+(1-0.2)*(1-0.3)) -->
+<!-- ) -->
+<!-- ``` -->
+
+<!-- ```{r, echo=FALSE, EVAL = FALSE} -->
+<!-- (0.95/(1-0.95))/(0.2/(1-0.2)) -->
+<!-- (0.95/(1-0.95))/(0.3/(1-0.3)) -->
+<!-- (0.95/(1-0.95))/((0.3*0.2)/(1-(0.3*0.2))) -->
+<!-- ``` -->
+
+
+
+
+
+
+
+
+
+<!-- Consider a posterior threshold $t=0.95$, as might be appropriate in a criminal case.  -->
 <!--
 \noindent
 If the conjunction principle holds,\todo{In which direction? Note that at least in one direction the principle still fails. For instance, if your threshold is 15, $14*25$ is 350 but still one of the elements fails to be sufficiently supported.}  the statement above would be equivalent \todo{not sure about the equivalence; at best, this would be a sufficient condition, no? you do talk about this later so putting it this way is a bit misleading} to:
@@ -983,72 +1087,105 @@ Guilt is proven beyond a reasonable doubt if and only if the evidential support 
  \noindent
 -->
 
-### Fixed Threshold
 
-The alternative here is to fix the Bays factor 
+The general lesson here is this. If we want the choice of evidential strength threshold to be informed by decision-theoretic considerations (as might be advisable), and we do so by deriving them from decision-theoretically justified posterior thresholds, the evidential strength thresholds become variable: they depend on priors. If in fact we then do keep track of which threshold is supposed to be used for which claim, aggregation still fails: there will be cases in which the conjuncts taken separately satisfy the decision standard, while the conjunction does not. 
+
+Perhaps, this is not the path that the proponent of the evidential strength approach would take anyway. After all, if your evidential strength thresholds mirror posterior threshold, it should not be deeply surprising if they run into similar problems. So what would happen if instead, we insisted that the evidential strength thresholds should be kept  fixed?
+
+
+# Fixed evidential strength threshold
+
+The alternative here is to fix the evidential strength 
 threshold regardless of the prior probability of the 
 claim of interest.  This raises the difficult 
 question of how to fix the Bayesian factor threshold irrespective 
 of the priors. Standard decision theory can no longer be used. 
 As it turns out, even if the question can be satisfactorily answered, 
 the fixed threshold approach gives rise to a complication that proves fatal.
-If the standard of proof is formalized using a fixed Bayes 
-factor threshold $t_{BF}$, the conjunction principle 
-would boil down to:
 
-\[  \text{ $\frac{\pr{a \vert A }}{\pr{a}}>t_{BF}$ and $\frac{\pr{ b \vert B}}{\pr{b}}>t_{BF}$ iff $\frac{\pr{a \et b \vert A \et B}}{\pr{a \et b}}>t_{BF}$ } \]
 
-\noindent
-The left-to-right direction---aggregation---is likely to hold for 
-any threshold $t_{BF}$ greater than one. As shown earlier, the combined evidential 
-support is greater than the individual evidential support 
-<!---
-because $\frac{\pr{a \et b \vert A \et B}}{\pr{a \et b}}$ 
-equals $\frac{\pr{a |A}}{\pr{a}} \times \frac{\pr{b |B}}{\pr{b}}$
+If the standard of proof is formalized using a fixed  threshold, the conjunction principle  would boil down to one of these:
+
+
+ \begin{align*} \frac{\pr{a \vert A }}{\pr{a}}>t_{BF} &\mbox{ and } 
+\frac{\pr{ b \vert B}}{\pr{b}}>t_{BF} \mbox{ iff } 
+\frac{\pr{a \et b \vert A \et B}}{\pr{a \et b}}>t_{BF} \\
+ \frac{\pr{a \vert A }}{\pr{a \vert \n A}}>t_{LR} &\mbox{ and } 
+\frac{\pr{ b \vert B}}{\pr{b\vert B}}>t_{LR} \mbox{ iff } 
+\frac{\pr{a \et b \vert A \et B}}{\pr{a \et b\vert \n (A \et B)}}>t_{LR} \\
+\end{align*}
+
+
+<!-- \[  \text{ $\frac{\pr{a \vert A }}{\pr{a}}>t_{BF}$ and $\frac{\pr{ b \vert B}}{\pr{b}}>t_{BF}$ iff $\frac{\pr{a \et b \vert A \et B}}{\pr{a \et b}}>t_{BF}$ } \] 
 -->
-if A and B are independent, or greater than the smallest individual support 
-<!---or $\frac{\pr{a |A}}{\pr{a}} \times \frac{\pr{b |B}}{\pr{b \vert a}}$ -->
-if A and B are dependent. Aggregation could not be justified using posterior probabilities 
-$\pr{A \vert a}$ and $\pr{B \vert b}$ nor could it be justified generally 
-using a variable Bayes factor threshold. 
-So it is an advantage of the fixed Bayes factor threshold 
-that it can justify this direction of the conjunction principle. 
-
-However, the right-to-left direction---distribution---has now become problematic. 
-For suppose the combined evidential support, $\frac{\pr{a \et b \vert A \et B}}{\pr{a \et b}}$, barely meets 
-the threshold. This implies that the individual support, say $\frac{\pr{a |A}}{\pr{a}}$, 
-could be be below the threshold unless $\frac{\pr{b |B}}{\pr{b}}=1$
-\todo{Not always true; just give a specific numerical counterexample. M: I added 'often'. Is this enough?} (which should not happen if $b$ positively supports $B$). So, curiously, there would be cases in which, even though the conjunction $A\et B$ is established to the desired standard of proof, one of the individual claims  fails to meet the standard. This is odd. More specifically, the following distribution 
-principle fails in some cases:
-
-\[\text{If S[$a \wedge b, A\wedge B$], then S[$a, A$] and S[$b, B$].} \tag{DIS1}\]
 
 \noindent
-Could this principle be rejected? Perhaps, it is not as essential as we thought at first. Since 
+The left-to-right direction---aggregation---will hold for 
+any thresholds $t_{BF}$ or $t_{LR}$ greater than one, as Facts \ali{REF} and \ali{REF, not sure how many we end up with, double check} entail.
+
+<!-- After all, the combined -->
+<!-- evidential  -->
+<!-- support is greater than the individual evidential support  -->
+<!-- <!--- -->
+<!-- because $\frac{\pr{a \et b \vert A \et B}}{\pr{a \et b}}$  -->
+<!-- equals $\frac{\pr{a |A}}{\pr{a}} \times \frac{\pr{b |B}}{\pr{b}}$ -->
+<!-- --> 
+<!-- if A and B are independent, or greater than the smallest individual support  -->
+<!-- <!---or $\frac{\pr{a |A}}{\pr{a}} \times \frac{\pr{b |B}}{\pr{b \vert a}}$ --> 
+<!-- if A and B are dependent.  -->
+
+Aggregation could not be justified using posterior probabilities 
+$\pr{A \vert a}$ and $\pr{B \vert b}$ nor could it be justified generally 
+using a variable Bayes factor threshold.  So it is an advantage of the fixed  evidential strength threshold  approach that it can justify this direction of the conjunction principle. 
+
+However, the right-to-left direction---distribution---has now become problematic.  Recall that we can distinguish at least two versions of the distribution principle if we take the evidential support into account:
+\begin{align}
+\text{If S[$a \wedge b, A\wedge B$], then S[$a, A$] and S[$b, B$].} \tag{DIS1}\\
+ \text{If S[$a \wedge b, A\wedge B$], then S[$a \wedge b, A$] and S[$a \wedge b, B$].} \tag{DIS2}
+\end{align}
+
+We will think of both of them. Let us start with (DIS1) first, still working with the independence assumptions in the background for the sake of simplicity. Suppose the combined Bayes factor, $\frac{\pr{a \et b \vert A \et B}}{\pr{a \et b}}$, barely meets 
+the threshold. The individual support, say $\frac{\pr{a \vert A}}{\pr{a}}$, 
+could be  still below the threshold unless $\frac{\pr{b \vert B}}{\pr{b}}=1$ (which should not happen if $b$ positively supports $B$). 
+
+The problem for likelihood ratio is analogous. For suppose evidence $a \et b$ supports $A \et B$ to 
+ the required threshold $t$. The threshold in this case should be  some order of magnitude greater than one. If the combined likelihood ratio meets the threshold $t_{LR}$, one of the individual likelihood ratios may well be below $t_{LR}$ So---if the standard of proof is interpreted using evidential support measured by the likelihood ratio---even though the conjuction $A \et B$ was proven according to the desired standard, one of individual claims might not.  (DIS1) in some cases fails. 
+
+
+Perhaps, the problem was with (DS1). Could this principle be rejected? Maybe  it is not as essential as we thought at first. Since 
 the evidence is not held constant, the support supplied by $a\wedge b$ could be stronger than 
 that supplied by $a$ and $b$ individually. So even when the conjunction 
 $A \wedge B$ is established to the requisite standard given evidence 
 $a\wedge b$, it might still be that $A$ does not meet the requisite 
-standard (given $a$) nor does $B$ (given $b$). 
+standard (given $a$) nor does $B$ (given $b$). Or at least one might try to argue so.
 
-But consider a less controversial version, holding the evidence constant:
-
- \[\text{If S[$a \wedge b, A\wedge B$], then S[$a \wedge b, A$] and S[$a \wedge b, B$].} \tag{DIS2}\]
-
-\noindent
-This principle is harder to deny. That is, one would not want 
+But (DS2)  is less controversial, as it  holds the evidence constant. This principle is harder to deny: one would not want 
 to claim that, holding fixed evidence $a\wedge b$, establishing the conjunction 
 might not be enough for establishing one of the conjuncts. 
-One cannot be willing to assent to the 
-conjunction without being willing to assent to one of the conjuncts 
-against a fixed body of evidence. Certainly any formalization of the standard of proof should obey 
-(DIS2). And yet, it is this very principle that we should deny if we understand 
-the standard of proof using the Bayes factor. \footnote{To show that (DIS2) fails, it is enough to show that $\frac{\pr{B \vert a\wedge b \wedge A}}{\pr{B \vert A}}>1$ because $S[a\wedge b, A\wedge B]>S[a\wedge b, A]$ iff $\frac{\pr{a\wedge b \vert A \wedge B}}{\pr{a\wedge b}}>\frac{\pr{a\wedge b \vert A}}{\pr{a\wedge b}}$ iff $\frac{\pr{A\wedge B \vert a \wedge b}}{\pr{A\wedge B}}>\frac{\pr{A \vert a \wedge b }}{\pr{A}}$ iff $\frac{\pr{A \vert a \wedge b} \times \pr{B \vert a\wedge b\wedge A}}{\pr{A} \times \pr{B \vert A}}>\frac{\pr{A \vert a \wedge b }}{\pr{A}}$. Now, $\frac{\pr{B \vert a\wedge b \wedge A}}{\pr{B \vert A}}>1$ so long as $a\wedge b$ positively supports $B$ even under the assumption of $A$, unless $A$ entailed $B$. We naturally exclude the situation in which one claim entails the other because otherwise there would be no need to establish the two claims. Establishing one claim alone would suffice. To see why $a\wedge b$ positively supports $B$ (or $A$), note that $S[a, A]=\frac{\pr{a |A}}{\pr{a}} \leq \frac{\pr{a |A} \times \pr{b \vert A \wedge a}}{\pr{a}\times \pr{b \vert a}}=\frac{\pr{a \wedge b |A}}{\pr{a\wedge b}}=S[a \wedge b, A]$. The key step here is $\frac{\pr{a |A}}{\pr{a}} \leq \frac{\pr{a |A} \times \pr{b \vert A \wedge a}}{\pr{a}\times \pr{b \vert a}}$. The latter holds because $\frac{\pr{b \vert A \wedge a}}{\pr{b \vert a}}\geq 1$. It is useful to distinguish two cases. First, if $A$ and $B$ are probabilistically independent, as in the Bayesian network in Figure \ref{network-conjunction} (top), then $\frac{\pr{b \vert A \wedge a}}{\pr{b \vert a}}= \frac{\pr{b}}{\pr{b}} = 1$. Second, if $A$ and $B$ are probabilistically dependent, as in the Bayesian network in Figure \ref{network-conjunction} (bottom), evidence $b$ positively supports claim $A$ (even conditional on $a$) so long as $b$ positively supports $B$. The assumption is that claim $A$ and $B$ are positively correlated, and thus, any evidence that supports one of the claims is going to support the other claim, as well. \textbf{SEE EARLIER CHAPTERS FOR A MORE RIGOROUS PROOF OF THIS LAST POINT.}}  In case $A$ and $B$ are probabilistically independent, (DIS1) and (DIS2) are in fact equivalent, so rejectign one requires rejecting the other.\footnote{$\frac{\pr{a\wedge b \vert A}}{\pr{a\wedge b}}=\frac{\pr{a \vert A}\pr{b \vert A}}{\pr{a}\pr{b}}=\frac{\pr{a \vert A}}{\pr{a}}$. In other words, $S[a \wedge b, A]=S[a, A]$.} The intuitive reason for this--- perhpas surprising---result is that $A \wedge B$ has a much lower prior probability than $A$ (or $B$) considered separately. Thus, the same body of evidence is going to have a larger impact on a hypothesis with a lower prior probability, other things being equal. This larger impact on the prior is reflected in a larger Bayes factor. We will examine this point in greater detail in later sections. 
+It seems that any formalization of the standard of proof should obey 
+(DIS2).  Yet, (DIS2) fails both for  Bayes factor and likelihood ratio. After all, if  $A$ and $B$ are probabilistically independent, (DIS1) and (DIS2) are in fact equivalent, so the counterexamples to (DIS1) work also against (DS2).
 
 
-All in all, using Bayes factor to understad the standard of proof 
-has counterintuitive consequences, what we will call the distribution paradox. 
-For suppose the prosecution provided evidence for claim $A$, but this evidence still falls short of the threshold $t$ (a certain number above 1). Just by tagging an additional claim $B$ and without doing any further evidentiary work, the prosecution could provide sufficiently strong evidence (which meets the threshold $t$) in favor of claim $A \wedge B$. So, it could well happen that, while the prosecution failed to prove beyond a reasonable doubt that the defendant injured the victim, the prosecution could nevertheless prove beyond a reasonable doubt that the defendant injured the victim and did so intentionally. This is odd. 
+
+<!-- To show this, it is enough to show that $\frac{\pr{B \vert a\wedge b \wedge A}}{\pr{B \vert A}}>1$ because $S[a\wedge b, A\wedge B]>S[a\wedge b, A]$ iff $\frac{\pr{a\wedge b \vert A \wedge B}}{\pr{a\wedge b}}>\frac{\pr{a\wedge b \vert A}}{\pr{a\wedge b}}$ iff $\frac{\pr{A\wedge B \vert a \wedge b}}{\pr{A\wedge B}}>\frac{\pr{A \vert a \wedge b }}{\pr{A}}$ iff $\frac{\pr{A \vert a \wedge b} \times \pr{B \vert a\wedge b\wedge A}}{\pr{A} \times \pr{B \vert A}}>\frac{\pr{A \vert a \wedge b }}{\pr{A}}$. Now, $\frac{\pr{B \vert a\wedge b \wedge A}}{\pr{B \vert A}}>1$ so long as $a\wedge b$ positively supports $B$ even under the assumption of $A$, unless $A$ entailed $B$. We naturally exclude the situation in which one claim entails the other because otherwise there would be no need to establish the two claims. Establishing one claim alone would suffice. To see why $a\wedge b$ positively supports $B$ (or $A$), note that $S[a, A]=\frac{\pr{a |A}}{\pr{a}} \leq \frac{\pr{a |A} \times \pr{b \vert A \wedge a}}{\pr{a}\times \pr{b \vert a}}=\frac{\pr{a \wedge b |A}}{\pr{a\wedge b}}=S[a \wedge b, A]$. The key step here is $\frac{\pr{a |A}}{\pr{a}} \leq \frac{\pr{a |A} \times \pr{b \vert A \wedge a}}{\pr{a}\times \pr{b \vert a}}$. The latter holds because $\frac{\pr{b \vert A \wedge a}}{\pr{b \vert a}}\geq 1$. It is useful to distinguish two cases. First, if $A$ and $B$ are probabilistically independent, as in the Bayesian network in Figure \ref{network-conjunction} (top), then $\frac{\pr{b \vert A \wedge a}}{\pr{b \vert a}}= \frac{\pr{b}}{\pr{b}} = 1$. Second, if $A$ and $B$ are probabilistically dependent, as in the Bayesian network in Figure \ref{network-conjunction} (bottom), evidence $b$ positively supports claim $A$ (even conditional on $a$) so long as $b$ positively supports $B$. The assumption is that claim $A$ and $B$ are positively correlated, and thus, any evidence that supports one of the claims is going to support the other claim, as well. \textbf{SEE EARLIER CHAPTERS FOR A MORE RIGOROUS PROOF OF THIS LAST POINT.} \footnote{$\frac{\pr{a\wedge b \vert A}}{\pr{a\wedge b}}=\frac{\pr{a \vert A}\pr{b \vert A}}{\pr{a}\pr{b}}=\frac{\pr{a \vert A}}{\pr{a}}$. In other words, $S[a \wedge b, A]=S[a, A]$.} The intuitive reason for this--- perhpas surprising---result is that $A \wedge B$ has a much lower prior probability than $A$ (or $B$) considered separately. Thus, the same body of evidence is going to have a larger impact on a hypothesis with a lower prior probability, other things being equal. This larger impact on the prior is reflected in a larger Bayes factor. We will examine this point in greater detail in later sections.  -->
+
+
+
+ 
+ 
+ So, curiously, on the fixed evidential strength threshold approach, no matter whether one uses Bayes factor or likelihood ratio, there would be cases in which, even though the conjunction $A\et B$ is established to the desired standard of proof, one of the individual claims  fails to meet the standard.  This is odd, to say the least.
+
+\todo{I don't think this argument worked, we can discuss this. Commented out}
+<!--   counterintuitive consequences, what we will call the distribution paradox.  -->
+<!-- For suppose the prosecution provided evidence for claim $A$, but this evidence still falls short of the threshold $t$ (a certain number above 1). Just by tagging an additional claim $B$ and without doing any further evidentiary work, the prosecution could provide sufficiently strong evidence (which meets the threshold $t$) in favor of claim $A \wedge B$. So, it could well happen that, while the prosecution failed to prove beyond a reasonable doubt that the defendant injured the victim, the prosecution could nevertheless prove beyond a reasonable doubt that the defendant injured the victim and did so intentionally.    -->
+
+
+
+
+
+<!-- \noindent -->
+
+
 
 
 
@@ -1077,175 +1214,73 @@ than the evidential support of $a$ alone in favor of $A$. So the equalities
 above fail.-->
 
 
-## Likelihood ratio threshold
+<!-- ## Likelihood ratio threshold -->
 
-### Variable Threshold
+<!-- ### Variable Threshold -->
 
-Like the Bayes factor, the likelihood ratio can be used 
-to formalize the standard of proof by equating the standard 
-to a threshold $t$ above one. The greater the threshold, the more stringent the standard. 
-In criminal trials, for example, the rule of decision would be: guilt is proven beyond a reasonable doubt if and only 
-if the evidential support in favor of $G$---as measured by the likelihood ratio 
-$\frac{\pr{E \vert  G}}{\pr{E \vert \neg G}}$---meets a suitably 
-high threshold $t$ above one. 
-
-By the ratio version of Bayes' theorem, 
-
-\[\textit{posterior ratio} = \textit{likelihood ratio} \times \textit{prior ratio},\]
-
-and thus
-
-\[\frac{\textit{posterior ratio}}{\textit{prior ratio}} = \textit{likelihood ratio}.\]
-
-If the posterior ratio is fixed at, say $t/1-t$, the threshold on the 
-likelihood ratio, call it $t_{LR}$ is defined as:
-
-\[\frac{t/1-t}{\textit{prior ratio}} = t_{LR}.\]
-
-\noindent
-The likelihood ratio threshold will vary depending on the prior. The higher the prior, 
-the lower the likelihood ratio threshold. So 
+<!-- Like the Bayes factor, the likelihood ratio can be used  -->
+<!-- to formalize the standard of proof by equating the standard  -->
+<!-- to a threshold $t$ above one. The greater the threshold, the more stringent the standard.  -->
+<!-- In criminal trials, for example, the rule of decision would be: guilt is proven beyond a reasonable doubt if and only  -->
+<!-- if the evidential support in favor of $G$---as measured by the likelihood ratio  -->
+<!-- $\frac{\pr{E \vert  G}}{\pr{E \vert \neg G}}$---meets a suitably  -->
+<!-- high threshold $t$ above one.  -->
 
 
-Consider the individual claim $A$ and $B$ 
-and compared them with the composite claim $A \wedge B$. Suppose the two 
-claims are independent. Consider a posterior threshold of $95\%$ as might be appropriate 
-in a criminal case. Assuming $A$ and $B$ have a prior probability of 
-$20\%$ and $30\%$ respectively, the likelihood ratio threshold for $A$ and $B$ will be 
-$t_{LR}^{A}\approx 76$ and $t_{LR}^{B}a\approx 44$. The likelihood ratio threshold for 
-the composite claim $A \wedge B$ will be $t^{A\wedge B}_{LR}\approx 297$. 
+<!-- As expected, other things being equal, the likelihood ratio threshold is lower  -->
+<!-- for civil than criminal cases. The threshold is variable and depends on then prior, so claim that have higher priors are asociated with lower likelihood ratio threshold, such as $A$ and $B$, than claims  -->
+<!-- associated with lower priors such as $A \wedge B$.  -->
 
 
+<!-- Things do not look any better for a lower threshold. Now suppoose the  -->
+<!-- individual likelihood ratios meet the threshold -->
+<!-- $t_{LR}^{A}$ and $t_{LR}^{B}$ give a posterior threshold of $0.5$.  -->
 
+<!-- ### Fixed Threshold -->
 
-```{r, echo=FALSE}
-(0.95/(1-0.95))/(0.2/(1-0.2))
-(0.95/(1-0.95))/(0.3/(1-0.3))
-(0.95/(1-0.95))/((0.3*0.2)/(1-(0.3*0.2)))
-```
+<!-- By using a likelihood ratio threshold that is prior dependent,  -->
+<!-- the conjunction principle---in particular, what we called aggregation---fails. The alternative  -->
+<!-- is to fix a likelihood ratio threshold irrespective of the prior. Setting aside the problem of how ot identify  -->
+<!-- the appropriate threshold, we will see that this approach  -->
+<!-- is able to justify one direction of the conjunction principle---what we  -->
+<!-- called aggregation---but still fails to justify the other direction---what we  -->
+<!-- called distribution So the distribution paradox arises here again.  -->
 
-
-Consider a posterior threshold of 50\% as might be appropriate 
-in a civil case. Assuming $A$ and $B$ have a prior probability of 
-20\% and 30\% respectively, the likelihood ratio threshold for $A$ and $B$ will be 
-$t_{LR}^{A}\approx 4$ and $t_{LR}^{B}a\approx 2$. The likelihood ratio threshold for 
-the composite claim $A \wedge B$ will be $t^{A\wedge B}_{LR}\approx 15$.
-
-
-```{r, echo=FALSE}
-(0.5/(1-0.5))/(0.2/(1-0.2))
-(0.5/(1-0.5))/(0.3/(1-0.3))
-(0.5/(1-0.5))/((0.3*0.2)/(1-(0.3*0.2)))
-```
-
-
-As expected, other things being equal, the likelihood ratio threshold is lower 
-for civil than criminal cases. The threshold is variable and depends on then prior, so claim that have higher priors are asociated with lower likelihood ratio threshold, such as $A$ and $B$, than claims 
-associated with lower priors such as $A \wedge B$. 
-
-
-Now suppoose the individual likelihood ratios meet the threshold
-$t_{LR}^{A}$ and $t_{LR}^{B}$ give a posterior threshold of $0.95$. 
-To ensure that $t_{LR}^{A}$ is met, 
-evidence $a$ should have a sensitivity of at least (roughly) 0.99 (and a 
-specificity of 1-sensitivity). To ensure that $t_{LR}^{B}$ is met, 
-evidence $b$ should have a sensitivity of at least (roughly) 0.98 (and a 
-specificity of 1-sensitivity). Holding fixed the values for sensitivity and specificity, 
-does the combined likelihood ratio meet the threshold $t_{LR}^{A\wedge B}$? Not quite. The combined likelihood ratio equals about 145, far short that what the threshold $t^{A\wedge B}_{LR}$ requires, namely a likelihood ratio of 297
+<!-- Consider aggregation first. Say both individual likelihood -->
+<!--  ratios $\frac{\pr{a |A}}{\pr{a \vert \neg A}}$ and $\frac{\pr{b |B}}{\pr{b \vert \neg B}}$ are above the requisite -->
+<!--  threshold $t$ for meeting the standard of proof. Will the combined likelihood -->
+<!--  ratio $\frac{\pr{ a \et b |A \et B}}{\pr{a \et b \vert \neg (A \et B)}}$ also -->
+<!--  be above the threshold? The answer is affirmative. As we argued earlier, the combined likelihood ratio is never below the lowest of the individual likelihood ratio. If both individual likelihood ratios meet the threhsold, so does the combined likelihood ratio.  But this approach faces another problem, the same problem that plagues the Bayes factor. That is, likelihood ratios still fail to capture the other direction of the conjunction principle, what we called distribution. -->
 
 
 
-```{r, echo=FALSE}
-(0.95/(1-0.95))/(0.2/(1-0.2))
-(0.987/(1-0.987))
+<!--  Consider now the second and less objectionale extrapolation principle discussed earlier. This is the principle that holds  -->
+<!-- the evidence fixed throughout, repeated below for convenience: -->
 
-(0.95/(1-0.95))/(0.3/(1-0.3))
-(0.978/(1-0.978))
+<!--  \[\text{If S[$a \wedge b, A\wedge B$], then S[$a \wedge b, A$] and S[$b \wedge b, B$].} \tag{DIS2}\] -->
 
-(0.987*0.978)/
-(
-  ((1-0.2)*(1-0.987)*0.3*0.978+0.2*0.987*(1-0.3)*(1-0.978)+(1-0.987)*(1-0.2)*(1-0.978)*(1-0.3))/
-  ((1-0.2)*0.3+0.2*(1-0.3)+(1-0.2)*(1-0.3))
-)
-```
+<!-- \noindent -->
+<!-- Here again, the support of $a\wedge b$ in favor of $A\wedge B$  -->
+<!-- could exceed that of $a\wedge b$ in favor of $A$ alone (or $B$ alone) if evidential support  -->
+<!-- is measured using likelihood ratios.\footnote{Note that, assuming either of the Baysian networks  -->
+<!-- in Figure \ref{network-conjunction},  $S[a\wedge b, A]=\frac{\pr{a \wedge b \vert A}}{\pr{a\wedge b\vert \neg A}}=\frac{\pr{a \vert A}}{\pr{a \vert \neg A}}\times \frac{\pr{b \vert A}}{\pr{b \vert \neg A}}$, where -->
 
+<!-- \[\frac{\pr{b \vert A}}{\pr{b \vert \neg A}} = \frac{\pr{B \vert A} \times \frac{\pr{b \vert B}}{\pr{b \vert \neg B}} + (1- \pr{B \vert A})}{\pr{B \vert \neg A} \times \frac{\pr{b \vert B}}{\pr{b \vert \neg B}} + (1- \pr{B \vert \neg A})}.\] -->
 
-Things do not look any better for a lower threshold. Now suppoose the 
-individual likelihood ratios meet the threshold
-$t_{LR}^{A}$ and $t_{LR}^{B}$ give a posterior threshold of $0.5$. 
-To ensure that $t_{LR}^{A}$ is met, 
-evidence $a$ should have a sensitivity of at least 0.8 (and a 
-specificity of 1-sensitivity). To ensure that $t_{LR}^{B}$ is met, 
-evidence $b$ should have a sensitivity of at least 0.7 (and a 
-specificity of 1-sensitivity). To ensure that $t_{LR}^{B}$ is met, 
-evidence $b$ should have a sensitivity of at least 0.7 (and a 
-specificity of 1-sensitivity). Holding fixed the values for sensitivity and specificity, 
-does the combined likelihood ratio meet the threshold $t_{LR}^{A\wedge B}$? Note quite. The combined likelihood ratio equals about 5, far short that what the threshold $t^{A\wedge B}_{LR}$ requires, namely a likelihood ratio of 15.
+<!-- \textbf{SEE PROOF IN EARLIER CHAPTERS.} -->
+<!--  If $A$ and $B$ are assumed to be probabilistically independent, the numerator and the denominator will be the same,  -->
+<!--  so $\frac{\pr{b \vert A}}{\pr{b \vert \neg A}}=1$. Thus,  -->
+<!--  $S[a\wedge b, A]=\frac{\pr{a \vert A}}{\pr{a \vert \neg A}}=S[a, A]$. Since $S[a, A]< S[a\wedge b, A\wedge B]$ (see Figure \ref{fig:jointLRMarcello}), it follows $S[a\wedge b, A]<S[a\wedge b, A\wedge B]$. \textbf{What if A and B are dependent? Need simulation data here.}} Even this second, seemingly unobjectionable version of extrapolation fails. The same counterintuitive consequences that arose with Bayes factor manifest themselves here. The distribution paradox persists.  -->
 
 
 
-```{r, echo=FALSE}
-(0.5/(1-0.5))/(0.2/(1-0.2))
-(0.8/(1-0.8))
+<!-- \todo{M: This whole section should be generalized to the case in which A and B are not  -->
+<!-- independent using the simulation data.} -->
 
-(0.5/(1-0.5))/(0.3/(1-0.3))
-(0.7/(1-0.7))
+<!-- \textbf{M: Might be good to emphasize how devastaing this finding is for legal probabilists  -->
+<!-- who endorsed likelihood ratios as the solution to many problems with legal probabilism.} -->
 
-
-(0.8*0.7)/
-(
-  ((1-0.2)*(1-0.8)*0.3*0.7+0.2*0.8*(1-0.3)*(1-0.7)+(1-0.8)*(1-0.2)*(1-0.7)*(1-0.3))/
-  ((1-0.2)*0.3+0.2*(1-0.3)+(1-0.2)*(1-0.3))
-)
-```
-
-
-### Fixed Threshold
-
-By using a likelihood ratio threshold that is prior dependent, 
-the conjunction principle---in particular, what we called aggregation---fails. The alternative 
-is to fix a likelihood ratio threshold irrespective of the prior. Setting aside the problem of how ot identify 
-the appropriate threshold, we will see that this approach 
-is able to justify one direction of the conjunction principle---what we 
-called aggregation---but still fails to justify the other direction---what we 
-called distribution So the distribution paradox arises here again. 
-
-Consider aggregation first. Say both individual likelihood 
- ratios $\frac{\pr{a |A}}{\pr{a \vert \neg A}}$ and $\frac{\pr{b |B}}{\pr{b \vert \neg B}}$ are above the requisite 
- threshold $t$ for meeting the standard of proof. Will the combined likelihood 
- ratio $\frac{\pr{ a \et b |A \et B}}{\pr{a \et b \vert \neg (A \et B)}}$ also 
- be above the threshold? The answer is affirmative. As we argued earlier, the combined likelihood ratio is never below the lowest of the individual likelihood ratio. If both individual likelihood ratios meet the threhsold, so does the combined likelihood ratio.  But this approach faces another problem, the same problem that plagues the Bayes factor. That is, likelihood ratios still fail to capture the other direction of the conjunction principle, what we called distribution. 
-
-For suppose evidence $a \et b$ supports $A \et B$ to 
- the required threshold $t$. If evidential support is measured by the likelihood ratio, the threshold in this case should be  some order of magnitude greater than one. If the combined likelihood ratio meets the threshold $t_{LR}$, one of the individual likelihood ratios may well be below $t_{LR}$ So---if the standard of proof is interpreted using evidential support measured by the likelihood ratio---even though the conjuction $A \et B$ was proven according to the desired standard, one of individual claims might not. The right-to-left direction of the conjunction principle---that is, if $S[a \et b, A \et B]$, then $S[a, A] \et S[b, B]$, what we called earlier the distribution principle (DIS1)---fails. 
- 
- Consider now the second and less objectionale extrapolation principle discussed earlier. This is the principle that holds 
-the evidence fixed throughout, repeated below for convenience:
- 
- \[\text{If S[$a \wedge b, A\wedge B$], then S[$a \wedge b, A$] and S[$b \wedge b, B$].} \tag{DIS2}\]
-
-\noindent
-Here again, the support of $a\wedge b$ in favor of $A\wedge B$ 
-could exceed that of $a\wedge b$ in favor of $A$ alone (or $B$ alone) if evidential support 
-is measured using likelihood ratios.\footnote{Note that, assuming either of the Baysian networks 
-in Figure \ref{network-conjunction},  $S[a\wedge b, A]=\frac{\pr{a \wedge b \vert A}}{\pr{a\wedge b\vert \neg A}}=\frac{\pr{a \vert A}}{\pr{a \vert \neg A}}\times \frac{\pr{b \vert A}}{\pr{b \vert \neg A}}$, where
-
-\[\frac{\pr{b \vert A}}{\pr{b \vert \neg A}} = \frac{\pr{B \vert A} \times \frac{\pr{b \vert B}}{\pr{b \vert \neg B}} + (1- \pr{B \vert A})}{\pr{B \vert \neg A} \times \frac{\pr{b \vert B}}{\pr{b \vert \neg B}} + (1- \pr{B \vert \neg A})}.\]
-
-\textbf{SEE PROOF IN EARLIER CHAPTERS.}
- If $A$ and $B$ are assumed to be probabilistically independent, the numerator and the denominator will be the same, 
- so $\frac{\pr{b \vert A}}{\pr{b \vert \neg A}}=1$. Thus, 
- $S[a\wedge b, A]=\frac{\pr{a \vert A}}{\pr{a \vert \neg A}}=S[a, A]$. Since $S[a, A]< S[a\wedge b, A\wedge B]$ (see Figure \ref{fig:jointLRMarcello}), it follows $S[a\wedge b, A]<S[a\wedge b, A\wedge B]$. \textbf{What if A and B are dependent? Need simulation data here.}} Even this second, seemingly unobjectionable version of extrapolation fails. The same counterintuitive consequences that arose with Bayes factor manifest themselves here. The distribution paradox persists. 
-
-
-
-\todo{M: This whole section should be generalized to the case in which A and B are not 
-independent using the simulation data.}
-
-\textbf{M: Might be goot to emphasize how devastaing this finding is for legal probabilists 
-who endorsed likelihood ratios as the solution to many problems with legal probabilism.}
-
-## The comparative strategy
+# The comparative strategy
 
 Instead of thinking in terms of absolute thresholds---whether relative to posterior probabilities, 
 the Bayes factor or the likelihood ratio---the standard of proof can be understood comparatively. This suggestion 
