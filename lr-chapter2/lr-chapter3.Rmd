@@ -36,7 +36,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Introduction
 
-Our goal in this chapter is to take a closer look at an important tool of evidence evaluation proposed by legal probabilists: the likelihood ratio. In Section \ref{sec:lr} we explain what this measure of evidential strength is, how it compares to another one, sometimes called the Bayes factor, and why it is preferable to it.  In Section \ref{sec:fp} we give an example of its utility. We explain the reasons to take the risk of false positives in DNA identification seriously and use likelihood ratio to illustrate the impact of such a risk on the value of DNA evidence. 
+Our goal in this chapter is to take a closer look at an important tool of evidence evaluation proposed by legal probabilists: the likelihood ratio. In Section \ref{sec:lr} we explain what this measure of evidential strength is, how it compares to another one, sometimes called the Bayes factor, and why it is preferable to it.  In Section \ref{sec:fp} we give an example of its utility. We explain the reasons to take the risk of false positives in DNA identification seriously and use likelihood ratio to illustrate the impact of such a risk on the value of DNA evidence.  Another example, developed in Section \ref{sec:eyewitness},  is meant to remove the impression that likelihood ratios are useful only for clearly quantitative evidence such as DNA evidence. We talk about the insights that probabilistic thinking can bring into eyewitness evidence evaluation and incorporation.
 
 Likelihood ratio, while useful, is sometimes hard to interpret in practice, as it depends on the choice of the hypotheses involved. We discuss this problem in Section \ref{sec:hchoice}. One reason why many hypotheses can be considered in such contexts is that they admit different levels: we discuss this phenomenon in Section \ref{sec:lhTwoSTain}, illustrating it with the example of the so-called two-stain problem.  The general lesson from these sections is that likelihood ratio, while a very useful measure of evidential value, when presented alone without proper attention paid to hypothesis formulation and the impact of the choice of the hypotheses on the likelihood ratio itself, might be misleading. 
 
@@ -45,7 +45,7 @@ Next, in Section \ref{sec:relevance} we discuss another problem put forward agai
 
 To illustrate the utility of thinking in terms of likelihood ratios in theorizing about the value of evidence, we go over a debate about  the value of cold-hit DNA matches in which various agencies studying  or performing  DNA evaluation have still failed to reach agreement (Section  \ref{sec:coldHitConfusion}), and argue that a proper use of likelihood ratios leads to a fairly clear resolution (Section \ref{sec:cold-hit}).
 
-We end this chapter with two digressions. One is meant to remove the impression that likelihood ratios are useful only for clearly quantitative evidence such as DNA evidence. We talk about the insights that probabilistic thinking can bring into eyewitness evidence evaluation and incorporation in Section \ref{sec:eyewitness}. Another is meant for a more philosophically minded reader, who might recall that there are quite a few probabilistic confirmation measures in the vincinity and might wonder why almost none of them were discussed in the chapter. In Section \ref{sec:confirmation} we explain why we think these other measures are not fit for the particular purpose at hand:  evidence evaluation in legal-fact finding.    
+We end this chapter with two digressions.  Another is meant for a more philosophically minded reader, who might recall that there are quite a few probabilistic confirmation measures in the vincinity and might wonder why almost none of them were discussed in the chapter. In Section \ref{sec:confirmation} we explain why we think these other measures are not fit for the particular purpose at hand:  evidence evaluation in legal-fact finding.    
 
 
 
@@ -208,7 +208,7 @@ Our goal in this chapter is to reach a balanced view of the utility of \textsf{L
 
 
 One context in which probabilities are extensively used is the use of DNA evidence.  In testifying about the DNA match at trial, experts  often assess the probability that a random person, unrelated to the crime, would coincidentally match the crime stain profile (random match probability). RMP  is often an impressively low number, say 1 in 100 million or lower. Usually, such a match is taken to constitute strong evidence against the defendant. We will have more to say about the interpretation of DNA evidence later on. \todo{add crossref} For now, we will illustrate the utility of likelihood ratios by using to explain how this apparent strength of DNA evidence can be mitigated by the probability of a false positive.
-\todo{M: Can you use BF to include false positives or no?}
+
 
 
 First, observe that while DNA evidence seems as scientific as it gets, the risk of a false positive is not negligible [@Shaer2016False].  For instance, Houston Police Department Crime Laboratory, a large public forensic center in Texas, handles around 500 cases a year. In 2016, KHOU 11, a local television station, sent dozens of profiles processed by the lab to independent experts. The results were not optimistic: police technicians quite systematically misinterpreted samples. 
@@ -243,12 +243,34 @@ $M$ & There is a true match.
 \end{tabular}
 \end{center}
 
+\noindent The difference between $S$ and $M$ is that a true match will exist not only if $S$ true, but also if the profiles in fact are the same due to a random match. Similarly, a reported match might arise not only if there is a true match, but also if a false positive error has been made. The dependencies here are illustrated in Figure \ref{fig:fpp}
+
+\begin{figure}[h]
+```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "70%", warning= FALSE, message = FALSE}
+library(bnlearn)
+fpp <- model2network("[reportedMatch|trueMatch:falsePositive][falsePositive][trueMatch|source:randomMatch][randomMatch][source]")
+graphviz.plot(fpp)
+```
+\caption{Dependencies between variables in the false positive problem.}
+\label{fig:fpp}
+\end{figure}
+
 The formula we will end up with is:
 
 \begin{align}
 \tag{FPP-LR} \mathsf{LR}(R, S, \n S) & = \frac{1}{RMP + [ FPP \times (1-RMP)]}
 \end{align}
-\noindent where RMP stands for the random match probability and FPP for the false positive probability. We will assume that whether a (lack of) match is reported is independent of whether it is coincidental,
+\noindent where RMP stands for the random match probability and FPP for the false positive probability. Re-written in terms of explicit probabities the formula reads:
+\begin{align*}
+\mathsf{LR}(R,S, \n S) & = \frac{1}
+{\pr{R \vert  M}\pr{ M \vert \n S} + \pr{R \vert \n M}\pr{\n M \vert \n S}}
+\end{align*}
+\noindent The denominator mirrors the fact that there are two ways misleading evidence can arise:  there is a true match and the suspect is not the source (so it's  a random match), or there is no real match, and an error has been made in the identification process.
+
+
+
+
+We will assume that whether a (lack of) match is reported is independent of whether it is coincidental,
 \begin{align}
 \label{eq:indOnS}
 \pr{R \vert M \et S} & = \pr{R \vert M \et \n S} = \pr{R \vert M}
@@ -266,8 +288,7 @@ The formula we will end up with is:
 \pr{R \vert M} & = 1.
 \end{align}
 
-\todo{M: The derivation is fine. It can be relegated to a footnote. We need to explain, intuitively,
-what is going on here. Formula (13) at the end is instructive. It shows that a reported match (given not-S) can happen  when there is a true match and when there is no true match, so we need to explain the notion of true match. Can BN help here? There is a path from source to true match to reported math.}
+
 
 Here, for simplicity we take the probability of a false negative to be null; in fact, some of the reasons for taking false positives seriously are also reasons to take false negatives seriously, but let's deal with one problem at a time (and in the end, the impact of a false positive risk will be clear from the way the formula will be derived). Now, let us rewrite the numerator of the LR by extending the conversation, rewriting the probabilities of conjunctions in terms of conditional probability and simplifying: 
 
@@ -367,13 +388,13 @@ ggplot(fppTableLong, aes(x=fpp,y=value, lty = line))+  geom_line()+ylim(c(0,400)
 Interestingly, @buckleton2018forensic give a seemingly different formula for
 the impact of errors on likelihood ratio. Since the derivation is simpler and it turns out that in fact this is simply a more general formula, of which (FPP-LR) is just a particular instance, it worth taking a look.
 
-First, @buckleton2018forensic make the conceptual distinction between the probability that an error occurs ($E$) and the probability that a match is reported if it does. In terms of our notation, we have:
+First, @buckleton2018forensic make the conceptual distinction between the probability that an error occurs ($E$) and the probability that a match is reported if it does.\todo{Added worning, I can rewrite the proof if you can think of a better abbreviation.} Mind your head: here $E$ stands for error, not for evidence! In terms of our notation, we have:
 \begin{align*}
 e & = \pr{E} = \pr{E \vert S} = \pr{E \vert \n S}
 \end{align*}
 \noindent That is, we denote the probability of error as $e$, and we assume it doesn't depend on whether the prosecution hypothesis is true (whether the suspect is the source).  
 
-\todo{M:Using E for error is confusing as we typically use E for evidence.}
+
 
 Separately, the formula includes the probability of a reported match if an error occurs, also assumed to be independent of whether the prosecution hypothesis is true:
 \begin{align*}
@@ -391,18 +412,22 @@ LR & = \frac{\pr{R\vert S}}
 {RMP(1-e)+ke}  = \frac{1-e+ke}{RMP  - e\times RMP + ke} \\
 & = \frac{1 - (1-k)e}{RMP(1-e)+ke}
 \end{align*}
+\todo{I added these three passages to explain the argument, is this clear now?}
+Let's take it slow. First, the likelihood ratio is just the ratio of probabilities of a reported match (1) if the suspect is the source  and (2) if the suspect is not the source.  
+
+Now, think of $\pr{R\vert S}$. This can be split into two possible scenarios: an error has not been made, or an error has been made. Accordingly, the numerator in the second line uses the law of total probability to split $\pr{R\vert S}$ into these two options.
+
+Similarly, $\pr{R\vert \n S}$ can be split into two cases: the suspect is not the source, but we are dealing with a random match, or the suspect is not the source, and an error has been made. An application of the law of total probability in the denominator mirrors this. The rest of the argument is just rewriting in terms of abbreviations, and algebraic manipulation.
 
 
-Note now that if you think of an error as something that guarantees a mistaken identification, $k$ becomes $1$ and $e$ becomes the false positive rate. On this assumption we have:
+Note now that if you think of an error as something that guarantees a mistaken identification, $k$ becomes $1$ and $e$ becomes the false positive rate. On this assumption straightforward algebraic manipulation gives:
 \begin{align*}
  \frac{1 - (1-k)e}{RMP(1-e)+ke} & = \frac{1-e+e}{RMP(1-e)+e}\\
  & = \frac{1}{RMP - e\times RMP + e} = \frac{1}{1 + e(1-RMP)}
 \end{align*}
 \noindent which is the same as the formula obtained by  @aitken2003probability if we take $e$ to be FPP, as we should on the assumption that $k=1$.
 
-\todo{M: I could  not follow the derivation. We need to give 
-an intuitive explanation and then relegate the 
-proof to a footnote or appendix.}
+\todo{Do you also want me to explain the manipulation here?}
 
 An analogous reasoning can be used to study the impact of false negative probability on the value of exculpator DNA evidence. Consider the probability of no match being reported if an error has been made, anaologus to $k$ above:
 \begin{align*}
@@ -420,6 +445,7 @@ l & = \pr{\n R \vert E, S} = \pr{\n R \vert E, \n S} = \pr{\n R\vert E}
 {1- RMP - e + eRMP + le} = \frac{le}{1-RMP + e(l + RMP -1)}\\
 & = \frac{e}{1 - RMP + eRMP} = \frac{e}{1+(e-1)RMP}
 \end{align*}
+\todo{Now, this argument is very similar, do we really need an informal gloss here as well?}
 
 \noindent If the error rate is 0, then the numerator is 0 and so is the \textsf{LR}, as it should. In such a case, the evidence is completely exculpatory, the posterior probability that the suspect is the source will be also 0. If the error rate is not 0, the numerator simply is the probability of error, and the numerator takes values between $1-RMP$ and $1$, depending on the value of $e$.
 Quite crucially, 1 in the denominator is decreased by $(1-e)RMP$, which with usually very low RMP in the case of DNA evidence is a very small change as compared to one, so the denominator stays very close to 1 even if $e$ is very high, and the \textsf{LR} effectively simply is $\approx \nicefrac{e}{1} = e$. The lines in Figure \ref{fig:fnplr}, strictly speaking, do not overlap, but the difference between them (with $RMP$ being fairly low) is negligible.
@@ -449,16 +475,271 @@ ggplot(fnpTableLong, aes(x=fnp,y=value, color = line))+  geom_line()+theme_tufte
 \end{figure}
 
 
-Interestingly, the situation is not symmetric when we compare FPP to FNP. With FPP, the LR is 50 when $e=0.01$ for RMP$=10^{-3}$, while for the same $e$ and RMP it is $0.01$ for FNP, an hundredfold decrease. This illustrates that the exculpatory value of DNA evidence is higher than its incriminating value, even if the error rates and random match probabilities are the same. 
+Interestingly, there is a sense in which the  situation is not symmetric when we compare FPP to FNP. With FPP, the LR is 50 when $e=0.01$ for RMP$=10^{-3}$, while for the same $e$ and RMP it is $0.01$ for FNP, an hundredfold decrease. This illustrates that the exculpatory value of DNA evidence is higher than its incriminating value, even if the error rates and random match probabilities are the same. 
 
-\todo{M: This is a very interesting point, worth thinking about for a bit more. 
-Is it true? Is there an intuitive explanation?}
+
+
+Some conceptual symmetry can be regained though. Suppose $RMP$ is really low as compared to $FPP$ and let's ignore it in our approximation. Then, the likelihood ratio of the incriminating evidence becomes $\nicefrac{1}{FPP}$ and the likelihood ratio of exculpatory evidence becomes $\nicefrac{FNP}{1}$. However, the change rate of these differ. While $\nicefrac{d}{dx}(\nicefrac{1}{x}) = \nicefrac{d}{dx} (x^{-1}) = - \nicefrac{1}{x^2}$, $\nicefrac{d}{dx}(\nicefrac{x}{1})=1$, and the derivatives look quite different (Figure \ref{fig:der})
+
+\begin{figure}[h]
+```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%"}
+x <- seq(0, 1, by = 0.01)
+dfn <- rep(1, length(x) )
+dfp <- -1/(x^2)
+
+ggplot()+geom_line(aes(x=x,y=dfp, color = "incriminating"))+geom_line(aes(x=x,y=dfn, color = "exculpatory"))+ylim(c(-10,2))+theme_tufte()+
+  theme(legend.position = c(0.8, 0.2), legend.title = element_blank())+ylab("likelihood ratio")+xlab("error rate")
+```
+\caption{Derivatives of incriminatory and exculpatory likelihood ratios, range restricted to (-10,2).}
+\label{fig:der}
+\end{figure}
+
+\todo{Added some explanation of the apparent assymetry does this help?}
+
+
+\todo{Added this summary passage here, let me know what you think}
+The key lesson from this section is as follows. First, likelihood ratios are useful in the evaluation and comparison of the impact of positive an negative error rates: and it makes clear that this impact is not the same, contrary to what one may intuitively think. Second, the likelihood ratio analysis reveals that  even a seemingly small error rate in a sense trumps random match probability: if you think there are good reasons to worry about random matches, the analysis shows that there  are much better reasons to worry about error rates.
+
+
+
+# Eyewitness identification and likelihood ratio \label{sec:eyewitness}
+
+
+  
+So far we paid attention  to  DNA evidence, which rather uncontroversially is quantitative. This might give the impression that likelihood ratio is useful only for thinking about clearly quantitative evidence of this sort.  In this section, we discuss how likelihood ratio is still useful for reflecting on evidence which, at leat seemingly, is not quantitative: eyewitness evidence and for combining various items of evidence. 
+
+We will argue that a quantitative perspective on eyewitness evidence is not only available, but also useful. First, it teaches us  that intuitive evaluation of such evidence  leads us astray more often than we tend to think. Second, it provides us with better tools of eyewitness evidence evaluation, as it allows us to study factors that impact its reliability. Next, we will sketch how such a quantitative perspective clears the path to a likelihood ratio treatment of such evidence:   (i) in  likelihood ratio evaluation of a stand-alone piece of eyewitness evidence, (ii)  in combination of eyewitness evidence with a piece of quantitative incriminating evidence, and (iii) in adjudication when different pieces of evidence collide. 
+
+
+The perspective we take here is that there is no magical barrier between quantitative and qualitative evidence. A certain type of evidence can become numerical if sufficient amount of evidence about its reliability has been collected and statistically analyzed. Eyewitness testimony is not only no exception, but also a good example of this. We will now go over the main quantitative findings regarding the reliability of eyewitness evidence. Next, we will show how insights from such findings can be used in a likelihood ratio analysis of the impact of eyewitness evidence.
+
+
+First of all, quantitative analyses might lead to a more sensible assessment of evidence than merely intuitive judgments. In the case of eyewitness testimony, this is crucial because eyewitness evidence tends to be overvalued, and it is the quantitative information that can and should be used to stop this madness. Field studies indicate  filler identification rates of 20-24\% [@klobuchar2006improving] in eyewitness identifications. That is, around 20\% of the time, an innocent presented to an eyewitness is going to be 'identified' by the eyewitness (the situation is a bit more complicated, read on for details). 
+
+To get a better perspective on the fallibility of eyewitness evidence, consider that  4.1\%  is a conservative estimate of false death sentence convictions in the United States, and those are based on much stronger and multiple pieces of evidence, not a single eyewitness' testimony [@gross2014RateFalseConviction]. A study of 340 exonerations in years 1989-2003   indicates that around 90\% of false convictions for rape (and pretty much all inter-racial rape mistaken convictions) are based on eyewitness misidentification, and that in   43\%  of false convictions for murder the defendant was misidentified by one or more eyewitnesses.
+
+
+
+What else is quantitatively known about the reliability of eyewitness testimony? A study of line-ups in 1561 witnesses and 616 suspect in real cases in Greater London [@Wright1996ComparingSystemEstimator]  and of 689 identification attempts in 271 real identification cases in Sacramento [@behrman2001EyewitnessIdentificationActual] suggest false positive rate of around 20\%.
+Also in experimental setting (where the witnesses are less emotionally affected by the crime), eyewitnesses identify a filler in approximately twenty percent of all real criminal line-ups [@thompson2007beyond].
+
+Moreover, studies of cross-examination failed to show that it improves accuracy and that there is a clear relation between witness' confidence and accuracy.   In a series of experiments  subjects were asked to cross-examine eyewitnesses to  determine whether witnesses made accurate or mistaken identifications. Subjects  have shown little or no ability to make such discriminations    [@wells2003EyewitnessTestimony]. Another example of the unreliability of cross-examination is an experiment by @Lindsay1981CanPeopleDetect,  in which a representative sample of $48$ witnesses  was cross-examined. Subjects ($n = 96$) viewing the cross-examinations showed no ability to distinguish accurate- from false-identification witnesses within conditions as measured by subjects' trust in witnesses.
+
+
+
+Moreover, there are various factors that have impact on the reliability of eyewitness testimony, and here is where the quantitative analysis shines. Several of the eyewitness quality issues  have been studied by means of experimental methods.
+Some of them are systemic variables (simultaneous/sequential lineups, showups,\footnote{Two basic types of identification procedures can be found in the literature, lineups, and field showups. A showup refers to the observation of a single suspect by a witness in the field, typically at the crime scene, whereas a lineup refers to the presentation of the suspect and several foils, either live or via photographs.} presence of prior identification, culprit present/culprit absent, frequency of witnesses per suspect), some of them---estimator variables -- are not  (the effect of delay, cross versus own-race effects, weapon focus effects, presence of violence)---see [@behrman2001EyewitnessIdentificationActual] and [@wells2003EyewitnessTestimony] for an interesting discussion of such factors. 
+
+A fascinating meta-analysis by @wixted2017RelationshipEyewitnessConfidence suggests an even more complicated picture, whose key points are as follows:
+
+
+- In light of the empirical results that we've discussed and results similar to them the justice systems has grown more suspicious of eyewitness evidence over the last twenty years or so, especially doubting whether the eyewitness confidence is predictive of  accuracy.
+
+- Isolating cases in which the identification has been made \emph{in pristine conditions} with  high \emph{initial} confidence focusing on cases which would go to trial, that is, in which the suspect indeed was identified with high confidence, @wixted2017RelationshipEyewitnessConfidence  argue that the data show that in such circumstances, the eyewitness confidence indeed is highly predictive of accuracy.
+
+- Pristine conditions involve a double-blind experiment containing only one suspect, at least five fillers, with no fillers who don't look like the perpertator at all, from among which the suspect doesn't stand out as obviously fitting the description which the eyewitness is familiar with, with no extreme coincidental resemblance of a filler to the suspect. The witness has to be cautioned that the offender might not be in the line-up and understand that they aren't failing if they don't indicate anyone, and the confidence statement needs to be collected at the time of first identification.  Very few police departments are known to run their lineups in pristine conditions.
+
+- Whether the conditions were pristine and whether the eyewitness initial confidence was high 
+are factors which trump the role of the estimator variables.
+
+- The extent to which initial  high  confidence in pristine conditions is predictive of identification accuracy depends on the base rate of target-present lineups. In lab studies it is usually fixed at around 50\%, but it is expected to vary widely in real circumstances. The best estimate is around 35\%, and it seems that at that base rate high-confidence witnesses (initial confidence, pristine conditions) are around 90\% accurate. 
+
+- With time, and especially in the contexts in which a witness expects a cross-examination, witness confidence loses its predictive power.  Preparations for the trial are known to inflate witness confidence, especially if they received a positive feedback from anyone after the initial identification.
+
+Ideally, properly formatted data  about all the factors we disussed could, with appropriate effort, be used to develop a multivariate model which would   lead to  quantitative eyewitness reliability estimates, including some estimation of the uncertainty involved. While we are far from reaching the state of such maturity, it should be clear that even with the current state of knowledge, and expert in eyewitness testimony evaluation aware of the literature some of which we have cited, aware of the circumstances of the case and identification could express their evaluation of the witness' reliability quantitatively.   Claiming that an  untrained jury member can do better by just intuitively evaluating what the eyewitness said instead is at least hasty.
+
+
+So consider two scenarios in which we numerically estimate the reliability of the eyewitness evidence in line with the research we just discussed. In one, such an expert recognizes the identification conditions as pristine and testifies: the probability of the testimony if the suspect in fact is the perpetrator ($\pr{E\vert H}$) is $.9\% \pm .05$, and the false positive probability ($\pr{E \vert \n H}$) is $.1\pm .03$. In scenario two, the conditions were not pristine, and the expert testifies that   $\pr{E\vert H}=.8 \pm .05$ and $\pr{E\vert \n H}=.25 \pm .05$. We get two different \emph{ranges} of likelihood ratios, $lr_1$ and $lr_2$. In the first case, the minimum and the maximum are as follows:
+\begin{align*}
+\mathsf{min}(lr_1) = \nicefrac{.95}{.07} \approx 13.57  & \,\,\,\,\,\,\,\,  \mathsf{max}(lr_1) = \nicefrac{.85}{.13} \approx 6.53  
+\end{align*}
+\noindent so the expert can, say, testify that the likelihood ratio is in the range of  6.5-13.5.
+In the second scenario, the minimum and the maximum are as follows:
+\begin{align*}
+\mathsf{min}(lr_1) = \nicefrac{.85}{.2} =  4.25 &  \,\,\,\,\,\,\,\,   \mathsf{max}(lr_1) = \nicefrac{.75}{.3} \approx 2.5  
+\end{align*}
+\noindent so the expert can  testify that the likelihood ratio is in the range of  2.5-4.25.
+
+Now, suppose further evidence is put forward to the effect that the suspect blood type matches the crime scene sample. Say the probability of a match if the suspect is the source is simply 1, while the probability of a random match is .05. The likelihood of this evidence alone is $\nicefrac{1}{.05}= 20$. Assuming indepedence, the joint likelihood for total evidence is obtained by multiplying separate likelihood ratios.  Now, without any commitment to the priors, the impact of likelihood ratio ranges on any prior probability can be  quantified and visualised, as in Figure \ref{fig:eyewitness3}. 
+
+
+```{r eyewitness1,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%", warning = FALSE, message = FALSE}
+
+
+prior <- seq(0,1,0.01)
+priorOdds <- prior/(1-prior)
+
+posteriorOddsMinS1 <- priorOdds * 6.5
+posteriorMinS1 <- posteriorOddsMinS1  / (1+ posteriorOddsMinS1 )
+posteriorOddsMaxS1 <- priorOdds * 13.5
+posteriorMaxS1 <- posteriorOddsMaxS1/(1+posteriorOddsMaxS1)
+scenario1 <- data.frame(prior,priorOdds,posteriorOddsMinS1,posteriorMinS1, posteriorOddsMaxS1, posteriorMaxS1)
+s1 <- ggplot(scenario1)+
+  geom_ribbon(aes(x = prior, ymin=posteriorMinS1,ymax=posteriorMaxS1), fill="skyblue", alpha=0.5)+theme_tufte()+
+  ggtitle("Eyewitness testimony", subtitle = ("pristine conditions"))+ylab("posterior")
+
+
+
+posteriorOddsMinS2 <- priorOdds * 2.5
+posteriorMinS2 <- posteriorOddsMinS2  / (1+ posteriorOddsMinS2 )
+posteriorOddsMaxS2 <- priorOdds * 4.25
+posteriorMaxS2 <- posteriorOddsMaxS2/(1+posteriorOddsMaxS2)
+scenario2 <- data.frame(prior,priorOdds,posteriorOddsMinS2,posteriorMinS2, posteriorOddsMaxS2, posteriorMaxS2)
+s2 <- ggplot(scenario2)+geom_ribbon(aes(x = prior, ymin=posteriorMinS2, ymax=posteriorMaxS2), fill="skyblue", alpha=0.5)+
+  theme_tufte()+ggtitle("Eyewitness testimony", subtitle =  ("suboptimal  conditions"))+ylab("posterior")
+
+
+posteriorOddsBlood <- priorOdds * 20
+posteriorBlood <- posteriorOddsBlood  / (1+ posteriorOddsBlood )
+scenario3 <- data.frame(prior,priorOdds,posteriorOddsBlood,posteriorBlood)
+s3 <- ggplot(scenario2)+geom_line(aes(x = prior, y= posteriorBlood))+
+  theme_tufte()+ggtitle("Blood evidence")+ylab("posterior")
+
+
+posteriorOddsMinS4 <- priorOdds * 20 * 6.5
+posteriorMinS4 <- posteriorOddsMinS4  / (1+ posteriorOddsMinS4 )
+posteriorOddsMaxS4 <- priorOdds * 20 * 13.5
+posteriorMaxS4 <- posteriorOddsMaxS4/(1+posteriorOddsMaxS4)
+scenario4 <- data.frame(prior,priorOdds,posteriorOddsMinS4,posteriorMinS4, posteriorOddsMaxS4, posteriorMaxS4)
+s4 <- ggplot(scenario4)+
+  geom_ribbon(aes(x = prior, ymin=posteriorMinS4,ymax=posteriorMaxS4), fill="skyblue", alpha=0.5)+theme_tufte()+
+  ggtitle("Joint evidence", subtitle = ("pristine conditions"))+ylab("posterior")
+
+posteriorOddsMinS5 <- priorOdds * 20 * 2.5
+posteriorMinS5 <- posteriorOddsMinS5  / (1+ posteriorOddsMinS5 )
+posteriorOddsMaxS5 <- priorOdds * 20 * 4.25
+posteriorMaxS5 <- posteriorOddsMaxS5/(1+posteriorOddsMaxS5)
+scenario5 <- data.frame(prior,priorOdds,posteriorOddsMinS5,posteriorMinS5, posteriorOddsMaxS5, posteriorMaxS5)
+s5 <- ggplot(scenario5)+
+  geom_ribbon(aes(x = prior, ymin=posteriorMinS5,ymax=posteriorMaxS5), fill="skyblue", alpha=0.5)+theme_tufte()+
+  ggtitle("Joint evidence", subtitle = ("subobptimal conditions"))+ylab("posterior")
+
+```
+
+
+
+\begin{figure}[h]
+```{r eyewitness2,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%", warning = FALSE, message = FALSE}
+ggarrange(ggarrange(s1+theme_tufte(base_size=8),s2+theme_tufte(base_size=8), ncol =2 ),
+s3+theme_tufte(base_size=8),
+ggarrange(s4+theme_tufte(base_size=8),s5+theme_tufte(base_size=8), ncol = 2), ncol = 1)
+```
+\caption{Impact of converging items of  evidence on the posteriors.}
+\label{fig:eyewitness3}
+\end{figure}
+
+
+What about conflicting evidence? Suppose this time the conditions were pristine, the expert's evaluation of the eyewitness evidence in pristine conditions is as before, but the witness identified   someone else than the suspect (evidence $E$), while DNA evidence (evidence $D$) supports the prosecution hypothesis $H$ with \textsf{LR} = 300 (this is, say, because we take the false positive probability seriously). Then, the range of plausible likelihood ratios for eyewitness evidence alone is:
+
+\begin{align*}
+\left[\frac{.07}{.95}, \frac{.13}{.85}    \right ]  & \approx [.073,.15]
+\end{align*}
+
+In contrast, if the eyewitness is a friend of the suspect, so that you estimate $\pr{E \vert H}$ to be .6, while the conditions were suboptimal, so that $\pr{E\vert \n H} = .8\pm .05$, the likelihood ratio range is $.7-.8$ and the impact of such eyewitness evidence is quite different.
+
+
+\vspace{1mm}
+\footnotesize
+```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%"}
+prior <- seq(0,1,0.001)
+priorOdds <- prior/(1-prior)
+
+posteriorOddsMinNeg1 <- priorOdds * .073
+posteriorMinNeg1 <- posteriorOddsMinNeg1  / (1+ posteriorOddsMinNeg1 )
+
+posteriorOddsMaxNeg1 <- priorOdds * .15
+posteriorMaxNeg1 <- posteriorOddsMaxNeg1/(1+posteriorOddsMaxNeg1)
+
+scenarioNeg1 <- data.frame(prior,priorOdds,posteriorOddsMinNeg1,posteriorMinNeg1,
+                            posteriorOddsMaxNeg1, posteriorMaxNeg1)
+
+sNeg1 <- ggplot(scenarioNeg1)+
+  geom_ribbon(aes(x = prior, ymin=posteriorMinNeg1,ymax=posteriorMaxNeg1), fill="skyblue", alpha=0.5)+theme_tufte()+
+  ggtitle("Exculpating eyewitness testimony", subtitle = ("pristine conditions"))+ylab("posterior")
+
+
+posteriorOddsMinNeg2 <- priorOdds * .6/.85
+
+posteriorMinNeg2 <- posteriorOddsMinNeg2  / (1+ posteriorOddsMinNeg2 )
+posteriorOddsMaxNeg2 <- priorOdds * .6/.75
+
+posteriorMaxNeg2 <- posteriorOddsMaxNeg2/(1+posteriorOddsMaxNeg2)
+scenarioNeg2 <- data.frame(prior,priorOdds,posteriorOddsMinNeg2,posteriorMinNeg2,
+                           posteriorOddsMaxNeg2, posteriorMaxNeg2)
+
+sNeg2 <- ggplot(scenarioNeg2)+
+  geom_ribbon(aes(x = prior, ymin=posteriorMinNeg2,ymax=posteriorMaxNeg2), fill="skyblue", alpha=0.5)+theme_tufte()+
+  ggtitle("Exculpating eyewitness testimony", subtitle = ("suboptimal conditions"))+ylab("posterior")
+
+
+posteriorOddsDNA <- priorOdds * 300
+posteriorDNA <- posteriorOddsDNA  / (1+ posteriorOddsDNA )
+
+
+scenarioDNA <- data.frame(prior,priorOdds,posteriorOddsDNA,posteriorDNA)
+sDNA <- ggplot(scenarioDNA)+geom_line(aes(x = prior, y= posteriorDNA))+
+  theme_tufte()+ggtitle("DNA evidence (LR=300)")+ylab("posterior")+xlim(c(0,.4))
+
+
+posteriorOddsMinJoint1 <- priorOdds * .073 * 300
+
+
+posteriorMinJoint1 <- posteriorOddsMinJoint1  / (1+ posteriorOddsMinJoint1 )
+
+posteriorOddsMaxJoint1 <- priorOdds * .15 * 300
+posteriorMaxJoint1 <- posteriorOddsMaxJoint1/(1+posteriorOddsMaxJoint1)
+
+scenarioJoint1 <- data.frame(prior,priorOdds,posteriorOddsMinJoint1,posteriorMinJoint1,
+                           posteriorOddsMaxJoint1, posteriorMaxJoint1)
+
+
+
+sJoint1 <- ggplot(scenarioJoint1)+
+  geom_ribbon(aes(x = prior, ymin=posteriorMinJoint1,ymax=posteriorMaxJoint1), fill="skyblue", alpha=0.5)+theme_tufte()+
+  ggtitle("Joint impact of conflicting evidence", subtitle = ("pristine conditions"))+ylab("posterior")+xlim(c(0,0.9))
+
+
+
+posteriorOddsMinJoint2 <- priorOdds * .7 * 300
+posteriorMinJoint2 <- posteriorOddsMinJoint2  / (1+ posteriorOddsMinJoint2 )
+
+posteriorOddsMaxJoint2 <- priorOdds * .8 * 300
+posteriorMaxJoint2 <- posteriorOddsMaxJoint2/(1+posteriorOddsMaxJoint2)
+
+scenarioJoint2 <- data.frame(prior,priorOdds,posteriorOddsMinJoint2,posteriorMinJoint2,
+                             posteriorOddsMaxJoint2, posteriorMaxJoint2)
+
+sJoint2 <- ggplot(scenarioJoint2)+
+  geom_ribbon(aes(x = prior, ymin=posteriorMinJoint2,ymax=posteriorMaxJoint2), fill="skyblue", alpha=1)+theme_tufte()+
+  ggtitle("Joint impact of conflicting evidence", subtitle = ("suboptimal conditions"))+ylab("posterior")+xlim(c(0,0.9))
+
+```
+\normalsize
+
+
+
+
+
+\begin{figure}[h]
+```{r eyewitness4,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%", warning = FALSE, message = FALSE}
+library(ggpubr)
+ggarrange(ggarrange(sNeg1+theme_tufte(base_size=8),sNeg2+theme_tufte(base_size=8), ncol =2 ),
+sDNA+theme_tufte(base_size=8),
+ggarrange(sJoint1+theme_tufte(base_size=8),sJoint2+theme_tufte(base_size=8), ncol = 2), ncol = 1)
+```
+\caption{Impact of conflicting items of  evidence on the posteriors.}
+\label{fig:eyewitness4}
+\end{figure}
+
+
+
+The key observation here is that whether exculpatory eyewitness testimony can in fact be sufficient
+to acquit in light of incriminating DNA evidence depends on the particulars: both on the quality of the eyewitness testimony and on the realistic assessment of the likelihood ratio for the DNA evidence (incorporating the probability of false positives), and on what priors other pieces of evidence led us to so far prior to the evaluation of such items of evidence. The devil is in the detail, and it is not always the case that one should trump the other.
+
+The reader might be disappointed: simply saying "it depends" does not seem to help much. However, keep in mind that there are well known items in the literature, on one hand, in psychology, illustrating that human jurors tend to value eyewitness evidence over statistical evidence [@wells1992naked; @niedermeierEtAl1999; @wells2003EyewitnessTestimony], and, on the other hand, in epistemology, attempting to explain this intuition in a philosophically principled manner [@thomson1986liability; @Smith2018evidence; @bolinger2020individualized].\todo{We might need more references in this passage, think about this.} In line with a more balanced view  [@redmayne2008exploring], our approach suggests that while the psychological effect exists, there are multiple cases in which the preference for eyewitness evidence is mistaken, and relegates the identification and evaluation of  factors that contribute to its proper evaluation to actual empirical research. If the situation is complicated, the best that can be done is take its complexity seriously, and quantitative methods are much more fit for this task than juror's intuitions or general philosophical statements.
 
 \vspace{3mm}
-\textbf{Marcello: The role of this section is not completely clear yet. Is it meant to illustrate why LR are useful?  Is it because FP and FN cannot ne incorporated into other measures of evidential strength such as RMP? But what about the BF? We should be clearer about the role of this section in defeding the LR approach.}
-
-
-
+\textbf{I still need to take a look and discuss the  Rush decision}
 
 
 
@@ -470,7 +751,10 @@ Is it true? Is there an intuitive explanation?}
 
 # Hypothesis choice \label{sec:hchoice}
 
-The discussion so far suggests that the likelihood ratio is a fruitful conceptual framework for assessing the strength of the evidence, even in complex cases such as cold-hits.   Now, however, we turn to a problem with the use of likelihood ratio in the context of legal fact-finding: it is sensitive to the hypothesis choice. We discuss this problem in general in this section, (i) showing how an ad hoc hypothesis can always lead to a useless likelihood ratio, (ii) discussing a real case in which the choice of hypothesis was fairly confusing and had impact on evidence evaluation, (iii) indicating that the problem doesn't arise if the hypotheses as exclusive and exhaustive, and (iv) arguing that this theoretical resolution may be unhelpful in practice, as there seem often to be good reasons why experts do not use such pairs of hypotheses. Further, in Section \ref{sec:lhTwoSTain} we further illustrate how large shifts in the likelihood ratio can take place even if the hypotheses chosen seem reasonable, and argue that another clear source of variability of likelihood ratio is the choice of hypothesis levels. The two sections taken together paint a difficulty with using likelihood ratio alone as a measure of evidential strength. 
+\todo{revised these two intro passages}
+The point so far is  that the likelihood ratio is a fruitful conceptual framework for assessing the strength of the evidence. However, its use is not devoid of challenges, and we move to a discussion of how they arise. 
+
+Now, we turn to a difficulty with the use of likelihood ratio in the context of legal fact-finding: likelihood ratios is sensitive to the hypothesis choice. We discuss this problem in general in this section, (i) showing how an ad hoc hypothesis can always lead to a useless likelihood ratio, (ii) discussing a real case in which the choice of hypothesis was fairly confusing and had impact on evidence evaluation, (iii) indicating that the problem doesn't arise if the hypotheses as exclusive and exhaustive, and (iv) arguing that this theoretical resolution may be unhelpful in practice, as there seem often to be good reasons why experts do not use such pairs of hypotheses. Further, in Section \ref{sec:lhTwoSTain} we further illustrate how large shifts in the likelihood ratio can take place even if the hypotheses chosen seem reasonable, and argue that another clear source of variability of likelihood ratio is the choice of hypothesis levels. The two sections taken together paint a difficulty with using likelihood ratio alone as a measure of evidential strength and suggest that a more elaborate framework, employing likelihood ratios, but not restricted to their reporting, would be more useful. 
 
 
 
@@ -562,6 +846,8 @@ The probability of a DNA match given this hypothesis would be 1.
 
 \todo{M: We should mention a dispute between Taroni research group and Fenton research group about LR. Is this in the references? They seem to disagree on this quite a bit. Bringing out the puzzle in their dispute could be philosophically very interesting even if we do not give a complete resolution.}
 
+\todo{You keep mentioning this dispute, but I never got the impression of deep disagreement. Maybe I missed something, do you have any specific papers in mind?}
+
 
 So, it seems, the choice of competing hypotheses 
 lies between two extremes. Exclusive and exhaustive hypotheses guard against ad hoc hypotheses, arbitrary comparisons and ensure a more objective assessment of the evidence. Unfortunately, exhaustive and exclusive hypothesis cover the entire space of possibilities, and sifting through this space may be cognitively unfeasible. So, in this respect, comparing more circumscribed hypotheses is preferable. The danger of doing so, however, is slipping into arbitrariness as likelihood ratios heavily depend on the hypotheses that are compared. The more latitude in the choice of the hypotheses,
@@ -575,8 +861,10 @@ This variability makes the likelihood ratio a seemingly  arbitrary---and easily 
 
 The likelihood ratio can be  misleading, but this risk is mitigated  when its assessment is accompanied by a careful discussion of a number of issues, such as: which hypotheses are being compared; how they are formulated; their level of granularity (that is, source, activity and offense level); why the hypotheses are (or are not) exclusive and exhaustive, and why other hypotheses are ruled out as unworthy of consideration. 
 
+\todo{Added this summary passage, check.}
+This is our first warning sign when it comes to relying on likelihood ratios. In real-life applications, multiple hypotheses and pairs thereof are at play, and their choice does matter. For this reason, merely reporting likelihood ratios might be misleading,\footnote{Similarly, BF would be sensitive to the choice of the prosecution hypothesis, but since BF faces other problems we already discussed, we will not get into this issue.} and such a presentation of evidence is best accompanied by a careful discussion of which hypotheses were considered, which were chosen and why, and how they all are related to the evidence. Later on we will argue that a clear treatment of such issues is immensely assisted by the use of Bayesian networks in evidence presentation and evaluation. This will be a recurring point in this book. 
 
-\todo{M: This section is interesting, but unsatisfying. A lot going on, but no unifying point What should we think overall? Any philosophical morals? Would BF fare better here than LR? Should we turn to Bayesian networks for aresolution?}
+
 
 
 
@@ -584,10 +872,10 @@ The likelihood ratio can be  misleading, but this risk is mitigated  when its as
 
 # Levels of Hypotheses and the two-stain problem \label{sec:lhTwoSTain}
 
-\todo{M: Both the beginning of this section and the beginning of the earlier section are strange. Not clear how they fit in the ovearall flow of the chapter.}
+\todo{added intro to improve flow}
+Since we want to put likelihood ratios in their proper place when it comes to evidence evaluation and reporting, we would like to obtain a deeper understanding of the factors that might lead to their variation depending on the hypothesis choice. let's take a closer look at one systematic dimension of hypothesis choice sensitivity: likelihood ratios change with the levels of hypothesis under consideration. In this section we take a closer look at this issue.
 
-
-Difficulties in assessing  probabilities go hand in hand with the choice of the hypotheses of interest. To some approximation, hypotheses can be divided into three levels: offence, activity, and source level hypotheses. At the offence level, the issue is one of guilt or innocence, as in the statement 'Smith intentionally attacked the victim with a knife'.  At the activity level, hypotheses 
+ To some approximation, hypotheses can be divided into three levels: offence, activity, and source level hypotheses. At the offence level, the issue is one of guilt or innocence, as in the statement 'Smith intentionally attacked the victim with a knife'.  At the activity level, hypotheses 
 do not include information about intent but simply describe what happened and what those involved did or did not do. An example of activity level hypothesis is 'Smith bled at the scene.' Finally, source level hypotheses describe the source of the traces, such as  'Smith left the stains at the crime scene,' without specifying how the traces got there. Overlooking differences in hypothesis level can lead to serious confusions. 
 To illustrate, consider a case in which a DNA match is the primary incriminating evidence. In testifying about the DNA match at trial, experts will often assess the probability that a random person, unrelated to the crime, would coincidentally match the crime stain profile^[For a survey of developments and complications of this model, see [@foreman2003interpreting].]
 The random match probability is often an impressively low number, say 1 in 100 million or lower, at least excluding the possibility that relatives or identical twins would coincidentally match [@donnelly1995NonindependenceMatchesDifferent].
@@ -597,7 +885,6 @@ Bayes' theorem to calculate   the posterior probability of innocence $\pr{\texts
 this also might be a mistake. Equating the random match probability with $\pr{\textsf{match} \vert \textsf{innocence}}$ overlooks the difference between offense, activity and source level hypothesis. It is hasty to assume that, in one way or another, a DNA match can speak directly to the question of guilt or innocence.  Even if the suspect actually left the genetic material at the scene---source level proposition---the match does not establish guilt.  Even if the defendant did visit the scene and came into contact with the victim, it does not follow that he committed the crime he was accused of.  It is true, that in many circumstances the random match probability and the posterior probability of innocence given a match would both be very low, but such issues need to be considered and took into consideration in DNA evidence evaluation. 
 <!-- \todo{add an example with a BN} \todo{find paper with graphing method} -->
 
-\todo{M: Why talk about levels of hypothesis now? Hoes does this relate to the chapter? Think about general structure and flow of the argument here.}
 
 Few forms of evidence can speak directly to offense level hypotheses. Circumstantial evidence that is more amenable to a probabilistic quantification, such as DNA matches and other trace evidence, does not.  Eyewitness testimony may speak more directly to offense level hypotheses, but it is also less easily amenable to a probabilistic quantification. This makes it  difficult to assign probabilities to offense level hypotheses. 
 Experts are usually not supposed to comment directly on offense level hypotheses, but they often comment on activity level  and source level hypotheses. In moving from source to activity level, however, additional sources of uncertainty come into play.
@@ -695,8 +982,10 @@ The National Research Council  (NRC II) recommended in 1996 that that the likeli
 the likelihood ratio of the match in cold-hit cases should be divided by the size of the database. Stockmarr believes we should evaluate the likelihood ratio using hypotheses that can be formulated prior to the database search, such as 'The true source of the crime traces is among the suspects in the database, ' while others insist on using 'The defendant is the true source of the crime traces.' Now, interestingly, while these approaches lead to different LR evaluations, they are equivalent conditional on the evidence: given the same evidence, they read to the same posterior. 
 This is another example of how likelihood ratios on their own might be  insufficiently informative to allow for an adequate assessment of the evidence. We will discuss these issues in more depth later on. First, we will look at an argument against likelihood ratio being useful  as a measure of evidential relevance, as dealing with it is conceptually more straighforward. 
 
+\todo{added this summary passage}
+This section emphasizes the  warning message we left you with at the end of the previous section: even if likelihood rations are legitimate tool of evidence evaluation, they should be used with care, and accompanied with an explicit discussion how they fit into a larger picture of various items of evidence and hypotheses at play.  Again, we will argue that a prominent way to do so is to employ Bayesian networks in evidence presentation and evaluation.
 
-\todo{M: As with the other section, this section is interesting, but its role and contribution to the chapter is unclear? Is this an argujemnt against LR and in favor of some other measure of evidenetial support? If so, which one? BF? Is this an argument that hints that we should use Bayesian networks?}
+
 
 
 
@@ -704,6 +993,10 @@ This is another example of how likelihood ratios on their own might be  insuffic
 
 
 # Relevance and the small-town murder scenario \label{sec:relevance}
+
+\todo{added this intro, check}
+Another  objection to likelihood ratios is that they might suggest evidence is irrelevant even if reported with respect to a pair of exlcusive and exhaustive hypotheses. The objection indeed sometimes applies when the key hypotheses are the main guilt hypothesis and its negation. But we will argue that this is not an objection to the use of likelihood ratios, but rather against reporting them in isolation. When justice is done to the complexities at play, appropriate likelihood ratios still evaluate such evidence as relevant. Again, the point is that there is no escape from using a more elaborate evidence presentation tool than just reporting likelihood ratios in isolation.
+
 
 The U.S.\ Federal Rules of Evidence
 define relevant evidence as one that has `any tendency to make the existence of any fact that is of consequence to the determination of the action more probable or less probable than it would be without the evidence' (rule 401). 
@@ -725,7 +1018,6 @@ If the evidence is equally likely under either hypothesis,
 $LR(E, H, H')=1$, the evidence is considered irrelevant. 
 
 
-\todo{M: relevance is an important topic, but why mention it in this section and at this point? What's the structure of the chapter?}
 
 This account of relevance has been challenged by cases in which the evidence 
 is intuitively relevant and yet
@@ -793,20 +1085,16 @@ For instance,  in the twins problem, the LR is 1 if the hypotheses are: 'the sus
 
 Similarly, in the food tray example, Bayesian network analysis shows that the value of the evidence 'prisoner withholds tray' for the question who started the fight depends on a range of uncertain events and other pieces of evidence (such as whether indeed a parcel he was supposed to obtain was withheld;  whether the prisoner inquired about this; whether and how this inquiry was answered). Considered in this context, the piece of evidence will not have a likelihood ratio of one with respect to at least some choice of sensible hypotheses.
 
-\todo{M: should this be the general point of the chapter? LR are good as far as it goes, but Bayesian network are better?}
 
-The general problem with the  paradoxes of relevance is that in complex situations there is no single likelihood ratio that corresponds to a single piece of evidence. The problematic scenarios focus on a single likelihood ratio based on non-exclusive or non-exhaustive hypotheses.  However, evidence can be relevant so long as it has a probabilistic impact on a  sub-hypothesis involved in the case,  even without having a recognizable probabilistic impact on the prosecutor's or defense's ultimate hypotheses. When this happens, it is relevant, in agreement with Rule 401 of the Federal Rules of Evidence. Bayesian networks help to see how pieces of evidence can increase or decrease the probability of different sub-hypotheses  [@dezoete2019ResolvingSocalledProbabilistic]. 
+
+The general problem with the  paradoxes of relevance is that in complex situations there is no single likelihood ratio that corresponds to a single piece of evidence. The problematic scenarios focus on a single likelihood ratio based on non-exclusive or non-exhaustive hypotheses.  However, evidence can be relevant so long as it has a probabilistic impact on a  sub-hypothesis involved in the case,  even without having a recognizable probabilistic impact on the prosecutor's or defense's ultimate hypotheses. When this happens, it is relevant, in agreement with Rule 401 of the Federal Rules of Evidence. Bayesian networks help to see how pieces of evidence can increase or decrease the probability of different sub-hypotheses  [@dezoete2019ResolvingSocalledProbabilistic].  Thus, while likelihood ratios are useful, they need to be properly presented in the context. 
 
 # The cold-hit confusion \label{sec:coldHitConfusion}
 
-\todo{revise the first senence here.}
+\todo{Added this intro here.}
+We have been quite negative in the last two sections. What we are after, though, is a balanced perspective. We are not saying that likelihood ratios should be disposed of: rather that they should be reported for individual pieces of evidence and used to evaluate the impact of combined evidence, but only when proper attention is paid to the structure of the problem. To re-emphasize the utility of likelihood ratios when care is paid to both  the hypothesis formulation, and to what the evidence in fact is, we illustrate it by showing how it can be used to resolve a lengthy debate in legal evidence studies: the value of  a cold-hit DNA match.
 
-\todo{M: Cannot see the structure of the chapter here. Looks like we are getting back to the virtues of LR while it felt as though we abandoned them for Bayesian networks in the earlier section on relevance.}
 
-To better appreciate the theoretical virtues of
-likelihood ratios, 
-it is instructive to look 
-at a case study, DNA evidence, focusing in particular on so-called cold-hit matches. 
 DNA evidence is one of the most  widely used forms of quantitative evidence currently in use.   It may be used to corroborate other evidence in a case, or as the primary  incriminating evidence. For example, suppose different investigative leads point to an individual, Mark Smith, as the perpetrator. The investigators also find several traces at the crime scene left by the perpetrator. Laboratory analyses show that the genetic profile associated with the traces matches Smith. In this scenario, the DNA match corroborates the other evidence against Smith.  In contrast, suppose the police has no other investigative lead except the traces left at the crime scene. Hoping to find the perpetrator, the police run the genetic profile associated with the traces through a 
 database of profiles and  find a match, a so-called  \textbf{cold-hit}.
 Cold-hit DNA matches have been the focus of intense discussion in recent years. Since in cold-hit cases there is little or no other evidence, cold-hit matches are often the primary item of evidence against the defendant. Some believe that this circumstance weakens the case. Others disagree.  This debate illustrates how probability theory---in particular, the likelihood ratio---can help to assess the strength of evidence at trial. What follows examines some of the main arguments.
@@ -1122,251 +1410,7 @@ cold-hit cases,  despite the fact that  a cold-hit match alone is stronger evide
 \todo{M: We need a proper conclusion here. Now it feels as thought LR are a good thing, at leats for cold-hits. But is this just an exception? Do LR have a very narrow applicability, say only for DNA evidence? So where do we stand exactly? And what about BF and Bayesian networks and priors? Need general morals here.}
 
 
-
-
-# Eyewitness identification and likelihood ratio \label{sec:eyewitness}
-
-
-\textbf{Marcello: perhaps this section could come right after the discusison of false positive in DNA evidence, just to give a second illustrration of how LR can be used to weigh evidence, and not just quantitive evidence.}
-
-  
-So far in this chapter, a lot of attention has been paid to  DNA evidence, which rather uncontroversially is quantitative. This might give the impression that likelihood ratio is useful only for thinking about clearly quantitative evidence of this sort.  In this section, we discuss how likelihood ratio is still useful for reflecting on evidence which, at leat seemingly, is not quantitative: eyewitness evidence. 
-
-We will argue that a quantitative perspective on eyewitness evidence is not only available, but also useful. First, it teaches us  that intuitive evaluation of such evidence  leads us astray more often than we tend to think. Second, it provides us with better tools of eyewitness evidence evaluation, as it allows us to study factors that impact its reliability. Next, we will sketch how such a quantitative perspective clears the path to a likelihood ratio treatment of such evidence:   (i) in  likelihood ratio evaluation of a stand-alone piece of eyewitness evidence, (ii)  in combination of eyewitness evidence with a piece of quantitative incriminating evidence, and (iii) in adjudication when different pieces of evidence collide. 
-
-
-The perspective we take here is that there is no magical barrier between quantitative and qualitative evidence. A certain type of evidence can become numerical if sufficient amount of evidence about its reliability has been collected and statistically analyzed. Eyewitness testimony is not only no exception, but also a good example of this.
-
-
-\todo{M: These numbers are interesting, but unless we use them later to help us fill out the values of the probabilities, this is besides the point. Get to the point -- i.e. how weuse LR to weigh eyewitness evidence.}
-
-First of all, quantitative analyses might lead to a more sensible assessment of evidence than merely intuitive judgments. In the case of eyewitness testimony, this is crucial because eyewitness evidence tends to be overvalued, and it is the quantitative information that can and should be used to stop this madness. Field studies indicate  filler identification rates of 20-24\% [@klobuchar2006improving] in eyewitness identifications. That is, around 20\% of the time, an innocent presented to an eyewitness is going to be 'identified' by the eyewitness (the situation is a bit more complicated, read on for details). 
-
-To get a better perspective on the fallibility of eyewitness evidence, consider that  4.1\%  is a conservative estimate of false death sentence convictions in the United States, and those are based on much stronger and multiple pieces of evidence, not a single eyewitness' testimony [@gross2014RateFalseConviction]. A study of 340 exonerations in years 1989-2003   indicates that around 90\% of false convictions for rape (and pretty much all inter-racial rape mistaken convictions) are based on eyewitness misidentification, and that in   43\%  of false convictions for murder the defendant was misidentified by one or more eyewitnesses.
-
-
-
-What else is quantitatively known about the reliability of eyewitness testimony? A study of line-ups in 1561 witnesses and 616 suspect in real cases in Greater London [@Wright1996ComparingSystemEstimator]  and of 689 identification attempts in 271 real identification cases in Sacramento [@behrman2001EyewitnessIdentificationActual] suggest false positive rate of around 20\%.
-Also in experimental setting (where the witnesses are less emotionally affected by the crime), eyewitnesses identify a filler in approximately twenty percent of all real criminal line-ups [@thompson2007beyond].
-
-Moreover, studies of cross-examination failed to show that it improves accuracy and that there is a clear relation between witness' confidence and accuracy.   In a series of experiments  subjects were asked to cross-examine eyewitnesses to  determine whether witnesses made accurate or mistaken identifications. Subjects  have shown little or no ability to make such discriminations    [@wells2003EyewitnessTestimony]. Another example of the unreliability of cross-examination is an experiment by @Lindsay1981CanPeopleDetect,  in which a representative sample of $48$ witnesses  was cross-examined. Subjects ($n = 96$) viewing the cross-examinations showed no ability to distinguish accurate- from false-identification witnesses within conditions as measured by subjects' trust in witnesses.
-
-
-
-Moreover, there are various factors that have impact on the reliability of eyewitness testimony, and here is where the quantitative analysis shines. Several of the eyewitness quality issues  have been studied by means of experimental methods.
-Some of them are systemic variables (simultaneous/sequential lineups, showups,\footnote{Two basic types of identification procedures can be found in the literature, lineups, and field showups. A showup refers to the observation of a single suspect by a witness in the field, typically at the crime scene, whereas a lineup refers to the presentation of the suspect and several foils, either live or via photographs.} presence of prior identification, culprit present/culprit absent, frequency of witnesses per suspect), some of them---estimator variables -- are not  (the effect of delay, cross versus own-race effects, weapon focus effects, presence of violence)---see [@behrman2001EyewitnessIdentificationActual] and [@wells2003EyewitnessTestimony] for an interesting discussion of such factors. 
-
-A fascinating meta-analysis by @wixted2017RelationshipEyewitnessConfidence suggests an even more complicated picture, whose key points are as follows:
-
-
-- In light of the empirical results that we've discussed and results similar to them the justice systems has grown more suspicious of eyewitness evidence over the last twenty years or so, especially doubting whether the eyewitness confidence is predictive of  accuracy.
-
-- Isolating cases in which the identification has been made \emph{in pristine conditions} with  high \emph{initial} confidence focusing on cases which would go to trial, that is, in which the suspect indeed was identified with high confidence, @wixted2017RelationshipEyewitnessConfidence  argue that the data show that in such circumstances, the eyewitness confidence indeed is highly predictive of accuracy.
-
-- Pristine conditions involve a double-blind experiment containing only one suspect, at least five fillers, with no fillers who don't look like the perpertator at all, from among which the suspect doesn't stand out as obviously fitting the description which the eyewitness is familiar with, with no extreme coincidental resemblance of a filler to the suspect. The witness has to be cautioned that the offender might not be in the line-up and understand that they aren't failing if they don't indicate anyone, and the confidence statement needs to be collected at the time of first identification.  Very few police departments are known to run their lineups in pristine conditions.
-
-- Whether the conditions were pristine and whether the eyewitness initial confidence was high 
-are factors which trump the role of the estimator variables.
-
-- The extent to which initial  high  confidence in pristine conditions is predictive of identification accuracy depends on the base rate of target-present lineups. In lab studies it is usually fixed at around 50\%, but it is expected to vary widely in real circumstances. The best estimate is around 35\%, and it seems that at that base rate high-confidence witnesses (initial confidence, pristine conditions) are around 90\% accurate. 
-
-- With time, and especially in the contexts in which a witness expects a cross-examination, witness confidence loses its predictive power.  Preparations for the trial are known to inflate witness confidence, especially if they received a positive feedback from anyone after the initial identification.
-
-Ideally, properly formatted data  about all the factors we disussed could, with appropriate effort, be used to develop a multivariate model which would   lead to  quantitative eyewitness reliability estimates, including some estimation of the uncertainty involved. While we are far from reaching the state of such maturity, it should be clear that even with the current state of knowledge, and expert in eyewitness testimony evaluation aware of the literature some of which we have cited, aware of the circumstances of the case and identification could express their evaluation of the witness' reliability quantitatively.   Claiming that an  untrained jury member can do better by just intuitively evaluating what the eyewitness said instead is at least hasty.
-
-
-\todo{M: Where do these probabilities come from? Here you can cite emprical research to justify those values.}
-So consider two scenarios. In one, such an expert recognizes the identification conditions as pristine and testifies: the probability of the testimony if the suspect in fact is the perpetrator ($\pr{E\vert H}$) is $.9\% \pm .05$, and the false positive probability ($\pr{E \vert \n H}$) is $.1\pm .03$. In scenario two, the conditions were not pristine, and the expert testifies that   $\pr{E\vert H}=.8 \pm .05$ and $\pr{E\vert \n H}=.25 \pm .05$. We get two different \emph{ranges} of likelihood ratios, $lr_1$ and $lr_2$. In the first case, the minimum and the maximum are as follows:
-\begin{align*}
-\mathsf{min}(lr_1) = \nicefrac{.95}{.07} \approx 13.57  & \,\,\,\,\,\,\,\,  \mathsf{max}(lr_1) = \nicefrac{.85}{.13} \approx 6.53  
-\end{align*}
-\noindent so the expert can, say, testify that the likelihood ratio is in the range of  6.5-13.5.
-In the second scenario, the minimum and the maximum are as follows:
-\begin{align*}
-\mathsf{min}(lr_1) = \nicefrac{.85}{.2} =  4.25 &  \,\,\,\,\,\,\,\,   \mathsf{max}(lr_1) = \nicefrac{.75}{.3} \approx 2.5  
-\end{align*}
-\noindent so the expert can  testify that the likelihood ratio is in the range of  2.5-4.25.
-
-Now, suppose further evidence is put forward to the effect that the suspect blood type matches the crime scene sample. Say the probability of a match if the suspect is the source is simply 1, while the probability of a random match is .05. The likelihood of this evidence alone is $\nicefrac{1}{.05}= 20$. Assuming indepedence, the joint likelihood for total evidence is obtained by multiplying separate likelihood ratios.  Now, without any commitment to the priors, the impact of likelihood ratio ranges on any prior probability can be  quantified and visualised, as in Figure \ref{fig:eyewitness3}. 
-
-
-```{r eyewitness1,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%", warning = FALSE, message = FALSE}
-
-
-prior <- seq(0,1,0.01)
-priorOdds <- prior/(1-prior)
-
-posteriorOddsMinS1 <- priorOdds * 6.5
-posteriorMinS1 <- posteriorOddsMinS1  / (1+ posteriorOddsMinS1 )
-posteriorOddsMaxS1 <- priorOdds * 13.5
-posteriorMaxS1 <- posteriorOddsMaxS1/(1+posteriorOddsMaxS1)
-scenario1 <- data.frame(prior,priorOdds,posteriorOddsMinS1,posteriorMinS1, posteriorOddsMaxS1, posteriorMaxS1)
-s1 <- ggplot(scenario1)+
-  geom_ribbon(aes(x = prior, ymin=posteriorMinS1,ymax=posteriorMaxS1), fill="skyblue", alpha=0.5)+theme_tufte()+
-  ggtitle("Eyewitness testimony", subtitle = ("pristine conditions"))+ylab("posterior")
-
-
-
-posteriorOddsMinS2 <- priorOdds * 2.5
-posteriorMinS2 <- posteriorOddsMinS2  / (1+ posteriorOddsMinS2 )
-posteriorOddsMaxS2 <- priorOdds * 4.25
-posteriorMaxS2 <- posteriorOddsMaxS2/(1+posteriorOddsMaxS2)
-scenario2 <- data.frame(prior,priorOdds,posteriorOddsMinS2,posteriorMinS2, posteriorOddsMaxS2, posteriorMaxS2)
-s2 <- ggplot(scenario2)+geom_ribbon(aes(x = prior, ymin=posteriorMinS2, ymax=posteriorMaxS2), fill="skyblue", alpha=0.5)+
-  theme_tufte()+ggtitle("Eyewitness testimony", subtitle =  ("suboptimal  conditions"))+ylab("posterior")
-
-
-posteriorOddsBlood <- priorOdds * 20
-posteriorBlood <- posteriorOddsBlood  / (1+ posteriorOddsBlood )
-scenario3 <- data.frame(prior,priorOdds,posteriorOddsBlood,posteriorBlood)
-s3 <- ggplot(scenario2)+geom_line(aes(x = prior, y= posteriorBlood))+
-  theme_tufte()+ggtitle("Blood evidence")+ylab("posterior")
-
-
-posteriorOddsMinS4 <- priorOdds * 20 * 6.5
-posteriorMinS4 <- posteriorOddsMinS4  / (1+ posteriorOddsMinS4 )
-posteriorOddsMaxS4 <- priorOdds * 20 * 13.5
-posteriorMaxS4 <- posteriorOddsMaxS4/(1+posteriorOddsMaxS4)
-scenario4 <- data.frame(prior,priorOdds,posteriorOddsMinS4,posteriorMinS4, posteriorOddsMaxS4, posteriorMaxS4)
-s4 <- ggplot(scenario4)+
-  geom_ribbon(aes(x = prior, ymin=posteriorMinS4,ymax=posteriorMaxS4), fill="skyblue", alpha=0.5)+theme_tufte()+
-  ggtitle("Joint evidence", subtitle = ("pristine conditions"))+ylab("posterior")
-
-posteriorOddsMinS5 <- priorOdds * 20 * 2.5
-posteriorMinS5 <- posteriorOddsMinS5  / (1+ posteriorOddsMinS5 )
-posteriorOddsMaxS5 <- priorOdds * 20 * 4.25
-posteriorMaxS5 <- posteriorOddsMaxS5/(1+posteriorOddsMaxS5)
-scenario5 <- data.frame(prior,priorOdds,posteriorOddsMinS5,posteriorMinS5, posteriorOddsMaxS5, posteriorMaxS5)
-s5 <- ggplot(scenario5)+
-  geom_ribbon(aes(x = prior, ymin=posteriorMinS5,ymax=posteriorMaxS5), fill="skyblue", alpha=0.5)+theme_tufte()+
-  ggtitle("Joint evidence", subtitle = ("subobptimal conditions"))+ylab("posterior")
-
-```
-
-
-
-\begin{figure}[h]
-```{r eyewitness2,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%", warning = FALSE, message = FALSE}
-ggarrange(ggarrange(s1+theme_tufte(base_size=8),s2+theme_tufte(base_size=8), ncol =2 ),
-s3+theme_tufte(base_size=8),
-ggarrange(s4+theme_tufte(base_size=8),s5+theme_tufte(base_size=8), ncol = 2), ncol = 1)
-```
-\caption{Impact of converging items of  evidence on the posteriors.}
-\label{fig:eyewitness3}
-\end{figure}
-
-
-What about conflicting evidence? Suppose this time the conditions were pristine, the expert's evaluation of the eyewitness evidence in pristine conditions is as before, but the witness identified   someone else than the suspect (evidence $E$), while DNA evidence (evidence $D$) supports the prosecution hypothesis $H$ with \textsf{LR} = 300 (this is, say, because we take the false positive probability seriously). Then, the range of plausible likelihood ratios for eyewitness evidence alone is:
-
-\begin{align*}
-\left[\frac{.07}{.95}, \frac{.13}{.85}    \right ]  & \approx [.073,.15]
-\end{align*}
-
-In contrast, if the eyewitness is a friend of the suspect, so that you estimate $\pr{E \vert H}$ to be .6, while the conditions were suboptimal, so that $\pr{E\vert \n H} = .8\pm .05$, the likelihood ratio range is $.7-.8$ and the impact of such eyewitness evidence is quite different.
-
-
-\vspace{1mm}
-\footnotesize
-```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%"}
-prior <- seq(0,1,0.001)
-priorOdds <- prior/(1-prior)
-
-posteriorOddsMinNeg1 <- priorOdds * .073
-posteriorMinNeg1 <- posteriorOddsMinNeg1  / (1+ posteriorOddsMinNeg1 )
-
-posteriorOddsMaxNeg1 <- priorOdds * .15
-posteriorMaxNeg1 <- posteriorOddsMaxNeg1/(1+posteriorOddsMaxNeg1)
-
-scenarioNeg1 <- data.frame(prior,priorOdds,posteriorOddsMinNeg1,posteriorMinNeg1,
-                            posteriorOddsMaxNeg1, posteriorMaxNeg1)
-
-sNeg1 <- ggplot(scenarioNeg1)+
-  geom_ribbon(aes(x = prior, ymin=posteriorMinNeg1,ymax=posteriorMaxNeg1), fill="skyblue", alpha=0.5)+theme_tufte()+
-  ggtitle("Exculpating eyewitness testimony", subtitle = ("pristine conditions"))+ylab("posterior")
-
-
-posteriorOddsMinNeg2 <- priorOdds * .6/.85
-
-posteriorMinNeg2 <- posteriorOddsMinNeg2  / (1+ posteriorOddsMinNeg2 )
-posteriorOddsMaxNeg2 <- priorOdds * .6/.75
-
-posteriorMaxNeg2 <- posteriorOddsMaxNeg2/(1+posteriorOddsMaxNeg2)
-scenarioNeg2 <- data.frame(prior,priorOdds,posteriorOddsMinNeg2,posteriorMinNeg2,
-                           posteriorOddsMaxNeg2, posteriorMaxNeg2)
-
-sNeg2 <- ggplot(scenarioNeg2)+
-  geom_ribbon(aes(x = prior, ymin=posteriorMinNeg2,ymax=posteriorMaxNeg2), fill="skyblue", alpha=0.5)+theme_tufte()+
-  ggtitle("Exculpating eyewitness testimony", subtitle = ("suboptimal conditions"))+ylab("posterior")
-
-
-posteriorOddsDNA <- priorOdds * 300
-posteriorDNA <- posteriorOddsDNA  / (1+ posteriorOddsDNA )
-
-
-scenarioDNA <- data.frame(prior,priorOdds,posteriorOddsDNA,posteriorDNA)
-sDNA <- ggplot(scenarioDNA)+geom_line(aes(x = prior, y= posteriorDNA))+
-  theme_tufte()+ggtitle("DNA evidence (LR=300)")+ylab("posterior")+xlim(c(0,.4))
-
-
-posteriorOddsMinJoint1 <- priorOdds * .073 * 300
-
-
-posteriorMinJoint1 <- posteriorOddsMinJoint1  / (1+ posteriorOddsMinJoint1 )
-
-posteriorOddsMaxJoint1 <- priorOdds * .15 * 300
-posteriorMaxJoint1 <- posteriorOddsMaxJoint1/(1+posteriorOddsMaxJoint1)
-
-scenarioJoint1 <- data.frame(prior,priorOdds,posteriorOddsMinJoint1,posteriorMinJoint1,
-                           posteriorOddsMaxJoint1, posteriorMaxJoint1)
-
-
-
-sJoint1 <- ggplot(scenarioJoint1)+
-  geom_ribbon(aes(x = prior, ymin=posteriorMinJoint1,ymax=posteriorMaxJoint1), fill="skyblue", alpha=0.5)+theme_tufte()+
-  ggtitle("Joint impact of conflicting evidence", subtitle = ("pristine conditions"))+ylab("posterior")+xlim(c(0,0.9))
-
-
-
-posteriorOddsMinJoint2 <- priorOdds * .7 * 300
-posteriorMinJoint2 <- posteriorOddsMinJoint2  / (1+ posteriorOddsMinJoint2 )
-
-posteriorOddsMaxJoint2 <- priorOdds * .8 * 300
-posteriorMaxJoint2 <- posteriorOddsMaxJoint2/(1+posteriorOddsMaxJoint2)
-
-scenarioJoint2 <- data.frame(prior,priorOdds,posteriorOddsMinJoint2,posteriorMinJoint2,
-                             posteriorOddsMaxJoint2, posteriorMaxJoint2)
-
-sJoint2 <- ggplot(scenarioJoint2)+
-  geom_ribbon(aes(x = prior, ymin=posteriorMinJoint2,ymax=posteriorMaxJoint2), fill="skyblue", alpha=1)+theme_tufte()+
-  ggtitle("Joint impact of conflicting evidence", subtitle = ("suboptimal conditions"))+ylab("posterior")+xlim(c(0,0.9))
-
-```
-\normalsize
-
-
-
-
-
-\begin{figure}[h]
-```{r eyewitness4,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%", warning = FALSE, message = FALSE}
-library(ggpubr)
-ggarrange(ggarrange(sNeg1+theme_tufte(base_size=8),sNeg2+theme_tufte(base_size=8), ncol =2 ),
-sDNA+theme_tufte(base_size=8),
-ggarrange(sJoint1+theme_tufte(base_size=8),sJoint2+theme_tufte(base_size=8), ncol = 2), ncol = 1)
-```
-\caption{Impact of conflicting items of  evidence on the posteriors.}
-\label{fig:eyewitness4}
-\end{figure}
-
-
-
-The key observation here is that whether exculpatory eyewitness testimony can in fact be sufficient
-to acquit in light of incriminating DNA evidence depends on the particulars: both on the quality of the eyewitness testimony and on the realistic assessment of the likelihood ratio for the DNA evidence (incorporating the probability of false positives), and on what priors other pieces of evidence led us to so far prior to the evaluation of such items of evidence. The devil is in the detail, and it is not always the case that one should trump the other.
-
-\vspace{3mm}
-\textbf{M: This discussion delivers  litle insight. As readers, we were sold the idea that LR would help clarify things or  block mistakes, but we are just left with the thought that "it depends". This is hardly progress. Perhaps this section needs an example to make it more exiciting. If not, we need to be clear  there isa lot of work to be done in this area. And how about the claim that DNA evidence is stronger than eyewitness evidence, see the Rush decision I gave you? Is this claim correct?Does LR help?}
-
-
+\todo{I think I now reiterated our point too many times throughought the chapter, we'll discuss this.}
 
 
 
@@ -1386,7 +1430,6 @@ to acquit in light of incriminating DNA evidence depends on the particulars: bot
 
 At this point a philosophically minded reader might recall that there is an important notion in the vincinity---that of confirmation---and that there is a vast philosophical literature on probabilistic explication of that notion. Natural questions arise: how is the notion of confirmation related to the notion of evidence strength, and why almost none of the probabilistic explications of confirmation have not been deployed in legal probabilism?
 
-\todo{add some structure description}
 
 The key question behind the enterprise we are going to take a look at is: when does a piece of evidence confirm a theory, and how are these requirements to be explicated probabilistically to agree with both successful scientific practice and sensible philosophical principles? The hope is that having answered these questions would facilitate both rational reconstructions of various developments in the history of science, and a critical evaluation
 of various ongoing scientific investigations.
