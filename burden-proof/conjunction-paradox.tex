@@ -1,39 +1,43 @@
-\documentclass[10pt,dvipsnames,enabledeprecatedfontcommands]{scrartcl}
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\PassOptionsToPackage{dvipsnames,svgnames*,x11names*}{xcolor}
+%
+\documentclass[
+  10pt,
+  dvipsnames,enabledeprecatedfontcommands]{scrartcl}
+\usepackage{amsmath,amssymb}
 \usepackage{lmodern}
-\usepackage{amssymb,amsmath}
 \usepackage{ifxetex,ifluatex}
-\usepackage{fixltx2e} % provides \textsubscript
 \ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
-\else % if luatex or xelatex
-  \ifxetex
-    \usepackage{mathspec}
-  \else
-    \usepackage{fontspec}
-  \fi
-  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
 \fi
-% use upquote if available, for straight quotes in verbatim environments
+% Use upquote if available, for straight quotes in verbatim environments
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
-% use microtype if available
-\IfFileExists{microtype.sty}{%
-\usepackage[]{microtype}
-\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
 }{}
-\PassOptionsToPackage{hyphens}{url} % url is loaded by hyperref
-\usepackage[unicode=true]{hyperref}
-\PassOptionsToPackage{usenames,dvipsnames}{color} % color is loaded by hyperref
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
 \hypersetup{
-            pdftitle={The difficulty with Conjunction},
-            pdfauthor={Marcello Di Bello and Rafal Urbaniak},
-            colorlinks=true,
-            linkcolor=Maroon,
-            citecolor=Blue,
-            urlcolor=blue,
-            breaklinks=true}
-\urlstyle{same}  % don't use monospace font for urls
-\usepackage{graphicx,grffile}
+  pdftitle={The difficulty with Conjunction},
+  pdfauthor={Marcello Di Bello and Rafal Urbaniak},
+  colorlinks=true,
+  linkcolor=Maroon,
+  filecolor=Maroon,
+  citecolor=Blue,
+  urlcolor=blue,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage{graphicx}
 \makeatletter
 \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
 \def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
@@ -42,31 +46,14 @@
 % margins by default, and it is still possible to overwrite the defaults
 % using explicit options in \includegraphics[width, height, ...]{}
 \setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
-\IfFileExists{parskip.sty}{%
-\usepackage{parskip}
-}{% else
-\setlength{\parindent}{0pt}
-\setlength{\parskip}{6pt plus 2pt minus 1pt}
-}
-\setlength{\emergencystretch}{3em}  % prevent overfull lines
-\providecommand{\tightlist}{%
-  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
-\setcounter{secnumdepth}{5}
-% Redefines (sub)paragraphs to behave more like sections
-\ifx\paragraph\undefined\else
-\let\oldparagraph\paragraph
-\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
-\fi
-\ifx\subparagraph\undefined\else
-\let\oldsubparagraph\subparagraph
-\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
-\fi
-
-% set default figure placement to htbp
+% Set default figure placement to htbp
 \makeatletter
 \def\fps@figure{htbp}
 \makeatother
-
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{5}
 %\documentclass{article}
 
 % %packages
@@ -233,6 +220,7 @@
 
 \usepackage{tikz}
 \usetikzlibrary{positioning,shapes,arrows}
+
 \usepackage{booktabs}
 \usepackage{longtable}
 \usepackage{array}
@@ -247,6 +235,29 @@
 \usepackage[normalem]{ulem}
 \usepackage{makecell}
 \usepackage{xcolor}
+\ifluatex
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\newlength{\cslhangindent}
+\setlength{\cslhangindent}{1.5em}
+\newlength{\csllabelwidth}
+\setlength{\csllabelwidth}{3em}
+\newenvironment{CSLReferences}[2] % #1 hanging-ident, #2 entry spacing
+ {% don't indent paragraphs
+  \setlength{\parindent}{0pt}
+  % turn on hanging indent if param 1 is 1
+  \ifodd #1 \everypar{\setlength{\hangindent}{\cslhangindent}}\ignorespaces\fi
+  % set entry spacing
+  \ifnum #2 > 0
+  \setlength{\parskip}{#2\baselineskip}
+  \fi
+ }%
+ {}
+\usepackage{calc}
+\newcommand{\CSLBlock}[1]{#1\hfill\break}
+\newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{#1}}
+\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{#1}\break}
+\newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
 
 \title{The difficulty with Conjunction}
 \author{Marcello Di Bello and Rafal Urbaniak}
@@ -257,12 +268,13 @@
 
 \tableofcontents
 
-\section{The problem}\label{the-problem}
+\hypertarget{the-problem}{%
+\section{The problem}\label{the-problem}}
 
 A theoretical difficulty that any theory
 \todo{here you say "any theory" but then you switch to the probabilistic ones. Is it a problem for non-probabilistic theories or not? }
 of the standard of proof should address is the the conjunction paradox
-or difficulty about conjunction. First formulated by J. Cohen (1977),
+or difficulty about conjunction. First formulated by J. L. Cohen (1977),
 the difficulty about conjunction has enjoyed a great deal of scholarly
 attention every since (R. J. Allen, 1986; R. J. Allen \& Stein, 2013; R.
 Allen \& Pardo, 2019; Haack, 2014; Schwartz \& Sober, 2017; Stein,
@@ -274,12 +286,13 @@ conjunct meets the requisite probability threshold, the conjunction does
 not. This chapter examines the difficulty about conjuction and how legal
 probabilists can respond.
 
-\subsection{The Conjunction Principle}\label{the-conjunction-principle}
+\hypertarget{the-conjunction-principle}{%
+\subsection{The Conjunction Principle}\label{the-conjunction-principle}}
 
 Suppose that in order to prevail in a criminal trial, the prosecution
 should establish by the required standard, first, that the defendant
 caused harm to the victim (call it claim \(A\)), and second, that the
-defendant had premeditated the harmful act (call it claim \(B\)). J.
+defendant had premeditated the harmful act (call it claim \(B\)). J. L.
 Cohen (1977) argues that common law systems subscribe to a conjunction
 principle, that
 is,\todo{Here you first fix $A$ and $B$ as abbreviations, and then make a general claim using those variables; this makes it seem like the conjunction principle is about two very specific sentences, which is not what you meant.}
@@ -298,20 +311,18 @@ placeholder for the standard of proof:
 \end{tabular}
 \end{center}
 
-\noindent
-If we generalize to more than just two constituent claims, the
+\noindent If we generalize to more than just two constituent claims, the
 conjunction principle requires
 that:\todo{You need to be clearer about what this equivalence symbol is supposed to mean; further, later you title a subsection saying the principle is false; but if it is normative, I don't understand what you mean by saying its false.}
 \[S[C_1 \wedge C_2  \wedge \dots \wedge  C_k] \Leftrightarrow S[C_1] \wedge S[C_2]  \wedge \dots \wedge  S[C_k].\]
 
-\noindent
-where \(S[C_i]\) means that claim or hypothesis \(C_i\) is established
-according to standard \(S\). In what follows it will be useful to
-distinguish between the two directions involved: the implication from
-right to left will be called \textbf{distribution}, and the opposite
-direction will be called \textbf{aggregation}. The problem that will be
-discussed in this subsection is a one with aggregation, but we will
-later on discuss approaches which fail to satisfy distribution.
+\noindent where \(S[C_i]\) means that claim or hypothesis \(C_i\) is
+established according to standard \(S\). In what follows it will be
+useful to distinguish between the two directions involved: the
+implication from right to left will be called \textbf{distribution}, and
+the opposite direction will be called \textbf{aggregation}. The problem
+that will be discussed in this subsection is a one with aggregation, but
+we will later on discuss approaches which fail to satisfy distribution.
 
 The conjunction principle is consistent with---perhaps even required
 by---the case law. For example, the United States Supreme Court writes
@@ -321,18 +332,17 @@ that in criminal cases
 the accused [is protected] against conviction except upon proof beyond a reasonable doubt of \textit{every fact} necessary to constitute the crime with which he is charged. \todo{cite properly} In re Winship (1970), 397 U.S. 358, 364. 
 \end{quote}
 
-\noindent
-A plausible way to interpret this quotation is to posit this identity:
-to establish someone's guilt beyond a reasonable doubt \textit{just is}
-to establish each element of the crime beyond a reasonable doubt. Thus,
+\noindent A plausible way to interpret this quotation is to posit this
+identity: to establish someone's guilt beyond a reasonable doubt
+\textit{just is} to establish each element of the crime beyond a
+reasonable doubt. Thus,
 
 \begin{align*}\mathsf{BARD}[C_1 \wedge C_2   \wedge \cdots \wedge C_n] \Leftrightarrow \mathsf{BARD}[C_1] \wedge \mathsf{BARD}[C_2]  \wedge \cdots \wedge \mathsf{BARD}[C_k],
 \end{align*}
 
-\noindent
-where the conjunction \(C_1 \et C_2 \cdots \et C_n\) comprises all the
-material facts that, according to the applicable law, constitute the
-crime with with the accused is charged.
+\noindent where the conjunction \(C_1 \et C_2 \cdots \et C_n\) comprises
+all the material facts that, according to the applicable law, constitute
+the crime with with the accused is charged.
 
 The problem for the legal probabilist is that the conjunction principle
 conflicts with a
@@ -381,8 +391,9 @@ threhsold.\todo{False in whole generality, give a counterexample with more speci
 \todo{some flow is needed here.}
 \todo{moved up the independencies section }
 
+\hypertarget{probabilistic-independencies-and-bayesian-networks-used}{%
 \subsection{Probabilistic (in)dependencies and Bayesian networks
-used}\label{probabilistic-independencies-and-bayesian-networks-used}
+used}\label{probabilistic-independencies-and-bayesian-networks-used}}
 
 The conjunction paradox is a difficult problem, as the vast literature
 on the topic attests. Before we move on, it is important to become clear
@@ -407,8 +418,8 @@ independence, with issues that we have to pay attention to:
   pairwise independent, and moreover (2)
   \(\pr{A}\pr{B}\pr{C} = \pr{A \et B \et C}\). Interestingly, pairwise
   independencies alone do not entail (2). Imagine tossing a coin twice,
-  let \(A\)=`heads in the first toss', \(B\)=`heads in the second toss',
-  and \(C\)=`the two results are the same'. These are pairwise
+  let \(A\)=`heads in the first toss,' \(B\)=`heads in the second toss,'
+  and \(C\)=`the two results are the same.' These are pairwise
   independent, but fail to satisfy (2), because once you know two of
   them, the third one is determined. Nor does (2) entail (1). If
   \(\pr{A}=0\), condition (2) will be satisfied no matter what happens
@@ -487,9 +498,7 @@ b\indep \n A \et a \vert B \label{eq:I5a}  \\
 b\indep A \et a \vert \n B \label{eq:I5b}  \\
 b\indep \n A \et a \vert \n B \label{eq:I5c}  \\
 b \indep a \vert B \label{eq:I6}
-\end{align}
-
-\todo{Double check if we in fact use I3.}
+\end{align} \todo{Double check if we in fact use I3.}
 
 Directed Acyclic Graphs (DAGs) are useful for representing graphically
 these relationships of independence. The edges, intuitively, are meant
@@ -528,8 +537,8 @@ $M$ & The crime scene stain and the suspect's blood share their DNA profile.\\
 \bottomrule
 \end{tabular}
 \end{center}
-
 \normalsize
+
 \noindent We naturally would like to have the connection
 \(G \rightarrow B \rightarrow M\). If we don't know whether \(B\) holds,
 \(G\) seems to have an indirect impact on the probability of \(M\). Yet,
@@ -553,7 +562,6 @@ $O$ & The crime scene stain comes from the offender.\\
 \bottomrule
 \end{tabular}
 \end{center}
-
 \normalsize
 
 \noindent Both \(G\) and \(O\) influence \(B\). If he's guilty, it's
@@ -581,7 +589,6 @@ Now, back to the independence assumptions in our take on the conjunction
 problem. Consider the DAG in Figure \ref{fig:conjunctionDAG}.
 
 \todo{Please use this method of drawing DAGs, it's simple, uniform and requires less work.}
-
 \begin{figure}[h]
 
 \begin{center}\includegraphics[width=0.6\linewidth]{conjunction-paradox_files/figure-latex/fig:conjunctionDAG-1} \end{center}
@@ -621,12 +628,11 @@ AB &  &  & Pr\\
 
 \todo{Please use the same format for tables so that it's uniform throughout the paper; I also removed the corners, it's too much fuss}
 
-\noindent
-This conditional probability table looks, essentially, like the truth
-table for conjunction. The difference is that the values \(1\) and \(0\)
-stand for two different things depending on where they are in the table.
-In the columns corresponding to the nodes they represent node states:
-true and false; in the \(\textsf{Pr}\) column they represent the
+\noindent This conditional probability table looks, essentially, like
+the truth table for conjunction. The difference is that the values \(1\)
+and \(0\) stand for two different things depending on where they are in
+the table. In the columns corresponding to the nodes they represent node
+states: true and false; in the \(\textsf{Pr}\) column they represent the
 conditional probability of a given state of \(AB\) given the states of
 \(A\) and \(B\) listed in the same row. For instance, take a look at row
 two. It says: if \(A\) and \(B\) are both in states 1, then the
@@ -651,8 +657,9 @@ models we will be concerned with in this chapter.
 \label{fig:conjunctionDAG2}
 \end{figure}
 
+\hypertarget{conjunction-principle-with-hypotheses-and-evidence}{%
 \subsection{Conjunction principle with hypotheses and
-evidence}\label{conjunction-principle-with-hypotheses-and-evidence}
+evidence}\label{conjunction-principle-with-hypotheses-and-evidence}}
 
 So far the discussion proceeded without mentioning explicitly the
 evidence proferred in support of the different claims that constitute
@@ -674,20 +681,16 @@ For suppose that given their respective pieces of evidence \(a\) and
 fixed threshold \(t\)), \(\pr{A \vert a}>t\) and \(\pr{B \vert b}>t\).
 It does not generally follow that \(A \et B\) is sufficiently probable
 given combined evidence \(a\et b\). With suitable indepedence
-assumptions (\eqref{eq:I1} and \eqref{eq:I2}) we have:
-
-\begin{align*}
+assumptions (\eqref{eq:I1} and \eqref{eq:I2}) we have: \begin{align*}
 \pr{A \wedge  B \vert a \wedge b}& =\pr{A \vert a \wedge b} \times \pr{B \vert  a \wedge b \wedge A}\\
  & = \pr{A \vert a} \times \pr{B \vert  b}
- \end{align*}
-
-\noindent Of course, these relationships of independence do not always
-hold, but they do sometimes. For example, in an aggravated assault case,
-evidence \(a\) could be a witness testimony that the defendant
-physically injured the victim (claim \(A\)), and \(b\) evidence that the
-defendant knew that the victim was a firefighter (claim \(B\)), for
-example, another testimony that the defendant earlier called the
-firefighther for help. Presumably,
+ \end{align*} \noindent Of course, these relationships of independence
+do not always hold, but they do sometimes. For example, in an aggravated
+assault case, evidence \(a\) could be a witness testimony that the
+defendant physically injured the victim (claim \(A\)), and \(b\)
+evidence that the defendant knew that the victim was a firefighter
+(claim \(B\)), for example, another testimony that the defendant earlier
+called the firefighther for help. Presumably,
 \(\pr{A \vert a}=\pr{A \vert a \wedge b}\) because the fact that the
 defendant called a firefighter for help (\(b\)) does not make it more
 (or less) likely that he would physically injure him (\(A\)). Further,
@@ -715,8 +718,9 @@ it follows that \(\pr{A \wedge B \vert a \wedge b}\) might be below
 \(t\) if the factors on the right-hand side are below 1 and separate
 posteriors are very close to \(t\).
 
+\hypertarget{evidential-strength-approach-to-the-conjunction-problem}{%
 \section{Evidential Strength approach to the conjunction
-problem}\label{evidential-strength-approach-to-the-conjunction-problem}
+problem}\label{evidential-strength-approach-to-the-conjunction-problem}}
 
 We have seen that aggregation fails if the standard of proof is
 understood as a posterior probability threshold. So legal probabilists
@@ -750,10 +754,9 @@ already made by Dawid (1987):
 \begin{quote} suitably measured, the support  supplied by the conjunction of several independent testimonies exceeds that supplied by any of its constituents.
  \end{quote}
 
-\noindent
-Dawid thought this fact was enough for the conjuction paradox to
-`evaporate'. To some extent, this is true since we are vindicating one
-direction of the conjunction principle, aggregation. That is,
+\noindent Dawid thought this fact was enough for the conjuction paradox
+to `evaporate.' To some extent, this is true since we are vindicating
+one direction of the conjunction principle, aggregation. That is,
 probability theory justifies this claim: if distinct items of evidence
 \(a\) and \(b\) constitute sufficiently strong evidence for claims \(A\)
 and \(B\), so does the conjunction \(a\wedge b\) for the composite claim
@@ -797,21 +800,21 @@ take our word for it and jump ahead to the next section.
 
 \todo{Some bits hidden, they need to be discussed elsewhere I think.}
 
+\hypertarget{bayes-factor-and-aggregation}{%
 \subsection{Bayes factor and
-aggregation}\label{bayes-factor-and-aggregation}
+aggregation}\label{bayes-factor-and-aggregation}}
 
 A common probabilistic measure of the support of \(E\) in favor of \(H\)
 is the Bayes factor \(\pr{E \vert H}/\pr{E}\). Since by Bayes' theorem
 
 \[\pr{H \vert E} = \frac{\pr{E \vert H}}{\pr{E}}\times \pr{H},\]
 
-\noindent
-the Bayes factor measures the extent to which a piece of evidence
-increases the probability of a hypothesis. The greater the Bayes factor
-(for values above one), the stronger the support of \(E\) in favor of
-\(H\). Putting aside reservations about this measure of evidential
-support (discussed earlier in Chapter CROSSREF), the Bayes factor
-\(\pr{E \vert H}/\pr{E}\), unlike the conditional probability
+\noindent the Bayes factor measures the extent to which a piece of
+evidence increases the probability of a hypothesis. The greater the
+Bayes factor (for values above one), the stronger the support of \(E\)
+in favor of \(H\). Putting aside reservations about this measure of
+evidential support (discussed earlier in Chapter CROSSREF), the Bayes
+factor \(\pr{E \vert H}/\pr{E}\), unlike the conditional probability
 \(\pr{H \vert E}\), offers a potential way to overcome the difficulty
 about conjunction.
 
@@ -844,9 +847,8 @@ the individual supports \(s_{A}\) and \(s_{B}\). Here is the argument:
 s_{AB}& =  s_{A}\times s_{B} 
  \end{align*}
 
-\noindent
-The step marked by the asterisk rests on some of the independence
-assumptions codified in the Bayesian network in Figure
+\noindent The step marked by the asterisk rests on some of the
+independence assumptions codified in the Bayesian network in Figure
 \ref{fig:conjunctionDAG}, namely: \eqref{eq:indAB}, \eqref{eq:I4}, and
 \eqref{eq:I5}.
 
@@ -868,7 +870,6 @@ in Bayes factor 1, no matter what the prior is or how many items of
 evidence there are).
 
 \todo{please use meaningful variable names, I revised s1 and s2 to sensitivity and specificity}
-
 \begin{figure}[h]
 
 \begin{center}\includegraphics[width=0.9\linewidth]{conjunction-paradox_files/figure-latex/bfconjunction5-1} \end{center}
@@ -893,9 +894,7 @@ Assuming \eqref{eq:I3}, \eqref{eq:I4} and \eqref{eq:I6}, if $\pr{B\vert b\et a }
 \end{fact}
 
 \noindent \textbf{Argument.} First, notice the following holds given
-\eqref{eq:I3} and \eqref{eq:I4}:
-
-\begin{align}
+\eqref{eq:I3} and \eqref{eq:I4}: \begin{align}
 \frac{\pr{a \wedge b\vert A\wedge B}}{\pr{a \wedge b}} & =  \frac{\pr{a \vert A}}{\pr{a}} \times \frac{\pr{b \vert B}}{\pr{b\vert a}} \\
 s^{'}_{AB}& =  s_{A}\times s^{'}_{B}  \label{eq:BFdep}
  \end{align}
@@ -928,17 +927,16 @@ provided \(s_A\) and \(S_B\) are both greater than one.
 
 Note that the reasoning behind \eqref{eq:BFdep} is symmetric and so the
 assumed inequalities give the result marked by the braces:
-
 \begin{align*}
 \frac{\pr{a \wedge b\vert A\wedge B}}{\pr{a \wedge b}} & =  \frac{\pr{a \vert A}}{\pr{a}} \times \underbrace{\frac{\pr{b \vert B}}{\pr{b\vert a}}}_{>1}  = \frac{\pr{b \vert B}}{\pr{b}} \times \underbrace{\frac{\pr{a \vert A}}{\pr{a\vert b}}}_{>1}
-\end{align*}
-
-\noindent which clearly lead to the conclusion. \textbf{Argument ends.}
+\end{align*} \noindent which clearly lead to the conclusion.
+\textbf{Argument ends.}
 
 \todo{Introduce simulations, illustrate results for aggregation and BF without independence here}
 
+\hypertarget{likelihood-ratio-and-aggregation}{%
 \subsection{Likelihood ratio and
-aggregation}\label{likelihood-ratio-and-aggregation}
+aggregation}\label{likelihood-ratio-and-aggregation}}
 
 Let's now see what happens if we replace the Bayes factor with the
 likelihood ratio, another probabilistic measure of evidential support,
@@ -954,8 +952,8 @@ We can think of the the likelihood rato as the following:
 
 \[\frac{\textit{sensitivity}}{\textit{1- specificity}}\]
 
-\noindent
-Unlike the Bayes factor, the likelihood ratio is not sensitive to the
+\noindent Unlike the Bayes factor, the likelihood ratio is not sensitive
+to the
 priors\todo{Rafal: read the sensitivity paper and check fn.}\footnote{At least so long as sensitivity and specificity are not}.
 In this sense, it is a more suitable measure if we want to factor out
 the effects that priors may have on the assessment of evidential
@@ -974,7 +972,6 @@ strength. What is the combined likelihood ratio and how does it behave?
  \end{fact}
 
 \noindent \textbf{Argument.} The numerator can be computed as follows:
-
 \begin{align*}
 \pr{a \wedge b\vert A\wedge B} & =  \frac{\pr{A \et B \et a\et b}}{\pr{A \et B}}
 &\mbox{\,\,\,\,\,\,\,\,\,\,\,\,\, (conditional probability)}
@@ -1007,7 +1004,6 @@ The denominator is more involved:
 }}
 
 \noindent Now consider the first summand from the numerator:
-
 \begin{align*}
 \pr{a \et b \et \neg A\et B} & = \pr{\n A} \pr{B \vert \n A} \pr{a \vert \n A \et B} \pr{b\vert a \et \n A \et B} &\mbox{\,\,\,\,\,\,\,\,\,\,\,\,\, (chain rule)} \\ & = 
 \pr{\neg A}\pr{B \vert \neg A} \pr{a \vert \neg A}\pr{b \vert B}
@@ -1043,13 +1039,13 @@ and \(\pr{B}=t\):
 \frac{\pr{a \wedge b \vert A\wedge B}}{\pr{a \et b\vert \neg (A\et B)}} & = \frac{x^2}{\frac{(1-k)t(1-x)x + k(1-t)x(1-x) + (1-k)(1-t)(1-x)(1-x)}{ \left(1-k\right) t +\left(1-t\right) k+\left(1-k\right) \left(1-t\right)}}
  \end{align*}
 
-\noindent
-In this simplified setup, the likelihood ratios can be easily plotted.
-As Figure \ref{fig:jointLRMarcello} shows, the combined likelihood ratio
-varies depeding on the prior probabilities \(\pr{A}\) and \(\pr{B}\), as
-expected, but always execeeds the individual likelihood ratios whenever
-they are greater than one (that is, the two piece of evidence provides
-positive support for their respective hypothesis).
+\noindent In this simplified setup, the likelihood ratios can be easily
+plotted. As Figure \ref{fig:jointLRMarcello} shows, the combined
+likelihood ratio varies depeding on the prior probabilities \(\pr{A}\)
+and \(\pr{B}\), as expected, but always execeeds the individual
+likelihood ratios whenever they are greater than one (that is, the two
+piece of evidence provides positive support for their respective
+hypothesis).
 
 \begin{figure}
 
@@ -1085,8 +1081,9 @@ threshold is to be used for the conjunction and for the conjuncts.
 However, whether a single threshold should be used here is soemwhat
 unclear, and this is an issue to which we will now turn.
 
+\hypertarget{variable-evidential-strength-thresholds}{%
 \section{Variable evidential strength
-thresholds}\label{variable-evidential-strength-thresholds}
+thresholds}\label{variable-evidential-strength-thresholds}}
 
 Once we formulate the decision standard in terms of evidential strength
 instead of posterior probabilities, the standard of proof would no
@@ -1120,37 +1117,28 @@ First, Bayes factor.
 \todo{Use textsf, or even better mathsf for text inside math} Since
 \(\textsf{posterior }=\textsf{ Bayes factor }\times \textsf{ prior}\),
 the Bayes factor threshold can be determined as follows:
-
 \begin{align*}t_{BF} & = \frac{t}{\textsf{prior}}
 \end{align*}
 
-\noindent
-The higher the prior probability, the lower \(t_{BF}\). Whether this is
-a desirable property for a decision threshold can be questioned, but a
-similar point holds about the posterior threshold \(t\): the higher the
-prior probability, the easier to meet the posterior threshold.
+\noindent The higher the prior probability, the lower \(t_{BF}\).
+Whether this is a desirable property for a decision threshold can be
+questioned, but a similar point holds about the posterior threshold
+\(t\): the higher the prior probability, the easier to meet the
+posterior threshold.
 
 Now, likelihood ratio. By the odds version of Bayes' theorem,
-
 \begin{align*}
 \textsf{posterior odds} & = \textsf{likelihood odds} \times \textsf{prior odds},
-\end{align*}
-
-and thus
-
+\end{align*} and thus
 \begin{align*}\frac{\textsf{posterior odds}}{\textsf{prior odds}} = \textsf{likelihood ratio}.
-\end{align*}
-
-If the posterior ratio is fixed at, say \(t/1-t\), \(t_{LR}\) can be
-obtained as follows:
-
+\end{align*} If the posterior ratio is fixed at, say \(t/1-t\),
+\(t_{LR}\) can be obtained as follows:
 \begin{align*}t_{LR} & = \frac{\nicefrac{t}{1-t}}{\textsf{prior odds}}.
 \end{align*}
 
-\noindent
-Just as the Bayes factor, the likelihood ratio threshold will therefore
-varywith the prior. The higher the prior, the lower the likelihood ratio
-threshold.
+\noindent Just as the Bayes factor, the likelihood ratio threshold will
+therefore varywith the prior. The higher the prior, the lower the
+likelihood ratio threshold.
 
 Now, we would like a standard of proof to be in principle applicable to
 all factual claims under consideration. In particular, if we consider a
@@ -1167,7 +1155,6 @@ composite claim, \(t_{BF}^{A\wedge B}\) and \(t_{LR}^{A\wedge B}\) .
 
 The conjunction principles formulated in terms of BF and LR would boil
 down to:
-
 \begin{align*} \frac{\pr{a \vert A }}{\pr{a}}>t^A_{BF} &\mbox{ and } 
 \frac{\pr{ b \vert B}}{\pr{b}}>t^B_{BF} \mbox{ iff } 
 \frac{\pr{a \et b \vert A \et B}}{\pr{a \et b}}>t^{A\wedge B}_{BF} \\
@@ -1181,16 +1168,18 @@ conjunction \(A \wedge B\), assuming the independence relations required
 for Facts \ali{REF} and \ali{REF} hold. Consider a posterior threshold
 of \(.95\) as might be appropriate in a criminal case.
 
-\todo{please use nicefrac for inline fractions} If \(A\) and \(B\) both
-have a prior probability of, say \(.1\), the threshold
-\(t^A_{BF}=t_{BF}^B=\nicefrac{.95}{.1}=9.5\) for \(A\) or \(B\)
-individually. The composite claim \(A \wedge B\) will be associated with
-the threshold \(t^{A\wedge B}_{BF}=\nicefrac{.95}{(.1\times .1)}=95\), a
-much higher value. But if each individual claim meets its Bayes factor
-threshold of 9.5 and the two claims are independent, the joint Bayes
-factor would result from the multiplication of the individual Bayes
-factors, that is, \(9.5 \times 9.5=90.25\). This is not quite enough to
-meet \(t^{A\wedge B}_{BF}=95\).
+\todo{please use nicefrac for inline fractions}
+
+If \(A\) and \(B\) both have a prior probability of, say \(.1\), the
+threshold \(t^A_{BF}=t_{BF}^B=\nicefrac{.95}{.1}=9.5\) for \(A\) or
+\(B\) individually. The composite claim \(A \wedge B\) will be
+associated with the threshold
+\(t^{A\wedge B}_{BF}=\nicefrac{.95}{(.1\times .1)}=95\), a much higher
+value. But if each individual claim meets its Bayes factor threshold of
+9.5 and the two claims are independent, the joint Bayes factor would
+result from the multiplication of the individual Bayes factors, that is,
+\(9.5 \times 9.5=90.25\). This is not quite enough to meet
+\(t^{A\wedge B}_{BF}=95\).
 
 The difference grows as (i) the prior probability of the individual
 claims decreases, (ii) as the posterior threshold \(t\) decreases, and
@@ -1253,8 +1242,9 @@ surprising if they run into similar problems. So what would happen if
 instead, we insisted that the evidential strength thresholds should be
 kept fixed?
 
+\hypertarget{fixed-evidential-strength-threshold}{%
 \section{Fixed evidential strength
-threshold}\label{fixed-evidential-strength-threshold}
+threshold}\label{fixed-evidential-strength-threshold}}
 
 The alternative here is to fix the evidential strength threshold
 regardless of the prior probability of the claim of interest. This
@@ -1275,10 +1265,9 @@ would boil down to one of these:
 \frac{\pr{a \et b \vert A \et B}}{\pr{a \et b\vert \n (A \et B)}}>t_{LR} \\
 \end{align*}
 
-\noindent
-The left-to-right direction---aggregation---will hold for any thresholds
-\(t_{BF}\) or \(t_{LR}\) greater than one, as Facts \ali{REF} and
-\ali{REF, not sure how many we end up with, double check} entail.
+\noindent The left-to-right direction---aggregation---will hold for any
+thresholds \(t_{BF}\) or \(t_{LR}\) greater than one, as Facts \ali{REF}
+and \ali{REF, not sure how many we end up with, double check} entail.
 
 This is an improvement. After all, aggregation could not be justified
 using posterior probabilities \(\pr{A \vert a}\) and \(\pr{B \vert b}\)
@@ -1290,7 +1279,6 @@ principle.
 However, the right-to-left direction---distribution---has now become
 problematic. Recall that we can distinguish at least two versions of the
 distribution principle if we take the evidential support into account:
-
 \begin{align}
 \text{If S[$a \wedge b, A\wedge B$], then S[$a, A$] and S[$b, B$].} \tag{DIS1}\\
  \text{If S[$a \wedge b, A\wedge B$], then S[$a \wedge b, A$] and S[$a \wedge b, B$].} \tag{DIS2}
@@ -1342,7 +1330,8 @@ meet the standard. This is odd, to say the least.
 
 \todo{I don't think this argument worked, we can discuss this. Commented out}
 
-\section{The comparative strategy}\label{the-comparative-strategy}
+\hypertarget{the-comparative-strategy}{%
+\section{The comparative strategy}\label{the-comparative-strategy}}
 
 Instead of thinking in terms of absolute thresholds---whether relative
 to posterior probabilities, the Bayes factor or the likelihood
@@ -1405,10 +1394,9 @@ acquittal---\(\pr{H_p \vert E}\times c_{FN}\)--- or in other words:
 
 \[\frac{\pr{H_p \vert E}}{\pr{H_d \vert E}} > \frac{c_{FP}}{c_{FN}}.\]
 
-\noindent
-In civil cases, it is customary to assume the costs ratio of false
-postives to false negatives equals one. So the rule of decision would
-be: find against the defedant whenever
+\noindent In civil cases, it is customary to assume the costs ratio of
+false postives to false negatives equals one. So the rule of decision
+would be: find against the defedant whenever
 \(\frac{\pr{H_p \vert E}}{\pr{H_d \vert E}} > 1\) or in other words
 \(\pr{H_p \vert E}\) is greater than \(\pr{H_d \vert E}\). In criminal
 trials, the costs ratio is usually considered higher, since convicting
@@ -1426,13 +1414,10 @@ a civil case, the plaintiff claims that the defendant was speeding
 (\(S\)) and that the crash caused her neck injury (\(C\)). Thus, the
 plaintiff's hypothesis \(H_p\) is \(S\et C\). Given the total evidence
 \(E\), the conjuncts, taken separately, meet the decision threshold:
-
 \begin{align}
  \nonumber 
  \frac{\pr{S\vert E}}{\pr{\neg S \vert E}} > 1   & & \frac{\pr{C\vert E}}{\pr{\neg C \vert E}} > 1
-\end{align}
-
-\noindent The question is whether
+\end{align} \noindent The question is whether
 \(\nicefrac{\pr{S\et C\vert E}}{\pr{H_d \vert E}}>1\). To answer it, we
 have to decide what the defense hypothesis \(H_d\) should be. Cheng
 reasons that there are three alternative defense scenarios:
@@ -1487,15 +1472,16 @@ If, as here, we individualize scenarios by boolean combinations of
 elements of a case, the more elements there are, into more scenarios
 \(\n H_p\) needs to be divided. This normally would lead to the
 probability of each of them being even lower (because now
-\(\pr{\n H_p}\) needs to be ``split'' between more scenarios). So, if we
-take this approach seriously, the more elements a case has, the more at
-disadvantage the defense is. This seems undesirable.
+\(\pr{\n H_p}\) needs to be ``split'\,' between more scenarios). So, if
+we take this approach seriously, the more elements a case has, the more
+at disadvantage the defense is. This seems undesirable.
 
 REPEAT SAME ARGUMENT USING LR AND COMPARATIVE STRATEGY
 \todo{I don't understand what you mean here.}
 
+\hypertarget{rejecting-the-conjunction-principle}{%
 \section{Rejecting the Conjunction
-Principle?}\label{rejecting-the-conjunction-principle}
+Principle?}\label{rejecting-the-conjunction-principle}}
 
 We have seen that various strategies that a legal probabilist can try to
 use to handle the difficulty about conjunction are all problematic.
@@ -1504,7 +1490,8 @@ problem would not arise without the conjunction principle. So could
 legal probabilists simply reject this principle?
 \todo{add more flow once section is complete}
 
-\subsection{Risk Accumulation}\label{risk-accumulation}
+\hypertarget{risk-accumulation}{%
+\subsection{Risk Accumulation}\label{risk-accumulation}}
 
 In current discussions in epistemology about knowledge or justification,
 a principle similar to the conjunction principle has been contested
@@ -1538,8 +1525,9 @@ distribution fails.
 
 \noindent
 
+\hypertarget{atomistic-and-holistic-approches}{%
 \subsection{Atomistic and Holistic
-Approches}\label{atomistic-and-holistic-approches}
+Approches}\label{atomistic-and-holistic-approches}}
 
 Suppose the legal probabilist does away with the conjunction principle.
 Now what? How should they define standards of proof? Two immediate
@@ -1631,7 +1619,8 @@ principle, legal probabilists should still explain how individual claims
 relate to larger claims in the process of legal proof, and how the
 balance between these two extreme directions is to be preserved.
 
-\subsection{Holistic approach revised}\label{holistic-approach-revised}
+\hypertarget{holistic-approach-revised}{%
+\subsection{Holistic approach revised}\label{holistic-approach-revised}}
 
 The difficulty about conjunction begins with the assumption that each
 element of the allegation has been established by the required standard.
@@ -1713,10 +1702,9 @@ statute about negligent driving:
 [RCW 46.61.5249]
 \end{quote}
 
-\noindent
-In other words, a prosecutor who wishes to establish beyond a reasonable
-doubt that the defendant is guilty of negligent driving should
-establish:
+\noindent In other words, a prosecutor who wishes to establish beyond a
+reasonable doubt that the defendant is guilty of negligent driving
+should establish:
 
 \begin{quote}
 (a) that the defendant operated a vehicle
@@ -1725,33 +1713,31 @@ establish:
 (d) that the defendant---presumably, immediately after the incident--- exihibited the signs of intoxication by liquor or drugs.
 \end{quote}
 
-\noindent
-It would be odd for the prosecutor to go about establishig each claim in
-isolation, especially because these four claims are specific to a time
-and place. Clearly, the prosecutor cannot simply establish that the
-defendant was operating a vehicle at some point in time and at some
-other point in time the defedant exhibited signs of intoxication. That
-would establish nothing. The elements to be established must be combined
-in a coherent spatio-temporal narrative. So establishing them in
-isolation makes little sense. Prosecutors could establish, say, that the
-defendant was driving on a busy Highway 1 north San Francisco at about
-8:30 PM; the car was moving erratically left and right, cutting across
-other lanes; the defendant was stopped by a police officer who conducted
-a field sobriety test and used a breathylizer, both tests showing a
-higher-than-normal quantity of alchool. This narrative, if true,
-establishes each element of the offense. The prosecutor's task would be
-to establish the narrative as a whole. Presumably, the prosecutor could
-establish item (a) and (b) separately, but then, would have to show that
-they happened as part of the same driving episode. So they would have to
-be unified somehow. The same applies to the other elements of the
-offense.
+\noindent It would be odd for the prosecutor to go about establishig
+each claim in isolation, especially because these four claims are
+specific to a time and place. Clearly, the prosecutor cannot simply
+establish that the defendant was operating a vehicle at some point in
+time and at some other point in time the defedant exhibited signs of
+intoxication. That would establish nothing. The elements to be
+established must be combined in a coherent spatio-temporal narrative. So
+establishing them in isolation makes little sense. Prosecutors could
+establish, say, that the defendant was driving on a busy Highway 1 north
+San Francisco at about 8:30 PM; the car was moving erratically left and
+right, cutting across other lanes; the defendant was stopped by a police
+officer who conducted a field sobriety test and used a breathylizer,
+both tests showing a higher-than-normal quantity of alchool. This
+narrative, if true, establishes each element of the offense. The
+prosecutor's task would be to establish the narrative as a whole.
+Presumably, the prosecutor could establish item (a) and (b) separately,
+but then, would have to show that they happened as part of the same
+driving episode. So they would have to be unified somehow. The same
+applies to the other elements of the offense.
 
 Suppose the prosecutor has established a narrative \(N\) to a very high
 probability, say above the required threshold for proof beyond a
 reasonable doubt. Then,\todo{= or $\approx$?}
 \[\text{ $\pr{C_a\wedge C_b \wedge C_c\wedge C_d \vert N}=\pr{C_i \vert N}\approx 1$ for any $i=\{a, b, c, d\}$}.\]
-\noindent
-Both direction of the conjunction principle, aggregation and
+\noindent Both direction of the conjunction principle, aggregation and
 distribution, are now trivially satisfied. Once we condition on the
 narrative \(N\), each individual claim has a probability of one and thus
 their conjunction also has a probability of one. The narrative, however,
@@ -1773,7 +1759,7 @@ should belong to the same wrongful act. It is this unity which the
 plaintiff and the prosecution must establish when they make their case.
 One way to establish this unity is by providing a unifying narrative,
 but this need not be the only way. Perhaps the expresion `theory' or
-`explanation' are better and more general than `narrative'.
+`explanation' are better and more general than `narrative.'
 
 \todo{I didn't see how this passage was useful, commented out, we can think about this.}
 
@@ -1788,10 +1774,12 @@ CHAPTER ENDS HERE
 
 \noindent\makebox[\linewidth]{\rule{\paperwidth}{1pt}}
 
+\hypertarget{extra-unstructured-materials}{%
 \section{Extra unstructured
-materials}\label{extra-unstructured-materials}
+materials}\label{extra-unstructured-materials}}
 
-\subsection{Prior Probabilities}\label{prior-probabilities}
+\hypertarget{prior-probabilities}{%
+\subsection{Prior Probabilities}\label{prior-probabilities}}
 
 It is worth examining the holistic account more closely, focusing in
 particular on the role of prior probabilities, an aspect that has gone
@@ -1840,8 +1828,9 @@ denying the paradox. To address the paradox, legal probabilists should
 offer a justification of the conjunction principle in probabilistic
 terms, something Cohen maintains cannot be done. Or can it be done?
 
+\hypertarget{the-conjunction-principle-is-false}{%
 \section{The Conjunction Principle Is
-False}\label{the-conjunction-principle-is-false}
+False}\label{the-conjunction-principle-is-false}}
 
 Neither the Bayes factor nor the likelihood ratio managed to fully
 justify both directions of the conjunction principle. One direction,
@@ -1860,8 +1849,9 @@ would be missing). But the failure of distribution manifests itself even
 when \(A\) and \(B\) are independent. What should we make of this? This
 problem exists for both the Bayes factor and the likelihood ratio.
 
+\hypertarget{factoring-out-prior-probabilities}{%
 \subsection{Factoring Out Prior
-Probabilities}\label{factoring-out-prior-probabilities}
+Probabilities}\label{factoring-out-prior-probabilities}}
 
 Let us return to the role of prior probabilities and their effect on
 measures of evidential strength. Dawid observed that the prior
@@ -2040,15 +2030,16 @@ cannot be the only factor at play, or else the equalization of the prior
 probabilities would have eliminated the paradox entirely. So what else
 is going on?
 
+\hypertarget{weaker-claims-weaken-sensitivity}{%
 \subsection{Weaker Claims Weaken
-Sensitivity}\label{weaker-claims-weaken-sensitivity}
+Sensitivity}\label{weaker-claims-weaken-sensitivity}}
 
 Let's examine more closely the Bayes factor and the likelihood ratio as
 measures of evidential strength. Likelihood ratios are comparative in
 nature. Suppose we compare claim \(A\) and claim \(A\wedge B\) relative
 to the same body of evidence \(a\wedge b\). Thinks of \(A\) as `the
 defendant physically injured the victim' while \(B\) as `the defendant
-knew the victim was a firefighter'. Think of \(a\) and \(b\) as
+knew the victim was a firefighter.' Think of \(a\) and \(b\) as
 testimonies each supporting one of the two hypotheses. We are still
 working with the Bayesian networks in Figure \ref{network-conjunction}.
 
@@ -2070,9 +2061,8 @@ between evidence and hypotheses,
 
 \[\frac{\pr{a\wedge b \vert A}}{\pr{a\wedge b \vert A \wedge B}}=\frac{\pr{a \vert A} \pr{b \vert A}}{\pr{a \vert A} \pr{b \vert B}}=\frac{\pr{b \vert A}}{\pr{b \vert B}}<1.\]
 
-\noindent
-The reason is that \(\pr{b \vert A} < \pr{b \vert B}\) since the
-sensitivity of \(b\) relative to \(B\) should be higher than the
+\noindent The reason is that \(\pr{b \vert A} < \pr{b \vert B}\) since
+the sensitivity of \(b\) relative to \(B\) should be higher than the
 sensitivity of \(b\) relative to \(A\).\footnote{GIVE PROOF OF THIS}
 This is obvious if \(A\) and \(b\) are independent claims, as in the
 Bayesian networks in Figure \ref{network-conjunction} (bottom). In this
@@ -2089,12 +2079,11 @@ then
 
 \[\frac{\pr{a\wedge b \vert A}}{\pr{a\wedge b}} < \frac{\pr{a\wedge b \vert A \wedge B}}{\pr{a\wedge b}}   \]
 
-\noindent
-Thus, evidence \(a\wedge b\) better supports, even on an absolute scale,
-\(A \wedge B\) compared to \(A\). Note that, even if the Baye factor
-depends on the priors, the difference here is not due to the difference
-between the priors of \(A\) and the priors of \(A\wedge B\) since the
-denominator is simply
+\noindent Thus, evidence \(a\wedge b\) better supports, even on an
+absolute scale, \(A \wedge B\) compared to \(A\). Note that, even if the
+Baye factor depends on the priors, the difference here is not due to the
+difference between the priors of \(A\) and the priors of \(A\wedge B\)
+since the denominator is simply
 \(\pr{a\wedge b}\).\footnote{Note that $\pr{a\wedge b \vert A}\pr{A}+ \pr{a\wedge b \vert \neg A}\pr\neg {A}$ is the same as $\pr{a\wedge b \vert (A\wedge B)}\pr{A\wedge B}+ \pr{a\wedge b \vert \neg (A\wedge B)}\pr{\neg (A\wedge B)}$. \textbf{NEED A PROOF FOR THIS BUT IT SHOULD HOLD, RIGHT?}}
 
 What we have said so far agrees with the claim defended in the previous
@@ -2104,15 +2093,15 @@ section. That is, even when \(a\wedge b\) strongly supports
 
 \[\frac{\pr{a\wedge b \vert A}}{\pr{a\wedge b \vert \neg A}} < \frac{\pr{a\wedge b \vert A \wedge B}}{\pr{a\wedge b \vert \neg (A \wedge B)}}\]
 
-\noindent
-In other words, even if \(a\wedge b\) favors \(A\wedge B\) over its
-negation to a very high degree, it need not favor equally strongly \(A\)
-over its negation. This is a comparative claim about two compartive
-claims, and as such, it may not be easy to parse. Evidential support,
-when it is formalized by the likelihoo ratio, is always relative to a
-contrast class. In comparing the support that the same body of evidence
-provides to \(A\) as contrasted to \(A\wedge B\), it might be better to
-include these two hypotheses in the contrast class. So the expression
+\noindent In other words, even if \(a\wedge b\) favors \(A\wedge B\)
+over its negation to a very high degree, it need not favor equally
+strongly \(A\) over its negation. This is a comparative claim about two
+compartive claims, and as such, it may not be easy to parse. Evidential
+support, when it is formalized by the likelihoo ratio, is always
+relative to a contrast class. In comparing the support that the same
+body of evidence provides to \(A\) as contrasted to \(A\wedge B\), it
+might be better to include these two hypotheses in the contrast class.
+So the expression
 \(\frac{\pr{a\wedge b \vert A}}{\pr{a\wedge b \vert A \wedge B}}\) is
 more straightforward.
 
@@ -2188,15 +2177,14 @@ from everything else. Thus,
 
 \[\frac{\pr{a \vert A}}{\pr{a \vert A \wedge H}}=\frac{\pr{a \vert A}}{\pr{a \vert A}}=1.\]
 
-\noindent
-Tagging an unrelated claim \(H\) does not strengthen the evidence, but
-leaves it unchanged. Similarly, suppose \(B\) constitutes one element of
-a crime and \(A\) constitutes the other element. The two claims are
-independent, each supported by items of evidence \(a\) and \(b\)
-respectively. This is our standard set up. If \(a\) supports \(A\),
-would \(a\) support \(A\wedge B\) more strongly than it supports \(A\)
-alone? Here we no longer have \(a\wedge b\), but instead, \(a\) alone.
-The question is whether
+\noindent Tagging an unrelated claim \(H\) does not strengthen the
+evidence, but leaves it unchanged. Similarly, suppose \(B\) constitutes
+one element of a crime and \(A\) constitutes the other element. The two
+claims are independent, each supported by items of evidence \(a\) and
+\(b\) respectively. This is our standard set up. If \(a\) supports
+\(A\), would \(a\) support \(A\wedge B\) more strongly than it supports
+\(A\) alone? Here we no longer have \(a\wedge b\), but instead, \(a\)
+alone. The question is whether
 \(\frac{\pr{a \vert A}}{\pr{a \vert A \wedge B}}>1\) or
 \(\frac{\pr{a \vert A}}{\pr{a \vert A \wedge B}}<1\). Given the usual
 independencies between evidence and hypotheses,
@@ -2280,8 +2268,9 @@ higher than if just one of the two paths is active. Hence,
 \end{figure}
 \end{center}
 
+\hypertarget{but-sensitivity-depends-on-prior-probabilities}{%
 \subsection{But Sensitivity Depends On Prior
-Probabilities}\label{but-sensitivity-depends-on-prior-probabilities}
+Probabilities}\label{but-sensitivity-depends-on-prior-probabilities}}
 
 We have shown, given a suitable number of assumptions, that the
 sensitivity of \(a\wedge b\) can be greater relative to \(A \wedge B\)
@@ -2330,8 +2319,7 @@ Source: Variation of a test’s sensitivity and specificity with disease prevale
 CMAJ August 06, 2013 185 (11) E537-E544; DOI: https://doi.org/10.1503/cmaj.121286
 \end{quote}
 
-\noindent
-The authors of the study, however, caution that
+\noindent The authors of the study, however, caution that
 
 \begin{quote}
  Because sensitivity is estimated in
@@ -2390,8 +2378,9 @@ TO DO:
   \textbf{HYPOTHESIS: WHEN THE HYPTHESIS IS NOT MEDIATED (AS IN a toward A OR b TOWARD B, AS OPPOSED TO a TOWARD A-AND-B), THEN SENSITIVITY OR SPECICITIY IS NOT DEPEDENT ON PRIORS}
 \end{enumerate}
 
+\hypertarget{which-measure-of-combined-evidential-support}{%
 \subsection{Which Measure of (Combined) Evidential
-Support?}\label{which-measure-of-combined-evidential-support}
+Support?}\label{which-measure-of-combined-evidential-support}}
 
 THIGNS TO ADD:
 
@@ -2409,7 +2398,8 @@ THIGNS TO ADD:
   WORLD. CONNECT TO POINT 1 AND MIN FUNCTION.
 \end{enumerate}
 
-\subsection{The likelihood strategy}\label{the-likelihood-strategy}
+\hypertarget{the-likelihood-strategy}{%
+\subsection{The likelihood strategy}\label{the-likelihood-strategy}}
 
 Focusing on posterior probabilities is not the only approach that legal
 probabilists can pursue. By Bayes' theorem, the following holds, using
@@ -2463,7 +2453,8 @@ suitable threshold that is a function of the cost ratio and the prior
 ratio. The outstanding question is how this threshold is to be
 determined.
 
-\subsubsection{Kaplow}\label{kaplow}
+\hypertarget{kaplow}{%
+\subsubsection{Kaplow}\label{kaplow}}
 
 Quite independently, a similar approach to juridical decisions has been
 proposed by Kaplow (2014) -- we'll call it
@@ -2483,11 +2474,9 @@ we have:
 \begin{align*}
 \frac{\pr{H_\Pi\vert E}}{\pr{H_\Delta\vert E}} =  \frac{\pr{H_\Pi}}{\pr{H_\Delta}}\times \frac{\pr{E\vert H_\Pi}}{\pr{E\vert H_\Delta}} &>1 \Leftrightarrow\\
   \Leftrightarrow \frac{\pr{E\vert H_\Pi}}{\pr{E\vert H_\Delta}} &> \frac{\pr{H_\Delta}}{\pr{H_\Pi}} 
- \end{align*}
-
-\noindent So, as expected, \(LR^\star\) is not unique and depends on
-priors. Analogous reformulations are available for thresholds other than
-\(0.5\).
+ \end{align*} \noindent So, as expected, \(LR^\star\) is not unique and
+depends on priors. Analogous reformulations are available for thresholds
+other than \(0.5\).
 
 Kaplow's point is not that we can reformulate threshold decision rules
 in terms of priors-sensitive likelihood ratio thresholds. Rather, he
@@ -2501,9 +2490,7 @@ them into account, Kaplow suggests, we should convict if and only if:
 \begin{align}
 \label{eq:Kaplow_decision}
 \pr{H_\Pi\vert E}\times G > \pr{H_\Delta\vert E}\times L
-\end{align}
-
-\noindent Now, \eqref{eq:Kaplow_decision} is equivalent to:
+\end{align} \noindent Now, \eqref{eq:Kaplow_decision} is equivalent to:
 
 \vspace{-6mm}
 
@@ -2519,7 +2506,8 @@ them into account, Kaplow suggests, we should convict if and only if:
 
 \noindent This is the general format of Kaplow's decision standard.
 
-\subsubsection{Dawid}\label{dawid}
+\hypertarget{dawid}{%
+\subsubsection{Dawid}\label{dawid}}
 
 Here is a slightly different perspective, due to Dawid (1987), that also
 suggests that juridical decisions should be likelihood-based. The focus
@@ -2563,7 +2551,6 @@ any particular choice of prior beliefs. Let \(a\) be the event that the
 witness testified that \(A\). It is useful to think about the problem in
 terms of \emph{odds, conditional odds (O)} and
 \emph{likelihood ratios (LR)}:
-
 \begin{align*} O(A)  & = \frac{\pr{A}}{\pr{\n A}}\\
  O(A\vert a) &= \frac{\pr{A\vert a}}{\pr{\n A \vert a}}  \\
  LR(a\vert A) &= \frac{\pr{a\vert A}}{\pr{a\vert \n A}}. 
@@ -2584,9 +2571,7 @@ with Bayesian updating, we should have:
  \frac{\prr{a\vert A}}{\prr{a\vert \n A}}
  \times
  \frac{\prr{A}}{\prr{\n A}}
-  \end{align*}
-
-that is,
+  \end{align*} that is,
 
 \vspace{-6mm}
 
@@ -2616,7 +2601,8 @@ witness's reliability in the sense introduced above only if the prior is
 
 \noindent  First we multiplied both sides by the denominator. Then we divided both sides by $\pr{a\vert A}$ and multiplied on the right side. Then we used our background notation and information. Next, we manipulated the right-hand side algebraically and  moved  $-p$ to the left-hand side. Move $2rel(a)p$ to the left and manipulate the result algebraically to get to the last line.}
 
-\subsection{Likelihood and DAC}\label{likelihood-and-dac}
+\hypertarget{likelihood-and-dac}{%
+\subsection{Likelihood and DAC}\label{likelihood-and-dac}}
 
 But how does our preference for the likelihood ratio as a measure of
 evidence strength relate to DAC? Let's go through Dawid's reasoning.
@@ -2655,50 +2641,35 @@ Let us see why the above claim holds. The calculations are my
 reconstruction and are not due to Dawid. The reader might be annoyed
 with me working out the mundane details of Dawid's claims, but it turns
 out that in the case of Dawid's strategy, the devil is in the details.
-The independence of witnesses gives us:
-
-\begin{align*}
+The independence of witnesses gives us: \begin{align*}
  \pr{a \et b \vert A\et B}& =0.7^2=0.49\\
  \pr{a \et b \vert A\et \n B}& =  0.7\times 0.3=0.21\\
  \pr{a \et b \vert \n A\et B}& =  0.3\times 0.7=0.21\\
  \pr{a \et b \vert \n A\et \n B}& =  0.3\times 0.3=0.09
- \end{align*}
-
-Without assuming \(A\) and \(B\) to be independent, let the
-probabilities of \(A\et B\), \(\n A\et B\), \(A\et \n B\),
+ \end{align*} Without assuming \(A\) and \(B\) to be independent, let
+the probabilities of \(A\et B\), \(\n A\et B\), \(A\et \n B\),
 \(\n A\et \n B\) be \(p_{11}, p_{01}, p_{10}, p_{00}\). First, let's see
 what \(\pr{a\et b}\) boils down to.
 
 By the law of total probability we have:
-
 \begin{align}\label{eq:total_lower}
  \pr{a\et b} & = 
                      \pr{a\et b \vert A \et B}\pr{A\et B} + \\ &  \nonumber
                      +\pr{a\et b \vert A \et \n B}\pr{A\et \n B} \\ &  \nonumber
  + \pr{a\et b \vert \n A \et B}\pr{\n A\et B} + \\ & \nonumber
                      + \pr{a\et b \vert \n A \et \n B}\pr{\n A\et \n B}
- \end{align}
-
-\noindent which, when we substitute our values and constants, results
-in:
-
-\begin{align*}
+ \end{align} \noindent which, when we substitute our values and
+constants, results in: \begin{align*}
                      & = 0.49p_{11}+0.21(p_{10}+p_{01})+0.09p_{00}
- \end{align*}
-
-Now, note that because \(p_{ii}\)s add up to one, we have
-\(p_{10}+p_{01}=1-p_{00}-p_{11}\). Let us continue.
-
-\begin{align*}
+ \end{align*} Now, note that because \(p_{ii}\)s add up to one, we have
+\(p_{10}+p_{01}=1-p_{00}-p_{11}\). Let us continue. \begin{align*}
     & = 0.49p_{11}+0.21(1-p_{00}-p_{11})+0.09p_{00} \\
                      & = 0.21+0.28p_{11}-0.12p_{00}
  \end{align*}
 
 Next, we ask what the posterior of \(A\et B\) given \(a\et b\) is (in
 the last line, we also multiply the numerator and the denominator by
-100).
-
-\begin{align*}
+100). \begin{align*}
  \pr{A\et B\vert a \et b} & =
          \frac{\pr{a\et b \vert A \et B}\pr{A\et B}}
              {\pr{a\et b}}\\
@@ -2739,14 +2710,9 @@ provides positive support of the conjunction of their claims.
 
 Let us see why the claim holds. First, we introduce an abbreviation for
 witness reliability:
-
 \begin{align*}\mathbf{a} &=rel(a)=\pr{a\vert A}=\pr{\n a\vert \n A}>0.5\\ 
 \mathbf{b} &=rel(b)=\pr{b\vert B}=\pr{\n b\vert \n A}>0.5
-\end{align*}
-
-Our independence assumption means:
-
-\begin{align*}
+\end{align*} Our independence assumption means: \begin{align*}
 \pr{a\et b \vert A\et B}  &= \mathbf{ab}\\
 \pr{a\et b \vert A\et \n B} & = \mathbf{a(1-b)}\\
 \pr{a\et b \vert \n A\et B}  & = \mathbf{(1-a)b}\\
@@ -2765,46 +2731,36 @@ $\pr{\n A \et B} = p_{01}$ & $\pr{\n A \et \n B}=p_{00}$
 \end{center}
 
 Our assumptions entail \(0\neq p_{ij}\neq 1\) for \(i,j\in \{0,1\}\)
-and:
-
-\begin{align}\label{eq:sumupto1}
+and: \begin{align}\label{eq:sumupto1}
 p_{11}+p_{10}+p_{01}+p_{00}&=1
 \end{align}
 
 \noindent So, we can use this with \eqref{eq:total_lower} to get:
-
 \begin{align}\label{eq:aetb}
 \pr{a\et b} & =  \mathbf{ab}p_{11} + \mathbf{a(1-b)}p_{10}+\mathbf{(1-a)b}p_{01} + \mathbf{(1-a)(1-b)}p_{00}\\ \nonumber
 & = p_{11}\mathbf{ab} + p_{10}(\mathbf{a}-\mathbf{ab}) + p_{01}(\mathbf{b}-\mathbf{ab})+p_{00}(1-\mathbf{b}-\mathbf{a}+\mathbf{ab})
 \end{align}
 
 Let's now work out what the posterior of \(A\et B\) will be, starting
-with an application of the Bayes' Theorem:
-
-\begin{align} \nonumber
+with an application of the Bayes' Theorem: \begin{align} \nonumber
 \pr{A\et B \vert a\et b} & = \frac{\pr{a\et b \vert A \et B}\pr{A\et B}}{\pr{a\et b}}
 \\ \label{eq:boiled}
 & = \frac{\mathbf{ab}p_{11}}{p_{11}\mathbf{ab} + p_{10}(\mathbf{a}-\mathbf{ab}) + p_{01}(\mathbf{b}-\mathbf{ab})+p_{00}(1-\mathbf{b}-\mathbf{a}+\mathbf{ab})}
-\end{align}
-
-To answer our question we therefore have to compare the content of
-\eqref{eq:boiled} to \(p_{11}\) and our claim holds just in case:
-
-\begin{align*}
+\end{align} To answer our question we therefore have to compare the
+content of \eqref{eq:boiled} to \(p_{11}\) and our claim holds just in
+case: \begin{align*}
 \frac{\mathbf{ab}p_{11}}{p_{11}\mathbf{ab} + p_{10}(\mathbf{a}-\mathbf{ab}) + p_{01}(\mathbf{b}-\mathbf{ab})+p_{00}(1-\mathbf{b}-\mathbf{a}+\mathbf{ab})} &> p_{11}
-\end{align*}\begin{align*}
+\end{align*} \begin{align*}
  \frac{\mathbf{ab}}{p_{11}\mathbf{ab} + p_{10}(\mathbf{a}-\mathbf{ab}) + p_{01}(\mathbf{b}-\mathbf{ab})+p_{00}(1-\mathbf{b}-\mathbf{a}+\mathbf{ab})} & > 1\end{align*}
-
 \begin{align}  
  \label{eq:goal}
 p_{11}\mathbf{ab} + p_{10}(\mathbf{a}-\mathbf{ab}) + p_{01}(\mathbf{b}-\mathbf{ab})+p_{00}(1-\mathbf{b}-\mathbf{a}+\mathbf{ab}) & < \mathbf{ab}
-\end{align}
-
-Proving \eqref{eq:goal} is therefore our goal for now. This is achieved
-by the following
+\end{align} Proving \eqref{eq:goal} is therefore our goal for now. This
+is achieved by the following
 reasoning:\footnote{Thanks to Pawel Pawlowski for working on this proof with me.}
 
-\hspace{-7mm} \resizebox{13.5cm}{!}{
+\hspace{-7mm}
+\resizebox{13.5cm}{!}{
 \begin{tabular}{llr}
  1. & $\mathbf{b}>0.5,\,\,\, \mathbf{a}>0.5$ & \mbox{assumption}\\
  2. & $2\mathbf{b}>1,\,\,\, 2\mathbf{a}> 1$ & \mbox{from 1.}\\
@@ -2820,7 +2776,9 @@ reasoning:\footnote{Thanks to Pawel Pawlowski for working on this proof with me.
 12. & $\mathbf{ab}(1-p_{11})> p_{10}(\mathbf{a}-\mathbf{ab})+p_{01}(\mathbf{b}-\mathbf{ab})+p_{00}(1-\mathbf{b}-\mathbf{a}+\mathbf{ab})$ & \mbox{11. and equation \eqref{eq:sumupto1}}\\
 13. & $\mathbf{ab}- \mathbf{ab}p_{11}> p_{10}(\mathbf{a}-\mathbf{ab})+p_{01}(\mathbf{b}-\mathbf{ab})+p_{00}(1-\mathbf{b}-\mathbf{a}+\mathbf{ab})$ & \mbox{12., algebraic manipulation}\\
 14. & $\mathbf{ab}> \mathbf{ab}p_{11}+ p_{10}(\mathbf{a}-\mathbf{ab})+p_{01}(\mathbf{b}-\mathbf{ab})+p_{00}(1-\mathbf{b}-\mathbf{a}+\mathbf{ab})$ & \mbox{13., moving from left to right}\\
-\end{tabular}} \%\textbackslash{}end\{adjustbox\}
+\end{tabular}}
+
+\%\textbackslash end\{adjustbox\}
 
 \vspace{1mm}
 
@@ -2831,7 +2789,8 @@ The last line is what we have been after.
 Now that we have as a theorem an explication of what Dawid informally
 suggested, let's see whether it helps the probabilist handling of DAC.
 
-\subsubsection{Kaplow}\label{kaplow-1}
+\hypertarget{kaplow-1}{%
+\subsubsection{Kaplow}\label{kaplow-1}}
 
 On RLP, at least in certain cases, the decision rule leads us to
 \eqref{eq:Cheng:compar2}, which tells us to decide the case based on
@@ -2846,15 +2805,16 @@ Add here stuff from Marcello's Mind paper about the prisoner
 hypothetical. Then, discuss Rafal's critique of the likelihood ratio
 threshold and see where we end up.
 
+\hypertarget{dawids-likelihood-strategy-doesnt-help}{%
 \subsection{Dawid's likelihood strategy doesn't
-help}\label{dawids-likelihood-strategy-doesnt-help}
+help}\label{dawids-likelihood-strategy-doesnt-help}}
 
 Recall that DAC was a problem posed for the decision standard proposed
 by TLP, and the real question is how the information resulting from Fact
 \ref{ther:increase} can help to avoid that problem. Dawid does not
 mention any decision standard, and so addresses quite a different
 question, and so it is not clear that `\texttt{the}paradox'
-evaporates'', as Dawid suggests.
+evaporates'\,', as Dawid suggests.
 
 What Dawid correctly suggests (and we establish in general as Fact
 \ref{ther:increase}) is that the support of the conjunction by two
@@ -2908,15 +2868,11 @@ are listed below as \eqref{eq:lambdamu}, the fourth is that if the
 conditions in \eqref{eq:lambdamu} hold,
 \(\pr{A\et B\vert a\et b}>max(\pr{A\vert a},\pr{B\vert b})\). Notice
 that \(\lambda=LR(a\vert A)\) and \(\mu=LR(b\vert B)\). Suppose the
-first three claims hold, that is:
-
-\begin{align}\label{eq:lambdamu}
+first three claims hold, that is: \begin{align}\label{eq:lambdamu}
  \pr{A\et B\vert  a\et b} &= \lambda \mu p_{11}/(\lambda \mu p_{11} + \lambda p_{10} +\mu p_{01} + p_{00})\\
  \pr{A\vert a} & = \frac{\lambda p_{11}}{1-p_{11}+\lambda p_{11}}\nonumber \\
  \pr{B\vert b} & = \frac{\mu p_{11}}{1-p_{11}+\mu p_{11}} \nonumber 
- \end{align}
-
-\noindent Is it really the case that
+ \end{align} \noindent Is it really the case that
 \(\pr{A\et B\vert a\et b}>\pr{A\vert a},\pr{B\vert b}\)? It does not
 seem so. Let \(\mathbf{a}=\mathbf{b}=0.6\),
 \(pr =\la p_{11},p_{10},p_{01},p_{00}\ra=\la 0.1, 0.7, 0.1, 0.1 \ra\).
@@ -2936,46 +2892,33 @@ also easily compute
    \mathbf{ab}p_{11} + \mathbf{a}(1-\mathbf{b})p_{10} + (1-\mathbf{a})\mathbf{b}p_{01} + (1-\mathbf{a})(1-\mathbf{b})p_{00}
  }  
     \approx 0.147
- \end{align*}
-
-The posterior probability of \(A\et B\) is not only lower than the
-larger of the individual posteriors, but also lower than any of them!
+ \end{align*} The posterior probability of \(A\et B\) is not only lower
+than the larger of the individual posteriors, but also lower than any of
+them!
 
 So what went wrong in Dawid's calculations in \eqref{eq:lambdamu}? Well,
 the first formula is correct. However, let us take a look at what the
 second one says (the problem with the third one is pretty much the
-same):
-
-\begin{align*}
+same): \begin{align*}
 \pr{A\vert a } & = \frac{\frac{\pr{a\vert A}}{\pr{\n a \vert A}}\times \pr{A\et B}}{\pr{\n (A\et B)}+ \frac{\pr{a\vert A}}{\pr{\n a \vert A}} \times \pr{A\et B}}
-\end{align*}
-
-Quite surprisingly, in Dawid's formula for \(\pr{A\vert a}\), the
-probability of \(A\et B\) plays a role. To see that it should not take
-any \(B\) that excludes \(A\) and the formula will lead to the
-conclusion that \emph{always} \(\pr{A\vert a}\) is undefined. The
-problem with Dawid's formula is that instead of \(p_{11}=\pr{A\et B}\)
-he should have used \(\pr{A}=p_{11}+p_{10}\), in which case the formula
-would rather say this:
-
-\begin{align*}
+\end{align*} Quite surprisingly, in Dawid's formula for
+\(\pr{A\vert a}\), the probability of \(A\et B\) plays a role. To see
+that it should not take any \(B\) that excludes \(A\) and the formula
+will lead to the conclusion that \emph{always} \(\pr{A\vert a}\) is
+undefined. The problem with Dawid's formula is that instead of
+\(p_{11}=\pr{A\et B}\) he should have used \(\pr{A}=p_{11}+p_{10}\), in
+which case the formula would rather say this: \begin{align*}
 \pr{A\vert a } & = \frac{\frac{\pr{a\vert A}}{\pr{\n a \vert A}}\times \pr{A}}{\pr{\n A}+ \frac{\pr{a\vert A}}{\pr{\n a \vert A}} \times \pr{A}}\\
 & = \frac{\frac{\pr{a\vert A}\pr{A}}{\pr{\n a \vert A}}}{\frac{\pr{\n a\vert A}\pr{\n A}}{\pr{\n a\vert A}}+ \frac{\pr{a\vert A}\pr{A}}{\pr{\n a \vert A}}}\\
 & = \frac{\pr{a\vert A}\pr{A}}{\pr{\n a\vert A}\pr{\n A} + \pr{a\vert A}\pr{A}}
-\end{align*}
-
-Now, on the assumption that witness' sensitivity is equal to their
-specificity, we have \(\pr{a\vert \n A}=\pr{\n a \vert A}\) and can
-substitute this in the denominator:
-
+\end{align*} Now, on the assumption that witness' sensitivity is equal
+to their specificity, we have \(\pr{a\vert \n A}=\pr{\n a \vert A}\) and
+can substitute this in the denominator:
 \begin{align*} & = \frac{\pr{a\vert A}\pr{A}}{\pr{ a\vert \n A}\pr{\n A} + \pr{a\vert A}\pr{A}}\end{align*}
-
 and this would be a formulation of Bayes' theorem. And indeed with
 \(\pr{A}=p_{11}+p_{10}\) the formula works (albeit its adequacy rests on
 the identity of \(\pr{a\vert \n A}\) and \(\pr{\n a \vert A}\)), and
-yields the result that we already obtained:
-
-\begin{align*}
+yields the result that we already obtained: \begin{align*}
 \pr{A\vert a} &= \frac{\lambda(p_{11}+p_{10})}{1-(p_{11}+p_{10})+\lambda(p_{11}+p_{10})}\\
 &= \frac{1.5\times 0.8}{1- 0.8+1.5\times 0.8} \approx 0.8571
 \end{align*}
@@ -3006,16 +2949,12 @@ individual ones.
 
 \intermezzoa
 
-Let us make sure this is the case. We have:
-
-\begin{align*}
+Let us make sure this is the case. We have: \begin{align*}
  LR(a\vert A) & = \frac{\pr{a\vert A}}{\pr{a\vert \n A}}\\
  &= \frac{\pr{a\vert A}}{\pr{\n a\vert  A}} \\
 & =  \frac{\mathbf{a}}{\mathbf{1-a}}.
-\end{align*}
-
-where the substitution in the denominator is legitimate only because
-witness' sensitivity is identical to their specificity.
+\end{align*} where the substitution in the denominator is legitimate
+only because witness' sensitivity is identical to their specificity.
 
 With the joint likelihood, the reasoning is just a bit more tricky. We
 will need to know what \(\pr{a\et b \vert \n (A\et B)}\) is. There are
@@ -3024,19 +2963,14 @@ three disjoint possible conditions in which the condition holds:
 \(a\et b\) in these three scenarios are respectively
 \(\mathbf{a(1-b),(1-a)b,(1-a)(1-b)}\) (again, the assumption of
 independence is important), and so on the assumption \(\n(A\et B)\) the
-probability of \(a\et b\) is:
-
-\begin{align*}
+probability of \(a\et b\) is: \begin{align*}
 \pr{a\et b \vert \n (A\et B)} & = 
 \mathbf{a}(1-\mathbf{b})+(1-\mathbf{a})\mathbf{b}+(1-\mathbf{a})(1-\mathbf{b})\\ 
 & = 
 \mathbf{a}(1-\mathbf{b})+(1-\mathbf{a})(\mathbf{b} + 1-\mathbf{b})\\
 & = \mathbf{a}(1-\mathbf{b})+(1-\mathbf{a})\\
 & = \mathbf{a}-\mathbf{a}\mathbf{b}+1-\mathbf{a} = 1- \mathbf{a}\mathbf{b}
-\end{align*}
-
-So, on the assumption of witness independence, we have:
-
+\end{align*} So, on the assumption of witness independence, we have:
 \begin{align*}
 LR(a\et b \vert A \et B) & = \frac{\pr{a\et b \vert A \et B}}{\pr{a \et b\vert \n (A \et B)}} \\
 & = \frac{\mathbf{ab}}{\mathbf{1-ab}}
@@ -3053,10 +2987,10 @@ the individual ones.
 Fact \ref{ther:increase} is so far the most optimistic reading of the
 claim that if witnesses are independent and fairly reliable, their
 testimonies are going to provide positive support for the
-conjunction,\textbackslash{}footnote\{And this is the reading that Dawid
+conjunction,\textbackslash footnote\{And this is the reading that Dawid
 in passing suggests: ``the combined support is always positive, in the
 sense that the posterior probability of the case always exceeds its
-prior probability.'' (Dawid, 1987: 95) and any stronger reading of
+prior probability.'\,' (Dawid, 1987: 95) and any stronger reading of
 Dawid's suggestions fails. But Fact \ref{ther:increase} is not too
 exciting when it comes to answering the original DAC. The original
 question focused on the adjudication model according to which the
@@ -3089,8 +3023,7 @@ fellow picks up the phone. I tell him what my problem is, and he reacts:
  --- & It's not fine! I'm cold here! \\
  --- & Look, sir, my notion of it being warm in your office is that the building provides some improvement to what the situation would be if it wasn't there. And you agree that you're definitely warmer than you'd be if your desk was standing outside, don't you? Your, so to speak, posterior warmth is higher than your prior warmth, right? 
  \end{tabular}
-
-\vspace{1mm}
+ \vspace{1mm}
 
 Dawid's discussion is in the vein of the above conversation. In response
 to a problem with the adjudication model under consideration Dawid
@@ -3154,8 +3087,9 @@ innocence, and what priors of guilt should be appropriate? This, indeed,
 is an important problem; but it does not have much to do with DAC, and
 should be discussed separately.
 
+\hypertarget{problems-with-kaplows-stuff}{%
 \subsection{Problem's with Kaplow's
-stuff}\label{problems-with-kaplows-stuff}
+stuff}\label{problems-with-kaplows-stuff}}
 
 Kaplow does not discuss the conceptual difficulties that we are
 concerned with, but this will not stop us from asking whether DTLP can
@@ -3163,16 +3097,10 @@ handle them (and answering to the negative). Let us start with DAC.
 
 Say we consider two claims, \(A\) and \(B\). Is it generally the case
 that if they separately satisfy the decision rule, then so does
-\(A\et B\)? That is, do the assumptions:
-
-\begin{align*}
+\(A\et B\)? That is, do the assumptions: \begin{align*}
  \frac{\pr{E\vert A}}{\pr{E\vert \n A}}  & > \frac{\pr{\n A}}{\pr{A}} \times \frac{L}{G}\\
  \frac{\pr{E\vert B}}{\pr{E\vert \n B}}  & > \frac{\pr{\n B}}{\pr{B}} \times \frac{L}{G}
- \end{align*}
-
-\noindent entail
-
-\begin{align*}
+ \end{align*} \noindent entail \begin{align*}
  \frac{\pr{E\vert A\et B}}{\pr{E\vert \n (A\et B)}}  & > \frac{\pr{\n (A\et B)}}{
  \pr{A\et B}} \times \frac{L}{G}?
  \end{align*}
@@ -3201,9 +3129,7 @@ this, counterexamples for when this condition fails are analogous).
 First, notice that \(A\) and \(B\) taken separately satisfy
 \eqref{eq:Kaplow_decision2}. \(\pr{A}=\pr{\n A}=0.5\),
 \(\pr{\n A}/\pr{A}=1\) \(\pr{E\vert A}=1\), \(\pr{E\vert \n A}=0.4\).
-\eqref{eq:Kaplow_decision2} tells us to check:
-
-\begin{align*}
+\eqref{eq:Kaplow_decision2} tells us to check: \begin{align*}
  \frac{\pr{E\vert A}}{\pr{E\vert \n A}}&> \frac{L}{G}\times \frac{\pr{\n A}}{\pr{A}}\\
  \frac{1}{0.4} & > 1
  \end{align*}
@@ -3212,7 +3138,6 @@ First, notice that \(A\) and \(B\) taken separately satisfy
 For analogous reasons, we should also accept \(B\).
 \(\pr{B}=\pr{\n B}=0.5\), \(\pr{\n B}/\pr{B}=1\) \(\pr{E\vert B}=0.8\),
 \(\pr{E\vert \n B}=0.6\), so we need to check that indeed:
-
 \begin{align*}
  \frac{\pr{E\vert B}}{\pr{E\vert \n B}}&> \frac{L}{G}\times \frac{\pr{\n B}}{\pr{B}}\\
  \frac{0.8}{0.6} & > 1 
@@ -3221,9 +3146,7 @@ For analogous reasons, we should also accept \(B\).
 But now, \(\pr{A\et B}=0.3\), \(\pr{\n (A \et B)}=0.7\),
 \(\pr{\n (A\et B)}/\pr{A\et B}=2\frac{1}{3}\),
 \(\pr{E\vert A \et B}=1\), \(\pr{E\vert \n (A\et B)}=4/7\) and it is
-false that:
-
-\begin{align*}
+false that: \begin{align*}
  \frac{\pr{E\vert A \et B}}{\pr{E\vert \n (A\et B)}}&> \frac{L}{G}\times \frac{\pr{\n (A \et B)}}{\pr{A \et B}}\\
  \frac{7}{4} & > \frac{7}{3} 
  \end{align*}
@@ -3260,38 +3183,24 @@ Let us turn to the gatecrasher paradox.
 
 Suppose \(L=G\) and recall our abbreviations: \(\pr{E}=e\),
 \(\pr{H_\Pi}=\pi\). DTLP tells us to convict just in case:
-
 \begin{align*}
  LR(E) &> \frac{1-\pi}{\pi}
- \end{align*}
-
-\noindent From \eqref{eq:Cheng_lre} we already now that
-
+ \end{align*} \noindent From \eqref{eq:Cheng_lre} we already now that
 \begin{align*}
  LR(E) & = \frac{0.991-0.991\pi}{0.009\pi}
- \end{align*}
-
-\noindent so we need to see whether there are any \(0<\pi<1\) for
-which\\
-
+ \end{align*} \noindent so we need to see whether there are any
+\(0<\pi<1\) for which\\
 \begin{align*}
   \frac{0.991-0.991\pi}{0.009\pi} &> \frac{1-\pi}{\pi}
- \end{align*}
-
-\noindent Multiply both sides first by \(009\pi\) and then by \(\pi\):
-
-\begin{align*}
+ \end{align*} \noindent Multiply both sides first by \(009\pi\) and then
+by \(\pi\): \begin{align*}
  0.991\pi - 0.991\pi^2 &> 0.09\pi - 0.009\pi^2
- \end{align*}
-
-\noindent Simplify and call the resulting function \(f\):
-
+ \end{align*} \noindent Simplify and call the resulting function \(f\):
 \begin{align*}
  f(\pi) = - 0.982 \pi^2 + 0.982\pi &>0 
- \end{align*}
-
-\noindent The above condition is satisfied for any \(0<\pi <1\) (\(f\)
-has two zeros: \(\pi = 0\) and \(\pi = 1\)). Here is a plot of \(f\):
+ \end{align*} \noindent The above condition is satisfied for any
+\(0<\pi <1\) (\(f\) has two zeros: \(\pi = 0\) and \(\pi = 1\)). Here is
+a plot of \(f\):
 
 \includegraphics[width=12cm]{f-gate.png}
 
@@ -3311,18 +3220,13 @@ and \(G\)? The answer is, not too much.
 
 How sensitive is our analysis to the choice of \(L/G\)? Well, \(LR(E)\)
 does not change at all, only the threshold moves. For instance, if
-\(L/G=4\), instead of \(f\) we end up with
-
-\begin{align*}
+\(L/G=4\), instead of \(f\) we end up with \begin{align*}
  f'(\pi) = - 0.955 \pi^2 + 0.955\pi &>0 
- \end{align*}
-
-and the function still takes positive values on the interval \((0,1)\).
-In fact, the decision won't change until \(L/G\) increases to
-\(\approx 111\). Denote \(L/G\) as \(\rho\), and let us start with the
-general decision standard, plugging in our calculations for \(LR(E)\):
-
-\begin{align*}
+ \end{align*} and the function still takes positive values on the
+interval \((0,1)\). In fact, the decision won't change until \(L/G\)
+increases to \(\approx 111\). Denote \(L/G\) as \(\rho\), and let us
+start with the general decision standard, plugging in our calculations
+for \(LR(E)\): \begin{align*}
 LR(E) &> \frac{\pr{H_\Delta}}{\pr{H_\Pi}} \rho\\
 LR(E) &> \frac{1-\pi}{\pi} \rho \\
 \frac{0.991-0.991\pi}{0.009\pi} &> \frac{1-\pi}{\pi} \rho\\
@@ -3340,7 +3244,8 @@ LR(E) &> \frac{1-\pi}{\pi} \rho \\
 So, we conclude, in usual circumstances, DTLP does not handle the
 gatecrasher paradox.
 
-\subsection{Conclusions}\label{conclusions}
+\hypertarget{conclusions}{%
+\subsection{Conclusions}\label{conclusions}}
 
 Where are we, how did we get here, and where can we go from here? We
 were looking for a probabilistically explicated condition \(\Psi\) such
@@ -3383,7 +3288,7 @@ The likelihood of the evidence is higher than the odds of innocence multiplied b
 Thus, each account either simply fails to satisfy the desiderata, or
 succeeds on rather unrealistic assumptions. Does this mean that a
 probabilistic approach to legal evidence evaluation should be abandoned?
-No. This only means that if we are to develop a general probabilistic
+No.~This only means that if we are to develop a general probabilistic
 model of legal decision standards, we have to do better. One promising
 direction is to go back to Cohen's pressure against
 \textbf{Requirement 1} and push against it. A brief paper suggesting
@@ -3399,72 +3304,76 @@ legal decision standards (Urbaniak, 2018), but a discussion of how this
 approach relates to DAC and the gatecrasher paradox lies beyond the
 scope of this paper.
 
-\section*{References}\label{references}
+\hypertarget{references}{%
+\section*{References}\label{references}}
 \addcontentsline{toc}{section}{References}
 
 \hypertarget{refs}{}
-\hypertarget{ref-Allen1986A-Reconceptuali}{}
+\begin{CSLReferences}{1}{0}
+\leavevmode\hypertarget{ref-Allen1986A-Reconceptuali}{}%
 Allen, R. J. (1986). A reconceptualization of civil trials. \emph{Boston
 University Law Review}, \emph{66}, 401--437.
 
-\hypertarget{ref-allen2013}{}
+\leavevmode\hypertarget{ref-allen2013}{}%
 Allen, R. J., \& Stein, A. (2013). Evidence, probability and the burden
 of proof. \emph{Arizona Law Journal}, \emph{55}, 557--602.
 
-\hypertarget{ref-AllenPardo2019relative}{}
+\leavevmode\hypertarget{ref-AllenPardo2019relative}{}%
 Allen, R., \& Pardo, M. (2019). Relative plausibility and its critics.
-\emph{The International Journal of Evidence \& Proof}, \emph{23}(1-2),
+\emph{The International Journal of Evidence {\&} Proof}, \emph{23}(1-2),
 5--59. \url{https://doi.org/10.1177/1365712718813781}
 
-\hypertarget{ref-cheng2012reconceptualizing}{}
+\leavevmode\hypertarget{ref-cheng2012reconceptualizing}{}%
 Cheng, E. (2012). Reconceptualizing the burden of proof. \emph{Yale LJ},
 \emph{122}, 1254.
 
-\hypertarget{ref-Cohen1977The-probable-an}{}
-Cohen, J. (1977). \emph{The probable and the provable}. Oxford
+\leavevmode\hypertarget{ref-Cohen1977The-probable-an}{}%
+Cohen, J. L. (1977). \emph{The probable and the provable}. Oxford
 University Press. \url{https://doi.org/10.2307/2219193}
 
-\hypertarget{ref-cohen1988difficulty}{}
+\leavevmode\hypertarget{ref-cohen1988difficulty}{}%
 Cohen, L. J. (1988). The difficulty about conjunction in forensic proof.
 \emph{The Statistician}, \emph{37}(4/5), 415.
 \url{https://doi.org/10.2307/2348767}
 
-\hypertarget{ref-dawid1987difficulty}{}
+\leavevmode\hypertarget{ref-dawid1987difficulty}{}%
 Dawid, A. P. (1987). The difficulty about conjunction. \emph{The
 Statistician}, 91--97.
 
-\hypertarget{ref-DiBello2019plausibility}{}
+\leavevmode\hypertarget{ref-DiBello2019plausibility}{}%
 Di Bello, M. (2019). Probability and plausibility in juridical proof.
 \emph{International Journal of Evidence and Proof}.
 
-\hypertarget{ref-haack2011legal}{}
+\leavevmode\hypertarget{ref-haack2011legal}{}%
 Haack, S. (2014). Legal probabilism: An epistemological dissent. In
-\emph{Haack2014-HAAEMS} (pp. 47--77).
+\emph{{Haack2014-HAAEMS}} (pp. 47--77).
 
-\hypertarget{ref-kaplow2014likelihood}{}
+\leavevmode\hypertarget{ref-kaplow2014likelihood}{}%
 Kaplow, L. (2014). Likelihood ratio tests and legal decision rules.
 \emph{American Law and Economics Review}, \emph{16}(1), 1--39.
 
-\hypertarget{ref-Kowalewska2021conjunction}{}
+\leavevmode\hypertarget{ref-Kowalewska2021conjunction}{}%
 Kowalewska, A. (2021). Reasoning without the conjunction closure.
 \emph{Episteme}, 1--14. \url{https://doi.org/10.1017/epi.2020.53}
 
-\hypertarget{ref-Makinson1965-MAKTPO-2}{}
+\leavevmode\hypertarget{ref-Makinson1965-MAKTPO-2}{}%
 Makinson, D. C. (1965). The paradox of the preface. \emph{Analysis},
 \emph{25}(6), 205--207.
 
-\hypertarget{ref-schwartz2017ConjunctionProblemLogic}{}
-Schwartz, D. S., \& Sober, E. R. (2017). The Conjunction Problem and the
-Logic of Jury Findings. \emph{William \& Mary Law Review}, \emph{59}(2),
-619--692.
+\leavevmode\hypertarget{ref-schwartz2017ConjunctionProblemLogic}{}%
+Schwartz, D. S., \& Sober, E. R. (2017). The {Conjunction Problem} and
+the {Logic} of {Jury Findings}. \emph{William \& Mary Law Review},
+\emph{59}(2), 619--692.
 
-\hypertarget{ref-Stein05}{}
+\leavevmode\hypertarget{ref-Stein05}{}%
 Stein, A. (2005). \emph{Foundations of evidence law}. Oxford University
 Press.
 
-\hypertarget{ref-urbaniak2018narration}{}
+\leavevmode\hypertarget{ref-urbaniak2018narration}{}%
 Urbaniak, R. (2018). Narration in judiciary fact-finding: A
 probabilistic explication. \emph{Artificial Intelligence and Law},
 1--32. \url{https://doi.org/10.1007/s10506-018-9219-z}
+
+\end{CSLReferences}
 
 \end{document}
