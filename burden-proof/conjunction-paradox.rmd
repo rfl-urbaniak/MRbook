@@ -1861,6 +1861,9 @@ yynull <- postn(x, 0.5, 0.5, 2)
 y50908 <- postn(x, 0.9, 0.8, 5)
 y50909 <- postn(x, 0.99, 0.99, 5)
 y5null <- postn(x, 0.5, 0.5, 5)
+y100908 <- postn(x, 0.9, 0.8, 10)
+y100909 <- postn(x, 0.99, 0.99, 10)
+y10null <- postn(x, 0.5, 0.5, 10)
 
 
 ggplot() +
@@ -1873,10 +1876,14 @@ ggplot() +
   geom_line(aes(x = x, y = y50908,color = "5, sens=0.9, spec=0.8")) +
   geom_line(aes(x = x, y = y50909,color = "5, sens=0.99, spec=0.99")) +
   geom_line(aes(x = x, y = y5null, color = "5, sens=0.5, spec=0.5")) +
+  geom_line(aes(x = x, y = y100908,color = "10, sens=0.9, spec=0.8")) +
+# geom_line(aes(x = x, y = y100909,color = "10, sens=0.99, spec=0.99")) +
+  geom_line(aes(x = x, y = y10null, color = "10, sens=0.5, spec=0.5")) +
         ylim(c(0,1))+
   xlab("prior")+ ylab("posterior")+theme_tufte()+
   theme(legend.position = c(0.9, 0.2), legend.title = element_blank())
 ```
+
 
 
 ```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "90%"}
@@ -1905,12 +1912,25 @@ post2 <- function (x, s1, s2){
      )
 }
 
+
+
+postn <- function (x, s1, s2, n){
+  (x)*
+    (
+      s1/
+        (s1*x^(1/n)+(1-s2)*(1-x^(1/n)))
+     )^n
+}
+
+
+
 x <-seq(0,1,by=0.001)
 y0908 <- post(x, 0.9, 0.8)
 y0909 <- post(x, 0.99, 0.99)
 yy0908 <- post2(x, 0.9, 0.8)
 yy0909 <- post2(x, 0.99, 0.99)
 yynull <- post2(x, 0.5, 0.5)
+y40_0909 <- postn(x, 0.99, 0.99, 40)
 
 ggplot() +
   stat_function(fun=function(x)(x), geom="line", aes(colour="1, null"))+
@@ -1918,12 +1938,13 @@ ggplot() +
   geom_line(aes(x = x, y = y0909,color = "1, sensitivity=0.99, specificity=0.99")) +
   geom_line(aes(x = x, y = yy0908,color = "2, sensitivity=0.8, specificity=0.7")) +
   geom_line(aes(x = x, y = yy0909,color = "2, sensitivity=0.99, specificity=0.99")) +
+  geom_line(aes(x = x, y = y40_0909,color = "40, sensitivity=0.99, specificity=0.99")) +
         ylim(c(0,1))+
   xlab("prior")+ ylab("posterior")+theme_tufte()+
   theme(legend.position = c(0.8, 0.2))
 ```
 
-\caption{The comparison is betwen individual support (marked by 1, for one individual 
+\caption{The comparison is between individual support (marked by 1, for one individual 
 hypothesis) and joint support (marked by 2, for a two-claim composite claim). 
 Top graph: The base line for joint support ($y=x*x$) is 
 below the base line for individual support ($y=x$).
@@ -1935,6 +1956,80 @@ get closer especially for high posterior probability values.}
 \end{figure}
 
 
+
+```{r}
+integrate(postn, 0, 1, s1 =0.99 , s2 =0.99, n = 1)$val 
+integrate(postn, 0, 1, s1 =0.99 , s2 =0.99, n = 2)$val 
+integrate(postn, 0, 1, s1 =0.99 , s2 =0.99, n = 5)$val 
+integrate(postn, 0, 1, s1 =0.99 , s2 =0.99, n = 10)$val
+integrate(postn, 0, 1, s1 =0.99 , s2 =0.99, n = 20)$val
+
+integrate(postn, 0, 1, s1 =0.5 , s2 =0.5, n = 1)$val 
+integrate(postn, 0, 1, s1 =0.5 , s2 =0.5, n = 2)$val 
+integrate(postn, 0, 1, s1 =0.5 , s2 =0.5, n = 5)$val 
+integrate(postn, 0, 1, s1 =0.5 , s2 =0.5, n = 10)$val
+integrate(postn, 0, 1, s1 =0.5 , s2 =0.5, n = 20)$val 
+
+integrate(postn, 0, 1, s1 =0.99 , s2 =0.99, n = 1)$val - integrate(postn, 0, 1, s1 =0.5 , s2 =0.5, n = 1)$val 
+integrate(postn, 0, 1, s1 =0.99 , s2 =0.99, n = 2)$val - integrate(postn, 0, 1, s1 =0.5 , s2 =0.5, n = 2)$val 
+integrate(postn, 0, 1, s1 =0.99 , s2 =0.99, n = 5)$val - integrate(postn, 0, 1, s1 =0.5 , s2 =0.5, n = 5)$val 
+integrate(postn, 0, 1, s1 =0.99 , s2 =0.99, n = 10)$val - integrate(postn, 0, 1, s1 =0.5 , s2 =0.5, n = 10)$val 
+integrate(postn, 0, 1, s1 =0.99 , s2 =0.99, n = 20)$val - integrate(postn, 0, 1, s1 =0.5 , s2 =0.5, n = 20)$val 
+integrate(postn, 0, 1, s1 =0.99 , s2 =0.99, n = 25)$val - integrate(postn, 0, 1, s1 =0.5 , s2 =0.5, n = 25)$val 
+integrate(postn, 0, 1, s1 =0.99 , s2 =0.99, n = 40)$val - integrate(postn, 0, 1, s1 =0.5 , s2 =0.5, n = 40)$val 
+
+``` 
+
+
+```{r}
+integrate(postn, 0, 1, s1 =0.6 , s2 =0.7, n = 1)$val 
+integrate(postn, 0, 1, s1 =0.6 , s2 =0.7, n = 2)$val 
+integrate(postn, 0, 1, s1 =0.6 , s2 =0.7, n = 5)$val 
+integrate(postn, 0, 1, s1 =0.6 , s2 =0.7, n = 10)$val
+integrate(postn, 0, 1, s1 =0.6 , s2 =0.7, n = 20)$val
+
+integrate(postn, 0, 1, s1 =0.5 , s2 =0.5, n = 1)$val 
+integrate(postn, 0, 1, s1 =0.5 , s2 =0.5, n = 2)$val 
+integrate(postn, 0, 1, s1 =0.5 , s2 =0.5, n = 5)$val 
+integrate(postn, 0, 1, s1 =0.5 , s2 =0.5, n = 10)$val
+integrate(postn, 0, 1, s1 =0.5 , s2 =0.5, n = 20)$val 
+
+integrate(postn, 0, 1, s1 =0.6 , s2 =0.7, n = 1)$val - integrate(postn, 0, 1, s1 =0.5 , s2 =0.5, n = 1)$val 
+integrate(postn, 0, 1, s1 =0.6 , s2 =0.7, n = 2)$val - integrate(postn, 0, 1, s1 =0.5 , s2 =0.5, n = 2)$val 
+integrate(postn, 0, 1, s1 =0.6 , s2 =0.7, n = 5)$val - integrate(postn, 0, 1, s1 =0.5 , s2 =0.5, n = 5)$val 
+integrate(postn, 0, 1, s1 =0.6 , s2 =0.7, n = 10)$val - integrate(postn, 0, 1, s1 =0.5 , s2 =0.5, n = 10)$val 
+integrate(postn, 0, 1, s1 =0.6 , s2 =0.7, n = 20)$val - integrate(postn, 0, 1, s1 =0.5 , s2 =0.5, n = 20)$val 
+``` 
+
+```{r}
+integrate(postn, 0, 1, s1 =0.9 , s2 =0.8, n = 1)$val 
+integrate(postn, 0, 1, s1 =0.9 , s2 =0.8, n = 2)$val 
+integrate(postn, 0, 1, s1 =0.9 , s2 =0.8, n = 5)$val 
+integrate(postn, 0, 1, s1 =0.9 , s2 =0.8, n = 10)$val
+integrate(postn, 0, 1, s1 =0.9 , s2 =0.8, n = 20)$val
+
+integrate(postn, 0, 1, s1 =0.5 , s2 =0.5, n = 1)$val 
+integrate(postn, 0, 1, s1 =0.5 , s2 =0.5, n = 2)$val 
+integrate(postn, 0, 1, s1 =0.5 , s2 =0.5, n = 5)$val 
+integrate(postn, 0, 1, s1 =0.5 , s2 =0.5, n = 10)$val
+integrate(postn, 0, 1, s1 =0.5 , s2 =0.5, n = 20)$val 
+
+integrate(postn, 0, 1, s1 =0.9 , s2 =0.8, n = 1)$val - integrate(postn, 0, 1, s1 =0.5 , s2 =0.5, n = 1)$val 
+integrate(postn, 0, 1, s1 =0.9 , s2 =0.8, n = 2)$val - integrate(postn, 0, 1, s1 =0.5 , s2 =0.5, n = 2)$val 
+integrate(postn, 0, 1, s1 =0.9 , s2 =0.8, n = 5)$val - integrate(postn, 0, 1, s1 =0.5 , s2 =0.5, n = 5)$val 
+integrate(postn, 0, 1, s1 =0.9 , s2 =0.8, n = 10)$val - integrate(postn, 0, 1, s1 =0.5 , s2 =0.5, n = 10)$val 
+integrate(postn, 0, 1, s1 =0.9 , s2 =0.8, n = 20)$val - integrate(postn, 0, 1, s1 =0.5 , s2 =0.5, n = 20)$val 
+``` 
+ 
+```{r} 
+integrate(post, 0, 1, s1 =0.99 , s2 =0.99)$val 
+integrate(postn, 0, 1, s1 =0.99 , s2 =0.99 , n = 2)$val
+integrate(postn, 0, 1, s1 =0.99 , s2 =0.99 , n = 5)$val
+```
+
+
+
+
 \begin{figure}
 
 ```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "90%"}
@@ -1942,18 +2037,20 @@ library(ggplot2)
 library(ggthemes)
 
 
-ratio <- function (x, s1, s2, n){
-  postn(x, s2, s2, n)/x^n  }
+diff <- function (x, s1, s2, n){
+  postn(x, s2, s2, n) - x^n  }
 
 x <-seq(0,1,by=0.001)
-y0908 <- ratio(x, 0.9, 0.8, 1)
-y0909 <- ratio(x, 0.99, 0.99, 1)
-yy0908 <- ratio(x, 0.9, 0.8, 2)
-yy0909 <- ratio(x, 0.99, 0.99, 2)
-yynull <- ratio(x, 0.5, 0.5, 2)
-y50908 <- ratio(x, 0.9, 0.8, 5)
-y50909 <- ratio(x, 0.99, 0.99, 5)
-y5null <- ratio(x, 0.5, 0.5, 5)
+y0908 <- diff(x, 0.9, 0.8, 1)
+y0909 <- diff(x, 0.99, 0.99, 1)
+yy0908 <- diff(x, 0.9, 0.8, 2)
+yy0909 <- diff(x, 0.99, 0.99, 2)
+yynull <- diff(x, 0.5, 0.5, 2)
+y50908 <- diff(x, 0.9, 0.8, 5)
+y50909 <- diff(x, 0.99, 0.99, 5)
+y5null <- diff(x, 0.5, 0.5, 5)
+y100908 <- diff(x, 0.9, 0.8, 10)
+y100909 <- diff(x, 0.99, 0.99, 10)
 
 
 ggplot() +
@@ -1966,12 +2063,61 @@ ggplot() +
   geom_line(aes(x = x, y = y50908,color = "5, sens=0.9, spec=0.8")) +
 # geom_line(aes(x = x, y = y50909,color = "5, sens=0.99, spec=0.99")) +
 #  geom_line(aes(x = x, y = y5null, color = "5, sens=0.5, spec=0.5")) +
-        ylim(c(0,100))+
-  xlab("prior")+ ylab("posterior")+theme_tufte()+
+  geom_line(aes(x = x, y = y100908,color = "10, sens=0.9, spec=0.8")) +
+# geom_line(aes(x = x, y = y100909,color = "10, sens=0.99, spec=0.99")) +  
+        ylim(c(0,1))+
+  xlab("prior")+ ylab("difference posterior - prior")+theme_tufte()+
   theme(legend.position = c(0.9, 0.8), legend.title = element_blank())
 ```
 
+
 \end{figure}
+
+<!---
+ integrate(diff, 0, 1, s1 =0.99 , s2 =0.99 , n = 1)
+ integrate(diff, 0, 1, s1 =0.99 , s2 =0.99 , n = 2)
+ integrate(diff, 0, 1, s1 =0.99 , s2 =0.99 , n = 5)
+-->
+
+```{r}
+prior_a <- 0.6
+prior_b <- 0.4
+sen_a <- 0.85  # Pr(a given A)
+spe_a <- 0.75  #  Pr(not-a given not-A)
+sen_b <- 0.7
+spe_b <- 0.75
+
+prior_ab <- prior_a*prior_b 
+
+bf_a <- sen_a/((sen_a*prior_a)+((1-spe_a)*(1-prior_a)))
+bf_b <- sen_b/((sen_b*prior_b)+((1-spe_b)*(1-prior_b)))
+bf_ab <- bf_a*bf_b
+
+post_a <- bf_a*prior_a
+post_b <- bf_b*prior_b
+post_ab <- bf_ab*prior_ab
+
+prior_a
+prior_b
+prior_ab
+
+post_a
+post_b
+post_ab
+
+prior_a <- 0.24
+prior_b <- 0.24
+
+bf_a <- sen_a/((sen_a*prior_a)+((1-spe_a)*(1-prior_a)))
+bf_b <- sen_b/((sen_b*prior_b)+((1-spe_b)*(1-prior_b)))
+bf_ab <- bf_a*bf_b
+
+post_a <- bf_a*prior_a
+post_b <- bf_b*prior_b
+post_a
+post_b
+```
+
 
 What happens if we make the same comparison between individual and composite claims by equalizing their prior probability? If the claims are independent and equiprobable, let $x$ be the prior probability of an individual claim (when it is considered in isolation) and let $x^{1/k}$ the prior probability of the same individual claim when it is part of a composite claim that consists of $k$ claims. In this way---and again, assuming independence and equiprobability of the hypotheses---the prior probability of the composite claim equals the prior probability of the individual claim since $(x^{1/k})^k=x$, as desired. These different claims are then plotted having the same priors. Here we are explicitly factoring out the role of prior probabilities. Figure \ref{fig:post-indiv-joint} (bottom) shows the result of this process of equalization. 
 
