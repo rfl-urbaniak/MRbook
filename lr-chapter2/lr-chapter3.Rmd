@@ -16,6 +16,7 @@ documentclass: scrartcl
 urlcolor: blue
 bibliography: [../references/referencesMRbook.bib]
 csl: apa-5th-edition.csl
+indent: true
 ---
 
 
@@ -80,8 +81,6 @@ the posterior probability $\pr{H \vert E}$ is higher than the prior probability 
 The greater the Bayes factor (for values above one), the greater the upward shift from prior to posterior probability, the more strongly $E$ positively supports $H$.
 In line with the motivating examples, the posterior probability of $H$ given $E$ could still be  low even if the Bayes factor is significantly above one. Conversely, again by Bayes' theorem,  the probability of $H$ given $E$ is lower than the probability of $H$, $\pr{H}>\pr{H\vert E}$ just in case the Bayes factor is less than one. So $E$ \textit{negatively} supports $H$ whenever the Bayes factor is less than one. In general, the smaller the Bayes factor (for values below one), the greater the downward shift from prior to posterior probability, the more strongly $E$ negatively supports $H$. If $\pr{H}=\pr{H\vert E}$, the evidence  has no impact on the  probability of $H$. 
 
-
-
 One reason to think the Bayes Factor is a useful measure of evidential strength is that it appropriately deviates from 1, its point of neutrality. But let us pause a moment to think about the denominator in \eqref{eq:BF}. It can be calculated following the law of total probability:
 
 \vspace{-3mm}
@@ -99,7 +98,6 @@ One reason to think the Bayes Factor is a useful measure of evidential strength 
 \mathsf{BF}(E,H) & = \frac{\pr{E \vert H}}{\pr{E \vert H} \pr{H}+\pr{E \vert \neg H} \pr{\neg H}}.
 \end{align}
 \noindent What should be clear from this formulation is that the Bayes factor depends on the prior probabilities. Indeed, suppose $\pr{E \vert H} = 1$ and $\pr{E \vert \neg H} = .1$. If $\pr{H}=.1$, $\pr{E}$, the denominator, is $.19$ and so the Bayes Factor is approximately $5.26$. If, however, $\pr{H} =.2$, the denominator is $.28$ and the Bayes Factor is approximately $3.57$. In fact, a more general look (Figure \ref{fig:BayesFactorPrior}) shows the prior probability can have larger impact on the Bayes factor than the likelihood $\pr{E \vert \n H}$.
-
 
 This seems to be a reason against using the Bayes factor as a measure of evidential strength in the context of legal fact-finding. After all, in such contexts, we would like the expert's assessment not to depend on the expert's prior convictions about the hypothesis, and for  all the agents involved in legal fact-finding to understand  the expert's statement in  the same way, even if they assign different priors to the hypothesis. \todo{Think about this again later. Plausible, but I think this needs some more careful discussion. Diagnostic properties of medical tests might change depeding on base rate?}
 
@@ -143,8 +141,9 @@ scatter3D(options$pH,options$EifNH,options$BF,pch=3,cex=0.3,byt="g",alpha=0.8,th
  
 
 \noindent A related reason to worry about the denominator of \eqref{eq:BFlotp} is that   assessing  the strength of evidence using the Bayes factor  seems to  impose too great a cognitive  burden on an agent,  since it would require estimating $\pr{E}$.  This rarely can be done directly, and estimation using the denominator of \eqref{eq:BFlotp} or \eqref{eq:lotpLong} (in a more complex case) not only requires  that the agent sifts through the entire space of possibilities, but also that the agent uses as weights a sensible selection of priors for the hypotheses involved. 
+\mar{M: Check remarks by Sober on  catch-all alternatives in his book Evidence and Evolution.}
 
-Here is another reason to hestitate about measuring evidential support with \textsf{BF}, stemming from   [@Gillies1986defense].^[See also [@Fitelson1999plurality] for a discussion.]  Consider the  hypothesis $H =:$ "the suspect is guilty" and suppose it is already known that $E =:$ "the suspect killed the victim" (say here guilt requires both \emph{actus reus}, the killing, and \emph{mens rea}, the intention). Clearly, $H$ entails $E$, and $E$ provides positive support for $H$. Now consider a composite hypothesis $H'=:$ "the suspect is guilty and we live in a simulation built by aliens." We hope the reader shares the intuition that the support $E$ provides for $H'$ is somewhat weaker than it does  for $H$ (yes, the example of $H'$ is really far-fetched, but this is the point: addition of far-fetched hypotheses should decrease the support). This feature, however, cannot be captured by \textsf{BF}. In general, suppose $H\models E$ (and so, also, $H \et X \models E$). Then both $\pr{E\vert H}$  and $\pr{E \vert H \et X}$ equal 1. But this means that $\mathsf{BF}(H,E) = \mathsf{BF}(H \et X, E) = \nicefrac{1}{\pr{E}}$, and so the Bayes factors for the two support relations are equal. This is the problem of irrelevant conjuncts.
+Here is another reason to hetitate about measuring evidential support with \textsf{BF}, stemming from   [@Gillies1986defense].^[See also [@Fitelson1999plurality] for a discussion.]  Consider the  hypothesis $H =:$ "the suspect is guilty" and suppose it is already known that $E =:$ "the suspect killed the victim" (say here guilt requires both \emph{actus reus}, the killing, and \emph{mens rea}, the intention). Clearly, $H$ entails $E$, and $E$ provides positive support for $H$. Now consider a composite hypothesis $H'=:$ "the suspect is guilty and we live in a simulation built by aliens." We hope the reader shares the intuition that the support $E$ provides for $H'$ is somewhat weaker than it does  for $H$ (yes, the example of $H'$ is really far-fetched, but this is the point: addition of far-fetched hypotheses should decrease the support). \raf{M: Not sure I share the intuition. This needs to be explained more. The posterior is lower, but why should an irrelevant hypothesis change the strength of the evidence? The LR gives rise to simular paradoxes. Need to discuss the problem of irrelevant conjuctions (Fitelson, Crupi, etc.)}This feature, however, cannot be captured by \textsf{BF}. In general, suppose $H\models E$ (and so, also, $H \et X \models E$). Then both $\pr{E\vert H}$  and $\pr{E \vert H \et X}$ equal 1. But this means that $\mathsf{BF}(H,E) = \mathsf{BF}(H \et X, E) = \nicefrac{1}{\pr{E}}$, and so the Bayes factors for the two support relations are equal. This is the problem of irrelevant conjuncts.
 
 \mar{added this flow here, and introduced the notion of irrelevant conjunts above, check}
 Other probabilistic measures of confirmation have been proposed and do deserve a discussion of their applicability in the context of legal evidence evaluation. However, as this would detract us from the study of the properties and applications of the most promising candidate that in fact has been used by legal probabilists (likelihood ratio), we postpone  painting  a  more complex picture of various confirmation measures, the conditions they satisfy, and the reasons why they are not preferrable to likelihood ratio to Appendix \ref{sec:confirmation}. 
@@ -157,7 +156,7 @@ Consider an example by @triggsCommentWhyEffect. In a child abuse case, the prose
 3\% of abused children rock, $\pr{\textsf{child rocks} \vert \textsf{abuse}}=.3$. Note that  the two probabilities need not add up to 1. Similarly,  learning only  that    $\pr{\textsf{child rocks} \vert \textsf{abuse}}=.3$ does not provide full information needed for evidence evaluation, and one also needs information about  $\pr{\textsf{child rocks} \vert \textsf{no abuse}}=.3$. In our particular case, 
 given that  rocking is equally unlikely under either hypothesis, rocking cannot count as evidence of abuse, and any  of the low conditional probabilities involved alone does not allow us to notice this. Thus, in order to avoid exaggerations of the evidence both conditional probabilities need  to be involved in the evidence strength evaluation [@Royall1997; @triggsCommentWhyEffect; @enfs2015]. 
 
-One issue that  these considerations illustrate is that what matters is also the probability of the evidence if the hypothesis is false. If the accussed is not the source, the probability of a blood match if the accussed is not the source, while small, is much higher than the probability of a DNA profile match, and this seems to explain why the latter piece of evidence is stronger.  So, both the probability of the evidence given the hypothesis, and the probability of evidence given an alternative hypothesis should be somehow factored into a useful measure of evidential strength. 
+One issue that  these considerations illustrate is that what matters is also the probability of the evidence if the hypothesis is false. If the accused is not the source, the probability of a blood match if the accused is not the source, while small, is much higher than the probability of a DNA profile match, and this seems to explain why the latter piece of evidence is stronger.  So, both the probability of the evidence given the hypothesis, and the probability of evidence given an alternative hypothesis should be somehow factored into a useful measure of evidential strength. 
 
 
 
@@ -171,9 +170,10 @@ One straightforward way to implement this  is to use the \textbf{likelihood rati
 \noindent If the evidence supports $H$ more than $H'$, the ratio would be above one, and if the evidence supports $H'$ more than $H$, the ratio would be below one.  So, as with the Bayes factor , support levels correspond to deviations from one.  The greater the likelihood ratio (for values above one), the stronger the evidence in favor of $H$ as contrasted with $H'$. The smaller the likelihood ratio (for values below one), the stronger the evidence in favor of the competing hypothesis $H'$ as contrasted with $H$.
 
 One reason to prefer \textsf{LR} to \textsf{BF} is that  \textsf{LR} is not susceptible to the addition of irrelevant hypotheses. Even if $\pr{E\vert H} = \pr{E\vert H \et X} = 1$, we have that $\mathsf{LR}(E,H) = \nicefrac{1}{\pr{E \vert \n H}}$, while $\mathsf{LR}(E, H \et X) =  \nicefrac{1}{\pr{E \vert \n H \vee \n X}}$. Crucially, the denominators might differ and so might the resulting likelihoods.
+\raf{M: Might differ? This is too quick. The reader will not be persuaded. Neeed to discuss the problme of irrelevant conjunctions.}
 
 The likelihood ratio does not depend on the priors, and is a simpler and more workable measure than the Bayes factor, since it does not require one to think about the probability of the evidence in general, namely $\pr{E}$. Think of blood match evidence. To calculate the Bayes factor, we need two things: $\pr{E\vert H}$, which here---say---is close to one, and $\pr{E}$, which is the probability of a blood match \emph{not} conditional on whether the suspect is the source. Yet, direct and reliable estimation of this probability  seems to be quite hard. Of course, one could try to use the law of total probability, as in \eqref{eq:lotpSimple}, but then they would need to use $\pr{E\vert \n H}$ which, with $\pr{E\vert H}$, would already suffice for the calculation of \textsf{LR},  and additional information about other probabilities used in the right-hand side. In this sense, it seems that the calculation of \textsf{BF} is more committing and requires more information than the calculation of \textsf{LR}.
-
+\raf{M: Should we care that in the case of composite hyptheses the LR does depend on priors, especially considering that most hytheses in court are going to be composite? Does this perhpas suggest that the LR should only be used for individual hyptheses. Its use for composite hyptheses wil inevitably introduce subjectivity (=priors)?}
 
 This apparent simplicity of \textsf{LR}, however, can often give rise to errors in the assessment of the evidence, especially if the two hypotheses are not chosen carefully. As it will transpire, the choice of the hypotheses that are conditioned upon is crucial. In the most straightforward case, $H'$ is simply the negation of $H$. In many practical contexts such a simplistic set-up, however, is not viable. We will discuss these issues in detail in this chapter later on.
 
@@ -223,7 +223,7 @@ To illustrate the utility of thinking in terms of likelihood ratios in theorizin
 
 # The risk of false positive and its impact \label{sec:fp}
 
-
+\raf{M: Proofs and derivations in this section should be cleaned up and made easy to follow. To be done at a later stage, when we are polishiong teh chapter though. Better to just focus on the arguments now.}
 
 
 One context in which probabilities are extensively used is the use of DNA evidence.  In testifying about the DNA match at trial, experts  often assess the probability that a random person, unrelated to the crime, would coincidentally match the crime stain profile (random match probability). RMP  is often an impressively low number, say 1 in 100 million or lower. Usually, such a match is taken to constitute strong evidence against the defendant. We will illustrate the utility of likelihood ratios by using to explain how this apparent strength of DNA evidence can be mitigated by the probability of a false positive.
