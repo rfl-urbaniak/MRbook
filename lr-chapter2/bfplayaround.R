@@ -60,5 +60,9 @@ BF <- .5/priorH[1]
 BF
 
 
+P(H1 | H1 v H2)
+/
+P(H1 | ~ (H1 v H2))  =0, undefined
+
 
 

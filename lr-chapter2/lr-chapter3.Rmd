@@ -102,7 +102,7 @@ One reason to think the Bayes Factor is a useful measure of evidential strength 
 This seems to be a reason against using the Bayes factor as a measure of evidential strength in the context of legal fact-finding. After all, in such contexts, we would like the expert's assessment not to depend on the expert's prior convictions about the hypothesis, and for  all the agents involved in legal fact-finding to understand  the expert's statement in  the same way, even if they assign different priors to the hypothesis.^[This is also in line with the more general objectivity condition in strength of statistical evidence considerations [@bickel2012strength], where the requirement is that the strength of evidence should not vary from one researcher to another.]
 
 \footnotesize
-```{r,echo=FALSE,eval=FALSE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%"}
+```{r bfcalculations,echo=FALSE,eval=FALSE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%"}
 EifH <- 1
 EifNH <- .1
 H <- .1
@@ -266,7 +266,7 @@ $M$ & There is a true match.
 \ali{Something is off about this DAG representation, think about doing this better and more clearly. In terms of gammas?, random match is  a conjunction, there is a dependence between source and random match...}
 
 \begin{figure}[h]
-```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "70%", warning= FALSE, message = FALSE}
+```{r fpp,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "70%", warning= FALSE, message = FALSE}
 library(bnlearn)
 fpp <- model2network("[reportedMatch|trueMatch:falsePositive][falsePositive][trueMatch|source:randomMatch][randomMatch][source]")
 graphviz.plot(fpp)
@@ -664,7 +664,7 @@ In contrast, if the eyewitness is a friend of the suspect, so that you estimate 
 
 \vspace{1mm}
 \footnotesize
-```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%"}
+```{r jointImpact,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%"}
 prior <- seq(0,1,0.001)
 priorOdds <- prior/(1-prior)
 
@@ -1177,7 +1177,7 @@ The lower the RMP, the more strongly incriminating the match. The rationale here
  Although clearly 1 in 1.1 million should not be confused with the probability of Puckett's innocence, the small figure indicates it is very unlikely that a random person unrelated to the crime would match. The match is therefore strong evidence of Puckett's guilt. Assuming that the probability of a match if Puckett indeed was the source was (practically) 1, the likelihood ratio is simply $1.1 \times 10^6$.
 
 
-```{r,echo=FALSE,eval=FALSE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%"}
+```{r lr,echo=FALSE,eval=FALSE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%"}
 eIfh <- 1
 eIfnH <- (1/1.1e6)
 lr <- eIfh/eIfnH
@@ -1190,7 +1190,7 @@ During the pretrial hearing, however, Bicka Barlow, the DNA expert  for the defe
 a database match probability of approximately .3.
 
 
-```{r,echo=FALSE,eval=FALSE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%"}
+```{r dmp,echo=FALSE,eval=FALSE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%"}
 dmp <- 1/1.1e6 * 338e3
 1/dmp
 ```
@@ -1347,12 +1347,12 @@ From this perspective, it is no surprise there were so many matching pairs among
 
 \raf{M: In general this section needs more signposting for guiding the reader. This last argument seems to be an add-on.}
 
-\mar{added appendix strcutre in the beginning and revised the next sentence to improve flow}
+\mar{added appendix structre in the beginning and revised the next sentence to improve flow}
 
 Before we move on, it is worhtwile to think about how the example at hand actually constitues evidence against a certain probabilistic model that one might initially want to deploy in this context. Note how the Arizona statistics constitute some empirical evidence against the adequacy of the binomial model. While the binomial estimate probability of at least 122 matches with an external sample for $n=6500$ is pretty much 0,  let us look at the most likely number of matches if we test ${6500 \choose 2}$ pairs, as estimated by the binomial model. We illustrate it  with an 89\% highest density inverval in Figure \ref{fig:ArizonaDensity}.  So, if the expert's estimate and the binomial model are both adequate, we indeed should be surprised by the presence of 122 matches. But this is because this number is suprisingly low: instead we should expect a much higher number, around 2000 of them! OF course, it is unlikely that in fact all possible pairs have been compared, and it is hard to evaluate this evidence against the binomial model unless we know the exact number of comparisons made.
 
 
-```{r ,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%", message = FALSE, warning= FALSE}
+```{r hdi ,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%", message = FALSE, warning= FALSE}
 hdi = function(x, x.density, coverage){
   best = 0
 for (ai in 1 : (length(x) - 1))
@@ -1372,7 +1372,7 @@ interval <- hdi(x, x.density, .89)
 
 
 
-```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%"}
+```{r binom,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%"}
 p <- 1/1.1e6
 d = seq(1500,2500, by = 1)
 probs <- dbinom(d,choose(65000,2),1/1.1e6)
