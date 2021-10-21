@@ -1,19 +1,15 @@
 % Options for packages loaded elsewhere
 \PassOptionsToPackage{unicode}{hyperref}
 \PassOptionsToPackage{hyphens}{url}
-\PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
+\PassOptionsToPackage{dvipsnames,svgnames*,x11names*}{xcolor}
 %
 \documentclass[
   10pt,
   dvipsnames,enabledeprecatedfontcommands]{scrartcl}
-\title{Likelihood ratio and evidence strength}
-\author{Marcello Di Bello and Rafal Urbaniak}
-\date{}
-
 \usepackage{amsmath,amssymb}
 \usepackage{lmodern}
-\usepackage{iftex}
-\ifPDFTeX
+\usepackage{ifxetex,ifluatex}
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
   \usepackage{textcomp} % provide euro and other symbols
@@ -35,10 +31,10 @@
   pdftitle={Likelihood ratio and evidence strength},
   pdfauthor={Marcello Di Bello and Rafal Urbaniak},
   colorlinks=true,
-  linkcolor={Maroon},
-  filecolor={Maroon},
-  citecolor={Blue},
-  urlcolor={blue},
+  linkcolor=Maroon,
+  filecolor=Maroon,
+  citecolor=Blue,
+  urlcolor=blue,
   pdfcreator={LaTeX via pandoc}}
 \urlstyle{same} % disable monospaced font for URLs
 \usepackage{graphicx}
@@ -58,29 +54,6 @@
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
 \setcounter{secnumdepth}{5}
-\newlength{\cslhangindent}
-\setlength{\cslhangindent}{1.5em}
-\newlength{\csllabelwidth}
-\setlength{\csllabelwidth}{3em}
-\newlength{\cslentryspacingunit} % times entry-spacing
-\setlength{\cslentryspacingunit}{\parskip}
-\newenvironment{CSLReferences}[2] % #1 hanging-ident, #2 entry spacing
- {% don't indent paragraphs
-  \setlength{\parindent}{0pt}
-  % turn on hanging indent if param 1 is 1
-  \ifodd #1
-  \let\oldpar\par
-  \def\par{\hangindent=\cslhangindent\oldpar}
-  \fi
-  % set entry spacing
-  \setlength{\parskip}{#2\cslentryspacingunit}
- }%
- {}
-\usepackage{calc}
-\newcommand{\CSLBlock}[1]{#1\hfill\break}
-\newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{#1}}
-\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{#1}\break}
-\newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
 %\documentclass{article}
 
 % %packages
@@ -251,9 +224,33 @@
 \usepackage{tikz}
 \usetikzlibrary{positioning,shapes,arrows}
 
-\ifLuaTeX
+\ifluatex
   \usepackage{selnolig}  % disable illegal ligatures
 \fi
+\newlength{\cslhangindent}
+\setlength{\cslhangindent}{1.5em}
+\newlength{\csllabelwidth}
+\setlength{\csllabelwidth}{3em}
+\newenvironment{CSLReferences}[2] % #1 hanging-ident, #2 entry spacing
+ {% don't indent paragraphs
+  \setlength{\parindent}{0pt}
+  % turn on hanging indent if param 1 is 1
+  \ifodd #1 \everypar{\setlength{\hangindent}{\cslhangindent}}\ignorespaces\fi
+  % set entry spacing
+  \ifnum #2 > 0
+  \setlength{\parskip}{#2\baselineskip}
+  \fi
+ }%
+ {}
+\usepackage{calc}
+\newcommand{\CSLBlock}[1]{#1\hfill\break}
+\newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{#1}}
+\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{#1}\break}
+\newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
+
+\title{Likelihood ratio and evidence strength}
+\author{Marcello Di Bello and Rafal Urbaniak}
+\date{}
 
 \begin{document}
 \maketitle
@@ -603,7 +600,7 @@ the strength of the evidence. An expert, for instance, may testify that
 the blood-staining on the jacket of the defendant is ten times more
 likely to be seen if the wearer of the jacket hit the victim
 (prosecutor's hypothesis) rather than if he did not (defense's
-hypothesis) (CGG Aitken et al., 2010, p. 38).
+hypothesis) (CGG Aitken, Roberts, \& Jackson, 2010, p. 38).
 
 The idea that both conditional probabilities involved in likelihood
 ratio should be used in evidence strength evaluation applies generally
@@ -873,12 +870,14 @@ are the same due to a random match. Similarly, a reported match might
 arise not only if there is a true match, but also if a false positive
 error has been made. The dependencies here are illustrated in Figure
 \ref{fig:fpp}
-\ali{Something is off about this DAG representation, think about doing this better and more clearly. In terms of gammas?, random match is  a conjunction, there is a dependence between source and random match...}
 
-\begin{figure}[h]
+\mar{A: Is the visualisation now better?}
 
-\begin{center}\includegraphics[width=0.7\linewidth]{lr-chapter3_files/figure-latex/fpp-1} \end{center}
+\begin{figure}
+\begin{center}
+\includegraphics[width = 12cm]{img/fpp.png}
 \caption{Dependencies between variables in the false positive problem.}
+\end{center}
 \label{fig:fpp}
 \end{figure}
 
@@ -996,9 +995,9 @@ the derivation is simpler and it turns out that in fact this is simply a
 more general formula, of which (FPP-LR) is just a particular instance,
 it worth taking a look.
 
-First, Buckleton et al. (2018) make the conceptual distinction between
-the probability that an error occurs (\(E\)) and the probability that a
-match is reported if it
+First, Buckleton, Bright, \& Taylor (2018) make the conceptual
+distinction between the probability that an error occurs (\(E\)) and the
+probability that a match is reported if it
 does.\mar{Added a warning, I can rewrite the proof if you can think of a better abbreviation.}
 Mind your head: here \(E\) stands for error, not for evidence! In terms
 of our notation, we have: \begin{align*}
@@ -1049,8 +1048,8 @@ gives: \begin{align*}
  \frac{1 - (1-k)e}{RMP(1-e)+ke} & = \frac{1-e+e}{RMP(1-e)+e}\\
  & = \frac{1}{RMP - e\times RMP + e} = \frac{1}{1 + e(1-RMP)}
 \end{align*} \noindent which is the same as the formula obtained by
-Colin Aitken et al. (2003) if we take \(e\) to be FPP, as we should on
-the assumption that \(k=1\).
+Colin Aitken, Taroni, \& Thompson (2003) if we take \(e\) to be FPP, as
+we should on the assumption that \(k=1\).
 
 \mar{Do you also want me to explain the manipulation here?}
 
@@ -1602,7 +1601,8 @@ that the expert had in mind the hypotheses `George was the man who shot
 Dando' and `The integrity of George's coat was corrupted.' But these
 hypotheses are neither exhaustive nor exclusive, and Keeley gave no
 clear criterion for why these hypotheses should be compared in the
-likelihood ratio (see Fenton et al., 2014 for further details).
+likelihood ratio (see Fenton, Berger, Lagnado, Neil, \& Hsu, 2014 for
+further details).
 
 The confusion in the Barry George case is attributable to the absence of
 clear rules for choosing the hypotheses in the likelihood ratio. One
@@ -1666,14 +1666,14 @@ case.) Similarly, in a rape case, it is hard to estimate the probability
 of the matching evidence if the suspect did not have the intercourse
 with the victim. Instead, what is considered is the hypothesis that
 someone else, unrelated to the suspect, had intercourse with the victim.
-As (Evett et al., 2000) point out, in many real life rape cases the
-choice of a particular hypothesis to be used by the expert in the
-evaluation of the strength of the evidence (of, say, the lack of semen
-in a rape case), will depend on contextual factors. Sometimes it will be
-`intercourse did not take place,' sometimes it will be `the intercourse
-took place, but the complainant used a vagina douche,' or sometimes
-`another sexual act took place.' More often than not, the hypotheses
-chosen will not be mutually exclusive.
+As (Evett, Jackson, \& Lambert, 2000) point out, in many real life rape
+cases the choice of a particular hypothesis to be used by the expert in
+the evaluation of the strength of the evidence (of, say, the lack of
+semen in a rape case), will depend on contextual factors. Sometimes it
+will be `intercourse did not take place,' sometimes it will be `the
+intercourse took place, but the complainant used a vagina douche,' or
+sometimes `another sexual act took place.' More often than not, the
+hypotheses chosen will not be mutually exclusive.
 
 Moreover, comparing exclusive and exhaustive hypotheses can also be
 unhelpful for jurors or judges making a decision at trial. In a
@@ -1695,7 +1695,7 @@ probability of the DNA match given the prosecution's hypothesis, say
 in a rather uninformative likelihood ratio of 1. Another feature of such
 specific explanations is that it's hard to reasonably estimate their
 prior probability, and so hard to use them in arguments between opposing
-sides. (Evett et al., 2000).
+sides. (Evett, Jackson, \& Lambert, 2000).
 
 \mar{You keep mentioning this dispute between Taroni research group and Fenton research group about LR, but I never got the impression of deep disagreement. Maybe I missed something, do you have any specific papers in mind?}
 
@@ -1723,9 +1723,9 @@ but at the offence level, the likelihood ratio favors the other side,
 say the defense, even though the hypotheses at the two levels are quite
 similar. Further, a likelihood ratio that equals 1 when source level
 hypotheses are compared may tip in favor of one side or the other when
-offence level hypotheses are compared (Fenton et al., 2014). This
-variability makes the likelihood ratio a seemingly arbitrary---and
-easily manipulable---measure of evidentiary value.
+offence level hypotheses are compared (Fenton, Berger, Lagnado, Neil, \&
+Hsu, 2014). This variability makes the likelihood ratio a seemingly
+arbitrary---and easily manipulable---measure of evidentiary value.
 
 The likelihood ratio can be misleading, but this risk is mitigated when
 its assessment is accompanied by a careful discussion of a number of
@@ -1838,20 +1838,20 @@ level hypotheses requires a close collaboration between scientists,
 investigators and attorneys (see Cook, Evett, Jackson, \& Jones, 1998
 for a discussion). The choice and formulation of the hypotheses are up
 for revision as new evidence is obtained or facts about what happened
-are accepted (Evett et al., 2000). A case study that further illustrates
-both advantages and limitations of the likelihood ratio as a measure of
-evidentiary strength is the two-stain problem, originally formulated by
-Evett (1987). The key limitation is due to the combination of two
-circumstances: first, that likelihood ratios vary depending on the
-choice of hypotheses being compared; second, that it is not always clear
-which hypotheses should be compared. To illustrate what is at stake,
-what follows begins with Evett's original version of the two-stain
-problem (which does not pose any challenge to the likelihood ratio) and
-then turns to a more complex version (which suggests that likelihood
-ratios, in and of themselves, are insufficiently informative). Suppose
-two stains from two different sources were left at the crime scene, and
-the suspect's blood matches one of them. More precisely, the two items
-of evidence are as follows: \vspace{2mm}
+are accepted (Evett, Jackson, \& Lambert, 2000). A case study that
+further illustrates both advantages and limitations of the likelihood
+ratio as a measure of evidentiary strength is the two-stain problem,
+originally formulated by Evett (1987). The key limitation is due to the
+combination of two circumstances: first, that likelihood ratios vary
+depending on the choice of hypotheses being compared; second, that it is
+not always clear which hypotheses should be compared. To illustrate what
+is at stake, what follows begins with Evett's original version of the
+two-stain problem (which does not pose any challenge to the likelihood
+ratio) and then turns to a more complex version (which suggests that
+likelihood ratios, in and of themselves, are insufficiently
+informative). Suppose two stains from two different sources were left at
+the crime scene, and the suspect's blood matches one of them. More
+precisely, the two items of evidence are as follows: \vspace{2mm}
 
 \begin{center}
     \begin{tabular}{lp{10cm}} 
@@ -2200,11 +2200,11 @@ Lagnado, 2019), for exclusive and exhaustive hypotheses,
 \(LR(E,H_p, \neg H_p)=1.75\), since \(P(E\vert H_d)=0.7\) and
 \(P(E\vert \neg H_d)=0.4\). The likelihood ratio of the evidence, if it
 is measured against exclusive and exhaustive hypotheses, is not equal to
-one.\^{}(de Zoete et al., 2019 offer a slightly different solution to
-the problem. They construct a Bayesian network with three hypotheses,
-also exhaustive and exclusive: in town to visit mother, in town to
-murder, out of town.) Such considerations should also generalize to
-other paradoxes of relevance.
+one.\^{}(de Zoete, Fenton, Noguchi, \& Lagnado, 2019 offer a slightly
+different solution to the problem. They construct a Bayesian network
+with three hypotheses, also exhaustive and exclusive: in town to visit
+mother, in town to murder, out of town.) Such considerations should also
+generalize to other paradoxes of relevance.
 
 For instance, in the twins problem, the LR is 1 if the hypotheses are:
 `the suspect committed the crime,' and `the suspect's twin brother
@@ -2230,9 +2230,9 @@ recognizable probabilistic impact on the prosecutor's or defense's
 ultimate hypotheses. When this happens, it is relevant, in agreement
 with Rule 401 of the Federal Rules of Evidence. Bayesian networks help
 to see how pieces of evidence can increase or decrease the probability
-of different sub-hypotheses (de Zoete et al., 2019). Thus, while
-likelihood ratios are useful, they need to be properly presented in the
-context.
+of different sub-hypotheses (de Zoete, Fenton, Noguchi, \& Lagnado,
+2019). Thus, while likelihood ratios are useful, they need to be
+properly presented in the context.
 
 \mar{Added the conclusions section, check.}
 
@@ -2795,7 +2795,8 @@ suspect is the source of the crime traces' and the defense's hypothesis
 in the database) and \(D\) the information that none of the \(n-1\)
 profiles in the database matches the crime stain. The likelihood ratio
 associated with \(E\) and \(D\) should be (David J. Balding \& Donnelly,
-1996; Taroni et al., 2014): \begin{align*}
+1996; Taroni, Biedermann, Bozza, Garbolino, \& Aitken, 2014):
+\begin{align*}
 V & = \frac{\pr{E,D\vert H_p}}{\pr{E,D\vert H_d}}.
 \end{align*} Since \(\pr{A\wedge B}=\pr{A\vert B}\pr{B}\), for any
 statement \(A\) and \(B\), this ratio can be rewritten as:
@@ -3143,340 +3144,340 @@ Measure & Reason not to use\\
 
 \hypertarget{refs}{}
 \begin{CSLReferences}{1}{0}
-\leavevmode\vadjust pre{\hypertarget{ref-aitken2010fundamentals}{}}%
+\leavevmode\hypertarget{ref-aitken2010fundamentals}{}%
 Aitken, CGG, Roberts, P., \& Jackson, G. (2010). Fundamentals of
 probability and statistical evidence in criminal proceedings
 ({P}ractitioner {G}uide {N}o. 1), {G}uidance for judges, lawyers,
 forensic scientists and expert witnesses. \emph{Royal Statistical
 Society's Working Group on Statistics and the Law}.
 
-\leavevmode\vadjust pre{\hypertarget{ref-aitken2008fundamentals}{}}%
+\leavevmode\hypertarget{ref-aitken2008fundamentals}{}%
 Aitken, Colin, \& Taroni, F. (2008). Fundamentals of statistical
 evidence - a primer for legal professionals. \emph{The International
 Journal of Evidence and Proof}, \emph{12}(3), 181--207. SAGE
 Publications.
 
-\leavevmode\vadjust pre{\hypertarget{ref-aitken2003probability}{}}%
+\leavevmode\hypertarget{ref-aitken2003probability}{}%
 Aitken, Colin, Taroni, F., \& Thompson, W. (2003). How the probability
 of a false positive affects the value of DNA evidence. \emph{Journal of
 Forensic Science}, \emph{48}(1), 1--8. ASTM International.
 
-\leavevmode\vadjust pre{\hypertarget{ref-balding2002DNDatabaseSearch}{}}%
+\leavevmode\hypertarget{ref-balding2002DNDatabaseSearch}{}%
 Balding, David J. (2002). The {DNA Database Search Controversy}.
 \emph{Biometrics}, \emph{58}(1), 241--244.
 
-\leavevmode\vadjust pre{\hypertarget{ref-balding2004comment}{}}%
+\leavevmode\hypertarget{ref-balding2004comment}{}%
 Balding, David J. (2004). Comment on: Why the effect of prior odds
 should accompany the likelihood ratio when reporting DNA evidence.
 \emph{Law, Probability and Risk}, \emph{3}(1), 63--64. Oxford Univ
 Press.
 
-\leavevmode\vadjust pre{\hypertarget{ref-balding1996EvaluatingDNAProfilea}{}}%
+\leavevmode\hypertarget{ref-balding1996EvaluatingDNAProfilea}{}%
 Balding, David J., \& Donnelly, P. (1996). Evaluating {DNA Profile
 Evidence When} the {Suspect Is Identified Through} a {Database Search}.
 \emph{Journal of Forensic Sciences}, \emph{41}(4), 13961J.
 
-\leavevmode\vadjust pre{\hypertarget{ref-Barnett2020Why}{}}%
+\leavevmode\hypertarget{ref-Barnett2020Why}{}%
 Barnett, Z. (2020). Why you should vote to change the outcome.
 \emph{Philosophy and Public Affairs}, \emph{48}(4), 422--446.
 
-\leavevmode\vadjust pre{\hypertarget{ref-behrman2001EyewitnessIdentificationActual}{}}%
+\leavevmode\hypertarget{ref-behrman2001EyewitnessIdentificationActual}{}%
 Behrman, B. W., \& Davey, S. L. (2001). Eyewitness identification in
 actual criminal cases: {An} archival analysis. \emph{Law and Human
 Behavior}, \emph{25}(5), 475--491.
 
-\leavevmode\vadjust pre{\hypertarget{ref-bickel2012strength}{}}%
+\leavevmode\hypertarget{ref-bickel2012strength}{}%
 Bickel, D. R. (2012). The strength of statistical evidence for composite
 hypotheses: Inference to the best explanation. \emph{Statistica Sinica},
 1147--1198. JSTOR.
 
-\leavevmode\vadjust pre{\hypertarget{ref-biedermann2014UseLikelihoodRatio}{}}%
+\leavevmode\hypertarget{ref-biedermann2014UseLikelihoodRatio}{}%
 Biedermann, A., Hicks, T., Taroni, F., Champod, C., \& Aitken, C.
 (2014). On the use of the likelihood ratio for forensic evaluation:
 {Response} to {Fenton} et al. \emph{Science \& Justice}, \emph{54}(4),
 316--318.
 
-\leavevmode\vadjust pre{\hypertarget{ref-bolinger2020individualized}{}}%
+\leavevmode\hypertarget{ref-bolinger2020individualized}{}%
 Bolinger, R. J. (2020). Explaining the justificatory asymmetry between
 statistical and individualized evidence. \emph{The social epistemology
 of legal trials}. Routledge.
 
-\leavevmode\vadjust pre{\hypertarget{ref-brennan2012ethics}{}}%
+\leavevmode\hypertarget{ref-brennan2012ethics}{}%
 Brennan, J. (2012). \emph{The ethics of voting}. Princeton University
 Press.
 
-\leavevmode\vadjust pre{\hypertarget{ref-buckleton2018forensic}{}}%
+\leavevmode\hypertarget{ref-buckleton2018forensic}{}%
 Buckleton, J. S., Bright, J.-A., \& Taylor, D. (2018). \emph{Forensic
 DNA evidence interpretation}. CRC press.
 
-\leavevmode\vadjust pre{\hypertarget{ref-carnap1962logical}{}}%
+\leavevmode\hypertarget{ref-carnap1962logical}{}%
 Carnap, R. (1962). Logical foundations of probability. Citeseer.
 
-\leavevmode\vadjust pre{\hypertarget{ref-Cook1998hierarchy}{}}%
+\leavevmode\hypertarget{ref-Cook1998hierarchy}{}%
 Cook, R., Evett, I., Jackson, G., \& Jones, P. (1998). A hierarchy of
 propositions: Deciding which level to address in casework. \emph{Science
 \& Justice}, \emph{38}(4), 231--239.
 
-\leavevmode\vadjust pre{\hypertarget{ref-crupi2015confirmation}{}}%
+\leavevmode\hypertarget{ref-crupi2015confirmation}{}%
 Crupi, V. (2015). Confirmation. In E. N. Zalta (Ed.), \emph{Stanford
 encyclopedia of philosophy}.
 
-\leavevmode\vadjust pre{\hypertarget{ref-crupi2007BayesianMeasuresEvidential}{}}%
+\leavevmode\hypertarget{ref-crupi2007BayesianMeasuresEvidential}{}%
 Crupi, V., Tentori, K., \& Gonzalez, M. (2007). On {Bayesian Measures}
 of {Evidential Support}: {Theoretical} and {Empirical Issues}.
 \emph{Philosophy of Science}, \emph{74}(2), 229--252.
 
-\leavevmode\vadjust pre{\hypertarget{ref-dawid1994island}{}}%
+\leavevmode\hypertarget{ref-dawid1994island}{}%
 Dawid, A. P. (1994). The island problem: Coherent use of identification
 evidence. In P. R. Freeman \& A. F. M. Smith (Eds.), \emph{Aspects of
 uncertainty: A tribute to {D. V. Lindley}} (pp. 159--170). John Wiley \&
 Sons, New York.
 
-\leavevmode\vadjust pre{\hypertarget{ref-dawid2004likelihood}{}}%
+\leavevmode\hypertarget{ref-dawid2004likelihood}{}%
 Dawid, A. P. (2004). Which likelihood ratio? (Comment on {`{W}hy the
 effect of prior odds should accompany the likelihood ratio when
 reporting {DNA} evidence,'} by {R}onald {M}eester and {M}arjan
 {S}jerps). \emph{Law, probability and risk}, \emph{3}(1), 65--71. Oxford
 Univ Press.
 
-\leavevmode\vadjust pre{\hypertarget{ref-dawid1996CoherentAnalysisForensic}{}}%
+\leavevmode\hypertarget{ref-dawid1996CoherentAnalysisForensic}{}%
 Dawid, A. P., \& Mortera, J. (1996). Coherent {Analysis} of {Forensic
 Identification Evidence}. \emph{Journal of the Royal Statistical
 Society. Series B (Methodological)}, \emph{58}(2), 425--443.
 
-\leavevmode\vadjust pre{\hypertarget{ref-dawid2001CommentStockmarrLikelihood}{}}%
+\leavevmode\hypertarget{ref-dawid2001CommentStockmarrLikelihood}{}%
 Dawid, A. P., \& Stockmarr, A. (2001). Comment on {Stockmarr}'s
 {``{Likelihood Ratios} for {Evaluating DNA Evidence When} the {Suspect
 Is Found} through a {Database Search}.''} \emph{Biometrics},
 \emph{57}(3), 976--980.
 
-\leavevmode\vadjust pre{\hypertarget{ref-dezoete2019ResolvingSocalledProbabilistic}{}}%
+\leavevmode\hypertarget{ref-dezoete2019ResolvingSocalledProbabilistic}{}%
 de Zoete, J. C., Fenton, N., Noguchi, T., \& Lagnado, D. (2019).
 Resolving the so-called {``probabilistic paradoxes in legal reasoning''}
 with {Bayesian} networks. \emph{Science \& Justice}, \emph{59}(4),
 367--379.
 
-\leavevmode\vadjust pre{\hypertarget{ref-brennan_lomasky_1993}{}}%
+\leavevmode\hypertarget{ref-brennan_lomasky_1993}{}%
 \emph{Democracy and decision: The pure theory of electoral preference}.
 (1993). Cambridge University Press.
 
-\leavevmode\vadjust pre{\hypertarget{ref-Bello2021probabilisticCrossexamination}{}}%
+\leavevmode\hypertarget{ref-Bello2021probabilisticCrossexamination}{}%
 Di Bello, M. (2021). A probabilistic analysis of cross-examination using
 bayesian networks. Wiley. Retrieved from
 \url{https://doi.org/10.1111/phis.12209}
 
-\leavevmode\vadjust pre{\hypertarget{ref-donnelly1995NonindependenceMatchesDifferent}{}}%
+\leavevmode\hypertarget{ref-donnelly1995NonindependenceMatchesDifferent}{}%
 Donnelly, P. (1995). Nonindependence of matches at different loci in
 {DNA} profiles: Quantifying the effect of close relatives on the match
 probability. \emph{Heredity}, \emph{75}(1), 26--34.
 
-\leavevmode\vadjust pre{\hypertarget{ref-donnelly1999DNADatabaseSearches}{}}%
+\leavevmode\hypertarget{ref-donnelly1999DNADatabaseSearches}{}%
 Donnelly, P., \& Friedman, R. D. (1999). {DNA Database Searches} and the
 {Legal Consumption} of {Scientific Evidence}. \emph{Michigan Law
 Review}, \emph{97}(4), 931.
 
-\leavevmode\vadjust pre{\hypertarget{ref-Dror2011subjectivity}{}}%
+\leavevmode\hypertarget{ref-Dror2011subjectivity}{}%
 Dror, I. E., \& Hampikian, G. (2011). Subjectivity and bias in forensic
 {DNA} mixture interpretation. \emph{Science {\&} Justice}, \emph{51}(4),
 204--208. Elsevier {BV}. Retrieved from
 \url{https://doi.org/10.1016/j.scijus.2011.08.004}
 
-\leavevmode\vadjust pre{\hypertarget{ref-eggleston1978evidence}{}}%
+\leavevmode\hypertarget{ref-eggleston1978evidence}{}%
 Eggleston, R. (1978). \emph{Evidence, proof and probability} (Vol. 2).
 Weidenfeld; Nicolson London.
 
-\leavevmode\vadjust pre{\hypertarget{ref-enfs2015}{}}%
+\leavevmode\hypertarget{ref-enfs2015}{}%
 ENFSI. (2015). \emph{Guidelines for evaluative reporting in forensic
 sciences}.
 
-\leavevmode\vadjust pre{\hypertarget{ref-Evett1987}{}}%
+\leavevmode\hypertarget{ref-Evett1987}{}%
 Evett, I. W. (1987). On meaningful questions: A two-trace transfer
 problem. \emph{Journal of the Forensic Science Society}, \emph{27}(6),
 375--381. Elsevier {BV}. Retrieved from
 \url{https://doi.org/10.1016/s0015-7368(87)72785-6}
 
-\leavevmode\vadjust pre{\hypertarget{ref-evett2000MoreHierarchyPropositions}{}}%
+\leavevmode\hypertarget{ref-evett2000MoreHierarchyPropositions}{}%
 Evett, I. W., Jackson, G., \& Lambert, J. A. (2000). More on the
 hierarchy of propositions: Exploring the distinction between
 explanations and propositions. \emph{Science \& Justice}, \emph{40}(1),
 3--10.
 
-\leavevmode\vadjust pre{\hypertarget{ref-fenton2014WhenNeutralEvidence}{}}%
+\leavevmode\hypertarget{ref-fenton2014WhenNeutralEvidence}{}%
 Fenton, N., Berger, D., Lagnado, D., Neil, M., \& Hsu, A. (2014). When
 {`neutral'} evidence still has probative value (with implications from
 the {Barry George Case}). \emph{Science \& Justice}, \emph{54}(4),
 274--287.
 
-\leavevmode\vadjust pre{\hypertarget{ref-finkelstein2009basic}{}}%
+\leavevmode\hypertarget{ref-finkelstein2009basic}{}%
 Finkelstein, M. (2009). \emph{Basic concepts of probability and
 statistics in the law}. Springer.
 
-\leavevmode\vadjust pre{\hypertarget{ref-Fitelson1999plurality}{}}%
+\leavevmode\hypertarget{ref-Fitelson1999plurality}{}%
 Fitelson, Branden. (1999). The plurality of bayesian measures of
 confirmation and the problem of measure sensitivity. \emph{Philosophy of
 Science}, \emph{66}, S362--S378. University of Chicago Press. Retrieved
 from \url{https://doi.org/10.1086/392738}
 
-\leavevmode\vadjust pre{\hypertarget{ref-Fitelson2021z_measure}{}}%
+\leavevmode\hypertarget{ref-Fitelson2021z_measure}{}%
 Fitelson, Branded. (2021). \emph{A problem for confirmation measure
 \(Z\)}. {[}online manuscript{]}.
 
-\leavevmode\vadjust pre{\hypertarget{ref-foreman2003interpreting}{}}%
-Foreman, L., Champod, C., Evett, I. W., Lambert, J., Pope, S., et al.
-(2003). Interpreting DNA evidence: A review. \emph{International
+\leavevmode\hypertarget{ref-foreman2003interpreting}{}%
+Foreman, L., Champod, C., Evett, I. W., Lambert, J., Pope, S., \&
+others. (2003). Interpreting DNA evidence: A review. \emph{International
 Statistical Review}, \emph{71}(3), 473--495. International Statistical
 Institute.
 
-\leavevmode\vadjust pre{\hypertarget{ref-gelman2002mathematics}{}}%
+\leavevmode\hypertarget{ref-gelman2002mathematics}{}%
 Gelman, A., Katz, J. N., \& Tuerlinckx, F. (2002). The mathematics and
 statistics of voting power. \emph{Statistical Science}, 420--435. JSTOR.
 
-\leavevmode\vadjust pre{\hypertarget{ref-gelman1998estimating}{}}%
+\leavevmode\hypertarget{ref-gelman1998estimating}{}%
 Gelman, A., King, G., \& Boscardin, W. J. (1998). Estimating the
 probability of events that have never occurred: When is your vote
 decisive? \emph{Journal of the American Statistical Association},
 \emph{93}(441), 1--9. Taylor \& Francis.
 
-\leavevmode\vadjust pre{\hypertarget{ref-Gillies1986defense}{}}%
+\leavevmode\hypertarget{ref-Gillies1986defense}{}%
 Gillies, D. (1986). In defense of the popper-miller argument.
 \emph{Philosophy of Science}, \emph{53}(1), 110--113. University of
 Chicago Press. Retrieved from \url{https://doi.org/10.1086/289295}
 
-\leavevmode\vadjust pre{\hypertarget{ref-gross2014RateFalseConviction}{}}%
+\leavevmode\hypertarget{ref-gross2014RateFalseConviction}{}%
 Gross, S. R., O'Brien, B., Hu, C., \& Kennedy, E. H. (2014). Rate of
 false conviction of criminal defendants who are sentenced to death.
 \emph{Proceedings of the National Academy of Sciences}, \emph{111}(20),
 7230--7235.
 
-\leavevmode\vadjust pre{\hypertarget{ref-klobuchar2006improving}{}}%
+\leavevmode\hypertarget{ref-klobuchar2006improving}{}%
 Klobuchar, A., Steblay, N. K. M., \& Caligiuri, H. L. (2006). Improving
 eyewitness identifications: Hennepin county's blind sequential lineup
 pilot project. \emph{Cardozo Pub. L. Pol'y \& Ethics J.}, \emph{4},
 381--413. HeinOnline.
 
-\leavevmode\vadjust pre{\hypertarget{ref-lempert1977modeling}{}}%
+\leavevmode\hypertarget{ref-lempert1977modeling}{}%
 Lempert, R. O. (1977). Modeling relevance. \emph{Michigan Law Review},
 \emph{75}, 1021--1057. JSTOR.
 
-\leavevmode\vadjust pre{\hypertarget{ref-Lindsay1981CanPeopleDetect}{}}%
+\leavevmode\hypertarget{ref-Lindsay1981CanPeopleDetect}{}%
 Lindsay, R. C. L., Wells, G. L., \& Rumpel, C. M. (1981). Can people
 detect eyewitness-identification accuracy within and across situations?
 \emph{Journal of Applied Psychology}, \emph{66}(1), 79--89.
 
-\leavevmode\vadjust pre{\hypertarget{ref-mayo2018}{}}%
+\leavevmode\hypertarget{ref-mayo2018}{}%
 Mayo, D. (2018). \emph{Statistical inference as severe testing}.
 Cambridge University Press.
 
-\leavevmode\vadjust pre{\hypertarget{ref-meester2004WhyEffectPriora}{}}%
+\leavevmode\hypertarget{ref-meester2004WhyEffectPriora}{}%
 Meester, R., \& Sjerps, M. (2004a). Why the effect of prior odds should
 accompany the likelihood ratio when reporting {DNA} evidence. \emph{Law,
 Probability and Risk}, \emph{3}(1), 51--62.
 
-\leavevmode\vadjust pre{\hypertarget{ref-meester2004ResponseDawidBalding}{}}%
+\leavevmode\hypertarget{ref-meester2004ResponseDawidBalding}{}%
 Meester, R., \& Sjerps, M. (2004b). Response to {Dawid}, {Balding},
 {Triggs} and {Buckleton}. \emph{Law, Probability and Risk}, \emph{3}(1),
 83--86.
 
-\leavevmode\vadjust pre{\hypertarget{ref-mulligan2003empirical}{}}%
+\leavevmode\hypertarget{ref-mulligan2003empirical}{}%
 Mulligan, C. B., \& Hunter, C. G. (2003). The empirical frequency of a
 pivotal vote. \emph{Public Choice}, \emph{116}(1), 31--54. Springer.
 
-\leavevmode\vadjust pre{\hypertarget{ref-NRCI1992}{}}%
+\leavevmode\hypertarget{ref-NRCI1992}{}%
 National Research Council. (1992). \emph{{DNA} technology in forensic
-science \mbox{\emph{[NRC I]}}}. Committee on {DNA} technology in
+science {\emph{{[}NRC I{]}}}}. Committee on {DNA} technology in
 {F}orensic {S}cience, {N}ational {R}esearch {C}ouncil.
 
-\leavevmode\vadjust pre{\hypertarget{ref-NRCII1996}{}}%
+\leavevmode\hypertarget{ref-NRCII1996}{}%
 National Research Council. (1996). \emph{The evaluation of forensic
-{DNA} evidence \mbox{\emph{[NRC II]}}}. Committee on {DNA} technology in
+{DNA} evidence {\emph{{[}NRC II{]}}}}. Committee on {DNA} technology in
 {F}orensic {S}cience, {N}ational {R}esearch {C}ouncil.
 
-\leavevmode\vadjust pre{\hypertarget{ref-niedermeierEtAl1999}{}}%
+\leavevmode\hypertarget{ref-niedermeierEtAl1999}{}%
 Niedermeier, K. E., Kerr, N. L., \& Messeé, L. A. (1999). Jurors' use of
 naked statistical evidence: Exploring bases and implications of the
 {Wells} effect. \emph{Journal of Personality and Social Psychology},
 \emph{76}(4), 533--542.
 
-\leavevmode\vadjust pre{\hypertarget{ref-pardo2013NaturePurposeEvidence}{}}%
+\leavevmode\hypertarget{ref-pardo2013NaturePurposeEvidence}{}%
 Pardo, M. S. (2013). The {Nature} and {Purpose} of {Evidence Theory}.
 \emph{Vanderbilt Law Review}, \emph{66}, 547--613.
 
-\leavevmode\vadjust pre{\hypertarget{ref-park2010BayesWarsRedivivus}{}}%
+\leavevmode\hypertarget{ref-park2010BayesWarsRedivivus}{}%
 Park, R. C., Tillers, P., Moss, F. C., Risinger, D. M., Kaye, D. H.,
 Allen, R. J., Gross, S. R., et al. (2010). Bayes {Wars Redivivus} -- {An
 Exchange}. \emph{International Commentary on Evidence}, \emph{8}(1).
 
-\leavevmode\vadjust pre{\hypertarget{ref-redmayne2008exploring}{}}%
+\leavevmode\hypertarget{ref-redmayne2008exploring}{}%
 Redmayne, M. (2008). Exploring the proof paradoxes. \emph{Legal Theory},
 \emph{14}(4), 281--309. Cambridge University Press.
 
-\leavevmode\vadjust pre{\hypertarget{ref-Royall1997}{}}%
+\leavevmode\hypertarget{ref-Royall1997}{}%
 Royall, R. M. (1997). \emph{Statistical evidence: A likelihood
 paradigm}. Chapman; Hall/CRC.
 
-\leavevmode\vadjust pre{\hypertarget{ref-Shaer2016False}{}}%
+\leavevmode\hypertarget{ref-Shaer2016False}{}%
 Shaer, M. (2016). The false promise of DNA testing. \emph{The Atlantic}.
 Retrieved from
 \url{https://www.theatlantic.com/magazine/archive/2016/06/a-reasonable-doubt/480747/}
 
-\leavevmode\vadjust pre{\hypertarget{ref-Smith2018evidence}{}}%
+\leavevmode\hypertarget{ref-Smith2018evidence}{}%
 Smith, M. (2017). When does evidence suffice for conviction?
 \emph{Mind}.
 
-\leavevmode\vadjust pre{\hypertarget{ref-sprenger2019bayesian}{}}%
+\leavevmode\hypertarget{ref-sprenger2019bayesian}{}%
 Sprenger, J., \& Hartmann, S. (2019). \emph{Bayesian philosophy of
 science}. Oxford University Press.
 
-\leavevmode\vadjust pre{\hypertarget{ref-stockmarr1999LikelihoodRatiosEvaluating}{}}%
+\leavevmode\hypertarget{ref-stockmarr1999LikelihoodRatiosEvaluating}{}%
 Stockmarr, A. (1999). Likelihood {Ratios} for {Evaluating DNA Evidence
 When} the {Suspect} is {Found Through} a {Database Search}.
 \emph{Biometrics}, \emph{55}(3), 671--677.
 
-\leavevmode\vadjust pre{\hypertarget{ref-Rush1995}{}}%
+\leavevmode\hypertarget{ref-Rush1995}{}%
 Supreme Court of New York, K. C. (1995). \emph{The people of the state
 of new york, plaintiff, v. Basheen rush, defendant}.
 
-\leavevmode\vadjust pre{\hypertarget{ref-taroni2006bayesian}{}}%
+\leavevmode\hypertarget{ref-taroni2006bayesian}{}%
 Taroni, F., Biedermann, A., Bozza, S., Garbolino, P., \& Aitken, C.
 (2014). \emph{Bayesian networks for probabilistic inference and decision
 analysis in forensic science} (2nd ed.). John Wiley \& Sons.
 
-\leavevmode\vadjust pre{\hypertarget{ref-thompson2007beyond}{}}%
+\leavevmode\hypertarget{ref-thompson2007beyond}{}%
 Thompson, S. G. (2007). Beyond a reasonable doubt-reconsidering
 uncorroborated eyewitness identification testimony. \emph{UC Davis L.
 Rev.}, \emph{41}, 1487--1545. HeinOnline.
 
-\leavevmode\vadjust pre{\hypertarget{ref-thompson2012forensic}{}}%
+\leavevmode\hypertarget{ref-thompson2012forensic}{}%
 Thompson, W. C. (2013). Forensic DNA evidence: The myth of
 infallibility. In S. Krimsky \& J. Gruber (Eds.), \emph{Genetic
 explanations: Sense and nonsense} (pp. 227--347). Harvard University
 Press.
 
-\leavevmode\vadjust pre{\hypertarget{ref-thomson1986liability}{}}%
+\leavevmode\hypertarget{ref-thomson1986liability}{}%
 Thomson, J. J. (1986). Liability and individualized evidence. \emph{Law
 and Contemporary Problems}, \emph{49}(3), 199--219. JSTOR.
 
-\leavevmode\vadjust pre{\hypertarget{ref-triggsCommentWhyEffect}{}}%
+\leavevmode\hypertarget{ref-triggsCommentWhyEffect}{}%
 Triggs, C. M., \& Buckleton, J. S. (2004). Comment on: {Why} the effect
 of prior odds should accompany the likelihood ratio when reporting {DNA}
 evidence. \emph{Law, Probability and Risk}, \emph{3}, 73--82.
 
-\leavevmode\vadjust pre{\hypertarget{ref-wells1992naked}{}}%
+\leavevmode\hypertarget{ref-wells1992naked}{}%
 Wells, G. L. (1992). Naked statistical evidence of liability: Is
 subjective probability enough? \emph{Journal of Personality and Social
 Psychology}, \emph{62}(5), 739--752. American Psychological Association.
 
-\leavevmode\vadjust pre{\hypertarget{ref-wells2003EyewitnessTestimony}{}}%
+\leavevmode\hypertarget{ref-wells2003EyewitnessTestimony}{}%
 Wells, G. L., \& Olson, E. A. (2003). Eyewitness {Testimony}.
 \emph{Annual Review of Psychology}, \emph{54}(1), 277--295.
 
-\leavevmode\vadjust pre{\hypertarget{ref-wixted2017RelationshipEyewitnessConfidence}{}}%
+\leavevmode\hypertarget{ref-wixted2017RelationshipEyewitnessConfidence}{}%
 Wixted, J. T., \& Wells, G. L. (2017). The {Relationship Between
 Eyewitness Confidence} and {Identification Accuracy}: {A New Synthesis}.
 \emph{Psychological Science in the Public Interest}, \emph{18}(1),
 10--65.
 
-\leavevmode\vadjust pre{\hypertarget{ref-Wright1996ComparingSystemEstimator}{}}%
+\leavevmode\hypertarget{ref-Wright1996ComparingSystemEstimator}{}%
 Wright, D. B., \& McDaid, A. T. (1996). Comparing system and estimator
 variables using data from real line-ups. \emph{Applied Cognitive
 Psychology}, \emph{10}, 75--84.

@@ -325,15 +325,37 @@ $M$ & There is a true match.
 \end{center}
 
 \noindent The difference between $S$ and $M$ is that a true match will exist not only if $S$ is true, but also if the profiles in fact are the same due to a random match. Similarly, a reported match might arise not only if there is a true match, but also if a false positive error has been made. The dependencies here are illustrated in Figure \ref{fig:fpp}
-\ali{Something is off about this DAG representation, think about doing this better and more clearly. In terms of gammas?, random match is  a conjunction, there is a dependence between source and random match...}
 
-\begin{figure}[h]
-```{r fpp,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "70%", warning= FALSE, message = FALSE}
-library(bnlearn)
-fpp <- model2network("[reportedMatch|trueMatch:falsePositive][falsePositive][trueMatch|source:randomMatch][randomMatch][source]")
-graphviz.plot(fpp)
+\mar{A: Is the visualisation now better?}
+```{r pre-fpp,echo=FALSE,eval=FALSE,fig.align = "center",cache=FALSE, fig.show = "hold", out.width = "70%", warning= FALSE, message = FALSE}
+library(plotly)
+library(htmlwidgets)
+library(webshot)
+library(data.tree)
+
+reportedMatch <- Node$new(" reportedMatch ")
+trueMatch <- reportedMatch$AddChild(" trueMatch ")
+randomMatch <- trueMatch$AddChild(" randomMatch ")
+source <- trueMatch$AddChild("source")
+falsePositive <- reportedMatch$AddChild(" falsePositive ")
+error <- falsePositive$AddChild("error")
+crossContamination <- error$AddChild(" cross-contamination ")
+misinterpratation <- error$AddChild(" misinterpretation ")
+mislabelling <- error$AddChild(" mislabelling ")
+rest <- error$AddChild("...")
+
+SetNodeStyle(reportedMatch, style = "filled,rounded", shape = "box",
+             fontname = "helvetica", tooltip = GetDefaultTooltip)
+
+saveWidget(plot(reportedMatch), "img/fpp.html")
+webshot("img/fpp.html", "img/fpp.png", zoom = 5)
 ```
+
+\begin{figure}
+\begin{center}
+\includegraphics[width = 12cm]{img/fpp.png}
 \caption{Dependencies between variables in the false positive problem.}
+\end{center}
 \label{fig:fpp}
 \end{figure}
 
