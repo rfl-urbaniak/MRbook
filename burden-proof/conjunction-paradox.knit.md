@@ -21,13 +21,7 @@ indent: true
 
 
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-library(bnlearn)
-library(Rgraphviz)
-library(gRain)
-library(kableExtra)
-```
+
 
 
 \tableofcontents
@@ -232,10 +226,8 @@ Now, back to the independence assumptions in our take on the conjunction problem
 
 \todo{Please use this method of drawing DAGs, it's simple, uniform and requires less work.}
 \begin{figure}[h]
-```{r fig:conjunctionDAG,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "60%"}
-conjunctionDAG <- model2network("[a|A][b|B][AB|A:B][A][B]")
-graphviz.plot(conjunctionDAG)
-```
+
+\begin{center}\includegraphics[width=0.6\linewidth]{conjunction-paradox_files/figure-latex/fig:conjunctionDAG-1} \end{center}
 \caption{DAG of the conjunction set-up, with the usual independence assumptions built in.}
 \label{fig:conjunctionDAG}
 \end{figure}
@@ -248,39 +240,22 @@ The structure of the network is rather natural because each piece of evidence be
 
 
 \begin{table}
-```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%"}
-source("../scripts/CptCreate.R")
-source("../scripts/kableCPTs.R")
-conjunctionDAG <- model2network("[a|A][b|B][AB|A:B][A][B]")
-As <- runif(1,0,1)
-Bs <- runif(1,0,1)
 
-aifAs <-runif(1,0,1)
-aifnAs <- runif(1,0,1)
-bifBs <-runif(1,0,1)
-bifnBs <- runif(1,0,1)
-
-
-AProb <-prior.CPT("A","1","0",As)
-BProb <- prior.CPT("B","1","0",Bs)
-aProb <- single.CPT("a","A","1","0","1","0",aifAs,aifnAs)
-bProb <- single.CPT("b","B","1","0","1","0",bifBs,bifnBs)
-
-
-ABProb <- array(c(1, 0, 0, 1, 0, 1, 0,1), 
-                dim = c(2, 2, 2),
-                dimnames = list(AB = c("1","0"),
-                                B = c("1","0"), 
-                                A = c("1","0")))
-
-conjunctionCPT <- list(A = AProb, B = BProb, 
-                       a = aProb, b = bProb, AB = ABProb)
-
-
-conjunctionBN <- custom.fit(conjunctionDAG,conjunctionCPT)
-
-CPkable2("conjunctionBN","AB")
-```
+\begin{tabular}{lllr}
+\toprule
+\multicolumn{1}{c}{} & \multicolumn{1}{c}{A} & \multicolumn{1}{c}{B} & \multicolumn{1}{c}{} \\
+AB &  &  & Pr\\
+\midrule
+1 & 1 & 1 & 1\\
+0 & 1 & 1 & 0\\
+1 & 0 & 1 & 0\\
+0 & 0 & 1 & 1\\
+1 & 1 & 0 & 0\\
+0 & 1 & 0 & 1\\
+1 & 0 & 0 & 0\\
+0 & 0 & 0 & 1\\
+\bottomrule
+\end{tabular}
 \caption{Conditional probability table for the conjunction node.}
 \label{tab:CPTconjunction}
 \end{table}
@@ -322,10 +297,8 @@ To eliminate the assumption of independence between  the two claims, while holdi
 
 
 \begin{figure}[h]
-```{r fig:conjunctionDAG2,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "60%"}
-conjunctionDAG2 <- model2network("[a|A][b|B][AB|A:B][A][B|A]")
-graphviz.plot(conjunctionDAG2, layout = "dot")
-```
+
+\begin{center}\includegraphics[width=0.6\linewidth]{conjunction-paradox_files/figure-latex/fig:conjunctionDAG2-1} \end{center}
 \caption{DAG of the conjunction set-up, without independence between $A$ and $B$.}
 \label{fig:conjunctionDAG2}
 \end{figure}
@@ -565,47 +538,8 @@ than the individual support so long as $s_{A}$ and $s_{B}$ are greater than one,
 
 \todo{please use meaningful variable names, I revised s1 and s2 to sensitivity and specificity}
 \begin{figure}[h]
-```{r bfconjunction5,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "90%", warning = FALSE, message = FALSE}
-library(ggplot2)
-library(ggthemes)
 
-bf <- function (x, sensitivity, specificity){
-    (
-      sensitivity/
-        (sensitivity*x+(1-specificity)*(1-x))
-     )
-}
-
-
-bfn <- function(x, sensitivity, specificity, n){
-  bf(x, sensitivity, specificity)^n
-}
-
-
-x <-seq(0,1,by=0.001)
-ynull <- bf(x, 0.5, 0.5)
-yynull <- bfn(x, 0.5, 0.5, 2)
-y5null <- bfn(x, 0.5, 0.5, 5)
-y06055 <- bf(x, 0.6, 0.55)
-yy06055 <- bfn(x, 0.6, 0.55,2)
-y506055 <- bfn(x, 0.6, 0.55,5)
-y04045 <- bf(x, 0.4, 0.45)
-yy04045 <- bfn(x, 0.4, 0.45,2)
-y504045 <- bfn(x, 0.4, 0.45,5)
-
-
-
-ggplot() +
-  xlab("prior")+ ylab("Bayes factor")+theme_tufte()+
-  theme(legend.position = c(0.85, 0.8), legend.title = element_blank())+
-    geom_line(aes(x = x, y = yynull,color = "sens=0.5, spec=0.5", lty = "two"))+  
-    geom_line(aes(x = x, y = ynull,color = "sens=0.5, spec=0.5", lty = "one"))+  
-    geom_line(aes(x = x, y = y5null,color = "sens=0.5, spec=0.5", lty = "five"))+
-    geom_line(aes(x = x, y = yy06055,color = "sens=0.6, spec=0.55", lty = "two")) +
-    geom_line(aes(x = x, y = y06055,color = "sens=0.6, spec=0.55", lty = "one"))+  geom_line(aes(x = x, y = y506055,color = "sens=0.6, spec=0.55", lty = "five"))+
-  geom_line(aes(x = x, y = yy04045,color = "sens=0.4, spec=0.45", lty = "two")) +  geom_line(aes(x = x, y = y504045,color = "sens=0.4, spec=0.45", lty = "five"))+
-  geom_line(aes(x = x, y = y04045,color = "sens=0.4, spec=0.45", lty = "one")) 
-```
+\begin{center}\includegraphics[width=0.9\linewidth]{conjunction-paradox_files/figure-latex/bfconjunction5-1} \end{center}
 \caption{BF for varying number of items of evidence and test qualities, with the usual independence assumptions.}
 \label{fig:bfconjunction5}
 \end{figure}
@@ -774,35 +708,8 @@ In this simplified setup, the likelihood ratios can be easily plotted. As Figure
 
  
 \begin{figure}
-```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "90%"}
-library(ggplot2)
-library(ggthemes)
 
-combined <- function (x,k,t) {
-  (x^2)/
-(
-  ((1-k)*t*(1-x)*x + k*(1-t)*x*(1-x) + (1-k)*(1-t)*(1-x)*(1-x))
-  /
-    ((1-k)*t +k*(1-t)+(1-k)*(1-t))
-)
-}
-
-# combinedMarcello <- function(x,k,t){
-#   (x^2)/(k*(1-t)*(x)*(1-x)+(1-k)*t*x*(1-x)+(1-k)*(1-t)*(1-x)*(1-x))
-# }
-
-x <-seq(0,1,by=0.001)
-y0102 <- combined(x,0.1,0.2)
-y0608 <- combined(x,0.6,0.8)
-
-
-ggplot() +
-  stat_function(fun=function(x)(x/(1-x)), geom="line", aes(colour="LR(a)=LR(b)"))+
-   geom_line(aes(x = x, y = y0102,color = "joint LR for k = 0.1, t=0.2"))+ylim(c(0,5))+
-  xlab("x=sensitivity(a)=sensitivity(b)")+ ylab("LR")+theme_tufte()+
-  theme(legend.position = c(0.8, 0.2)) +
-  geom_line(aes(x = x, y = y0608,color = "joint LR for k = 0.6, t=0.8"))
-```
+\begin{center}\includegraphics[width=0.9\linewidth]{conjunction-paradox_files/figure-latex/unnamed-chunk-2-1} \end{center}
 
 \caption{Combined likelihood ratios exceeds individual Likelihood ratios as soon as sensitivity is above .5. Changes in the prior 
 probabilities $t$ and $k$ do not invalidate this result.}
@@ -1460,16 +1367,19 @@ This difficulty is best appreciated by running some numbers. Assume, for the sak
 
 
 
-```{r, echo=FALSE}
-0.5^(1/10)
+
+```
+## [1] 0.933033
 ```
 
-```{r, echo=FALSE}
-0.95^(1/10)
+
+```
+## [1] 0.9948838
 ```
 
-```{r, echo=FALSE}
-0.95^(10)
+
+```
+## [1] 0.5987369
 ```
 
 
@@ -1725,54 +1635,8 @@ $\pr{C_1 \wedge C_2 \wedge \dots \wedge C_k}$, contrasted with the posterior pro
 $\pr{C_1 \wedge C_2 \wedge \dots \wedge C_k \vert E_1 \wedge E_2 \wedge \dots \wedge E_k}$. Figure \ref{fig:post-indiv-joint-first} (top) compares one item of evidence supporting an individual claim and five items of evidence supporting a composite claim consisting of five claims. As is customary, the items of evidence and constituent claims are independent. In addition, for the sake of simplicity, the prior probabilities of the constituent claims are assumed to be the same. There is a significant difference in posterior probabilities, as expected, but there is a also a significant difference in prior probabilities. Since the composite claim starts out less likely than any individual claim, it is natural---other things being equal---that its posterior probability would be correspondingly lower. 
  
  \begin{figure}
-```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "90%"}
-library(ggplot2)
-library(ggthemes)
 
-
-post <- function (x, s1, s2){
-  (x)*
-    (
-      s1/
-        (s1*x+(1-s2)*(1-x))
-     )
-}
-
-
-postn <- function (x, s1, s2, n){
-  ((x)^n)*
-    ((
-      s1/
-        (s1*x+(1-s2)*(1-x))
-     )^n)
-    
-}
-
-x <-seq(0,1,by=0.001)
-y0908 <- post(x, 0.9, 0.8)
-y0909 <- post(x, 0.99, 0.99)
-yy0908 <- postn(x, 0.9, 0.8, 2)
-yy0909 <- postn(x, 0.99, 0.99, 2)
-yynull <- postn(x, 0.5, 0.5, 2)
-y50908 <- postn(x, 0.9, 0.8, 5)
-y50909 <- postn(x, 0.99, 0.99, 5)
-y5null <- postn(x, 0.5, 0.5, 5)
-
-
-ggplot() +
-  stat_function(fun=function(x)(x), geom="line", aes(colour="1, sens=0.5, spec=0.5"))+
-  #geom_line(aes(x = x, y = yynull,color = "2, sens=0.5, spec=0.5")) +
-  geom_line(aes(x = x, y = y0908,color = "1, sens=0.9, spec=0.8")) +
-  geom_line(aes(x = x, y = y0909,color = "1, sens=0.99, spec=0.99")) +
-  #geom_line(aes(x = x, y = yy0908,color = "2, sens=0.9, spec=0.8")) +
-  # geom_line(aes(x = x, y = yy0909,color = "2, sens=0.99, spec=0.99")) +
-  geom_line(aes(x = x, y = y50908,color = "5, sens=0.9, spec=0.8")) +
-  geom_line(aes(x = x, y = y50909,color = "5, sens=0.99, spec=0.99")) +
-  geom_line(aes(x = x, y = y5null, color = "5, sens=0.5, spec=0.5")) +
-        ylim(c(0,1))+
-  xlab("prior")+ ylab("posterior")+theme_tufte()+
-  theme(legend.position = c(0.9, 0.2), legend.title = element_blank())
-```
+\begin{center}\includegraphics[width=0.9\linewidth]{conjunction-paradox_files/figure-latex/unnamed-chunk-6-1} \end{center}
 \caption{The comparison here is betwen individual support and joint support. 
 The null line for joint support ($y=x*x$) is 
 much below the null line for individual support ($y=x$).}
@@ -1855,33 +1719,8 @@ below represents to what extent the evidence changes the probability of a select
 
 \begin{figure}
 
-```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "90%"}
-library(ggplot2)
-library(ggthemes)
 
-
-post <- function (x, s1, s2){
-  (x)*
-    (
-      s1/
-        (s1*x+(1-s2)*(1-x))
-     )
-}
-
-x <-seq(0,1,by=0.001)
-y0906 <- post(x, 0.9, 0.6)
-y0609 <- post(x, 0.6, 0.9)
-y0909 <- post(x, 0.999, 0.999)
-
-ggplot() +
-  stat_function(fun=function(x)(x), geom="line", aes(colour="null, sensitivity=specificity=0.5"))+
-  geom_line(aes(x = x, y = y0906,color = "sensitivity=0.9, specificity=0.6")) +
-  geom_line(aes(x = x, y = y0609,color = "sensitivity=0.6, specificity=0.9")) +
-  geom_line(aes(x = x, y = y0909,color = "sensitivity=0.999, specificity=0.999")) +
-        ylim(c(0,1))+
-  xlab("prior")+ ylab("posterior")+theme_tufte()+
-  theme(legend.position = c(0.8, 0.2))
-```
+\begin{center}\includegraphics[width=0.9\linewidth]{conjunction-paradox_files/figure-latex/unnamed-chunk-7-1} \end{center}
 
 \caption{The further away the posterior line from the base 
 line, the stronger the evidence irrespective 
@@ -1892,31 +1731,8 @@ of the prior probability of the hypothesis.}
 
 \begin{figure}
 
-```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "90%"}
-library(ggplot2)
-library(ggthemes)
 
-
-# function for plotting difference between prior and posterior
-
-diff <- function (x, s1, s2){
-  post(x, s1, s2) - x
-}
-
-x <-seq(0,1,by=0.001)
-y0906 <- diff(x, 0.9, 0.6)
-y0609 <- diff(x, 0.6, 0.9)
-y0909 <- diff(x, 0.999, 0.999)
-
-ggplot() +
-  # stat_function(fun=function(x)(x), geom="line", aes(colour="null, sensitivity=specificity=0.5"))+
-  geom_line(aes(x = x, y = y0906,color = "sensitivity=0.9, specificity=0.6")) +
-  geom_line(aes(x = x, y = y0609,color = "sensitivity=0.6, specificity=0.9")) +
-  geom_line(aes(x = x, y = y0909,color = "sensitivity=0.999, specificity=0.999")) +
-        ylim(c(0,1))+
-  xlab("prior")+ ylab("posterior")+theme_tufte()+
-  theme(legend.position = c(0.8, 0.8))
-```
+\begin{center}\includegraphics[width=0.9\linewidth]{conjunction-paradox_files/figure-latex/unnamed-chunk-8-1} \end{center}
 
 \caption{Difference between priors and posteriors as a measure of te strength of evidence.}
 \label{fig:strength-difference}
@@ -1942,120 +1758,13 @@ are probabilistically independent of one another).
 
 \begin{figure}
 
-```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "90%"}
-library(ggplot2)
-library(ggthemes)
 
-
-post <- function (x, s1, s2){
-  (x)*
-    (
-      s1/
-        (s1*x+(1-s2)*(1-x))
-     )
-}
-
-
-postn <- function (x, s1, s2, n){
-  ((x)^n)*
-    ((
-      s1/
-        (s1*x+(1-s2)*(1-x))
-     )^n)
-    
-}
-
-x <-seq(0,1,by=0.001)
-y0908 <- post(x, 0.9, 0.8)
-y0909 <- post(x, 0.99, 0.99)
-yy0908 <- postn(x, 0.9, 0.8, 2)
-yy0909 <- postn(x, 0.99, 0.99, 2)
-yynull <- postn(x, 0.5, 0.5, 2)
-y50908 <- postn(x, 0.9, 0.8, 5)
-y50909 <- postn(x, 0.99, 0.99, 5)
-y5null <- postn(x, 0.5, 0.5, 5)
-y100908 <- postn(x, 0.9, 0.8, 10)
-y100909 <- postn(x, 0.99, 0.99, 10)
-y10null <- postn(x, 0.5, 0.5, 10)
-
-
-ggplot() +
-  stat_function(fun=function(x)(x), geom="line", aes(colour="1, sens=0.5, spec=0.5"))+
-#geom_line(aes(x = x, y = yynull,color = "2, sens=0.5, spec=0.5")) +
-  geom_line(aes(x = x, y = y0908,color = "1, sens=0.9, spec=0.8")) +
-  geom_line(aes(x = x, y = y0909,color = "1, sens=0.99, spec=0.99")) +
-#geom_line(aes(x = x, y = yy0908,color = "2, sens=0.9, spec=0.8")) +
-# geom_line(aes(x = x, y = yy0909,color = "2, sens=0.99, spec=0.99")) +
-  geom_line(aes(x = x, y = y50908,color = "5, sens=0.9, spec=0.8")) +
-  geom_line(aes(x = x, y = y50909,color = "5, sens=0.99, spec=0.99")) +
-  geom_line(aes(x = x, y = y5null, color = "5, sens=0.5, spec=0.5")) +
-  geom_line(aes(x = x, y = y100908,color = "10, sens=0.9, spec=0.8")) +
-# geom_line(aes(x = x, y = y100909,color = "10, sens=0.99, spec=0.99")) +
-  geom_line(aes(x = x, y = y10null, color = "10, sens=0.5, spec=0.5")) +
-        ylim(c(0,1))+
-  xlab("prior")+ ylab("posterior")+theme_tufte()+
-  theme(legend.position = c(0.9, 0.2), legend.title = element_blank())
-```
+\begin{center}\includegraphics[width=0.9\linewidth]{conjunction-paradox_files/figure-latex/unnamed-chunk-9-1} \end{center}
 
 
 
-```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "90%"}
-library(ggplot2)
-library(ggthemes)
 
-
-post <- function (x, s1, s2){
-  (x)*
-    (
-      s1/
-        (s1*x+(1-s2)*(1-x))
-     )
-}
-
-
-post2 <- function (x, s1, s2){
-  (x)*
-    (
-      s1/
-        (s1*sqrt(x)+(1-s2)*(1-sqrt(x)))
-     )*
-    (
-      s1/
-        (s1*sqrt(x)+(1-s2)*(1-sqrt(x)))
-     )
-}
-
-
-
-postn <- function (x, s1, s2, n){
-  (x)*
-    (
-      s1/
-        (s1*x^(1/n)+(1-s2)*(1-x^(1/n)))
-     )^n
-}
-
-
-
-x <-seq(0,1,by=0.001)
-y0908 <- post(x, 0.9, 0.8)
-y0909 <- post(x, 0.99, 0.99)
-yy0908 <- post2(x, 0.9, 0.8)
-yy0909 <- post2(x, 0.99, 0.99)
-yynull <- post2(x, 0.5, 0.5)
-y40_0909 <- postn(x, 0.99, 0.99, 40)
-
-ggplot() +
-  stat_function(fun=function(x)(x), geom="line", aes(colour="1, null"))+
-  geom_line(aes(x = x, y = y0908,color = "1, sensitivity=0.8, specificity=0.7")) +
-  geom_line(aes(x = x, y = y0909,color = "1, sensitivity=0.99, specificity=0.99")) +
-  geom_line(aes(x = x, y = yy0908,color = "2, sensitivity=0.8, specificity=0.7")) +
-  geom_line(aes(x = x, y = yy0909,color = "2, sensitivity=0.99, specificity=0.99")) +
-  geom_line(aes(x = x, y = y40_0909,color = "40, sensitivity=0.99, specificity=0.99")) +
-        ylim(c(0,1))+
-  xlab("prior")+ ylab("posterior")+theme_tufte()+
-  theme(legend.position = c(0.8, 0.2))
-```
+\begin{center}\includegraphics[width=0.9\linewidth]{conjunction-paradox_files/figure-latex/unnamed-chunk-10-1} \end{center}
 
 \caption{The comparison is between individual support (marked by 1, for one individual 
 hypothesis) and joint support (marked by 2, for a two-claim composite claim). 
@@ -2070,74 +1779,409 @@ get closer especially for high posterior probability values.}
 
 
 
-```{r}
+
+```r
 integrate(postn, 0, 1, s1 =0.99 , s2 =0.99, n = 1)$val 
+```
+
+```
+## [1] 0.9628366
+```
+
+```r
 integrate(postn, 0, 1, s1 =0.99 , s2 =0.99, n = 2)$val 
+```
+
+```
+## [1] 0.9815782
+```
+
+```r
 integrate(postn, 0, 1, s1 =0.99 , s2 =0.99, n = 5)$val 
+```
+
+```
+## [1] 0.9876204
+```
+
+```r
 integrate(postn, 0, 1, s1 =0.99 , s2 =0.99, n = 10)$val
+```
+
+```
+## [1] 0.9889299
+```
+
+```r
 integrate(postn, 0, 1, s1 =0.99 , s2 =0.99, n = 20)$val
+```
 
+```
+## [1] 0.989491
+```
+
+```r
 integrate(postn, 0, 1, s1 =0.5 , s2 =0.5, n = 1)$val 
-integrate(postn, 0, 1, s1 =0.5 , s2 =0.5, n = 2)$val 
-integrate(postn, 0, 1, s1 =0.5 , s2 =0.5, n = 5)$val 
-integrate(postn, 0, 1, s1 =0.5 , s2 =0.5, n = 10)$val
-integrate(postn, 0, 1, s1 =0.5 , s2 =0.5, n = 20)$val 
+```
 
+```
+## [1] 0.5
+```
+
+```r
+integrate(postn, 0, 1, s1 =0.5 , s2 =0.5, n = 2)$val 
+```
+
+```
+## [1] 0.5
+```
+
+```r
+integrate(postn, 0, 1, s1 =0.5 , s2 =0.5, n = 5)$val 
+```
+
+```
+## [1] 0.5
+```
+
+```r
+integrate(postn, 0, 1, s1 =0.5 , s2 =0.5, n = 10)$val
+```
+
+```
+## [1] 0.5
+```
+
+```r
+integrate(postn, 0, 1, s1 =0.5 , s2 =0.5, n = 20)$val 
+```
+
+```
+## [1] 0.5
+```
+
+```r
 integrate(postn, 0, 1, s1 =0.99 , s2 =0.99, n = 1)$val - integrate(postn, 0, 1, s1 =0.5 , s2 =0.5, n = 1)$val 
+```
+
+```
+## [1] 0.4628366
+```
+
+```r
 integrate(postn, 0, 1, s1 =0.99 , s2 =0.99, n = 2)$val - integrate(postn, 0, 1, s1 =0.5 , s2 =0.5, n = 2)$val 
+```
+
+```
+## [1] 0.4815782
+```
+
+```r
 integrate(postn, 0, 1, s1 =0.99 , s2 =0.99, n = 5)$val - integrate(postn, 0, 1, s1 =0.5 , s2 =0.5, n = 5)$val 
+```
+
+```
+## [1] 0.4876204
+```
+
+```r
 integrate(postn, 0, 1, s1 =0.99 , s2 =0.99, n = 10)$val - integrate(postn, 0, 1, s1 =0.5 , s2 =0.5, n = 10)$val 
+```
+
+```
+## [1] 0.4889299
+```
+
+```r
 integrate(postn, 0, 1, s1 =0.99 , s2 =0.99, n = 20)$val - integrate(postn, 0, 1, s1 =0.5 , s2 =0.5, n = 20)$val 
+```
+
+```
+## [1] 0.489491
+```
+
+```r
 integrate(postn, 0, 1, s1 =0.99 , s2 =0.99, n = 25)$val - integrate(postn, 0, 1, s1 =0.5 , s2 =0.5, n = 25)$val 
+```
+
+```
+## [1] 0.4895968
+```
+
+```r
 integrate(postn, 0, 1, s1 =0.99 , s2 =0.99, n = 40)$val - integrate(postn, 0, 1, s1 =0.5 , s2 =0.5, n = 40)$val 
+```
 
-``` 
+```
+## [1] 0.4897516
+```
 
 
-```{r}
+
+```r
 integrate(postn, 0, 1, s1 =0.6 , s2 =0.7, n = 1)$val 
+```
+
+```
+## [1] 0.6137056
+```
+
+```r
 integrate(postn, 0, 1, s1 =0.6 , s2 =0.7, n = 2)$val 
+```
+
+```
+## [1] 0.6355324
+```
+
+```r
 integrate(postn, 0, 1, s1 =0.6 , s2 =0.7, n = 5)$val 
+```
+
+```
+## [1] 0.65284
+```
+
+```r
 integrate(postn, 0, 1, s1 =0.6 , s2 =0.7, n = 10)$val
+```
+
+```
+## [1] 0.6595075
+```
+
+```r
 integrate(postn, 0, 1, s1 =0.6 , s2 =0.7, n = 20)$val
+```
 
+```
+## [1] 0.663025
+```
+
+```r
 integrate(postn, 0, 1, s1 =0.5 , s2 =0.5, n = 1)$val 
-integrate(postn, 0, 1, s1 =0.5 , s2 =0.5, n = 2)$val 
-integrate(postn, 0, 1, s1 =0.5 , s2 =0.5, n = 5)$val 
-integrate(postn, 0, 1, s1 =0.5 , s2 =0.5, n = 10)$val
-integrate(postn, 0, 1, s1 =0.5 , s2 =0.5, n = 20)$val 
+```
 
+```
+## [1] 0.5
+```
+
+```r
+integrate(postn, 0, 1, s1 =0.5 , s2 =0.5, n = 2)$val 
+```
+
+```
+## [1] 0.5
+```
+
+```r
+integrate(postn, 0, 1, s1 =0.5 , s2 =0.5, n = 5)$val 
+```
+
+```
+## [1] 0.5
+```
+
+```r
+integrate(postn, 0, 1, s1 =0.5 , s2 =0.5, n = 10)$val
+```
+
+```
+## [1] 0.5
+```
+
+```r
+integrate(postn, 0, 1, s1 =0.5 , s2 =0.5, n = 20)$val 
+```
+
+```
+## [1] 0.5
+```
+
+```r
 integrate(postn, 0, 1, s1 =0.6 , s2 =0.7, n = 1)$val - integrate(postn, 0, 1, s1 =0.5 , s2 =0.5, n = 1)$val 
+```
+
+```
+## [1] 0.1137056
+```
+
+```r
 integrate(postn, 0, 1, s1 =0.6 , s2 =0.7, n = 2)$val - integrate(postn, 0, 1, s1 =0.5 , s2 =0.5, n = 2)$val 
+```
+
+```
+## [1] 0.1355324
+```
+
+```r
 integrate(postn, 0, 1, s1 =0.6 , s2 =0.7, n = 5)$val - integrate(postn, 0, 1, s1 =0.5 , s2 =0.5, n = 5)$val 
+```
+
+```
+## [1] 0.15284
+```
+
+```r
 integrate(postn, 0, 1, s1 =0.6 , s2 =0.7, n = 10)$val - integrate(postn, 0, 1, s1 =0.5 , s2 =0.5, n = 10)$val 
+```
+
+```
+## [1] 0.1595075
+```
+
+```r
 integrate(postn, 0, 1, s1 =0.6 , s2 =0.7, n = 20)$val - integrate(postn, 0, 1, s1 =0.5 , s2 =0.5, n = 20)$val 
-``` 
+```
 
-```{r}
+```
+## [1] 0.163025
+```
+
+
+```r
 integrate(postn, 0, 1, s1 =0.9 , s2 =0.8, n = 1)$val 
+```
+
+```
+## [1] 0.7331961
+```
+
+```r
 integrate(postn, 0, 1, s1 =0.9 , s2 =0.8, n = 2)$val 
+```
+
+```
+## [1] 0.7717311
+```
+
+```r
 integrate(postn, 0, 1, s1 =0.9 , s2 =0.8, n = 5)$val 
+```
+
+```
+## [1] 0.7990992
+```
+
+```r
 integrate(postn, 0, 1, s1 =0.9 , s2 =0.8, n = 10)$val
+```
+
+```
+## [1] 0.8086466
+```
+
+```r
 integrate(postn, 0, 1, s1 =0.9 , s2 =0.8, n = 20)$val
+```
 
+```
+## [1] 0.8134273
+```
+
+```r
 integrate(postn, 0, 1, s1 =0.5 , s2 =0.5, n = 1)$val 
-integrate(postn, 0, 1, s1 =0.5 , s2 =0.5, n = 2)$val 
-integrate(postn, 0, 1, s1 =0.5 , s2 =0.5, n = 5)$val 
-integrate(postn, 0, 1, s1 =0.5 , s2 =0.5, n = 10)$val
-integrate(postn, 0, 1, s1 =0.5 , s2 =0.5, n = 20)$val 
+```
 
+```
+## [1] 0.5
+```
+
+```r
+integrate(postn, 0, 1, s1 =0.5 , s2 =0.5, n = 2)$val 
+```
+
+```
+## [1] 0.5
+```
+
+```r
+integrate(postn, 0, 1, s1 =0.5 , s2 =0.5, n = 5)$val 
+```
+
+```
+## [1] 0.5
+```
+
+```r
+integrate(postn, 0, 1, s1 =0.5 , s2 =0.5, n = 10)$val
+```
+
+```
+## [1] 0.5
+```
+
+```r
+integrate(postn, 0, 1, s1 =0.5 , s2 =0.5, n = 20)$val 
+```
+
+```
+## [1] 0.5
+```
+
+```r
 integrate(postn, 0, 1, s1 =0.9 , s2 =0.8, n = 1)$val - integrate(postn, 0, 1, s1 =0.5 , s2 =0.5, n = 1)$val 
+```
+
+```
+## [1] 0.2331961
+```
+
+```r
 integrate(postn, 0, 1, s1 =0.9 , s2 =0.8, n = 2)$val - integrate(postn, 0, 1, s1 =0.5 , s2 =0.5, n = 2)$val 
+```
+
+```
+## [1] 0.2717311
+```
+
+```r
 integrate(postn, 0, 1, s1 =0.9 , s2 =0.8, n = 5)$val - integrate(postn, 0, 1, s1 =0.5 , s2 =0.5, n = 5)$val 
+```
+
+```
+## [1] 0.2990992
+```
+
+```r
 integrate(postn, 0, 1, s1 =0.9 , s2 =0.8, n = 10)$val - integrate(postn, 0, 1, s1 =0.5 , s2 =0.5, n = 10)$val 
+```
+
+```
+## [1] 0.3086466
+```
+
+```r
 integrate(postn, 0, 1, s1 =0.9 , s2 =0.8, n = 20)$val - integrate(postn, 0, 1, s1 =0.5 , s2 =0.5, n = 20)$val 
-``` 
+```
+
+```
+## [1] 0.3134273
+```
  
-```{r} 
+
+```r
 integrate(post, 0, 1, s1 =0.99 , s2 =0.99)$val 
+```
+
+```
+## [1] 0.9628366
+```
+
+```r
 integrate(postn, 0, 1, s1 =0.99 , s2 =0.99 , n = 2)$val
+```
+
+```
+## [1] 0.9815782
+```
+
+```r
 integrate(postn, 0, 1, s1 =0.99 , s2 =0.99 , n = 5)$val
+```
+
+```
+## [1] 0.9876204
 ```
 
 
@@ -2145,43 +2189,8 @@ integrate(postn, 0, 1, s1 =0.99 , s2 =0.99 , n = 5)$val
 
 \begin{figure}
 
-```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "90%"}
-library(ggplot2)
-library(ggthemes)
 
-
-diff <- function (x, s1, s2, n){
-  postn(x, s2, s2, n) - x^n  }
-
-x <-seq(0,1,by=0.001)
-y0908 <- diff(x, 0.9, 0.8, 1)
-y0909 <- diff(x, 0.99, 0.99, 1)
-yy0908 <- diff(x, 0.9, 0.8, 2)
-yy0909 <- diff(x, 0.99, 0.99, 2)
-yynull <- diff(x, 0.5, 0.5, 2)
-y50908 <- diff(x, 0.9, 0.8, 5)
-y50909 <- diff(x, 0.99, 0.99, 5)
-y5null <- diff(x, 0.5, 0.5, 5)
-y100908 <- diff(x, 0.9, 0.8, 10)
-y100909 <- diff(x, 0.99, 0.99, 10)
-
-
-ggplot() +
-#stat_function(fun=function(x)(x), geom="line", aes(colour="1, sens=0.5, spec=0.5"))+
-#geom_line(aes(x = x, y = yynull,color = "2, sens=0.5, spec=0.5")) +
-  geom_line(aes(x = x, y = y0908,color = "1, sens=0.9, spec=0.8")) +
-# geom_line(aes(x = x, y = y0909,color = "1, sens=0.99, spec=0.99")) +
-  geom_line(aes(x = x, y = yy0908,color = "2, sens=0.9, spec=0.8")) +
-# geom_line(aes(x = x, y = yy0909,color = "2, sens=0.99, spec=0.99")) +
-  geom_line(aes(x = x, y = y50908,color = "5, sens=0.9, spec=0.8")) +
-# geom_line(aes(x = x, y = y50909,color = "5, sens=0.99, spec=0.99")) +
-#  geom_line(aes(x = x, y = y5null, color = "5, sens=0.5, spec=0.5")) +
-  geom_line(aes(x = x, y = y100908,color = "10, sens=0.9, spec=0.8")) +
-# geom_line(aes(x = x, y = y100909,color = "10, sens=0.99, spec=0.99")) +  
-        ylim(c(0,1))+
-  xlab("prior")+ ylab("difference posterior - prior")+theme_tufte()+
-  theme(legend.position = c(0.9, 0.8), legend.title = element_blank())
-```
+\begin{center}\includegraphics[width=0.9\linewidth]{conjunction-paradox_files/figure-latex/unnamed-chunk-15-1} \end{center}
 
 
 \end{figure}
@@ -2192,7 +2201,8 @@ ggplot() +
  integrate(diff, 0, 1, s1 =0.99 , s2 =0.99 , n = 5)
 -->
 
-```{r}
+
+```r
 prior_a <- 0.6
 prior_b <- 0.4
 sen_a <- 0.85  # Pr(a given A)
@@ -2211,13 +2221,53 @@ post_b <- bf_b*prior_b
 post_ab <- bf_ab*prior_ab
 
 prior_a
+```
+
+```
+## [1] 0.6
+```
+
+```r
 prior_b
+```
+
+```
+## [1] 0.4
+```
+
+```r
 prior_ab
+```
 
+```
+## [1] 0.24
+```
+
+```r
 post_a
-post_b
-post_ab
+```
 
+```
+## [1] 0.8360656
+```
+
+```r
+post_b
+```
+
+```
+## [1] 0.6511628
+```
+
+```r
+post_ab
+```
+
+```
+## [1] 0.5444148
+```
+
+```r
 prior_a <- 0.24
 prior_b <- 0.24
 
@@ -2228,7 +2278,18 @@ bf_ab <- bf_a*bf_b
 post_a <- bf_a*prior_a
 post_b <- bf_b*prior_b
 post_a
+```
+
+```
+## [1] 0.5177665
+```
+
+```r
 post_b
+```
+
+```
+## [1] 0.4692737
 ```
 
 
@@ -2248,85 +2309,39 @@ The same equalization can be done with the Bayes factor, arriving at similar res
 \begin{figure}
 
 
-```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "90%"}
-library(ggplot2)
-library(ggthemes)
 
-
-bf <- function (x, s1, s2){
-  
-    (
-      s1/
-        (s1*x+(1-s2)*(1-x))
-     )
-}
-
-
-bfn <- function (x, s1, s2, n){
-
-    (
-      s1/
-        (s1*x+(1-s2)*(1-x))
-     )^n
-}
-
-x <-seq(0,1,by=0.001)
-y0908 <- bf(x, 0.9, 0.8)
-y0909 <- bf(x, 0.99, 0.99)
-y50908 <- bfn(x, 0.9, 0.8, 5)
-y50909 <- bfn(x, 0.99, 0.99, 5)
-y5null <- bfn(x, 0.5, 0.5, 5)
-
-ggplot() +
-  stat_function(fun=function(x)(x), geom="line", aes(colour="1, null"))+
-  geom_line(aes(x = x, y = y0908,color = "1, sens=0.9, spec=0.8")) +
-  geom_line(aes(x = x, y = y0909,color = "1, sens=0.99, spec=0.99")) +
-  geom_line(aes(x = x, y = y50908,color = "5, sens=0.9, spec=0.8")) +
-  geom_line(aes(x = x, y = y50909,color = "5, sens=0.99, spec=0.99")) +
-        ylim(c(0,10))+
-  xlab("prior")+ ylab("Bayes Factor")+theme_tufte()+
-  theme(legend.position = c(0.8, 0.7), legend.title = element_blank())
+```
+## Warning: Removed 91 row(s) containing missing values (geom_path).
 ```
 
-```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "90%"}
-library(ggplot2)
-library(ggthemes)
-
-
-bf <- function (x, s1, s2){
-  
-    (
-      s1/
-        (s1*x+(1-s2)*(1-x))
-     )
-}
-
-
-bfnEq <- function (x, s1, s2, n){
-
-    (
-      s1/
-        (s1*x^(1/n)+(1-s2)*(1-x^(1/n)))
-     )^n
-}
-
-x <-seq(0,1,by=0.001)
-y0908 <- bf(x, 0.9, 0.8)
-y0909 <- bf(x, 0.99, 0.99)
-y50908 <- bfnEq(x, 0.9, 0.8, 5)
-y50909 <- bfnEq(x, 0.99, 0.99, 5)
-y5null <- bfnEq(x, 0.5, 0.5, 5)
-
-ggplot() +
-  stat_function(fun=function(x)(x), geom="line", aes(colour="1, null"))+
-  geom_line(aes(x = x, y = y0908,color = "1, sens=0.9, spec=0.8")) +
-  geom_line(aes(x = x, y = y0909,color = "1, sens=0.99, spec=0.99")) +
-  geom_line(aes(x = x, y = y50908,color = "5, sens=0.9, spec=0.8")) +
-  geom_line(aes(x = x, y = y50909,color = "5, sens=0.99, spec=0.99")) +
-        ylim(c(0,10))+
-  xlab("prior")+ ylab("Bayes Factor Prior Equalized")+theme_tufte()+
-  theme(legend.position = c(0.8, 0.7), legend.title = element_blank())
 ```
+## Warning: Removed 526 row(s) containing missing values (geom_path).
+```
+
+```
+## Warning: Removed 628 row(s) containing missing values (geom_path).
+```
+
+
+
+\begin{center}\includegraphics[width=0.9\linewidth]{conjunction-paradox_files/figure-latex/unnamed-chunk-17-1} \end{center}
+
+
+```
+## Warning: Removed 91 row(s) containing missing values (geom_path).
+```
+
+```
+## Warning: Removed 41 row(s) containing missing values (geom_path).
+```
+
+```
+## Warning: Removed 98 row(s) containing missing values (geom_path).
+```
+
+
+
+\begin{center}\includegraphics[width=0.9\linewidth]{conjunction-paradox_files/figure-latex/unnamed-chunk-18-1} \end{center}
 
 \label{fig:bf-indiv-joint}
 \end{figure}

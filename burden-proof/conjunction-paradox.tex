@@ -1,15 +1,19 @@
 % Options for packages loaded elsewhere
 \PassOptionsToPackage{unicode}{hyperref}
 \PassOptionsToPackage{hyphens}{url}
-\PassOptionsToPackage{dvipsnames,svgnames*,x11names*}{xcolor}
+\PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
 %
 \documentclass[
   10pt,
   dvipsnames,enabledeprecatedfontcommands]{scrartcl}
+\title{The difficulty with Conjunction}
+\author{Marcello Di Bello and Rafal Urbaniak}
+\date{}
+
 \usepackage{amsmath,amssymb}
 \usepackage{lmodern}
-\usepackage{ifxetex,ifluatex}
-\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+\usepackage{iftex}
+\ifPDFTeX
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
   \usepackage{textcomp} % provide euro and other symbols
@@ -31,10 +35,10 @@
   pdftitle={The difficulty with Conjunction},
   pdfauthor={Marcello Di Bello and Rafal Urbaniak},
   colorlinks=true,
-  linkcolor=Maroon,
-  filecolor=Maroon,
-  citecolor=Blue,
-  urlcolor=blue,
+  linkcolor={Maroon},
+  filecolor={Maroon},
+  citecolor={Blue},
+  urlcolor={blue},
   pdfcreator={LaTeX via pandoc}}
 \urlstyle{same} % disable monospaced font for URLs
 \usepackage{color}
@@ -94,6 +98,29 @@
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
 \setcounter{secnumdepth}{5}
+\newlength{\cslhangindent}
+\setlength{\cslhangindent}{1.5em}
+\newlength{\csllabelwidth}
+\setlength{\csllabelwidth}{3em}
+\newlength{\cslentryspacingunit} % times entry-spacing
+\setlength{\cslentryspacingunit}{\parskip}
+\newenvironment{CSLReferences}[2] % #1 hanging-ident, #2 entry spacing
+ {% don't indent paragraphs
+  \setlength{\parindent}{0pt}
+  % turn on hanging indent if param 1 is 1
+  \ifodd #1
+  \let\oldpar\par
+  \def\par{\hangindent=\cslhangindent\oldpar}
+  \fi
+  % set entry spacing
+  \setlength{\parskip}{#2\cslentryspacingunit}
+ }%
+ {}
+\usepackage{calc}
+\newcommand{\CSLBlock}[1]{#1\hfill\break}
+\newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{#1}}
+\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{#1}\break}
+\newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
 %\documentclass{article}
 
 % %packages
@@ -277,33 +304,9 @@
 \usepackage[normalem]{ulem}
 \usepackage{makecell}
 \usepackage{xcolor}
-\ifluatex
+\ifLuaTeX
   \usepackage{selnolig}  % disable illegal ligatures
 \fi
-\newlength{\cslhangindent}
-\setlength{\cslhangindent}{1.5em}
-\newlength{\csllabelwidth}
-\setlength{\csllabelwidth}{3em}
-\newenvironment{CSLReferences}[2] % #1 hanging-ident, #2 entry spacing
- {% don't indent paragraphs
-  \setlength{\parindent}{0pt}
-  % turn on hanging indent if param 1 is 1
-  \ifodd #1 \everypar{\setlength{\hangindent}{\cslhangindent}}\ignorespaces\fi
-  % set entry spacing
-  \ifnum #2 > 0
-  \setlength{\parskip}{#2\baselineskip}
-  \fi
- }%
- {}
-\usepackage{calc}
-\newcommand{\CSLBlock}[1]{#1\hfill\break}
-\newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{#1}}
-\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{#1}\break}
-\newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
-
-\title{The difficulty with Conjunction}
-\author{Marcello Di Bello and Rafal Urbaniak}
-\date{}
 
 \begin{document}
 \maketitle
@@ -1767,7 +1770,8 @@ piecemeal manner implicitly requires, sooner or later, to weave the
 different elements together into a unified whole. Our argument consists
 of two parts. First, the guilt or civil liability of a defendant on
 trial cannot be equated with a generic claim of guilt or civil liability
-as defined in the law. Call this the specificity argument. Second, it is
+as defined in the law. Call this the specificity
+argument.\mar{R: can you very briefly indicate why?} Second, it is
 erroneous to think of someone's guilt or civil liability as the mere
 conjunction of separate claims. The separate claims must be unified, not
 just added up in a conjunction. Call this the unity argument.
@@ -1790,7 +1794,7 @@ convincing standard, the threshold is assumed to be more stringent than
 the preponderance standard, but not as stringent as proof beyond a
 reasonable doubt.
 
-While seemingly innocuous, this formulation conflate two things. The
+While seemingly innocuous, this formulation conflates two things. The
 wrongdoing as defined in the applicable law is one thing. The way in
 which the wrongdoing is established in court is quite another thing. The
 wrongdoing is defined in a generic manner and is applicable across a
@@ -1801,6 +1805,7 @@ defendant assaulted the victim in some way or another, but rather, that
 the defendant behaved in such and such a manner in this time and place,
 and that the specific behavior in question fulfills the legal definition
 of assault.
+\mar{R: can you say a bit more about why the specific narration is needed? Or do you do this later on?}
 
 If this is correct, the probabilistic interpretation of proof standard
 should be revised. The generic claim that the defendant is guilty or
@@ -2084,21 +2089,22 @@ being equal, the conjunction is more probable on the evidence than the
 narrative, and each conjunct even more probable. But this does not mean
 that the conjunction is established by a higher standard of proof than
 the narrative. As we argued in the chapter on naked statistical evidence
-\textbf{REFERENCE TO EARLIER CHAPTERS}, a highly probable narrative that
-nevertheless lacks the desired degree of specificity will fail to meet
-the standard of proof, even though a more specific narrative that is
-otherwise less probable might well meet the standard. On this account,
-the standard of proof consists of two criteria: 1. the posterior
-probability of the proposed narrative (or theory, story, explanation)
-given the evidence presented at trial; and 2. the degree of specificity,
-coherence and unity of the narrative or explanation.
+\textbf{REFERENCE TO EARLIER CHAPTERS},\mar{R: remember to add your paper to the folder.}
+a highly probable narrative that nevertheless lacks the desired degree
+of specificity will fail to meet the standard of proof, even though a
+more specific narrative that is otherwise less probable might well meet
+the standard. On this account, the standard of proof consists of two
+criteria: 1. the posterior probability of the proposed narrative (or
+theory, story, explanation) given the evidence presented at trial; and
+2. the degree of specificity, coherence and unity of the narrative or
+explanation.
 
 Are we giving up on legal probabilism? We are giving up on
 \emph{traditional} legal probabilism. Even though ideas such as
 specificity, coherence and unity cannot be captured by the posterior
 probability alone, they can be formalized as properties of Bayesian
 networks.
-\textbf{NEED BRIEF DISCUSSION OF HOW THIS WORKS IN GENEREAL AND REFERENCES}
+\textbf{NEED BRIEF DISCUSSION OF HOW THIS WORKS IN GENEREAL AND REFERENCES}\raf{R: fill in with a short description.}
 Further, this analysis of the standard of proof -- which combines two
 criteria, posterior probability and specificity -- can be evaluated
 using concepts from probability theory that are not posterior
@@ -2112,17 +2118,18 @@ long run? The answer is not obvious. But the question can be made
 precise in the language of probability. The question concerns the
 diagnostic properties of the two trial systems, specifically their rate
 of false positives and false negatives. We examine this question in a
-later chapter. \textbf{REFERENCE TO LATER CHAPTERS} To anticipate, we
-argue that more specific claims are liable to more extensive
-\emph{direct} adversarial scrutiny than generic claims. The more
-specific someone's claim, the more liable to be attacked. At the same
-time, if a specific claim resists adversarial scrutiny, it becomes more
-firmly established than a less specific claim that survived scrutiny by
-evading the questions. So specificity plays an accuracy-conducive role
-even though more specific claims are, other things being equal, less
-probable than more generic claims.\footnote{CITE POPPER HERE} That is
-why specificity should be an important ingredient in any theory of the
-standard of proof.
+later chapter.
+\raf{R: talk a bit about accuracy-wise consideratios even prior to scrutiny.}
+\textbf{REFERENCE TO LATER CHAPTERS} To anticipate, we argue that more
+specific claims are liable to more extensive \emph{direct} adversarial
+scrutiny than generic claims. The more specific someone's claim, the
+more liable to be attacked. At the same time, if a specific claim
+resists adversarial scrutiny, it becomes more firmly established than a
+less specific claim that survived scrutiny by evading the questions. So
+specificity plays an accuracy-conducive role even though more specific
+claims are, other things being equal, less probable than more generic
+claims.\footnote{CITE POPPER HERE} That is why specificity should be an
+important ingredient in any theory of the standard of proof.
 
 Another ingredient worth adding to posterior probability and specificity
 is the completeness of the evidence presented at trial. Could the
@@ -2189,7 +2196,8 @@ narrative \(N\), each individual claim has a probability of one and thus
 their conjunction also has a probability of one. The narrative, however,
 has a probability short of one, up to whatever value is required to meet
 the governing standard of proof. This is the way we suggest that we make
-sense of the conjunction principle.
+sense of the conjunction
+principle.\mar{R: and the trivialization is unsuprising and desirable given that no lawyer every was concerned with the reliability of conjunction elimination or introduction.}
 
 \hypertarget{notes-on-the-argument}{%
 \subsection{Notes on the argument}\label{notes-on-the-argument}}
@@ -4515,66 +4523,66 @@ scope of this paper.
 
 \hypertarget{refs}{}
 \begin{CSLReferences}{1}{0}
-\leavevmode\hypertarget{ref-Allen1986A-Reconceptuali}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-Allen1986A-Reconceptuali}{}}%
 Allen, R. J. (1986). A reconceptualization of civil trials. \emph{Boston
 University Law Review}, \emph{66}, 401--437.
 
-\leavevmode\hypertarget{ref-allen2013}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-allen2013}{}}%
 Allen, R. J., \& Stein, A. (2013). Evidence, probability and the burden
 of proof. \emph{Arizona Law Journal}, \emph{55}, 557--602.
 
-\leavevmode\hypertarget{ref-AllenPardo2019relative}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-AllenPardo2019relative}{}}%
 Allen, R., \& Pardo, M. (2019). Relative plausibility and its critics.
 \emph{The International Journal of Evidence {\&} Proof}, \emph{23}(1-2),
 5--59. \url{https://doi.org/10.1177/1365712718813781}
 
-\leavevmode\hypertarget{ref-cheng2012reconceptualizing}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-cheng2012reconceptualizing}{}}%
 Cheng, E. (2012). Reconceptualizing the burden of proof. \emph{Yale LJ},
 \emph{122}, 1254.
 
-\leavevmode\hypertarget{ref-Cohen1977The-probable-an}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-Cohen1977The-probable-an}{}}%
 Cohen, J. L. (1977). \emph{The probable and the provable}. Oxford
 University Press. \url{https://doi.org/10.2307/2219193}
 
-\leavevmode\hypertarget{ref-cohen1988difficulty}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-cohen1988difficulty}{}}%
 Cohen, L. J. (1988). The difficulty about conjunction in forensic proof.
 \emph{The Statistician}, \emph{37}(4/5), 415.
 \url{https://doi.org/10.2307/2348767}
 
-\leavevmode\hypertarget{ref-dawid1987difficulty}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-dawid1987difficulty}{}}%
 Dawid, A. P. (1987). The difficulty about conjunction. \emph{The
 Statistician}, 91--97.
 
-\leavevmode\hypertarget{ref-DiBello2019plausibility}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-DiBello2019plausibility}{}}%
 Di Bello, M. (2019). Probability and plausibility in juridical proof.
 \emph{International Journal of Evidence and Proof}.
 
-\leavevmode\hypertarget{ref-haack2011legal}{}%
-Haack, S. (2014). Legal probabilism: An epistemological dissent. In
-\emph{{Haack2014-HAAEMS}} (pp. 47--77).
+\leavevmode\vadjust pre{\hypertarget{ref-haack2011legal}{}}%
+Haack, S. (2014). Legal probabilism: An epistemological dissent. In (pp.
+47--77).
 
-\leavevmode\hypertarget{ref-kaplow2014likelihood}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-kaplow2014likelihood}{}}%
 Kaplow, L. (2014). Likelihood ratio tests and legal decision rules.
 \emph{American Law and Economics Review}, \emph{16}(1), 1--39.
 
-\leavevmode\hypertarget{ref-Kowalewska2021conjunction}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-Kowalewska2021conjunction}{}}%
 Kowalewska, A. (2021). Reasoning without the conjunction closure.
 \emph{Episteme}, 1--14. \url{https://doi.org/10.1017/epi.2020.53}
 
-\leavevmode\hypertarget{ref-Makinson1965-MAKTPO-2}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-Makinson1965-MAKTPO-2}{}}%
 Makinson, D. C. (1965). The paradox of the preface. \emph{Analysis},
 \emph{25}(6), 205--207.
 
-\leavevmode\hypertarget{ref-schwartz2017ConjunctionProblemLogic}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-schwartz2017ConjunctionProblemLogic}{}}%
 Schwartz, D. S., \& Sober, E. R. (2017). The {Conjunction Problem} and
 the {Logic} of {Jury Findings}. \emph{William \& Mary Law Review},
 \emph{59}(2), 619--692.
 
-\leavevmode\hypertarget{ref-Stein05}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-Stein05}{}}%
 Stein, A. (2005). \emph{Foundations of evidence law}. Oxford University
 Press.
 
-\leavevmode\hypertarget{ref-urbaniak2018narration}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-urbaniak2018narration}{}}%
 Urbaniak, R. (2018). Narration in judiciary fact-finding: A
 probabilistic explication. \emph{Artificial Intelligence and Law},
 1--32. \url{https://doi.org/10.1007/s10506-018-9219-z}
