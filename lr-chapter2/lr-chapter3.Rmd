@@ -3,31 +3,44 @@ title: "Likelihood ratio and evidence strength"
 author: "Marcello Di Bello and Rafal Urbaniak"
 output:
   pdf_document:
-    number_sections: true
-    df_print: kable 
-    keep_tex: true
-    toc: true
+    number_sections: yes
+    df_print: kable
+    keep_tex: yes
+    toc: yes
     includes:
-      in_header:
-        - Rafal_latex7.sty
+      in_header: Rafal_latex7.sty
+  html_document:
+    toc: yes
+    df_print: paged
 classoption: dvipsnames,enabledeprecatedfontcommands
 fontsize: 10pt
 documentclass: scrartcl
 urlcolor: blue
-bibliography: [../references/referencesMRbook.bib]
+bibliography: ../references/referencesMRbook.bib
 csl: apa-5th-edition.csl
-indent: true
+indent: yes
 ---
 
 
 
 
 ```{r setup, include=FALSE}
-library(ggplot2)
 library(ggthemes)
-library(bnlearn)
-library(tidyverse)
+library(ggplot2)
+library(gridExtra)
+library(knitr)
 library(kableExtra)
+library(gRain)
+library(reshape2)
+library(plyr)
+library(rje)
+library(bnlearn)
+library(utils)
+library(latex2exp)
+library(useful)
+library(tidyverse)
+library(stringr)
+library(plot3D)
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
@@ -1176,23 +1189,22 @@ Legal probabilists can also offer a more principled response to \emph{Small Town
 
 
 \begin{figure}
-\hspace{2cm}\scalebox{0.8}{\begin{subfigure}[!ht]{0.4\textwidth}
-    ```{r STMdag,echo=FALSE,eval=TRUE,fig.align = "center",cache=FALSE,  fig.show = "hold", out.width = "100%", dpi = 300}
-  source("utils//STMDag.R")
+\hspace{2cm}\scalebox{0.8}{\begin{subfigure}[!ht]{0.5\textwidth}
+    ```{r STMdag,echo=FALSE,eval=TRUE,fig.align = "center", cache=FALSE,  fig.show = "hold", out.width = "100%", dpi = 300}
+  source("utils//STMDag.R")  
   graphviz.plot(STMdag)
     ```
   \end{subfigure}} \hfill
-\hspace{-3cm}\begin{subfigure}[!ht]{0.7\textwidth}
-```{r Cpt,echo=FALSE,eval=TRUE,fig.align = "center",cache=FALSE, fig.show = "hold", out.width = "70%", dpi = 300}
-cat("halo")
+\hspace{-3cm}\begin{subfigure}[!ht]{0.6\textwidth}
+```{r Cpt,echo=FALSE,eval=TRUE,fig.align = "center", cache=FALSE, fig.show = "hold", out.width = "70%", dpi = 300}
 source("utils//CptLikelihood.R")
-CPkable0("STMbn", "HD")
+CPkable0("STMbn", "HD")   
 CPkable0("STMbn", "HP")
 CPkable2("STMbn", "E")
 ```
 \end{subfigure}
-\caption{Bayesian network for the \textsf{BGP} scenario.}
-\label{fig:BGP}
+\caption{Bayesian network and \textsf{Cpt} tables}
+\label{fig:Cpt}
 \end{figure}
 
 

@@ -29,7 +29,7 @@ doubleCPT <- function(eNode, h1Node, h2Node, eState1 = "1" , eState2 = "0", h1St
 Eprob <- doubleCPT("E", "HD", "HP",  probEifH1S1H2S1 = 0, probEifH1S1H2S2 =.7, probEifH1S2H2S1 =.7 , probEifH1S2H2S2 = .1)
 
 
-# Conditional probability 
+# CPkable0
 CPkable0 <- function(bn,node){
   ref <-  paste(bn,'$',node,'[[4]]', sep="")
   
@@ -39,9 +39,23 @@ CPkable0 <- function(bn,node){
                             linesep = "") #%>%   kable_styling(latex_options=c("striped"))
 }
 
+# CPkable2
+CPkable2 <- function(bn, node){
+  ref <-  paste(bn,'$',node,'[[4]]', sep="")
+  parents <- paste(bn,'$',node, '$', 'parents', sep="")
+  parents <- eval(parse(text =  parents))
+  
+  table <- eval(parse(text =  ref)) %>% kable(format = "latex",booktabs=T,
+                                              col.names = c(node, "", "", "Pr"), linesep = "") #%>%   kable_styling(latex_options=c("striped"))
+  eval(parse(text = paste('add_header_above(table, c(\"\",', '\"', parents[1], '\" =1, \"', parents[2], '\"=1,', '\"\"),line = FALSE)', sep="")))
+}
+
+STMpr <- list(HD = HDprob, HP = HPprob, E = Eprob)
+
+STMbn <- custom.fit(STMdag, STMpr)
+
 CPkable0("STMbn", "HD")
 CPkable0("STMbn", "HP")
 CPkable2("STMbn", "E")
-
 
 
