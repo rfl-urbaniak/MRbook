@@ -3,28 +3,44 @@ title: "Likelihood ratio and evidence strength"
 author: "Marcello Di Bello and Rafal Urbaniak"
 output:
   pdf_document:
-    number_sections: true
-    df_print: kable 
-    keep_tex: true
-    toc: true
+    number_sections: yes
+    df_print: kable
+    keep_tex: yes
+    toc: yes
     includes:
-      in_header:
-        - Rafal_latex7.sty
+      in_header: Rafal_latex7.sty
+  html_document:
+    toc: yes
+    df_print: paged
 classoption: dvipsnames,enabledeprecatedfontcommands
 fontsize: 10pt
 documentclass: scrartcl
 urlcolor: blue
-bibliography: [../references/referencesMRbook.bib]
+bibliography: ../references/referencesMRbook.bib
 csl: apa-5th-edition.csl
-indent: true
+indent: yes
 ---
 
 
 
 
 ```{r setup, include=FALSE}
-library(ggplot2)
 library(ggthemes)
+library(ggplot2)
+library(gridExtra)
+library(knitr)
+library(kableExtra)
+library(gRain)
+library(reshape2)
+library(plyr)
+library(rje)
+library(bnlearn)
+library(utils)
+library(latex2exp)
+library(useful)
+library(tidyverse)
+library(stringr)
+library(plot3D)
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
@@ -1172,15 +1188,36 @@ But if the range of  hypotheses $H$ and $H'$ to compare in the likelihood ratio 
 Legal probabilists can also offer a more principled response to \emph{Small Town Murder} and related problems based on Bayesian networks. Let $H_p$ be the prosecutor's hypothesis that the defendant committed the murder, and $H_d$ the defense's hypothesis  that the defendant was visiting his mother. Let $E$ be the fact that the defendant was seen driving to the town prior to the murder. Further, suppose the prior probabilities of $H_d$ and $H_p$ are $.5$, and the conditional probability of $E$ on each of those hypotheses is $.7$ (nothing of what will be said depends on this particular choice of values). Crucially, while indeed the evidence supports both hypotheses, this example is based on a pair of hypotheses that are neither mutually exclusive nor exhaustive. A Bayesian network can be used to calculate other likelihood ratios for hypotheses that are exclusive and exhaustive.
 
 
-\begin{figure}[h]
-\begin{minipage}{0.4\textwidth}
-\includegraphics{STMdag.png}
-\end{minipage} \hfill \begin{minipage}{0.4\textwidth}
-\includegraphics{STMpt.png}
-\end{minipage}
-\caption{Graphic model of Small Town Murder, with the  probability distribution of $E$.}
-\label{fig:bayes_test4}
+\begin{figure}
+\hspace{1cm}\scalebox{0.8}{\begin{subfigure}[!ht]{0.5\textwidth}
+    ```{r STMdag,echo=FALSE,eval=TRUE,fig.align = "center", cache=FALSE,  fig.show = "hold", out.width = "100%", dpi = 300}
+  source("utils//STMDag.R")  
+  graphviz.plot(STMdag)
+    ```
+  \end{subfigure}} \hfill
+\hspace{-3cm}\begin{subfigure}[!ht]{0.6\textwidth}
+```{r Cpt,echo=FALSE,eval=TRUE,fig.align = "center", cache=FALSE, fig.show = "hold", out.width = "70%", dpi = 300}
+source("utils//CptLikelihood.R")
+CPkable0("STMbn", "HD")   
+CPkable0("STMbn", "HP")
+CPkable2("STMbn", "E")
+```
+\end{subfigure}
+\caption{Bayesian network and \textsf{Cpt} tables}
+\label{fig:Cpt}
 \end{figure}
+
+
+
+<!-- \begin{figure}[h] -->
+<!-- \begin{minipage}{0.4\textwidth} -->
+<!-- \includegraphics{STMdag.png} -->
+<!-- \end{minipage} \hfill \begin{minipage}{0.4\textwidth} -->
+<!-- \includegraphics{STMpt.png} -->
+<!-- \end{minipage} -->
+<!-- \caption{Graphic model of Small Town Murder, with the  probability distribution of $E$.} -->
+<!-- \label{fig:bayes_test4} -->
+<!-- \end{figure} -->
 
 <!-- \caption{Graphic model of Small Town Murder, with the  probability distribution of $E$.} -->
 <!-- \label{fig:bayes_test4} -->
