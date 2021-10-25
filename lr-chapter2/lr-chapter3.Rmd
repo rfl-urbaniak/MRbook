@@ -42,6 +42,9 @@ library(tidyverse)
 library(stringr)
 library(plot3D)
 knitr::opts_chunk$set(echo = TRUE)
+
+source("utils//CptCreate.R")  
+source("utils//kableCPTs.R")  
 ```
 
 
@@ -1187,30 +1190,41 @@ In response (inspired by the ideas put forward in the discussion by David Kaye, 
 But if the range of  hypotheses $H$ and $H'$ to compare in the likelihood ratio $LR(E, H, H')$ is quite broad,  this may raise another concern. The choice of hypotheses  needed to determine the relevance of an  item of evidence might depend on other items of evidence, and so it might be  difficult to determine relevance until one has heard all the evidence.  This fact---Ronald Allen and Samuel Gross argue in [@park2010BayesWarsRedivivus]---makes the probabilistic account of relevance impractical.  But, in response, David Kaye points out that deciding whether a reasonable juror would find  evidence $E$  helpful requires only looking at what hypotheses or stories the juror would reasonably consider. Since the juror will rely on several clues about which stories are reasonable, this task is computationally easier than going over all possible combinations of  hypotheses [@park2010BayesWarsRedivivus]. 
 
 
-Legal probabilists can also offer a more principled response to \emph{Small Town Murder} and related problems based on Bayesian networks. Let $H_p$ be the prosecutor's hypothesis that the defendant committed the murder, and $H_d$ the defense's hypothesis  that the defendant was visiting his mother. Let $E$ be the fact that the defendant was seen driving to the town prior to the murder. Further, suppose the prior probabilities of $H_d$ and $H_p$ are $.5$, and the conditional probability of $E$ on each of those hypotheses is $.7$ (nothing of what will be said depends on this particular choice of values). Crucially, while indeed the evidence supports both hypotheses, this example is based on a pair of hypotheses that are neither mutually exclusive nor exhaustive. A Bayesian network can be used to calculate other likelihood ratios for hypotheses that are exclusive and exhaustive.
+
+\vspace{1mm}
+\footnotesize
+```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%"}
+source("utils//STMDag.R") 
+source("utils//STMbn.R")
+```
+\normalsize
+
+
+
+\mar{R: the treatment of STM have been thoroughly revised, please check the details!}
+Legal probabilists can also offer a more principled response to \emph{Small Town Murder} and related problems based on Bayesian networks. Let $H_p$ be the prosecutor's hypothesis that the defendant committed the murder, and $H_d$ the defense's hypothesis  that the defendant was visiting his mother. Let $E$ be the fact that the defendant was seen driving to the town prior to the murder. For the sake of the example, suppose the prior probability of $H_d$ is $.5$, the prior of  $H_p$ is $.02$, the conditional probability of $E$ if $H_d$ alone is true is .7, the conditional probability of $E$ given $H_p$ alone is true is $.6$ (say, the suspect is more likely to move fast and less likely to be seen if he's guilty), and the probability of $E$ if both hypotheses are true is $.8$ (it is a bit higher if he visited two spots and therefore drove around a bit more),  and the conditional probability of $E$ is  $.05$ if both are false (say, because he'd have no business being in the town if they are both false).   The following Bayesian network can be used to calculate the relevant likelihood ratios.
+
 
 
 \begin{figure}
-\hspace{1cm}\scalebox{0.8}{\begin{subfigure}[!ht]{0.5\textwidth}
+\hspace{1cm}\scalebox{.9}{\begin{subfigure}[!ht]{0.6\textwidth}
     ```{r STMdag,echo=FALSE,eval=TRUE,fig.align = "center", cache=FALSE,  fig.show = "hold", out.width = "100%", dpi = 300}
-  source("utils//STMDag.R")  
+ 
   graphviz.plot(STMdag)
     ```
   \end{subfigure}} \hfill
-\hspace{-3cm}\begin{subfigure}[!ht]{0.6\textwidth}
+\begin{subfigure}[!ht]{0.3\textwidth}
 ```{r Cpt,echo=FALSE,eval=TRUE,fig.align = "center", cache=FALSE, fig.show = "hold", out.width = "70%", dpi = 300}
-source("utils//CptLikelihood.R")
 CPkable0("STMbn", "HD")   
 CPkable0("STMbn", "HP")
 CPkable2("STMbn", "E")
 ```
 \end{subfigure}
-\caption{Bayesian network and \textsf{Cpt} tables}
+\caption{Bayesian network and \textsf{CPT}s for a small town murder scenario.}
 \label{fig:Cpt}
 \end{figure}
 
-
-
+Now, $\pr{E\vert H_d}$ = `r PReHD`, $\pr{E \vert \n H_d}$ = `r PRenHD`, so $\mathsf{LR(E, H_d, \n H_d)}\approx$  `r round(LRHD,3)`, and $\pr{E\vert H_p}$ = `r PReHP`, $\pr{E \vert \n H_p}$ = `r PRenHP`, and so $\mathsf{LR(E, H_p, \n H_p)} \approx$  `r round(LRHP)`.  Crucially,  this example is based on a pair of hypotheses that are neither mutually exclusive nor exhaustive. As it might in such a case happen, both likelihood ratios are above one, and so the evidence is not neutral, despite the apparent intuitions relied on in the counterexample. Moreover, while the evidence supports each of the hypotheses, the difference in likelihood ratios indicates that this is so to different extents..^[ @dezoete2019ResolvingSocalledProbabilistic offer a slightly different solution to the problem. They construct a Bayesian network with three hypotheses, also exhaustive and exclusive: in town to visit mother, in town to murder, out of town. The gist of the resolution holds, though.]
 <!-- \begin{figure}[h] -->
 <!-- \begin{minipage}{0.4\textwidth} -->
 <!-- \includegraphics{STMdag.png} -->
@@ -1234,12 +1248,8 @@ CPkable2("STMbn", "E")
 <!-- \end{figure} -->
 
 
-\noindent
-  Following the calculations in [@dezoete2019ResolvingSocalledProbabilistic], for exclusive and exhaustive hypotheses, $LR(E,H_d,\neg H_d)=1.75$, and similarly, $LR(E,H_p, \neg H_p)=1.75$, since $P(E\vert H_d)=0.7$ and $P(E\vert \neg H_d)=0.4$. 
-  The likelihood ratio of the evidence, if it is measured against exclusive and exhaustive hypotheses, is not equal to one.\^[ @dezoete2019ResolvingSocalledProbabilistic offer a slightly different solution to the problem. They construct a Bayesian network with three hypotheses, also exhaustive and exclusive: in town to visit mother, in town to murder, out of town.]
-Such considerations should also generalize to other paradoxes of relevance.  
 
-For instance,  in the twins problem, the LR is 1 if the hypotheses are: 'the suspect committed the crime', and 'the suspect's twin brother committed the crime', but is not 1 f we consider the fairly natural hypothesis that  the defendant is  innocent. 
+Analogous considerations should also generalize to other paradoxes of relevance.   For instance,  in the twins problem, the LR might be 1 if the hypotheses are: 'the suspect committed the crime', and 'the suspect's twin brother committed the crime', but is not 1 if we consider the fairly natural hypothesis that  the defendant is  innocent. 
 
 Similarly, in the food tray example, Bayesian network analysis shows that the value of the evidence 'prisoner withholds tray' for the question who started the fight depends on a range of uncertain events and other pieces of evidence (such as whether indeed a parcel he was supposed to obtain was withheld;  whether the prisoner inquired about this; whether and how this inquiry was answered). Considered in this context, the piece of evidence will not have a likelihood ratio of one with respect to at least some choice of sensible hypotheses.
 
