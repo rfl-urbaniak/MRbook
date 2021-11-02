@@ -1,19 +1,15 @@
 % Options for packages loaded elsewhere
 \PassOptionsToPackage{unicode}{hyperref}
 \PassOptionsToPackage{hyphens}{url}
-\PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
+\PassOptionsToPackage{dvipsnames,svgnames*,x11names*}{xcolor}
 %
 \documentclass[
   10pt,
   dvipsnames,enabledeprecatedfontcommands]{scrartcl}
-\title{The difficulty with Conjunction}
-\author{Marcello Di Bello and Rafal Urbaniak}
-\date{}
-
 \usepackage{amsmath,amssymb}
 \usepackage{lmodern}
-\usepackage{iftex}
-\ifPDFTeX
+\usepackage{ifxetex,ifluatex}
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
   \usepackage{textcomp} % provide euro and other symbols
@@ -35,10 +31,10 @@
   pdftitle={The difficulty with Conjunction},
   pdfauthor={Marcello Di Bello and Rafal Urbaniak},
   colorlinks=true,
-  linkcolor={Maroon},
-  filecolor={Maroon},
-  citecolor={Blue},
-  urlcolor={blue},
+  linkcolor=Maroon,
+  filecolor=Maroon,
+  citecolor=Blue,
+  urlcolor=blue,
   pdfcreator={LaTeX via pandoc}}
 \urlstyle{same} % disable monospaced font for URLs
 \usepackage{color}
@@ -98,29 +94,6 @@
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
 \setcounter{secnumdepth}{5}
-\newlength{\cslhangindent}
-\setlength{\cslhangindent}{1.5em}
-\newlength{\csllabelwidth}
-\setlength{\csllabelwidth}{3em}
-\newlength{\cslentryspacingunit} % times entry-spacing
-\setlength{\cslentryspacingunit}{\parskip}
-\newenvironment{CSLReferences}[2] % #1 hanging-ident, #2 entry spacing
- {% don't indent paragraphs
-  \setlength{\parindent}{0pt}
-  % turn on hanging indent if param 1 is 1
-  \ifodd #1
-  \let\oldpar\par
-  \def\par{\hangindent=\cslhangindent\oldpar}
-  \fi
-  % set entry spacing
-  \setlength{\parskip}{#2\cslentryspacingunit}
- }%
- {}
-\usepackage{calc}
-\newcommand{\CSLBlock}[1]{#1\hfill\break}
-\newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{#1}}
-\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{#1}\break}
-\newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
 %\documentclass{article}
 
 % %packages
@@ -306,9 +279,33 @@
 \usepackage[normalem]{ulem}
 \usepackage{makecell}
 \usepackage{xcolor}
-\ifLuaTeX
+\ifluatex
   \usepackage{selnolig}  % disable illegal ligatures
 \fi
+\newlength{\cslhangindent}
+\setlength{\cslhangindent}{1.5em}
+\newlength{\csllabelwidth}
+\setlength{\csllabelwidth}{3em}
+\newenvironment{CSLReferences}[2] % #1 hanging-ident, #2 entry spacing
+ {% don't indent paragraphs
+  \setlength{\parindent}{0pt}
+  % turn on hanging indent if param 1 is 1
+  \ifodd #1 \everypar{\setlength{\hangindent}{\cslhangindent}}\ignorespaces\fi
+  % set entry spacing
+  \ifnum #2 > 0
+  \setlength{\parskip}{#2\baselineskip}
+  \fi
+ }%
+ {}
+\usepackage{calc}
+\newcommand{\CSLBlock}[1]{#1\hfill\break}
+\newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{#1}}
+\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{#1}\break}
+\newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
+
+\title{The difficulty with Conjunction}
+\author{Marcello Di Bello and Rafal Urbaniak}
+\date{}
 
 \begin{document}
 \maketitle
@@ -414,13 +411,11 @@ traditionally concerned with the failure of aggregation, but we will see
 later on under what circumstances distribution can fail, as well.
 
 There is some disagreement among legal scholars about the tenability of
-conjunction principle (\textbf{CITE}).
-\mar{R: Dunno, I prefer to think of this as a way of validating it! After all, it holds once you accept the narration, no?}
-We will ultimately reject this principle. For the time being, however,
-let us assume the principle correctly captures features of the standard
-of proof. The principle has some degree of plausibility and is
-consistent with the case law. For example, the United States Supreme
-Court writes that in criminal cases
+conjunction principle (more on this toward the end of this chapter). For
+the time being, however, let us assume the principle correctly captures
+features of the standard of proof. The principle has some degree of
+plausibility and is consistent with the case law. For example, the
+United States Supreme Court writes that in criminal cases
 
 \begin{quote}
 the accused [is protected] against conviction except upon proof beyond a reasonable doubt of \textit{every fact} necessary to constitute the crime with which he is charged. \linebreak 
@@ -443,31 +438,32 @@ evidence or clear and convincing evidence.
 
 The problem for the legal probabilist is that the conjunction principle
 conflicts with a threshold-based probabilistic interpretation of the
-standard of proof. The legal probabilist who also endorses the
-conjunction principle is in fact committed to a contradiction in many
-clearly admissible scenarios. For suppose the prosecution in a criminal
-case presents evidence that establishes claims \(A\) and \(B\),
-separately, by the required probability, say about \(.95\) each. Has the
-prosecution met its burden of proof? For one thing, if each claim is
-established by the requisite probability threshold, each claim is
-established by the requisite standard (assuming the threshold-based
-interpretation of the standard of proof). And if each claim is
-established by the requisite standard, then (i) liability as a whole is
-established by the requisite standard (assuming the conjunction
-principle). On the other hand, even though each claim is established by
-the requisite probability threshold, the probability of their
-conjunction---assuming the two claims are independent---is only
-\(.95\times .95 \approx .9\), below the required \(.95\) threshold. So
-(ii) liability as a whole is \textit{not} established by the requisite
-standard (assuming a threshold-based probabilistic interpretation of the
-standard). Hence, (i) the prosecution met its burden of proof and (ii)
-it did not meet its burden. Contradiction.
+standard of proof. For suppose the prosecution in a criminal case
+presents evidence that establishes claims \(A\) and \(B\), separately,
+by the required probability, say about \(.95\) each. Has the prosecution
+met its burden of proof? For one thing, if each claim is established by
+the requisite probability threshold, each claim is established by the
+requisite standard (assuming the threshold-based interpretation of the
+standard of proof). And if each claim is established by the requisite
+standard, then (i) liability as a whole is established by the requisite
+standard (assuming the conjunction principle). And yet, even though each
+claim is established by the requisite probability threshold, the
+probability of their conjunction---assuming the two claims are
+independent---is only \(.95\times .95 \approx .9\), below the required
+\(.95\) threshold. So (ii) liability as a whole is \textit{not}
+established by the requisite standard (assuming a threshold-based
+probabilistic interpretation of the standard). Hence, (i) the
+prosecution met its burden of proof and (ii) it did not meet its burden.
+Contradiction.
 
-The difficulty with conjunction---the fact that a probabilistic
-interpretation of the standard of proof conflicts with the conjunction
-principle---can also be stated more plainly as the fact that a
-threshold-based interpretation of the standard of proof violates the
-conjunction principle, specifically, aggregation.
+The difficulty with conjunction can be stated more plainly as the fact
+that a threshold-based interpretation of the standard of proof violates
+the conjunction principle, specifically, aggregation. Even though
+aggregation posits that establishing each conjunct by the required
+standard of proof is enough to establish the conjunction as a whole, the
+probability of each conjunct, considered in isolation, can be meet the
+required probability threshold without the conjunction as a whole
+meeting the requisite probability threshold.
 
 This difficulty is quite persistent. It does not subside as the number
 of constituent claims increases. If anything, the difficulty becomes
@@ -486,8 +482,8 @@ meet the threshold, the probability of \(A \et B\) should still be below
 the \(.95\) threshold unless \(\pr{A \vert B}=1\). For example, that
 someone premeditated a harmful act against another (call it
 \textsf{Premed}) makes it more likely that they did cause harm in the
-end (call it \textit{Harm}). Since
-\(\pr{\mathsf{Harm} \vert \textsf{Premed}} > \pr{\textsf{Harm}}\), the
+end (call it \textsf{Harm}). Since
+\(\pr{\textsf{Harm} \vert \textsf{Premed}} > \pr{\textsf{Harm}}\), the
 two claims are not independent. Still, premeditation does not always
 lead to harm, so \(\pr{\textsf{Harm} \vert \textsf{Premed}}\) will often
 be below \(1\). If both claims are established with \(.95\), the
@@ -514,7 +510,7 @@ accordingly.
 
 Does a threshold-based probabilistic interpretation of the standard of
 proof also conflict with this revised version of the conjunction
-principle? We should check whether whenever both \(\pr{A \vert a}\) and
+principle? We should check whether, whenever both \(\pr{A \vert a}\) and
 \(\pr{B \vert b}\) meet the threshold, say \(.95\), then so does
 \(\pr{A\wedge B \vert a\wedge b}\). The answer is negative, but seeing
 why requires some work. We are no longer just comparing the probability
@@ -524,24 +520,24 @@ of \(A\wedge B\) to the probability of \(A\) and the probability of
 probability of \(A\) given evidence \(a\) and the probability of \(B\)
 given evidence \(b\).
 
-To fix ideas, consider an aggravated assault case. The prosecution
-should establish, first, that the defendant physically injured the
-victim, and second, that the defendant knew he was interacting with
-a\ali{R: fix these representations too, convert all abbreviations to lowercase throughout the chapter.}
-firefighter. Let \textit{Witness} denote a witness testimony supporting
-the claim that the defendant physically injured the victim, call this
-claim \textit{Injury}. Let \textit{Call} be evidence that the defendant
-made a call to an emergency number. This evidence supports the claim
-that the defendant knew he was dealing with a firefighter, call this
-claim \textit{Firefighther}. If
+To fix ideas, consider an example. In an aggravated assault case, the
+prosecution should establish two claims: first, that the defendant
+injured the victim; and second, that the defendant knew he was
+interacting with a public official.
+\ali{R: fix these representations too, convert all abbreviations to lowercase throughout the chapter.}
+Let \textit{Witness} denote a testimony that the defendant injured the
+victim, call this claim \textit{Injury}. Let \textit{Call} denote the
+fact that the defendant made a call to an emergency number. This is
+evidence that the defendant knew he was dealing with a firefighter, call
+this claim \textit{Firefighther}. If
 \(\pr{\textit{Injury} \vert \textit{Witness}}\) and
 \(\pr{\textit{Firefighther} \vert \textit{Call} }\) both meet the
 required probability threshold, does
 \(\pr{\textit{Injury} \wedge \textit{Firefighther} \vert \textit{Witness} \wedge \textit{Call}}\)
 also meet the threshold?
 
-The answer is negative if two probabilistic independence assumptions
-hold. The first is that
+The answer is negative provided two probabilistic independence
+assumptions hold. The first is that
 \(\pr{\textit{Injury} \vert \textit{Witness}}=\pr{\textit{Injury} \vert \textit{Witness} \wedge \textit{Call}}\).
 This assumption is plausible because that the defendant called a
 firefighter for help, as opposed to someone else, does not make it more
@@ -719,28 +715,28 @@ sufficiently probable given combined evidence \(a\et b\). One again, the
 conjunction principle fails because aggregation fails. The difficult
 with conjunction persists.
 
-The argument here was general and went beyond the specific example about
-aggravated assault in the previous section. It suffices to assume that
-the directed graph in Figure \ref{fig:conjunctionDAG} is an adequate
-representation of a situation in which two items of evidence, \(a\) and
-\(b\), support their own hypothesis, \(A\) and \(B\). The graph encodes
-two plausible relations of probabilistic dependence: between hypotheses
-\(A\) and \(B\) and between items of evidence \(a\) and \(b\). The
-theory of Bayesian network does the rest of the work for us.
+The argument here is general and goes beyond the specific example about
+aggravated assault in the previous section. The argument only assumes
+that the directed graph in Figure \ref{fig:conjunctionDAG} is an
+adequate representation of a situation in which two items of evidence,
+\(a\) and \(b\), support their own hypothesis, \(A\) and \(B\). The
+graph encodes two plausible relations of probabilistic dependence:
+between hypotheses \(A\) and \(B\) and between items of evidence \(a\)
+and \(b\). The theory of Bayesian network does the rest of the work.
 
 \hypertarget{dependent-hypotheses}{%
 \subsection{Dependent hypotheses}\label{dependent-hypotheses}}
 
-Consider now what happens if the probabilistic independence between
-\(A\) and \(B\) is dispensed with. To this end, it is enough to draw an
-arrow between \(A\) and \(B\) in our directed graph. The result is
-displayed in Figure \ref{fig:conjunctionDAG2}. There is an open path
-between the hypotheses nodes \(A\) and \(B\) and the evidence nodes
-\(a\) and \(b\). Thus, the new graph no longer guarantees the
-probabilistic independence of \(A\) and \(B\), or that of \(a\) and
-\(b\). Items of evidence \(a\) and \(b\) are still probabilistically
-independent of one another \textit{conditional} on their respective
-hypothesis. That is, \(\pr{a \vert A}=\pr{a \vert A \wedge b}\) and
+What happens if the probabilistic independence between claims \(A\) and
+\(B\) is dispensed with? To this end, it is enough to draw an arrow
+between \(A\) and \(B\) in our directed graph. The result is displayed
+in Figure \ref{fig:conjunctionDAG2}. There is an open path between the
+hypotheses nodes \(A\) and \(B\) and the evidence nodes \(a\) and \(b\).
+Thus, the new graph no longer guarantees the probabilistic independence
+of \(A\) and \(B\), or that of \(a\) and \(b\). Items of evidence \(a\)
+and \(b\) are still probabilistically independent of one another
+\textit{conditional} on their respective hypothesis. That is,
+\(\pr{a \vert A}=\pr{a \vert A \wedge b}\) and
 \(\pr{b \vert B}=\pr{b \vert B \wedge a}\). So \(a\) and \(b\) still
 counts as independent lines of evidence despite not being
 (unconditionally) probabilistically independent.\footnote{Here is an
@@ -786,32 +782,34 @@ that:\mar{R: looks fin, although moving from P(a \& b|A\& B) to the numerator in
 
 \raf{M: Can you check the derivation here?}
 
-\noindent Note two things. First, \(\pr{B \vert A}\) is the prior
-probability of \(B\) conditional on \(A\). This conditional prior
-probability may be greater or lower than the unconditional probability
-of \(B\). However, examples of probabilistic dependence hypotheses are
-usually such that one hypothesis makes the other more likely than it
-would be otherwise.
-\mar{R: I don't think this is true, and I don't think we should rely on this assumption assertively.}
-So typically \(\pr{B \vert A} > \pr{B}\). Second,
-\(\nicefrac{\pr{b \vert B}}{\pr{b\vert a}}\) is going to be greater than
-one.
-\textbf{STUCK HERE: CAN WE MAKE A GENERAL CLAIM THAT THE STATEMENT ABOVE IS GOING TO CREATE A VIOLATION OF AGGREGATION?}
-\mar{R: no. Because it is not generally the case. But for us it is enough it might happen quite often; I think we need the simulations here to talk about frequency.}
-
-\raf{M: see comment in boldface. Your brief argument commented out was not comprehensible to me.}
-
-\raf{M: let me try it like this.}
-
-For this to be less than \(\pr{A\vert a}\), it is enough that
-\(\frac{\pr{b \vert B}}{\pr{b\vert a}} \pr{B \vert A}\), or
-equivalently, that: \begin{align*}
+\noindent Note that, in number of cases,
+\(\nicefrac{\pr{b \vert B}}{\pr{b\vert a}} \pr{B \vert A}\) will be less
+than one, or equivalently: \begin{align*}
 \frac{\pr{b \vert B}}{\pr{b \vert a}}   &<  \frac{1}{\pr{B\vert A}}
-\end{align*} \noindent This inequality can come out true for a range of
-probabilities. For instance, if \(\pr{b\vert B}=.9\),
+\end{align*} \noindent The expression
+\(\frac{\pr{b \vert B}}{\pr{b \vert a}}\) will typically be greater than
+one because evidence \(b\) should provide positive support for \(B\)
+even in combination with \(a\).\footnote{Because of the relations of
+  independence in Figure \ref{fig:conjunctionDAG2},
+  \(\nicefrac{\pr{b \vert B}}{\pr{b\vert a}}=\nicefrac{\pr{b \vert B \wedge a}}{\pr{b\vert a}}\).
+  We are assuming that \(\pr{B \vert a wedge a}>\pr{B \vert a}>1\),
+  which is equivalent to
+  \(\nicefrac{\pr{b \vert B \wedge a}}{\pr{b\vert a}}>1\), ir in other
+  words, \(b\) provides positive supports for \(B\) even in light of
+  \(a\). Hence, also \(\nicefrac{\pr{b \vert B}}{\pr{b\vert a}}>1\).}
+The inequality can come out true for a range of probabilities. For
+instance, if \(\pr{b\vert B}=.9\),
 \(\pr{b\vert a} = \pr{B \vert A} = .55\), the left-hand side is
-\(\approx 1.63\) and the right-hand side is \(\approx 1.81\).
-\mar{R: we still need the simulation here}
+\(\approx 1.63\) and the right-hand side is \(\approx 1.81\). If
+\(\nicefrac{\pr{b \vert B}}{\pr{b\vert a}} \pr{B \vert A}<1\), then
+\(\pr{A \wedge B \vert a \wedge b}< \pr{A \vert a}\).\footnote{By
+  symmetric reasoning, the analogous conclusion that
+  \(\pr{A \wedge B \vert a \wedge b}< \pr{B \vert b}\) follows.} There
+are plenty of such cases. The general pattern is that the higher the
+right side (for values above one), the lower the probability of
+\(\pr{A \vert A}\) for the inequality to hold. So aggregation does not
+hold generally even assuming that \(A\) and \(B\) are probabilistically
+dependent. \mar{R: we still need the simulation here}
 
 \mar{R: check calculations in chunk}
 \vspace{1mm}
@@ -822,6 +820,8 @@ probabilities. For instance, if \(\pr{b\vert B}=.9\),
 \hypertarget{indepedencies-more-generally}{%
 \subsection{Indepedencies more
 generally}\label{indepedencies-more-generally}}
+
+\raf{M: Move to appendix?}
 
 The directed graphs in Figure \ref{fig:conjunctionDAG} and
 \ref{fig:conjunctionDAG2} provide a compact representation of two
@@ -872,33 +872,34 @@ b \indep a
 \hypertarget{evidential-strength}{%
 \section{Evidential Strength}\label{evidential-strength}}
 
-The failure of the conjunction principles we have encountered so far
-are---specifically---failure of aggregation. When the probability of
-\(A\) and the probability of \(B\) is above a give threshold, the
-probability of their conjunction \(A\wedge B\) usually is not. This can
-happen whether or not the probability of \(A\) and \(B\) are conditional
-on support evidence and whether or not \(A\) and \(B\) are
-probabilistically independent. These widespread failures of aggregation
-occur assuming the standard of proof is understood as a posterior
-probability threshold. Thus, legal probabilists cannot justify
-aggregation if they equate the standard of proof to such threshold.
+The failure of the conjunction principles encountered so far are
+failures of aggregation. When the probability of \(A\) and the
+probability of \(B\) is above a given threshold, the probability of the
+conjunction \(A\wedge B\) usually is not. This can happen whether or not
+the probability of \(A\) and \(B\) are conditional on the supporting
+evidence and whether or not \(A\) and \(B\) are probabilistically
+independent. These failures of aggregation occur assuming the standard
+of proof is understood as a posterior probability threshold. Thus,
+aggregation aggregation cannot be justified by equating the standard of
+proof to such threshold.
 
 As an alternative, legal probabilists can think of proof standards as
 sufficiency criteria for how strong the evidence should be in order to
-justify a finding of criminal or civil liability. Instead of a posterior
-probability threshold, legal probabilists can formalize the standard of
-proof using a probabilistic measure of evidential strength. Will this
-move vindicate the conjunction principle on probabilistic grounds
-contrary to what Cohen thought? As we shall see, the answer to this
-question is complicated. But the short answer is negative.
+justify a finding of liability. Instead of a posterior probability
+threshold, the standard of proof can be modeled using a probabilistic
+measure of evidential strength. Does this alternative way of modeling
+proof standards succeed in solving the conjunction paradox work? To some
+extent, but not completely. To understand why is the task of this
+section.
 
-Suppose the standard of proof is no longer understood as a threshold on
-the posterior probability given the evidence, but rather, as a threshold
-on evidential strength. Two common probabilistic measures of evidential
-strength are the Bayes factor and the likelihood ratio. We discussed
-this topic in earlier chapters (REFER TO EARLIER CHAPTERS). As will
-become clear later, under plausible assumptions, these measures of
-evidential strength validate one direction of the conjunction principle:
+\hypertarget{a-dilemma}{%
+\subsection{A dilemma}\label{a-dilemma}}
+
+Two common probabilistic measures of evidential strength are the Bayes
+factor and the likelihood ratio. We discussed this topic in earlier
+chapters (\textbf{REFER TO EARLIER CHAPTERS}). As will become clear
+later, under plausible assumptions, these measures of evidential
+strength validate one direction of the conjunction principle:
 aggregation. If \(a\) is sufficiently strong evidence in favor of \(A\)
 and \(b\) is sufficiently strong evidence in favor of \(B\), then
 \(a\wedge b\) is sufficiently strong evidence in favor of the
@@ -909,59 +910,48 @@ already made by Dawid (1987):
 \begin{quote} suitably measured, the support supplied by the conjunction of several independent testimonies exceeds that supplied by any of its constituents.
  \end{quote}
 
-\noindent Dawid thought this fact was enough for the conjuction paradox
-to `evaporate.' This is true so long as we are only concerned with
-vindicating one direction of the conjunction principle, aggregation.
-That is, probability theory justifies this claim: if distinct items of
-evidence \(a\) and \(b\) constitute sufficiently strong evidence for
-claims \(A\) and \(B\), so does the conjunction \(a\wedge b\) for the
-composite claim \(A\wedge B\) (although, there are some caveats and
-extra assumptions for this to hold).
+\noindent That is, probability theory justifies this claim: if distinct
+items of evidence \(a\) and \(b\) constitute sufficiently strong
+evidence for claims \(A\) and \(B\), so does the conjunction
+\(a\wedge b\) for the composite claim \(A\wedge B\) (although, there are
+some caveats and extra assumptions for this to hold; more on this
+later).
 
-Unfortunately, we will show that on the evidential strength
-interpretation of the standard of proof, the other direction of the
-conjunction principle, distribution, does not hold. If \(a \wedge b\) is
-sufficiently strong evidence in favor of \(A \wedge B\), it does not
-follow that \(a\) is sufficiently strong evidence in favor of \(A\) or
-\(b\) sufficiently strong evidence in favor of \(B\). It is not even
-true that, if \(a \wedge b\) is sufficiently strong evidence in favor of
-\(A \wedge B\), then \(a\wedge b\) is sufficiently strong evidence in
-favor of \(A\) or \(B\). This is odd. It would mean that, given a body
-of evidence, one can establish beyond a reasonable doubt that
-\(A \wedge B\) (say the defendant killed the victim \textit{and} did so
-intentionally) while failing to establish by the same standard one of
-the conjuncts.
+Dawid thought that vindicating aggregation was enough for the conjuction
+paradox to `evaporate.' Unfortunately, we will show that on the
+evidential strength interpretation of the standard of proof, the other
+direction of the conjunction principle, distribution, does not hold. If
+\(a \wedge b\) is sufficiently strong evidence in favor of
+\(A \wedge B\), it does not follow that \(a\) is sufficiently strong
+evidence in favor of \(A\) or \(b\) sufficiently strong evidence in
+favor of \(B\). It is not even true that, if \(a \wedge b\) is
+sufficiently strong evidence in favor of \(A \wedge B\), then
+\(a\wedge b\) is sufficiently strong evidence in favor of \(A\) or
+\(B\). This is odd. It would mean that, given a body of evidence, one
+can establish beyond a reasonable doubt that \(A \wedge B\) (say the
+defendant killed the victim \textit{and} did so intentionally) while
+failing to establish one of the conjuncts.
 
-So we seem to be in a dilemma. If the standard of proof is understood as
-a threshold relative to the posterior probability, the conjunction
-principle fails because aggregation fails while distribution succeeds.
-If, on the other hand, the standard of proof is understood as a
-threshold relative to standard measures of evidential strength, the
-conjunction principle fails because distribution fails while aggregation
-succeeds. From a probabilistic perspective, it seems impossible to
-capture both directions of the conjunction principle.
+We face a dilemma. If the standard of proof is understood as a posterior
+probability threshold, the conjunction principle fails because
+aggregation fails while distribution succeeds. If, on the other hand,
+the standard of proof is understood as a threshold relative to
+evidential strength, the conjunction principle fails because
+distribution fails while aggregation succeeds. From a probabilistic
+perspective, it seems impossible to capture both directions of the
+conjunction principle.
 
-Before we discuss this more general challenge, let us explore how
-aggregation succeeds and distribution fails on the evidential strength
-approach. We will first investigate to what extent Dawid's was right in
-claiming that `suitably measured, the support supplied by the
-conjunction of several independent testimonies exceeds that supplied by
-any of its constituents'. Next, we will show---perhaps
-surprisingly---that after switching from posterior probabilities to
-measures of evidential support, another paradox, what we call the
-\textit{distribution paradox}, arises. The argument for these two claims
-is tedious. The reader should arm themselves with patience or take our
-word for it and jump ahead to the next section.
+In what follows, we develop more precisely the argument that, on the
+evidential strength approach, (a) aggregation succeeds but (b)
+distribution fails. The argument for these two claims is tedious. The
+reader should arm themselves with patience or take our word for it and
+jump ahead to the next section.
 
 \todo{Some bits hidden, they need to be discussed elsewhere I think.}
 
 \hypertarget{bayes-factor-and-aggregation}{%
 \subsection{Bayes factor and
 aggregation}\label{bayes-factor-and-aggregation}}
-
-\textbf{COMMENT: This section has too much formalism that I think is unecessary for the main line of argument. This needs to go in a footnote or appendix. The statement of "Fact 1" and "Fat 2" with all those assumptions is an overkill. Made some changes but we need to discuss.}
-
-\raf{M: See boldface comments in the text. }
 
 We will start with the Bayes factor \(\pr{E \vert H}/\pr{E}\) as our
 measure of the support of \(E\) in favor of \(H\). Since by Bayes'
@@ -982,19 +972,20 @@ with conjunction.
 \hypertarget{independent-hypotheses-1}{%
 \subsubsection{Independent hypotheses}\label{independent-hypotheses-1}}
 
-Say \(a\) and \(b\), separately, support \(A\) and \(B\)
-\todo{use nicefrac for inline fractions} to degree \(s_A\) and \(s_B\)
-respectively, that is, \(\nicefrac{\pr{a \vert A}}{\pr{a}}=s_A\) and
-\(\nicefrac{\pr{b \vert B}}{\pr{b}=s_B}\), where both \(s_A\) and
-\(s_B\) are greater than one. Does the combined evidence \(a \wedge b\)
-provide at least as much support in favor of the joint claim
-\(A \wedge B\) as the individual support by \(a\) and \(b\) in favor of
-\(A\) and \(B\) considered separately? The combined support here is
-measured by the combined Bayes factor
-\(\nicefrac{\pr{a \wedge b\vert A\wedge B}}{\pr{a \wedge b}}\). The
-latter, under suitable independence assumptions, equals the product of
-the individual supports \(s_{A}\) and \(s_{B}\).\footnote{Here is the
-  argument: \begin{align*}
+Suppose items of evidence \(a\) and \(b\) positively support \(A\) and
+\(B\), separately. In other words, both Bayes factors
+\(\nicefrac{\pr{a \vert A}}{\pr{a}}\) (abbreviated \(BF_A\) and
+\(\nicefrac{\pr{b \vert B}}{\pr{b}=s_B}\) (abbreviated \(BF_B\)) are
+greater than one. Does the combined evidence \(a \wedge b\) provide at
+least as much support in favor of the joint claim \(A \wedge B\) as the
+individual support by \(a\) and \(b\) in favor of \(A\) and \(B\)
+considered separately? The combined support here is measured by the
+combined Bayes factor
+\(\nicefrac{\pr{a \wedge b\vert A\wedge B}}{\pr{a \wedge b}}\)
+(abbreviated \(BF_{AB}\)). The latter, under suitable independence
+assumptions, equals the product of the individual Bayes factors
+\(BF_{A}\) and \(BF_{B}\). That is:\footnote{Here is the argument:
+  \begin{align*}
   \frac{\pr{a \wedge b\vert A\wedge B}}{\pr{a \wedge b}} & =  \frac{\pr{A \et B\vert a\wedge b}}{\pr{A \et B}}
   &\mbox{\,\,\,\,\,\,\,\,\,\,\,\,\, (Bayes's theorem)}
   \\
@@ -1007,19 +998,24 @@ the individual supports \(s_{A}\) and \(s_{B}\).\footnote{Here is the
   &\mbox{\,\,\,\,\,\,\,\,\,\,\,\,\, (independencies in Figure \ref{fig:conjunctionDAG})}\\ 
   & =  \frac{\pr{a |A}}{\pr{a}} \times \frac{\pr{b |B}}{\pr{b}} 
   &\mbox{\,\,\,\,\,\,\,\,\,\,\,\,\, (algebraic manipulation)} \\
-  s_{AB}& =  s_{A}\times s_{B} 
+  BF_{AB}& =  BF_{A}\times BF_{B} 
    \end{align*} The step marked by asterisk rests on the independence
   assumptions codified in Figure \ref{fig:conjunctionDAG}, namely:
   \eqref{eq:indAB}, \eqref{eq:I4}, and \eqref{eq:I5}.}
-\ali{M: Check reference to independence assumptions} Essentially, we are
-assuming that hypotheses \(A\) and \(B\) are independent and that items
-of evidence \(a\) and \(b\) are independent. As noted earlier, these
-assumptions are plausible insofar as the Bayesian network in Figure
-\ref{fig:conjunctionDAG} is a plausible representation of the situation
-at hand. Thus, the combined support \(s_{AB}\) will always be higher
-than the individual support so long as \(s_{A}\) and \(s_{B}\) are
-greater than one, that is, if the individual piece of evidence
-positively support their respective hypotheses.
+\ali{M: Check reference to independence assumptions} \begin{align*}
+\frac{\pr{a \wedge b \vert A \wedge B}}{\pr{a \wedge b}} &= \frac{\pr{a \vert A}}{\pr{a}} \times \frac{\pr{b \vert B}}{\pr{b}}\\
+BF_{AB} &= BF_{A} \times BF_{B}\\
+\end{align*}
+
+\noindent Essentially, we are assuming that hypotheses \(A\) and \(B\)
+are independent and that items of evidence \(a\) and \(b\) are
+independent. As noted earlier, these assumptions are plausible insofar
+as the Bayesian network in Figure \ref{fig:conjunctionDAG} is a
+plausible representation of the situation at hand. Thus, the combined
+support \(s_{AB}\) will always be higher than the individual support so
+long as \(s_{A}\) and \(s_{B}\) are greater than one, that is, if the
+individual piece of evidence positively support their respective
+hypotheses.
 
 This result generalizes beyond two pieces of evidence. Figure
 \ref{fig:bfconjunction5} compares the Bayes factor of one item of
@@ -1049,9 +1045,27 @@ that supplied by any of its constituents' is vindicated.
 
 What happens if \(A\) and \(B\) are not necessarily probabilistically
 independent as in the Bayesian network in Figure
-\ref{fig:conjunctionDAG2}? The claim still holds under weaker
-independence assumptions in the background.
+\ref{fig:conjunctionDAG2}? The combined Bayesian factor \(BF_{AB}\) is
+still greater than both the individual Bayesian factor \(BF_{A}\) and
+\(BF_{B}\) in a number of circumstances. First, the following
+holds:\footnote{Here is the derivation: \begin{align*}
+  \frac{\pr{a \wedge b\vert A\wedge B}}{\pr{a \wedge b}} & =  \frac{\frac{ \pr{A \et B \et a \wedge b }}{\pr{A \et B}}}{\pr{a \et b}} \\ 
+  & =  \frac{\frac{ \pr{A} \times \pr{B|A} \times \pr{a \vert A \wedge B} \times \pr{b \vert A \wedge B \wedge a} }{\pr{A} \times \pr{B \vert A}}}{\pr{a} \times \pr{b \vert a}} \\ 
+  & =  \frac{\pr{a \vert A \wedge B} \times \pr{b \vert A \wedge B \wedge a}}{\pr{a} \times \pr{b \vert a}} \\ 
+  & =^*  \frac{\pr{a |A}}{\pr{a}} \times \frac{\pr{b |B}}{\pr{b|a}} \\
+  BF^{'}_{AB}& =  BF_{A}\times BF^{'}_{B} 
+   \end{align*}} \begin{align*}
+\frac{\pr{a \wedge b\vert A\wedge B}}{\pr{a \wedge b}} & = \frac{\pr{a |A}}{\pr{a}} \times \frac{\pr{b |B}}{\pr{b|a}} \\
+BF^{'}_{AB}& =  BF_{A}\times BF^{'}_{B} 
+ \end{align*}
+
+\hypertarget{move-to-appendix-materials}{%
+\paragraph{MOVE TO Appendix
+materials}\label{move-to-appendix-materials}}
+
 \ali{double check, are these d-sep in the second network?}
+
+\raf{M: One assumption does not hold. Conditionally on A-and-B, the evidence is not independent in the DAG in Figure 2 since A-and-B is a collider node. The derivation is more complicated. See footnote.}
 
 \begin{fact}
 Assuming \eqref{eq:I3}, \eqref{eq:I4} and \eqref{eq:I6}, if $\pr{B\vert b\et a } > \pr{B\vert a}$ and $\pr{A\vert a \et b} > \pr{A \vert b}$, we have:
@@ -4663,66 +4677,66 @@ scope of this paper.
 
 \hypertarget{refs}{}
 \begin{CSLReferences}{1}{0}
-\leavevmode\vadjust pre{\hypertarget{ref-Allen1986A-Reconceptuali}{}}%
+\leavevmode\hypertarget{ref-Allen1986A-Reconceptuali}{}%
 Allen, R. J. (1986). A reconceptualization of civil trials. \emph{Boston
 University Law Review}, \emph{66}, 401--437.
 
-\leavevmode\vadjust pre{\hypertarget{ref-allen2013}{}}%
+\leavevmode\hypertarget{ref-allen2013}{}%
 Allen, R. J., \& Stein, A. (2013). Evidence, probability and the burden
 of proof. \emph{Arizona Law Journal}, \emph{55}, 557--602.
 
-\leavevmode\vadjust pre{\hypertarget{ref-AllenPardo2019relative}{}}%
+\leavevmode\hypertarget{ref-AllenPardo2019relative}{}%
 Allen, R., \& Pardo, M. (2019). Relative plausibility and its critics.
 \emph{The International Journal of Evidence {\&} Proof}, \emph{23}(1-2),
 5--59. \url{https://doi.org/10.1177/1365712718813781}
 
-\leavevmode\vadjust pre{\hypertarget{ref-cheng2012reconceptualizing}{}}%
+\leavevmode\hypertarget{ref-cheng2012reconceptualizing}{}%
 Cheng, E. (2012). Reconceptualizing the burden of proof. \emph{Yale LJ},
 \emph{122}, 1254.
 
-\leavevmode\vadjust pre{\hypertarget{ref-Cohen1977The-probable-an}{}}%
+\leavevmode\hypertarget{ref-Cohen1977The-probable-an}{}%
 Cohen, J. L. (1977). \emph{The probable and the provable}. Oxford
 University Press. \url{https://doi.org/10.2307/2219193}
 
-\leavevmode\vadjust pre{\hypertarget{ref-cohen1988difficulty}{}}%
+\leavevmode\hypertarget{ref-cohen1988difficulty}{}%
 Cohen, L. J. (1988). The difficulty about conjunction in forensic proof.
 \emph{The Statistician}, \emph{37}(4/5), 415.
 \url{https://doi.org/10.2307/2348767}
 
-\leavevmode\vadjust pre{\hypertarget{ref-dawid1987difficulty}{}}%
+\leavevmode\hypertarget{ref-dawid1987difficulty}{}%
 Dawid, A. P. (1987). The difficulty about conjunction. \emph{The
 Statistician}, 91--97.
 
-\leavevmode\vadjust pre{\hypertarget{ref-DiBello2019plausibility}{}}%
+\leavevmode\hypertarget{ref-DiBello2019plausibility}{}%
 Di Bello, M. (2019). Probability and plausibility in juridical proof.
 \emph{International Journal of Evidence and Proof}.
 
-\leavevmode\vadjust pre{\hypertarget{ref-haack2011legal}{}}%
-Haack, S. (2014). Legal probabilism: An epistemological dissent. In (pp.
-47--77).
+\leavevmode\hypertarget{ref-haack2011legal}{}%
+Haack, S. (2014). Legal probabilism: An epistemological dissent. In
+\emph{{Haack2014-HAAEMS}} (pp. 47--77).
 
-\leavevmode\vadjust pre{\hypertarget{ref-kaplow2014likelihood}{}}%
+\leavevmode\hypertarget{ref-kaplow2014likelihood}{}%
 Kaplow, L. (2014). Likelihood ratio tests and legal decision rules.
 \emph{American Law and Economics Review}, \emph{16}(1), 1--39.
 
-\leavevmode\vadjust pre{\hypertarget{ref-Kowalewska2021conjunction}{}}%
+\leavevmode\hypertarget{ref-Kowalewska2021conjunction}{}%
 Kowalewska, A. (2021). Reasoning without the conjunction closure.
 \emph{Episteme}, 1--14. \url{https://doi.org/10.1017/epi.2020.53}
 
-\leavevmode\vadjust pre{\hypertarget{ref-Makinson1965-MAKTPO-2}{}}%
+\leavevmode\hypertarget{ref-Makinson1965-MAKTPO-2}{}%
 Makinson, D. C. (1965). The paradox of the preface. \emph{Analysis},
 \emph{25}(6), 205--207.
 
-\leavevmode\vadjust pre{\hypertarget{ref-schwartz2017ConjunctionProblemLogic}{}}%
+\leavevmode\hypertarget{ref-schwartz2017ConjunctionProblemLogic}{}%
 Schwartz, D. S., \& Sober, E. R. (2017). The {Conjunction Problem} and
 the {Logic} of {Jury Findings}. \emph{William \& Mary Law Review},
 \emph{59}(2), 619--692.
 
-\leavevmode\vadjust pre{\hypertarget{ref-Stein05}{}}%
+\leavevmode\hypertarget{ref-Stein05}{}%
 Stein, A. (2005). \emph{Foundations of evidence law}. Oxford University
 Press.
 
-\leavevmode\vadjust pre{\hypertarget{ref-urbaniak2018narration}{}}%
+\leavevmode\hypertarget{ref-urbaniak2018narration}{}%
 Urbaniak, R. (2018). Narration in judiciary fact-finding: A
 probabilistic explication. \emph{Artificial Intelligence and Law},
 1--32. \url{https://doi.org/10.1007/s10506-018-9219-z}
