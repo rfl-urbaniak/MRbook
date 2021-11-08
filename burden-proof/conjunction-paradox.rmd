@@ -179,6 +179,7 @@ The simplest evidential relation, one of
 evidence bearing on a hypothesis of interest, can be represented 
 by the following directed graph:
 
+\ali{M: Can you make this DAG and the others folowing smaller so that they look better on the page?}
 
 \begin{figure}[h]
 ```{r fig:hEDAG,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "60%"}
@@ -188,7 +189,6 @@ graphviz.plot(hEDAG)
 \caption{DAG of the simplest evidential relation}
 \label{fig:hEDAG}
 \end{figure}
-
 
 \noindent
 The arrow need not have a causal interpretation. 
@@ -200,6 +200,7 @@ Back to the difficulty with conjunction. Two items of evidence, $a$ and $b$, eac
 by two directed graphs, as follows:
 
 \mar{A: Is this what you meant?}
+\ali{M: No. The two DAGS A-->a and B-->b should be one next to the other as part of the same figure. They should also look smaller and be positioned in the appropriate places.}
 
 \begin{figure}[h]
 ```{r fig:aADAG,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "60%"}
@@ -221,8 +222,7 @@ graphviz.plot(bBDAG)
 
 
 \noindent
-The two directed graphs should be joined to represent the conjunction $A\wedge B$. How can this be done?  Suppose for now that claims $A$ and $B$ are independent. We will relax this assumption later. The conjunction can be represented by adding a node $AB$ in the directed graph in Figure \ref{fig:conjunctionDAG}. The arrows go from node $A$ and node $B$ into the conjunction node $AB$. This arrangement makes it possible to express the meaning of $A\wedge B$ via a probability table (Table \ref{tab:CPTconjunction}). This 
-table looks, essentially, like the truth table for the conjunction in propositional logic.^[The difference is that  the values $1$ and $0$ stand for two different things depending on where they are in the table. In the columns corresponding to the nodes they represent node states: true and false; in the $\textsf{Pr}$ column they represent the conditional probability of a given state of $AB$ given the states of $A$ and $B$ listed in the same row. For instance, take a look at row two. It says: if $A$ and $B$ are both in states 1, then the probability of $AB$ being in state 0 is 0. In principle we could use 'true' and 'false' instead of 1 and 0 to represent states, but the numeric representation is easier to use in programming, which we do quite a bit in the background, so the reader might as well get used to this harmless ambiguity. For binary nodes, we will consistently  use '1' and '0' for the states, it's just probabilities that in this case end up being extreme.] 
+The two directed graphs should be joined to represent the conjunction $A\wedge B$. How can this be done?  Suppose for now that claims $A$ and $B$ are independent. We will relax this assumption later. The conjunction can be represented by adding a node $AB$ in the directed graph in Figure \ref{fig:conjunctionDAG}. The arrows go from node $A$ and node $B$ into the conjunction node $AB$. This arrangement makes it possible to express the meaning of $A\wedge B$ via a probability table (Table \ref{tab:CPTconjunction}). This table looks, essentially, like the truth table for the conjunction in propositional logic.^[The difference is that  the values $1$ and $0$ stand for two different things depending on where they are in the table. In the columns corresponding to the nodes they represent node states: true and false; in the $\textsf{Pr}$ column they represent the conditional probability of a given state of $AB$ given the states of $A$ and $B$ listed in the same row. For instance, take a look at row two. It says: if $A$ and $B$ are both in states 1, then the probability of $AB$ being in state 0 is 0. In principle we could use 'true' and 'false' instead of 1 and 0 to represent states, but the numeric representation is easier to use in programming, which we do quite a bit in the background, so the reader might as well get used to this harmless ambiguity. For binary nodes, we will consistently  use '1' and '0' for the states, it's just probabilities that in this case end up being extreme.] 
 
 
 \begin{figure}[h]
@@ -319,7 +319,7 @@ graphviz.plot(conjunctionDAG2, layout = "dot")
 \label{fig:conjunctionDAG2}
 \end{figure}
 
-\ali{M: Would be good if this new DAG had the same structure as the previous one, with an extra arrow between A and B added, but all else kept the same.}
+\ali{M: This new DAG should have the same structure as the previous one, with an extra arrow between A and B added, but all else kept the same.}
 
 Does the difficulty with conjunction arise even without the independence of hypotheses $A$ and $B$? It does in a number of circumstances.  Suppose evidence $a\et b$ establishes claim $A$ and also claim $B$, separately, right above the probability threshold $t$. The graph in Figure \ref{fig:conjunctionDAG2} ensures that:\mar{R: looks fin, although moving from P(a \& b|A\& B) to the numerator in the second line requires a bit of comment in a gloss after the derivation.}
  \begin{align*}
@@ -512,13 +512,14 @@ One important reason why d-separation matters is that it can be proven that if t
 
 
 The failure of the conjunction principles encountered so far are failures 
-of aggregation. When the probability of $A$ and the probability of $B$ is above a given threshold, the probability of the conjunction $A\wedge B$ usually is not. This can happen whether or not the probability of $A$ and $B$ are conditional on the supporting evidence and whether or not $A$ and $B$ are probabilistically independent. These failures of aggregation occur assuming the standard of proof is understood as a posterior probability threshold. Thus, aggregation cannot be justified  by equating the standard of proof to such threshold. 
+of aggregation. When the probability of $A$ and the probability of $B$ are both above a given threshold, the probability of the conjunction $A\wedge B$ usually is not. This can happen whether or not $A$ and $B$ are probabilistically independent. It can also happen whether or not 
+the probability of $A$ and $B$ are conditional on the supporting evidence. These failures of aggregation occur assuming the standard of proof is understood as a posterior probability threshold. Thus, aggregation cannot be justified  by equating the standard of proof to such threshold. 
 
-As an alternative, legal probabilists can think of proof standards as sufficiency criteria for how strong the evidence should be in order to justify a finding of liability. Instead of a posterior probability threshold, the standard of proof can be modeled using a probabilistic measure of evidential strength. Does this alternative way of modeling proof standards succeed in solving the conjunction paradox work? To some extent, but not completely. To understand why is the task of this section. 
+As an alternative, legal probabilists can think of proof standards as decision criteria of evidential strength, specifically, how strong strong the evidence should be in order to justify a finding of liability. Instead of a posterior probability threshold, the standard of proof can be modeled using a probabilistic measure of evidential strength. Does this alternative way of modeling proof standards succeed in solving the conjunction paradox work? To some extent, it does, but not completely. To understand why is the task of this section. 
 
 ## A dilemma
 
-Two common probabilistic measures of evidential strength are the Bayes factor and the likelihood ratio. We discussed this topic in earlier chapters (\textbf{REFER TO EARLIER CHAPTERS}).  As will become clear later, under plausible assumptions, these measures of evidential strength validate one direction of the conjunction principle: aggregation. If $a$ is sufficiently strong evidence in favor of $A$ and $b$ is sufficiently strong evidence in favor of $B$, then $a\wedge b$ is sufficiently strong evidence in favor of the conjunction $A \wedge B$. In fact, the evidential support for the conjunction will often exceed that for the individual claims, a point already made by @dawid1987difficulty:
+Two common probabilistic measures of evidential strength are the Bayes factor and the likelihood ratio. We discussed them in earlier chapters (\textbf{REFER TO EARLIER CHAPTERS}).  As will become clear later, under plausible assumptions, these measures of evidential strength validate one direction of the conjunction principle: aggregation. If $a$ is sufficiently strong evidence in favor of $A$ and $b$ is sufficiently strong evidence in favor of $B$, then $a\wedge b$ is sufficiently strong evidence in favor of the conjunction $A \wedge B$. In fact, the evidential support for the conjunction will often exceed that for the individual claims, a point already made by @dawid1987difficulty:
 
  \begin{quote} suitably measured, the support supplied by the conjunction of several independent testimonies exceeds that supplied by any of its constituents.
  \end{quote}
@@ -528,23 +529,17 @@ That is, probability theory justifies this claim: if distinct items of evidence 
 
 Dawid thought that vindicating aggregation was enough for the conjuction paradox to 'evaporate'. 
 Unfortunately, we will show that on the evidential strength interpretation of the standard 
-of proof, the other direction of the conjunction principle, distribution, does not hold. If $a \wedge b$ is sufficiently strong evidence in favor of $A \wedge B$, it does not follow that $a$ is sufficiently strong evidence in favor of $A$ or $b$ sufficiently strong evidence in favor of $B$. It is not even true that, if $a \wedge b$ is sufficiently strong evidence in favor of $A \wedge B$, then $a\wedge b$ is sufficiently strong evidence in favor of $A$ or $B$. This is  odd.  It would mean that, given a body of evidence, one can establish beyond a reasonable doubt that $A \wedge B$ (say the defendant killed the victim \textit{and} did so intentionally) while failing to establish one of the conjuncts. 
+of proof, the other direction of the conjunction principle, distribution, does not hold. If $a \wedge b$ is sufficiently strong evidence in favor of $A \wedge B$, it does not follow that $a$ is sufficiently strong evidence in favor of $A$ or $b$ sufficiently strong evidence in favor of $B$. It is not even true that, if $a \wedge b$ is sufficiently strong evidence in favor of $A \wedge B$, then $a\wedge b$ is sufficiently strong evidence in favor of $A$ or $B$. This is  odd.  It would mean that, given a body of evidence, one can establish beyond a reasonable doubt that $A \wedge B$ (say the defendant killed the victim \textit{and} acted intentionally) while failing to establish one of the conjuncts. 
 
 We face a dilemma. If the standard of proof is understood as a posterior probability threshold, the conjunction principle fails because aggregation fails while distribution succeeds. If, on the other hand, the standard of proof is understood as a threshold relative to evidential strength, the conjunction principle fails because distribution fails while aggregation succeeds. From a probabilistic perspective, it seems impossible to capture both directions of the conjunction principle. 
 
 In what follows, we develop more precisely the argument that, on the evidential strength approach, (a) aggregation succeeds but (b) distribution fails.  The argument for these two claims is tedious.  The reader should arm themselves with patience or take our word for it and jump ahead to the next section. 
 
-\todo{Some bits hidden, they need to be discussed elsewhere I think.}
-<!-- So, ultimately, Cohen was right that legal probabilists cannot justify the conjuction principle. But, as we shall explain, legal probabilists have very good reasons to reject one or the other direction of the conjunction principle. So Cohen was wrong in holding on to the conjunction principle.   -->
 
-<!-- All in all, legal probabilists have two routes for addressing the conjunction paradox: deny aggregation (and understand the standard of proof in terms of posterior probabilities) or deny distribution (and understand the standard of proof in terms of evidential strength). For reasons we shall explain, we think the former option is preferrable. -->
+## Combined support by the Bayes factor 
 
-
-
-## Bayes factor and aggregation
-
-We will start with the Bayes factor $\pr{E \vert H}/\pr{E}$ 
-as our measure of the support of $E$ in 
+The first step in the argument shows that the combined support supplied 
+by multiple pieces of evidence typically exceeds the individual support supplied by individual pieces of evidence. This claim holds for both the Bayes factor and the likelihood ratio. We start with the Bayes factor $\pr{E \vert H}/\pr{E}$ as our measure of the support of $E$ in 
 favor of $H$. Since by Bayes' theorem
 
 \[\pr{H \vert E} = \frac{\pr{E \vert H}}{\pr{E}}\times \pr{H},\]
@@ -557,14 +552,14 @@ the support of $E$ in favor of $H$. Putting aside reservations about this measur
 of evidential support (discussed earlier in \textbf{REFER TO EARLIER CHAPTER}), 
 the Bayes factor $\pr{E \vert H}/\pr{E}$, unlike the conditional probability 
 $\pr{H \vert E}$, offers a potential way to overcome 
-the difficulty with conjunction.
+the difficulty with conjunction by vindicating aggregation.
 
 
 ### Independent hypotheses 
 
 Suppose items of evidence  $a$ and $b$ positively support $A$ and $B$, separately.
-In other words, both Bayes factors $\nicefrac{\pr{a \vert A}}{\pr{a}}$ (abbreviated $BF_A$  and 
-$\nicefrac{\pr{b \vert B}}{\pr{b}=s_B}$ (abbreviated $BF_B$) are greater than one. 
+In other words, both Bayes factors $\nicefrac{\pr{a \vert A}}{\pr{a}}$ (abbreviated $BF_A$)  and 
+$\nicefrac{\pr{b \vert B}}{\pr{b}}$ (abbreviated $BF_B$) are greater than one. 
 Does the combined evidence $a \wedge b$ provide at least as much support 
 in favor of the joint claim $A \wedge B$ as the individual support by $a$ and $b$ 
 in favor of $A$ and $B$ considered separately? The combined support here is 
@@ -589,16 +584,13 @@ independence assumptions codified in Figure \ref{fig:conjunctionDAG}, namely: \e
 \ali{M: Check reference to independence assumptions}
 \begin{align*}
 \frac{\pr{a \wedge b \vert A \wedge B}}{\pr{a \wedge b}} &= \frac{\pr{a \vert A}}{\pr{a}} \times \frac{\pr{b \vert B}}{\pr{b}}\\
-BF_{AB} &= BF_{A} \times BF_{B}\\
+BF_{AB} &= BF_{A} \times BF_{B}
 \end{align*}
 
+\noindent This claim holds assuming (roughly) that hypotheses $A$ and $B$ are independent and that items of evidence $a$ and $b$ are independent. As noted earlier, these assumptions are plausible insofar as the Bayesian network in Figure \ref{fig:conjunctionDAG} is a plausible representation of the situation at hand. Thus, the combined support $BF_{AB}$ will always be higher than the individual support so long as $BF_{A}$ and $BF_{B}$ are greater than one, that is, if the individual piece of evidence positively support their respective hypotheses. 
 
-\noindent Essentially, we are assuming that hypotheses $A$ and $B$ are independent and that items of evidence $a$ and $b$ are independent. As noted earlier, these assumptions are plausible insofar as the Bayesian network in Figure \ref{fig:conjunctionDAG} is a plausible representation of the situation at hand. Thus, the combined support $s_{AB}$ will always be higher than the individual support so long as $s_{A}$ and $s_{B}$ are greater than one, that is, if the individual piece of evidence positively support their respective hypotheses. 
+This result generalizes beyond two pieces of evidence. Figure \ref{fig:bfconjunction5} compares the Bayes factor of one item of evidence, say $\nicefrac{\pr{a \vert A}}{\pr{a}}$ with the combined Bayes factor for five items of evidence, say $\nicefrac{\pr{a_1 \wedge \dots \wedge a_5 \vert A_1 \wedge \dots \wedge A_5}}{\pr{a_1\wedge \dots \wedge a_5}}$, for different values of sensitivity and specificity of the evidence.^[The sensitivity of a piece of evidence $e$ relative to a hypothesis $H$ is $\pr{e \vert H}$, while its specificity is $\pr{\neg e | \neg H}$.] The combined Bayes factor always exceeds the individual Bayes factors provided, as usual, the individual pieces of evidence positively support the individual hypotheses.^[The order is reversed if the items of evidence oppose the individual hypotheses. Neutral evidence results in a combined Bayes factor of 1, no matter  the prior or the number of items of evidence] In these circumstances, Dawid's claim that `the support supplied by the conjunction of several independent testimonies exceeds that supplied by any of its constituents' is vindicated.  
 
-This result generalizes beyond two pieces of evidence. Figure \ref{fig:bfconjunction5} compares the Bayes factor of one item of evidence, say $\nicefrac{\pr{a \vert A}}{\pr{a}}$ with the combined Bayes factor for five items of evidence, say $\nicefrac{\pr{a_1 \wedge \dots \wedge a_5 \vert A_1 \wedge \dots \wedge A_5}}{\pr{a_1\wedge \dots \wedge a_5}}$, for different values of sensitivity and specificity of the evidence. The latter always exceeds the former provided, of course, the individual pieces of evidence positively support the individual hypotheses.^[The order is reversed if the items of evidence oppose the individual hypotheses. Neutral evidence results in a combined Bayes factor of 1, no matter  the prior or the number of items of evidence] In these circumstances, Dawid's claim that `the support supplied by the conjunction of several independent testimonies exceeds that supplied by any of its constituents' is vindicated.  
-
-
-\todo{please use meaningful variable names, I revised s1 and s2 to sensitivity and specificity}
 \begin{figure}[h]
 ```{r bfconjunction5,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "90%", warning = FALSE, message = FALSE}
 library(ggplot2)
@@ -641,19 +633,17 @@ ggplot() +
   geom_line(aes(x = x, y = yy04045,color = "sens=0.4, spec=0.45", lty = "two")) +  geom_line(aes(x = x, y = y504045,color = "sens=0.4, spec=0.45", lty = "five"))+
   geom_line(aes(x = x, y = y04045,color = "sens=0.4, spec=0.45", lty = "one")) 
 ```
-\caption{BF for varying number of items of evidence and test qualities, with the usual independence assumptions.}
+\caption{Bayes factor for one, two and five items of evidence and the corresponding claims, given different degrees of specificity and sensitivity of the evidence. The independence assumptions in Figure \ref{fig:conjunctionDAG} hold.}
 \label{fig:bfconjunction5}
 \end{figure}
 
 
 ### Dependent hypotheses 
 
-
-What happens if $A$ and $B$ are not necessarily 
-probabilistically independent as in the Bayesian network 
-in Figure \ref{fig:conjunctionDAG2}? The combined Bayesian factor $BF_{AB}$ 
-is still greater than both the individual Bayesian factor $BF_{A}$ and $BF_{B}$
-in a number of circumstances. First, the following holds:^[Here is the derivation:
+If $A$ and $B$ are not necessarily probabilistically independent as in the Bayesian network 
+in Figure \ref{fig:conjunctionDAG2}, the combined Bayes factor $BF_{AB}$ 
+is still greater than both the individual Bayes factor $BF_{A}$ and $BF_{B}$
+in a number of circumstances. To see why, first note that the following holds:^[Here is the derivation:
  \begin{align*}
 \frac{\pr{a \wedge b\vert A\wedge B}}{\pr{a \wedge b}} & =  \frac{\frac{ \pr{A \et B \et a \wedge b }}{\pr{A \et B}}}{\pr{a \et b}} \\ 
 & =  \frac{\frac{ \pr{A} \times \pr{B|A} \times \pr{a \vert A \wedge B} \times \pr{b \vert A \wedge B \wedge a} }{\pr{A} \times \pr{B \vert A}}}{\pr{a} \times \pr{b \vert a}} \\ 
@@ -666,13 +656,22 @@ BF^{'}_{AB}& =  BF_{A}\times BF^{'}_{B}
 BF^{'}_{AB}& =  BF_{A}\times BF^{'}_{B} 
  \end{align*}
 
+\noindent
+The difference from the case of independent hypotheses 
+is that $BF_B=\frac{\pr{b |B}}{\pr{b}}$ was replaced by 
+$BF^{'}_B=\frac{\pr{b |B}}{\pr{b|a}}$. Since $b$ need not be probabilistically independent of $a$,  there is no guarantee that $\pr{b \vert a}=\pr{b}$. However, $BF_B^{'}$ is usually greater than one so long as $b$ raises the probability of $B$ even in conjunction with $a$. This is a plausible assumption to make, or else $b$ (in conjunction with $a$) would be useless evidence.^[Note that $BF^{'}_{B}$ is usually lower than $BF_{B}$ because $\pr{b \vert a} > \pr{b}$ (assuming, at least, $a$ and $b$ are convergent pieces  of evidence; \textbf{REFER TO EARLIER CHAPTER ON CROSS-EXAMINATION AND CORROBORATION}. At the same time, $BF^{'}_{B}$ should  still be greater than one if $b$ positively supports $B$ even conditional on  $a$. Note that $\frac{\pr{b \vert B}}{\pr{b\vert a}}=\frac{\pr{b \vert B \wedge a}}{\pr{b\vert a}}$, by independence \eqref{eq:I6}. Further, by Bayes' theorem, $\pr{B \vert b \wedge a} = \frac{\pr{b \vert B \wedge a}}{\pr{b\vert a}} \times \pr{B\vert a}$, so $\pr{B\vert b\et a}$ is obtained by multiplying $\pr{B\vert a}$ by $s^{'}_{B}$. In other words, the claim that $\frac{\pr{b \vert B}}{\pr{b\vert a}}>1$ is equivalent to the claim that $\pr{B \vert b \wedge a}> \pr{B\vert a}$. The latter is plausible in this context, since  $b$ should still raise the probability of $B$  even in conjunction with $a$, or else $b$ would be useless evidence.] Since $BF^{'}_{AB} =  BF_{A}\times BF^{'}_{B}$ and $BF^{'}_B$ is greater than one, $BF^{'}_{AB}$ should be greater than $BF_A$.
+
+The argument is, in fact, symmetric. So we have:
+\begin{align*}
+\frac{\pr{a \wedge b\vert A\wedge B}}{\pr{a \wedge b}} & =  \frac{\pr{a \vert A}}{\pr{a}} \times \underbrace{\frac{\pr{b \vert B}}{\pr{b\vert a}}}_{>1}  = \frac{\pr{b \vert B}}{\pr{b}} \times \underbrace{\frac{\pr{a \vert A}}{\pr{a\vert b}}}_{>1}
+\end{align*}
+
+\noindent
+As before, since $BF^{'}_{AB} =  BF_{B}\times BF^{'}_{A}$ and $BF^{'}_A$ is greater than one, $BF^{'}_{AB}$ should be greater than $BF_B$. So, putting everything together, $BF^{'}_{AB}$ will usually be greater than both $BF_A$ and $BF_B$ even when hypotheses $A$ and $B$ are dependent. 
 
 
-
-#### MOVE TO Appendix materials
-
-
-
+\textit{MOVE TO APPENDIX}
+---------------------
 
 \ali{double check, are these d-sep in the second network?}
 
@@ -680,66 +679,161 @@ BF^{'}_{AB}& =  BF_{A}\times BF^{'}_{B}
 
 \begin{fact}
 Assuming \eqref{eq:I3}, \eqref{eq:I4} and \eqref{eq:I6}, if $\pr{B\vert b\et a } > \pr{B\vert a}$ and $\pr{A\vert a \et b} > \pr{A \vert b}$, we have:
-\[S_{AB}> \frac{\pr{a \vert A}}{\pr{a}}, \frac{\pr{b\vert B}}{\pr{b}}\]
+\[BF_{AB}> \frac{\pr{a \vert A}}{\pr{a}}, \frac{\pr{b\vert B}}{\pr{b}}\]
 \end{fact}
 \raf{M: What does comma mean? Fact 1 is too much formalism.}
 
 \noindent \textbf{Argument.} First, notice the following holds given \eqref{eq:I3} and \eqref{eq:I4}:
 \begin{align}
 \frac{\pr{a \wedge b\vert A\wedge B}}{\pr{a \wedge b}} & =  \frac{\pr{a \vert A}}{\pr{a}} \times \frac{\pr{b \vert B}}{\pr{b\vert a}} \\
-s^{'}_{AB}& =  s_{A}\times s^{'}_{B},  \label{eq:BFdep}
+BF^{'}_{AB}& =  s_{A}\times BF^{'}_{B},  \label{eq:BFdep}
  \end{align}
 
 \noindent 
-where factor $s_{B}= \nicefrac{\pr{b \vert B}}{\pr{b}}$ was replaced by
-$s^{'}_{B}=\nicefrac{\pr{b \vert B}}{\pr{b\vert a}}$.^[The difference between $s_{B} and $S^{'}_{B}$ is that $b$ need not be probabilistically independent of $a$, and thus there is no guarantee that $\pr{b \vert a}=\pr{a}$. In fact, $s^{'}_{B}$ is usually lower than $s_{B}$ because $\pr{b \vert a} > \pr{b}$ (assuming, at least, $a$ and $b$ are convergent pieces  of evidence; SEE DISCUSSION IN EARLIER CHAPTERS ON CROSS-EXAMINATION AND CORROBORATION). At the same time, $s^{'}_{B}$ should  still be greater than one if $b$ positively supports $B$ even conditional on  $a$. Note that $\frac{\pr{b \vert B}}{\pr{b\vert a}}=\frac{\pr{b \vert B \wedge a}}{\pr{b\vert a}}$, by independence \eqref{eq:I6}. Further, by Bayes' theorem, $\pr{B \vert b \wedge a} = \frac{\pr{b \vert B \wedge a}}{\pr{b\vert a}} \times \pr{B\vert a}$, so $\pr{B\vert b\et a}$ is obtained by multiplying $\pr{B\vert a}$ by $s^{'}_{B}$. In other words, the claim that $\frac{\pr{b \vert B}}{\pr{b\vert a}}>1$ is equivalent to the claim that $\pr{B \vert b \wedge a}> \pr{B\vert a}$. The latter is plausible in this context, since  $b$ should still raise the probability of $B$  even in conjunction with $a$, or else $b$ would be useless evidence.]
+where factor $BF_{B}= \nicefrac{\pr{b \vert B}}{\pr{b}}$ was replaced by
+$BF^{'}_{B}=\nicefrac{\pr{b \vert B}}{\pr{b\vert a}}$.^[The difference between $BF_{B}$ and $BF^{'}_{B}$ is that $b$ need not be probabilistically independent of $a$, and thus there is no guarantee that $\pr{b \vert a}=\pr{b}$. In fact, $BF^{'}_{B}$ is usually lower than $BF_{B}$ because $\pr{b \vert a} > \pr{b}$ (assuming, at least, $a$ and $b$ are convergent pieces  of evidence; SEE DISCUSSION IN EARLIER CHAPTERS ON CROSS-EXAMINATION AND CORROBORATION). At the same time, $BF^{'}_{B}$ should  still be greater than one if $b$ positively supports $B$ even conditional on  $a$. Note that $\frac{\pr{b \vert B}}{\pr{b\vert a}}=\frac{\pr{b \vert B \wedge a}}{\pr{b\vert a}}$, by independence \eqref{eq:I6}. Further, by Bayes' theorem, $\pr{B \vert b \wedge a} = \frac{\pr{b \vert B \wedge a}}{\pr{b\vert a}} \times \pr{B\vert a}$, so $\pr{B\vert b\et a}$ is obtained by multiplying $\pr{B\vert a}$ by $BF^{'}_{B}$. In other words, the claim that $\frac{\pr{b \vert B}}{\pr{b\vert a}}>1$ is equivalent to the claim that $\pr{B \vert b \wedge a}> \pr{B\vert a}$. The latter is plausible in this context, since  $b$ should still raise the probability of $B$  even in conjunction with $a$, or else $b$ would be useless evidence.]
 \ali{check if d-sep in this fn holds in the second bn}
 <!-- However, it might not always exceed the support supplied by $s_A$ and $s_B$ individually. For suppose $s_A=2$  -->
 <!-- and $s_B=3$, but $s^{'}_B=1.2$.\todo{Give a clear example showing that this might happen, I now think this is mathematically impossible!} Then, $s^{'}_{AB}=2\times 1.2=2.4$, which is below  -->
 <!-- the individual support $s_B$, but still above $s_A$.  For the case in which  -->
 <!-- $A$ and $B$ are probabilistically dependent,  -->
 <!-- Dawid's claim should be amended as follows. Even though the support supplied by the conjunction of several independent testimonies need not always exceed that supplied by any of its constituents, it is always at least as great as the smallest support supplied by its constituents, if the individual Bayes factors are $>$1.\todo{This needs to be reconsidered.} -->
-Hence, $s^{'}_{AB}$ should be greater than either $s_A$   if   $s^{'}_B$ is  
+Hence, $BF^{'}_{AB}$ should be greater than either $BF_A$   if   $BF^{'}_B$ is  
 greater than one.  Note that the reasoning behind \eqref{eq:BFdep} is symmetric and so the assumed inequalities give the result marked by the braces:
 \begin{align*}
 \frac{\pr{a \wedge b\vert A\wedge B}}{\pr{a \wedge b}} & =  \frac{\pr{a \vert A}}{\pr{a}} \times \underbrace{\frac{\pr{b \vert B}}{\pr{b\vert a}}}_{>1}  = \frac{\pr{b \vert B}}{\pr{b}} \times \underbrace{\frac{\pr{a \vert A}}{\pr{a\vert b}}}_{>1}
 \end{align*}
-So, symmetrically, we have $s^{'}_{AB} =  s_{B}\times s^{'}_{A}$, and so   $s^{'}_{AB}$ should be greater than either $s_B$   if   $s^{'}_A$ is greater than one.  
+So, symmetrically, we have $BF^{'}_{AB} =  BF_{B}\times BF^{'}_{A}$, and so   $BF^{'}_{AB}$ should be greater than either $BF_B$   if   $BF^{'}_A$ is greater than one.  
 
  \textbf{Argument ends.}
 
-\raf{M: Not sure what this argument shows. Do we show that the joint support exceeds 
-the LOWEST of the individual support? Unclear}
+---------------------
+
 \raf{M: Need to introduce simulations, illustrate results for aggregation and BF without independence here}
 
 
+## Combined support by the likelihood ratio
 
-## Likelihood ratio and aggregation
-
-Let's now see what happens if we replace the Bayes factor with the likelihood ratio, another probabilistic measure of evidential support, extensively discussed in Chapter XXX \todo{REF}. 
-As we shall understand it here, the likelihood ratio compares
-the probability of the evidence on the assumption that 
-a hypothesis of interest is true and the probability of the evidence on the assumption that 
-the negation of the hypothesis is true, 
-that is, $\nicefrac{\pr{E \vert H}}{\pr{E \vert \neg H}}$. The greater the 
-likelihood ratio (for values above one), the stronger the evidential support 
-in favor of the hypothesis (as contrasted to the its negation). 
-We can think of the the likelihood rato as the following:
+The Bayes factor can be replaced by the likelihood ratio, another probabilistic measure of evidential support, extensively discussed in \textbf{REFER TO Chapter XXX \todo{REF}}. The likelihood ratio compares the probability of the evidence on the assumption that a hypothesis of interest is true and the probability of the evidence on the assumption that the negation of the hypothesis is true, that is, $\nicefrac{\pr{E \vert H}}{\pr{E \vert \neg H}}$. We can think of the the likelihood ratio as the following:
 
 \[\frac{\textit{sensitivity}}{\textit{1- specificity}}\]
 
 \noindent
-Unlike the Bayes factor, the likelihood ratio is not sensitive to the priors\todo{Rafal: read the sensitivity paper and check fn.}\footnote{At least so long as sensitivity and specificity are not}. In this sense, it is a more suitable measure 
-if we want to factor out the effects that 
-priors may have on the assessment of evidential strength.  What is the combined likelihood ratio and how does it behave?
+The greater the likelihood ratio (for values above one), the stronger the evidential support 
+in favor of the hypothesis (as contrasted to the its negation). Unlike the Bayes factor, the likelihood ratio is not sensitive to the prior probability of the hypothesis of interest so long as sensitivity and specificity are not sensitive to the prior.^[This point is debated in the literature \textbf{CITE}. Further, we will see that specificity is sensitive to prior probabilities in the case of combined hypotheses.] 
 
-\todo{This "short lived" bit was too strong, and too distracting at this point, commented out.}
-<!-- But this advantage is short lived. The likelihood ratio  -->
-<!-- is sensitive to priors when one  -->
-<!-- considers a composite claim instead of an individual claim.  -->
+Does the combined support measured by the combined likelihood ratio $\nicefrac{\pr{a\wedge b \vert a\wedge B}}{\pr{a \wedge b \vert \neg (A\wedge B)}}$ exceed the individual support measured by the individual likelihood ratios $\nicefrac{\pr{a \vert A}}{\pr{a \vert \neg A}}$ and $\nicefrac{\pr{b \vert B}}{\pr{b \vert \neg B}}$? Under suitable assumptions, the answer is positive.
+So, details aside, Bayes factor and likelihood ratio agree on this point. The argument for the likelihood ratio, however, is more laborious.  
 
-\raf{M: Fact 2 is too much formalism. It does not aid understanding. Enough to say that Figure 2 validates it.}
- 
+### Combined sensitivity and specificity
+
+
+First, we compute the numerator and denominator of the combined 
+likelihood ratio. The numerator is easy. It results from multiplying the sensitivity of the individual items of evidence, $a$ and $b$, relative to their respective hypotheses, $A$ and $B$:^[\begin{align*}
+\pr{a \wedge b\vert A\wedge B} & =  \frac{\pr{A \et B \et a\et b}}{\pr{A \et B}}
+&\mbox{\,\,\,\,\,\,\,\,\,\,\,\,\, (conditional probability)}
+\\
+&= \frac{   \pr{A} \times \pr{B\vert A} \times \pr{a \vert A \wedge B} \times \pr{b \vert A \wedge B \wedge a} }{\pr{A} \times \pr{B \vert A}}
+&\mbox{\,\,\,\,\,\,\,\,\,\,\,\,\, (chain rule)}
+\\
+& = \frac{\pr{A} \times \pr{B \vert A} \times \pr{a \vert A} \times \pr{b \vert B}}{\pr{A}  \times \pr{B \vert A}} 
+&\mbox{\,\,\,\,\,\,\,\,\,\,\,\,\, (independencies \eqref{eq:I3a} and \eqref{eq:I5})}
+\\
+& = \pr{a \vert A} \times \pr{b \vert B} 
+&\mbox{\,\,\,\,\,\,\,\,\,\,\,\,\, (algebraic manipulation)}
+ \end{align*}]
+ \begin{align*}
+\pr{a \wedge b\vert A\wedge B} & =  \pr{a \vert A} \times \pr{b \vert B} 
+ \end{align*}
+\noindent
+Call this \textit{combined sensitivity}. The denominator of the combined likelihood ratio is more complicated, mostly because of the presence of $\neg (A \wedge B)$ as a condition:^[\begin{align*}
+\pr{a \et b\vert \neg (A\et B)} & = \frac{\pr{a \et b \et \neg (A\et B)}}{\pr{\neg (A \et B)}} 
+&\mbox{\,\,\,\,\,\,\,\,\,\,\,\,\, (conditional probability)}\\
+& = \frac{\pr{a \et b \et \neg A\et B} +  \pr{a \et b \et A\et \neg B} + \pr{a \et b \et \neg A\et \neg B}  }{\pr{\neg A \et B} + \pr{A \et \neg B} + \pr{\neg A \et \neg B} } 
+&\mbox{\,\,\,\,\,\,\,\,\,\,\,\,\, (logic \& additivity)}
+\end{align*}
+\noindent Now consider the first summand from the numerator:
+\begin{align*}
+\pr{a \et b \et \neg A\et B} & = \pr{\n A} \pr{B \vert \n A} \pr{a \vert \n A \et B} \pr{b\vert a \et \n A \et B} &\mbox{\,\,\,\,\,\,\,\,\,\,\,\,\, (chain rule)} \\ & = 
+\pr{\neg A}\pr{B \vert \neg A} \pr{a \vert \neg A}\pr{b \vert B}
+&\mbox{\,\,\,\,\,\,\,\,\,\,\,\,\, (independencies \eqref{eq:I4a} and \eqref{eq:I5a})} \\
+\end{align*}
+The simplification of the other two summanda is analogous (albeit with slightly different independence assumptions---\eqref{eq:I4b} and \eqref{eq:I5b} for the second one and \eqref{eq:I4c} and \eqref{eq:I5c} for the third. Once we plug these into the denominator formula we get:
+\begin{align*}
+\pr{a \et b\vert \neg (A\et B)} & = \frac{\pr{\neg A}\pr{B \vert \neg A} \pr{a \vert \neg A}\pr{b \vert B} + \pr{A}\pr{\neg B \vert A} \pr{a \vert A }\pr{b \vert \neg B} + \pr{\neg A}\pr{\neg B \vert \neg A } \pr{a \vert \neg A}\pr{b \vert \neg B}}{\pr{\neg A}\pr{B \vert \neg A} + \pr{A}\pr{\neg B \vert A } + \pr{\neg A}\pr{\neg B \vert \neg A} }  
+ \end{align*}] 
+
+\scalebox{.85}{\parbox{1\linewidth}{
+\begin{align*}
+\pr{a \et b\vert \neg (A\et B)} & = \frac{\pr{\neg A}\pr{B \vert \neg A} \pr{a \vert \neg A}\pr{b \vert B} + \pr{A}\pr{\neg B \vert A} \pr{a \vert A }\pr{b \vert \neg B} + \pr{\neg A}\pr{\neg B \vert \neg A } \pr{a \vert \neg A}\pr{b \vert \neg B}}{\pr{\neg A}\pr{B \vert \neg A} + \pr{A}\pr{\neg B \vert A } + \pr{\neg A}\pr{\neg B \vert \neg A} }  
+ \end{align*}
+}}
+Call this \textit{combined specificity}. The two equalities holds whether or not $A$ and $B$ are probabilistically independent. So both directed graphs in Figure \ref{fig:conjunctionDAG} and Figure \ref{fig:conjunctionDAG2} validate these claims.
+
+
+### Equal probability and independence 
+
+Many variables are at play here. Unlike with the Bayes factor, it is not easy to compare the combined evidential support and the individual support. For illustrative purpose,  we simplify. Let the sensitivity and specificity for the items of evidence involved be the same and equal $x$.  Let also $A$ and $B$ be probabilistically independent in agreement with the directed graph in Figure \ref{fig:conjunctionDAG}. In this simplified set-up, the combined likelihood ratio reduces to the following, where $\pr{A}=k$ and $\pr{B}=t$:
+  \begin{align*}
+\frac{\pr{a \wedge b \vert A\wedge B}}{\pr{a \et b\vert \neg (A\et B)}} & = \frac{x^2}{\frac{(1-k)t(1-x)x + k(1-t)x(1-x) + (1-k)(1-t)(1-x)(1-x)}{ \left(1-k\right) t +\left(1-t\right) k+\left(1-k\right) \left(1-t\right)}}
+ \end{align*}
+
+\noindent
+The combined likelihood ratio can now be easily plotted. As Figure \ref{fig:jointLRMarcello} shows, the combined likelihood ratio always exceeds the individual likelihood ratios whenever they are greater than one (or in other words, as is usually assumed, the two pieces of evidence provide positive support for their respective hypotheses). Interestingly, we notice that the combined likelihood ratio 
+varies deepening on the prior probabilities $\pr{A}$ and $\pr{B}$. 
+
+\begin{figure}
+```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "90%"}
+library(ggplot2)
+library(ggthemes)
+
+combined <- function (x,k,t) {
+  (x^2)/
+(
+  ((1-k)*t*(1-x)*x + k*(1-t)*x*(1-x) + (1-k)*(1-t)*(1-x)*(1-x))
+  /
+    ((1-k)*t +k*(1-t)+(1-k)*(1-t))
+)
+}
+
+# combinedMarcello <- function(x,k,t){
+#   (x^2)/(k*(1-t)*(x)*(1-x)+(1-k)*t*x*(1-x)+(1-k)*(1-t)*(1-x)*(1-x))
+# }
+
+x <-seq(0,1,by=0.001)
+y0102 <- combined(x,0.1,0.2)
+y0608 <- combined(x,0.6,0.8)
+
+
+ggplot() +
+  stat_function(fun=function(x)(x/(1-x)), geom="line", aes(colour="LR(a)=LR(b)"))+
+   geom_line(aes(x = x, y = y0102,color = "joint LR for k = 0.1, t=0.2"))+ylim(c(0,5))+
+  xlab("x=sensitivity(a)=sensitivity(b)")+ ylab("LR")+theme_tufte()+
+  theme(legend.position = c(0.8, 0.2)) +
+  geom_line(aes(x = x, y = y0608,color = "joint LR for k = 0.6, t=0.8"))
+```
+
+\caption{Combined likelihood ratios exceeds individual Likelihood ratios as soon as sensitivity is above .5. Changes in the prior probabilities $t$ and $k$ do not invalidate this result.}
+\label{fig:jointLRMarcello}
+\end{figure}
+
+As with the Bayes factor, the combined likelihood ratio exceeds 
+the individual likelihood ratios. However, the graph only covers cases in which
+the two pieces of evidence have the same sensitivity and specificity and hypotheses $A$ and $B$ are probabilistically independent. What happens when these two assumptions are relaxed?
+
+### More complex scenarios -- NEEDS SIMULATION
+
+If the items of evidence have different levels of sensitivity and specificity, the combined likelihood ratio never goes below the lower of the two individual likelihood ratios, but can be lower than the higher one. \raf{M: Need to add simulation results to make this argument 
+fully general and drop all the simplifying assumptions (.e.g. independence or equiprobability)}
+If the composite likelihood ratio behaves differently than the Bayes factor in that it is greater than the lower of the individual likelihood ratios, rather than being greater than both of them,  Dawid's claim that  `the support supplied by the conjunction of several independent testimonies exceeds that supplied by any of its constituents' still holds.
+
+<!---
+This also entails that any likelihood ratio threshold decision standard still satisfies aggregation: if both individual likelihood ratios are above a threshold, then so will be the composite likelihood ratio, as long as one and the same threshold is to be used for the conjunction and for the conjuncts. However, whether a single threshold should be used here is somewhat unclear, and this is an issue to which we will now turn.
+--->
+
+\textit{MOVE TO APPENDIX}
+---------------------
+
 \begin{fact} If independence assumptions \ali{check whic of these d-sep hold in the first and in the second BN}  \eqref{eq:I3a}, \eqref{eq:I4a},  \eqref{eq:I4b}, \eqref{eq:I4c}, \eqref{eq:I5}, \eqref{eq:I5a}, \eqref{eq:I5b}   and \eqref{eq:I5c} hold, the combined likelihood ratio is:
  \begin{align}\label{eq:jointLR}
 \frac{\pr{a \wedge b \vert A\wedge B}}{\pr{a \et b\vert \neg (A\et B)}} & = \frac{\pr{a \vert A} \times \pr{b \vert B}}{\frac{\pr{\neg A}\pr{B \vert \neg A} \pr{a \vert \neg A}\pr{b \vert B} + \pr{A}\pr{\neg B \vert A} \pr{a \vert A }\pr{b \vert \neg B} + \pr{\neg A}\pr{\neg B \vert \neg A } \pr{a \vert \neg A}\pr{b \vert \neg B}}{\pr{\neg A}\pr{B \vert \neg A} + \pr{A}\pr{\neg B \vert A } + \pr{\neg A}\pr{\neg B \vert \neg A} } }
@@ -803,56 +897,6 @@ The simplification of the other two summanda is analogous (albeit with slightly 
 \textbf{Argument ends.}
 
 
-Because of the many variables at play, it is not easy to compare the combined evidential support and 
-the individual support supplied by $a$ and $b$ towards $A$ and $B$, as measured by the individual and combined likelihood ratio. Let's work with \eqref{eq:jointLR2}. For illustrative purposes,  we  simplify: Let all the sensitivites and specificities involved be the same and equal $x$.  In this simplified set-up with independence assumptions in the background, the combined likelihood ratio therefore reduces to the following, where $\pr{A}=k$ and $\pr{B}=t$:
-
-  \begin{align*}
-\frac{\pr{a \wedge b \vert A\wedge B}}{\pr{a \et b\vert \neg (A\et B)}} & = \frac{x^2}{\frac{(1-k)t(1-x)x + k(1-t)x(1-x) + (1-k)(1-t)(1-x)(1-x)}{ \left(1-k\right) t +\left(1-t\right) k+\left(1-k\right) \left(1-t\right)}}
- \end{align*}
-
-\noindent
-In this simplified setup, the likelihood ratios can be easily plotted. As Figure \ref{fig:jointLRMarcello} shows, the combined likelihood  ratio varies depeding on the prior probabilities $\pr{A}$ and $\pr{B}$, as expected, but always execeeds the individual likelihood ratios whenever they are greater than one (that is, the two piece of evidence provides positive support for their respective hypothesis).
-
- 
-\begin{figure}
-```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "90%"}
-library(ggplot2)
-library(ggthemes)
-
-combined <- function (x,k,t) {
-  (x^2)/
-(
-  ((1-k)*t*(1-x)*x + k*(1-t)*x*(1-x) + (1-k)*(1-t)*(1-x)*(1-x))
-  /
-    ((1-k)*t +k*(1-t)+(1-k)*(1-t))
-)
-}
-
-# combinedMarcello <- function(x,k,t){
-#   (x^2)/(k*(1-t)*(x)*(1-x)+(1-k)*t*x*(1-x)+(1-k)*(1-t)*(1-x)*(1-x))
-# }
-
-x <-seq(0,1,by=0.001)
-y0102 <- combined(x,0.1,0.2)
-y0608 <- combined(x,0.6,0.8)
-
-
-ggplot() +
-  stat_function(fun=function(x)(x/(1-x)), geom="line", aes(colour="LR(a)=LR(b)"))+
-   geom_line(aes(x = x, y = y0102,color = "joint LR for k = 0.1, t=0.2"))+ylim(c(0,5))+
-  xlab("x=sensitivity(a)=sensitivity(b)")+ ylab("LR")+theme_tufte()+
-  theme(legend.position = c(0.8, 0.2)) +
-  geom_line(aes(x = x, y = y0608,color = "joint LR for k = 0.6, t=0.8"))
-```
-
-\caption{Combined likelihood ratios exceeds individual Likelihood ratios as soon as sensitivity is above .5. Changes in the prior 
-probabilities $t$ and $k$ do not invalidate this result.}
-\label{fig:jointLRMarcello}
-\end{figure}
-
-
-
-
 
 <!--
 
@@ -871,18 +915,6 @@ The combined likelihood ratio is therefore:
 
 -->
 
-
-
-As with the Bayes factor, the combined likelihood ratio exceeds 
-the individual likelihood ratios. However, this happens only as long as the two pieces of evidence have the same sensitivity and specificity. If the items of evidence have different levels of sensitivity and specificity, the combined likelihood ratio never goes 
-below the lower of the two individual likelihood ratios, but can be lower than the higher one. 
-
-
-
-
-\todo{Need to add simulation results to make this argument 
-fully general and drop all the simplifying assumptions (.e.g. independence or equiprobability)}
-
 <!-- ```{r echo=FALSE} -->
 <!-- library(ggplot2) -->
 <!-- library("gridExtra") -->
@@ -899,23 +931,20 @@ fully general and drop all the simplifying assumptions (.e.g. independence or eq
 <!--        ggtitle("Combined v individual support measured by LR with y=0.7") -->
 
 
-Notice that even if the composite likelihood ratio behaves somewhat differently than the Bayes factor in being greater than the lower of the individual likelihood ratios, rather than being greater than both of them,  Dawid's claim that  `the support supplied by the conjunction of several independent testimonies exceeds that supplied by any of its constituents' still holds.
-
-This also entails that any likelihood ratio threshold decision standard still satisfies aggregation: if both individual likelihood ratios are above a threshold, then so will be the composite likelihood ratio, as long as one and the same threshold is to be used for the conjunction and for the conjuncts. However, whether a single threshold should be used here is somewhat unclear, and this is an issue to which we will now turn.
 
 
-##  Evidential strength threshold
+##  Vindicating aggregation
 
-If the decision criterion is formulated in terms of evidential strength instead of posterior probabilities,  the standard of proof should no longer be formalized as a posterior probability threshold, but rather as a threshold for the Bayes factor or the likelihood ratio. The threshold should no longer be a probability between 0 and 1, but a number somewhere above one. The greater this number, the more stringent the standard of proof, for any value above one. In criminal trials, for example, the rule of decision would be: guilt is proven beyond a reasonable doubt if and only if the evidential support in favor of $H$---as measured by the Bayes factor $\nicefrac{\pr{E \vert H}}{\pr{E}}$ (or by the likelihood ratio $\nicefrac{\pr{E\vert H}}{\pr{E \vert \n H}}$)---meets a suitably high threshold $t_{BF}$ ($t_{LR}$).  The obvious question at this point is, how do we identify 
-the appropriate threshold?\todo{will at some point take a look at "Bayesian Choice"}
+The fact that---for both the Bayes faxctor and the likelihood ratio--the support supplied by the conjunction usually exceeds the support supplied by individual items of evidence can be used to justify aggregation. The argument, however, is not straightforward. Aggregation is a principle about the standard of proof. So, in order to vindicate aggregation, the standard of proof should be understood in terms of evidential strength. But how this should be done is not obvious. 
+
+Here is what should be obvious. If the decision criterion is formulated in terms of evidential strength instead of posterior probabilities,the standard of proof should no longer be formalized as a posterior probability threshold, but rather as a threshold for the Bayes factor or the likelihood ratio. The threshold should no longer be a probability between 0 and 1, but a number somewhere above one. The greater this number, the more stringent the standard of proof, for any value above one. In criminal trials, for example, the rule of decision would be: guilt is proven beyond a reasonable doubt if and only if the evidential support in favor of $H$---as measured by the Bayes factor $\nicefrac{\pr{E \vert H}}{\pr{E}}$ (or by the likelihood ratio $\nicefrac{\pr{E\vert H}}{\pr{E \vert \n H}}$)---meets a suitably high threshold $t_{BF}$ ($t_{LR}$).  The question at this point is, how do we identify 
+the appropriate threshold? The answer to this question is not obvious. \todo{will at some point take a look at "Bayesian Choice"}
 
 ### Variable threhsold
 
-A threshold on evidential strength can be derived from the threshold on posterior probability.
-The advantage of the posterior probability threshold is that its value can be determined in a decision-theoretic manner via the minimization of expected costs. (\textbf{REFER TO ERALIER CHAPPER}}) Can something analogous be done for the Bayes factor or the likelihood ratio? One option is to derive a threshold for the Bayes factor and the likelihood ratio, call these thresholds $t_{BF}$ or $t_{LR}$, from a thresholds $t$ on the posterior probability.
-This is easy to do. 
+We first articulate an approach that is a non-starter. It is useful to understand why this appropach does not work to formulate a more promising approach. A threshold on evidential strength can be derived from the threshold on posterior probability. The advantage of the posterior probability threshold is that its stringency can be determined in a decision-theoretic manner via the minimization of expected costs. (\textbf{REFER TO ERALIER CHAPPER}}) Something analogous can be done for the Bayes factor or the likelihood ratio. One option is to derive a threshold for the Bayes factor and the likelihood ratio, call these thresholds $t_{BF}$ or $t_{LR}$, from a thresholds $t$ on the posterior probability. This is easy to do. 
 
-Consider threshold $t_{BF} first. Since $\mathsf{posterior }=\mathsf{ Bayes factor }\times \mathsf{ prior}$, the Bayes factor threshold can be determined as follows:
+Consider threshold $t_{BF}$ first. Since $\mathsf{posterior }=\mathsf{ Bayes factor }\times \mathsf{ prior}$, the Bayes factor threshold can be determined as follows:
 \begin{align*}t_{BF} & = \frac{t}{\textsf{prior}}
 \end{align*}
 
@@ -1053,10 +1082,9 @@ threshold regardless of the prior probability of the
 claim of interest.  This raises the difficult 
 question of how to fix the  threshold irrespective 
 of the priors. Standard decision theory can no longer be used. 
-Still, even if the question can be satisfactorily answered, 
-the fixed threshold approach gives rise 
-to a complication that proves fatal.
-
+Still, assuming this question can be satisfactorily answered, 
+the fixed threshold approach manages to vindicate aggregation. 
+This is a significant improvement. 
 
 If the standard of proof is formalized using a fixed  threshold for the Bayes factor or for the likelihood ratio, the conjunction principle  would boil down to one of these:
 
@@ -1074,21 +1102,12 @@ If the standard of proof is formalized using a fixed  threshold for the Bayes fa
 -->
 
 \noindent
-The left-to-right direction---aggregation---will hold for 
-any thresholds $t_{BF}$ or $t_{LR}$ greater than one, as Facts \ali{REF} and \ali{REF, not sure how many we end up with, double check} entail.
-
-<!-- After all, the combined -->
-<!-- evidential  -->
-<!-- support is greater than the individual evidential support  -->
-<!-- <!--- -->
-<!-- because $\frac{\pr{a \et b \vert A \et B}}{\pr{a \et b}}$  -->
-<!-- equals $\frac{\pr{a |A}}{\pr{a}} \times \frac{\pr{b |B}}{\pr{b}}$ -->
-<!-- --> 
-<!-- if A and B are independent, or greater than the smallest individual support  -->
-<!-- <!---or $\frac{\pr{a |A}}{\pr{a}} \times \frac{\pr{b |B}}{\pr{b \vert a}}$ --> 
-<!-- if A and B are dependent.  -->
-
-This is an improvement. After all, aggregation could not be justified using posterior probabilities 
+The left-to-right direction---aggregation---holds for 
+any thresholds $t_{BF}$ or $t_{LR}$ greater than one.
+As shown previously, the combined evidential support is usually 
+greater than the individual evidential support, 
+ whether it is measured in terms of the Bayes factor or the likelihood ratio. 
+This is an improvement. Aggregation could not be justified using posterior probabilities 
 $\pr{A \vert a}$ and $\pr{B \vert b}$ nor could it be justified generally 
 using a variable Bayes factor threshold.  So it is an advantage of the fixed  evidential strength threshold  approach that it can justify this direction of the conjunction principle. 
 
