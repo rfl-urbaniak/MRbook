@@ -63,12 +63,13 @@ conjunctionCPT <- list(A = AProb, B = BProb,
 
 conjunctionBN <- custom.fit(conjunctionDAG,conjunctionCPT)
 
+
+
 #graphviz.chart(conjunctionBN,type="barprob", scale = c(0.7,1.3),
 #               main = "Marginal probabilities in a conjunction BN")
 
 
 conjunctionJN <- compile(as.grain(conjunctionBN))
-
 
 as[i] <- querygrain(conjunctionJN, node = "a")[[1]][[1]]
 bs[i] <- querygrain(conjunctionJN, node = "b")[[1]][[1]]
@@ -89,19 +90,19 @@ BFBs[i] <- bifBs[i]/bs[i]
 
 BFABs[i] <- abifABs[i]/abs[i]
 
-
 LRAs[i] <- aifAs[i]/aifnAs[i]
 LRBs[i] <- bifBs[i]/bifnBs[i]
 
 
-#now for joint likelihood, P(a^b|A ^B) is easy and alread done, but
+#now for joint likelihood, P(a^b|A ^B) is easy and already done, but
 # P(a^b | ~(A&B)) will be calculated using Bayes:
-# (1-P(A^B |a^b))P(a^b)/1 - P(A^B)
+# (1-P(A^B |a^b))P(a^b)/[1 - P(A^B)]
 conjunctionJNab <- setEvidence(conjunctionJN, nodes = c("a", "b"), 
                                states = c("1", "1"))
 
 ABifabs[i] <- querygrain(conjunctionJNab, node = c("A","B"), 
                      type = "joint")[1,1]
+
 
 ABs[i] <- querygrain(conjunctionJN, node = c("AB"))[[1]][1]
 
@@ -117,7 +118,9 @@ conjunctionTable <- data.frame(As,Bs,aifAs,aifnAs,bifBs,bifnBs,
                              LRAs, LRBs, LRABs)
 
 
-saveRDS(conjunctionTable, file = "conjunctionTable.RDS")
+
+
+#saveRDS(conjunctionTable, file = "conjunctionTable.RDS")
 
 
 

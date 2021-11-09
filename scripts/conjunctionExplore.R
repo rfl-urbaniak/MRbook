@@ -23,6 +23,7 @@ mean(BFABs<BFBs)
 
 conjunctionTable$maxBF <- pmax(BFAs, BFBs)
 
+
 conjunctionTable$BFdifs <- conjunctionTable$BFABs - conjunctionTable$maxBF 
 
 ggplot(conjunctionTable)+geom_histogram(aes(x=BFdifs), bins= 90)+
@@ -43,6 +44,11 @@ conjunctionTable$LRdifs <- conjunctionTable$LRABs - conjunctionTable$maxLR
 
 ggplot(conjunctionTable)+geom_histogram(aes(x=LRdifs), bins= 80)+
   xlim(c(-10,10))
+
+
+#ALICJA: VISUALISE DISTRIBUTION FAIL
+
+ 
 # MARCELLO: DIFFERENCE BETWEEN COMBINED LR AND MAX INDIVIDUAL LR IS OFTEN NEGATUVE
 
 
