@@ -128,7 +128,7 @@ conjunction}
 \newcommand{\ko}[1]{\forall  #1\,}
 \newcommand{\ro}{\leftrightarrow}
 \newcommand{\exi}[1]{\exists\, {_{#1}}}
-\newcommand{\pr}[1]{\mathsf{P}(#1)}
+\newcommand{\pr}[1]{\ensuremath{\mathsf{P}(#1)}}
 \newcommand{\cost}{\mathsf{cost}}
 \newcommand{\benefit}{\mathsf{benefit}}
 \newcommand{\ut}{\mathsf{ut}}
@@ -145,7 +145,7 @@ conjunction}
 \newtheorem{q}{\color{blue}Question}
 \newtheorem{lemma}{Lemma}
 \newtheorem{theorem}{Theorem}
-
+\newtheorem{corollary}{Corollary}[fact]
 
 
 %technical intermezzo
@@ -489,50 +489,98 @@ b \indep a \vert B \label{eq:I6} & \hspace{2cm}\mbox{\footnotesize BN1 , BN2}
 \raf{Double check if we in fact use I3.}
 
 We will start with the Bayes factor \(\pr{E \vert H}/\pr{E}\) and its
-relation to conjunction. First, given CONDITIONS, if separate BFs are
-greater than 1, then so is the joint BF.
+relation to conjunction. Let's abbreviate: \begin{align*}
+BF_A  & =  \frac{\pr{a \vert A}}{\pr{a}},\\
+BF_B & = \frac{\pr{b \vert B}}{\pr{b}}
+\end{align*}
 
-\begin{fact} Suppose   $a$ and $b$ positively support $A$ and $B$, that is:
-\begin{align} BF_A  & =  \frac{\pr{a \vert A}}{\pr{a}} >1 \\  
-BF_B & = \frac{\pr{b \vert B}}{\pr{b}=s_B} = >1.
-\end{align}Then, if
-CONDITIONS, it follows that:
-\begin{align}BF_{AB} >1 & = \frac{\pr{a \wedge b\vert A\wedge B}}{\pr{a \wedge b}} >1. 
-\end{align}
+\begin{fact} If the independence assumptions \eqref{eq:indAB}, \eqref{eq:indab}, \eqref{eq:I4} and \eqref{eq:I5} hold, then 
+$BF_{AB} = BF_A \times BF_B$. \label{fac:BFindep}
 \end{fact}
 
 \begin{proof}
+
 \begin{align*}
-\frac{\pr{a \wedge b\vert A\wedge B}}{\pr{a \wedge b}} & =  \frac{\pr{A \et B\vert a\wedge b}}{\pr{A \et B}}
-&\mbox{\,\,\,\,\,\,\,\,\,\,\,\,\, (Bayes's theorem)}
-\\
-& =  \frac{\frac{ \pr{A \et B \et a \wedge b }}{\pr{a \et b}}}{\pr{A \et B}} 
-&\mbox{\,\,\,\,\,\,\,\,\,\,\,\,\, (definition of conditional probability)}\\ 
-& =  \frac{\frac{ \pr{A} \times \pr{B\vert A} \times \pr{a \vert A \wedge B} \times \pr{b \vert A \wedge B \wedge a}}{\pr{a} \times \pr{b \vert a}}}{\pr{A \et B}} 
-&\mbox{\,\,\,\,\,\,\,\,\,\,\,\,\, (chain rule)}
-\\ 
-& = \frac{\frac{ \pr{A} \times \pr{B\vert A} \times \pr{a \vert A \wedge B} \times \pr{b \vert A \wedge B \wedge a}}{\pr{a} \times \pr{b \vert a}}}{\pr{A} \times \pr{B}}  
-&\mbox{\,\,\,\,\,\,\,\,\,\,\,\,\, (independencies in Figure \ref{fig:conjunctionDAG})} \\
-& = \frac{\frac{\pr{A} \times \pr{B} \times \pr{a \vert A} \times \pr{b \vert B}}{\pr{a} \times \pr{b}}}{\pr{A} \times \pr{B}} 
-&\mbox{\,\,\,\,\,\,\,\,\,\,\,\,\, (independencies in Figure \ref{fig:conjunctionDAG})}\\ 
-& =  \frac{\pr{a |A}}{\pr{a}} \times \frac{\pr{b |B}}{\pr{b}} 
-&\mbox{\,\,\,\,\,\,\,\,\,\,\,\,\, (algebraic manipulation)} \\
-BF_{AB}& =  BF_{A}\times BF_{B} 
- \end{align*}
+\frac{\pr{a \wedge b\vert A\wedge B}}{\pr{a \wedge b}} & = \frac{\pr{A \et B\et a\wedge b}}{\pr{A \et B}} \bigg/ \pr{a \wedge b}
+&\mbox{(conditional probability)} \\
+&  = \frac{\pr{A} \times \pr {B \vert A}  \times \pr{a \vert A \et B} \times \pr{b \vert A \et B \et a}}{\pr{A \et B}} \bigg/ \pr{a \wedge b}
+&\mbox{\,\,\,\,\,\,\, (chain rule)} \\
+\end{align*}
 
+\noindent Now, let's deploy the respective independence assumptions, as follows:
 
-
-
-
+\begin{align*}
+&  = \frac{\pr{A} \times \overbrace{\pr {B \vert A}}^{ \pr{B} \mbox{\footnotesize \, by \eqref{eq:indAB}}}  \times
+\overbrace{\pr{a \vert A \et B}}^{\pr{a \vert A} \mbox{\footnotesize \, by \eqref{eq:I4}}}
+\times \overbrace{\pr{b \vert A \et B \et a}}^{\pr{b \vert B} \mbox{\footnotesize \, by \eqref{eq:I5}}}
+}{\underbrace{\pr{A \et B}}_{\pr{A} \times \pr{B} \mbox{\footnotesize \, by \eqref{eq:indAB}}}} \bigg/ \underbrace{\pr{a \wedge b}}_{\pr{a}\times \pr{b} \mbox{ \footnotesize \, by \eqref{eq:indab}}} \\
+&  = \frac{\pr{A} \times  \pr{B}   \times \pr{a \vert A}  \times  \pr{b \vert B}}
+{\pr{A} \times \pr{B}} \bigg/ \pr{a}\times \pr{b} \\
+& = \frac{\pr{a \vert A}  }{\pr{a}}  \times \frac{\pr{b \vert B}}{\pr{b}} \\
+& = BF_{A} \times BF_B
+\end{align*}
 
 \end{proof}
 
-The step marked by asterisk rests on the independence assumptions
-codified in Figure \ref{fig:conjunctionDAG}, namely: \eqref{eq:indAB},
-\eqref{eq:I4}, and \eqref{eq:I5}.{]}
-\ali{M: Check reference to independence assumptions} \begin{align*}
-\frac{\pr{a \wedge b \vert A \wedge B}}{\pr{a \wedge b}} &= \frac{\pr{a \vert A}}{\pr{a}} \times \frac{\pr{b \vert B}}{\pr{b}}\\
-BF_{AB} &= BF_{A} \times BF_{B}\\
+This fact has the following straigthforward consequence which simply
+follows from the simple fact that if \(a = b \times c\) and \(b, c>1\),
+then \(a > \mathsf{max}(b,c)\).
+
+\begin{corollary} If the independence assumptions \eqref{eq:indAB}, \eqref{eq:indab}, \eqref{eq:I4} and \eqref{eq:I5} hold, and $BF_{A}$ and $BF_{B}$ are both greater than 1, then $BF_{AB}$ is greater than one. In fact,  $BF_{AB}$ is then greater than either of $BF_{A}, BF_{B}$. \label{cor:BFind2}
+\end{corollary}
+
+Now, does a similar claim if we drop the independence assumption
+specific to \textsf{BN1}? A claim somewhat weaker than Fact
+\ref{fac:BFindep} can be proven without employing independencies
+entailed by \textsf{BN1}, relying only on some independencies entailed
+by \textsf{BN2}. Let's abbreviate: \begin{align*}
+BF^{'}_{B} & = \frac{\pr{b \vert B}}{\pr{b\vert a}} \\
+BF^{'}_{A} & = \frac{\pr{a \vert A}}{\pr{a \vert b}}
 \end{align*}
+
+\begin{fact} If \eqref{eq:I4} and \eqref{eq:I5}  hold, then $BF_{AB} =  BF_{A}\times BF^{'}_{B}  = BF_{B} \times BF^{'}_{A}$. \label{fac:BFdep}
+\end{fact}
+
+\begin{proof}
+
+We start with the definition of conditional probability and the chain rule, as in the proof of Fact \ref{fac:BFindep}, but now we use fewer  independencies (all of them entailed by \textsf{BN2}), as we use the chain rule instead in a few cases. 
+
+ \begin{align*}
+\frac{\pr{a \wedge b\vert A\wedge B}}{\pr{a \wedge b}} &
+= \frac{\pr{A} \times \pr {B \vert A}  \times
+\overbrace{\pr{a \vert A \et B}}^{\pr{a \vert A} \mbox{\footnotesize \, by \eqref{eq:I4}}}
+\times \overbrace{\pr{b \vert A \et B \et a}}^{\pr{b \vert B} \mbox{\footnotesize \, by \eqref{eq:I5}}}
+}{\underbrace{\pr{A \et B}}_{\pr{A} \times \pr{B\vert A} \mbox{\footnotesize \, by the chain rule}}} \bigg/ \underbrace{\pr{a \wedge b}}_{\pr{a}\times \pr{b\vert a} \mbox{ \footnotesize \, by the chain rule }}\\
+& = \frac{\pr{a \vert A}}{\pr{a}} \times \frac{\pr{b\vert B}}{\pr{b \vert a}}\\
+& = BF_{A} \times BF^{'}_{B}
+\end{align*}
+If instead of obtaining $\pr{a}\pr{b \vert a}$ in the denominator we deploy the chain rule differently, resulting in $\pr{b}\pr{a \vert b}$, we end up with:
+\begin{align*}
+& = \frac{\pr{a \vert A}}{\pr{a \vert b}} \times \frac{\pr{b\vert B}}{\pr{b}}\\
+& = BF^{'}_{A} \times BF_{B}
+\end{align*}
+
+\end{proof}
+
+Now, to obtain a corollary analogous to Corollary \ref{cor:BFind2}, we
+need an additional assumption: that either \(\pr{b\vert a} \leq \pr{b}\)
+or \(\pr{a \vert b} \leq \pr{b}\).
+
+\begin{corollary} Suppose \eqref{eq:I4} and \eqref{eq:I5}  hold and $BF_{BA}, BF_{B} >1$. 
+Then if either $\pr{b\vert a} \leq \pr{b}$ or \linebreak  $\pr{a \vert b} \leq \pr{b}$, we have $BF_{AB}> BF_{A}, BF_{B}$.
+\end{corollary}
+
+\begin{proof}
+Notice that by Fact \ref{fac:BFdep} we have that on the assumptions of the corollary:
+\begin{align*}
+BF_{AB} & = BF_{A}\times BF^{'}_{B} \\
+& = BF_{B} \times BF^{'}_{A}
+\end{align*}
+If we now can show that either $BF^{'}_{B} > 1$, or $BF^{'}_{A} > 1$, the reasoning we used before applies: the product of two numbers greater than one is greater than either of them.  Consider $BF_{B}$, which we assumed to be greater than 1. If we can show $BF^{'}_{B}\geq BF_{B}$, we're done. But this holds on one of the disjuncts assumed in the corollary, $\pr{b\vert a} \leq \pr{b}$, as then we have:
+\begin{align*}
+\frac{\pr{b \vert B}}{\pr{b\vert a}} \geq \frac{\pr{b \vert B}}{\pr{b}}
+\end{align*}
+Similarly, if the other disjunct holds, we run an analogous argument, this time focusing on $BF^{'}_{A}$.
+\end{proof}
 
 \end{document}
