@@ -200,6 +200,7 @@ Back to the difficulty with conjunction. Two items of evidence, $a$ and $b$, eac
 by two directed graphs, as follows:
 
 \mar{A: Is this what you meant?}
+\ali{R: scale down and put them next to each other in a single figure, they take too much space; then avoid referring to figures in a way that depend on their location, as these might shift in the editorial process. Always say things like "In figure \ref{fig:aADAG}".}
 
 \begin{figure}[h]
 ```{r fig:aADAG,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "60%"}
@@ -267,7 +268,8 @@ conjunctionCPT <- list(A = AProb, B = BProb,
 
 conjunctionBN <- custom.fit(conjunctionDAG,conjunctionCPT)
 
-CPkable2("conjunctionBN","AB")
+CPkable2("conjunctionBN","AB") %>%   
+                          kable_styling(latex_options=c("striped","HOLD_position")) 
 ```
 \caption{Conditional probability table for the conjunction node.}
 \label{tab:CPTconjunction}
@@ -372,45 +374,45 @@ BA <- .66
 Since $\pr{A \wedge  B \vert  a \wedge b} =\pr{A \vert a \wedge b} \times \pr{B \vert a \wedge b \wedge A}$, it follows that $\pr{A \wedge  B \vert a \wedge b}$ might be below $t$ if the factors on the right-hand side are below 1 and separate posteriors are very close to $t$.
 --->
 
-## Indepedencies more generally 
+<!-- ## Indepedencies more generally  -->
 
-\raf{M: Move to appendix?}
+<!-- \raf{M: Move to appendix?} -->
 
-The directed graphs in Figure \ref{fig:conjunctionDAG}
- and \ref{fig:conjunctionDAG2} provide a compact representation of two plausible scenarios  one might have in mind in formulating the conjunction paradox. In one scenario (Figure \ref{fig:conjunctionDAG}), hypotheses $A$ and $B$, as well as items of evidence $a$ and $b$, are unconditionally independent. In another scenario (Figure \ref{fig:conjunctionDAG2}), $A$ and $B$ need not be independent any longer, and $a$ and $b$ are only conditionally independent. 
- 
-The two directed graphs encode several relationships of probabilistic independence which it would be difficult to derive without the theory of Bayesian networks. We list these relationships of independence below as we will appeal to them in the rest of the chapter. The fist graph encodes all the relationship below and the second graph encodes only a subset of them (those marked by [*]). The symbols $\indep$ stands for independence. 
+<!-- The directed graphs in Figure \ref{fig:conjunctionDAG} -->
+<!--  and \ref{fig:conjunctionDAG2} provide a compact representation of two plausible scenarios  one might have in mind in formulating the conjunction paradox. In one scenario (Figure \ref{fig:conjunctionDAG}), hypotheses $A$ and $B$, as well as items of evidence $a$ and $b$, are unconditionally independent. In another scenario (Figure \ref{fig:conjunctionDAG2}), $A$ and $B$ need not be independent any longer, and $a$ and $b$ are only conditionally independent.  -->
 
-\ali{confirm all are d-sep in the first BN, check which are d-sep in the second one and whether the d-separated in the second DAG are in fact those marked by [*].}
+<!-- The two directed graphs encode several relationships of probabilistic independence which it would be difficult to derive without the theory of Bayesian networks. We list these relationships of independence below as we will appeal to them in the rest of the chapter. The symbols $\indep$ stands for independence.  -->
 
-\raf{M: D-separtation is between variables (not values of variables). Do we need to list negations?}
+<!-- \ali{confirm all are d-sep in the first BN, check which are d-sep in the second one and whether the d-separated in the second DAG are in fact those marked by [*].} -->
 
-\mar{R: in conditions, yeh; my getting a good grade and me working hard in class are dependent if the teacher doesn't assign grades randomly, but are independent if they do.}
+<!-- \raf{M: D-separtation is between variables (not values of variables). Do we need to list negations?} -->
 
-
-\begin{align} A\indep B  \label{eq:indAB}\\
-A \indep b \vert a   \label{eq:I1}\\
-B \indep a \et A \vert b \label{eq:I2}\\
-a\indep b \vert A\et B \label{eq:I3}  \\  
-a\indep b \vert A \label{eq:I3a} [*]  \\ 
-a\indep B \vert A \label{eq:I4} [*]   \\
-a\indep B \vert \n A \label{eq:I4a} [*]   \\
-a\indep \n B \vert A \label{eq:I4b} [*]  \\
-a\indep \n B \vert \n A \label{eq:I4c} [*]  \\
-b\indep A \et a \vert B \label{eq:I5} [*] \\
-b\indep \n A \et a \vert B \label{eq:I5a} [*]  \\
-b\indep A \et a \vert \n B \label{eq:I5b} [*] \\
-b\indep \n A \et a \vert \n B \label{eq:I5c} [*]  \\
-b \indep a \vert B \label{eq:I6} [*]\\
-b \indep a 
-\end{align} 
-
-\raf{Double check if we in fact use I3.}
-
-\raf{M: Added the independence of a and b unconditionally. Check!}
+<!-- \mar{R: in conditions, yeh; my getting a good grade and me working hard in class are dependent if the teacher doesn't assign grades randomly, but are independent if they do.} -->
 
 
-\raf{M: We need to agree on the notation here can be confusing. We need to distinguish between variables and values of variables. Any thoughts on how to make teh notation uniform?}
+<!-- \begin{align} A\indep B  \label{eq:indAB}\\ -->
+<!-- A \indep b \vert a   \label{eq:I1}\\ -->
+<!-- B \indep a \et A \vert b \label{eq:I2}\\ -->
+<!-- a\indep b \vert A\et B \label{eq:I3}  \\   -->
+<!-- a\indep b \vert A \label{eq:I3a} [*]  \\  -->
+<!-- a\indep B \vert A \label{eq:I4} [*]   \\ -->
+<!-- a\indep B \vert \n A \label{eq:I4a} [*]   \\ -->
+<!-- a\indep \n B \vert A \label{eq:I4b} [*]  \\ -->
+<!-- a\indep \n B \vert \n A \label{eq:I4c} [*]  \\ -->
+<!-- b\indep A \et a \vert B \label{eq:I5} [*] \\ -->
+<!-- b\indep \n A \et a \vert B \label{eq:I5a} [*]  \\ -->
+<!-- b\indep A \et a \vert \n B \label{eq:I5b} [*] \\ -->
+<!-- b\indep \n A \et a \vert \n B \label{eq:I5c} [*]  \\ -->
+<!-- b \indep a \vert B \label{eq:I6} [*]\\ -->
+<!-- b \indep a  -->
+<!-- \end{align}  -->
+
+<!-- \raf{Double check if we in fact use I3.} -->
+
+<!-- \raf{M: Added the independence of a and b unconditionally. Check!} -->
+
+
+<!-- \raf{M: We need to agree on the notation here can be confusing. We need to distinguish between variables and values of variables. Any thoughts on how to make teh notation uniform?} -->
 
 
 <!---
