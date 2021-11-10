@@ -1,15 +1,19 @@
 % Options for packages loaded elsewhere
 \PassOptionsToPackage{unicode}{hyperref}
 \PassOptionsToPackage{hyphens}{url}
-\PassOptionsToPackage{dvipsnames,svgnames*,x11names*}{xcolor}
+\PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
 %
 \documentclass[
   10pt,
   dvipsnames,enabledeprecatedfontcommands]{scrartcl}
+\title{The difficulty with Conjunction}
+\author{Marcello Di Bello and Rafal Urbaniak}
+\date{}
+
 \usepackage{amsmath,amssymb}
 \usepackage{lmodern}
-\usepackage{ifxetex,ifluatex}
-\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+\usepackage{iftex}
+\ifPDFTeX
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
   \usepackage{textcomp} % provide euro and other symbols
@@ -31,10 +35,10 @@
   pdftitle={The difficulty with Conjunction},
   pdfauthor={Marcello Di Bello and Rafal Urbaniak},
   colorlinks=true,
-  linkcolor=Maroon,
-  filecolor=Maroon,
-  citecolor=Blue,
-  urlcolor=blue,
+  linkcolor={Maroon},
+  filecolor={Maroon},
+  citecolor={Blue},
+  urlcolor={blue},
   pdfcreator={LaTeX via pandoc}}
 \urlstyle{same} % disable monospaced font for URLs
 \usepackage{color}
@@ -94,6 +98,29 @@
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
 \setcounter{secnumdepth}{5}
+\newlength{\cslhangindent}
+\setlength{\cslhangindent}{1.5em}
+\newlength{\csllabelwidth}
+\setlength{\csllabelwidth}{3em}
+\newlength{\cslentryspacingunit} % times entry-spacing
+\setlength{\cslentryspacingunit}{\parskip}
+\newenvironment{CSLReferences}[2] % #1 hanging-ident, #2 entry spacing
+ {% don't indent paragraphs
+  \setlength{\parindent}{0pt}
+  % turn on hanging indent if param 1 is 1
+  \ifodd #1
+  \let\oldpar\par
+  \def\par{\hangindent=\cslhangindent\oldpar}
+  \fi
+  % set entry spacing
+  \setlength{\parskip}{#2\cslentryspacingunit}
+ }%
+ {}
+\usepackage{calc}
+\newcommand{\CSLBlock}[1]{#1\hfill\break}
+\newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{#1}}
+\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{#1}\break}
+\newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
 %\documentclass{article}
 
 % %packages
@@ -282,33 +309,9 @@
 \usepackage[normalem]{ulem}
 \usepackage{makecell}
 \usepackage{xcolor}
-\ifluatex
+\ifLuaTeX
   \usepackage{selnolig}  % disable illegal ligatures
 \fi
-\newlength{\cslhangindent}
-\setlength{\cslhangindent}{1.5em}
-\newlength{\csllabelwidth}
-\setlength{\csllabelwidth}{3em}
-\newenvironment{CSLReferences}[2] % #1 hanging-ident, #2 entry spacing
- {% don't indent paragraphs
-  \setlength{\parindent}{0pt}
-  % turn on hanging indent if param 1 is 1
-  \ifodd #1 \everypar{\setlength{\hangindent}{\cslhangindent}}\ignorespaces\fi
-  % set entry spacing
-  \ifnum #2 > 0
-  \setlength{\parskip}{#2\baselineskip}
-  \fi
- }%
- {}
-\usepackage{calc}
-\newcommand{\CSLBlock}[1]{#1\hfill\break}
-\newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{#1}}
-\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{#1}\break}
-\newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
-
-\title{The difficulty with Conjunction}
-\author{Marcello Di Bello and Rafal Urbaniak}
-\date{}
 
 \begin{document}
 \maketitle
@@ -328,7 +331,7 @@ be established with at least .5 probability.
 
 In Chapter (\textbf{REFER TO EARLIER CHAPTER}), we discussed how the .95
 and .5 thresholds can be justified, for example, by minimizing expected
-costs. In Chapter (\textbf{REFER TO EARLIER CHAPTER}), we discussed a
+costs. In Chapter XX\todo{REFER TO EARLIER CHAPTER}, we discussed a
 theoretical problem for this probabilistic interpretation: the paradox
 of naked statistical evidence. In this chapter, we discuss a second
 theoretical problem, which we call
@@ -825,58 +828,6 @@ dependent. \mar{R: we still need the simulation here}
 
 \normalsize
 
-\hypertarget{indepedencies-more-generally}{%
-\subsection{Indepedencies more
-generally}\label{indepedencies-more-generally}}
-
-\raf{M: Move to appendix?}
-
-The directed graphs in Figure \ref{fig:conjunctionDAG} and
-\ref{fig:conjunctionDAG2} provide a compact representation of two
-plausible scenarios one might have in mind in formulating the
-conjunction paradox. In one scenario (Figure \ref{fig:conjunctionDAG}),
-hypotheses \(A\) and \(B\), as well as items of evidence \(a\) and
-\(b\), are unconditionally independent. In another scenario (Figure
-\ref{fig:conjunctionDAG2}), \(A\) and \(B\) need not be independent any
-longer, and \(a\) and \(b\) are only conditionally independent.
-
-The two directed graphs encode several relationships of probabilistic
-independence which it would be difficult to derive without the theory of
-Bayesian networks. We list these relationships of independence below as
-we will appeal to them in the rest of the chapter. The fist graph
-encodes all the relationship below and the second graph encodes only a
-subset of them (those marked by {[}*{]}). The symbols \(\indep\) stands
-for independence.
-
-\ali{confirm all are d-sep in the first BN, check which are d-sep in the second one and whether the d-separated in the second DAG are in fact those marked by [*].}
-
-\raf{M: D-separtation is between variables (not values of variables). Do we need to list negations?}
-
-\mar{R: in conditions, yeh; my getting a good grade and me working hard in class are dependent if the teacher doesn't assign grades randomly, but are independent if they do.}
-
-\begin{align} A\indep B  \label{eq:indAB}\\
-A \indep b \vert a   \label{eq:I1}\\
-B \indep a \et A \vert b \label{eq:I2}\\
-a\indep b \vert A\et B \label{eq:I3}  \\  
-a\indep b \vert A \label{eq:I3a} [*]  \\ 
-a\indep B \vert A \label{eq:I4} [*]   \\
-a\indep B \vert \n A \label{eq:I4a} [*]   \\
-a\indep \n B \vert A \label{eq:I4b} [*]  \\
-a\indep \n B \vert \n A \label{eq:I4c} [*]  \\
-b\indep A \et a \vert B \label{eq:I5} [*] \\
-b\indep \n A \et a \vert B \label{eq:I5a} [*]  \\
-b\indep A \et a \vert \n B \label{eq:I5b} [*] \\
-b\indep \n A \et a \vert \n B \label{eq:I5c} [*]  \\
-b \indep a \vert B \label{eq:I6} [*]\\
-b \indep a 
-\end{align}
-
-\raf{Double check if we in fact use I3.}
-
-\raf{M: Added the independence of a and b unconditionally. Check!}
-
-\raf{M: We need to agree on the notation here can be confusing. We need to distinguish between variables and values of variables. Any thoughts on how to make teh notation uniform?}
-
 \hypertarget{evidential-strength}{%
 \section{Evidential Strength}\label{evidential-strength}}
 
@@ -904,7 +855,7 @@ outline of the argument and then go into the details.
 
 Two common probabilistic measures of evidential strength are the Bayes
 factor and the likelihood ratio. We discussed them in earlier chapters
-(\textbf{REFER TO EARLIER CHAPTERS}). We will show that, under plausible
+\todo{REFER TO EARLIER CHAPTERS}. We will show that, under plausible
 assumptions, these measures of evidential strength validate one
 direction of the conjunction principle: aggregation. If \(a\) is
 sufficiently strong evidence in favor of \(A\) and \(b\) is sufficiently
@@ -970,8 +921,8 @@ favor of \(H\). Since by Bayes' theorem
 evidence increases the probability of a hypothesis. The greater the
 Bayes factor (for values above one), the stronger the support of \(E\)
 in favor of \(H\). Putting aside reservations about this measure of
-evidential support (discussed earlier in
-\textbf{REFER TO EARLIER CHAPTER}), the Bayes factor
+evidential support (discussed earlier in Chapter XX
+\todo{REFER TO EARLIER CHAPTER}, the Bayes factor
 \(\pr{E \vert H}/\pr{E}\), unlike the conditional probability
 \(\pr{H \vert E}\), offers a potential way to overcome the difficulty
 with conjunction by vindicating aggregation.
@@ -1008,18 +959,20 @@ evidence, say \(\nicefrac{\pr{a \vert A}}{\pr{a}}\) with the combined
 Bayes factor for five items of evidence, say
 \(\nicefrac{\pr{a_1 \wedge \dots \wedge a_5 \vert A_1 \wedge \dots \wedge A_5}}{\pr{a_1\wedge \dots \wedge a_5}}\),
 for different values of sensitivity and specificity of the
-evidence.\footnote{The sensitivity of a piece of evidence \(e\) relative
-  to a hypothesis \(H\) is \(\pr{e \vert H}\), while its specificity is
-  \(\pr{\neg e | \neg H}\).} The combined Bayes factor always exceeds
-the individual Bayes factors provided, as usual, the individual pieces
-of evidence positively support the individual hypotheses.\footnote{The
-  order is reversed if the items of evidence oppose the individual
-  hypotheses. Neutral evidence results in a combined Bayes factor of 1,
-  no matter the prior or the number of items of evidence} In these
-circumstances, Dawid's claim that `the support supplied by the
-conjunction of several independent testimonies exceeds that supplied by
-any of its constituents' is vindicated.
+evidence.\footnote{The \textbf{sensitivity} of a piece of evidence \(e\)
+  relative to a hypothesis \(H\) is \(\pr{e \vert H}\), while its
+  \textbf{specificity} is \(\pr{\neg e | \neg H}\).} The combined Bayes
+factor always exceeds the individual Bayes factors provided, as usual,
+the individual pieces of evidence positively support the individual
+hypotheses.\footnote{The order is reversed if the items of evidence
+  oppose the individual hypotheses. Neutral evidence results in a
+  combined Bayes factor of 1, no matter the prior or the number of items
+  of evidence} Under these conditions, Dawid's claim that `the support
+supplied by the conjunction of several independent testimonies exceeds
+that supplied by any of its constituents' (if support is to be measured
+in terms of Bayes factor) is vindicated.
 
+\ali{R: recode lty scale so that the order is five-two-one in the legend.}
 \begin{figure}[h]
 
 \begin{center}\includegraphics[width=0.9\linewidth]{conjunction-paradox2_files/figure-latex/bfconjunction5-1} \end{center}
@@ -1035,112 +988,40 @@ in the Bayesian network in Figure \ref{fig:conjunctionDAG2}, the
 combined Bayes factor \(BF_{AB}\) is still greater than both the
 individual Bayes factor \(BF_{A}\) and \(BF_{B}\) in a number of
 circumstances. To see why, first note that the following holds:
-\begin{align*}
-\frac{\pr{a \wedge b\vert A\wedge B}}{\pr{a \wedge b}} & = \frac{\pr{a |A}}{\pr{a}} \times \frac{\pr{b |B}}{\pr{b|a}} \\
-BF_{AB}& =  BF_{A}\times BF^{'}_{B} 
- \end{align*}
-
-\noindent (See the appendix for a proof.) The difference from the case
-of independent hypotheses is that \(BF_B=\frac{\pr{b |B}}{\pr{b}}\) was
-replaced by \(BF^{'}_B=\frac{\pr{b |B}}{\pr{b|a}}\). Since \(b\) need
-not be probabilistically independent of \(a\), there is no guarantee
-that \(\pr{b \vert a}=\pr{b}\). However, \(BF_B^{'}\) is usually greater
-than one so long as \(b\) raises the probability of \(B\) even in
-conjunction with \(a\). This is a plausible assumption to make, or else
-\(b\) (in conjunction with \(a\)) would be useless evidence.\footnote{Note
-  that \(BF^{'}_{B}\) is usually lower than \(BF_{B}\) because
-  \(\pr{b \vert a} > \pr{b}\) (assuming, at least, \(a\) and \(b\) are
-  convergent pieces of evidence;
-  \textbf{REFER TO EARLIER CHAPTER ON CROSS-EXAMINATION AND CORROBORATION}.
-  At the same time, \(BF^{'}_{B}\) should still be greater than one if
-  \(b\) positively supports \(B\) even conditional on \(a\). Note that
-  \(\frac{\pr{b \vert B}}{\pr{b\vert a}}=\frac{\pr{b \vert B \wedge a}}{\pr{b\vert a}}\),
-  by independence \eqref{eq:I6}. Further, by Bayes' theorem,
-  \(\pr{B \vert b \wedge a} = \frac{\pr{b \vert B \wedge a}}{\pr{b\vert a}} \times \pr{B\vert a}\),
-  so \(\pr{B\vert b\et a}\) is obtained by multiplying \(\pr{B\vert a}\)
-  by \(s^{'}_{B}\). In other words, the claim that
-  \(\frac{\pr{b \vert B}}{\pr{b\vert a}}>1\) is equivalent to the claim
-  that \(\pr{B \vert b \wedge a}> \pr{B\vert a}\). The latter is
-  plausible in this context, since \(b\) should still raise the
-  probability of \(B\) even in conjunction with \(a\), or else \(b\)
-  would be useless evidence.} The argument is, in fact, symmetric. So we
-have: \begin{align*}
-\frac{\pr{a \wedge b\vert A\wedge B}}{\pr{a \wedge b}} & =  \frac{\pr{a \vert A}}{\pr{a}} \times \underbrace{\frac{\pr{b \vert B}}{\pr{b\vert a}}}_{>1}  = \frac{\pr{b \vert B}}{\pr{b}} \times \underbrace{\frac{\pr{a \vert A}}{\pr{a\vert b}}}_{>1}
-\end{align*}
-
-\noindent So, putting everything together, \(BF^{'}_{AB}\) will usually
-be greater than both \(BF_A\) and \(BF_B\) even when hypotheses \(A\)
-and \(B\) are dependent.
-
-\hypertarget{section}{%
-\subsection{\texorpdfstring{\textit{MOVE TO APPENDIX}}{}}\label{section}}
-
-\ali{double check, are these d-sep in the second network?}
-
-\raf{M: One assumption does not hold. Conditionally on A-and-B, the evidence is not independent in the DAG in Figure 2 since A-and-B is a collider node. The derivation is more complicated. See footnote.}
-
-\begin{fact}
-Assuming \eqref{eq:I3}, \eqref{eq:I4} and \eqref{eq:I6}, if $\pr{B\vert b\et a } > \pr{B\vert a}$ and $\pr{A\vert a \et b} > \pr{A \vert b}$, we have:
-\[BF_{AB}> \frac{\pr{a \vert A}}{\pr{a}}, \frac{\pr{b\vert B}}{\pr{b}}\]
-\end{fact}
-\raf{M: What does comma mean? Fact 1 is too much formalism.}
-
-\noindent \textbf{Argument.} First, notice the following holds given
-\eqref{eq:I3} and \eqref{eq:I4}: \begin{align}
-\frac{\pr{a \wedge b\vert A\wedge B}}{\pr{a \wedge b}} & =  \frac{\pr{a \vert A}}{\pr{a}} \times \frac{\pr{b \vert B}}{\pr{b\vert a}} \\
-BF^{'}_{AB}& =  s_{A}\times BF^{'}_{B},  \label{eq:BFdep}
+\begin{align}
+\frac{\pr{a \wedge b\vert A\wedge B}}{\pr{a \wedge b}} & = \frac{\pr{a |A}}{\pr{a}} \times \frac{\pr{b |B}}{\pr{b|a}} \nonumber \\
+BF_{AB}& =  BF_{A}\times BF^{'}_{B}  \label{eq:BFdep}
  \end{align}
 
-\noindent  where factor \(BF_{B}= \nicefrac{\pr{b \vert B}}{\pr{b}}\)
-was replaced by
-\(BF^{'}_{B}=\nicefrac{\pr{b \vert B}}{\pr{b\vert a}}\).\footnote{The
-  difference between \(BF_{B}\) and \(BF^{'}_{B}\) is that \(b\) need
-  not be probabilistically independent of \(a\), and thus there is no
-  guarantee that \(\pr{b \vert a}=\pr{b}\). In fact, \(BF^{'}_{B}\) is
-  usually lower than \(BF_{B}\) because \(\pr{b \vert a} > \pr{b}\)
-  (assuming, at least, \(a\) and \(b\) are convergent pieces of
-  evidence; SEE DISCUSSION IN EARLIER CHAPTERS ON CROSS-EXAMINATION AND
-  CORROBORATION). At the same time, \(BF^{'}_{B}\) should still be
-  greater than one if \(b\) positively supports \(B\) even conditional
-  on \(a\). Note that
-  \(\frac{\pr{b \vert B}}{\pr{b\vert a}}=\frac{\pr{b \vert B \wedge a}}{\pr{b\vert a}}\),
-  by independence \eqref{eq:I6}. Further, by Bayes' theorem,
-  \(\pr{B \vert b \wedge a} = \frac{\pr{b \vert B \wedge a}}{\pr{b\vert a}} \times \pr{B\vert a}\),
-  so \(\pr{B\vert b\et a}\) is obtained by multiplying \(\pr{B\vert a}\)
-  by \(BF^{'}_{B}\). In other words, the claim that
-  \(\frac{\pr{b \vert B}}{\pr{b\vert a}}>1\) is equivalent to the claim
-  that \(\pr{B \vert b \wedge a}> \pr{B\vert a}\). The latter is
-  plausible in this context, since \(b\) should still raise the
-  probability of \(B\) even in conjunction with \(a\), or else \(b\)
-  would be useless evidence.}
-\ali{check if d-sep in this fn holds in the second bn} Hence,
-\(BF^{'}_{AB}\) should be greater than either \(BF_A\) if \(BF^{'}_B\)
-is\\
-greater than one. Note that the reasoning behind \eqref{eq:BFdep} is
-symmetric and so the assumed inequalities give the result marked by the
-braces: \begin{align*}
-\frac{\pr{a \wedge b\vert A\wedge B}}{\pr{a \wedge b}} & =  \frac{\pr{a \vert A}}{\pr{a}} \times \underbrace{\frac{\pr{b \vert B}}{\pr{b\vert a}}}_{>1}  = \frac{\pr{b \vert B}}{\pr{b}} \times \underbrace{\frac{\pr{a \vert A}}{\pr{a\vert b}}}_{>1}
-\end{align*} So, symmetrically, we have
-\(BF^{'}_{AB} = BF_{B}\times BF^{'}_{A}\), and so \(BF^{'}_{AB}\) should
-be greater than either \(BF_B\) if \(BF^{'}_A\) is greater than one.
+\mar{R: revised and commented out quite a bit in light of the appendix now.}
 
-\textbf{Argument ends.}
-
-\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
-
-\raf{M: Need to introduce simulations, illustrate results for aggregation and BF without independence here}
+\noindent(See the appendix for a proof.) The difference from the case of
+independent hypotheses is that \(BF_B=\frac{\pr{b |B}}{\pr{b}}\) was
+replaced by \mar{R: use vert for conditional probabilities, please.}
+\(BF^{'}_B=\frac{\pr{b |B}}{\pr{b\vert a}}\). Since \(b\) need not be
+probabilistically independent of \(a\), there is no guarantee that
+\(\pr{b \vert a}=\pr{b}\). However, if \(BF_B\) is greater than 1, so is
+\(BF^{'}_B\) as soon as \(\pr{b\vert a} \leq \pr{b}\). In many cases of
+interest, when pieces of evidence converge, this is a plausible
+assumption to make, unless a piece of evidence for \(A\) actually makes
+the occurrence of a piece of evidence for \(B\) more likely (which in
+turn would decrease the Bayes factor for \(B\) by increasing the
+denominator).
+\todo{REFER TO EARLIER CHAPTER ON CROSS-EXAMINATION AND CORROBORATION}
+If these assumptions are satisfied, \eqref{eq:BFdep} entails that the
+joint Bayes factor, \(BF_{AB}\), is going to be greater than any of the
+individual Bayes factors (again, see the appendix for proof).
 
 \hypertarget{combined-support-likelihood-ratio}{%
 \subsection{Combined support: likelihood
 ratio}\label{combined-support-likelihood-ratio}}
 
 The likelihood ratio is another probabilistic measure of evidential
-support, extensively discussed in
-\textbf{REFER TO Chapter XXX \todo{REF}}. The likelihood ratio compares
-the probability of the evidence on the assumption that a hypothesis of
-interest is true (\textit{sensitivity}) and the probability of the
-evidence on the assumption that the negation of the hypothesis is true
-(\textit{1- specificity}). That is,
+support, extensively discussed in Chapter XX.\todo{REF} The likelihood
+ratio compares the probability of the evidence on the assumption that a
+hypothesis of interest is true (\textit{sensitivity}) and the
+probability of the evidence on the assumption that the negation of the
+hypothesis is true (\textit{1- specificity}). That is,
 \[\frac{\pr{E \vert H}}{\pr{E \vert \neg H}}=\frac{\textit{sensitivity}}{\textit{1- specificity}}\]
 
 \noindent The greater the likelihood ratio (for values above one), the
@@ -1165,58 +1046,19 @@ assumptions, the answer is positive. So, details aside, Bayes factor and
 likelihood ratio agree here. The argument for the likelihood ratio,
 however, is more laborious.
 
-\hypertarget{combined-sensitivity-and-specificity}{%
-\subsubsection{Combined sensitivity and
-specificity}\label{combined-sensitivity-and-specificity}}
+Let us start with observing that given the independence assumptions
+entailed even by the more complex Bayesian network, we have (the proof
+is in the appendix):
 
-First, we compute the numerator and denominator of the combined
-likelihood ratio. The numerator is easy. It results from multiplying the
-sensitivity of the individual items of evidence, \(a\) and \(b\),
-relative to their respective hypotheses, \(A\) and \(B\):\footnote{\begin{align*}
-  \pr{a \wedge b\vert A\wedge B} & =  \frac{\pr{A \et B \et a\et b}}{\pr{A \et B}}
-  &\mbox{\,\,\,\,\,\,\,\,\,\,\,\,\, (conditional probability)}
-  \\
-  &= \frac{   \pr{A} \times \pr{B\vert A} \times \pr{a \vert A \wedge B} \times \pr{b \vert A \wedge B \wedge a} }{\pr{A} \times \pr{B \vert A}}
-  &\mbox{\,\,\,\,\,\,\,\,\,\,\,\,\, (chain rule)}
-  \\
-  & = \frac{\pr{A} \times \pr{B \vert A} \times \pr{a \vert A} \times \pr{b \vert B}}{\pr{A}  \times \pr{B \vert A}} 
-  &\mbox{\,\,\,\,\,\,\,\,\,\,\,\,\, (independencies \eqref{eq:I3a} and \eqref{eq:I5})}
-  \\
-  & = \pr{a \vert A} \times \pr{b \vert B} 
-  &\mbox{\,\,\,\,\,\,\,\,\,\,\,\,\, (algebraic manipulation)}
-   \end{align*}} \begin{align*}
-\pr{a \wedge b\vert A\wedge B} & =  \pr{a \vert A} \times \pr{b \vert B} 
- \end{align*}
-
-\noindent Call this \textit{combined sensitivity}. The denominator of
-the combined likelihood ratio is more complicated, mostly because of the
-presence of \(\neg (A \wedge B)\) as a condition:\footnote{\begin{align*}
-  \pr{a \et b\vert \neg (A\et B)} & = \frac{\pr{a \et b \et \neg (A\et B)}}{\pr{\neg (A \et B)}} 
-  &\mbox{\,\,\,\,\,\,\,\,\,\,\,\,\, (conditional probability)}\\
-  & = \frac{\pr{a \et b \et \neg A\et B} +  \pr{a \et b \et A\et \neg B} + \pr{a \et b \et \neg A\et \neg B}  }{\pr{\neg A \et B} + \pr{A \et \neg B} + \pr{\neg A \et \neg B} } 
-  &\mbox{\,\,\,\,\,\,\,\,\,\,\,\,\, (logic \& additivity)}
-  \end{align*} \noindent Now consider the first summand from the
-  numerator: \begin{align*}
-  \pr{a \et b \et \neg A\et B} & = \pr{\n A} \pr{B \vert \n A} \pr{a \vert \n A \et B} \pr{b\vert a \et \n A \et B} &\mbox{\,\,\,\,\,\,\,\,\,\,\,\,\, (chain rule)} \\ & = 
-  \pr{\neg A}\pr{B \vert \neg A} \pr{a \vert \neg A}\pr{b \vert B}
-  &\mbox{\,\,\,\,\,\,\,\,\,\,\,\,\, (independencies \eqref{eq:I4a} and \eqref{eq:I5a})} \\
-  \end{align*} The simplification of the other two summanda is analogous
-  (albeit with slightly different independence
-  assumptions---\eqref{eq:I4b} and \eqref{eq:I5b} for the second one and
-  \eqref{eq:I4c} and \eqref{eq:I5c} for the third. Once we plug these
-  into the denominator formula we get: \begin{align*}
-  \pr{a \et b\vert \neg (A\et B)} & = \frac{\pr{\neg A}\pr{B \vert \neg A} \pr{a \vert \neg A}\pr{b \vert B} + \pr{A}\pr{\neg B \vert A} \pr{a \vert A }\pr{b \vert \neg B} + \pr{\neg A}\pr{\neg B \vert \neg A } \pr{a \vert \neg A}\pr{b \vert \neg B}}{\pr{\neg A}\pr{B \vert \neg A} + \pr{A}\pr{\neg B \vert A } + \pr{\neg A}\pr{\neg B \vert \neg A} }  
-   \end{align*}}
-
-\scalebox{.85}{\parbox{1\linewidth}{
 \begin{align*}
-\pr{a \et b\vert \neg (A\et B)} & = \frac{\pr{\neg A}\pr{B \vert \neg A} \pr{a \vert \neg A}\pr{b \vert B} + \pr{A}\pr{\neg B \vert A} \pr{a \vert A }\pr{b \vert \neg B} + \pr{\neg A}\pr{\neg B \vert \neg A } \pr{a \vert \neg A}\pr{b \vert \neg B}}{\pr{\neg A}\pr{B \vert \neg A} + \pr{A}\pr{\neg B \vert A } + \pr{\neg A}\pr{\neg B \vert \neg A} }  
- \end{align*}}}
+LR_{AB} & =  \frac{\pr{a \vert A} \times \pr{b \vert B}}
+ {\frac{\pr{\neg A}\pr{B \vert \neg A} \pr{a \vert \neg A}\pr{b \vert B} + \pr{A}\pr{\neg B \vert A} \pr{a \vert A }\pr{b \vert \neg B} + \pr{\neg A}\pr{\neg B \vert \neg A } \pr{a \vert \neg A}\pr{b \vert \neg B}}{\pr{\neg A}\pr{B \vert \neg A} + \pr{A}\pr{\neg B \vert A } + \pr{\neg A}\pr{\neg B \vert \neg A} }}
+\end{align*}
 
-\noindent Call this \textit{combined specificity}. The two equalities
-holds whether or not \(A\) and \(B\) are probabilistically independent.
-So both directed graphs in Figure \ref{fig:conjunctionDAG} and Figure
-\ref{fig:conjunctionDAG2} validate these claims.
+The complexity in the numerator arises from conditioning on a negation
+of a conjunction, and it makes proving a general claim about the
+behavior of a conjunction somewhat harder. First, let's look at an
+illustration obtained by looking at a simplified picture.
 
 \hypertarget{same-sensitivity-and-specificity-and-independence}{%
 \subsubsection{Same sensitivity and specificity, and
@@ -1270,8 +1112,8 @@ ratios, rather than being greater than both of them, Dawid's claim that
 testimonies exceeds that supplied by any of its constituents' still
 holds.
 
-\hypertarget{section-1}{%
-\subsection{\texorpdfstring{\textit{MOVE TO APPENDIX}}{}}\label{section-1}}
+\hypertarget{section}{%
+\subsection{\texorpdfstring{\textit{MOVE TO APPENDIX}}{}}\label{section}}
 
 \begin{fact} If independence assumptions \ali{check whic of these d-sep hold in the first and in the second BN}  \eqref{eq:I3a}, \eqref{eq:I4a},  \eqref{eq:I4b}, \eqref{eq:I4c}, \eqref{eq:I5}, \eqref{eq:I5a}, \eqref{eq:I5b}   and \eqref{eq:I5c} hold, the combined likelihood ratio is:
  \begin{align}\label{eq:jointLR}
@@ -4692,66 +4534,66 @@ scope of this paper.
 
 \hypertarget{refs}{}
 \begin{CSLReferences}{1}{0}
-\leavevmode\hypertarget{ref-Allen1986A-Reconceptuali}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-Allen1986A-Reconceptuali}{}}%
 Allen, R. J. (1986). A reconceptualization of civil trials. \emph{Boston
 University Law Review}, \emph{66}, 401--437.
 
-\leavevmode\hypertarget{ref-AllenPardo2019relative}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-AllenPardo2019relative}{}}%
 Allen, R. J., \& Pardo, M. (2019). Relative plausibility and its
 critics. \emph{The International Journal of Evidence {\&} Proof},
 \emph{23}(1-2), 5--59. \url{https://doi.org/10.1177/1365712718813781}
 
-\leavevmode\hypertarget{ref-allen2013}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-allen2013}{}}%
 Allen, R. J., \& Stein, A. (2013). Evidence, probability and the burden
 of proof. \emph{Arizona Law Journal}, \emph{55}, 557--602.
 
-\leavevmode\hypertarget{ref-cheng2012reconceptualizing}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-cheng2012reconceptualizing}{}}%
 Cheng, E. (2012). Reconceptualizing the burden of proof. \emph{Yale LJ},
 \emph{122}, 1254.
 
-\leavevmode\hypertarget{ref-Cohen1977The-probable-an}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-Cohen1977The-probable-an}{}}%
 Cohen, J. L. (1977). \emph{The probable and the provable}. Oxford
 University Press. \url{https://doi.org/10.2307/2219193}
 
-\leavevmode\hypertarget{ref-cohen1988difficulty}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-cohen1988difficulty}{}}%
 Cohen, L. J. (1988). The difficulty about conjunction in forensic proof.
 \emph{The Statistician}, \emph{37}(4/5), 415.
 \url{https://doi.org/10.2307/2348767}
 
-\leavevmode\hypertarget{ref-dawid1987difficulty}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-dawid1987difficulty}{}}%
 Dawid, A. P. (1987). The difficulty about conjunction. \emph{The
 Statistician}, 91--97.
 
-\leavevmode\hypertarget{ref-DiBello2019plausibility}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-DiBello2019plausibility}{}}%
 Di Bello, M. (2019). Probability and plausibility in juridical proof.
 \emph{International Journal of Evidence and Proof}.
 
-\leavevmode\hypertarget{ref-haack2011legal}{}%
-Haack, S. (2014). Legal probabilism: An epistemological dissent. In
-\emph{{Haack2014-HAAEMS}} (pp. 47--77).
+\leavevmode\vadjust pre{\hypertarget{ref-haack2011legal}{}}%
+Haack, S. (2014). Legal probabilism: An epistemological dissent. In (pp.
+47--77).
 
-\leavevmode\hypertarget{ref-kaplow2014likelihood}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-kaplow2014likelihood}{}}%
 Kaplow, L. (2014). Likelihood ratio tests and legal decision rules.
 \emph{American Law and Economics Review}, \emph{16}(1), 1--39.
 
-\leavevmode\hypertarget{ref-Kowalewska2021conjunction}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-Kowalewska2021conjunction}{}}%
 Kowalewska, A. (2021). Reasoning without the conjunction closure.
 \emph{Episteme}, 1--14. \url{https://doi.org/10.1017/epi.2020.53}
 
-\leavevmode\hypertarget{ref-Makinson1965-MAKTPO-2}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-Makinson1965-MAKTPO-2}{}}%
 Makinson, D. C. (1965). The paradox of the preface. \emph{Analysis},
 \emph{25}(6), 205--207.
 
-\leavevmode\hypertarget{ref-schwartz2017ConjunctionProblemLogic}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-schwartz2017ConjunctionProblemLogic}{}}%
 Schwartz, D. S., \& Sober, E. R. (2017). The {Conjunction Problem} and
 the {Logic} of {Jury Findings}. \emph{William \& Mary Law Review},
 \emph{59}(2), 619--692.
 
-\leavevmode\hypertarget{ref-Stein05}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-Stein05}{}}%
 Stein, A. (2005). \emph{Foundations of evidence law}. Oxford University
 Press.
 
-\leavevmode\hypertarget{ref-urbaniak2018narration}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-urbaniak2018narration}{}}%
 Urbaniak, R. (2018). Narration in judiciary fact-finding: A
 probabilistic explication. \emph{Artificial Intelligence and Law},
 1--32. \url{https://doi.org/10.1007/s10506-018-9219-z}

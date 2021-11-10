@@ -1,6 +1,11 @@
 library(ggplot2)
 library(ggthemes)
-# library(plot3D)
+library(tidyverse)
+library(plot3D)
+library(plotly)
+
+
+old <- theme_set(theme_tufte())
 
 getwd() #this should be the project directory
 
@@ -17,23 +22,81 @@ attach(conjunctionTable)
 #how often is the joint bf below each individual Bfs?
 mean(BFABs < BFAs & BFABs < BFBs)
 
+
+conjunctionTable 
+
+source('http://www.sthda.com/sthda/RDoc/functions/addgrids3d.r')
+
+scatter3D(conjunctionTable$BFAs,conjunctionTable$BFBs,conjunctionTable$BFABs,pch=3,cex=0.3,byt="g",alpha=0.8,theta=50, phi=8,xlab= "BF(A)", ylab="BF(B)",zlab="BF(AB)",main="Joint Bayes factor as a function of individual Bayes factors", zlim = c(0,2), xlim = c(0, 2), ylim = c(0,2),cex.main =0.8)
+
+BFfails <- conjunctionTable %>% filter(BFAs > BFABs & BFBs > BFABs ) 
+ scatter3D(BFfails$BFAs,BFfails$BFBs,BFfails$BFABs,pch=3,cex=0.3, colvar = NULL, box = TRUE, grid = TRUE,theta=50, phi = 10, axis.ticks = TRUE, ticktype= "detailed",xlab= "BF(A)", ylab="BF(B)",zlab="BF(AB)",main="Cases in which BF(AB) < BF(A), BF(B) (frequency=.25)")
+
+LRfails <- conjunctionTable %>% filter(LRAs > LRABs & LRBs > LRABs ) 
+ scatter3D(LRfails$LRAs,LRfails$LRBs,LRfails$LRABs,pch=3,cex=0.3, colvar = NULL, 
+box = TRUE, grid = TRUE,theta=50, phi = 10, axis.ticks = TRUE, ticktype= "detailed",xlab= "LR(A)", ylab="LR(B)",zlab="LR(AB)",main="Cases in which LR(AB) < LR(A), LR(B) (frequency=.125)")
+
+
+
+
 mean(BFABs<BFAs)
 mean(BFABs<BFBs)
 
 
+# does the multiplicative claim always hold?
+mean(BFABs == BFAs * BFBs)
+# YES
+
+
+# choose the maximal individual BF
 conjunctionTable$maxBF <- pmax(BFAs, BFBs)
+# choose the minimal individual BF
+conjunctionTable$minBF <- pmin(BFAs, BFBs)
 
+conjunctionTable$BFdifsMax <- conjunctionTable$BFABs - conjunctionTable$maxBF 
 
-conjunctionTable$BFdifs <- conjunctionTable$BFABs - conjunctionTable$maxBF 
+conjunctionTable$BFdifsMin <- conjunctionTable$BFABs - conjunctionTable$minBF 
+
 
 ggplot(conjunctionTable)+geom_histogram(aes(x=BFdifs), bins= 90)+
   xlim(c(-10,10))
+
+#now suppose the antecendents are false, is joint BF still higher?
+plotBFindBelow <- conjunctionTable %>% filter(BFAs < 1 & BFBs < 1) %>% ggplot( aes(x = BFdifsMin))+geom_histogram(aes( y = ..density..), bins = 40)+
+  xlab(expression(paste(BF[AB] - min,"(",BF[A], ", ", BF[B],")")))+ggtitle("Distance of joint BF from the minimal individual BFs for BN1")+
+  labs(subtitle = expression(paste("Assuming ",  BF[A], ", ",   BF[B] < 1)))+xlim(c(-.3,.05))
+
+
+plotBFindBelow
+
+
+plotBFindAbove <- conjunctionTable %>% filter(BFAs > 1 & BFBs > 1) %>% ggplot( aes(x = BFdifsMax))+geom_histogram(aes( y = ..density..), bins = 40)+
+  xlab(expression(paste(BF[AB] - max,"(",BF[A], ", ", BF[B],")")))+ggtitle("Distance of joint BF from the maximal individual BFs for BN1")+
+  labs(subtitle = expression(paste("Assuming ",  BF[A], ", ",   BF[B] > 1)))+xlim(c(0,3))
+
+plotBFindAbove
+
+
+
+
+
+
+
+
+
+
+mean(BFAs < 1 & BFBs < 1 & BFABs > BFAs & BFABs > BFBs)
+
+ggplot(conjunctionTable[BFAs < 1 & BFBs < 1,])
+
 
 
 
 
 #how often is the joint LR below each individual LR?
 mean(LRABs < LRAs & LRABs < LRBs)
+
+
 
 mean(LRABs<LRAs)
 mean(LRABs<LRBs)
@@ -141,11 +204,12 @@ mean(positiveBF$BFdifs > 0)
 
 #however, note BF is also always higher than the max
 ggplot(positiveBF)+geom_histogram(aes(x=positiveBF$BFdifs), bins= 80)+
-  xlim(c(-100,100))
-
+  xlim(c(-1,10))
 mean(positiveBF$BFdifs>0)
 
-# MARCELLO'S COMMENT. THIS SEEMS TO BE A DIFFERENCE BETWEE JOINT LR AND JOINT BF
+
+
+# MARCELLO'S COMMENT. THIS SEEMS TO BE A DIFFERENCE BETWEEN JOINT LR AND JOINT BF
 # JOINT BF IS ALWAYS HIGHER THAN POSITIVE INDIVIDUAL BF
 # INSTEAD JOINT LR IS NOT ALWAYS HIGHER THAN POSITIVE INDIVIDUAL BF
 # WHAT EXPLAINS THE DIFFERENCE BETWEEN JOINT BF AND JOINT LR?

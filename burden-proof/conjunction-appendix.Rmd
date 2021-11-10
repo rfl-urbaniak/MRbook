@@ -29,9 +29,14 @@ library(gRain)
 library(kableExtra)
 library(dagitty)
 library(rethinking)
+library(ggpubr)
+library(tidyverse)
+library(ggthemes)
 ```
 
 
+
+## Bayesian networks and probabilistic independence
 
 One assumption often made in the formulation 
 of the conjunction paradox is that claims $A$ and $B$ are probabilistically independent. This is not always the case---we have seen that the paradox does subside even if the two claims are dependent. However, two fairly natural set-ups for conjunctive hypotheses and evidence supporting them  (Figure \ref{fig:conjunctionBNs}) indeed do have some independencies built in, and so it is also natural what can be said about the conjunction problem given these independencies. Moreover, in some context, we will be freely using the independence assumptions, as a counterexample to a general claim still remains one even if it satisfies an additional requirement, that is, independence conditions.
@@ -247,6 +252,15 @@ b \indep a \vert B \label{eq:I6} & \hspace{2cm}\mbox{\footnotesize BN1 , BN2}
 
 \raf{Double check if we in fact use I3.}
 
+## The simulation approach
+
+
+In what follows, we will provide theorems where we managed to obtain them. However, in some cases calculations are somewhat unmanageable, and so we decided to inspect such issues by means of a simulation. Moreover, even for cases in which we obtained the relevant proofs, the results of a simulation provide further insights, for instance, in terms of relative frequencies of various facts. For each DAG under consideration, we generated 100k random Bayesian networks which share that DAG. For each of these networks, we calculated all the relevant probabilities, Bayes factors, and likelihood ratios for each of them. With the output of such calculations, various questions can be asked and the answers visualized.
+
+
+
+
+## Bayes factor and the conjunction problem
 
 We will start with the Bayes factor $\pr{E \vert H}/\pr{E}$ and its relation to conjunction. Let's abbreviate:
 \begin{align*}
@@ -289,8 +303,52 @@ $BF_{AB} = BF_A \times BF_B$. \label{fac:BFindep}
 
 This fact has the following straigthforward consequence which simply follows from the simple fact that if $a = b \times c$ and $b, c>1$, then $a > \mathsf{max}(b,c)$.
 
-\begin{corollary} If the independence assumptions \eqref{eq:indAB}, \eqref{eq:indab}, \eqref{eq:I4} and \eqref{eq:I5} hold, and $BF_{A}$ and $BF_{B}$ are both greater than 1, then $BF_{AB}$ is greater than one. In fact,  $BF_{AB}$ is then greater than either of $BF_{A}, BF_{B}$. \label{cor:BFind2}
+\begin{corollary} If the independence assumptions \eqref{eq:indAB}, \eqref{eq:indab}, \eqref{eq:I4} and \eqref{eq:I5} hold, and $BF_{A}$ and $BF_{B}$ are both greater than 1, then $BF_{AB}$ is greater than one. In fact,  $BF_{AB}$ is then greater than both  $BF_{A}$ and $BF_{B}$. \label{cor:BFind2}
 \end{corollary}
+
+
+Note that the claim has its negative counterpart. 
+
+
+
+\begin{corollary} If the independence assumptions \eqref{eq:indAB}, \eqref{eq:indab}, \eqref{eq:I4} and \eqref{eq:I5} hold, and $BF_{A}$ and $BF_{B}$ are both strictly less than 1, then $BF_{AB}$  is less than  $\mathsf{min}(BF_{A}, BF_{B})$. \label{cor:BFind3}
+\end{corollary}
+
+Simulations based on the DAG used in \textsf{BN1} can illustrate the distribution of Bayes factors in the two separate scenarios used as assumptions of the above corollaries. 
+
+
+\vspace{1mm}
+\footnotesize
+```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=FALSE, fig.show = "hold", out.width = "100%", warning = FALSE, message = FALSE}
+old <- theme_set(theme_tufte())
+conjunctionTable <-  readRDS(file = "../datasets/conjunctionTable.RDS")
+conjunctionTable$maxBF <- pmax(conjunctionTable$BFAs, conjunctionTable$BFBs)
+conjunctionTable$minBF <- pmin(conjunctionTable$BFAs, conjunctionTable$BFBs)
+conjunctionTable$BFdifsMax <- conjunctionTable$BFABs - conjunctionTable$maxBF
+conjunctionTable$BFdifsMin <- conjunctionTable$BFABs - conjunctionTable$minBF
+
+plotBFindBelow <- conjunctionTable %>% filter(BFAs < 1 & BFBs < 1) %>% ggplot( aes(x = BFdifsMin))+geom_histogram(aes( y = ..density..), bins = 40)+
+  xlab(expression(paste(BF[AB] - min,"(",BF[A], ", ", BF[B],")")))+ggtitle("Compared to the the minimum")+
+  labs(subtitle = expression(paste("Assuming ",  BF[A], ", ",   BF[B] < 1)))+xlim(c(-.3,.05))
+plotBFindAbove <- conjunctionTable %>% filter(BFAs > 1 & BFBs > 1) %>% ggplot( aes(x = BFdifsMax))+geom_histogram(aes( y = ..density..), bins = 40)+
+  xlab(expression(paste(BF[AB] - max,"(",BF[A], ", ", BF[B],")")))+ggtitle("Compared to  the maximum")+
+  labs(subtitle = expression(paste("Assuming ",  BF[A], ", ",   BF[B] > 1)))+xlim(c(0,3))
+
+plotBFind <- ggarrange(plotBFindBelow, plotBFindAbove, ncol = 2)
+```
+\normalsize
+
+
+
+\begin{figure}[ht]
+```{r BFind,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%"}
+annotate_figure(plotBFind, top = text_grob("Distances of the joint BF from the individual BFs", 
+                face = "bold", size = 14)) 
+```
+\caption{Distances of the joint Bayes factor from maxima and minima of individual Bayes factors, depending on whether the individual support levels are both positive or both negative.}
+\end{figure}
+
+
 
 
 
