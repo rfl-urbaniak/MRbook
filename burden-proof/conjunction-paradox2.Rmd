@@ -121,7 +121,7 @@ the probability of the conjunction $\textsf{harm} \et \textsf{premed}$ should st
 The discussion so far proceeded without mentioning the evidence in support of the claims that constitute the wrongdoing. This is a simplification. To be more precise, the conjunction paradox and the conjunction principle must be formulated by including the supporting evidence. For two claims, the conjunction principle can be formulated as follows:
 \[\text{S[$a, A$] and S[$b, B$] $\Leftrightarrow$ S[$a \wedge b, A\wedge B$]},\]
 
-\noindent where $a$ and $b$ denote the evidence for claims $A$ and $B$ respectively, and $S$ denote the standard by which the evidence establishes the claim in question. In the case of more than two claims, the formulation of the conjunction principle should be modified accordingly. 
+\noindent where $a$ and $b$ denote the evidence for claims $A$ and $B$ respectively, and $S$ denote the standard by which the evidence establishes the claim in question. In the case of more than two claims, the formulation of the conjunction principle should be extended accordingly. 
 
 Does a threshold-based probabilistic interpretation of the standard of proof also conflict with this revised version of the conjunction principle? The answer is positive, but seeing why requires some work.  We should check whether, if  both $\pr{A \vert a}$ and $\pr{B \vert b}$ meet the threshold, say $.95$, then so does $\pr{A\wedge B \vert a\wedge b}$. 
 <!---Could the combined evidence $a\wedge B$ provide a boost to $A\wedge B$ so that $\pr{A\wedge B \vert a\wedge b}$ meets the threshold just when $\pr{A \vert a}$ and $\pr{B \vert b}$ do? --->
@@ -139,11 +139,10 @@ The answer is negative provided two probabilistic independence assumptions hold.
 \[\pr{\textsf{injury} \wedge \textsf{firefighther} \vert \textsf{witness} \wedge \textsf{call}}= \pr{\textsf{injury} \vert \textsf{witness}} \times \pr{\textsf{firefighther} \vert \textsf{call}}. \]
 
 \noindent
-If the equality holds, even when $\pr{\textsf{injury} \vert \textsf{witness}}$ and $\pr{\textsf{firefighther} \vert \textsf{call} }$ meet the required probability threshold, $\pr{\textsf{injury} \wedge \textsf{firefighther} \vert \textsf{witness} \wedge \textsf{call}}$ will not.^[The only additional assumption to make here is that both $\pr{\textsf{injury} \vert \textsf{witness}}$ and $\pr{\textsf{firefighther} \vert \textsf{call} }$ are below 1, as is usually the case given that the evidence offered in a trial is fallible.] 
+If the equality holds, even when $\pr{\textsf{injury} \vert \textsf{witness}}$ and $\pr{\textsf{firefighther} \vert \textsf{call} }$ meet the required probability threshold, $\pr{\textsf{injury} \wedge \textsf{firefighther} \vert \textsf{witness} \wedge \textsf{call}}$ usually will not.^[The only additional assumption to make here is that both $\pr{\textsf{injury} \vert \textsf{witness}}$ and $\pr{\textsf{firefighther} \vert \textsf{call} }$ are below 1, as is usually the case given that the evidence offered in a trial is fallible.] 
 This  violates  aggregation.  
 
-There are some loose ends in this discussion, however. Why should one subscribe to the independence assumptions in the aggravated assault case?  Further, do these assumptions hold in other cases? The argument should be made both more rigorous and more general. To this end, we will represent formally the relationship between claims $A$, $B$ and their conjunction $A\wedge B$, as well as the supporting evidence $a$, $b$ and their conjunction $a\wedge b$. A natural way to do that is to use Bayesian networks. 
-We have already introduced Bayesian networks in an earlier chapter (\textbf{REF TO OTHER CHAPETR}). Here we will only sketch the ideas necessary to discuss the difficulty with conjunction. 
+There are some loose ends in this discussion, however. Why should one subscribe to the independence assumptions in the aggravated assault case?  Further, do these assumptions hold in other cases? The argument should be made both more rigorous and more general. To this end, we will represent formally the relationship between claims $A$, $B$ and their conjunction $A\wedge B$, as well as the supporting evidence $a$, $b$ and their conjunction $a\wedge b$. A natural way to do that is to use Bayesian networks.  We have already introduced Bayesian networks in Chapter \todo{REF TO OTHER CHAPETR}. Here we will only sketch the ideas necessary to discuss the difficulty with conjunction. 
 
 ##  Independent hypotheses 
 
@@ -193,7 +192,9 @@ graphviz.plot(hEDAG)
 The arrow need not have a causal interpretation. 
 The direction of the arrow indicates which conditional probabilities 
 should be supplied in the probability table. Since the arrow goes from $H$ to $E$, we should specify the probabilities of the different values of $E$ conditional on the different 
-values of $H$. In addition, since the hypothesis node has no parents, we should simply specify the prior probabilities of the difference values of $H$. 
+values of $H$.
+
+<!---In addition, since the hypothesis node has no parents, we should simply specify the prior probabilities of the difference values of $H$. --->
 
 Back to the difficulty with conjunction. Two items of evidence, $a$ and $b$, each support their own hypothesis, $A$ and $B$. This set up can be represented 
 by two directed graphs, as follows:
@@ -302,7 +303,7 @@ that the directed graph in Figure \ref{fig:conjunctionDAG} is an adequate repres
 
 ## Dependent hypotheses 
 
-Consider now what happens if the probabilistic independence between claims $A$ and $B$ is dispensed with. To this end, it is enough to draw an arrow between $A$ and $B$ in our directed graph. The result is displayed in Figure \ref{fig:conjunctionDAG2}. There is an open path between the hypotheses nodes $A$ and $B$ and the evidence nodes $a$ and $b$. Thus, the new graph no longer guarantees the probabilistic independence of $A$ and $B$, or that of $a$ and $b$.  Items of evidence $a$ and $b$ are still probabilistically independent of one another \textit{conditional} on their respective hypothesis. That is, $\pr{a \vert A}=\pr{a \vert A \wedge b}$ and $\pr{b \vert B}=\pr{b \vert B  \wedge a}$.
+Consider now what happens if the probabilistic independence between claims $A$ and $B$ is dispensed with. To this end, it is enough to draw an arrow between $A$ and $B$ in our directed graph. The result is displayed in Figure \ref{fig:conjunctionDAG2}. There is an open path between  hypothesis nodes $A$ and $B$ and  evidence nodes $a$ and $b$. Thus, the new graph no longer guarantees the probabilistic independence of $A$ and $B$, or that of $a$ and $b$.  Items of evidence $a$ and $b$ are still probabilistically independent of one another \textit{conditional} on their respective hypothesis. That is, $\pr{a \vert A}=\pr{a \vert A \wedge b}$ and $\pr{b \vert B}=\pr{b \vert B  \wedge a}$.
 So $a$ and $b$ still counts as independent lines of evidence despite not being (unconditionally) probabilistically independent.^[Here is an illustration of the idea of independent lines of evidence without unconditional independence. Suppose the same phenomenon (say blood pressure) is measured by two instruments. The reading of the two instruments (say `high' blood pressure) should be \textit{probabilistically dependent} of one another. After all, if the instruments were both infallible and they were measuring the same phenomenon, they should give the exact same reading.  On the other hand, the two instruments measuring the same phenomenon should count as \textit{independent lines of evidence}. This fact is rendered in probabilistic terms by means of probabilistic independence conditional on the hypothesis of interest. These ideas can be worked out more systematically 
 in the language of Bayesian networks. Roughly, two variables are probabilistically dependent if there 
 is an open path between them. On the other hand, an open path 
@@ -419,7 +420,7 @@ The failures of the conjunction principles so far are failures
 of aggregation. When the probability of $A$ and the probability of $B$ are both above a given threshold, the probability of the conjunction $A\wedge B$ usually is not. This can happen whether or not $A$ and $B$ are probabilistically independent. It can also happen whether or not 
 the probability of $A$ and the probability of $B$ are conditional on the supporting evidence. These failures of aggregation occur if the standard of proof is understood as a posterior probability threshold. 
 
-Some have regarded these failures as strong enough ground to advocate a different conception of probability, along the lines of so-called Baconian probability or fuzzy logic, or reject legal probabilism altogether. We do not rehearse these lines of argument here.\todo{Add footnote about what these strategies are like} Our focus is on \textit{probabilistic} strategies for capturing the principle of aggregation, and more generally, for handling the difficulty with conjunction. Our working hypothesis  is that probability theory need not be revised. Probability theory is sufficiently well-established that we should not reject it unless extremely strong reasons mandate it. Since we have not explored any alternative strategies, within the probabilistic approach, the failures of aggregation are not yet extremely strong reasons to reject probability theory in this context.  
+Some have regarded these failures as strong enough ground to advocate a different conception of probability, along the lines of so-called Baconian probability or fuzzy logic, or reject legal probabilism altogether. We do not rehearse these lines of argument here.\todo{Add footnote about what these strategies are like} Our focus is on \textit{probabilistic} strategies for capturing the principle of aggregation, and more generally, for handling the difficulty with conjunction. Our working hypothesis  is that probability theory need not be revised. Probability theory is sufficiently well-established that we should not reject it unless extremely strong reasons mandate it. Since we have not explored any alternative strategies, within the probabilistic approach, the failures of aggregation are not yet strong reasons to reject probability theory in this context.  
 
 Now, as we have seen, aggregation fails in a large class of cases if the standard of proof is understood as a posterior probability threshold. As an alternative, legal probabilists can think of proof standards as decision criteria of evidential strength. This is the strategy we examine in this section. Instead of a posterior probability threshold, the standard of proof can be modeled using a probabilistic measure of evidential strength. As we shall see, this alternative way of modeling proof standards succeeds in capturing aggregation, but is still not entirely satisfactory. 
 
@@ -909,8 +910,8 @@ Unfortunately, this approach incurs  a major shortcoming: aggregation still fail
 
 \noindent
 Note the superscripts $A$, $B$ or $A\wedge B$. The Bayes factor threshold $t_{BF}$ is now indexed by the superscript to the claim of interest because the threshold $T_{BF}$ is prior-dependent and thus claim-dependent (since different claims have different prior probabilities). Now, for simplicity, suppose the individual claims $A$ and $B$ are probabilistically independent.  Consider a posterior threshold of $.95$ as might be appropriate in a criminal case. If $A$ and $B$ both have a prior probability of, say $.1$, the threshold $t^A_{BF}=t_{BF}^B=\nicefrac{.95}{.1}=9.5$ for $A$ or $B$ individually. The composite claim $A \wedge B$ will be associated with the threshold $t^{A\wedge B}_{BF}=\nicefrac{.95}{(.1\times .1)}=95$, a much higher value. But if each individual claim meets its Bayes factor threshold of 9.5 and the two claims are independent, the joint Bayes factor would result from the multiplication of the individual Bayes factors, that is, $9.5 \times 9.5=90.25$. This is not quite enough to meet $t^{A\wedge B}_{BF}=95$. So aggregation fails. An analogous 
-point holds for likelihood ratio threshold.^[Say $A$ and $B$ have  prior probabilities of 
-$.2$ and $.3$ respectively. On this approach, the likelihood ratio threshold for $A$ and $B$ will be  $t_{LR}^{A}\approx 76$ and $t_{LR}^{B}a\approx 44$. The likelihood ratio threshold for  the composite claim $A \wedge B$ will be $t^{A\wedge B}_{LR}\approx 297$.  Now suppose the individual likelihood ratios meet their  threshold and respective sensitivities and specificities are identical. For $t_{LR}^{A}$ to be met, evidence $a$ should have sensitivity of at least 0.988. For $t_{LR}^{B}$ to be met,  evidence $b$ should have  sensitivity  0.978. Now with these separate sensitivies, The combined likelihood ratio equals about 145, far short that what the threshold $t^{A\wedge B}_{LR}$ requires, namely a likelihood ratio of 297. Once again, aggregation fails.] 
+point holds for the likelihood ratio threshold.^[Say $A$ and $B$ have  prior probabilities of 
+$.2$ and $.3$ respectively. On this approach, the likelihood ratio threshold for $A$ and $B$ will be  $t_{LR}^{A}\approx 76$ and $t_{LR}^{B}a\approx 44$. The likelihood ratio threshold for  the composite claim $A \wedge B$ will be $t^{A\wedge B}_{LR}\approx 297$.  Now suppose the individual likelihood ratios meet their threshold and respective sensitivity and specificity are identical. For $t_{LR}^{A}$ to be met, evidence $a$ should have sensitivity of at least 0.988. For $t_{LR}^{B}$ to be met,  evidence $b$ should have  sensitivity  0.978. Now with these separate sensitivies, The combined likelihood ratio equals about 145, far short that what the threshold $t^{A\wedge B}_{LR}$ requires, namely a likelihood ratio of 297. Once again, aggregation fails.] 
 
 <!---
 The difference  grows as (i) the prior probability of the individual claims decreases, (ii)  as the posterior threshold $t$  decreases, and  (iii) as the number of constituents claims increases. For two constituents, the combined Bayes factor remains only $5\%$ below the value needed to meet $t_{BF}^{A\wedge B}$. The difference at here is between $t_{BF}^{A\wedge B}=\nicefrac{.95}{p^2}$ and $t_{BF}^{A}*t_{BF}^{B}=(\nicefrac{.5}{p})^{2}$. Note that $\frac{\nicefrac{.95}{p^2} - (\nicefrac{.5}{p})^{2}}{\nicefrac{.95}{p^2}}=.05$, for any value of the prior $p$. Given five constituent claims, $\frac{\nicefrac{.95}{p^5} - (\nicefrac{.95}{p})^{5}}{\nicefrac{.95}{p^5}}=.18$.  Now, say $t=.5$. Even with just two claims, $t^{A\wedge B}_{BF}=.5/(.1*.1)=50$, but $t^A_{BF}*t_{BF}^B=(.5/.1)*(.5/.1)=25$, only half of the required value. 
@@ -998,21 +999,20 @@ Guilt is proven beyond a reasonable doubt if and only if the evidential support 
 
 ### Fixed threshold
 
-The approach consists in fixing the evidential strength 
+The second approach we consider consists in fixing the evidential strength 
 threshold regardless of the prior probability of the 
 hypothesis of interest.  This raises the 
 question of how the threshold should be fixed irrespective 
 of the priors. Standard decision theory can no longer be used. 
-Still, it is worth noting that, if this question can be 
-satisfactorily answered, the fixed threshold approach manages 
-to vindicate aggregation. 
+But assuming this question can be answered, it can be shown that 
+the fixed threshold approach vindicates aggregation. 
 
 If the standard of proof is formalized using a fixed  threshold for the Bayes factor or the likelihood ratio, the conjunction principle boils down to one of these:
  \begin{align*} \frac{\pr{a \vert A }}{\pr{a}}>t_{BF} &\mbox{ and } 
-\frac{\pr{ b \vert B}}{\pr{b}}>t_{BF} \mbox{ iff } 
+\frac{\pr{ b \vert B}}{\pr{b}}>t_{BF} \Leftrightarrow 
 \frac{\pr{a \et b \vert A \et B}}{\pr{a \et b}}>t_{BF} \\
  \frac{\pr{a \vert A }}{\pr{a \vert \n A}}>t_{LR} &\mbox{ and } 
-\frac{\pr{ b \vert B}}{\pr{b\vert B}}>t_{LR} \mbox{ iff } 
+\frac{\pr{ b \vert B}}{\pr{b\vert B}}>t_{LR} \Leftrightarrow 
 \frac{\pr{a \et b \vert A \et B}}{\pr{a \et b\vert \n (A \et B)}}>t_{LR}
 \end{align*}
 
@@ -1028,10 +1028,10 @@ in terms of the Bayes factor or the likelihood ratio. So whenever $BF_A$
 and $BF_B$ meet the threshold $t_{BF}$, then usually also $BF_{AB}$ meets $t_{BF}$. 
 The same applies for the likelihood ratio threshold. Whenever $LR_A$ 
 and $LR_B$ meet the threshold $t_{LR}$, then usually also $LR_{AB}$ meets $t_{LR}$.
-Success. Aggregation is finally vindicated. Aggregation could not be justified using posterior probabilities $\pr{A \vert a}$ and $\pr{B \vert b}$ nor could it be justified generally 
-using a variable evidential strength threshold.  So it is an advantage of the fixed  evidential strength threshold  approach that it can justify this direction of the conjunction principle. 
+Success. Aggregation is finally vindicated. Since aggregation could not be justified using posterior probabilities $\pr{A \vert a}$ and $\pr{B \vert b}$ or 
+using a variable evidential strength threshold, this result militates in favor of the fixed evidential strength threshold  approach.  
 
-However, the right-to-left direction---the seemingly uncontroversial principle of distribution---has now become problematic. Suppose the combined Bayes factor, $\nicefrac{\pr{a \et b \vert A \et B}}{\pr{a \et b}}$, barely meets  the threshold. The individual support, say $\nicefrac{\pr{a \vert A}}{\pr{a}}$, could be  still below the threshold unless $\nicefrac{\pr{b \vert B}}{\pr{b}}=1$ (which should not happen if $b$ positively supports $B$). The problem for likelihood ratio is analogous. For suppose evidence $a \et b$ supports $A \et B$ to the required threshold $t$. The threshold in this case should be  some order of magnitude greater than one. If the combined likelihood ratio meets the threshold $t_{LR}$, one of the individual likelihood ratios may well be below $t_{LR}$. So---if the standard of proof is interpreted using evidential support measured by the likelihood ratio---even though the conjuction $A \et B$ was proven according to the desired standard, one of individual claims might not.
+Unfortunately, the right-to-left direction---the seemingly uncontroversial principle of distribution---has now become problematic. Suppose the combined Bayes factor, $\nicefrac{\pr{a \et b \vert A \et B}}{\pr{a \et b}}$, barely meets  the threshold. The individual support, say $\nicefrac{\pr{a \vert A}}{\pr{a}}$, could be  still below the threshold unless $\nicefrac{\pr{b \vert B}}{\pr{b}}=1$ (which should not happen if $b$ positively supports $B$). The problem for likelihood ratio is analogous. For suppose evidence $a \et b$ supports $A \et B$ to the required threshold $t$. The threshold in this case should be  some order of magnitude greater than one. If the combined likelihood ratio meets the threshold $t_{LR}$, one of the individual likelihood ratios may well be below $t_{LR}$. So---if the standard of proof is interpreted using evidential support measured by the likelihood ratio---even though the conjuction $A \et B$ was proven according to the desired standard, one of individual claims might not.
 
 To be specific, we have just shown that the following distribution principles fails:
 \begin{align}
@@ -1045,7 +1045,7 @@ S[a \wedge b, A\wedge B] \Rightarrow S[a \wedge b, A] \wedge S[a\wedge b, B]. \t
 \end{align}
 
 \noindent
-Principle (DIS2)  is less controversial because it holds the evidence constant. This principle is harder to deny: one would not want to claim that, while holding fixed evidence $a\wedge b$, establishing the conjunction might not be enough for establishing one of the conjuncts. It seems that any formalization of the standard of proof should obey (DIS2).  Yet, (DIS2) also fails both for Bayes factor and likelihood ratio threshold. After all, if  $A$ and $B$ are probabilistically independent, (DIS1) and (DIS2) are in fact equivalent principles so long as the standard of proof is interpreted as a fixed evidential strength threshold.\raf{M: Need proof of this. Appendix? What about if they are not independent. Need proof. Maybe simulation?}. So the counterexamples to (DIS1) also work against (DIS2).
+Principle (DIS2)  is less controversial because it holds the evidence constant. This principle is harder to deny: one would not want to claim that, while holding fixed evidence $a\wedge b$, establishing the conjunction might not be enough for establishing one of the conjuncts. It seems that any formalization of the standard of proof should obey (DIS2).  Yet, (DIS2) also fails both for Bayes factor and likelihood ratio threshold. After all, if  $A$ and $B$ are probabilistically independent, (DIS1) and (DIS2) are in fact equivalent principles so long as the standard of proof is interpreted as a fixed evidential strength threshold.\raf{M: Need proof of this. Appendix? What about if they are not independent. Need proof. Maybe simulation?} So the counterexamples to (DIS1) also work against (DIS2).
 
 <!---
 To show this, it is enough to show that $\frac{\pr{B \vert a\wedge b \wedge A}}{\pr{B \vert A}}>1$ because $S[a\wedge b, A\wedge B]>S[a\wedge b, A]$ iff $\frac{\pr{a\wedge b \vert A \wedge B}}{\pr{a\wedge b}}>\frac{\pr{a\wedge b \vert A}}{\pr{a\wedge b}}$ iff $\frac{\pr{A\wedge B \vert a \wedge b}}{\pr{A\wedge B}}>\frac{\pr{A \vert a \wedge b }}{\pr{A}}$ iff $\frac{\pr{A \vert a \wedge b} \times \pr{B \vert a\wedge b\wedge A}}{\pr{A} \times \pr{B \vert A}}>\frac{\pr{A \vert a \wedge b }}{\pr{A}}$. Now, $\frac{\pr{B \vert a\wedge b \wedge A}}{\pr{B \vert A}}>1$ so long as $a\wedge b$ positively supports $B$ even under the assumption of $A$, unless $A$ entailed $B$. We naturally exclude the situation in which one claim entails the other because otherwise there would be no need to establish the two claims. Establishing one claim alone would suffice. To see why $a\wedge b$ positively supports $B$ (or $A$), note that $S[a, A]=\frac{\pr{a |A}}{\pr{a}} \leq \frac{\pr{a |A} \times \pr{b \vert A \wedge a}}{\pr{a}\times \pr{b \vert a}}=\frac{\pr{a \wedge b |A}}{\pr{a\wedge b}}=S[a \wedge b, A]$. The key step here is $\frac{\pr{a |A}}{\pr{a}} \leq \frac{\pr{a |A} \times \pr{b \vert A \wedge a}}{\pr{a}\times \pr{b \vert a}}$. The latter holds because $\frac{\pr{b \vert A \wedge a}}{\pr{b \vert a}}\geq 1$. It is useful to distinguish two cases. First, if $A$ and $B$ are probabilistically independent, as in the Bayesian network in Figure \ref{network-conjunction} (top), then $\frac{\pr{b \vert A \wedge a}}{\pr{b \vert a}}= \frac{\pr{b}}{\pr{b}} = 1$. Second, if $A$ and $B$ are probabilistically dependent, as in the Bayesian network in Figure \ref{network-conjunction} (bottom), evidence $b$ positively supports claim $A$ (even conditional on $a$) so long as $b$ positively supports $B$. The assumption is that claim $A$ and $B$ are positively correlated, and thus, any evidence that supports one of the claims is going to support the other claim, as well. \textbf{SEE EARLIER CHAPTERS FOR A MORE RIGOROUS PROOF OF THIS LAST POINT.} \footnote{$\frac{\pr{a\wedge b \vert A}}{\pr{a\wedge b}}=\frac{\pr{a \vert A}\pr{b \vert A}}{\pr{a}\pr{b}}=\frac{\pr{a \vert A}}{\pr{a}}$. In other words, $S[a \wedge b, A]=S[a, A]$.} The intuitive reason for this--- perhpas surprising---result is that $A \wedge B$ has a much lower prior probability than $A$ (or $B$) considered separately. Thus, the same body of evidence is going to have a larger impact on a hypothesis with a lower prior probability, other things being equal. This larger impact on the prior is reflected in a larger Bayes factor. We will examine this point in greater detail in later sections. 
@@ -1172,14 +1172,17 @@ and decide for the one for which the evidence provides better support.
 
 It is controversial whether this is what happens in all trial 
 proceedings, especially in criminal trials, if one 
-thinks of $H_d$ as a substantial account of what has happened. The defense may elect to challenge 
-the hypothesis put foward by the other party without proposing one of its own. 
+thinks of the defense hypothesis $H_d$ as a substantial account of what has happened. The defense may elect to challenge the hypothesis put forward by the other party without proposing one of its own. 
 For example, in the O.J.\ Simpson trial the defense did not advance its own story about what happened, but simply argued that the evidence provided by the prosecution, while significant on its face to establish OJ's guilt, was riddled with problems and deficencies. This defense strategy 
 was enough to secure an acquittal.  So, in order to create a reasonable doubt about 
 guilt, the defense does not always provide a full-fledged alternative hypothesis. 
 The supporters of the comparative approach, however, will respond that this could happen 
 in a small number of cases, even though in general---especially for tactical reasons---the defense 
-will provide an alternative hypothesis. And even such cases can be construed as involving a defense hypothesis, one that is simply equivalent to the negation of $H_p$.
+will provide an alternative hypothesis. 
+
+<!---And even if the defense does not explicitly put forward can alternative hypothesis, such cases can still be construed as featuring a defense hypothesis, one that is simply equivalent to the negation of the other party's hypothesis.^[If so, however, the comparative approach collapses onto the threshold approach since $\pr{H}$ and $\pr{\neg H}$ must 
+add up to one.] 
+--->
 
 <!-- After all, not to provide one would usually  -->
 <!-- amount to an admission of criminal or civil liability.   -->
@@ -1188,10 +1191,10 @@ will provide an alternative hypothesis. And even such cases can be construed as 
 
 Setting  aside this controversy for the time being, 
 we first work out the comparative strategy 
-using posterior probabilities. More specifically, given a body of evidence $E$ and two competing hypotheses $H_p$ and $H_d$, the probability $\pr{H_p \vert E}$ should be suitably higher 
-than $\pr{H_d \vert E}$, or in other words, the ratio $\nicefrac{\pr{H_p \vert E}}{\pr{H_d \vert E}}$ should be above a suitable threshold. Presumably, the ratio threshold shoud be higher 
+using posterior probabilities. More specifically, the standard of proof is understood comparatively as follows: given a body of evidence $E$ and two competing hypotheses $H_p$ and $H_d$, the probability $\pr{H_p \vert E}$ should be suitably higher 
+than $\pr{H_d \vert E}$, or in other words, the ratio $\nicefrac{\pr{H_p \vert E}}{\pr{H_d \vert E}}$ should be above a suitable threshold. Presumably, the ratio threshold should be higher 
 for criminal than civil cases.  In fact, in civil cases it seems enough to require that the 
-ratio $\nicefrac{\pr{H_p \vert E}}{\pr{H_d \vert E}}$ be above 1, or in other words, that 
+ratio $\nicefrac{\pr{H_p \vert E}}{\pr{H_d \vert E}}$ be above 1, or equivalently, that 
 $\pr{H_p \vert E}$ should be higher than $\pr{H_d \vert E}$.\todo{I'm not convinced this footnote is needed and what its point is.}\footnote{Note that $H_p$ and $H_d$ need not be one the negation of the other. Whenever two hypotheses are exclusive and exhaustive, $\nicefrac{\pr{H_p \vert E}}{\pr{H_d \vert E}}>1$ implies that $\pr{H_p \vert E}>.5$, the standard probabilistic interpretation of the preponderance standard.} 
 
 One advantage of this approach---as Cheng shows---is that expected utility theory can 
@@ -1210,9 +1213,7 @@ or in other words:
 \noindent
 In civil cases, it is customary to assume the costs ratio of 
 false positives to false negatives equals one. So the rule of decision would be: find against the defendant whenever $\frac{\pr{H_p \vert E}}{\pr{H_d \vert E}} > 1$ or in other words
-$\pr{H_p \vert E}$ is greater than $\pr{H_d \vert E}$. In criminal trials, the costs ratio is usually considered higher, since convicting an innocent (false positive) should be more harmful or morally objectionable 
-than acquitting a guilty defendant (false negative). Thus, the rule of decision in criminal proceedings would be: 
-convict whenever $\pr{H_p \vert E}$ is appropriately greater than $\pr{H_d \vert E}$.
+$\pr{H_p \vert E}$ is greater than $\pr{H_d \vert E}$. In criminal trials, the costs ratio is usually considered higher, since convicting an innocent (false positive) should be more harmful or morally objectionable than acquitting a guilty defendant (false negative). Thus, the rule of decision in criminal proceedings would be: convict whenever $\pr{H_p \vert E}$ is appropriately greater than $\pr{H_d \vert E}$.
 
 <!---
 \begin{center}
@@ -1301,7 +1302,7 @@ Assuming independence between $C$ and $S$, we have
 
 \noindent So, whatever the defense hypothesis, the plaintiff's hypothesis is more probable. At least in this case, whenever the elements of a plaintiff's claim satisfy the decision threshold, so does their conjunction. The left-to-right direction of the conjunction principle---what we called aggregation---has been vindicated, at least for simple cases involving independence. Success. 
 
-What about the opposite direction, distribution? If the threshold to be met just 1---as might be appropriate in civil cases---distribution is not generally satisfied. Suppose $\nicefrac{\pr{S\et C\vert E}}{\pr{H_d \vert E}}>1$, or in other words, the combined hypothesis $S \et C$ has been established by preponderance of the evidence. The question is whether the individual hypotheses have been established by the same standard, specifically, whether $\frac{\pr{C\vert E}}{\pr{\n C \vert E}} > 1$ and $\frac{\pr{S\vert E}}{\pr{\n S \vert E}} > 1$. If $\nicefrac{\pr{S\et C\vert E}}{\pr{H_d \vert E}}>1$, the combined hypothesis is assumed to be more probable than any of the competing hypotheses, in particular, $\nicefrac{\pr{S\et C\vert E}}{\pr{\neg S \et C \vert E}}>1$, $\nicefrac{\pr{S\et C\vert E}}{\pr{S \et \neg C \vert E}}>1$ and $\nicefrac{\pr{S\et C\vert E}}{\pr{\neg S \et \neg C \vert E}}>1$.  We have
+What about the opposite direction, distribution? Distribution is not generally satisfied. Suppose $\nicefrac{\pr{S\et C\vert E}}{\pr{H_d \vert E}}>1$, or in other words, the combined hypothesis $S \et C$ has been established by preponderance of the evidence. The question is whether the individual hypotheses have been established by the same standard, specifically, whether $\frac{\pr{C\vert E}}{\pr{\n C \vert E}} > 1$ and $\frac{\pr{S\vert E}}{\pr{\n S \vert E}} > 1$. If $\nicefrac{\pr{S\et C\vert E}}{\pr{H_d \vert E}}>1$, the combined hypothesis is assumed to be more probable than any of the competing hypotheses, in particular, $\nicefrac{\pr{S\et C\vert E}}{\pr{\neg S \et C \vert E}}>1$, $\nicefrac{\pr{S\et C\vert E}}{\pr{S \et \neg C \vert E}}>1$ and $\nicefrac{\pr{S\et C\vert E}}{\pr{\neg S \et \neg C \vert E}}>1$.  We have
 \begin{align}\label{eq:cheng-multiplication-two}
 1 < \frac{\pr{S\et C\vert E}}{\pr{S\et \n C\vert E}} & = \frac{\pr{S\vert E}\pr{C\vert E}}{\pr{S \vert E}\pr{\n C \vert E}}  =\frac{\pr{C\vert E}}{\pr{\n C \vert E}} \\
 \nonumber
@@ -1312,13 +1313,26 @@ What about the opposite direction, distribution? If the threshold to be met just
 
 \noindent
 In the first two cases, clearly, if the composite hypothesis meets the threshold, 
-so do the individual claims. But now consider the third case. $\nicefrac{\pr{S\vert E}\pr{C\vert E}}{\pr{\n S \vert E}\pr{\n C \vert E}}$ might be strictly greater than $\nicefrac{\pr{C\vert E}}{\pr{\n C \vert E}}$ or $\nicefrac{\pr{S\vert E}}{\pr{\n S \vert E}}$. So it possible that $\nicefrac{\pr{S\vert E}\pr{C\vert E}}{\pr{\n S \vert E}\pr{\n C \vert E}}$ is greater than one, while either$\nicefrac{\pr{C\vert E}}{\pr{\n C \vert E}}$ or $\nicefrac{\pr{S\vert E}}{\pr{\n S \vert E}}$ are not, say when they are 3 and 0.5, respectively. Once again, distribution fails. And the same problem would arise with a more stringent threshold as might be appropriate in criminal cases. 
+so do the individual claims. But now consider the third case. $\nicefrac{\pr{S\vert E}\pr{C\vert E}}{\pr{\n S \vert E}\pr{\n C \vert E}}$ might be strictly greater than $\nicefrac{\pr{C\vert E}}{\pr{\n C \vert E}}$ or $\nicefrac{\pr{S\vert E}}{\pr{\n S \vert E}}$. It is possible that $\nicefrac{\pr{S\vert E}\pr{C\vert E}}{\pr{\n S \vert E}\pr{\n C \vert E}}$ is greater than one, while either$\nicefrac{\pr{C\vert E}}{\pr{\n C \vert E}}$ or $\nicefrac{\pr{S\vert E}}{\pr{\n S \vert E}}$ are not, say when they are 3 and 0.5, respectively. Distribution fails. And the same problem would arise with a more stringent threshold as might be appropriate in criminal cases. 
 
-There is a more general problem with the comparative approach worth flagging here. Much of the heavy lifting here is done by the strategic splitting of the defense line into multiple scenarios. Now suppose, for illustrative purposes, $\pr{H_p\vert E}=0.37$ and the probability of each of the defense lines given $E$ is $0.21$. This means that $H_p$ wins with each of the scenarios, so on this approach we should find against the defendant. But should we? Given the evidence, the accusation is very likely to be false, because $\pr{\n H_p \vert E}=0.63$.  The problem generalizes. If, as here, we individualize scenarios by Boolean combinations of elements of a case, the more elements there are, into more  scenarios $\n H_p$ needs to be divided. This normally would lead to the probability of each of them being even lower  (because now $\pr{\n H_p}$ needs to be ``split'' between more scenarios). So, if we take this approach seriously, the more elements a case has, the more at a disadvantage the defense is. This seems undesirable. 
+There is a more general problem with Cheng's comparative approach worth flagging here. Much of the heavy lifting here is done by the strategic splitting of the defense line into multiple scenarios. Now suppose, for illustrative purposes, $\pr{H_p\vert E}=0.37$ and the probability of each of the defense lines given $E$ is $0.21$. This means that $H_p$ wins with each of the scenarios, so on this approach we should find against the defendant. But should we? Given the evidence, the accusation is very likely to be false, because $\pr{\n H_p \vert E}=0.63$.  The problem generalizes. If, as here, we individualize scenarios by Boolean combinations of elements of a case, the more elements there are, into more  scenarios $\n H_p$ needs to be divided. This normally would lead to the probability of each of them being even lower  (because now $\pr{\n H_p}$ needs to be ``split'' between more scenarios). So, if we take this approach seriously, the more elements a case has, the more at a disadvantage the defense is. This seems undesirable. 
 
 ## Comaparing likelihoods
 
-INSTEAD OF COMPARING POSTERIOR PROBABILITIES, COMPARE LIKELIHOODS OF EVIDENCE GIVEN HYPOTHESIS. DOES THE PARADOX STILL REMAIN?
+Instead of comparing posterior probabilities, likelihoods 
+can be compared. In other words, the standard of proof can be understood as follows: the ratio between likelihoods $\nicefrac{\pr{E \vert H_p}}{\pr{E \vert H_d}}$ should be above a suitable threshold.
+Note that the posterior ratio $\nicefrac{\pr{H_p \vert E}}{\pr{H_d \vert E}}$ from before was replaced by the likelihood ratio $\nicefrac{\pr{E \vert H_p}}{\pr{E \vert H_d}}$ where $H_d$ and $H_p$, as before, need not be exhaustive hypotheses.  In civil cases, the likelihood ratio should perhaps be just be above 1, meaning that the evidence supports $H_p$ more strongly than it supports $H_d$. In criminal cases, the ratio should be several orders of magnitude above one. This approach has many of the advantages of Cheng's comparative approach but also runs into the same problem. It cannot justify distribution. 
+
+We do not provide all the details of the argument. The reasoning is analogous. Consider the car crash example from before, where $S$ stands for the defendant's speeding, $C$ stands for the statement that the crash caused neck injury, and $E$ stands for the total evidence. The plaintiff's hypothesis $H_p$ is $S\et C$. Suppose $\nicefrac{\pr{E \vert S\et C}}{\pr{E \vert H_d}}>1$, or in other words, the combined hypothesis $S \et C$ has been established by preponderance of the evidence. The question is whether the individual hypotheses have been established by the same standard, specifically, whether $\frac{\pr{E \vert C}}{\pr{E\vert \neg C}} > 1$ and $\frac{\pr{E \vert S}}{\pr{E\vert \neg S}} > 1$.
+Focusing on a posisble defense hypothesis, $\n S\et \n C$, the following holds:^[NEED PROOF]
+We have
+\begin{align}\label{eq:lr-multiplication-two}
+1 < \frac{\pr{E \vert S\et C}}{\pr{E\vert \n S\et \n C}} & = \frac{\pr{E\vert S}\pr{E\vert C}}{\pr{ E \vert \n S}\pr{E \vert \n C}}   
+\end{align}
+
+\noindent
+Note that $\nicefrac{\pr{E\vert S}\pr{E\vert C}}{\pr{E \vert \n S}\pr{E\vert \n C}}$ might be strictly greater than $\nicefrac{\pr{E\vert C}}{\pr{E\vert \n C}}$ or $\nicefrac{\pr{E\vert S}}{\pr{E\vert \n S}}$. It is possible that $\nicefrac{\pr{E \vert S\et C}}{\pr{E \vert H_d}}$ is greater than one, while either $\frac{\pr{E \vert C}}{\pr{E\vert \neg C}}$ and $\frac{\pr{E \vert S}}{\pr{E\vert \neg S}}$. are not, say when they are 3 and 0.5, respectively. Once again, distribution fails. 
+
 
 ## Relative plausibility
 
@@ -1326,20 +1340,11 @@ MENTION THAT SINCE CHENG THOUGHT THE COMPARATIVE STRATEGY WOULD CAPTURE INFERENC
 
 
 
-# Rejecting the conjunction principle
+# Rejecting the conjunction principle?
 
 
-We have seen that various strategies that a legal probabilist can try to use to handle the difficulty with conjunction are all problematic.
-Perhaps, a different perspective should be taken here? After all, the 
-problem would not arise without 
-the conjunction principle. So could legal 
-probabilists simply reject this principle? 
-\todo{add more flow once section is complete}
-<!-- On its face, the conjunction principle is no different from closure principles 
-used in epistemic logic. Let $\Box$ the modal operator for belief or knowledge.
-The conjunction principle is a special version 
-of the closure principle $\Box A \wedge \Box B \leftrightarrow \Box (A \et B)$. (CITE MODAL LOGICS THAT ADOPT THIS PRINCIPLE.) \todo{Ok, I will add a footnote about this.}
---> 
+A number of strategies that legal probabilists can pursue to address the difficulty with conjunction have proven problematic. Perhaps, a different perspective should be taken here? Observe that the problem would not arise without the conjunction principle. Should legal 
+probabilists simply reject this principle?  So far we have not challenged it, but it is time to scrutinize it more closely. In this section, we provide an epistemic argument and a legal argument to question the conjunction principle. But we also caution that a simple rejection of the conjunction will not automatically dissolve the difficulty with conjunction.  More work needs to be done.
 
 
 ## Risk accumulation
@@ -1349,13 +1354,7 @@ In current discussions in epistemology about knowledge or justification, a princ
 Risk accumulation challenges aggregation: even if the probability of several claims, considered individually, is above a threshold $t$, their conjunction need not be above $t$. It does not, however, challenge distribution. If, all risks considered, you have good reasons to accept a conjunction, no further risk is involved in accepting any of the conjuncts separately. This is also mirrored by what happens with probabilities. If the probability of the conjunction of several claims is above $t$, so is the probability of each individual claim.  <!---This means that risk accumulation does not help one to save the approaches for which distribution fails. \todo{I added a sentence of how this is related to previous sections, should we say sth more here? What's our take on risk accummulation?}--->
 \mar{R: What's our take on risk accummulation?} 
 
-The standard of proof in criminal or civil cases can be understood as a criterion concerning the degree of risk that judicial decisions should not exceed. If this understanding of the standard of proof is correct, the phenomenon of risk accumulation would invalidate the conjunction principle, specifically, it would invalidate aggregation. It would longer be correct to assume that, if each element is  proven according to the applicable standard, the case as a whole is proven according to the same standard. And, in turn, if the conjunction principle no longer holds, the conjunction paradox would disappear. Success. 
-
-## The legal argument
-
-REASON TO REJECT CONJUCTION PRINCIPLE ON LEGAL GROUNDS, SEE REVIEW OF JURYR INSTRCUTIONS BY SOBER AND SCHWARTZ
-
-
+The standard of proof in criminal or civil cases can be understood as a criterion concerning the degree of risk that judicial decisions should not exceed. If this understanding of the standard of proof is correct, the phenomenon of risk accumulation would invalidate the conjunction principle, specifically, it would invalidate aggregation. It would longer be correct to assume that, if each element is  proven according to the applicable standard, the case as a whole is proven according to the same standard. And, in turn, if the conjunction principle no longer holds, the conjunction paradox will disappear. Or will it?
 
 
 ## Atomistic and holistic approches
@@ -1397,7 +1396,12 @@ Unlike the atomistic approach, the holistic approach is more promising.
 The most difficult challenge for the holistic approach comes from the observation  H
 --->
 
-It is true that the individual elements (the individual conjuncts) should be established with a higher probability than the case as a whole (the conjunction). This would seem to impose an unreasonably stringent burden of proof on the prosecution or the plaintiff. But the burden might not be as unreasonable as it appears at first.  As @dawid1987difficulty pointed out, in one of the earliest attempts to solve the conjunction paradox from a probabilistic perspective, the prior probabilities of the conjuncts will also be higher than the prior probability of their conjunction:
+
+We reached an impasse. Under the atomistic approach, the standard is too lax because it allows for findings of liability when the defendant quite likely committed no wrong. Under the holistic approach, the standard is too demanding on the prosecution (or the plaintiff) because it requires the individual claims to be established with extremely high probabilities. Bummer.
+
+## Not asking too much
+
+Consider again the holistic approach. It is true that the individual elements (the individual conjuncts) should be established with a higher probability than the case as a whole (the conjunction). This would seem to impose an unreasonably stringent burden of proof on the prosecution or the plaintiff. But the burden might not be as unreasonable as it appears at first.  As @dawid1987difficulty pointed out, in one of the earliest attempts to solve the conjunction paradox from a probabilistic perspective, the prior probabilities of the conjuncts will also be higher than the prior probability of their conjunction:
 
 \begin{quote}
 \dots it is not asking too much of the plaintiff to establish the case as a whole with a posterior probability exceeding one half, even though this means  that the several component issues must be established with much larger posterior probabilities; for the \textit{prior}  probabilities of the components will also be correspondingly larger, compared with that of their conjunction (p. 97).
@@ -1406,11 +1410,17 @@ It is true that the individual elements (the individual conjuncts) should be est
 Dawid's proposal is compelling. Still, why exactly is it `not asking too much' to establish the individual conjuncts by a higher threshold than the case as a whole? The prior probabilities of the conjuncts are surely higher than the prior probability of the conjunction. But what is the notion of 'not asking too much' at work here? Dawid might be recommending---as the rest of his paper suggests---that the standard of proof no longer be understood in terms of just posterior probabilities. Measures of how strongly each claim is being supported by the evidence, such as the Bayes' factor of the likelihood ratio, account for the difference between prior and posterior probabilities. So, presumably, Dawid is recommending these measures as better suited to formalize the standard of proof. 
 
 Now, as the reader will have realized, we have pursued Dawid's strategy already. This strategy can justify, on purely probabilistic grounds, one direction of the conjunction principle: aggregation. 
-The providential support---measured by the Bayes' factor or the likelihood ratio---for the conjunction often exceeds the individual support for the individual claims. This is a success, especially because the failure of aggregation motivated Cohen's formulation of the conjunction paradox. Unfortunately, we have also seen that this strategy invalidates a previously unchallenged direction of the conjunction principle, distribution. This outcome is very counterintuitive. Clearly, we cannot appeal to risk accumulation to challenge distribution since no additional risk arises after making an inference from a conjunction to one of its conjunct. 
+The evidential support---measured by the Bayes' factor or the likelihood ratio---for the conjunction often exceeds the individual support for the individual claims. This is a success, especially because the failure of aggregation motivated Cohen's formulation of the conjunction paradox. Unfortunately, we have also seen that this strategy invalidates a previously unchallenged direction of the conjunction principle, distribution. This outcome is counterintuitive. We cannot appeal to risk accumulation to challenge distribution since no additional risk arises after making an inference from a conjunction to one of its conjunct. 
 
-MAYBE ADD STUFF ABOUT FACTORING OPUT PRIORS
 
-We reached an impasse. Under the atomistic approach, the standard is too lax because it allows for findings of liability when the defendant quite likely committed no wrong. Under the holistic approach, the standard is too demanding on the prosecution (or the plaintiff) because it requires the individual claims to be established with extremely high probabilities. Dawid's approach is compelling, but switching from posterior probability to measures of evidential support invalidate distribution, a seemingly unobjectionable principle. Bummer. 
+## The legal argument
+
+REASON TO REJECT CONJUCTION PRINCIPLE ON LEGAL GROUNDS, SEE REVIEW OF JURYR INSTRCUTIONS BY SOBER AND SCHWARTZ
+
+
+
+
+
 
 
 # The proposal
