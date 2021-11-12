@@ -1,15 +1,19 @@
 % Options for packages loaded elsewhere
 \PassOptionsToPackage{unicode}{hyperref}
 \PassOptionsToPackage{hyphens}{url}
-\PassOptionsToPackage{dvipsnames,svgnames*,x11names*}{xcolor}
+\PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
 %
 \documentclass[
   10pt,
   dvipsnames,enabledeprecatedfontcommands]{scrartcl}
+\title{The difficulty with Conjunction}
+\author{Marcello Di Bello and Rafal Urbaniak}
+\date{}
+
 \usepackage{amsmath,amssymb}
 \usepackage{lmodern}
-\usepackage{ifxetex,ifluatex}
-\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+\usepackage{iftex}
+\ifPDFTeX
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
   \usepackage{textcomp} % provide euro and other symbols
@@ -31,10 +35,10 @@
   pdftitle={The difficulty with Conjunction},
   pdfauthor={Marcello Di Bello and Rafal Urbaniak},
   colorlinks=true,
-  linkcolor=Maroon,
-  filecolor=Maroon,
-  citecolor=Blue,
-  urlcolor=blue,
+  linkcolor={Maroon},
+  filecolor={Maroon},
+  citecolor={Blue},
+  urlcolor={blue},
   pdfcreator={LaTeX via pandoc}}
 \urlstyle{same} % disable monospaced font for URLs
 \usepackage{color}
@@ -94,6 +98,29 @@
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
 \setcounter{secnumdepth}{5}
+\newlength{\cslhangindent}
+\setlength{\cslhangindent}{1.5em}
+\newlength{\csllabelwidth}
+\setlength{\csllabelwidth}{3em}
+\newlength{\cslentryspacingunit} % times entry-spacing
+\setlength{\cslentryspacingunit}{\parskip}
+\newenvironment{CSLReferences}[2] % #1 hanging-ident, #2 entry spacing
+ {% don't indent paragraphs
+  \setlength{\parindent}{0pt}
+  % turn on hanging indent if param 1 is 1
+  \ifodd #1
+  \let\oldpar\par
+  \def\par{\hangindent=\cslhangindent\oldpar}
+  \fi
+  % set entry spacing
+  \setlength{\parskip}{#2\cslentryspacingunit}
+ }%
+ {}
+\usepackage{calc}
+\newcommand{\CSLBlock}[1]{#1\hfill\break}
+\newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{#1}}
+\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{#1}\break}
+\newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
 %\documentclass{article}
 
 % %packages
@@ -282,33 +309,9 @@
 \usepackage[normalem]{ulem}
 \usepackage{makecell}
 \usepackage{xcolor}
-\ifluatex
+\ifLuaTeX
   \usepackage{selnolig}  % disable illegal ligatures
 \fi
-\newlength{\cslhangindent}
-\setlength{\cslhangindent}{1.5em}
-\newlength{\csllabelwidth}
-\setlength{\csllabelwidth}{3em}
-\newenvironment{CSLReferences}[2] % #1 hanging-ident, #2 entry spacing
- {% don't indent paragraphs
-  \setlength{\parindent}{0pt}
-  % turn on hanging indent if param 1 is 1
-  \ifodd #1 \everypar{\setlength{\hangindent}{\cslhangindent}}\ignorespaces\fi
-  % set entry spacing
-  \ifnum #2 > 0
-  \setlength{\parskip}{#2\baselineskip}
-  \fi
- }%
- {}
-\usepackage{calc}
-\newcommand{\CSLBlock}[1]{#1\hfill\break}
-\newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{#1}}
-\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{#1}\break}
-\newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
-
-\title{The difficulty with Conjunction}
-\author{Marcello Di Bello and Rafal Urbaniak}
-\date{}
 
 \begin{document}
 \maketitle
@@ -1118,7 +1121,12 @@ SIMULATION}\label{different-sensitivity-and-specificity-along-with-depedence-nee
 If the items of evidence have different levels of sensitivity and
 specificity, the combined likelihood ratio never goes below the lower of
 the two individual likelihood ratios, but can be lower than the higher
-one. \raf{M: Need to add simulation results to make this argument 
+one. The simplified situation visualised in the previous situation
+doesn't contradict this. In fact, it follows from this more general
+fact---after all, in the simplified situation both individual likelihood
+ratios were identical, so whenever the joint \textsf{LR} was higher than
+the minimum of the invidual \textsf{LRs}, it was higher than the both of
+them. \raf{M: Need to add simulation results to make this argument 
 fully general and drop all the simplifying assumptions (.e.g. independence or equiprobability)}
 If the composite likelihood ratio behaves differently than the Bayes
 factor in that it is greater than the lower of the individual likelihood
@@ -1126,73 +1134,7 @@ ratios, rather than being greater than both of them, Dawid's claim that
 `the support supplied by the conjunction of several independent
 testimonies exceeds that supplied by any of its constituents' still
 holds.
-
-\hypertarget{section}{%
-\subsection{\texorpdfstring{\textit{MOVE TO APPENDIX}}{}}\label{section}}
-
-\begin{fact} If independence assumptions \ali{check whic of these d-sep hold in the first and in the second BN}  \eqref{eq:I3a}, \eqref{eq:I4a},  \eqref{eq:I4b}, \eqref{eq:I4c}, \eqref{eq:I5}, \eqref{eq:I5a}, \eqref{eq:I5b}   and \eqref{eq:I5c} hold, the combined likelihood ratio is:
- \begin{align}\label{eq:jointLR}
-\frac{\pr{a \wedge b \vert A\wedge B}}{\pr{a \et b\vert \neg (A\et B)}} & = \frac{\pr{a \vert A} \times \pr{b \vert B}}{\frac{\pr{\neg A}\pr{B \vert \neg A} \pr{a \vert \neg A}\pr{b \vert B} + \pr{A}\pr{\neg B \vert A} \pr{a \vert A }\pr{b \vert \neg B} + \pr{\neg A}\pr{\neg B \vert \neg A } \pr{a \vert \neg A}\pr{b \vert \neg B}}{\pr{\neg A}\pr{B \vert \neg A} + \pr{A}\pr{\neg B \vert A } + \pr{\neg A}\pr{\neg B \vert \neg A} } }
- \end{align}
-\noindent If, further the hypotheses are independent in the sense of  \label{eq:indAB} this reduces to:
- \begin{align}\label{eq:jointLR2}
-\frac{\pr{a \wedge b \vert A\wedge B}}{\pr{a \et b\vert \neg (A\et B)}} & = \frac{\pr{a \vert A} \times \pr{b \vert B}}{\frac{\pr{\neg A}\pr{B} \pr{a \vert \neg A}\pr{b \vert B} + \pr{A}\pr{\neg B} \pr{a \vert A }\pr{b \vert \neg B} + \pr{\neg A}\pr{\neg B} \pr{a \vert \neg A}\pr{b \vert \neg B}}{\pr{\neg A}\pr{B} + \pr{A}\pr{\neg B} + \pr{\neg A}\pr{\neg B} } }
- \end{align}
- \end{fact}
-
-\noindent \textbf{Argument.} The numerator can be computed as follows:
-\begin{align*}
-\pr{a \wedge b\vert A\wedge B} & =  \frac{\pr{A \et B \et a\et b}}{\pr{A \et B}}
-&\mbox{\,\,\,\,\,\,\,\,\,\,\,\,\, (conditional probability)}
-\\
-&= \frac{   \pr{A} \times \pr{B\vert A} \times \pr{a \vert A \wedge B} \times \pr{b \vert A \wedge B \wedge a} }{\pr{A} \times \pr{B \vert A}}
-&\mbox{\,\,\,\,\,\,\,\,\,\,\,\,\, (chain rule)}
-\\
-& = \frac{\pr{A} \times \pr{B \vert A} \times \pr{a \vert A} \times \pr{b \vert B}}{\pr{A}  \times \pr{B \vert A}} 
-&\mbox{\,\,\,\,\,\,\,\,\,\,\,\,\, (independencies \eqref{eq:I3a} and \eqref{eq:I5})}
-\\
-& = \pr{a \vert A} \times \pr{b \vert B} 
-&\mbox{\,\,\,\,\,\,\,\,\,\,\,\,\, (algebraic manipulation)}
- \end{align*}
-
-The numerator clearly does not depend on the prior probability of
-\(A\wedge B\). We call it \textit{combined sensitivity}, and given the
-independence assumptions it simply results from multiplying the
-sensitivity of the individual items of evidence, \(a\) and \(b\),
-relative to their respective hypotheses, \(A\) and \(B\).
-
-The denominator is more involved:
-
-\scalebox{.85}{\parbox{1\linewidth}{
-\begin{align*}
-\pr{a \et b\vert \neg (A\et B)} & = \frac{\pr{a \et b \et \neg (A\et B)}}{\pr{\neg (A \et B)}} 
-&\mbox{\,\,\,\,\,\,\,\,\,\,\,\,\, (conditional probability)}\\
-& = \frac{\pr{a \et b \et \neg A\et B} +  \pr{a \et b \et A\et \neg B} + \pr{a \et b \et \neg A\et \neg B}  }{\pr{\neg A \et B} + \pr{A \et \neg B} + \pr{\neg A \et \neg B} } 
-&\mbox{\,\,\,\,\,\,\,\,\,\,\,\,\, (logic \& additivity)}
-\end{align*}
-}}
-
-\noindent Now consider the first summand from the numerator:
-\begin{align*}
-\pr{a \et b \et \neg A\et B} & = \pr{\n A} \pr{B \vert \n A} \pr{a \vert \n A \et B} \pr{b\vert a \et \n A \et B} &\mbox{\,\,\,\,\,\,\,\,\,\,\,\,\, (chain rule)} \\ & = 
-\pr{\neg A}\pr{B \vert \neg A} \pr{a \vert \neg A}\pr{b \vert B}
-&\mbox{\,\,\,\,\,\,\,\,\,\,\,\,\, (independencies \eqref{eq:I4a} and \eqref{eq:I5a})} \\
-\end{align*}
-
-The simplification of the other two summanda is analogous (albeit with
-slightly different independence assumptions---\eqref{eq:I4b} and
-\eqref{eq:I5b} for the second one and \eqref{eq:I4c} and \eqref{eq:I5c}
-for the third. Once we plug these into the denominator formula we get:
-
-\scalebox{.85}{\parbox{1\linewidth}{
-\begin{align*}
-\pr{a \et b\vert \neg (A\et B)} & = \frac{\pr{\neg A}\pr{B \vert \neg A} \pr{a \vert \neg A}\pr{b \vert B} + \pr{A}\pr{\neg B \vert A} \pr{a \vert A }\pr{b \vert \neg B} + \pr{\neg A}\pr{\neg B \vert \neg A } \pr{a \vert \neg A}\pr{b \vert \neg B}}{\pr{\neg A}\pr{B \vert \neg A} + \pr{A}\pr{\neg B \vert A } + \pr{\neg A}\pr{\neg B \vert \neg A} }  
- \end{align*}
-}}
-
-\noindent  \eqref{eq:jointLR2} is easily obtained from
-\eqref{eq:jointLR} by \label{eq:indAB}.\\
-\textbf{Argument ends.}
+\mar{R: I don't see how it holds; after all it fails to be higher than one of them!! Rethink this.}
 
 \hypertarget{vindicating-aggregation}{%
 \subsection{Vindicating aggregation}\label{vindicating-aggregation}}
@@ -4610,70 +4552,70 @@ scope of this paper.
 
 \hypertarget{refs}{}
 \begin{CSLReferences}{1}{0}
-\leavevmode\hypertarget{ref-Allen1986A-Reconceptuali}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-Allen1986A-Reconceptuali}{}}%
 Allen, R. J. (1986). A reconceptualization of civil trials. \emph{Boston
 University Law Review}, \emph{66}, 401--437.
 
-\leavevmode\hypertarget{ref-AllenPardo2019relative}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-AllenPardo2019relative}{}}%
 Allen, R. J., \& Pardo, M. (2019). Relative plausibility and its
 critics. \emph{The International Journal of Evidence {\&} Proof},
 \emph{23}(1-2), 5--59. \url{https://doi.org/10.1177/1365712718813781}
 
-\leavevmode\hypertarget{ref-allen2013}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-allen2013}{}}%
 Allen, R. J., \& Stein, A. (2013). Evidence, probability and the burden
 of proof. \emph{Arizona Law Journal}, \emph{55}, 557--602.
 
-\leavevmode\hypertarget{ref-cheng2012reconceptualizing}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-cheng2012reconceptualizing}{}}%
 Cheng, E. (2012). Reconceptualizing the burden of proof. \emph{Yale LJ},
 \emph{122}, 1254.
 
-\leavevmode\hypertarget{ref-Cohen1977The-probable-an}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-Cohen1977The-probable-an}{}}%
 Cohen, J. L. (1977). \emph{The probable and the provable}. Oxford
 University Press. \url{https://doi.org/10.2307/2219193}
 
-\leavevmode\hypertarget{ref-cohen1988difficulty}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-cohen1988difficulty}{}}%
 Cohen, L. J. (1988). The difficulty about conjunction in forensic proof.
 \emph{The Statistician}, \emph{37}(4/5), 415.
 \url{https://doi.org/10.2307/2348767}
 
-\leavevmode\hypertarget{ref-dawid1987difficulty}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-dawid1987difficulty}{}}%
 Dawid, A. P. (1987). The difficulty about conjunction. \emph{The
 Statistician}, 91--97.
 
-\leavevmode\hypertarget{ref-DiBello2019plausibility}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-DiBello2019plausibility}{}}%
 Di Bello, M. (2019). Probability and plausibility in juridical proof.
 \emph{International Journal of Evidence and Proof}.
 
-\leavevmode\hypertarget{ref-haack2011legal}{}%
-Haack, S. (2014). Legal probabilism: An epistemological dissent. In
-\emph{{Haack2014-HAAEMS}} (pp. 47--77).
+\leavevmode\vadjust pre{\hypertarget{ref-haack2011legal}{}}%
+Haack, S. (2014). Legal probabilism: An epistemological dissent. In (pp.
+47--77).
 
-\leavevmode\hypertarget{ref-kaplow2014likelihood}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-kaplow2014likelihood}{}}%
 Kaplow, L. (2014). Likelihood ratio tests and legal decision rules.
 \emph{American Law and Economics Review}, \emph{16}(1), 1--39.
 
-\leavevmode\hypertarget{ref-Kowalewska2021conjunction}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-Kowalewska2021conjunction}{}}%
 Kowalewska, A. (2021). Reasoning without the conjunction closure.
 \emph{Episteme}, 1--14. \url{https://doi.org/10.1017/epi.2020.53}
 
-\leavevmode\hypertarget{ref-Makinson1965-MAKTPO-2}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-Makinson1965-MAKTPO-2}{}}%
 Makinson, D. C. (1965). The paradox of the preface. \emph{Analysis},
 \emph{25}(6), 205--207.
 
-\leavevmode\hypertarget{ref-Pardo2008judicial}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-Pardo2008judicial}{}}%
 Pardo, M. S., \& Allen, R. J. (2008). Judicial proof and the best
 explanation. \emph{Law and Philosophy}, \emph{27}(3), 223--268.
 
-\leavevmode\hypertarget{ref-schwartz2017ConjunctionProblemLogic}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-schwartz2017ConjunctionProblemLogic}{}}%
 Schwartz, D. S., \& Sober, E. R. (2017). The {Conjunction Problem} and
 the {Logic} of {Jury Findings}. \emph{William \& Mary Law Review},
 \emph{59}(2), 619--692.
 
-\leavevmode\hypertarget{ref-Stein05}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-Stein05}{}}%
 Stein, A. (2005). \emph{Foundations of evidence law}. Oxford University
 Press.
 
-\leavevmode\hypertarget{ref-urbaniak2018narration}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-urbaniak2018narration}{}}%
 Urbaniak, R. (2018). Narration in judiciary fact-finding: A
 probabilistic explication. \emph{Artificial Intelligence and Law},
 1--32. \url{https://doi.org/10.1007/s10506-018-9219-z}
