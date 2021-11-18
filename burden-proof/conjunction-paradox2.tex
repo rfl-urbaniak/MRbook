@@ -1,19 +1,15 @@
 % Options for packages loaded elsewhere
 \PassOptionsToPackage{unicode}{hyperref}
 \PassOptionsToPackage{hyphens}{url}
-\PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
+\PassOptionsToPackage{dvipsnames,svgnames*,x11names*}{xcolor}
 %
 \documentclass[
   10pt,
   dvipsnames,enabledeprecatedfontcommands]{scrartcl}
-\title{The difficulty with Conjunction}
-\author{Marcello Di Bello and Rafal Urbaniak}
-\date{}
-
 \usepackage{amsmath,amssymb}
 \usepackage{lmodern}
-\usepackage{iftex}
-\ifPDFTeX
+\usepackage{ifxetex,ifluatex}
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
   \usepackage{textcomp} % provide euro and other symbols
@@ -35,10 +31,10 @@
   pdftitle={The difficulty with Conjunction},
   pdfauthor={Marcello Di Bello and Rafal Urbaniak},
   colorlinks=true,
-  linkcolor={Maroon},
-  filecolor={Maroon},
-  citecolor={Blue},
-  urlcolor={blue},
+  linkcolor=Maroon,
+  filecolor=Maroon,
+  citecolor=Blue,
+  urlcolor=blue,
   pdfcreator={LaTeX via pandoc}}
 \urlstyle{same} % disable monospaced font for URLs
 \usepackage{color}
@@ -98,29 +94,6 @@
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
 \setcounter{secnumdepth}{5}
-\newlength{\cslhangindent}
-\setlength{\cslhangindent}{1.5em}
-\newlength{\csllabelwidth}
-\setlength{\csllabelwidth}{3em}
-\newlength{\cslentryspacingunit} % times entry-spacing
-\setlength{\cslentryspacingunit}{\parskip}
-\newenvironment{CSLReferences}[2] % #1 hanging-ident, #2 entry spacing
- {% don't indent paragraphs
-  \setlength{\parindent}{0pt}
-  % turn on hanging indent if param 1 is 1
-  \ifodd #1
-  \let\oldpar\par
-  \def\par{\hangindent=\cslhangindent\oldpar}
-  \fi
-  % set entry spacing
-  \setlength{\parskip}{#2\cslentryspacingunit}
- }%
- {}
-\usepackage{calc}
-\newcommand{\CSLBlock}[1]{#1\hfill\break}
-\newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{#1}}
-\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{#1}\break}
-\newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
 %\documentclass{article}
 
 % %packages
@@ -309,9 +282,33 @@
 \usepackage[normalem]{ulem}
 \usepackage{makecell}
 \usepackage{xcolor}
-\ifLuaTeX
+\ifluatex
   \usepackage{selnolig}  % disable illegal ligatures
 \fi
+\newlength{\cslhangindent}
+\setlength{\cslhangindent}{1.5em}
+\newlength{\csllabelwidth}
+\setlength{\csllabelwidth}{3em}
+\newenvironment{CSLReferences}[2] % #1 hanging-ident, #2 entry spacing
+ {% don't indent paragraphs
+  \setlength{\parindent}{0pt}
+  % turn on hanging indent if param 1 is 1
+  \ifodd #1 \everypar{\setlength{\hangindent}{\cslhangindent}}\ignorespaces\fi
+  % set entry spacing
+  \ifnum #2 > 0
+  \setlength{\parskip}{#2\baselineskip}
+  \fi
+ }%
+ {}
+\usepackage{calc}
+\newcommand{\CSLBlock}[1]{#1\hfill\break}
+\newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{#1}}
+\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{#1}\break}
+\newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
+
+\title{The difficulty with Conjunction}
+\author{Marcello Di Bello and Rafal Urbaniak}
+\date{}
 
 \begin{document}
 \maketitle
@@ -321,28 +318,27 @@
 \hypertarget{introduction}{%
 \section{Introduction}\label{introduction}}
 
-According to a common probabilistic reading, the standard of proof
-functions as a probability threshold. In criminal cases, the standard is
-very stringent. So the probability threshold should be high, say the
-defendant's criminal liability should be established with at least .95
-probability. In civil cases, the standard is less stringent. So the
-probability threshold should be lower, say the defendant civil liability
-should be established with at least .5 probability.
+According to a common probabilistic interpretation, the standard of
+proof in legal trials functions as a probability threshold. In criminal
+cases, the standard is very stringent. So the probability threshold
+should be high, say the defendant's criminal liability should be
+established with at least .95 probability. In civil cases, the standard
+is less stringent. So the probability threshold should be lower, say the
+defendant civil liability should be established with at least .5
+probability.
 
-In Chapter XX \todo{REFER TO EARLIER CHAPTER}, we discussed how the .95
-and .5 thresholds can be justified, for example, by minimizing expected
-costs. In Chapter YY\todo{REFER TO EARLIER CHAPTER}, we discussed a
-theoretical problem for this probabilistic interpretation: the paradox
-of naked statistical evidence. In this chapter, we discuss a second
-theoretical problem, which we call
-\textbf{the difficulty with conjunction}, also known as the conjunction
-paradox.
-
-The chapter is structured as follows. First, we describe the difficulty
-with conjunction. Next, we explore different strategies that legal
-probabilists can pursue to respond to this difficulty. These strategies
-are promising and worth examining. But we show that they are ultimately
-unsatisfactory. Finally, we articulate our proposal.
+Chapter XX \todo{REFER TO EARLIER CHAPTER} shows how the .95 and .5
+thresholds can be justified by means of expected utility theory. Chapter
+YY\todo{REFER TO EARLIER CHAPTER} examines a theoretical problem for
+this probabilistic interpretation: the paradox of naked statistical
+evidence. This chapter examines a second theoretical problem, which we
+will \textbf{the difficulty with conjunction}, also known as the
+conjunction paradox. The chapter is structured as follows. First, we
+describe the difficulty with conjunction. Next, we explore different
+strategies that legal probabilists can pursue to respond to this
+difficulty. These strategies are promising and worth examining. But we
+show that they are ultimately unsatisfactory. Finally, we articulate our
+proposal.
 
 Our solution to the difficulty with conjunction complements our solution
 to the problem of naked statistical evidence. Both problems---we
@@ -378,12 +374,11 @@ contrary to trial practice.
 \hypertarget{simple-formulation}{%
 \subsection{Simple formulation}\label{simple-formulation}}
 
-We begin with a simple formulation of the problem. An example will help
-to fix ideas. Suppose that, in order to prevail in a criminal trial, the
-prosecution should establish two claims by the required standard: first,
-that the defendant caused harm to the victim; and second, that the
-defendant's action was premeditated. J. L. Cohen (1977) argues that
-common law systems subscribe to what he calls a
+A simple example will help to fix ideas. Suppose that, in order to
+prevail in a criminal trial, the prosecution should establish two claims
+by the required standard: first, that the defendant caused the victim's
+death; and second, that the defendant's action was premeditated. J. L.
+Cohen (1977) argues that common law systems subscribe to what he calls a
 \textbf{conjunction principle}, that is, if two claims---call them \(A\)
 and \(B\)---are established according to the governing standard of
 proof, so is their conjunction \(A\wedge B\) (and vice versa). If the
@@ -436,10 +431,10 @@ the accused [is protected] against conviction except upon proof beyond a reasona
 identity: to establish someone's guilt beyond a reasonable doubt
 \textit{just is} to establish each element of the crime beyond a
 reasonable doubt (abbreviated \(\mathsf{BARD}\)). Thus,
-\begin{align*}\mathsf{BARD}[C_1 \wedge C_2   \wedge \cdots \wedge C_n] \Leftrightarrow \mathsf{BARD}[C_1] \wedge \mathsf{BARD}[C_2]  \wedge \cdots \wedge \mathsf{BARD}[C_k],
+\begin{align*}\mathsf{BARD}[C_1 \wedge C_2   \wedge \cdots \wedge C_k] \Leftrightarrow \mathsf{BARD}[C_1] \wedge \mathsf{BARD}[C_2]  \wedge \cdots \wedge \mathsf{BARD}[C_k],
 \end{align*}
 
-\noindent where the conjunction \(C_1 \et C_2 \cdots \et C_n\) comprises
+\noindent where the conjunction \(C_1 \et C_2 \cdots \et C_k\) comprises
 all the material facts that, according to the applicable law, constitute
 the crime with with the accused is charged. A similar argument could be
 run for the standard of proof in civil cases, preponderance of the
@@ -476,10 +471,10 @@ whole meeting the threshold.
 
 This difficulty is persistent. It does not subside as the number of
 constituent claims increases. If anything, the difficulty becomes more
-apparent. Say the prosecution has established three separate claims to
+apparent. Say the prosecution has established three separate claims by
 \(.95\) probability. Their conjunction---again if the claims are
 independent---would be about \(.85\) probable, even further below the
-\(.95\) threshold.
+\(.95\) probability threshold.
 
 Nor does the difficulty with conjunction subside if the claims are no
 longer regarded as independent. The probability of the conjunction
@@ -505,23 +500,22 @@ should still be below the \(.95\) threshold so long as
 
 The discussion so far proceeded without mentioning the evidence in
 support of the claims that constitute the wrongdoing. This is a
-simplification. To be more precise, the conjunction paradox and the
-conjunction principle must be formulated by including the supporting
-evidence. For two claims, the conjunction principle can be formulated as
-follows:
+simplification. To be more precise, the conjunction principle must be
+formulated by including the supporting evidence. For two claims, the
+principle can be formulated as follows:
 \[\text{S[$a, A$] and S[$b, B$] $\Leftrightarrow$ S[$a \wedge b, A\wedge B$]},\]
 
 \noindent where \(a\) and \(b\) denote the evidence for claims \(A\) and
-\(B\) respectively, and \(S\) denote the standard by which the evidence
+\(B\) respectively, and \(S\) denotes the standard by which the evidence
 establishes the claim in question. In the case of more than two claims,
 the formulation of the conjunction principle should be extended
 accordingly.
 
 Does a threshold-based probabilistic interpretation of the standard of
 proof also conflict with this revised version of the conjunction
-principle? The answer is positive, but seeing why requires some work. We
-should check whether, if both \(\pr{A \vert a}\) and \(\pr{B \vert b}\)
-meet the threshold, say \(.95\), then so does
+principle? The answer is positive, but seeing why requires some more
+work. We should check whether, if both \(\pr{A \vert a}\) and
+\(\pr{B \vert b}\) meet the threshold, say \(.95\), then so does
 \(\pr{A\wedge B \vert a\wedge b}\). We are no longer just comparing the
 probability of \(A\wedge B\) to the probability of \(A\) and the
 probability of \(B\) as such. Rather, we are comparing the probability
@@ -556,7 +550,7 @@ This assumption is plausible because that the defendant injured the
 victim and there is a testimony to that effect does not make it more (or
 less) likely that the victim was a firefighter. To be sure, these
 informal arguments are not rigorous, a point to which we will soon
-return. Assuming for now that the two assumptions hold, it follows
+return. But, assuming for now that the two assumptions hold, it follows
 that:\footnote{By the chain rule and the independence assumptions
   \(\pr{A | a}=\pr{A | a \wedge b}\) and
   \(\pr{B | b}=\pr{B | a \wedge b \wedge A}\), the following holds:
@@ -585,7 +579,7 @@ represent formally the relationship between claims \(A\), \(B\) and
 their conjunction \(A\wedge B\), as well as the supporting evidence
 \(a\), \(b\) and their conjunction \(a\wedge b\). A natural way to do
 that is to use Bayesian networks. We have already introduced Bayesian
-networks in Chapter \todo{REF TO OTHER CHAPETR}. Here we will only
+networks in Chapter ZZ.\todo{REF TO OTHER CHAPETR} Here we will only
 sketch the ideas necessary to discuss the difficulty with conjunction.
 
 \hypertarget{independent-hypotheses}{%
@@ -617,9 +611,10 @@ supplied in the probability table. Since the arrow goes from \(H\) to
 \(E\), we should specify the probabilities of the different values of
 \(E\) conditional on the different values of \(H\).
 
-Back to the difficulty with conjunction. Two items of evidence, \(a\)
-and \(b\), each support their own hypothesis, \(A\) and \(B\). This set
-up can be represented by two directed graphs, as follows:
+Return now to the difficulty with conjunction. The set up is this. Two
+items of evidence, \(a\) and \(b\), each support their own hypothesis,
+\(A\) and \(B\). This can be represented by two directed graphs, as
+follows:
 
 \mar{A: Is this what you meant?}
 \ali{M: No. The two DAGS A-->a and B-->b should be one next to the other as part of the same figure. They should also look smaller and be positioned in the appropriate places.}
@@ -641,22 +636,21 @@ up can be represented by two directed graphs, as follows:
 \noindent The two directed graphs should be joined to represent the
 conjunction \(A\wedge B\). How can this be done? Suppose for now that
 claims \(A\) and \(B\) are independent. We will relax this assumption
-later. The conjunction can be represented by adding a node \(AB\) in the
-directed graph in Figure \ref{fig:conjunctionDAG}. The arrows go from
-node \(A\) and node \(B\) into the conjunction node \(AB\). This
-arrangement makes it possible to express the meaning of \(A\wedge B\)
-via a probability table (Table \ref{tab:CPTconjunction}). This table
-looks, essentially, like the truth table for the conjunction in
-propositional logic.\footnote{The difference is that the values \(1\)
-  and \(0\) stand for two different things depending on where they are
-  in the table. In the columns corresponding to the nodes they represent
-  node states: true and false; in the \(\textsf{Pr}\) column they
-  represent the conditional probability of a given state of \(AB\) given
-  the states of \(A\) and \(B\) listed in the same row. For instance,
-  take a look at row two. It says: if \(A\) and \(B\) are both in states
-  1, then the probability of \(AB\) being in state 0 is 0. In principle
-  we could use `true' and `false' instead of 1 and 0 to represent
-  states, but the numeric representation is easier to use in
+later. The conjunction can be represented by adding a conjunction node
+\(AB\) and drawing arrows from nodes \(A\) and \(B\) into node \(AB\)
+(Figure \ref{fig:conjunctionDAG}). This arrangement makes it possible to
+express the meaning of \(A\wedge B\) via a probability table (Table
+\ref{tab:CPTconjunction}). This table mirrors the truth table for the
+conjunction in propositional logic.\footnote{The difference is that the
+  values \(1\) and \(0\) stand for two different things depending on
+  where they are in the table. In the columns corresponding to the nodes
+  they represent node states: true and false; in the \(\textsf{Pr}\)
+  column they represent the conditional probability of a given state of
+  \(AB\) given the states of \(A\) and \(B\) listed in the same row. For
+  instance, take a look at row two. It says: if \(A\) and \(B\) are both
+  in states 1, then the probability of \(AB\) being in state 0 is 0. In
+  principle we could use `true' and `false' instead of 1 and 0 to
+  represent states, but the numeric representation is easier to use in
   programming, which we do quite a bit in the background, so the reader
   might as well get used to this harmless ambiguity. For binary nodes,
   we will consistently use `1' and `0' for the states, it's just
@@ -720,18 +714,18 @@ that:\footnote{EXPLAIN THIS POINT MORE FORMALLY} \begin{align*}
 probable given their supporting evidence \(a\) and \(b\) (for a fixed
 threshold \(t\))---in symbols, \(\pr{A \vert a}>t\) and
 \(\pr{B \vert b}>t\)---it does not generally follow that \(A \et B\) is
-sufficiently probable given combined evidence \(a\et b\). One again, the
-conjunction principle fails because aggregation fails. The difficulty
-with conjunction persists.
+sufficiently probable given combined evidence \(a\et b\). Once again,
+the conjunction principle fails because aggregation fails. The
+difficulty with conjunction persists.
 
-The argument here is general and goes beyond the specific example about
-aggravated assault in the previous section. The argument only assumes
-that the directed graph in Figure \ref{fig:conjunctionDAG} is an
-adequate representation of a situation in which two items of evidence,
-\(a\) and \(b\), support their own hypothesis, \(A\) and \(B\). The
-graph encodes two plausible relations of probabilistic dependence:
-between hypotheses \(A\) and \(B\) and between items of evidence \(a\)
-and \(b\). The theory of Bayesian network does the rest of the work.
+The argument here goes beyond the specific example about aggravated
+assault in the previous section. The argument only assumes that the
+directed graph in Figure \ref{fig:conjunctionDAG} is an adequate
+representation of a situation in which two items of evidence, \(a\) and
+\(b\), support their own hypothesis, \(A\) and \(B\). The graph encodes
+two plausible relations of probabilistic independence: between
+hypotheses \(A\) and \(B\) and between items of evidence \(a\) and
+\(b\). The theory of Bayesian networks does the rest of the work.
 
 \hypertarget{dependent-hypotheses}{%
 \subsection{Dependent hypotheses}\label{dependent-hypotheses}}
@@ -739,12 +733,12 @@ and \(b\). The theory of Bayesian network does the rest of the work.
 Consider now what happens if the probabilistic independence between
 claims \(A\) and \(B\) is dispensed with. To this end, it is enough to
 draw an arrow between \(A\) and \(B\) in our directed graph. The result
-is displayed in Figure \ref{fig:conjunctionDAG2}. There is an open path
-between hypothesis nodes \(A\) and \(B\) and evidence nodes \(a\) and
-\(b\). Thus, the new graph no longer guarantees the probabilistic
-independence of \(A\) and \(B\), or that of \(a\) and \(b\). Items of
-evidence \(a\) and \(b\) are still probabilistically independent of one
-another \textit{conditional} on their respective hypothesis. That is,
+is displayed in Figure \ref{fig:conjunctionDAG2}. Since there is now an
+open path between nodes \(A\) and \(B\), the new graph no longer
+guarantees the probabilistic independence of \(A\) and \(B\), nor the
+indepedence of evidence nodes \(a\) and \(b\). The latter, however, are
+still probabilistically independent of one another \textit{conditional}
+on their respective hypothesis. That is,
 \(\pr{a \vert A}=\pr{a \vert A \wedge b}\) and
 \(\pr{b \vert B}=\pr{b \vert B \wedge a}\). So \(a\) and \(b\) still
 counts as independent lines of evidence despite not being
@@ -820,6 +814,8 @@ cases \(\pr{A \wedge B \vert a \wedge b}\) is smaller than
 \(\pr{A \vert a}\) and \(\pr{B \vert b}\), aggregation does not hold
 generally even assuming that \(A\) and \(B\) are probabilistically
 dependent. \mar{R: we still need the simulation here}
+
+\raf{M: Sober and Schwarz claim that, given dependence between A and B, aggregation fails less often, so the paradox is contained. maybe use simulation to check that?}
 
 \mar{R: check calculations in chunk}
 \vspace{1mm}
@@ -927,9 +923,10 @@ The first step in the argument shows that the combined support supplied
 by multiple pieces of evidence (e.g.~\(a\wedge b\)) for a conjunctive
 claim (e.g.~\(A\wedge B\)) typically exceeds the individual support
 supplied by individual pieces of evidence for individual claims. This
-claim holds for both the Bayes factor and the likelihood ratio. We start
-with the Bayes factor \(\pr{E \vert H}/\pr{E}\) as our measure of the
-support of \(E\) in favor of \(H\). Since by Bayes' theorem
+claim holds for the Bayes factor and to some extent for the likelihood
+ratio. We start with the Bayes factor \(\pr{E \vert H}/\pr{E}\) as our
+measure of the support of \(E\) in favor of \(H\). Since by Bayes'
+theorem
 
 \[\pr{H \vert E} = \frac{\pr{E \vert H}}{\pr{E}}\times \pr{H},\]
 
@@ -1009,24 +1006,20 @@ BF_{AB}& =  BF_{A}\times BF^{'}_{B}  \label{eq:BFdep}
  \end{align}
 
 \mar{R: revised and commented out quite a bit in light of the appendix now.}
-\raf{M: Argument here is too cryptic. Need to say more. Will revise later. See also my next comment}
+\raf{M: Argument here is too cryptic. Need to say more. Will revise later.}
 
 \noindent(See the appendix for a proof.) The difference from the case of
 independent hypotheses is that \(BF_B=\frac{\pr{b \vert B}}{\pr{b}}\)
 was replaced by \(BF^{'}_B=\frac{\pr{b \vert B}}{\pr{b\vert a}}\). Since
 \(b\) need not be probabilistically independent of \(a\), there is no
-guarantee that \(\pr{b \vert a}=\pr{b}\). However, if \(BF_B\) is
-greater than 1, so is \(BF^{'}_B\) as soon as
-\(\pr{b\vert a} \leq \pr{b}\). In many cases of interest, when pieces of
-evidence converge, this is a plausible assumption to make, unless a
-piece of evidence for \(A\) actually makes the occurrence of a piece of
-evidence for \(B\) more likely (which in turn would decrease the Bayes
-factor for \(B\) by increasing the denominator).
-\raf{M: Not sure this argument is right. I  expect evidence $a$ (favoring $A$, which converges with $B$) to increase the probability of $b$, hence $\pr{b \vert a} \geq \pr{a}$.}
+guarantee that \(\pr{b \vert a}=\pr{b}\). However, assume that, if
+\(BF_B\) is greater than 1, then so is \(BF^{'}_B\). In many cases of
+interest, when two pieces of evidence converge, this is a plausible
+assumption to make.
 \todo{REFER TO EARLIER CHAPTER ON CROSS-EXAMINATION AND CORROBORATION}
-If these assumptions are satisfied, \eqref{eq:BFdep} entails that the
-joint Bayes factor, \(BF_{AB}\), is going to be greater than any of the
-individual Bayes factors (again, see the appendix for proof).
+If this assumption is satisfied, \eqref{eq:BFdep} entails that the joint
+Bayes factor, \(BF_{AB}\), will be greater than any of the individual
+Bayes factors (again, see the appendix for proof).
 
 \hypertarget{combined-support-likelihood-ratio}{%
 \subsection{Combined support: likelihood
@@ -1072,24 +1065,21 @@ LR_{AB} & = \frac{\pr{a\wedge b \vert A\wedge B}}{\pr{a \wedge b \vert \neg (A\w
  {\frac{\pr{\neg A}\pr{B \vert \neg A} \pr{a \vert \neg A}\pr{b \vert B} + \pr{A}\pr{\neg B \vert A} \pr{a \vert A }\pr{b \vert \neg B} + \pr{\neg A}\pr{\neg B \vert \neg A } \pr{a \vert \neg A}\pr{b \vert \neg B}}{\pr{\neg A}\pr{B \vert \neg A} + \pr{A}\pr{\neg B \vert A } + \pr{\neg A}\pr{\neg B \vert \neg A} }}
 \end{align*}
 
-\noindent The equality is sufficiently generally as it holds whether or
+\noindent The equality is sufficiently general and it holds whether or
 not hypotheses \(A\) and \(B\) are probabilistically independent. (See
-the appendix for a proof.) The numerator is involved because
-conditioning on the negation of a conjunction makes proving a general
-claim about the behavior of the conjunction tricky.
+the appendix for a proof.)
 
-\hypertarget{same-sensitivity-and-specificity-along-with-independence}{%
-\subsubsection{Same sensitivity and specificity along with
-independence}\label{same-sensitivity-and-specificity-along-with-independence}}
+\hypertarget{same-sensitivity-and-specificity-and-independence}{%
+\subsubsection{Same sensitivity and specificity, and
+independence}\label{same-sensitivity-and-specificity-and-independence}}
 
 For illustrative purposes, we first consider a simplified picture. Let
 the sensitivity and specificity of the items of evidence be the same and
 equal \(x\). Let also \(A\) and \(B\) be probabilistically independent
-in agreement with the directed graph in Figure \ref{fig:conjunctionDAG}.
-The combined likelihood ratio can now be easily plotted as as function
-of \(x\).\footnote{In this simplified set-up, the combined likelihood
-  ratio reduces to the following, where \(\pr{A}=k\) and \(\pr{B}=t\):
-  \begin{align*}
+in agreement with Figure \ref{fig:conjunctionDAG}. The combined
+likelihood ratio can now be plotted as a function of \(x\).\footnote{In
+  this simplified set-up, the combined likelihood ratio reduces to the
+  following, where \(\pr{A}=k\) and \(\pr{B}=t\): \begin{align*}
   \frac{\pr{a \wedge b \vert A\wedge B}}{\pr{a \et b\vert \neg (A\et B)}} & = \frac{x^2}{\frac{(1-k)t(1-x)x + k(1-t)x(1-x) + (1-k)(1-t)(1-x)(1-x)}{ \left(1-k\right) t +\left(1-t\right) k+\left(1-k\right) \left(1-t\right)}}
    \end{align*}} Figure \ref{fig:jointLRMarcello} shows that the
 combined likelihood ratio always exceeds the individual likelihood
@@ -1113,55 +1103,74 @@ cases in which the two pieces of evidence have the same sensitivity and
 specificity and hypotheses \(A\) and \(B\) are independent. What happens
 if these assumptions are relaxed?
 
-\hypertarget{different-sensitivity-and-specificity-along-with-depedence-needs-simulation}{%
-\subsubsection{Different sensitivity and specificity along with
-depedence -- NEEDS
-SIMULATION}\label{different-sensitivity-and-specificity-along-with-depedence-needs-simulation}}
+\hypertarget{different-sensitivity-and-specificity}{%
+\subsubsection{Different sensitivity and
+specificity}\label{different-sensitivity-and-specificity}}
 
 If the items of evidence have different levels of sensitivity and
 specificity, the combined likelihood ratio never goes below the lower of
 the two individual likelihood ratios, but can be lower than the higher
-one. The simplified situation visualised in the previous situation
-doesn't contradict this. In fact, it follows from this more general
-fact---after all, in the simplified situation both individual likelihood
-ratios were identical, so whenever the joint \textsf{LR} was higher than
-the minimum of the invidual \textsf{LRs}, it was higher than the both of
-them. \raf{M: Need to add simulation results to make this argument 
-fully general and drop all the simplifying assumptions (.e.g. independence or equiprobability)}
-If the composite likelihood ratio behaves differently than the Bayes
-factor in that it is greater than the lower of the individual likelihood
-ratios, rather than being greater than both of them, Dawid's claim that
-`the support supplied by the conjunction of several independent
-testimonies exceeds that supplied by any of its constituents' still
-holds.
-\mar{R: I don't see how it holds; after all it fails to be higher than one of them!! Rethink this.}
+individual likelihood ratio.
+\raf{M: Do we say something about dependence v independence?}We
+established this claim by means of a computer simulation.
+\raf{M: Add simulatio results here. Can we say that, usually, the joint LR is in between the two individual LRs? If so, how often?}
+The simplified set-up in the previous situation does not contradict this
+claim but follows from it. In the simplified set-up, both individual
+likelihood ratios were the same, so whenever the joint likelihood was
+higher than the minimum of the individual likelihood ratios, it was
+higher than the both of them. In this sense, the joint likelihood ratio
+behaves differently than the joint Bayes factor in that it is greater
+than the lower of the individual likelihood ratios, rather than being
+greater than both of them. Here Dawid's claim that `the support supplied
+by the conjunction of several independent testimonies exceeds that
+supplied by any of its constituents' should therefore be weakened. That
+is, the evidential support (as measured by the likelihood ratio)
+supplied by the conjunction of several independent items of evidence
+exceeds the support supplied by at least one individual item of evidence
+but possibly not all.
 
 \hypertarget{vindicating-aggregation}{%
 \subsection{Vindicating aggregation}\label{vindicating-aggregation}}
 
-According to the Bayes factor and the likelihood ratio, the combined
-evidential support for the conjunction usually exceeds the individual
-evidential support for individual claims. This fact can be used to
-justify aggregation. The argument, however, is not immediate.
-Aggregation is a principle about the standard of proof. The Bayes factor
-and the likelihood ratio are instead measures of evidential support. The
-standard of proof must somehow be connected to these measures of
-evidential strength. To this end, the decision criterion can be
-formulated in terms of evidential strength instead of posterior
-probabilities. Consequently, the standard of proof will no longer be
-formalized as a posterior probability threshold, but rather, as a
-threshold for the Bayes factor or the likelihood ratio. The new
-threshold will no longer be a probability between 0 and 1, but a number
-somewhere above one. The greater this number, the more stringent the
-standard of proof, for any value above one. In criminal trials, for
-example, the rule of decision could be: guilt is proven beyond a
-reasonable doubt if and only if the evidential support in favor of
-\(H\)---as measured by the Bayes factor
+We have seen that the combined evidential support for the conjunction
+exceeds the individual support for at least one of the individual
+claims. More precisely:
+
+\[STR[a \wedge b, A\wedge A] \geq min(STR[a, A], STR[b, B]),\]
+
+\noindent where \(STR[...]\) stands for the strength of the evidential
+support of a piece of evidence toward a hypothesis, measured by the
+Bayes factor or the likelihood ratio. This fact can be used to justify
+aggregation. By the principle above, the following implication holds:
+
+\[STR[a, A]>t_{STR} \wedge STR[b, B]>t_{STR} \Rightarrow  STR[a \wedge b, A\wedge B]>t_{STR},\]
+
+\noindent where \(t_{STR}\) is a threshold on the strength of evidential
+support. This implication resembles the aggregation principle, repeated
+below for convenience:
+
+\[S[a, A] \wedge S[b, B] \Rightarrow  S[a \wedge b, A\wedge B],\]
+
+\noindent  where \(S\) stands for the standard of proof by which a claim
+must be established based on the evidence.
+
+The argument for justifying the principle of aggregation, however, is
+not immediate. Aggregation is a principle about the standard of proof.
+The Bayes factor and the likelihood ratio are instead measures of
+evidential strength. The standard of proof must be connected to
+evidential strength. Naturally enough, the decision criterion should be
+formulated in terms of evidential strength rather than posterior
+probabilities. In criminal trials, for example, the rule of decision
+could be: guilt is proven beyond a reasonable doubt if and only if the
+evidential support in favor of \(H\)---as measured by the Bayes factor
 \(\nicefrac{\pr{E \vert H}}{\pr{E}}\) or the likelihood ratio
 \(\nicefrac{\pr{E\vert H}}{\pr{E \vert \n H}}\)---meets a suitably high
-threshold \(t_{BF}\) or \(t_{LR}\). The question at this point is, how
-do we identify the appropriate evidential strength threshold? The answer
-to this question is not obvious.
+threshold \(t_{BF}\) or \(t_{LR}\). The new threshold is no longer be a
+probability between 0 and 1, but a number somewhere above one. The
+greater this number, the more stringent the standard of proof, for any
+value above one. The question at this point is, how to identify the
+appropriate evidential strength threshold? The answer to this question
+is not obvious.
 \todo{will at some point take a look at "Bayesian Choice"} Below we
 examine two possible approaches.
 
@@ -1174,12 +1183,12 @@ formulate one that is more promising. A threshold on evidential strength
 can be derived from the threshold on posterior probability. The
 advantage of the posterior probability threshold is that its stringency
 can be determined in a decision-theoretic manner via the minimization of
-expected costs (see Chapter XX \todo{REFER TO ERALIER CHAPPER}). So how
-should one derive a threshold for the Bayes factor and the likelihood
-ratio, call these thresholds \(t_{BF}\) or \(t_{LR}\), from a thresholds
-\(t\) on the posterior probability?
+expected costs (see Chapter XX \todo{REFER TO ERALIER CHAPPER}). The
+threshold for the Bayes factor and the likelihood ratio, call them
+\(t_{BF}\) or \(t_{LR}\), can be derived from the threshold \(t\) for
+the posterior probability by manipulating a simple equation.
 
-Consider threshold \(t_{BF}\) first. Since \begin{align*}
+Consider \(t_{BF}\) first. Since \begin{align*}
 \mathsf{ Bayes \: factor }=\frac{\mathsf{posterior }}{\mathsf{ prior}},
 \end{align*}
 
@@ -1187,13 +1196,15 @@ Consider threshold \(t_{BF}\) first. Since \begin{align*}
 \begin{align*}t_{BF} & = \frac{t}{\textsf{prior}}
 \end{align*}
 
-\noindent The higher the prior probability, the lower \(t_{BF}\). So
-threshold \(t_{BF}\) would be dependent on the prior probability of the
-hypothesis of interest. Whether this is a desirable property for a
-decision threshold can be questioned, but a similar point holds about
-the standard posterior threshold \(t\): the higher the prior
-probability, the easier to meet this threshold. The same strategy works
-for the threshold \(t_{LR}\). By the odds version of Bayes' theorem,
+\noindent Note that \(t_{BF}\) will depend on the prior probability of
+the hypothesis of interest. The higher its prior probability, the lower
+\(t_{BF}\). Whether this is a desirable property for a decision
+threshold can be questioned, but a similar point holds about the
+posterior threshold \(t\): the higher the prior probability, the easier
+to meet the threshold.
+
+The same strategy works for the threshold \(t_{LR}\). By the odds
+version of Bayes' theorem,
 \begin{align*}\textsf{likelihood ratio}=\frac{\textsf{posterior odds}}{\textsf{prior odds}}.
 \end{align*} If the posterior ratio is fixed at, say \(t/1-t\),
 \(t_{LR}\) can be obtained as follows:
@@ -1261,10 +1272,10 @@ other thresholds that are parasitic to it.
 
 The second approach we consider consists in fixing the evidential
 strength threshold regardless of the prior probability of the hypothesis
-of interest. This raises the question of how the threshold should be
-fixed irrespective of the priors. Standard decision theory can no longer
-be used. But assuming this question can be answered, it can be shown
-that the fixed threshold approach vindicates aggregation.
+of interest. This approach raises the question of how the threshold
+should be fixed irrespective of the priors. Standard decision theory can
+no longer help here. But assuming the question can be answered, it can
+be shown that the fixed threshold approach vindicates aggregation.
 
 If the standard of proof is formalized using a fixed threshold for the
 Bayes factor or the likelihood ratio, the conjunction principle boils
@@ -1281,17 +1292,17 @@ down to one of these:
 same for individual and conjunctive claims. We now show that the
 left-to-right direction---the principle of aggregation---holds for any
 thresholds \(t_{BF}\) or \(t_{LR}\) greater than one. As seen
-previously, the combined evidential support is usually greater than the
-individual evidential support, whether it is measured in terms of the
-Bayes factor or the likelihood ratio. So whenever \(BF_A\) and \(BF_B\)
-meet the threshold \(t_{BF}\), then usually also \(BF_{AB}\) meets
-\(t_{BF}\). The same applies for the likelihood ratio threshold.
+previously, the combined evidential support is usually greater than at
+least one, if not all, individual evidential supports, whether measured
+by the Bayes factor or the likelihood ratio. So whenever \(BF_A\) and
+\(BF_B\) meet the threshold \(t_{BF}\), then usually also \(BF_{AB}\)
+meets \(t_{BF}\). The same applies for the likelihood ratio threshold.
 Whenever \(LR_A\) and \(LR_B\) meet the threshold \(t_{LR}\), then
 usually also \(LR_{AB}\) meets \(t_{LR}\). Success. Aggregation is
 finally vindicated. Since aggregation could not be justified using
 posterior probabilities \(\pr{A \vert a}\) and \(\pr{B \vert b}\) or
 using a variable evidential strength threshold, this result militates in
-favor of the fixed evidential strength threshold approach.
+favor of the fixed evidential strength threshold.
 
 Unfortunately, the right-to-left direction---the seemingly
 uncontroversial principle of distribution---has now become problematic.
@@ -1399,11 +1410,12 @@ be above 1, or equivalently, that \(\pr{H_p \vert E}\) should be higher
 than
 \(\pr{H_d \vert E}\).\todo{I'm not convinced this footnote is needed and what its point is.}\footnote{Note that $H_p$ and $H_d$ need not be one the negation of the other. Whenever two hypotheses are exclusive and exhaustive, $\nicefrac{\pr{H_p \vert E}}{\pr{H_d \vert E}}>1$ implies that $\pr{H_p \vert E}>.5$, the standard probabilistic interpretation of the preponderance standard.}
 
-One advantage of this approach---as Cheng shows---is that expected
-utility theory can set the appropriate comparative threshold \(t\) as a
-function of the costs and benefits of trial decisions. For simplicity,
-suppose that if the decision is correct, no costs result, but incorrect
-decisions have their price. \todo{REFERENCE TO EARLIER CHAPTER 
+One advantage of this approach---as Cheng (2012) shows---is that
+expected utility theory can set the appropriate comparative threshold
+\(t\) as a function of the costs and benefits of trial decisions. For
+simplicity, suppose that if the decision is correct, no costs result,
+but incorrect decisions have their price.
+\todo{REFERENCE TO EARLIER CHAPTER 
 FOR MORE COMPLEX COST STRUCTURE} The costs of a false positive is
 \(c_{FP}\) and that of a false negative is \(C_{FN}\), both greater than
 zero. Intuitively, the decision rule should minimize the expected costs.
@@ -1471,7 +1483,7 @@ hypotheses, in particular,
 \(\nicefrac{\pr{S\et C\vert E}}{\pr{\neg S \et C \vert E}}>1\),
 \(\nicefrac{\pr{S\et C\vert E}}{\pr{S \et \neg C \vert E}}>1\) and
 \(\nicefrac{\pr{S\et C\vert E}}{\pr{\neg S \et \neg C \vert E}}>1\). We
-have \begin{align}\label{eq:cheng-multiplication-two}
+have: \begin{align}\label{eq:cheng-multiplication-two}
 1 < \frac{\pr{S\et C\vert E}}{\pr{S\et \n C\vert E}} & = \frac{\pr{S\vert E}\pr{C\vert E}}{\pr{S \vert E}\pr{\n C \vert E}}  =\frac{\pr{C\vert E}}{\pr{\n C \vert E}} \\
 \nonumber
 1 < \frac{\pr{S\et C\vert E}}{\pr{\n S\et C\vert E}} & = \frac{\pr{S\vert E}\pr{C\vert E}}{\pr{\n S \vert E}\pr{C\vert E}}  = \frac{\pr{S\vert E}}{\pr{\n S \vert E}}  \\
@@ -1480,8 +1492,8 @@ have \begin{align}\label{eq:cheng-multiplication-two}
 \end{align}
 
 \noindent In the first two cases, clearly, if the composite hypothesis
-meets the threshold, so do the individual claims. But now consider the
-third case.
+meets the threshold, so do the individual claims. But consider the third
+case.
 \(\nicefrac{\pr{S\vert E}\pr{C\vert E}}{\pr{\n S \vert E}\pr{\n C \vert E}}\)
 might be strictly greater than
 \(\nicefrac{\pr{C\vert E}}{\pr{\n C \vert E}}\) or
@@ -1494,31 +1506,30 @@ are 3 and 0.5, respectively. Distribution fails. And the same problem
 would arise with a more stringent threshold as might be appropriate in
 criminal cases.
 
-There is a more general problem with Cheng's comparative approach worth
-flagging here. Much of the heavy lifting here is done by the strategic
-splitting of the defense line into multiple scenarios. Now suppose, for
-illustrative purposes, \(\pr{H_p\vert E}=0.37\) and the probability of
-each of the defense lines given \(E\) is \(0.21\). This means that
-\(H_p\) wins with each of the scenarios, so on this approach we should
-find against the defendant. But should we? Given the evidence, the
-accusation is very likely to be false, because
-\(\pr{\n H_p \vert E}=0.63\). The problem generalizes. If, as here, we
-individualize scenarios by Boolean combinations of elements of a case,
-the more elements there are, into more scenarios \(\n H_p\) needs to be
-divided. This normally would lead to the probability of each of them
-being even lower (because now \(\pr{\n H_p}\) needs to be ``split'\,'
-between more scenarios). So, if we take this approach seriously, the
-more elements a case has, the more at a disadvantage the defense is.
-This seems undesirable.
+There is a more general problem with Cheng's comparative approach. Much
+of the heavy lifting here is done by the strategic splitting of the
+defense line into multiple scenarios. Suppose, for illustrative
+purposes, \(\pr{H_p\vert E}=0.37\) and the probability of each of the
+defense lines given \(E\) is \(0.21\). This means that \(H_p\) wins with
+each of the scenarios, so on this approach we should find against the
+defendant. But should we? Given the evidence, the accusation is very
+likely to be false, because \(\pr{\n H_p \vert E}=0.63\). The problem
+generalizes. If, as here, we individualize scenarios by Boolean
+combinations of elements of a case, the more elements, the more
+alternative scenarios into which \(\n H_p\) needs to be divided. This
+normally would lead to lowering even further the probability of each of
+them (because now \(\pr{\n H_p}\) needs to be split between more
+scenarios). So, if we take this approach seriously, the more elements a
+case has, the more at a disadvantage the defense is. This seems
+undesirable.
 
 \hypertarget{comaparing-likelihoods}{%
 \subsection{Comaparing likelihoods}\label{comaparing-likelihoods}}
 
-Instead of comparing posterior probabilities, likelihoods can be
-compared. In other words, the standard of proof can be understood as
-follows: the ratio between likelihoods
-\(\nicefrac{\pr{E \vert H_p}}{\pr{E \vert H_d}}\) should be above a
-suitable threshold. Note that the posterior ratio
+Instead of posterior probabilities, likelihoods can also be compared.
+The standard of proof would then be as follows: the ratio between
+likelihoods \(\nicefrac{\pr{E \vert H_p}}{\pr{E \vert H_d}}\) should be
+above a suitable threshold. Note that the posterior ratio
 \(\nicefrac{\pr{H_p \vert E}}{\pr{H_d \vert E}}\) from before was
 replaced by the likelihood ratio
 \(\nicefrac{\pr{E \vert H_p}}{\pr{E \vert H_d}}\) where \(H_d\) and
@@ -1541,8 +1552,8 @@ preponderance of the evidence. The question is whether the individual
 hypotheses have been established by the same standard, specifically,
 whether \(\frac{\pr{E \vert C}}{\pr{E\vert \neg C}} > 1\) and
 \(\frac{\pr{E \vert S}}{\pr{E\vert \neg S}} > 1\). Focusing on a
-posisble defense hypothesis, \(\n S\et \n C\), the following
-holds:\footnote{NEED PROOF} We have
+specific defense hypothesis, \(\n S\et \n C\), the following
+holds:\footnote{NEED PROOF}
 \begin{align}\label{eq:lr-multiplication-two}
 1 < \frac{\pr{E \vert S\et C}}{\pr{E\vert \n S\et \n C}} & = \frac{\pr{E\vert S}\pr{E\vert C}}{\pr{ E \vert \n S}\pr{E \vert \n C}}   
 \end{align}
@@ -1554,18 +1565,8 @@ might be strictly greater than
 \(\nicefrac{\pr{E\vert S}}{\pr{E\vert \n S}}\). It is possible that
 \(\nicefrac{\pr{E \vert S\et C}}{\pr{E \vert H_d}}\) is greater than
 one, while either \(\frac{\pr{E \vert C}}{\pr{E\vert \neg C}}\) and
-\(\frac{\pr{E \vert S}}{\pr{E\vert \neg S}}\). are not, say when they
-are 3 and 0.5, respectively. Once again, distribution fails.
-
-\hypertarget{relative-plausibility}{%
-\subsection{Relative plausibility}\label{relative-plausibility}}
-
-MENTION THAT SINCE CHENG THOUGHT THE COMPARATIVE STRATEGY WOULD CAPTURE
-INFERENCE TO THE BEST EXPLANATION IN PROBABILISTIC TERMS, THE FAILURE OF
-THE COMPARATIVE STRATEGY TO CAPTURE THE CONJUNCTION PRINCIPLE IS ALSO A
-FAILURE OF INFERENCE TO THE BEST EXPLANATION IN CAPTURING THE
-CONJUNCTION PRINCIPLE SO LONG AS WE ASSUME THAT PLAUSIBILITY DOES NOT
-CONTRADICT PROBABILITY (WHICH ALLEN AND PARDO DO GRANT)
+\(\frac{\pr{E \vert S}}{\pr{E\vert \neg S}}\) are not, say when they are
+3 and 0.5, respectively. Once again, distribution fails.
 
 \hypertarget{rejecting-the-conjunction-principle}{%
 \section{Rejecting the conjunction
@@ -1573,14 +1574,14 @@ principle?}\label{rejecting-the-conjunction-principle}}
 
 A number of strategies that legal probabilists can pursue to address the
 difficulty with conjunction have proven problematic. Perhaps, a
-different perspective should be taken here? Observe that the problem
+different perspective should be taken here. Observe that the problem
 would not arise without the conjunction principle. Should legal
 probabilists simply reject this principle? So far we have not challenged
 it, but it is time to scrutinize it more closely. In this section, we
 provide an epistemic argument and a legal argument to question the
-conjunction principle. But we also caution that a simple rejection of
-the conjunction will not automatically dissolve the difficulty with
-conjunction. More work needs to be done.
+conjunction principle. We also caution that merely rejecting the
+conjunction principle will not dissolve the difficulty with conjunction.
+More work needs to be done. We take it on in the final section.
 
 \hypertarget{risk-accumulation}{%
 \subsection{Risk accumulation}\label{risk-accumulation}}
@@ -1675,7 +1676,7 @@ might require that the elements of an accusation be proven to different
 probabilities---and thus different standards---depending on how well
 other claims have been established. This result runs counter to the
 tacit assumption that each element should be established to the same
-standard of proof.
+standard of proof. \raf{M: Cite Ubaniak's paper on this point.}
 
 Fortunately, this challenge can be addressed. It is true that different
 elements will be established with different probabilities, depending on
@@ -1770,14 +1771,12 @@ Now, as the reader will have realized, we have pursued Dawid's strategy
 already. This strategy can justify, on purely probabilistic grounds, one
 direction of the conjunction principle: aggregation. The evidential
 support---measured by the Bayes' factor or the likelihood ratio---for
-the conjunction often exceeds the individual support for the individual
-claims. This is a success, especially because the failure of aggregation
-motivated Cohen's formulation of the conjunction paradox. Unfortunately,
-we have also seen that this strategy invalidates a previously
-unchallenged direction of the conjunction principle, distribution. This
-outcome is counterintuitive. We cannot appeal to risk accumulation to
-challenge distribution since no additional risk arises after making an
-inference from a conjunction to one of its conjunct.
+the conjunction often exceeds the individual support for (at least one
+of) the individual claims. This is a success, especially because the
+failure of aggregation motivated Cohen's formulation of the conjunction
+paradox. Unfortunately, we have seen that this strategy invalidates a
+previously unchallenged direction of the conjunction principle:
+distribution.
 
 \hypertarget{the-legal-argument}{%
 \subsection{The legal argument}\label{the-legal-argument}}
@@ -1818,25 +1817,22 @@ as follows: the evidence \(E\) presented at trial establishes guilt
 beyond a reasonable doubt provided \(\pr{G \vert E}\) is above a
 suitable threshold, say .95. The threshold is lower in civil trials.
 Civil liability is proven by preponderance provided \(\pr{L \vert E}\)
-is above a suitable threshold, say .5. In case of the clear and
-convincing standard, the threshold is assumed to be more stringent than
-the preponderance standard, but not as stringent as proof beyond a
-reasonable doubt.
+is above a suitable threshold, say .5.
 
 While seemingly innocuous, this formulation conflates two things. The
 wrongdoing as defined in the applicable law is one thing. The way in
-which the wrongdoing is established in court is quite another thing. The
+which the wrongdoing is established in court is another thing. The
 wrongdoing is defined in a generic manner and is applicable across a
-large class of situations, whereas the way it is established in court is
-specific to a unique situation and tailored to the individual defendant.
-A prosecutor in a criminal case does not just establish that the
-defendant assaulted the victim in some way or another, but rather, that
-the defendant behaved in such and such a manner in this time and place,
-and that the specific behavior in question fulfills the legal definition
-of assault.
+large class of situations, whereas the way the wrongdoing is established
+in court is specific to a unique situation and tailored to the
+individual defendant. A prosecutor in a criminal case does not just
+establish that the defendant assaulted the victim in some way or
+another, but rather, that the defendant behaved in such and such a
+manner in this time and place, and that the specific behavior in
+question fulfills the legal definition of assault.
 \mar{R: can you say a bit more about why the specific narration is needed? Or do you do this later on?}
 
-If this is correct, the probabilistic interpretation of proof standard
+If this is correct, the probabilistic interpretation of proof standards
 should be revised. The generic claim that the defendant is guilty or
 civilly liable should be replaced by a more fine-grained hypothesis,
 call it \(H_p\), the hypothesis put forward by the prosecutor (or the
@@ -1920,7 +1916,7 @@ establish:\footnote{As an illustration, we follow the jury instructions
   of the State of Washington. EXACT REFERENCE}
 
 \begin{quote}
-(E1) defendant supplied false information to guide plaintiff in their business transactions; 
+(E1) defendant supplied false information to guide plaintiff in their business transaction; 
 
 (E2) defendant knew the false information was supplied to guide plaintiff;
 
@@ -2228,6 +2224,16 @@ the governing standard of proof. This is the way we suggest that we make
 sense of the conjunction
 principle.\mar{R: and the trivialization is unsuprising and desirable given that no lawyer every was concerned with the reliability of conjunction elimination or introduction.}
 
+\noindent\makebox[\linewidth]{\rule{\paperwidth}{1pt}}
+
+CHAPTER ENDS HERE
+
+\noindent\makebox[\linewidth]{\rule{\paperwidth}{1pt}}
+
+\hypertarget{extra-unstructured-materials}{%
+\section{Extra unstructured
+materials}\label{extra-unstructured-materials}}
+
 \hypertarget{notes-on-the-argument}{%
 \subsection{Notes on the argument}\label{notes-on-the-argument}}
 
@@ -2383,16 +2389,6 @@ factors.
 See Spottswood paper, Unraveling the Conjunction Paradox
 
 OPTION 5. p-values, what about the conjucntion of p-values?
-
-\noindent\makebox[\linewidth]{\rule{\paperwidth}{1pt}}
-
-CHAPTER ENDS HERE
-
-\noindent\makebox[\linewidth]{\rule{\paperwidth}{1pt}}
-
-\hypertarget{extra-unstructured-materials}{%
-\section{Extra unstructured
-materials}\label{extra-unstructured-materials}}
 
 \hypertarget{prior-probabilities}{%
 \subsection{Prior Probabilities}\label{prior-probabilities}}
@@ -4552,70 +4548,70 @@ scope of this paper.
 
 \hypertarget{refs}{}
 \begin{CSLReferences}{1}{0}
-\leavevmode\vadjust pre{\hypertarget{ref-Allen1986A-Reconceptuali}{}}%
+\leavevmode\hypertarget{ref-Allen1986A-Reconceptuali}{}%
 Allen, R. J. (1986). A reconceptualization of civil trials. \emph{Boston
 University Law Review}, \emph{66}, 401--437.
 
-\leavevmode\vadjust pre{\hypertarget{ref-AllenPardo2019relative}{}}%
+\leavevmode\hypertarget{ref-AllenPardo2019relative}{}%
 Allen, R. J., \& Pardo, M. (2019). Relative plausibility and its
 critics. \emph{The International Journal of Evidence {\&} Proof},
 \emph{23}(1-2), 5--59. \url{https://doi.org/10.1177/1365712718813781}
 
-\leavevmode\vadjust pre{\hypertarget{ref-allen2013}{}}%
+\leavevmode\hypertarget{ref-allen2013}{}%
 Allen, R. J., \& Stein, A. (2013). Evidence, probability and the burden
 of proof. \emph{Arizona Law Journal}, \emph{55}, 557--602.
 
-\leavevmode\vadjust pre{\hypertarget{ref-cheng2012reconceptualizing}{}}%
+\leavevmode\hypertarget{ref-cheng2012reconceptualizing}{}%
 Cheng, E. (2012). Reconceptualizing the burden of proof. \emph{Yale LJ},
 \emph{122}, 1254.
 
-\leavevmode\vadjust pre{\hypertarget{ref-Cohen1977The-probable-an}{}}%
+\leavevmode\hypertarget{ref-Cohen1977The-probable-an}{}%
 Cohen, J. L. (1977). \emph{The probable and the provable}. Oxford
 University Press. \url{https://doi.org/10.2307/2219193}
 
-\leavevmode\vadjust pre{\hypertarget{ref-cohen1988difficulty}{}}%
+\leavevmode\hypertarget{ref-cohen1988difficulty}{}%
 Cohen, L. J. (1988). The difficulty about conjunction in forensic proof.
 \emph{The Statistician}, \emph{37}(4/5), 415.
 \url{https://doi.org/10.2307/2348767}
 
-\leavevmode\vadjust pre{\hypertarget{ref-dawid1987difficulty}{}}%
+\leavevmode\hypertarget{ref-dawid1987difficulty}{}%
 Dawid, A. P. (1987). The difficulty about conjunction. \emph{The
 Statistician}, 91--97.
 
-\leavevmode\vadjust pre{\hypertarget{ref-DiBello2019plausibility}{}}%
+\leavevmode\hypertarget{ref-DiBello2019plausibility}{}%
 Di Bello, M. (2019). Probability and plausibility in juridical proof.
 \emph{International Journal of Evidence and Proof}.
 
-\leavevmode\vadjust pre{\hypertarget{ref-haack2011legal}{}}%
-Haack, S. (2014). Legal probabilism: An epistemological dissent. In (pp.
-47--77).
+\leavevmode\hypertarget{ref-haack2011legal}{}%
+Haack, S. (2014). Legal probabilism: An epistemological dissent. In
+\emph{{Haack2014-HAAEMS}} (pp. 47--77).
 
-\leavevmode\vadjust pre{\hypertarget{ref-kaplow2014likelihood}{}}%
+\leavevmode\hypertarget{ref-kaplow2014likelihood}{}%
 Kaplow, L. (2014). Likelihood ratio tests and legal decision rules.
 \emph{American Law and Economics Review}, \emph{16}(1), 1--39.
 
-\leavevmode\vadjust pre{\hypertarget{ref-Kowalewska2021conjunction}{}}%
+\leavevmode\hypertarget{ref-Kowalewska2021conjunction}{}%
 Kowalewska, A. (2021). Reasoning without the conjunction closure.
 \emph{Episteme}, 1--14. \url{https://doi.org/10.1017/epi.2020.53}
 
-\leavevmode\vadjust pre{\hypertarget{ref-Makinson1965-MAKTPO-2}{}}%
+\leavevmode\hypertarget{ref-Makinson1965-MAKTPO-2}{}%
 Makinson, D. C. (1965). The paradox of the preface. \emph{Analysis},
 \emph{25}(6), 205--207.
 
-\leavevmode\vadjust pre{\hypertarget{ref-Pardo2008judicial}{}}%
+\leavevmode\hypertarget{ref-Pardo2008judicial}{}%
 Pardo, M. S., \& Allen, R. J. (2008). Judicial proof and the best
 explanation. \emph{Law and Philosophy}, \emph{27}(3), 223--268.
 
-\leavevmode\vadjust pre{\hypertarget{ref-schwartz2017ConjunctionProblemLogic}{}}%
+\leavevmode\hypertarget{ref-schwartz2017ConjunctionProblemLogic}{}%
 Schwartz, D. S., \& Sober, E. R. (2017). The {Conjunction Problem} and
 the {Logic} of {Jury Findings}. \emph{William \& Mary Law Review},
 \emph{59}(2), 619--692.
 
-\leavevmode\vadjust pre{\hypertarget{ref-Stein05}{}}%
+\leavevmode\hypertarget{ref-Stein05}{}%
 Stein, A. (2005). \emph{Foundations of evidence law}. Oxford University
 Press.
 
-\leavevmode\vadjust pre{\hypertarget{ref-urbaniak2018narration}{}}%
+\leavevmode\hypertarget{ref-urbaniak2018narration}{}%
 Urbaniak, R. (2018). Narration in judiciary fact-finding: A
 probabilistic explication. \emph{Artificial Intelligence and Law},
 1--32. \url{https://doi.org/10.1007/s10506-018-9219-z}
