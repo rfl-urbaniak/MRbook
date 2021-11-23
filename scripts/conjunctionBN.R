@@ -9,7 +9,7 @@ conjunctionDAG <- model2network("[a|A][b|B][AB|A:B][A][B]")
 graphviz.plot(conjunctionDAG)
 
 set.seed(123)
-n <- 100
+n <- 100000
 
 As <- numeric(n)
 Bs <- numeric(n)

@@ -8,8 +8,8 @@ conjunctionDAG <- model2network("[a|A][b|B][AB|A:B][A][B|A]")
 graphviz.plot(conjunctionDAG)
 
 # set seed and number of iterations
-set.seed(123)
-n <- 100
+set.seed(321)
+n <- 100000
 
 # initialize the variables
 As <- numeric(n)
@@ -44,7 +44,6 @@ LRABs <- numeric(n)
 # run a loop per each case - add dependence
 
 for(i in 1:n){
-  i = 1
   As[i] <- runif(1,0,1)
   # Bs[i] <- runif(1,0,1)
   
@@ -135,16 +134,16 @@ for(i in 1:n){
   LRABs[i] <- abifABs[i] / abIfnABs[i]
 }
 
-conjunctionTable <- data.frame(As,Bs,aifAs,aifnAs,bifBs,bifnBs,
+conjunctionTableAli <- data.frame(As,Bs,aifAs,aifnAs,bifBs,bifnBs,
                                as, bs, abs, abifABs,abIfnABs,ABs,
                                ABifabs,BFAs,BFBs, BFABs,
                                LRAs, LRBs, LRABs)
 
 
 
-conjunctionTable
+conjunctionTableAli
 
-# saveRDS(conjunctionTable, file = "conjunctionTable.RDS")
+saveRDS(conjunctionTableAli, file = "conjunctionTableDepAli.RDS")
 
 
 
