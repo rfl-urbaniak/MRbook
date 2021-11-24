@@ -141,7 +141,7 @@ conjunctionTableAli <- data.frame(As,Bs,aifAs,aifnAs,bifBs,bifnBs,
 
 
 
-conjunctionTableAli
+
 
 saveRDS(conjunctionTableAli, file = "conjunctionTableDepAli.RDS")
 
