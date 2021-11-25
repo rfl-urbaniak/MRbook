@@ -33,8 +33,8 @@ LRABs <- numeric(n)
 
 
 
-
 for(i in 1:n){
+i = 1
 As[i] <- runif(1,0,1)
 Bs[i] <- runif(1,0,1)
 
@@ -119,6 +119,7 @@ conjunctionTable <- data.frame(As,Bs,aifAs,aifnAs,bifBs,bifnBs,
 
 
 
+conjunctionTable
 
 #saveRDS(conjunctionTable, file = "conjunctionTable.RDS")
 
