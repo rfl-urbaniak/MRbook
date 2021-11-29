@@ -168,18 +168,21 @@ DAG2Ind <- impliedConditionalIndependencies(daggityConjunctionDag2, type  = "all
 Directed Acyclic Graphs (DAGs) are useful for representing graphically these relationships of independence. 
 The edges, intuitively, are meant to capture direct influence between the nodes. The role that such direct influence plays is that in a Bayesian network built over a DAG any node is conditionally independent of its nondescentants (including ancestors), given its parents. If this is the case for a given probabilistic measure $\pr{}$ and a given DAG, we say that $\pr{}$ is compatible with $\mathsf{G}$, and they can be put together to constitute a Bayesian network. 
 
-\raf{A: The name of the converging connection is missing and maybe the names should be highlighted?}
+
 
 The graphical counterpart of probabilistic independence is the so-called \textbf{d-separation}, $\indep_d$.  We say that two nodes, $X$ and $Y$, are d-separated given a set of nodes $\mathsf{Z}$---$X\indep_d Y \vert \mathsf{Z}$ --- iff for every undirected path from $X$ to $Y$ there is a node $Z'$ on the path such that either:
 
 \begin{itemize}
 
-\item $Z' \in \mathsf{Z}$ and there is a \emph{serial} connection, $\rightarrow Z' \rightarrow$, on the path,
-\item  $Z'\in \mathsf{Z}$ and there is a diverging connection, $\leftarrow Z' \rightarrow $, on the path,
-\item There is a connection $\rightarrow Z' \leftarrow$ on the path, and neither $Z'$ nor its descendants are in $\mathsf{Z}$.
+\item $Z' \in \mathsf{Z}$ and there is a \textbf{serial} connection, $\rightarrow Z' \rightarrow$, on the path (\textbf{pipe}),
+\item  $Z'\in \mathsf{Z}$ and there is a \textbf{diverging} connection, $\leftarrow Z' \rightarrow $, on the path (\textbf{fork}),
+\item There is a \textbf{converging} connection $\rightarrow Z' \leftarrow$ on the path (in which case $Z'$ is a \textbf{collider}), and neither $Z'$ nor its descendants are in $\mathsf{Z}$.
 \end{itemize}
 
 \vspace{1mm}
+
+\ali{R: add graph of three types next to each other using daggity.}
+
 
 Finally, two sets of nodes, $\mathsf{X}$ and $\mathsf{Y}$, are d-separated given $\mathsf{Z}$ if every node in $\mathsf{X}$ is d-separated from every node in $\mathsf{Y}$ given $\mathsf{Z}$. With serial connection, for instance, if:
 
@@ -244,7 +247,7 @@ In what follows, however, we will sometimes use a finer level of granularity, be
 \begin{align} A\indep B  \label{eq:indAB}     &\hspace{2cm}\mbox{\footnotesize DAG1}\\
 b \indep a   \label{eq:indab}   & \hspace{2cm}\mbox{\footnotesize DAG1}\\
 A \indep b \vert a   \label{eq:I1}    &\hspace{2cm}\mbox{\footnotesize DAG1} \\
-B \indep a \et A \vert b \label{eq:I2}&\hspace{2cm}\mbox{\footnotesize DAG1 , DAG2} \\
+B \indep a \et A \vert b \label{eq:I2}&\hspace{2cm}\mbox{\footnotesize DAG1 } \\
 a\indep b \vert A\et B \label{eq:I3}  &\hspace{2cm}\mbox{\footnotesize DAG1 , DAG2} \\  
 a\indep b \vert A \label{eq:I3a}   &\hspace{2cm}\mbox{\footnotesize DAG1 , DAG2} \\ 
 a\indep B \vert A \label{eq:I4}    & \hspace{2cm}\mbox{\footnotesize DAG1 , DAG2} \\
@@ -258,8 +261,11 @@ b\indep \n A \et a \vert \n B \label{eq:I5c} & \hspace{2cm}\mbox{\footnotesize D
 b \indep a \vert B \label{eq:I6} & \hspace{2cm}\mbox{\footnotesize DAG1 , DAG2} 
 \end{align}
 
-\ali{R: Double check if we in fact use I3, or if there are any unused independence assumptions listed above.}
+
 \raf{A: Can we discuss I3?We dont we use AB there to make it clear to what we refer? And is I1 correct for sure? Isn't I2 redundant? In I6 it is true even without B because of convergence, do we still need this equation?}
+
+Some caveats. In \eqref{eq:I1} the conditioning on $a$ is not essential, because it's not on the path between the nodes: the key reason why the independence remains upon this conditioning is that there is an unconditioned collider on the path. Still, we need this independence in the proof later on. In \eqref{eq:I3} what we are conditioning on is nodes $A$ and $B$ jointly. Technically, independence conditional on the conjunction node $AB$ does not fall out of the d-separations present in the network (it does follow, given that $AB$ and $A,B$ are connected deterministically: fixing $AB$ to true fixes both $A$ and $B$ to true).
+
 
 In what follows, we will provide theorems where we managed to obtain them. However, in some cases analytic calculations are somewhat unmanageable, and so we decided to inspect such issues by means of a simulation. Moreover, even for cases in which we obtained the relevant proofs, the results of a simulation provide further insights, for instance, in terms of relative frequencies of various facts. For each DAG under consideration, we generated 100k random Bayesian networks which share that DAG. For each of these networks, we calculated all the relevant probabilities, Bayes factors, and likelihood ratios for each of them. With the output of such calculations, various questions can be asked and the answers visualized.
 
