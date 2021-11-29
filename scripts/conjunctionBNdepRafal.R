@@ -9,9 +9,10 @@ conjunctionDAG2 <- model2network("[a|A][b|B][AB|A:B][A][B|A]")
 graphviz.plot(conjunctionDAG2)
 
 set.seed(123)
-n <- 100000
+n <- 10000
 
 As <- numeric(n)
+Bs <- numeric(n)
 BifAs <- numeric(n)
 BifnAs <- numeric(n)
 aifAs <- numeric(n)
@@ -21,6 +22,8 @@ bifnBs <- numeric(n)
 as <- numeric(n)
 bs <- numeric(n)
 abs <- numeric(n)
+aifbs <- numeric(n)
+bifas <- numeric(n)
 abifABs <- numeric(n)
 abIfnABs <- numeric(n)
 ABs <- numeric(n)
@@ -28,10 +31,11 @@ ABifabs <- numeric(n)
 BFAs <- numeric(n)
 BFBs <- numeric(n)
 BFABs <-  numeric(n)
+BFAprimes <- numeric(n)
+BFBprimes <- numeric(n)
 LRAs <- numeric(n)
 LRBs <- numeric(n)
 LRABs <- numeric(n)
-
 
 
 
@@ -77,8 +81,19 @@ for(i in 1:n){
   as[i] <- querygrain(conjunctionJN, node = "a")[[1]][[1]]
   bs[i] <- querygrain(conjunctionJN, node = "b")[[1]][[1]]
   
+  
+  Bs[i] <- querygrain(conjunctionJN, node = "B")[[1]][[1]]
+  
   abs[i] <- querygrain(conjunctionJN, node = c("a","b"), 
                        type = "joint")[1,1]
+  
+  conjunctionJNa <- setEvidence(conjunctionJN, nodes = c("a"), 
+                               states = c("1"))
+  bifas[i] <-   querygrain(conjunctionJNa, node = c("b"))[[1]][1]
+
+  conjunctionJNb <- setEvidence(conjunctionJN, nodes = c("b"), 
+                                states = c("1"))
+  aifbs[i] <-   querygrain(conjunctionJNb, node = c("a"))[[1]][1]
   
   
   conjunctionJNAB <- setEvidence(conjunctionJN, nodes = c("A", "B"), 
@@ -90,6 +105,9 @@ for(i in 1:n){
   
   BFAs[i] <- aifAs[i]/as[i]
   BFBs[i] <- bifBs[i]/bs[i]
+  
+  BFAprimes[i] <- aifAs[i]/aifbs
+  BFBprimes[i] <- bifBs[i]/bifas
   
   BFABs[i] <- abifABs[i]/abs[i]
   
@@ -115,14 +133,16 @@ for(i in 1:n){
   LRABs[i] <- abifABs[i] / abIfnABs[i]
 }
 
+
+
 conjunctionTable2raf <- data.frame(As,Bs,aifAs,aifnAs,bifBs,bifnBs,
-                               as, bs, abs, abifABs,abIfnABs,ABs,
-                               ABifabs,BFAs,BFBs, BFABs,
+                               as, bs, abs, aifbs, bifas, abifABs,abIfnABs,ABs,
+                               ABifabs,BFAs,BFBs, BFABs, BFAprimes, BFBprimes,
                                LRAs, LRBs, LRABs)
 
 
 
-saveRDS(conjunctionTable2raf, file = "datasets/conjunctionTable2raf.RDS")
+saveRDS(conjunctionTable2raf, file = "datasets/conjunctionTable2Braf.RDS")
 
 
 

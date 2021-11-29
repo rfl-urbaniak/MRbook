@@ -497,8 +497,6 @@ b\indep \n A \et a \vert \n B \label{eq:I5c} & \hspace{2cm}\mbox{\footnotesize D
 b \indep a \vert B \label{eq:I6} & \hspace{2cm}\mbox{\footnotesize DAG1 , DAG2} 
 \end{align}
 
-\raf{A: Can we discuss I3?We dont we use AB there to make it clear to what we refer? And is I1 correct for sure? Isn't I2 redundant? In I6 it is true even without B because of convergence, do we still need this equation?}
-
 Some caveats. In \eqref{eq:I1} the conditioning on \(a\) is not
 essential, because it's not on the path between the nodes: the key
 reason why the independence remains upon this conditioning is that there
@@ -506,21 +504,22 @@ is an unconditioned collider on the path. Still, we need this
 independence in the proof later on. In \eqref{eq:I3} what we are
 conditioning on is nodes \(A\) and \(B\) jointly. Technically,
 independence conditional on the conjunction node \(AB\) does not fall
-out of the d-separations present in the network (it does follow, given
-that \(AB\) and \(A,B\) are connected deterministically: fixing \(AB\)
-to true fixes both \(A\) and \(B\) to true).
+out of the d-separations present in the network---it follows given that
+\(AB\) and \(A,B\) are connected deterministically: fixing \(AB\) to
+true fixes both \(A\) and \(B\) to true.
 
 In what follows, we will provide theorems where we managed to obtain
 them. However, in some cases analytic calculations are somewhat
 unmanageable, and so we decided to inspect such issues by means of a
-simulation. Moreover, even for cases in which we obtained the relevant
-proofs, the results of a simulation provide further insights, for
-instance, in terms of relative frequencies of various facts. For each
-DAG under consideration, we generated 100k random Bayesian networks
-which share that DAG. For each of these networks, we calculated all the
-relevant probabilities, Bayes factors, and likelihood ratios for each of
-them. With the output of such calculations, various questions can be
-asked and the answers visualized.
+\textbf{simulation}. For each DAG under consideration, we generated 100k
+random Bayesian networks (with probabilities sampled from the
+\textsf{Uniform(0,1)} distribution) which share that DAG. For each of
+these networks, we calculated all the relevant probabilities, Bayes
+factors, and likelihood ratios. With the output of such calculations,
+various questions can be asked and the answers visualized. Even for
+cases in which we obtained the relevant proofs, the results of a
+simulation provide further insights, for instance, in terms of relative
+frequencies of various facts.
 
 \hypertarget{bayes-factor-claims-and-proofs}{%
 \subsection*{Bayes factor: claims and
@@ -605,13 +604,13 @@ If instead of obtaining $\pr{a}\pr{b \vert a}$ in the denominator we deploy the 
 
 \end{proof}
 
-Now, to obtain a corollary analogous to Corollary \ref{cor:BFind2}, we
-use the additional assumption that either \(\pr{b\vert a} \leq \pr{b}\)
-or \(\pr{a \vert b} \leq \pr{a}\).
+Now, to obtain a corollary analogous to Corollary \ref{cor:BFind2},
+there are at lest two paths. One starts with an additional disjunctive
+assumption that either \(\pr{b\vert a} \leq \pr{b}\) or
+\(\pr{a \vert b} \leq \pr{a}\).
 
-\ali{R: this cor will be revised, will let you know when to read.}
 \begin{corollary} Suppose \eqref{eq:I4} and \eqref{eq:I5}  hold and $BF_{BA}, BF_{B} >1$. 
-Then if either $\pr{b\vert a} \leq \pr{b}$ or \linebreak  $\pr{a \vert b} \leq \pr{a}$, we have $BF_{AB}> BF_{A}, BF_{B}$. \label{cor:BFweaker}
+Then if either $\pr{b\vert a} \leq \pr{b}$ or \linebreak  $\pr{a \vert b} \leq \pr{a}$, we have $BF_{AB}\geq BF_{A}, BF_{B}$. \label{cor:BFweaker}
 \end{corollary}
 
 \begin{proof}
@@ -620,14 +619,47 @@ Notice that by Fact \ref{fac:BFdep} we have that on the assumptions of the corol
 BF_{AB} & = BF_{A}\times BF^{'}_{B} \\
 & = BF_{B} \times BF^{'}_{A}
 \end{align*}
-If we now can show that either $BF^{'}_{B} > 1$, or $BF^{'}_{A} > 1$, the reasoning we used before applies: the product of two numbers greater than one is greater than either of them.  Consider $BF_{B}$, which we assumed to be greater than 1. If we can show $BF^{'}_{B}\geq BF_{B}$, we're done. But this holds on one of the disjuncts assumed in the corollary, $\pr{b\vert a} \leq \pr{b}$, as then we have:
+If we now can show that either $BF^{'}_{B} \geq 1$, or $BF^{'}_{A} \geq 1$, the reasoning we used before applies: the product of two numbers greater than one is not less than either of them.  Consider $BF_{B}$, which we assumed to be greater than 1. If we can show $BF^{'}_{B}\geq BF_{B}$, we're done. But this holds on one of the disjuncts assumed in the corollary, $\pr{b\vert a} \leq \pr{b}$, as then we have:
 \begin{align*}
-\frac{\pr{b \vert B}}{\pr{b\vert a}} \geq \frac{\pr{b \vert B}}{\pr{b}}
+\frac{\pr{b \vert B}}{\pr{b\vert a}} &\geq \frac{\pr{b \vert B}}{\pr{b}} \\
+BF^{'}_{B}  & \geq BF_{B} \\
+BF_{AB} & = BF_{A}\times BF^{'}_{B}   \geq BF_{A} \times BF_{B}\\
 \end{align*}
 Similarly, if the other disjunct holds, we run an analogous argument, this time focusing on $BF^{'}_{A}$.
 \end{proof}
 
-\todo{add negative simulation result for DAG2, analogous to the ones for DAG1}
+\mar{R: added this paragraph and another collorary, check}
+
+However, the problem with this assumption is that if it holds, this
+means that one item of evidence makes the other item of evidence at
+least as surprising as it originally was. This, at least intuitively,
+might not happen in a legal context. If \(A\) and \(B\) are elements of
+a crime, say that the driver was drunk and that they caused harm by
+erratic driving, evidence for one hypothesis, say the blood alcohol
+level test, in fact makes the evidence for the other
+hypothesis---witnesses attesting to the erratic driving, the presence of
+the harm, and so on, more likely.
+
+Another approach uses a conjunction of assumptions.
+
+\begin{corollary} Suppose \eqref{eq:I4} and \eqref{eq:I5}  hold and $BF_{BA}, BF_{B} >1$. 
+Then if both $\pr{a\vert b} \leq \pr{a \vert A}$ and \linebreak  $\pr{b \vert a} \leq \pr{b\vert B}$, we have $BF_{AB}\geq BF_{A}, BF_{B}$. \label{cor:BFweaker2}
+\end{corollary}
+
+\begin{proof}
+Assume the first conjunct holds. Then $\frac{\pr{a\vert A}}{\pr{a\vert b}} \geq 1$ and so:
+\begin{align*}
+BF^{'}_{AB} &= BF^{'}_{A} \times BF_{B} \geq BF_{B}
+\end{align*}
+\noindent The argument for the other comparison is analogous.
+\end{proof}
+
+While this is a conjunction, not a disjunction, the assumption still
+seems more plausible in usual legal contexts. If, say, \(a\) is used as
+evidence for \(A\), we often expect \(A\) and \(a\) to be fairly
+strongly connected, that is, we expect \(\pr{a\vert A}\) to be rather
+high, while the connection between different pieces of evidence for
+different hypotheses, intuitively, is not expected to be as strong.
 
 \hypertarget{bayes-factor-simulations}{%
 \subsection*{Bayes factor: simulations}\label{bayes-factor-simulations}}
@@ -686,6 +718,23 @@ the values are fairly close (Figure \ref{fig:BFmulti}).
 \begin{center}\includegraphics[width=1\linewidth]{conjunction-appendix9_files/figure-latex/unnamed-chunk-9-1} \end{center}
 \caption{In DAG2, the result of multiplying individual BFs does not equal the joing BF, but often is a good approximation thereof.}
 \label{fig:BFmulti}
+\end{figure}
+
+How about distribution? Note that in principle a failure of distribution
+can occur whenever the joint \textsf{BF} is strictly greater than at
+least one of the individual \(\textsf{BFs}\). The distribution of such
+cases for both dags can be inspected in Figure \ref{fig:BFdistr}.
+
+\vspace{1mm}
+\footnotesize
+
+\normalsize
+
+\begin{figure}
+
+\begin{center}\includegraphics[width=1\linewidth]{conjunction-appendix9_files/figure-latex/plotBFDistr-1} \end{center}
+\caption{Distribution failure for the Bayes factor, \textsf{DAG 1}. The $x$ axis restricted to $(-3,15)$.}
+\label{fig:BFdistr}
 \end{figure}
 
 \hypertarget{likelihood-ratio-claims-and-proofs}{%
@@ -786,7 +835,7 @@ similar).
 
 \begin{figure}
 
-\begin{center}\includegraphics[width=1\linewidth]{conjunction-appendix9_files/figure-latex/unnamed-chunk-10-1} \end{center}
+\begin{center}\includegraphics[width=1\linewidth]{conjunction-appendix9_files/figure-latex/unnamed-chunk-11-1} \end{center}
 \caption{Ca. 25k cases (out of simulated 100k) in which the joint BF is below each of the individual BFs.}
 \label{fig:LRfails}
 \end{figure}
@@ -804,7 +853,7 @@ higher than their maximum (Figures \ref{fig:LRlowerPlot} and
 \begin{figure}
 
 
-\begin{center}\includegraphics[width=1\linewidth]{conjunction-appendix9_files/figure-latex/unnamed-chunk-12-1} \end{center}
+\begin{center}\includegraphics[width=1\linewidth]{conjunction-appendix9_files/figure-latex/unnamed-chunk-13-1} \end{center}
 
 \caption{Distances of joint likelihood ratios for the minima and the maxima of the individual likelihood ratios if the individual likelihood ratios are below 1, DAG used in \textsf{DAG1}.} 
 \label{fig:LRlowerPlot}
@@ -818,7 +867,7 @@ higher than their maximum (Figures \ref{fig:LRlowerPlot} and
 \begin{figure}
 
 
-\begin{center}\includegraphics[width=1\linewidth]{conjunction-appendix9_files/figure-latex/unnamed-chunk-14-1} \end{center}
+\begin{center}\includegraphics[width=1\linewidth]{conjunction-appendix9_files/figure-latex/unnamed-chunk-15-1} \end{center}
 
 \caption{Distances of joint likelihood ratios for the minima and the maxima of the individual likelihood ratios if the individual likelihood ratios are below 1, DAG used in \textsf{DAG2}.} 
 \label{fig:LRlowerPlot2}
@@ -832,7 +881,7 @@ of the individual likelihood ratios (Figures \ref{fig:LRabovePlot} and
 \begin{figure}
 
 
-\begin{center}\includegraphics[width=1\linewidth]{conjunction-appendix9_files/figure-latex/unnamed-chunk-15-1} \end{center}
+\begin{center}\includegraphics[width=1\linewidth]{conjunction-appendix9_files/figure-latex/unnamed-chunk-16-1} \end{center}
 
 \caption{Distances of joint likelihood ratios for the minima and the maxima of the individual likelihood ratios if the individual likelihood ratios are above 1, DAG used in \textsf{DAG1}.}
 \label{fig:LRabovePlot}
@@ -841,7 +890,7 @@ of the individual likelihood ratios (Figures \ref{fig:LRabovePlot} and
 \begin{figure}
 
 
-\begin{center}\includegraphics[width=1\linewidth]{conjunction-appendix9_files/figure-latex/unnamed-chunk-16-1} \end{center}
+\begin{center}\includegraphics[width=1\linewidth]{conjunction-appendix9_files/figure-latex/unnamed-chunk-17-1} \end{center}
 
 \caption{Distances of joint likelihood ratios for the minima and the maxima of the individual likelihood ratios if the individual likelihood ratios are above 1, DAG used in \textsf{DAG2}.}
 \label{fig:LRabovePlotDep}
