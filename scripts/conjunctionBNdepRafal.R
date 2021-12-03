@@ -9,7 +9,7 @@ conjunctionDAG2 <- model2network("[a|A][b|B][AB|A:B][A][B|A]")
 graphviz.plot(conjunctionDAG2)
 
 set.seed(123)
-n <- 10000
+n <- 100000
 
 As <- numeric(n)
 Bs <- numeric(n)
@@ -134,15 +134,15 @@ for(i in 1:n){
 }
 
 
-
-conjunctionTable2raf <- data.frame(As,Bs,aifAs,aifnAs,bifBs,bifnBs,
+# added BifnAs, BifAs
+conjunctionTable2raf <- data.frame(As,Bs,aifAs,aifnAs,bifBs,bifnBs, BifnAs, BifAs,
                                as, bs, abs, aifbs, bifas, abifABs,abIfnABs,ABs,
                                ABifabs,BFAs,BFBs, BFABs, BFAprimes, BFBprimes,
                                LRAs, LRBs, LRABs)
 
 
 
-saveRDS(conjunctionTable2raf, file = "datasets/conjunctionTable2Braf.RDS")
+# saveRDS(conjunctionTable2raf, file = "datasets/conjunctionTableAdditional.RDS")
 
 
 

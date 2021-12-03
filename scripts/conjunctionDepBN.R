@@ -102,16 +102,13 @@ for(i in 1:n){
   
   abifABs[i] <- querygrain(conjunctionJNAB, node = c("a","b"), 
                            type = "joint")[1,1]
+
   
-  # todo: read the chapter again and Scutari
-  
-  # should it be changed? 
   BFAs[i] <- aifAs[i]/as[i]
   BFBs[i] <- bifBs[i]/bs[i]
   
   BFABs[i] <- abifABs[i]/abs[i]
   
-  # should it be changed? 
   LRAs[i] <- aifAs[i]/aifnAs[i]
   LRBs[i] <- bifBs[i]/bifnBs[i]
   

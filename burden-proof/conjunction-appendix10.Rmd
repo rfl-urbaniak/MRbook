@@ -41,7 +41,6 @@ library(tidyverse)
 
 
 ## Bayesian networks and probabilistic independence {-}
-
 One assumption often made in the formulation 
 of the conjunction paradox is that claims $A$ and $B$ are probabilistically independent. This is not always the case---we have seen that the paradox does subside even if the two claims are dependent. However, two fairly natural set-ups for conjunctive hypotheses and evidence supporting them  (Figure \ref{fig:conjunctionBNs}) indeed do have some independencies built in, and so it is also natural what can be said about the conjunction problem given these independencies. Moreover, in some context, we will be freely using the independence assumptions, as a counterexample to a general claim still remains one even if it satisfies an additional requirement, that is, independence conditions.
 
@@ -181,7 +180,67 @@ The graphical counterpart of probabilistic independence is the so-called \textbf
 
 \vspace{1mm}
 
-\ali{R: add graph of three types next to each other using daggity.}
+
+
+```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%"}
+serial <- dagitty("
+    dag{
+        X -> Z 
+        Z -> Y
+      }")
+
+diverging <- dagitty("
+    dag{
+        Z -> X 
+        Z -> Y
+      }")
+
+converging <- dagitty("
+    dag{
+        X -> Z 
+        Y -> Z
+      }")
+```
+
+
+\begin{figure}[H]
+\hspace{2mm}\scalebox{1}{\begin{subfigure}[!ht]{0.35\textwidth}
+```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%", dpi = 300}
+coordinates(serial) <- list( x=c(X = 2, Z = 2, Y = 2),
+                                            y=c(X = 1, Z = 2, Y = 3) )
+drawdag(serial, 
+        shapes =  list(X = "c", Z = "c", Y = "c"), radius = 5)
+```
+\subcaption{\textsf{serial}}
+\end{subfigure}} 
+\hspace{5mm}\begin{subfigure}[!ht]{0.35\textwidth}
+\vspace{1mm}
+```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%", dpi = 300}
+coordinates(diverging) <- list( x=c(X = 1, Z = 2, Y = 3) ,
+                                            y=c(X = 2, Z = 1, Y = 2) )
+drawdag(diverging, 
+        shapes =  list(X = "c", Z = "c", Y = "c"), radius = 5)
+```
+\subcaption{\textsf{diverging}}
+\end{subfigure}
+\hspace{5mm}\begin{subfigure}[!ht]{0.35\textwidth}
+\vspace{1mm}
+```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%", dpi = 300}
+coordinates(converging) <- list( x=c(X = 1, Z = 2, Y = 3) ,
+                                            y=c(X = 1, Z = 2, Y = 1) )
+drawdag(converging, 
+        shapes =  list(X = "c", Z = "c", Y = "c"), radius = 5)
+```
+\subcaption{\textsf{converging}}
+\end{subfigure}
+
+\normalsize
+\caption{Three dags to visualize connections.}
+\label{fig:connectionsBN}
+\end{figure}
+
+
+
 
 
 Finally, two sets of nodes, $\mathsf{X}$ and $\mathsf{Y}$, are d-separated given $\mathsf{Z}$ if every node in $\mathsf{X}$ is d-separated from every node in $\mathsf{Y}$ given $\mathsf{Z}$. With serial connection, for instance, if:
@@ -923,10 +982,60 @@ annotate_figure(LRabovePlotDep, top = text_grob("Distances of the joint LR from 
 <!-- BF_{AB}& =  BF_{A}\times BF^{'}_{B}  -->
  <!-- \end{align*} -->
 
+\raf{A: Verify if this is what you meant}
+
+## Individual likelihood exceeds the conjunction likelihood
 
 
+```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%"}
+source("../scripts/CptCreate.R")
+source("../scripts/kableCPTs.R")
+conjunctionDAG <- model2network("[a|A][b|B][AB|A:B][A][B|A]")
+# added missing values BifAs and BifnAs to the final table and run the simulation again -> with same seed 
+conjunctionTable2 <- readRDS(file = "../datasets/conjunctionTableAdditional.RDS")
+
+# LRAs > LRABs
+newdata <- subset(conjunctionTable2, LRAs > LRABs)
+one_row <- head(newdata, 1)
+
+As = one_row[1, "As"] 
+BifAs = one_row[1, "BifAs"]
+BifnAs = one_row[1, "BifnAs"]
+aifAs = one_row[1, "aifAs"]
+aifnAs = one_row[1, "aifnAs"]
+bifBs = one_row[1, "bifBs"]
+bifnBs = one_row[1, "bifnBs"]
+
+AProb <-prior.CPT("A","1","0",As)
+BProb <-  single.CPT("B","A","1","0","1","0",BifAs,BifnAs)
+aProb <- single.CPT("a","A","1","0","1","0",aifAs,aifnAs)
+bProb <- single.CPT("b","B","1","0","1","0",bifBs,bifnBs)
 
 
+ABProb <- array(c(1, 0, 0, 1, 0, 1, 0,1), 
+                dim = c(2, 2, 2),
+                dimnames = list(AB = c("1","0"),
+                                B = c("1","0"), 
+                                A = c("1","0")))
+
+
+conjunctionCPT <- list(A = AProb, B = BProb, 
+                       a = aProb, b = bProb, AB = ABProb)
+
+
+conjunctionBNL <- custom.fit(conjunctionDAG,conjunctionCPT)
+
+```
+
+\begin{table}[h]
+```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%"}
+CPkable2("conjunctionBNL","AB") %>%   
+                          kable_styling(latex_options=c("striped","HOLD_position")) 
+```
+\normalsize
+\caption{Conditional probability table for the individual likelihood above the conjunction.}
+\label{tab:CPTconjunctionBNL}
+\end{table}
 
 
 
