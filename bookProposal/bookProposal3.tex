@@ -57,8 +57,11 @@
 %\documentclass{article}
 
 % %packages
- \usepackage{booktabs}
- \usepackage[sort&compress]{natbib}
+\usepackage{booktabs}
+\usepackage[left]{showlabels}
+\usepackage{multirow}
+\usepackage{subcaption}
+
 \usepackage{graphicx}
 \usepackage{longtable}
 \usepackage{ragged2e}
@@ -68,11 +71,16 @@
 \usepackage[notextcomp]{kpfonts}
 \usepackage{nicefrac}
 \newcommand*{\QED}{\hfill \footnotesize {\sc Q.e.d.}}
-\usepackage{multicol} 
-%\usepackage[textsize=footnotesize]{todonotes}
-%\linespread{1.5}
+\usepackage{floatrow}
 
-\usepackage{xcolor}
+\usepackage[textsize=footnotesize]{todonotes}
+\newcommand{\ali}[1]{\todo[color=gray!40]{\textbf{Alicja:} #1}}
+\newcommand{\mar}[1]{\todo[color=blue!40]{#1}}
+\newcommand{\raf}[1]{\todo[color=olive!40]{#1}}
+
+%\linespread{1.5}
+\newcommand{\indep}{\!\perp \!\!\! \perp\!}
+
 
 \setlength{\parindent}{10pt}
 \setlength{\parskip}{1pt}
@@ -81,14 +89,13 @@
 %language
 %\usepackage{times}
 \usepackage{mathptmx}
-\usepackage[scaled=0.88]{helvet}
-
+\usepackage[scaled=0.86]{helvet}
 \usepackage{t1enc}
 %\usepackage[utf8x]{inputenc}
 %\usepackage[polish]{babel}
 %\usepackage{polski}
 
-\usepackage{subcaption}
+
 
 
 %AMS
@@ -96,9 +103,16 @@
 \usepackage{amssymb}
 \usepackage{amsthm}
 \usepackage{amsmath}
+\usepackage{mathtools}
 
-%\usepackage{geometry}
- %\geometry{a4paper,left=35mm,top=20mm,}
+\usepackage{geometry}
+ \geometry{a4paper,left=35mm,top=20mm,}
+
+
+%environments
+\newtheorem{fact}{Fact}
+
+
 
 %abbreviations
 \newcommand{\ra}{\rangle}
@@ -109,21 +123,76 @@
 \newcommand{\ko}[1]{\forall  #1\,}
 \newcommand{\ro}{\leftrightarrow}
 \newcommand{\exi}[1]{\exists\, {_{#1}}}
-\newcommand{\pr}{\mathsf{P}}
+\newcommand{\pr}[1]{\ensuremath{\mathsf{P}(#1)}}
+\newcommand{\cost}{\mathsf{cost}}
+\newcommand{\benefit}{\mathsf{benefit}}
+\newcommand{\ut}{\mathsf{ut}}
+
 \newcommand{\odds}{\mathsf{Odds}}
 \newcommand{\ind}{\mathsf{Ind}}
 \newcommand{\nf}[2]{\nicefrac{#1\,}{#2}}
 \newcommand{\R}[1]{\texttt{#1}}
+\newcommand{\prr}[1]{\mbox{$\mathtt{P}_{prior}(#1)$}}
+\newcommand{\prp}[1]{\mbox{$\mathtt{P}_{posterior}(#1)$}}
+
+
 
 \newtheorem{q}{\color{blue}Question}
+\newtheorem{lemma}{Lemma}
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}{Corollary}[fact]
 
 
-%% Rafal's stuff
-\usepackage[margin=1.5in,top=1in]{geometry}
-\usepackage[textsize=scriptsize, textwidth = 3cm]{todonotes}
-% This is my own comment shading, keep \todo for general stuff, feel free to define your own separate comment colors (usually useful if you use margin comments at tall) For instance, I defined one for Patrycja
-\newcommand{\rt}[1]{\todo[color = orange!40]{#1}}
-\newcommand{\pt}[1]{\todo[color = blue!40]{#1}}
+%technical intermezzo
+%---------------------
+
+\newcommand{\intermezzoa}{
+	\begin{minipage}[c]{13cm}
+	\begin{center}\rule{10cm}{0.4pt}
+
+
+
+	\tiny{\sc Optional Content Starts}
+	
+	\vspace{-1mm}
+	
+	\rule{10cm}{0.4pt}\end{center}
+	\end{minipage}\nopagebreak 
+	}
+
+
+\newcommand{\intermezzob}{\nopagebreak 
+	\begin{minipage}[c]{13cm}
+	\begin{center}\rule{10cm}{0.4pt}
+
+	\tiny{\sc Optional Content Ends}
+	
+	\vspace{-1mm}
+	
+	\rule{10cm}{0.4pt}\end{center}
+	\end{minipage}
+	}
+	
+	
+%--------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -149,6 +218,15 @@
 
 
 
+
+\usepackage[authoryear]{natbib}
+
+%\bibliographystyle{apalike}
+
+
+
+\usepackage{tikz}
+\usetikzlibrary{positioning,shapes,arrows}
 
 \ifluatex
   \usepackage{selnolig}  % disable illegal ligatures
@@ -351,16 +429,17 @@ terminology) is depicted below:
 
 Since the story node unifies the different parts of a story, changes in
 the probabilities of these parts can be used to model the notion of
-coherence. To model conflicts of evidence, a Bayesian network can be
-built that comprises two competing stories, say, one story put forward
-by the prosecution and another by the defense, each supported by their
-own evidence. The network would specify that these stories are
-incompatible and cannot be true concurrently. Another approach to model
-conflicting evidence and competing stories was developed by Norman
-Fenton and his research group. Separate stories are represented by
-separate Bayesian networks, and Bayesian model comparison is then used
-for assessing the comparative evidential support of the competing
-stories.
+coherence. The stronger the (positive) probabilistic dependence between
+the different parts, the more coherent the story. To model conflicts of
+evidence, a Bayesian network can be built that comprises two competing
+stories, say, one story put forward by the prosecution and another by
+the defense, each supported by their own evidence. The network would
+specify that these stories are incompatible and cannot be true
+concurrently. Another approach to model conflicting evidence and
+competing stories was developed by Norman Fenton and his research group.
+Separate stories are represented by separate Bayesian networks, and
+Bayesian model comparison is then used for assessing the comparative
+evidential support of the competing stories.
 
 \textbf{Chapter 7} focuses on Vlek's story node approach as an account
 of coherence. The chapter contains a critical argument followed by a
@@ -380,7 +459,7 @@ formal notion of `story coherence' that reflects properties of the
 Bayesian network used to model the evidence. We show that our formal
 notion of coherence addresses the objections against probabilistic
 accounts of coherence in the philosophical literature.
-\todo{M: ANYTHING ELSE TO DESCRIBE THE POSITIVE ACCOUNT?}
+\raf{M: ANYTHING ELSE TO DESCRIBE THE POSITIVE ACCOUNT?}
 
 \textbf{Chapter 8} focuses on conflicts between pieces of evidence.
 Neither Vlek's story node approch nor Fenton's model comparison approach
@@ -405,11 +484,11 @@ converging evidence, in particular, the fact that one piece of evidence
 corroborates another. Corroboration has been the focus of extensive
 scholarly debate often independently of the debates within legal
 probabilism. \textbf{Chapter 9} surveys the literature on corroboration
-and the main difficulties that have been levelled against proposed
+and the main difficulties that have been leveled against proposed
 probabilistic accounts. The chapter then formalizes a notion of
 corroboration using Bayesian networks that overcomes most of the
 difficulties of exisisting accounts.
-\todo{M: ANYTHING ELSE TO DESCRIBE THE POSITIVE ACCOUNT?}
+\raf{M: ANYTHING ELSE TO DESCRIBE THE POSITIVE ACCOUNT?}
 
 \textbf{Chapter 10} draws some general morals after comparing legal
 probabilism 1.02---as fomulated in the previous two chapters---to other
@@ -502,16 +581,13 @@ Dawid and the comparative strategy by Cheng. Our proposal follows the
 holistic approach by Allen and Pardo. As noted already, our working
 hypothesis is that the prosecution (or the plainitiff in a civil trial)
 should aim to establish a well-specified accusatory narrative whose
-moving parts are supported by adequate evidence. Once the prosecution
-has accomplished that---and its case withstands criticism---each element
-of the accusation is estalished to the required standard if and only if
-the conjunction of these elements (that is, the story as a whole) is
-estalished to the required standard. So long as legal probabilism can
-offer an account of evidenetial support that is sensitive to holistic
-notions such as coherence and specificity, as well as argument-based
-notions such as resistance to objections, legal probabilism can address
-the difficulty with conjunction.
-\todo{M: THIS MIGHT NEED SOME WORK. WHAT TO ADD?}
+moving parts are supported by adequate evidence. We show how legal
+probabilism can address the difficulty with conjunction so long as it
+can account for holistic notions such as coherence and specificity. Once
+the prosecution has accomplished that---and its case withstands
+criticism---each element of the accusation is established to the
+required standard if and only if the conjunction of these elements (that
+is, the story as a whole) is established to the required standard.
 
 \textbf{Chapter 14} compares our probabilistic account of
 decision-making and standards of proof to other accounts in the
@@ -524,104 +600,130 @@ plausibility (Allen and Pardo). The second criticism we make is that
 other accounts are engaged with what we might call `epistemology
 fetishism'---that is, they borrow ideas in contemporary analytic
 epistemology and force them onto legal-decision making. This criticism
-applies in particular to knowledge accounts of legal proof. But we might
-ourselves be accused of `probability fetishism'---that is, of
+applies in particular to knowledge accounts of legal proof. To be sure,
+we might ourselves be accused of `probability fetishism'---that is,
 unquestionably taking probability theory as a paradigm of rationality
-and force it onto legal-decision making. To be sure, there is no clear
-evidence that a probabilistic turn in legal decision-making would
-improve trial decisions. On the other hand, what it would mean to
-`improve' trial decision is unclear. A set of criteria are needed for
+and force it onto legal-decision making. Admittedly, there is no
+empirical evidence that a probabilistic turn in legal decision-making
+would improve trial decisions, if only because what it would mean to
+`improve' trial decisions is unclear. A set of criteria are needed for
 assessing the desired improvements. We tackle this normative question in
-the final part of the book and show how probability can help.
+the final part of the book and show how probability theory can be of
+service here.
 
 \vspace{3mm}
 
 \noindent \textbf{Part V - Accuracy and Fairness}
 
-\noindent Even if one did not agree that legal probabilism as we have
-articulated it is helpful for understanding evidence assessment and
-decision-making at trial, it can still play an analytic role. What
-values and objectives should trial decision seek to realize? How should
-these decisions be made so that they further these values and
-objectives? The fourth part of the book addresses these questions by
-focus on the accuracy and fairness of trial decisions.
+\noindent What values and objectives should trial decision seek to
+realize? How should these decisions be taken so that they further these
+values and objectives? The fourth part of the book addresses these
+questions by focusing on improving the accuracy and fairness of trial
+decisions.
 
-\textbf{Chapter 15} surveys different values and objectives that may
-inform the design of the trial system. We assume that the state has in
-principle an authority to inflict punishment and allocate monetary
-compensation, but explore what would strengthen or substantiate this
-authority. We survey the most common values and objectives that trial
-decisions should conform with: trial decisions should be accurate; they
-should be fair and not further existing inequalities in society; they
-should be accompanied by a justification that is public and subject to
-scrutiny; they should be reversible under appeal; they should contribute
-to further social cohesion, compliance and deterrence; they should be
-humane and respectful of people's dignity. We also explore to what
-extent these values and objectives may be in tension with one another
-and to what extent they can be subject to restrictions. For example,
-trial by jury, on one hand, allows for democratic participation in legal
-decisions, but also makes them less subject to public scrutiny. The
-subsequent chapters focus on two values and objectives: accuracy and
-fairness. We focus on them, not because the others are not important,
-but because we believe they are foundational for the others.
+As a preliminary step, \textbf{Chapter 15} surveys different values and
+objectives that may inform the design of the trial system. In response
+to criminal and civil wrongs, we assume that the state has, in
+principle, the authority to impose punishments onto people and decide
+about monetary compensations. Given this assumption, we survey the most
+common values and objectives that trial decisions should conform with:
+trial decisions should be accurate; they should be fair and not further
+existing inequalities in society; they should be accompanied by a
+justification that is public and subject to scrutiny; they should be
+reversible under appeal; they should contribute to further social
+cohesion, compliance and deterrence; they should be humane and
+respectful of people's dignity. We also explore to what extent these
+values and objectives may be in tension with one another and to what
+extent they can be subject to restrictions. The subsequent chapters
+focus on two values and objectives: accuracy and fairness. We focus on
+them, not because the others are not important, but because we believe
+they are foundational for the others.
 
 \textbf{Chapter 16} examines what it means for trial decisions to be
-accurate. There are different ways to understand accuracy in trial
-decisions. We first distinguish accuracy in the single instance and
-accuracy in the long run. Accuracy in the single instance is the
-conviction of a defendant that is factually guilty and the acquittal of
-a defendant that is factually innocent. A similar definition applies to
-civil liability. Some have objected to the notion of `factual guilt' on
-the ground that guilt a judgment made on the basis of evidence, not a
-state of affairs the exists objectively. We argue that this view
-needless deprives trial decision of a fundamental criterion of
-objectivity and legitimacy. We then turn to accuracy in the long run.
-Here is where the conception of probability is most useful. In the long
-run, accuracy can be understood as predictive or diagnostic. The former
-is the probability that, if the defendant is found (not) liable at
-trial, the defendant is actually (not) liable; the latter is the
-probability that if the defendant is (not) liable, the defendant would
-(not) be found liable at trial. The two notions are related but they are
-not equivalent. Distinguishing them has implications for how we should
+accurate and how accuracy can be promoted. There are different ways to
+understand accuracy in trial decisions. We first distinguish accuracy in
+the single instance and accuracy in the long run. Accuracy in the single
+instance consists in the conviction of a defendant that is factually
+guilty and the acquittal of a defendant that is factually innocent. A
+similar definition applies to civil liability. Some have criticized the
+notion of `factual guilt' on the ground that guilt is a judgment based
+on evidence, not a state of affairs the exists objectively. We argue
+that this view needlessly deprives trial decisions of objectivity and
+legitimacy. We then turn to accuracy in the long run. In the long run,
+accuracy can be understood as predictive or diagnostic. The former is
+the probability that, if the defendant is found (not) liable at trial,
+the defendant is actually (not) liable; the latter is the probability
+that if the defendant is (not) liable, the defendant would (not) be
+found liable at trial. The two notions are related but they are not
+equivalent. Distinguishing them has implications for how we should
 understand standards of proof. To this end, we ask whether the standard
 of proof as we defined in earlier chapters -- consisting of multiple
-criteria such as high probability of liability and narrative specificity
--- is in fact accuracy-promoting. We devise a computer simulation that
-compares two models of the standard of proof. On the first model, the
-standard of proof simply requires that the defendant's liability be
-established with a high probability. On the second model, the standard
-of proof requires, in addition to high probability, that the narrative
-presented by the prosecution or the plaintiff be reasonably specific. We
-compare the performance of the two models against long run accuracy,
-both in terms of predictive accuracy and diagnostic accuracy. While the
-first model prevails in terms of predictive accuracy, the second
-prevails in terms of diagnostic accuracy. We argue that diagnostic
-accuracy, rather than predictive accuracy, is the most adequate notion
-of accuracy for trial decisions. If this is correct, understanding the
-standard of proof as the combination of a `high probability' and
-`narrative specificity' would be a better---that is, more
-rational---model of the standard of proof.
+criteria such as high probability of liability, narrative specificity
+and resistance to objections -- is in fact accuracy-promoting. We devise
+a computer simulation that compares two models of the standard of proof.
+On the first model, the standard of proof simply requires that the
+defendant's liability be established with a high probability. On the
+second model, the standard of proof requires, in addition to high
+probability, that the narrative presented by the prosecution or the
+plaintiff be reasonably specific. We compare the performance of the two
+models against long run accuracy, both in terms of predictive accuracy
+and diagnostic accuracy. The first model prevails in terms of predictive
+accuracy, while the second prevails in terms of diagnostic accuracy. We
+argue that diagnostic accuracy, rather than predictive accuracy, is the
+most adequate notion of accuracy for trial decisions. If this is
+correct, understanding the standard of proof as the combination of a
+`high probability' and `narrative specificity' (as we have argued in
+earlier chapters) is a more rational model of the standard of proof.
 
-\todo{Does this make sense? Anythign to add or remove?}
+\raf{M: Does this make sense? Anythign to add or remove?}
 
-\textbf{Chapter 17} turns to the fairness of trial decisions. Another
-notion that can be further clarified through the lenses of probability
-theory is fairness. What does it means for trial decisions to be fair?
-The formalistic sense of fairness would require that every rules be
-applied to all participants in the same way. The more substantive sense
-of fairness would require that burdens (and benefits) be evenly
-distributed across different defendants. Substantive fairness can be
-understood as the requirement that all defendants be exposed to the same
-risk of mistaken conviction (or more precisely, that the conditional
-probability that a defedant, if innocent, would be convicted be the same
-across all defendants). Once this notion of substantive fairness is on
-the table, we can meaningfully debate whether certain types of evidence
-(and types of rules of procedure) are unfair, or whether, as some have
-argued, trial decisions are inevitably unfair because evidence is
-distributed unfairly via structural inequalities in society.
+Another notion that can be further clarified through the lenses of
+probability theory is fairness. \textbf{Chapter 17} turns to the
+fairness of trial decisions. What does it means for trial decisions to
+be fair? The formalistic sense of fairness would require that every
+rules be applied to all participants in the same way. The more
+substantive sense of fairness would require, for one thing, that trial
+defendants not be subject to excessive burdens, and for another thing,
+that burdens (as well as benefits) be evenly distributed across
+different defendants. Substantive fairness in the comparative sense can
+be understood as the requirement that all defendants be exposed to the
+same risk of mistaken conviction (or more precisely, that the
+conditional probability that a defendant, if innocent, would be
+convicted be the same across all defendants). With this notion of
+substantive fairness on the table, we can meaningfully debate whether
+certain types of evidence (and types of rules of procedure) are unfair,
+or whether, as some have argued, trial decisions are inevitably unfair
+because evidence is distributed unfairly via structural inequalities in
+society. We argue that admitting certain forms of evidence, specifically
+profile evidence and group-based generalizations, tends to burden
+certain groups of defendants more heavily than others, thus
+deteriorating the fairness of trial decisions. We also compare, via a
+computer simulation, different models of the standard of proof and
+examine which model is most conducive to fair decisions. We show that a
+standard of proof that incorporates multiple criteria---such as a high
+probability of liability; the specificity of the narrative; resistance
+to objections; and comprehensiveness of the evidence---allocates burdens
+and benefits more fairly across defendants than a standard of proof that
+that simply requires that the probability of liability be above a fixed
+threshold. Consequently, the multidimensional account of the standard of
+proof we have proposed fares well in light of normative criteria such as
+accuracy and fairness.
+\raf{M: Does this make sense? Anythign to add or remove?}
 
 \textbf{Chapter 18} draws some conclusions and points to open problems
-for legal probabilism. \todo{M: ANYTHING TO ADD HERE?}
+for legal probabilistic. We emphasize that our aim in the book is to
+show that legal probabilism is a richer and more flexible theory that it
+might seem at first. It is a theory that is able to incorporate insight
+from other, possibly rival theories. Besides furthering the academic
+debate, our contributions in `Boosting Legal Probabilism' can be used by
+legal practitioners and reformers who aim to better project defendants
+against wrongful convictions, limit the unfairness of trial decision,
+and improve their overall accuracy. We sketch how the theoretical
+findings can be implemented in the trial setting, but leave a more
+precise articulation of the challenges of implementation for future
+work.
+
+\raf{M: ANYTHING TO ADD HERE?}
 
 \todo{Question: don't we plan to have a chapter on the priors?}
 
@@ -852,15 +954,24 @@ Book}\label{outstanding-features-of-the-book}}
 
 \begin{itemize}
 \item
-  `Booosting Legal Probabilism' is the first comprehensive sustained
-  philosophical examination of legal probabilism and how it fares
-  against well-known objections.
+  `Booosting Legal Probabilism' is divided into different parts, each
+  tackling a distinct domain and level of analysis. The first half (PART
+  II and PART III) examines the correct probabilistic assessment of the
+  evidence. The second half examines decisions at trial. The discussion
+  of decision offers a probability-based explication of the standards of
+  proof that is theoretically plausible (PART IV). In addition, we also
+  provide a normative justification of the proposed theory based on its
+  performance in light of accuracy and fairness (PART V).
 \item
   The book is interdisciplinary. It closely engages with the literature
   in philosophy (see, for example, the discussion about coherence and
   corroboration) as well as literature outside philosophy in artificial
   intelligence and forensic science (see, for example, the discussion pf
   Vlek's story node approach and Fenton's everaging).
+\item
+  `Booosting Legal Probabilism' is the first comprehensive sustained
+  philosophical examination of legal probabilism and how it fares
+  against well-known objections.
 \item
   The analytical, theoretical argument in defense of legal probabilism
   is accompanied by an \textbf{\textsf{R}} code implementation. This
@@ -879,7 +990,7 @@ Book}\label{outstanding-features-of-the-book}}
   follow depending on their interests.
 \end{itemize}
 
-\todo{what else?}
+\raf{M: What else?}
 
 \hypertarget{apparatus}{%
 \subsection{Apparatus}\label{apparatus}}
@@ -887,14 +998,6 @@ Book}\label{outstanding-features-of-the-book}}
 \footnotesize a. Will the book include photographs, line drawings,
 cases, questions, problems, glossaries, bibliography, references,
 appendices, etc.?
-
-\vspace{2mm}
-
-\normalsize
-
-Yes, the book will contain various plots, either of Bayesian networks,
-or some other data visualisations generated by \texttt{ggplot2}. The
-book also will contain bibliography. \vspace{2mm}
 
 \footnotesize b. If the book is a text, do you plan to provide
 supplementary material to accompany it? (Teacher's manual, study guide,
@@ -904,8 +1007,17 @@ solutions, answers, workbook, anthology, or other material.)
 
 \normalsize
 
-The book will be accompanied by an online-only appendix detailing the
-use of the \texttt{R} code in the book and the source code we used.
+Besides the customary list of references at the end, the book will
+contain several graphs and plots, Bayesian networks, and other data
+visualizations generated via the \textbf{\textsf{R}} package
+\texttt{ggplot2} as is standard in publications in statistics and
+machine learning.
+
+Since computer simulations play an integral part in the argument, the
+book will be accompanied by supplementary materials available on-line.
+These materials will contain the \textbf{\textsf{R}} source code for the
+simulations along with tutorials for students or readers interested in
+learning the technical details.
 
 \hypertarget{competition}{%
 \subsection{Competition}\label{competition}}
@@ -972,6 +1084,8 @@ forensics
 \hypertarget{the-primary-market}{%
 \subsection{The Primary Market}\label{the-primary-market}}
 
+\footnotesize
+
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
 \item
@@ -989,6 +1103,38 @@ forensics
   associations, libraries, book or music stores?) For what type of
   reader is your book intended?
 \end{enumerate}
+
+\normalsize
+
+The target audience comprise scholars in various disciplines, primarily
+philosophers and legal theorists with an interest in epistemology,
+evidence and decision-making under uncertainty. Computer scientists and
+psychologists who work on similar topics will also be interested in
+reading the book.
+
+Selection of chapters from the book are suitable to be used as primary
+readings in advanced undergraduate courses or graduate seminar under
+titles such as Legal Probabilism, Legal Epistemology, Probability and
+the Law, Bayesian Epistemology, Bayesian Networks in Philosophy,
+Statistics in the Law, Math on Trial. We have ourselves taught such
+courses in the past and felt the need of a book such as ours. We believe
+other instructors have felt the same.
+
+We have already used some of the materials on which this book is based
+in graduate seminar, for example, in the seminar Bayesian Networks in
+the Philosophy that one of us taught at Arizona State in Spring 2021. We
+plan to use select chapters to teach graduate seminars and advanced
+undergraduate courses. By the time the book is published, we hope to
+have student-tested a significant portion of the book. This will improve
+its readability and presentation.
+
+To better reach our intended audience, we plan to present portions of
+the book at international conferences in the coming years. For example,
+we have been invited to an international conference in Girona, Spain on
+Evidence Law in Spring 2022. This conference gathers some of the leading
+scholars in law, philosophy, forensic science and psychology interested
+in topics at the intersection of law, evidence, probability and
+decision-making.
 
 \hypertarget{status-of-the-work}{%
 \section{Status of the Work}\label{status-of-the-work}}
