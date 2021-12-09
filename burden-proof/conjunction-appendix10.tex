@@ -1,15 +1,20 @@
 % Options for packages loaded elsewhere
 \PassOptionsToPackage{unicode}{hyperref}
 \PassOptionsToPackage{hyphens}{url}
-\PassOptionsToPackage{dvipsnames,svgnames*,x11names*}{xcolor}
+\PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
 %
 \documentclass[
   10pt,
   dvipsnames,enabledeprecatedfontcommands]{scrartcl}
+\title{Appendix: Bayes factor, likelihood ratio, and the difficulty
+about conjunction}
+\author{Marcello Di Bello and Rafal Urbaniak}
+\date{}
+
 \usepackage{amsmath,amssymb}
 \usepackage{lmodern}
-\usepackage{ifxetex,ifluatex}
-\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+\usepackage{iftex}
+\ifPDFTeX
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
   \usepackage{textcomp} % provide euro and other symbols
@@ -28,13 +33,13 @@
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
 \IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
 \hypersetup{
-  pdftitle={Appendix: confirmation measures and the difficulty about conjunction},
+  pdftitle={Appendix: Bayes factor, likelihood ratio, and the difficulty about conjunction},
   pdfauthor={Marcello Di Bello and Rafal Urbaniak},
   colorlinks=true,
-  linkcolor=Maroon,
-  filecolor=Maroon,
-  citecolor=Blue,
-  urlcolor=blue,
+  linkcolor={Maroon},
+  filecolor={Maroon},
+  citecolor={Blue},
+  urlcolor={blue},
   pdfcreator={LaTeX via pandoc}}
 \urlstyle{same} % disable monospaced font for URLs
 \usepackage{graphicx}
@@ -58,7 +63,7 @@
 
 % %packages
 \usepackage{booktabs}
-\usepackage[left]{showlabels}
+%\usepackage[left]{showlabels}
 \usepackage{multirow}
 \usepackage{subcaption}
 
@@ -242,21 +247,60 @@
 \usepackage[normalem]{ulem}
 \usepackage{makecell}
 \usepackage{xcolor}
-\ifluatex
+\ifLuaTeX
   \usepackage{selnolig}  % disable illegal ligatures
 \fi
-
-\title{Appendix: confirmation measures and the difficulty about
-conjunction}
-\author{Marcello Di Bello and Rafal Urbaniak}
-\date{}
 
 \begin{document}
 \maketitle
 
-\tableofcontents
+In this appendix we take a closer look at the behavior of the Bayes
+factor and the likelihood ratio with respect to the conjunction problem.
+First, we describe the \textsf{DAG}s at play: one of them represents a
+conjunction when the hypotheses are independent, and the other one drops
+this independence assumptions. We then discuss the relation between
+\textsf{DAG}s and independence, and introduce the independencies in the
+proofs used later on.
 
-\todo{paragraph of flow}
+Then we turn to the Bayes factor. First we prove that for if the
+stronger independence assumptions hold, the joint Bayes factor is just
+the result of multiplying the individual Bayes factors. It follows that
+aggregation is satisfied in such cases, if individual Bayes factors are
+greater than one. Once the hypotheses are not independent, a weaker
+result can be obtained, which entails that the aggregation is satisfied
+for the Bayes factor, if a certain additional constraint is satisfied.
+
+We investigate simulations based on the first \textsf{DAG}: in general,
+aggregation fails 25\% of the time if the individual Bayes factors are
+not constrained to be greater than one, but holds once this constraint
+is added. Switching to the second \textsf{DAG} does not change the
+picture, and so the question of whether the additional constraint needed
+for the weaker theorem holds in all Bayesian networks based on this
+\textsf{DAG}. Inspired by this observation, we show that in fact the
+additional constraint needed for aggregation to hold falls out of a pair
+of other independencies entailed by the second \textsf{DAG}. Finally,
+what the simulation reveal is that there is a large class of cases in
+which individual Bayes factors are above one, aggregation is satisfied,
+but distribution fails.
+
+Finally, we turn to the likelihood ratio. Since the analytic approach is
+less feasible here, we approach Bayesian networks based on the simpler
+\textsf{DAG} analytically, but rely on simulations for cases in which
+the hypotheses are not assumed to be independent. Without any constraint
+on individual likelihood ratios, aggregation fails in 12.5\% cases
+(twice less often than aggregation for the Bayes factor). Another
+difference was that while the joint Bayes factor in cases with positive
+individual Bayes factor was always not less than the larger of the
+individual factors, now around 70\% of joint likelihood ratios falls
+between the individual ratios, and is no lower than the smaller of these
+(if the individual likelihood ratios are assumed to be greater than
+one). Thus, aggregation is satisfied, but it no longer holds that the
+joint support is greater than any of the individual support levels.
+Still, distribution fails in a large class of cases.
+
+The \textsf{\textbf{R}} code we used in the simulations, calculations
+and visualizations is made available on the book website {[}LINK TO
+DOCUMENTATION TO BE ADDED LATER{]}.
 
 \hypertarget{bayesian-networks-and-probabilistic-independence}{%
 \subsection*{Bayesian networks and probabilistic
@@ -363,32 +407,36 @@ such that either:
 
 \vspace{1mm}
 
+\noindent These types of connections are visualized in Figure
+\ref{fig:connectionsBN}.
+
+\ali{R: I fixed this, for future reference: to make them fit in a row play with textwidth ratio, to improve visibility tweak fig width and height and radius.}
+
 \begin{figure}[H]
-\hspace{2mm}\scalebox{1}{\begin{subfigure}[!ht]{0.35\textwidth}
+\hspace{2mm}\begin{subfigure}[!ht]{0.25\textwidth}
 
 \begin{center}\includegraphics[width=1\linewidth]{conjunction-appendix10_files/figure-latex/unnamed-chunk-7-1} \end{center}
-\subcaption{\textsf{serial}}
-\end{subfigure}} 
-\hspace{5mm}\begin{subfigure}[!ht]{0.35\textwidth}
+\subcaption{\textsf{Pipe}}
+\end{subfigure} 
+\hspace{5mm}\scalebox{1}{\begin{subfigure}[!ht]{0.32\textwidth}
 \vspace{1mm}
 
 \begin{center}\includegraphics[width=1\linewidth]{conjunction-appendix10_files/figure-latex/unnamed-chunk-8-1} \end{center}
-\subcaption{\textsf{diverging}}
-\end{subfigure}
-\hspace{5mm}\begin{subfigure}[!ht]{0.35\textwidth}
+\subcaption{\textsf{Fork}}
+\end{subfigure}}
+\hspace{5mm}\scalebox{1}{\begin{subfigure}[!ht]{0.32\textwidth}
 \vspace{1mm}
 
 \begin{center}\includegraphics[width=1\linewidth]{conjunction-appendix10_files/figure-latex/unnamed-chunk-9-1} \end{center}
-\subcaption{\textsf{converging}}
-\end{subfigure}
-
+\subcaption{\textsf{Collider}}
+\end{subfigure}}
 \normalsize
-\caption{Three dags to visualize connections.}
+\caption{Three basic types of connections.}
 \label{fig:connectionsBN}
 \end{figure}
 
-Finally, two sets of nodes, \(\mathsf{X}\) and \(\mathsf{Y}\), are
-d-separated given \(\mathsf{Z}\) if every node in \(\mathsf{X}\) is
+\noindent Finally, two sets of nodes, \(\mathsf{X}\) and \(\mathsf{Y}\),
+are d-separated given \(\mathsf{Z}\) if every node in \(\mathsf{X}\) is
 d-separated from every node in \(\mathsf{Y}\) given \(\mathsf{Z}\). With
 serial connection, for instance, if:
 
@@ -484,8 +532,6 @@ $\,\, a    \indep_d\,\, b$    & $a  \indep_d\,\,  b \vert  A $ \\
 \caption{Some of d-separations entailed by \textsf{DAG1} and \textsf{DAG2} in the conjunction problem. One minimal testable implication (with the smallest possible conditioning set) is returned per missing edge of the graph.} 
 \label{tab:indepBNS}
 \end{table}
-
-\todo{Refer to the code}
 
 In what follows, however, we will sometimes use a finer level of
 granularity, being very explicit on what independence assumptions are
@@ -692,19 +738,21 @@ different hypotheses, intuitively, is not expected to be as strong.
 \subsection*{Bayes factor: simulations}\label{bayes-factor-simulations}}
 \addcontentsline{toc}{subsection}{Bayes factor: simulations}
 
-First, let's look at simulations based on \textsf{DAG1}. We can
-illustrate the distribution of Bayes factors in the two separate
-scenarios used as assumptions of the above corollaries.
+First, let's look at simulations based on \textsf{DAG1} (Figure
+\ref{fig:DAG1BF}). We can illustrate the distribution of Bayes factors
+in the two separate scenarios used as assumptions of the above
+corollaries.
 
 \vspace{1mm}
 \footnotesize
 
 \normalsize
 
-\begin{figure}[ht]
+\begin{figure}
 
 \begin{center}\includegraphics[width=1\linewidth]{conjunction-appendix10_files/figure-latex/BFind-1} \end{center}
 \caption{Distances of the joint Bayes factor from maxima and minima of individual Bayes factors, depending on whether the individual support levels are both positive or both negative. Simulation based on 100k Bayesian networks build over the DAG of \textsf{DAG1}.}
+\label{fig:DAG1BF}
 \end{figure}
 
 For the DAG corresponding to \textsf{DAG1}, the simulated frequency of
@@ -722,17 +770,18 @@ is visualized in Figure \ref{fig:BFfails}.
 The picture doesn't change when we move to \textsf{DAG2} (Figure
 \ref{fig:BFind2}). One reason this is interesting is that this suggests
 that the additional assumption we used in the proof of Corollary
-\ref{cor:BFweaker} was not needed. We have failed to derive the claim
-without it, though. What does change, however, is that the joint BF is
-no longer the result of multiplying the individual BFs. Nevertheless,
-the values are fairly close (Figure \ref{fig:BFmulti}).
+\ref{cor:BFweaker} was not needed. We will take a closer look at this
+issue soon.\\
+What does change, however, is that the joint BF is no longer the result
+of multiplying the individual BFs. Nevertheless, the values are fairly
+close (Figure \ref{fig:BFmulti}).
 
 \vspace{1mm}
 \footnotesize
 
 \normalsize
 
-\begin{figure}[ht]
+\begin{figure}
 
 \begin{center}\includegraphics[width=1\linewidth]{conjunction-appendix10_files/figure-latex/BFind2-1} \end{center}
 
@@ -740,7 +789,7 @@ the values are fairly close (Figure \ref{fig:BFmulti}).
 \label{fig:BFind2}
 \end{figure}
 
-\begin{figure}[ht]
+\begin{figure}
 
 \begin{center}\includegraphics[width=1\linewidth]{conjunction-appendix10_files/figure-latex/unnamed-chunk-13-1} \end{center}
 \caption{In DAG2, the result of multiplying individual BFs does not equal the joing BF, but often is a good approximation thereof.}
@@ -1015,34 +1064,72 @@ of the individual likelihood ratios (Figures \ref{fig:LRabovePlot} and
 \label{fig:LRabovePlotDep}
 \end{figure}
 
-\raf{A: Verify if this is what you meant}
+\ali{setup was nice, didn't use the >1 restriction, didn't built counterexample for both, and displayed the wrong tables. :)}
 
-\hypertarget{individual-likelihood-exceeds-the-conjunction-likelihood}{%
-\subsection{Individual likelihood exceeds the conjunction
-likelihood}\label{individual-likelihood-exceeds-the-conjunction-likelihood}}
+Here's an example of one of many \textsf{BNs} in which an individual
+likelihood exceeds the joint likelihood.
 
-\begin{table}[h]
+\begin{figure}
+\hspace{2mm}\scalebox{1}{\begin{subfigure}[!ht]{0.45\textwidth}
 \begin{table}[H]
 \centering
-\begin{tabular}{lllr}
+\begin{tabular}{lr}
 \toprule
-\multicolumn{1}{c}{} & \multicolumn{1}{c}{A} & \multicolumn{1}{c}{B} & \multicolumn{1}{c}{} \\
-AB &  &  & Pr\\
+A & Pr\\
 \midrule
-\cellcolor{gray!6}{1} & \cellcolor{gray!6}{1} & \cellcolor{gray!6}{1} & \cellcolor{gray!6}{1}\\
-0 & 1 & 1 & 0\\
-\cellcolor{gray!6}{1} & \cellcolor{gray!6}{0} & \cellcolor{gray!6}{1} & \cellcolor{gray!6}{0}\\
-0 & 0 & 1 & 1\\
-\cellcolor{gray!6}{1} & \cellcolor{gray!6}{1} & \cellcolor{gray!6}{0} & \cellcolor{gray!6}{0}\\
-0 & 1 & 0 & 1\\
-\cellcolor{gray!6}{1} & \cellcolor{gray!6}{0} & \cellcolor{gray!6}{0} & \cellcolor{gray!6}{0}\\
-0 & 0 & 0 & 1\\
+\cellcolor{gray!6}{1} & \cellcolor{gray!6}{0.288}\\
+0 & 0.712\\
 \bottomrule
 \end{tabular}
 \end{table}
-\normalsize
-\caption{Conditional probability table for the individual likelihood above the conjunction.}
-\label{tab:CPTconjunctionBNL}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lrr}
+\toprule
+\multicolumn{1}{c}{B} & \multicolumn{2}{c}{A} \\
+  & 1 & 0\\
+\midrule
+\cellcolor{gray!6}{1} & \cellcolor{gray!6}{0.788} & \cellcolor{gray!6}{0.409}\\
+0 & 0.212 & 0.591\\
+\bottomrule
+\end{tabular}
 \end{table}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lrr}
+\toprule
+\multicolumn{1}{c}{a} & \multicolumn{2}{c}{A} \\
+  & 1 & 0\\
+\midrule
+\cellcolor{gray!6}{1} & \cellcolor{gray!6}{0.883} & \cellcolor{gray!6}{0.94}\\
+0 & 0.117 & 0.06\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lrr}
+\toprule
+\multicolumn{1}{c}{b} & \multicolumn{2}{c}{B} \\
+  & 1 & 0\\
+\midrule
+\cellcolor{gray!6}{1} & \cellcolor{gray!6}{0.046} & \cellcolor{gray!6}{0.528}\\
+0 & 0.954 & 0.472\\
+\bottomrule
+\end{tabular}
+\end{table}
+\subcaption{\textsf{Conditional probabilities (the one for \textsf{AB} does not change).}}
+\end{subfigure}} 
+\hspace{5mm}\scalebox{1}{\begin{subfigure}[!ht]{0.45\textwidth}
+
+\begin{center}\includegraphics[width=1\linewidth]{conjunction-appendix10_files/figure-latex/unnamed-chunk-24-1} \end{center}
+\subcaption{Marginal probabilities. }
+\end{subfigure}} 
+\caption{A counterexample to distribution. $LR_A  \approx 2.11$, $LR_B \approx 1.183$,  $LR_{AB} \approx 1.319$. $BF_A \approx  1.06, BF_B \approx  1.076, BF_{AB}\approx   1.14$}.
+\label{tab:CPTconjunctionBNL}
+\end{figure}
 
 \end{document}
