@@ -1,3 +1,6 @@
+library(tidyverse)
+
+
 conjunctionTable2B <-  readRDS(file = "datasets/conjunctionTable2Braf.RDS")
 conjunctionTable2B$maxBF <- pmax(conjunctionTable2B$BFAs, conjunctionTable2B$BFBs)
 conjunctionTable2B$minBF <- pmin(conjunctionTable2B$BFAs, conjunctionTable2B$BFBs)
@@ -13,9 +16,23 @@ conjunctionTable2B$LRdifsMin <- conjunctionTable2B$LRABs - conjunctionTable2B$mi
 head(conjunctionTable2B)
 
 
+conjunctionPositiveBforA <- conjunctionTable2B %>% filter (BFAs >1)
+
+head(conjunctionPositiveBforA)
+
+mean(conjunctionPositiveBforA$LRAs > 1)
+
+
+mean(conjunctionPositiveBforA$as >= conjunctionPositiveBforA$aifnAs)
+
+
+
 
 conjunctionPositiveB <- conjunctionTable2B %>% filter (BFAs >1 & BFBs >1)
 attach(conjunctionTable2B)
+
+
+conjunctionPositiveB$
 
 
 
@@ -56,6 +73,8 @@ mean(conjunctionPositiveB$BFABs >= conjunctionPositiveB$BFBs)
 
 
 
+
+
 #assumptions of second corollary fail
 mean(BFAprimes  >= BFAs)
 mean(BFBprimes  >= BFBs)
@@ -63,14 +82,24 @@ mean(conjunctionPositiveB$BFAprimes >= conjunctionPositiveB$BFAs)
 mean(conjunctionPositiveB$BFBprimes >= conjunctionPositiveB$BFBs)
 
 
+
+P(a|b) ≤ P(a|A)
+
+mean(conjunctionPositiveB$aifbs < conjunctionPositiveB$aifAs)
+mean(conjunctionPositiveB$bifas < conjunctionPositiveB$bifBs)
+
+
+
 #assumptions of the first corollary fail, no impact of BFAs
 mean(aifbs <= as)
-mean(conjunctionPositiveB$aifbs <= conjunctionPositiveB$as)
+mean(conjunctionPositiveB$aifbs > conjunctionPositiveB$as)
 
-mean(bifas <= bs)
-mean(conjunctionPositiveB$bifas <= conjunctionPositiveB$bs)
+mean(bifas > bs)
+mean(conjunctionPositiveB$bifas > conjunctionPositiveB$bs)
 
-mean(conjunctionPositiveB$bifas <= conjunctionPositiveB$bs | conjunctionPositiveB$aifbs <= conjunctionPositiveB$as)
+mean(conjunctionPositiveB$bifas > conjunctionPositiveB$bs | conjunctionPositiveB$aifbs > conjunctionPositiveB$as)
+
+
 
 #bow about BFBprimes <1?
 
@@ -79,12 +108,85 @@ mean(conjunctionPositiveB$BFBprimes >= 1)
 
 mean(BFAprimes >= 1)
 mean(conjunctionPositiveB$BFAprimes >= 1)
+mean(conjunctionPositiveB$BFAprimes >= 1)
+
+ggplot(conjunctionPositiveB, aes(y = BFAprimes, x = BFAs))+geom_point(size = 0.4)+xlim(c(0,30))+ylim(c(0,30))
+
+ggplot(conjunctionTable2B, aes(y = BFAprimes, x = BFAs))+geom_point(size = 0.4)+xlim(c(0,20))+ylim(c(0,20))
+
+lmbf <- lm(BFAprimes ~ BFAs, data = conjunctionTable2B)
+cor(BFAprimes,BFAs)
+
+
+mult <- BFAs *BFBs
+
+lmbf2 <- lm(BFABs ~ mult, data = conjunctionTable2B)
+cor.test(BFABs,mult)
+
+
+
+
+summary(lmbf)
+
+mean(conjunctionPositiveB$aifAs >= conjunctionPositiveB$as)
+mean(conjunctionPositiveB$aifAs >= conjunctionPositiveB$aifbs)
+
+ggplot(conjunctionPositiveB, aes(y = aifAs, x = aifbs))+geom_point(size = 0.1)
+
+mean(conjunctionPositiveB$as >=  conjunctionPositiveB$aifbs )
+
+ggplot(conjunctionPositiveB, aes(y = aifbs, x = as))+geom_point(size = 0.1)
+
+mean(conjunctionPositiveB$as >=  conjunctionPositiveB$aifbs | conjunctionPositiveB$bs >=  conjunctionPositiveB$bifas)
+
+ggplot(conjunctionPositiveB, aes(x = aifbs))+geom_histogram()
+ggplot(conjunctionPositiveB, aes(x = as))+geom_histogram()
+
+ggplot(conjunctionPositiveB, aes(y = aifAs, x = aifbs))+geom_point(size = 0.1)
+
+
+mean(conjunctionPositiveB$aifAs >=  conjunctionPositiveB$aifbs )
+
+
+
+aA <- conjunctionPositiveB$aifAs
+Ab <- conjunctionPositiveB$Aifbs
+
+left <- aA   * Ab
+
+colnames(conjunctionPositiveB)
+
+anA <- conjunctionPositiveB$aifnAs
+nAb <- 1 - conjunctionPositiveB$As
+
+right <- anA * nA
+
+
+ggplot()+geom_histogram(aes(x = left))
+ggplot()+geom_histogram(aes(x = right))
+
+mean(left < aA)
+
+sum <- left + right
+
+mean(sum  ==  conjunctionPositiveB$aifbs )
+
+
+
+
 
 #does the multiplicative result hold?
 
 mean(round(BFABs,2) == round(BFAs * BFBprimes,2))
 
 mean(round(BFABs,2) == round(BFBs * BFAprimes,2))
+
+
+
+
+
+
+
 
 
 set.seed(109)
@@ -109,7 +211,9 @@ ggplot(conjunctionPositiveB, aes(y = BFABs, x = BFAs))+geom_point(size = 0.1)
 
 
 
+## Marcello's questions
 
+conjunctionTable2B %>% filter( BFAs > 1 & BFBs >1 & AifBs)
 
 
 

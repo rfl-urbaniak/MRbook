@@ -106,8 +106,8 @@ for(i in 1:n){
   BFAs[i] <- aifAs[i]/as[i]
   BFBs[i] <- bifBs[i]/bs[i]
   
-  BFAprimes[i] <- aifAs[i]/aifbs
-  BFBprimes[i] <- bifBs[i]/bifas
+  BFAprimes[i] <- aifAs[i]/aifbs[i]
+  BFBprimes[i] <- bifBs[i]/bifas[i]
   
   BFABs[i] <- abifABs[i]/abs[i]
   

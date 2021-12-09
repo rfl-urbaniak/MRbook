@@ -40,6 +40,8 @@ library(tidyverse)
 \tableofcontents
 
 
+\todo{paragraph of flow}
+
 ## Bayesian networks and probabilistic independence {-}
 
 One assumption often made in the formulation 
@@ -242,6 +244,7 @@ $\,\, a    \indep_d\,\, b$    & $a  \indep_d\,\,  b \vert  A $ \\
 \label{tab:indepBNS}
 \end{table}
 
+\todo{Refer to the code}
 In what follows, however, we will sometimes use a finer level of granularity, being very explicit on what independence assumptions are used in the derivations. In such contexts, we will be talking about states rather than nodes, and so when we present the derivation, \mbox{$b\indep A \et a \vert \n B$} is a claim about events (or propositions) means  the same as  $\pr{b = 1 \vert B = 0}   = \pr{b = 1 \vert A = 1, a = 1, B = 0}$. This distinction matters, as, first,  independence conditional on $B= 0$ doesn't entail independence given $B=1$ (for instance, your final grade might depend on how hard you work if the teacher is fair, but this might fail if the teacher is not fair), and, second, sometimes only some of the independencies entailed by a Bayesian network will be actually required for a given claim to hold, and we want to be explicit about such cases. We hope this slight ambiguity in notation will cause no confusion, as whether we talk about nodes or events will be clear from the context.  So, moving to events, here is a list of independence claims used in the arguments that follow.  We also marked whether they are entailed by the DAG under consideration.
 
 \begin{align} A\indep B  \label{eq:indAB}     &\hspace{2cm}\mbox{\footnotesize DAG1}\\
@@ -250,6 +253,7 @@ A \indep b \vert a   \label{eq:I1}    &\hspace{2cm}\mbox{\footnotesize DAG1} \\
 B \indep a \et A \vert b \label{eq:I2}&\hspace{2cm}\mbox{\footnotesize DAG1 } \\
 a\indep b \vert A\et B \label{eq:I3}  &\hspace{2cm}\mbox{\footnotesize DAG1 , DAG2} \\  
 a\indep b \vert A \label{eq:I3a}   &\hspace{2cm}\mbox{\footnotesize DAG1 , DAG2} \\ 
+a\indep b \vert \n A \label{eq:I3b}   &\hspace{2cm}\mbox{\footnotesize DAG1 , DAG2} \\ 
 a\indep B \vert A \label{eq:I4}    & \hspace{2cm}\mbox{\footnotesize DAG1 , DAG2} \\
 a\indep B \vert \n A \label{eq:I4a}    & \hspace{2cm}\mbox{\footnotesize DAG1 , DAG2} \\
 a\indep \n B \vert A \label{eq:I4b}   & \hspace{2cm}\mbox{\footnotesize DAG1 , DAG2} \\
@@ -321,7 +325,7 @@ $BF_{AB} = BF_A \times BF_B$. \label{fac:BFindep}
 
 This fact has the following straigthforward consequences which simply follow from the simple fact that if $a = b \times c$ and $b, c>1$, then $a > \mathsf{max}(b,c)$ and that if $b, c<1$, then $a < \mathsf{min}(b,c)$.
 
-\begin{corollary} If the independence assumptions \eqref{eq:indAB}, \eqref{eq:indab}, \eqref{eq:I4} and \eqref{eq:I5} hold, and $BF_{A}$ and $BF_{B}$ are both greater than 1, then $BF_{AB}$ is greater than one. In fact,  $BF_{AB}$ is then greater than both  $BF_{A}$ and $BF_{B}$. \label{cor:BFind2}
+\begin{corollary} If the independence assumptions \eqref{eq:indAB}, \eqref{eq:indab}, \eqref{eq:I4} and \eqref{eq:I5} hold, and $BF_{A}$ and $BF_{B}$ are both greater than 1, then $BF_{AB}$ is greater than one. In fact,  $BF_{AB}$ is then greater than  $\mathsf{max}(BF_{A},BF_{B})$. \label{cor:BFind2}
 \end{corollary}
 
 
@@ -338,7 +342,7 @@ BF^{'}_{B} & = \frac{\pr{b \vert B}}{\pr{b\vert a}} \\
 BF^{'}_{A} & = \frac{\pr{a \vert A}}{\pr{a \vert b}}
 \end{align*}
 
-\begin{fact} If \eqref{eq:I4} and \eqref{eq:I5}  hold, then $BF_{AB} =  BF_{A}\times BF^{'}_{B}  = BF_{B} \times BF^{'}_{A}$. \label{fac:BFdep}
+\begin{fact} If \eqref{eq:I4} and \eqref{eq:I5}  hold (and they do in BNs based on \textsf{DAG 2}), then $BF_{AB} =  BF_{A}\times BF^{'}_{B}  = BF_{B} \times BF^{'}_{A}$. \label{fac:BFdep}
 \end{fact}
 
 
@@ -402,7 +406,7 @@ Then if both $\pr{a\vert b} \leq \pr{a \vert A}$ and \linebreak  $\pr{b \vert a}
 \begin{proof}
 Assume the first conjunct holds. Then $\frac{\pr{a\vert A}}{\pr{a\vert b}} \geq 1$ and so:
 \begin{align*}
-BF^{'}_{AB} &= BF^{'}_{A} \times BF_{B} \geq BF_{B}
+BF_{AB} &= BF^{'}_{A} \times BF_{B} \geq BF_{B}
 \end{align*}
 \noindent The argument for the other comparison is analogous.
 \end{proof}
@@ -556,9 +560,8 @@ So do the assumptions of Corollary \ref{cor:BFweaker2}: $\pr{a \vert b } > \pr {
 It is not generally the case in \textsf{DAG 2} that $BF^{'}_{A} \geq BF_{A}$ or $BF^{'}_{B} \geq BF_{B}$. So what validates the results?
 
 
-\mar{R: I spent quite some time trying to prove this falls out of the setup, I checked the assumptions in the simulations though, give it a try!}
 What does in fact hold in all \textsf{BNs} build on \textsf{DAG 2}, however, is 
- the assumptions of  Corollary \ref{cor:BFweaker2}: it falls out of the \textsf{DAG 2} setup and the assumption that the individual Bayes factor is greater than 1 (this assumption is essential, the claim fails without it) that  $\pr{a \vert b} \leq \pr{a \vert A}$ and $\pr{b \vert a} \leq \pr{b \vert B}$, and so, still both $BF^{'}_{A}$ and $BF^{'}_{B}$ are above one if the individual Bayes factors are above one, even though the former might be lower the latter (respectively). 
+ the assumptions of  Corollary \ref{cor:BFweaker2}: it falls out of the \textsf{DAG 2} setup and the assumption that the individual Bayes factor is greater than 1 (this assumption is essential, the claim fails without it) that  $\pr{a \vert b} \leq \pr{a \vert A}$ and $\pr{b \vert a} \leq \pr{b \vert B}$, and so, still both $BF^{'}_{A}$ and $BF^{'}_{B}$ are above one if the individual Bayes factors are above one, even though the former might be lower the latter (respectively).  We will turn to proving this very soon.
  
  
 
@@ -605,7 +608,73 @@ annotate_figure(plotBFDistrJoint, top = text_grob("Distribution failures for BF"
 
 
 
+##  Corollary \ref{cor:BFweaker2} and \textsf{DAG 2} {-}
 
+\ali{R: this subsection is new, check statements and proofs in detail.}
+\mar{R: this subsection is new, check statements and proofs in detail.}
+
+
+Let us start with the following lemma.
+
+\begin{lemma} For any probabilistic measure $\mathsf{P}$, if $BF_A >1$, then $LR_A>1$.\label{lem:BFLR}
+\end{lemma}
+
+
+\begin{proof} We start with our assumption.
+
+
+\begin{align*}
+1 & \leq \frac{\pr{a \vert A}}{\pr{a}} & &  \,\, (BF_A \geq 1) \\
+\pr{A} & \leq  \frac{\pr{a \vert A}}{\pr{a}} \pr{A} & & (\mbox{algebraic manipulation}) \\
+\pr{A} & \leq \pr{A \vert a} & &  (\mbox{Bayes' theorem})  \\
+- \pr{A} &\geq - \pr{A \vert a} &  &   (\mbox{algebraic manipulation}) \\
+1- \pr{A} & \geq 1 - \pr{A \vert a} & & (\mbox{algebraic manipulation})\\
+1- \pr{A}  & \geq \pr{\n A \vert a} & & (\mbox{algebraic manipulation})\\
+\pr{a}\left( 1 - \pr{A}\right) & \geq \pr{a}\pr{\n A \vert a}  & & (\mbox{algebraic manipulation})\\
+\pr{a} & \geq \frac{\pr{a} \pr{\n A \vert a}}{\pr{\n A}} &  & (\mbox{algebraic manipulation, negation}) \\
+\pr{a} & \geq \pr{a \vert \n A}  & &   (\mbox{conditional probability}) \\
+\end{align*}
+From this and our assumption  that $\pr{a \vert A} \geq \pr{a}$ it follows that $\pr{a \vert A}\geq \pr{a \vert \n A}$, that is, that \mbox{$LR_A \geq 1$}.
+\end{proof}
+
+
+
+Now the main claim. 
+
+\begin{fact}
+For any probabilistic measure $\mathsf{P}$ appropriate for \textsf{DAG 2}, if $BF_A >1$, then $\pr{a \vert A} \geq \pr{a \vert b}$.
+\end{fact}
+
+
+\begin{proof}
+
+First, we have:
+\begin{align*}
+\pr{a \vert b} & = \pr{a \et A \vert b} + \pr{a \et \n A \vert b} & &   (\mbox{total probability}) \\
+& = \underbrace{\pr{a \vert b \et A}}_{\pr{a \vert A}  \mbox{\footnotesize \, by \eqref{eq:I3a}}} \pr{A \vert b} +
+\underbrace{\pr{a \vert b \et \n A}}_{\pr{a \vert \n A} \mbox{\footnotesize \, by \eqref{eq:I3b}}}\pr{\n A \vert b}  & &   (\mbox{chain rule}) \\
+\end{align*}
+
+Now let's introduce some abbreviations:
+\begin{align*}
+& = \underbrace{\pr{a\vert A}}_k \underbrace{\pr{A \vert b}}_x + \underbrace{\pr{a \vert \n A}}_t \underbrace{\pr{\n A \vert b}}_{(1- x)}
+\end{align*}
+
+\noindent Note that the assumption that $BF_A\geq 1$ entails, by Lemma \ref{lem:BFLR}, that $k \geq t$, and so $k-t \geq 0$. Also, since $x$ is a probability, we know $0 \leq x \leq 1$. This allows us to reason algebraically as follows:
+
+\begin{align*}
+k & \geq k  \\
+k & \geq t + (k - t) \\
+k & \geq t + (k -t)x \\
+k & \geq kx + t  - tx \\
+\pr{a \vert A} = k & \geq kx + t(1-x) = \pr{a \vert b}
+\end{align*}
+\noindent This completes the proof. 
+\end{proof}
+
+
+
+<!-- : it falls out of the \textsf{DAG 2} setup and the assumption that the individual Bayes factor is greater than 1 (this assumption is essential, the claim fails without it) that  $\pr{a \vert b} \leq \pr{a \vert A}$ and $\pr{b \vert a} \leq \pr{b \vert B}$, and so, still both $BF^{'}_{A}$ and $BF^{'}_{B}$ -->
 
 
 
