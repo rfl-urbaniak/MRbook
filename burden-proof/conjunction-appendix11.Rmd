@@ -1144,8 +1144,9 @@ graphviz.chart(conjunctionBNL, type = "barprob")
 \end{figure}
 
 
-## Double dependency 
+## Double dependency  {-}
 
+Note that the result for joint Bayes factors for  \textsf{DAG 2} depended on two independencies that fell out of the dag: that $a$ and $b$ are independent both conditional on $A$ and conditional on $\n A$. A natural question is: does  aggregation hold once this independence is dropped? To investigate, we run a simulation based on \textsf{DAG 3}, illustrated in Figure \ref{{fig:dag3}}.
 
 \vspace{1mm}
 \footnotesize
@@ -1167,14 +1168,17 @@ daggityDoubleDepDAG <- dagitty("
 ```
 \normalsize
 
-
-```{r,echo=TRUE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%", dpi = 300,fig.width=2.5, fig.height=2}
+\begin{figure}[H]
+```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%", dpi = 300,fig.width=2.5, fig.height=2}
 #graphviz.plot(conjunctionDAG, layout = "dot")
 coordinates(daggityDoubleDepDAG) <- list( x=c(a = 1, A = 2, AB = 3, B = 4, b = 5) ,
                                             y=c(a = 3, A = 1, AB = 2, B = 1, b = 3) )
 drawdag(daggityDoubleDepDAG, 
         shapes =  list(A = "c", a = "c", AB = "c", B = "c", b = "c"), radius = 3.5)
 ```
+\label{fig:dag3}
+\end{figure}
+
 
 
 ```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%"}
@@ -1185,7 +1189,7 @@ doubleDepDAG <- model2network("[a|A:b][b|B][AB|A:B][A][B|A]")
 doubleDepTable <- readRDS(file = "../datasets/doubleDependencyTable.RDS")
 
 # LRAs > LRABs
-newdata <- subset(doubleDepTable, LRAs > LRABs & BFAs > 1 & BFBs > 1 & BFABs > BFAs)
+newdata <- subset(doubleDepTable, LRAs > LRABs & LRAs > LRABs & BFAs > 1 & BFBs > 1 & BFABs > BFAs & BFABs > BFBs)
 one_row <- head(newdata, 1)
 
 

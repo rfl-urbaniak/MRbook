@@ -9,7 +9,7 @@ doubleDepDAG <- model2network("[a|A:b][b|B][AB|A:B][A][B|A]")
 graphviz.plot(doubleDepDAG)
 
 set.seed(123)
-n <- 100000
+n <- 10000
 
 As <- numeric(n)
 Bs <- numeric(n)
@@ -37,8 +37,11 @@ bs <- numeric(n)
 
 
 abs <- numeric(n)
-aifbs <- numeric(n)
-bifas <- numeric(n)
+aifAbs <- numeric(n)
+aifAnbs <- numeric(n)
+aifnAbs <- numeric(n)
+aifnAnbs <- numeric(n)
+
 abifABs <- numeric(n)
 abIfnABs <- numeric(n)
 
@@ -64,9 +67,12 @@ for(i in 1:n){
   BifAs[i] <- runif(1,0,1)
   BifnAs[i] <- runif(1,0,1)
   
-  aifAs[i] <-runif(1,0,1)
-  aifnAs[i] <- runif(1,0,1)
+  aifAbs[i] <-runif(1,0,1)
+  aifAnbs[i] <-runif(1,0,1)
+  aifnAbs[i] <- runif(1,0,1)
+  aifnAnbs[i] <- runif(1,0,1)
   
+    
   bifBs[i] <-runif(1,0,1)
   bifnBs[i] <- runif(1,0,1)
   
@@ -83,9 +89,10 @@ for(i in 1:n){
   
   # changed
   #aProb <- single.CPT("a","A","1","0","1","0",aifAs[i],aifnAs[i])
-  
   # added this
-  aProb <- array(c(1, 0, 0, 1, 0, 1, 0, 1), 
+  
+  aProb <- array(c(aifAbs[i], 1-aifAbs[i],aifAnbs[i], 1 - aifAnbs[i], 
+                   aifnAbs[i], 1- aifnAbs[i], aifnAnbs[i], 1 - aifnAnbs[i]), 
                   dim = c(2, 2, 2),
                   dimnames = list(a = c("1","0"),
                                   b = c("1","0"), 
@@ -130,7 +137,16 @@ for(i in 1:n){
                                 states = c("1"))
   aifbs[i] <-   querygrain(conjunctionJNb, node = c("a"))[[1]][1]
   
+  conjunctionJNA<- setEvidence(conjunctionJN, nodes = c("A"), 
+                            states = c("1"))
+  aifAs[i] <-   querygrain(conjunctionJNA, node = c("a"))[[1]][1]
+
+  conjunctionJNnA<- setEvidence(conjunctionJN, nodes = c("A"), 
+                               states = c("0"))
   
+  aifnAs[i] <-   querygrain(conjunctionJNnA, node = c("a"))[[1]][1]
+  
+
   conjunctionJNAB <- setEvidence(conjunctionJN, nodes = c("A", "B"), 
                                  states = c("1", "1"))
   
@@ -170,11 +186,14 @@ for(i in 1:n){
 
 
 # added BifnAs, BifAs
-conjunctionTable2raf <- data.frame(As,Bs,aifAs,aifnAs,bifBs,bifnBs, BifnAs, BifAs,
+conjunctionTable2raf <- data.frame(As,Bs,aifAs,aifnAs,bifBs,bifnBs,aifAbs,
+                                   aifnAnbs,
+                                   aifnAbs,
+                                   aifAnbs,
+                                   BifnAs, BifAs,
                                    as, bs, abs, aifbs, bifas, abifABs,abIfnABs,ABs,
                                    ABifabs,BFAs,BFBs, BFABs, BFAprimes, BFBprimes,
                                    LRAs, LRBs, LRABs)
-
 
 
 saveRDS(conjunctionTable2raf, file = "datasets/doubleDependencyTable.RDS")
