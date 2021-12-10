@@ -1144,8 +1144,112 @@ graphviz.chart(conjunctionBNL, type = "barprob")
 \end{figure}
 
 
+## Double dependency 
 
 
+\vspace{1mm}
+\footnotesize
+```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%"}
+source("../scripts/CptCreate.R")
+source("../scripts/kableCPTs.R")
+doubleDepDAG <- model2network("[a|A:b][b|B][AB|A:B][A][B|A]")
+
+daggityDoubleDepDAG <- dagitty("
+    dag{
+        A -> a 
+        B -> b
+        A -> B
+        A -> AB
+        B -> AB
+        b -> a
+      }")
+
+```
+\normalsize
 
 
+```{r,echo=TRUE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%", dpi = 300,fig.width=2.5, fig.height=2}
+#graphviz.plot(conjunctionDAG, layout = "dot")
+coordinates(daggityDoubleDepDAG) <- list( x=c(a = 1, A = 2, AB = 3, B = 4, b = 5) ,
+                                            y=c(a = 3, A = 1, AB = 2, B = 1, b = 3) )
+drawdag(daggityDoubleDepDAG, 
+        shapes =  list(A = "c", a = "c", AB = "c", B = "c", b = "c"), radius = 3.5)
+```
+
+
+```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%"}
+source("../scripts/CptCreate.R")
+source("../scripts/kableCPTs.R")
+doubleDepDAG <- model2network("[a|A:b][b|B][AB|A:B][A][B|A]")
+# added missing values BifAs and BifnAs to the final table and run the simulation again -> with same seed 
+doubleDepTable <- readRDS(file = "../datasets/doubleDependencyTable.RDS")
+
+# LRAs > LRABs
+newdata <- subset(doubleDepTable, LRAs > LRABs & BFAs > 1 & BFBs > 1 & BFABs > BFAs)
+one_row <- head(newdata, 1)
+
+
+As = one_row[1, "As"] 
+BifAs = one_row[1, "BifAs"]
+BifnAs = one_row[1, "BifnAs"]
+aifAs = one_row[1, "aifAs"]
+aifnAs = one_row[1, "aifnAs"]
+bifBs = one_row[1, "bifBs"]
+bifnBs = one_row[1, "bifnBs"]
+
+AProb <-prior.CPT("A","1","0",As)
+BProb <-  single.CPT("B","A","1","0","1","0",BifAs,BifnAs)
+#aProb <- single.CPT("a","A","1","0","1","0",aifAs,aifnAs)
+bProb <- single.CPT("b","B","1","0","1","0",bifBs,bifnBs)
+
+
+aProb <- array(c(1, 0, 0, 1, 0, 1, 0, 1), 
+                  dim = c(2, 2, 2),
+                  dimnames = list(a = c("1","0"),
+                                  b = c("1","0"), 
+                                  A = c("1","0")))
+  
+
+ABProb <- array(c(1, 0, 0, 1, 0, 1, 0,1), 
+                dim = c(2, 2, 2),
+                dimnames = list(AB = c("1","0"),
+                                B = c("1","0"), 
+                                A = c("1","0")))
+
+
+conjunctionCPT <- list(A = AProb, B = BProb, 
+                       a = aProb, b = bProb, AB = ABProb)
+
+
+conjunctionDoubleBNL <- custom.fit(doubleDepDAG,conjunctionCPT)
+
+```
+
+\begin{figure}
+\hspace{2mm}\scalebox{1}{\begin{subfigure}[!ht]{0.45\textwidth}
+```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%"}
+CPkable0("conjunctionDoubleBNL","A") %>%   
+                          kable_styling(latex_options=c("striped","HOLD_position")) 
+
+CPkable1("conjunctionDoubleBNL","B") %>%   
+                          kable_styling(latex_options=c("striped","HOLD_position")) 
+
+CPkable1("conjunctionDoubleBNL","a") %>%   
+                          kable_styling(latex_options=c("striped","HOLD_position")) 
+
+CPkable1("conjunctionDoubleBNL","b") %>%   
+                          kable_styling(latex_options=c("striped","HOLD_position")) 
+
+```
+\subcaption{\textsf{Conditional probabilities (the one for \textsf{AB} does not change).}}
+\end{subfigure}} 
+\hspace{5mm}\scalebox{1}{\begin{subfigure}[!ht]{0.45\textwidth}
+```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%", dpi = 300,fig.width=2.5, fig.height=2}
+graphviz.chart(conjunctionDoubleBNL, type = "barprob")
+```
+\subcaption{Marginal probabilities. }
+\end{subfigure}} 
+\caption{A double dependency. $LR_A  \approx 2.11$, $LR_B \approx 1.183$,  $LR_{AB} \approx 1.319$. $BF_A \approx  1.06, BF_B \approx	1.076, BF_{AB}\approx	1.14$}.
+\label{tab:CPTDoubleL}
+\end{figure}
 
