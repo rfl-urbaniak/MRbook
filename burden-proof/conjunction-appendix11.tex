@@ -1,20 +1,15 @@
 % Options for packages loaded elsewhere
 \PassOptionsToPackage{unicode}{hyperref}
 \PassOptionsToPackage{hyphens}{url}
-\PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
+\PassOptionsToPackage{dvipsnames,svgnames*,x11names*}{xcolor}
 %
 \documentclass[
   10pt,
   dvipsnames,enabledeprecatedfontcommands]{scrartcl}
-\title{Appendix: Bayes factor, likelihood ratio, and the difficulty
-about conjunction}
-\author{Marcello Di Bello and Rafal Urbaniak}
-\date{}
-
 \usepackage{amsmath,amssymb}
 \usepackage{lmodern}
-\usepackage{iftex}
-\ifPDFTeX
+\usepackage{ifxetex,ifluatex}
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
   \usepackage{textcomp} % provide euro and other symbols
@@ -36,12 +31,52 @@ about conjunction}
   pdftitle={Appendix: Bayes factor, likelihood ratio, and the difficulty about conjunction},
   pdfauthor={Marcello Di Bello and Rafal Urbaniak},
   colorlinks=true,
-  linkcolor={Maroon},
-  filecolor={Maroon},
-  citecolor={Blue},
-  urlcolor={blue},
+  linkcolor=Maroon,
+  filecolor=Maroon,
+  citecolor=Blue,
+  urlcolor=blue,
   pdfcreator={LaTeX via pandoc}}
 \urlstyle{same} % disable monospaced font for URLs
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
 \usepackage{graphicx}
 \makeatletter
 \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
@@ -247,9 +282,14 @@ about conjunction}
 \usepackage[normalem]{ulem}
 \usepackage{makecell}
 \usepackage{xcolor}
-\ifLuaTeX
+\ifluatex
   \usepackage{selnolig}  % disable illegal ligatures
 \fi
+
+\title{Appendix: Bayes factor, likelihood ratio, and the difficulty
+about conjunction}
+\author{Marcello Di Bello and Rafal Urbaniak}
+\date{}
 
 \begin{document}
 \maketitle
@@ -1130,6 +1170,95 @@ A & Pr\\
 \end{subfigure}} 
 \caption{A counterexample to distribution. $LR_A  \approx 2.11$, $LR_B \approx 1.183$,  $LR_{AB} \approx 1.319$. $BF_A \approx  1.06, BF_B \approx  1.076, BF_{AB}\approx   1.14$}.
 \label{tab:CPTconjunctionBNL}
+\end{figure}
+
+\hypertarget{double-dependency}{%
+\subsection{Double dependency}\label{double-dependency}}
+
+\vspace{1mm}
+\footnotesize
+
+\normalsize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#graphviz.plot(conjunctionDAG, layout = "dot")}
+\FunctionTok{coordinates}\NormalTok{(daggityDoubleDepDAG) }\OtherTok{\textless{}{-}} \FunctionTok{list}\NormalTok{( }\AttributeTok{x=}\FunctionTok{c}\NormalTok{(}\AttributeTok{a =} \DecValTok{1}\NormalTok{, }\AttributeTok{A =} \DecValTok{2}\NormalTok{, }\AttributeTok{AB =} \DecValTok{3}\NormalTok{, }\AttributeTok{B =} \DecValTok{4}\NormalTok{, }\AttributeTok{b =} \DecValTok{5}\NormalTok{) ,}
+                                            \AttributeTok{y=}\FunctionTok{c}\NormalTok{(}\AttributeTok{a =} \DecValTok{3}\NormalTok{, }\AttributeTok{A =} \DecValTok{1}\NormalTok{, }\AttributeTok{AB =} \DecValTok{2}\NormalTok{, }\AttributeTok{B =} \DecValTok{1}\NormalTok{, }\AttributeTok{b =} \DecValTok{3}\NormalTok{) )}
+\FunctionTok{drawdag}\NormalTok{(daggityDoubleDepDAG, }
+        \AttributeTok{shapes =}  \FunctionTok{list}\NormalTok{(}\AttributeTok{A =} \StringTok{"c"}\NormalTok{, }\AttributeTok{a =} \StringTok{"c"}\NormalTok{, }\AttributeTok{AB =} \StringTok{"c"}\NormalTok{, }\AttributeTok{B =} \StringTok{"c"}\NormalTok{, }\AttributeTok{b =} \StringTok{"c"}\NormalTok{), }\AttributeTok{radius =} \FloatTok{3.5}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\includegraphics[width=1\linewidth]{conjunction-appendix11_files/figure-latex/unnamed-chunk-26-1} \end{center}
+
+\begin{figure}
+\hspace{2mm}\scalebox{1}{\begin{subfigure}[!ht]{0.45\textwidth}
+\begin{table}[H]
+\centering
+\begin{tabular}{lr}
+\toprule
+A & Pr\\
+\midrule
+\cellcolor{gray!6}{1} & \cellcolor{gray!6}{0.482}\\
+0 & 0.518\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lrr}
+\toprule
+\multicolumn{1}{c}{B} & \multicolumn{2}{c}{A} \\
+  & 1 & 0\\
+\midrule
+\cellcolor{gray!6}{1} & \cellcolor{gray!6}{0.253} & \cellcolor{gray!6}{0.216}\\
+0 & 0.747 & 0.784\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lllr}
+\toprule
+\multicolumn{1}{c}{a} & \multicolumn{2}{c}{A} \\
+a & A & b & Freq\\
+\midrule
+\cellcolor{gray!6}{1} & \cellcolor{gray!6}{1} & \cellcolor{gray!6}{1} & \cellcolor{gray!6}{1}\\
+0 & 1 & 1 & 0\\
+\cellcolor{gray!6}{1} & \cellcolor{gray!6}{0} & \cellcolor{gray!6}{1} & \cellcolor{gray!6}{0}\\
+0 & 0 & 1 & 1\\
+\cellcolor{gray!6}{1} & \cellcolor{gray!6}{1} & \cellcolor{gray!6}{0} & \cellcolor{gray!6}{0}\\
+0 & 1 & 0 & 1\\
+\cellcolor{gray!6}{1} & \cellcolor{gray!6}{0} & \cellcolor{gray!6}{0} & \cellcolor{gray!6}{0}\\
+0 & 0 & 0 & 1\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lrr}
+\toprule
+\multicolumn{1}{c}{b} & \multicolumn{2}{c}{B} \\
+  & 1 & 0\\
+\midrule
+\cellcolor{gray!6}{1} & \cellcolor{gray!6}{0.701} & \cellcolor{gray!6}{0.352}\\
+0 & 0.299 & 0.648\\
+\bottomrule
+\end{tabular}
+\end{table}
+\subcaption{\textsf{Conditional probabilities (the one for \textsf{AB} does not change).}}
+\end{subfigure}} 
+\hspace{5mm}\scalebox{1}{\begin{subfigure}[!ht]{0.45\textwidth}
+
+\begin{center}\includegraphics[width=1\linewidth]{conjunction-appendix11_files/figure-latex/unnamed-chunk-29-1} \end{center}
+\subcaption{Marginal probabilities. }
+\end{subfigure}} 
+\caption{A double dependency. $LR_A  \approx 2.11$, $LR_B \approx 1.183$,  $LR_{AB} \approx 1.319$. $BF_A \approx  1.06, BF_B \approx   1.076, BF_{AB}\approx   1.14$}.
+\label{tab:CPTDoubleL}
 \end{figure}
 
 \end{document}
