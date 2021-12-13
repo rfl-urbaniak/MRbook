@@ -331,6 +331,8 @@ B \indep a \et A \vert b \label{eq:I2}&\hspace{2cm}\mbox{\footnotesize DAG1 } \\
 a\indep b \vert A\et B \label{eq:I3}  &\hspace{2cm}\mbox{\footnotesize DAG1 , DAG2} \\  
 a\indep b \vert A \label{eq:I3a}   &\hspace{2cm}\mbox{\footnotesize DAG1 , DAG2} \\ 
 a\indep b \vert \n A \label{eq:I3b}   &\hspace{2cm}\mbox{\footnotesize DAG1 , DAG2} \\ 
+a\indep b \vert B \label{eq:I3a2}   &\hspace{2cm}\mbox{\footnotesize DAG1 , DAG2} \\ 
+a\indep b \vert \n B \label{eq:I3b2}   &\hspace{2cm}\mbox{\footnotesize DAG1 , DAG2} \\ 
 a\indep B \vert A \label{eq:I4}    & \hspace{2cm}\mbox{\footnotesize DAG1 , DAG2} \\
 a\indep B \vert \n A \label{eq:I4a}    & \hspace{2cm}\mbox{\footnotesize DAG1 , DAG2} \\
 a\indep \n B \vert A \label{eq:I4b}   & \hspace{2cm}\mbox{\footnotesize DAG1 , DAG2} \\
@@ -720,13 +722,14 @@ From this and our assumption  that $\pr{a \vert A} \geq \pr{a}$ it follows that 
 Now the main claim. 
 
 \begin{fact}
-For any probabilistic measure $\mathsf{P}$ appropriate for \textsf{DAG 2}, if $BF_A >1$, then $\pr{a \vert A} \geq \pr{a \vert b}$.
+For any probabilistic measure $\mathsf{P}$ appropriate for \textsf{DAG 2}, if $BF_A >1$, then $\pr{a \vert A} \geq \pr{a \vert b}$ and 
+$\pr{b \vert B} \geq \pr{b \vert a}$.
 \end{fact}
 
 
 \begin{proof}
 
-First, we have:
+Let's focus on the first conjunct. First, we have:
 \begin{align*}
 \pr{a \vert b} & = \pr{a \et A \vert b} + \pr{a \et \n A \vert b} & &   (\mbox{total probability}) \\
 & = \underbrace{\pr{a \vert b \et A}}_{\pr{a \vert A}  \mbox{\footnotesize \, by \eqref{eq:I3a}}} \pr{A \vert b} +
@@ -747,7 +750,15 @@ k & \geq t + (k -t)x \\
 k & \geq kx + t  - tx \\
 \pr{a \vert A} = k & \geq kx + t(1-x) = \pr{a \vert b}
 \end{align*}
-\noindent This completes the proof. 
+
+For the second conjunct, notice that we have a similar reasoning, albeit it relies on a different pair of independencies (which nevertheless holds in \textsf{DAG1} and \textsf{DAG 2}).
+\begin{align*}
+\pr{b \vert a} & = \pr{b \et B \vert a} + \pr{b \et \n B \vert a} & &   (\mbox{total probability}) \\
+& = \underbrace{\pr{b \vert a \et B}}_{\pr{b \vert B}  \mbox{\footnotesize \, by \eqref{eq:I3a2}}} \pr{B \vert a} +
+\underbrace{\pr{b \vert a \et \n B}}_{\pr{b \vert \n B} \mbox{\footnotesize \, by \eqref{eq:I3b2}}}\pr{\n B \vert a}  & &   (\mbox{chain rule}) \\
+\end{align*}
+
+\noindent The rest of the reasoning for this case is algebraically the same as the one used above. This completes the proof. 
 \end{proof}
 
 
@@ -1059,18 +1070,7 @@ annotate_figure(LRabovePlotDep, top = text_grob("Distances of the joint LR from 
 
 
 
-<!-- \frac{\frac{ \pr{A \et B \et a \wedge b }}{\pr{A \et B}}}{\pr{a \et b}} \\  -->
-<!-- & =  \frac{\frac{ \pr{A} \times \pr{B\vert A} \times \pr{a \vert A \wedge B} \times \pr{b \vert A \wedge B \wedge a} }{\pr{A} \times \pr{B \vert A}}}{\pr{a} \times \pr{b \vert a}} \\  -->
-<!-- & =  \frac{\pr{a \vert A \wedge B} \times \pr{b \vert A \wedge B \wedge a}}{\pr{a} \times \pr{b \vert a}} \\  -->
-<!-- & =^*  \frac{\pr{a \vert A}}{\pr{a}} \times \frac{\pr{b \vert B}}{\pr{b\vert a}} \\ -->
-<!-- BF_{AB}& =  BF_{A}\times BF^{'}_{B}  -->
-<!--  \end{align*}] -->
-<!--   \begin{align*} -->
-<!-- \frac{\pr{a \wedge b\vert A\wedge B}}{\pr{a \wedge b}} & = \frac{\pr{a \vert A}}{\pr{a}} \times \frac{\pr{b \vert B}}{\pr{b\vert a}} \\ -->
-<!-- BF_{AB}& =  BF_{A}\times BF^{'}_{B}  -->
- <!-- \end{align*} -->
 
-\ali{setup was nice, didn't use the >1 restriction, didn't built counterexample for both, and displayed the wrong tables. :)}
 
 Here's an example of one of many \textsf{BNs} in which an individual likelihood exceeds the joint likelihood.
 
@@ -1115,36 +1115,75 @@ conjunctionBNL <- custom.fit(conjunctionDAG,conjunctionCPT)
 
 ```
 
+
+
+
 \begin{figure}
-\hspace{2mm}\scalebox{1}{\begin{subfigure}[!ht]{0.45\textwidth}
-```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%"}
-CPkable0("conjunctionBNL","A") %>%   
-                          kable_styling(latex_options=c("striped","HOLD_position")) 
+\begin{subfigure}[!ht]{0.45\textwidth}
 
-CPkable1("conjunctionBNL","B") %>%   
-                          kable_styling(latex_options=c("striped","HOLD_position")) 
+\footnotesize 
+\begin{tabular}{lr}
+\toprule
+A & Pr\\
+\midrule
+\cellcolor{gray!6}{1} & \cellcolor{gray!6}{0.892}\\
+0 & 0.108\\
+\bottomrule
+\end{tabular}
 
-CPkable1("conjunctionBNL","a") %>%   
-                          kable_styling(latex_options=c("striped","HOLD_position")) 
+\vspace{2mm}
 
-CPkable1("conjunctionBNL","b") %>%   
-                          kable_styling(latex_options=c("striped","HOLD_position")) 
+\begin{tabular}{lrr}
+\toprule
+\multicolumn{1}{c}{B} & \multicolumn{2}{c}{A} \\
+  & 1 & 0\\
+\midrule
+\cellcolor{gray!6}{1} & \cellcolor{gray!6}{0.551} & \cellcolor{gray!6}{0.457}\\
+0 & 0.449 & 0.543\\
+\bottomrule
+\end{tabular}
 
-```
-\subcaption{\textsf{Conditional probabilities (the one for \textsf{AB} does not change).}}
-\end{subfigure}} 
-\hspace{5mm}\scalebox{1}{\begin{subfigure}[!ht]{0.45\textwidth}
+\vspace{2mm}
+
+\begin{tabular}{lrr}
+\toprule
+\multicolumn{1}{c}{a} & \multicolumn{2}{c}{A} \\
+  & 1 & 0\\
+\midrule
+\cellcolor{gray!6}{1} & \cellcolor{gray!6}{0.957} & \cellcolor{gray!6}{0.453}\\
+0 & 0.043 & 0.547\\
+\bottomrule
+\end{tabular}
+
+
+\vspace{2mm}
+
+\begin{tabular}{lrr}
+\toprule
+\multicolumn{1}{c}{b} & \multicolumn{2}{c}{B} \\
+  & 1 & 0\\
+\midrule
+\cellcolor{gray!6}{1} & \cellcolor{gray!6}{0.678} & \cellcolor{gray!6}{0.573}\\
+0 & 0.322 & 0.427\\
+\bottomrule
+\end{tabular}
+
+\vspace{2mm}
+
+\normalsize
+\end{subfigure} \begin{subfigure}[!ht]{0.45\textwidth}
 ```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%", dpi = 300,fig.width=2.5, fig.height=2}
 graphviz.chart(conjunctionBNL, type = "barprob")
 ```
-\subcaption{Marginal probabilities. }
-\end{subfigure}} 
-\caption{A counterexample to distribution. $LR_A  \approx 2.11$, $LR_B \approx 1.183$,  $LR_{AB} \approx 1.319$. $BF_A \approx  1.06, BF_B \approx	1.076, BF_{AB}\approx	1.14$}.
+\end{subfigure}
+\caption{A counterexample to distribution. $LR_A  \approx 2.11$, $LR_B \approx 1.183$,  $LR_{AB} \approx 1.319$. \newline  $BF_A \approx  1.06, BF_B \approx	1.076, BF_{AB}\approx	1.14$.}
 \label{tab:CPTconjunctionBNL}
 \end{figure}
 
 
-## Aggregation can fail if the items of evidence are directly dependent  {-}
+
+
+
 
 Note that the result for joint Bayes factors for  \textsf{DAG 2} depended on two independencies that fell out of the dag: that $a$ and $b$ are independent both conditional on $A$ and conditional on $\n A$. A natural question is: does  aggregation hold once this independence is dropped? To investigate, we run a simulation based on \textsf{DAG 3}, illustrated in Figure \ref{fig:dag3}.
 
@@ -1173,7 +1212,7 @@ daggityDoubleDepDAG <- dagitty("
 ```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%", dpi = 300,fig.width=2.5, fig.height=2}
 #graphviz.plot(conjunctionDAG, layout = "dot")
 coordinates(daggityDoubleDepDAG) <- list( x=c(a = 1, A = 2, AB = 3, B = 4, b = 5) ,
-                                            y=c(a = 3, A = 1, AB = 2, B = 1, b = 3) )
+                                          y=c(a = 3, A = 1, AB = 2, B = 1, b = 3) )
 drawdag(daggityDoubleDepDAG, 
         shapes =  list(A = "c", a = "c", AB = "c", B = "c", b = "c"), radius = 3.5)
 ```
@@ -1182,6 +1221,7 @@ drawdag(daggityDoubleDepDAG,
 \end{figure}
 
 In fact, it turns out that simultaneously the joint likelihood ratio is lower than both individual likelihood ratios and the joint Bayes factor is lower than each individual Bayes factor in 14\% cases in which the individual Bayes factor (and therefore also the individual likelihood ratios) are greater than one. One particular counterexample is illustrated in Figure \ref{fig:CPTDoubleL}.
+
 
 
 ```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%"}
@@ -1217,14 +1257,14 @@ BProb <-  single.CPT("B","A","1","0","1","0",BifAs,BifnAs)
 bProb <- single.CPT("b","B","1","0","1","0",bifBs,bifnBs)
 
 
- aProb <- array(c(one_rowB[1,"aifAbs"], 1-one_rowB[1,"aifAbs"],
-                  one_rowB[1,"aifAnbs"], 1 - one_rowB[1,"aifAnbs"], 
-                   one_rowB[1,"aifnAbs"], 1- one_rowB[1,"aifnAbs"],
-                  one_rowB[1,"aifnAnbs"], 1 - one_rowB[1,"aifnAnbs"]), 
-                  dim = c(2, 2, 2),
-                  dimnames = list(a = c("1","0"),
-                                  b = c("1","0"), 
-                                  A = c("1","0")))
+aProb <- array(c(one_rowB[1,"aifAbs"], 1-one_rowB[1,"aifAbs"],
+                 one_rowB[1,"aifAnbs"], 1 - one_rowB[1,"aifAnbs"], 
+                 one_rowB[1,"aifnAbs"], 1- one_rowB[1,"aifnAbs"],
+                 one_rowB[1,"aifnAnbs"], 1 - one_rowB[1,"aifnAnbs"]), 
+               dim = c(2, 2, 2),
+               dimnames = list(a = c("1","0"),
+                               b = c("1","0"), 
+                               A = c("1","0")))
 
 ABProb <- array(c(1, 0, 0, 1, 0, 1, 0,1), 
                 dim = c(2, 2, 2),
@@ -1239,24 +1279,74 @@ conjunctionCPT <- list(A = AProb, B = BProb,
 
 conjunctionDoubleBNL <- custom.fit(doubleDepDAG,conjunctionCPT)
 
+ 
 ```
+
+
+
+
+
+
 
 \begin{figure}
 \hspace{2mm}\begin{subfigure}[ht!]{0.45\textwidth}
-```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%"}
-CPkable0("conjunctionDoubleBNL","A") %>%   
-                          kable_styling(latex_options=c("striped","HOLD_position")) 
+\footnotesize
 
-CPkable1("conjunctionDoubleBNL","B") %>%   
-                          kable_styling(latex_options=c("striped","HOLD_position")) 
 
-CPkable2("conjunctionDoubleBNL","a") %>%   
-                          kable_styling(latex_options=c("striped","HOLD_position")) 
+\begin{tabular}{lr}
+\toprule
+A & Pr\\
+\midrule
+\cellcolor{gray!6}{1} & \cellcolor{gray!6}{0.521}\\
+0 & 0.479\\
+\bottomrule
+\end{tabular}
 
-CPkable1("conjunctionDoubleBNL","b") %>%   
-                          kable_styling(latex_options=c("striped","HOLD_position")) 
+\vspace{2mm}
 
-```
+\begin{tabular}{lrr}
+\toprule
+\multicolumn{1}{c}{B} & \multicolumn{2}{c}{A} \\
+  & 1 & 0\\
+\midrule
+\cellcolor{gray!6}{1} & \cellcolor{gray!6}{0.66} & \cellcolor{gray!6}{0.729}\\
+0 & 0.34 & 0.271\\
+\bottomrule
+\end{tabular}
+
+\vspace{2mm}
+
+\begin{tabular}{lllr}
+\toprule
+\multicolumn{1}{c}{} & \multicolumn{1}{c}{A} & \multicolumn{1}{c}{b} & \multicolumn{1}{c}{} \\
+a &  &  & Pr\\
+\midrule
+\cellcolor{gray!6}{1} & \cellcolor{gray!6}{1} & \cellcolor{gray!6}{1} & \cellcolor{gray!6}{0.3989398}\\
+0 & 1 & 1 & 0.6010602\\
+\cellcolor{gray!6}{1} & \cellcolor{gray!6}{0} & \cellcolor{gray!6}{1} & \cellcolor{gray!6}{0.9673984}\\
+0 & 0 & 1 & 0.0326016\\
+\cellcolor{gray!6}{1} & \cellcolor{gray!6}{1} & \cellcolor{gray!6}{0} & \cellcolor{gray!6}{0.9693564}\\
+0 & 1 & 0 & 0.0306436\\
+\cellcolor{gray!6}{1} & \cellcolor{gray!6}{0} & \cellcolor{gray!6}{0} & \cellcolor{gray!6}{0.7267025}\\
+0 & 0 & 0 & 0.2732975\\
+\bottomrule
+\end{tabular}
+
+\vspace{2mm}
+
+\begin{tabular}{lrr}
+\toprule
+\multicolumn{1}{c}{b} & \multicolumn{2}{c}{B} \\
+  & 1 & 0\\
+\midrule
+\cellcolor{gray!6}{1} & \cellcolor{gray!6}{0.995} & \cellcolor{gray!6}{0.108}\\
+0 & 0.005 & 0.892\\
+\bottomrule
+\end{tabular}
+
+\normalsize 
+
+
 \subcaption{Conditional probabilities for the counterexample (the one for \textsf{AB} does not change).}
 \end{subfigure} 
 \hspace{5mm}\begin{subfigure}{0.45\textwidth}
@@ -1265,9 +1355,14 @@ graphviz.chart(conjunctionDoubleBNL, type = "barprob")
 ```
 \subcaption{Marginal probabilities. }
 \end{subfigure} 
-\caption{A counterexample based on \textsf{DAG 3}, with independence between the items of evidence dropped.   $LR_A  \approx 1.063$, $LR_B \approx 1.159742$,  $LR_{AB} \approx 0.651$. $BF_A \approx  1.022, BF_B \approx	1.079, BF_{AB}\approx	0.699$}.
+\caption{A counterexample based on \textsf{DAG 3}, with independence between the items of evidence dropped.   $LR_A  \approx 1.063$, $LR_B \approx 1.159742$,  $LR_{AB} \approx 0.651$. $BF_A \approx  1.022, BF_B \approx	1.079, BF_{AB}\approx	0.699$.}
 \label{fig:CPTDoubleL}
 \end{figure}
+
+
+
+
+
 
 
 
@@ -1301,21 +1396,12 @@ aggregationFailurePlot <- annotate_figure(aggregationFailure, top = text_grob("A
 ```
 
 
-
-
-
-
-\begin{figure}[H]
-
-```{r aggregationFails,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%"}
-aggregationFailurePlot 
+\begin{figure}
+```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%"}
+aggregationFailurePlot
 ```
-
-\caption{Aggregation fails in 14% cases if there is direct dependence between pieces of evidence even if the individual Bayes factors are greater than 1.}
-
+\caption{Aggregation failure.} 
 \label{fig:aggregationFails}
-
 \end{figure}
-
 
 
