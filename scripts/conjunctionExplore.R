@@ -19,6 +19,19 @@ colnames(conjunctionTable)
 attach(conjunctionTable)
 
 
+conjunctionTable$minIndividual <- pmin(As, Bs)
+conjunctionTable$ABdifsMin <- conjunctionTable$ABs - conjunctionTable$minIndividual 
+conjunctionPositive <- conjunctionTable %>% filter ( ABifabs )
+
+plotABbelow<- conjunctionTable  %>% ggplot( aes(x = ABdifsMin))+geom_histogram(aes( y = ..density..), bins = 40)+
+  xlab(expression(paste(P[AB] - min,"(",P[A], ", ", P[B],")")))+ggtitle("Compared to the the minimum")+
+  labs(subtitle = expression(paste("Assuming ",  BF[A], ", ",   BF[B] < 1)))+xlim(c(-.3,.05))
+plotBFindAbove <- conjunctionTable %>% filter(BFAs > 1 & BFBs > 1) %>% ggplot( aes(x = BFdifsMax))+geom_histogram(aes( y = ..density..), bins = 40)+
+  xlab(expression(paste(BF[AB] - max,"(",BF[A], ", ", BF[B],")")))+ggtitle("Compared to  the maximum")+
+  labs(subtitle = expression(paste("Assuming ",  BF[A], ", ",   BF[B] > 1)))+xlim(c(0,3))
+
+
+
 #how often is the joint bf below each individual Bfs?
 mean(BFABs < BFAs & BFABs < BFBs)
 
@@ -273,6 +286,47 @@ mean(positiveBF$BFdifs>0)
 # - SAY ASSUME THAT
 # - INDIVIDUAL LR ARE THE SAME
 # - PRIOR PROBABILITIES OF HYPOTHESIS ARE THE SAME OR 0.5 EACH
+
+
+library(ggplot2)
+library(ggthemes)
+library(tidyverse)
+library(plot3D)
+library(plotly)
+
+
+old <- theme_set(theme_tufte())
+
+getwd() #this should be the project directory
+getwd()
+conjunctionTable2 <- readRDS(file = "../datasets/conjunctionTable2.RDS")
+
+
+
+colnames(conjunctionTable2)
+
+conjunctionTable2$minIndividual <- pmin(conjunctionTable2$Aifas, conjunctionTable2$Bifbs)
+conjunctionTable2$diffIndividualMin <- conjunctionTable2$ABifabs - conjunctionTable2$minIndividual 
+
+
+plotABindBelow <- conjunctionTable2 %>% filter(ABifabs > ABs) %>% ggplot( aes(x = diffIndividualMin))+geom_histogram(aes( y = ..density..), bins = 60)+
+  xlab("P(AB|ab) -  min(P(A|a), P(B|b))")+ggtitle("Compared to the the minimum (failure rate ca. 68%)")+
+  labs(subtitle = expression(paste("Assuming  P(AB|ab) > P(AB)")))+xlim(c(-.3,1))
+
+plotABindBelow
+
+
+positive <-  conjunctionTable2 %>% filter(ABifabs > ABs)
+
+mean(positive$ABifabs < positive$Aifas & positive$ABifabs < positive$Bifbs )
+
+
+
+
+plotBFindAbove <- conjunctionTable %>% filter(BFAs > 1 & BFBs > 1) %>% ggplot( aes(x = BFdifsMax))+geom_histogram(aes( y = ..density..), bins = 40)+
+  xlab(expression(paste(BF[AB] - max,"(",BF[A], ", ", BF[B],")")))+ggtitle("Compared to  the maximum")+
+  labs(subtitle = expression(paste("Assuming ",  BF[A], ", ",   BF[B] > 1)))+xlim(c(0,3))
+
 
 
 

@@ -507,7 +507,50 @@ While this is a conjunction, not a disjunction, the assumption still seems more 
 
 ## Bayes factor: simulations {-}
 
-First, let's look at simulations based on \textsf{DAG1} (Figure \ref{fig:DAG1BF}). We  can illustrate the distribution of Bayes factors in the two separate scenarios used as assumptions of the above corollaries. 
+First, let's look at the distributions of the distances of the joint posterior from the minimum of the individual posteriors (Figure \ref{fig:posteriorFailure}). 
+
+
+
+```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%", warning =- FALSE, message = FALSE}
+conjunctionTable2 <- readRDS(file = "../datasets/conjunctionTable2.RDS")
+
+conjunctionTable2$minIndividual <- pmin(conjunctionTable2$Aifas, conjunctionTable2$Bifbs)
+conjunctionTable2$diffIndividualMin <- conjunctionTable2$ABifabs - conjunctionTable2$minIndividual 
+
+positive <- conjunctionTable2[conjunctionTable2$ABifabs > conjunctionTable2$ABs, ]
+
+plotABindBelow2a <-  ggplot(positive, aes(x = diffIndividualMin))+geom_histogram(aes( y = ..density..), bins = 60)+
+xlab("P(AB|ab) -  min(P(A|a), P(B|b))")+ggtitle("DAG 1, failure rate ca. 68%")+
+labs(subtitle = expression(paste("Assuming  P(AB|ab) > P(AB)")))+xlim(c(-.3,1))+theme_tufte()
+
+conjunctionTable2dep <- readRDS(file = "../datasets/conjunctionTableDepAli2.RDS")
+
+conjunctionTable2dep$minIndividual <- pmin(conjunctionTable2dep$Aifas, conjunctionTable2dep$Bifbs)
+conjunctionTable2dep$diffIndividualMin <- conjunctionTable2dep$ABifabs - conjunctionTable2dep$minIndividual 
+
+positiveDEP <-  conjunctionTable2dep[ conjunctionTable2dep$ABifabs > conjunctionTable2dep$ABs,]
+
+plotABindBelow2DEP <-  ggplot(positiveDEP, aes(x = diffIndividualMin))+geom_histogram(aes( y = ..density..), bins = 60)+
+  xlab("P(AB|ab) -  min(P(A|a), P(B|b))")+ggtitle("DAG 2, Failure rate ca. 60%")+
+  labs(subtitle = expression(paste("Assuming  P(AB|ab) > P(AB)")))+xlim(c(-.7,1))+theme_tufte()
+
+plotABfaila <- ggarrange(plotABindBelow2a, plotABindBelow2DEP, ncol = 2)
+
+```
+
+
+\begin{figure}[H]
+
+```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%", message = FALSE, warning = FALSE}
+annotate_figure(plotABfaila, top = text_grob("Distances of the joint posterior from the lower individual posterior",size = 13))
+```
+\caption{Even assuming the joint support is positive, the joint posterior quite often is lower than individual posteriors.}
+\label{fig:posteriorFailure}
+\end{figure}
+
+
+
+Now, let's look at simulations based on \textsf{DAG1} (Figure \ref{fig:DAG1BF}). We  can illustrate the distribution of Bayes factors in the two separate scenarios used as assumptions of the above corollaries. 
 
 
 \vspace{1mm}

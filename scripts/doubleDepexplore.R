@@ -1,22 +1,39 @@
 library(tidyverse)
 
 
-conjunctionTable2B <-  readRDS(file = "datasets/doubleDependencyTable.RDS")
+doubleTable <-  readRDS(file = "datasets/doubleDependencyTable.RDS")
 
-str(conjunctionTable2B)
+str(doubleTable)
 
-conjunctionTable2B$maxBF <- pmax(conjunctionTable2B$BFAs, conjunctionTable2B$BFBs)
-conjunctionTable2B$minBF <- pmin(conjunctionTable2B$BFAs, conjunctionTable2B$BFBs)
-conjunctionTable2B$BFdifsMax <- conjunctionTable2B$BFABs - conjunctionTable2B$maxBF
-conjunctionTable2B$BFdifsMin <- conjunctionTable2B$BFABs - conjunctionTable2B$minBF
+doubleTable$maxBF <- pmax(doubleTable$BFAs, doubleTable$BFBs)
+doubleTable$minBF <- pmin(doubleTable$BFAs, doubleTable$BFBs)
+doubleTable$BFdifsMax <- doubleTable$BFABs - doubleTable$maxBF
+doubleTable$BFdifsMin <- doubleTable$BFABs - doubleTable$minBF
 
-conjunctionTable2B$maxLR <- pmax(conjunctionTable2B$LRAs, conjunctionTable2B$LRBs)
-conjunctionTable2B$minLR <- pmin(conjunctionTable2B$LRAs, conjunctionTable2B$LRBs)
-conjunctionTable2B$LRdifsMax <- conjunctionTable2B$LRABs - conjunctionTable2B$maxLR 
-conjunctionTable2B$LRdifsMin <- conjunctionTable2B$LRABs - conjunctionTable2B$minLR 
+doubleTable$maxLR <- pmax(doubleTable$LRAs, doubleTable$LRBs)
+doubleTable$minLR <- pmin(doubleTable$LRAs, doubleTable$LRBs)
+doubleTable$LRdifsMax <- doubleTable$LRABs - doubleTable$maxLR 
+doubleTable$LRdifsMin <- doubleTable$LRABs - doubleTable$minLR 
+
+
+positiveBF <- doubleTable %>% filter (BFAs >1 & BFBs > 1 )
 
 
 
-focus <- conjunctionTable2B %>% filter (BFAs >1 & BFBs > 1 & BFABs < BFAs & BFABs < BFBs)
+nrow(focus)/nrow(positiveBF)
 
-focus
+focus <- doubleTable %>% filter (BFAs >1 & BFBs > 1 & BFABs < BFAs & BFABs < BFBs & LRABs < LRAs & LRABs < LRBs)
+
+
+
+plotBFfailure <- positiveBF %>% ggplot( aes(x = BFdifsMin))+geom_histogram(aes( y = ..density..), bins = 40)+
+  xlab(expression(paste(BF[AB] - min,"(",BF[A], ", ", BF[B],")")))+ggtitle("Joint BFs compared to  the minimum")+
+  labs(subtitle = expression(paste("Assuming ",  BF[A], ", ",   BF[B] > 1)))+xlim(c(-3,3))
+
+plotLRfailure <- positiveBF %>% ggplot( aes(x = LRdifsMin))+geom_histogram(aes( y = ..density..), bins = 40)+
+  xlab(expression(paste(LR[AB] - min,"(",LR[A], ", ", LR[B],")")))+ggtitle("Joint LRs compared to  the minimum")+
+  labs(subtitle = expression(paste("Assuming ",  LR[A], ", ",   LR[B] > 1)))+xlim(c(-3,3))
+
+plotLRfailure
+
+

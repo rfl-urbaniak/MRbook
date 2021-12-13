@@ -9,7 +9,7 @@ graphviz.plot(conjunctionDAG)
 
 # set seed and number of iterations
 set.seed(321)
-n <- 100000
+n <- 10000
 
 # initialize the variables
 As <- numeric(n)
@@ -31,6 +31,8 @@ abifABs <- numeric(n)
 abIfnABs <- numeric(n)
 ABs <- numeric(n)
 ABifabs <- numeric(n)
+Aifas <- numeric(n)
+Bifbs <- numeric(n)
 
 # should this be changed? 
 BFAs <- numeric(n)
@@ -44,6 +46,7 @@ LRABs <- numeric(n)
 # run a loop per each case - add dependence
 
 for(i in 1:n){
+  
   As[i] <- runif(1,0,1)
   # Bs[i] <- runif(1,0,1)
   
@@ -83,7 +86,6 @@ for(i in 1:n){
   conjunctionBN <- custom.fit(conjunctionDAG,conjunctionCPT)
   
   
-  
   #graphviz.chart(conjunctionBN,type="barprob", scale = c(0.7,1.3),
   #               main = "Marginal probabilities in a conjunction BN")
   
@@ -95,6 +97,15 @@ for(i in 1:n){
   
   abs[i] <- querygrain(conjunctionJN, node = c("a","b"), 
                        type = "joint")[1,1]
+  
+  
+  conjunctionJNa <-  setEvidence(conjunctionJN, nodes = c("a"), 
+                                 states = c("1"))
+  Aifas[i]  <- querygrain(conjunctionJNa, node = "A")[[1]][[1]] 
+  
+  conjunctionJNb <-  setEvidence(conjunctionJN, nodes = c("b"), 
+                                 states = c("1"))
+  Bifbs[i]  <- querygrain(conjunctionJNa, node = "B")[[1]][[1]] 
   
   
   conjunctionJNAB <- setEvidence(conjunctionJN, nodes = c("A", "B"), 
@@ -132,15 +143,14 @@ for(i in 1:n){
 }
 
 conjunctionTableAli <- data.frame(As,Bs,aifAs,aifnAs,bifBs,bifnBs,
-                               as, bs, abs, abifABs,abIfnABs,ABs,
+                               as, bs, abs, abifABs,abIfnABs, Aifas, Bifbs, ABs,
                                ABifabs,BFAs,BFBs, BFABs,
                                LRAs, LRBs, LRABs)
 
 
 
 
-
-saveRDS(conjunctionTableAli, file = "conjunctionTableDepAli.RDS")
+saveRDS(conjunctionTableAli, file = "datasets/conjunctionTableDepAli2.RDS")
 
 
 

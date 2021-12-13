@@ -9,7 +9,7 @@ conjunctionDAG <- model2network("[a|A][b|B][AB|A:B][A][B]")
 graphviz.plot(conjunctionDAG)
 
 set.seed(123)
-n <- 100000
+n <- 10000
 
 As <- numeric(n)
 Bs <- numeric(n)
@@ -22,6 +22,8 @@ bs <- numeric(n)
 abs <- numeric(n)
 abifABs <- numeric(n)
 abIfnABs <- numeric(n)
+Aifas <- numeric(n)
+Bifbs <- numeric(n)
 ABs <- numeric(n)
 ABifabs <- numeric(n)
 BFAs <- numeric(n)
@@ -34,7 +36,6 @@ LRABs <- numeric(n)
 
 
 for(i in 1:n){
-i = 1
 As[i] <- runif(1,0,1)
 Bs[i] <- runif(1,0,1)
 
@@ -77,6 +78,14 @@ bs[i] <- querygrain(conjunctionJN, node = "b")[[1]][[1]]
 abs[i] <- querygrain(conjunctionJN, node = c("a","b"), 
                  type = "joint")[1,1]
 
+conjunctionJNa <-  setEvidence(conjunctionJN, nodes = c("a"), 
+                               states = c("1"))
+Aifas[i]  <- querygrain(conjunctionJNa, node = "A")[[1]][[1]] 
+
+conjunctionJNb <-  setEvidence(conjunctionJN, nodes = c("b"), 
+                               states = c("1"))
+Bifbs[i]  <- querygrain(conjunctionJNa, node = "B")[[1]][[1]] 
+
 
 conjunctionJNAB <- setEvidence(conjunctionJN, nodes = c("A", "B"), 
                                states = c("1", "1"))
@@ -113,7 +122,7 @@ LRABs[i] <- abifABs[i] / abIfnABs[i]
 }
 
 conjunctionTable <- data.frame(As,Bs,aifAs,aifnAs,bifBs,bifnBs,
-                             as, bs, abs, abifABs,abIfnABs,ABs,
+                             as, bs, Aifas, Bifbs, abs, abifABs,abIfnABs,ABs,
                              ABifabs,BFAs,BFBs, BFABs,
                              LRAs, LRBs, LRABs)
 
@@ -121,7 +130,8 @@ conjunctionTable <- data.frame(As,Bs,aifAs,aifnAs,bifBs,bifnBs,
 
 conjunctionTable
 
-#saveRDS(conjunctionTable, file = "conjunctionTable.RDS")
+getwd()
+saveRDS(conjunctionTable, file = "../datasets/conjunctionTable2.RDS")
 
 
 
