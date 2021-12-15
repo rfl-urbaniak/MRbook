@@ -1,19 +1,15 @@
 % Options for packages loaded elsewhere
 \PassOptionsToPackage{unicode}{hyperref}
 \PassOptionsToPackage{hyphens}{url}
-\PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
+\PassOptionsToPackage{dvipsnames,svgnames*,x11names*}{xcolor}
 %
 \documentclass[
   10pt,
   dvipsnames,enabledeprecatedfontcommands]{scrartcl}
-\title{The Difficulty With Conjunction}
-\author{Marcello Di Bello and Rafal Urbaniak}
-\date{}
-
 \usepackage{amsmath,amssymb}
 \usepackage{lmodern}
-\usepackage{iftex}
-\ifPDFTeX
+\usepackage{ifxetex,ifluatex}
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
   \usepackage{textcomp} % provide euro and other symbols
@@ -35,10 +31,10 @@
   pdftitle={The Difficulty With Conjunction},
   pdfauthor={Marcello Di Bello and Rafal Urbaniak},
   colorlinks=true,
-  linkcolor={Maroon},
-  filecolor={Maroon},
-  citecolor={Blue},
-  urlcolor={blue},
+  linkcolor=Maroon,
+  filecolor=Maroon,
+  citecolor=Blue,
+  urlcolor=blue,
   pdfcreator={LaTeX via pandoc}}
 \urlstyle{same} % disable monospaced font for URLs
 \usepackage{graphicx}
@@ -58,29 +54,6 @@
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
 \setcounter{secnumdepth}{5}
-\newlength{\cslhangindent}
-\setlength{\cslhangindent}{1.5em}
-\newlength{\csllabelwidth}
-\setlength{\csllabelwidth}{3em}
-\newlength{\cslentryspacingunit} % times entry-spacing
-\setlength{\cslentryspacingunit}{\parskip}
-\newenvironment{CSLReferences}[2] % #1 hanging-ident, #2 entry spacing
- {% don't indent paragraphs
-  \setlength{\parindent}{0pt}
-  % turn on hanging indent if param 1 is 1
-  \ifodd #1
-  \let\oldpar\par
-  \def\par{\hangindent=\cslhangindent\oldpar}
-  \fi
-  % set entry spacing
-  \setlength{\parskip}{#2\cslentryspacingunit}
- }%
- {}
-\usepackage{calc}
-\newcommand{\CSLBlock}[1]{#1\hfill\break}
-\newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{#1}}
-\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{#1}\break}
-\newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
 %\documentclass{article}
 
 % %packages
@@ -269,9 +242,33 @@
 \usepackage[normalem]{ulem}
 \usepackage{makecell}
 \usepackage{xcolor}
-\ifLuaTeX
+\ifluatex
   \usepackage{selnolig}  % disable illegal ligatures
 \fi
+\newlength{\cslhangindent}
+\setlength{\cslhangindent}{1.5em}
+\newlength{\csllabelwidth}
+\setlength{\csllabelwidth}{3em}
+\newenvironment{CSLReferences}[2] % #1 hanging-ident, #2 entry spacing
+ {% don't indent paragraphs
+  \setlength{\parindent}{0pt}
+  % turn on hanging indent if param 1 is 1
+  \ifodd #1 \everypar{\setlength{\hangindent}{\cslhangindent}}\ignorespaces\fi
+  % set entry spacing
+  \ifnum #2 > 0
+  \setlength{\parskip}{#2\baselineskip}
+  \fi
+ }%
+ {}
+\usepackage{calc}
+\newcommand{\CSLBlock}[1]{#1\hfill\break}
+\newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{#1}}
+\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{#1}\break}
+\newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
+
+\title{The Difficulty With Conjunction}
+\author{Marcello Di Bello and Rafal Urbaniak}
+\date{}
 
 \begin{document}
 \maketitle
@@ -279,21 +276,20 @@
 \hypertarget{introducing-the-difficulty}{%
 \section{Introducing the difficulty}\label{introducing-the-difficulty}}
 
-According to a common probabilistic
-interpretation,\mar{R: add some refs?} the standard of proof in legal
-trials functions as a probability threshold. In criminal cases the
-standard is very stringent, and so the probability threshold should be
-high: say the defendant's criminal liability should be established with
-at least .95 probability. In civil cases the standard is less stringent,
-so the probability threshold should be lower: say the defendant civil
-liability should be established with at least .5 probability.
+According to a common probabilistic interpretation, the standard of
+proof in legal trials functions as a probability threshold (see
+Bernoulli, 1713; Dekay, 1996; Kaplan, 1968; Kaye, 1979; Laplace, 1814;
+Laudan, 2006). In criminal cases, the standard is very stringent, and so
+the probability threshold should be high, say the defendant's criminal
+liability should be established with at least .95 probability. In civil
+cases, the standard is less stringent, so the probability threshold
+should be lower, say the defendant civil liability should be established
+with at least .5 probability.
 
-Chapter XX \todo{REFER TO EARLIER CHAPTER} shows how the .95 and .5
-thresholds can be argued for by means of expected utility theory.
-Chapter YY \todo{REFER TO EARLIER CHAPTER} examines a theoretical
-problem for this probabilistic interpretation: the paradox of naked
-statistical evidence. This chapter examines another theoretical problem,
-which we will \textbf{the difficulty with conjunction}, also known as
+The previous chapter examines a theoretical problem for this
+probabilistic interpretation: the paradox of naked statistical evidence.
+This chapter examines another theoretical problem, which we will
+\textbf{the difficulty with conjunction}, also known as
 \textbf{the conjunction paradox}. The chapter is structured as follows.
 First, we describe the difficulty with conjunction. Next, we explore
 different strategies that legal probabilists can pursue to respond to
@@ -302,14 +298,14 @@ we show that they are ultimately unsatisfactory. Finally, we articulate
 our proposal.
 
 Our solution to the difficulty with conjunction complements our solution
-to the problem of naked statistical evidence. Both problems---we
-maintain---suggest that the claim of wrongdoing, criminal or civil
-liability, should not be understood as an abstract, general proposition,
-but as a specific narrative, theory or explanation of the facts tailored
-to the individual defendant on trial. This insight---which can be
-formalized using Bayesian networks, as done in chapter XY
-\todo{REFER TO EARLIER CHAPTER}---contributes to a more adequate
-understanding of the standard of proof in civil and criminal cases.
+to the problem of naked statistical evidence. We believe both problems
+suggest that the claim of criminal or civil liability should not be
+understood as an abstract, general proposition. It should be understood
+as a theory or explanation of the facts tailored to the individual
+defendant on trial. This insight---already formalized using Bayesian
+networks in chapter XY \todo{REFER TO EARLIER CHAPTER}---contributes to
+a more adequate understanding of the standard of proof in civil and
+criminal cases.
 
 \ali{M: Check format of references throughout the chapter. We do not want initilas of authors, only their last name.}
 
@@ -326,9 +322,9 @@ conjuncts. So, according to the probabilistic interpretation of the
 standard of proof, it might happen that even when each constituent
 element (each individual conjunct) is established by the required
 standard of proof, the overall claim of wrongdoing (the conjunction)
-fails to meet the required standard. Many consider this outcome
-counter-intuitive and contrary to trial practice.
-\mar{R: any refs here?}
+fails to meet the required standard. Cohen and others after him believe
+that this outcome is counter-intuitive and runs contrary to trial
+practice.
 
 \hypertarget{simple-formulation}{%
 \subsection{Simple formulation}\label{simple-formulation}}
@@ -366,7 +362,7 @@ directions: call the implication from left to right
 \textbf{distribution}, and the one in the opposite direction
 \textbf{aggregation}. Aggregation posits that establishing the
 individual claims by the requisite standard is enough to establish the
-conjunction by the same standard. Distribution claims that establishing
+conjunction by the same standard. Distribution posits that establishing
 the conjunction by the requisite standard is enough to establish the
 individual claims by the same standard. Aggregation and distribution
 identify properties that the standard of proof should arguably possess.
@@ -376,16 +372,14 @@ probabilistic explications of the standard of proof distribution can
 also fail.
 
 Legal scholars disagree about the tenability of the conjunction
-principle (more on this toward the end of this chapter).
-\mar{Cite here "The Conjunction Problem and the Logic of Jury Findings" by David S. Schwartz and Elliott Sober. Argues that (a) elements are usually dependent, (b) elements function as checklist and (c) jury instructions usually do not give rise to the conjunction paradox  because they do not follow the conjunction principle.}
-For the time being, however, let us assume the principle correctly
-captures two desidred features of the standard of proof. The principle
-has some degree of plausibility and is consistent with the case law. For
-example, the United States Supreme Court writes that in criminal cases
-\dots
+principle (more on this toward the end of this chapter). For the time
+being, however, let us assume the principle correctly captures two
+desidred features of the standard of proof. The principle has some
+degree of plausibility and is consistent with the case law. For example,
+the United States Supreme Court writes that in criminal cases
 
 \begin{quote}
-\dots the accused [is protected] against conviction except upon proof beyond a reasonable doubt of \textit{every fact} necessary to constitute the crime with which he is charged. \linebreak 
+the accused [is protected] against conviction except upon proof beyond a reasonable doubt of \textit{every fact} necessary to constitute the crime with which he is charged. \linebreak 
 (In re Winship, 397 U.S. 358, 364, 1970)
 \end{quote}
 
@@ -407,29 +401,26 @@ conflicts with a threshold-based probabilistic interpretation of the
 standard of proof. For suppose the prosecution in a criminal case
 presents evidence that establishes claims \(A\) and \(B\), separately,
 by the required probability, say about \(.95\) each. Has the prosecution
-met its burden of proof? For one thing, if each claim is established by
-the requisite probability threshold, each claim is established by the
-requisite standard (assuming the threshold-based interpretation of the
-standard of proof). And if each claim is established by the requisite
-standard, then (i) liability as a whole is established by the requisite
-standard (assuming the conjunction principle). And yet, even though each
+met its burden of proof? If each claim is established by the requisite
+probability threshold, each claim is established by the requisite
+standard (assuming the threshold-based interpretation of the standard of
+proof). And if each claim is established by the requisite standard, then
+liability as a whole is established by the requisite standard (assuming
+the conjunction principle). But this cannot be right. Even though each
 claim is established by the requisite probability threshold, if the
 claims are independent, the probability of their conjunction will be
 only \(.95\times .95 \approx .9\), below the required \(.95\) threshold.
-So we have a class of cases in which despite condition (i) being
-satisfied, (ii) liability as a whole is \textit{not} established by the
-requisite standard (assuming a threshold-based probabilistic
-interpretation of the standard), which contradicts the conjunction
-principle.
+So liability as a whole is \textit{not} established by the requisite
+standard (assuming a threshold-based probabilistic interpretation of the
+standard). This contradicts the conjunction principle.
 
-In other words, the difficulty with conjunction consists in the fact
-that a threshold-based interpretation of the standard of proof violates
-the conjunction principle by violating aggregation. Even though
-aggregation posits that establishing each conjunct by the required
-standard of proof is enough to establish the conjunction as a whole, the
-probability of each conjunct, considered in isolation, can meet the
-required probability threshold without the conjunction as a whole
-meeting the threshold.
+The difficulty with conjunction shows that a threshold-based
+interpretation of the standard of proof violates the conjunction
+principle by violating aggregation. Even though aggregation posits that
+establishing each conjunct by the required standard of proof is enough
+to establish the conjunction as a whole, the probability of each
+conjunct, considered in isolation, can meet the required probability
+threshold without the conjunction as a whole meeting the threshold.
 
 This difficulty is persistent. It does not subside as the number of
 constituent claims increases. If anything, the difficulty becomes more
@@ -463,8 +454,8 @@ should still be below the \(.95\) threshold so long as
 The discussion so far proceeded without mentioning the evidence in
 support of the claims that constitute the wrongdoing. This is a
 simplification. As we will see, it is crucial to pay attention to the
-supporting evidence and the structure of the problem. With this in mind,
-for two claims, the principle can be formulated as follows:
+supporting evidence. With this in mind, for two claims, the conjunction
+principle can be formulated as follows:
 \[\text{S[$a, A$] and S[$b, B$] $\Leftrightarrow$ S[$a \wedge b, A\wedge B$]},\]
 
 \noindent where \(a\) and \(b\) denote the evidence for claims \(A\) and
@@ -2296,66 +2287,89 @@ or introduction.
 
 \hypertarget{refs}{}
 \begin{CSLReferences}{1}{0}
-\leavevmode\vadjust pre{\hypertarget{ref-Allen1986A-Reconceptuali}{}}%
+\leavevmode\hypertarget{ref-Allen1986A-Reconceptuali}{}%
 Allen, R. J. (1986). A reconceptualization of civil trials. \emph{Boston
 University Law Review}, \emph{66}, 401--437.
 
-\leavevmode\vadjust pre{\hypertarget{ref-AllenPardo2019relative}{}}%
+\leavevmode\hypertarget{ref-AllenPardo2019relative}{}%
 Allen, R. J., \& Pardo, M. (2019). Relative plausibility and its
 critics. \emph{The International Journal of Evidence {\&} Proof},
 \emph{23}(1-2), 5--59. \url{https://doi.org/10.1177/1365712718813781}
 
-\leavevmode\vadjust pre{\hypertarget{ref-allen2013}{}}%
+\leavevmode\hypertarget{ref-allen2013}{}%
 Allen, R. J., \& Stein, A. (2013). Evidence, probability and the burden
 of proof. \emph{Arizona Law Journal}, \emph{55}, 557--602.
 
-\leavevmode\vadjust pre{\hypertarget{ref-cheng2012reconceptualizing}{}}%
+\leavevmode\hypertarget{ref-Bernoulli1713Ars-conjectandi}{}%
+Bernoulli, J. (1713). \emph{Ars conjectandi}.
+
+\leavevmode\hypertarget{ref-cheng2012reconceptualizing}{}%
 Cheng, E. (2012). Reconceptualizing the burden of proof. \emph{Yale LJ},
 \emph{122}, 1254.
 
-\leavevmode\vadjust pre{\hypertarget{ref-Cohen1977The-probable-an}{}}%
+\leavevmode\hypertarget{ref-Cohen1977The-probable-an}{}%
 Cohen, J. L. (1977). \emph{The probable and the provable}. Oxford
 University Press. \url{https://doi.org/10.2307/2219193}
 
-\leavevmode\vadjust pre{\hypertarget{ref-dawid1987difficulty}{}}%
+\leavevmode\hypertarget{ref-dawid1987difficulty}{}%
 Dawid, A. P. (1987). The difficulty about conjunction. \emph{The
 Statistician}, 91--97.
 
-\leavevmode\vadjust pre{\hypertarget{ref-haack2011legal}{}}%
-Haack, S. (2014). Legal probabilism: An epistemological dissent. In (pp.
-47--77).
+\leavevmode\hypertarget{ref-Dekay1996}{}%
+Dekay, M. L. (1996). The difference between {B}lackstone-like error
+ratios and probabilistic standards of proof. \emph{Law and Social
+Inquiry}, \emph{21}, 95--132.
 
-\leavevmode\vadjust pre{\hypertarget{ref-Kowalewska2021conjunction}{}}%
+\leavevmode\hypertarget{ref-haack2011legal}{}%
+Haack, S. (2014). Legal probabilism: An epistemological dissent. In
+\emph{{Haack2014-HAAEMS}} (pp. 47--77).
+
+\leavevmode\hypertarget{ref-Kaplan1968decision}{}%
+Kaplan, J. (1968). Decision theory and the fact-finding process.
+\emph{Stanford Law Review}, \emph{20}(6), 1065--1092.
+
+\leavevmode\hypertarget{ref-kaye79}{}%
+Kaye, D. H. (1979). The laws of probability and the law of the land.
+\emph{The University of Chicago Law Review}, \emph{47}(1), 34--56.
+
+\leavevmode\hypertarget{ref-Kowalewska2021conjunction}{}%
 Kowalewska, A. (2021). Reasoning without the conjunction closure.
 \emph{Episteme}, 1--14. \url{https://doi.org/10.1017/epi.2020.53}
 
-\leavevmode\vadjust pre{\hypertarget{ref-Makinson1965-MAKTPO-2}{}}%
+\leavevmode\hypertarget{ref-Laplace1814}{}%
+Laplace, P.-S. (1814). \emph{Essai philosophique sur les probabilités}.
+
+\leavevmode\hypertarget{ref-laudan2006truth}{}%
+Laudan, L. (2006). \emph{Truth, error, and criminal law: An essay in
+legal epistemology}. Cambridge University Press.
+
+\leavevmode\hypertarget{ref-Makinson1965-MAKTPO-2}{}%
 Makinson, D. C. (1965). The paradox of the preface. \emph{Analysis},
 \emph{25}(6), 205--207.
 
-\leavevmode\vadjust pre{\hypertarget{ref-Pardo2008judicial}{}}%
+\leavevmode\hypertarget{ref-Pardo2008judicial}{}%
 Pardo, M. S., \& Allen, R. J. (2008). Judicial proof and the best
 explanation. \emph{Law and Philosophy}, \emph{27}(3), 223--268.
 
-\leavevmode\vadjust pre{\hypertarget{ref-penn1993}{}}%
+\leavevmode\hypertarget{ref-penn1993}{}%
 Pennington, N., \& Hastie, R. (1993). Reasoning in explanation-based
 decision making. \emph{Cognition}, \emph{49}, 123--163.
 
-\leavevmode\vadjust pre{\hypertarget{ref-schwartz2017ConjunctionProblemLogic}{}}%
+\leavevmode\hypertarget{ref-schwartz2017ConjunctionProblemLogic}{}%
 Schwartz, D. S., \& Sober, E. R. (2017). The {Conjunction Problem} and
 the {Logic} of {Jury Findings}. \emph{William \& Mary Law Review},
 \emph{59}(2), 619--692.
 
-\leavevmode\vadjust pre{\hypertarget{ref-Stein05}{}}%
+\leavevmode\hypertarget{ref-Stein05}{}%
 Stein, A. (2005). \emph{Foundations of evidence law}. Oxford University
 Press.
 
-\leavevmode\vadjust pre{\hypertarget{ref-urbaniak2018narration}{}}%
+\leavevmode\hypertarget{ref-urbaniak2018narration}{}%
 Urbaniak, R. (2018). Narration in judiciary fact-finding: A
 probabilistic explication. \emph{Artificial Intelligence and Law},
 1--32. \url{https://doi.org/10.1007/s10506-018-9219-z}
 
-\leavevmode\vadjust pre{\hypertarget{ref-wagenaar1993anchored}{}}%
+\leavevmode\hypertarget{ref-wagenaar1993anchored}{}%
 Wagenaar, W., Van Koppen, P., \& Crombag, H. (1993). \emph{Anchored
 narratives: The psychology of criminal evidence.} St Martin's Press.
 

@@ -1,20 +1,15 @@
 % Options for packages loaded elsewhere
 \PassOptionsToPackage{unicode}{hyperref}
 \PassOptionsToPackage{hyphens}{url}
-\PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
+\PassOptionsToPackage{dvipsnames,svgnames*,x11names*}{xcolor}
 %
 \documentclass[
   10pt,
   dvipsnames,enabledeprecatedfontcommands]{scrartcl}
-\title{Appendix: Bayes factor, likelihood ratio, and the difficulty
-about conjunction}
-\author{Marcello Di Bello and Rafal Urbaniak}
-\date{}
-
 \usepackage{amsmath,amssymb}
 \usepackage{lmodern}
-\usepackage{iftex}
-\ifPDFTeX
+\usepackage{ifxetex,ifluatex}
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
   \usepackage{textcomp} % provide euro and other symbols
@@ -36,10 +31,10 @@ about conjunction}
   pdftitle={Appendix: Bayes factor, likelihood ratio, and the difficulty about conjunction},
   pdfauthor={Marcello Di Bello and Rafal Urbaniak},
   colorlinks=true,
-  linkcolor={Maroon},
-  filecolor={Maroon},
-  citecolor={Blue},
-  urlcolor={blue},
+  linkcolor=Maroon,
+  filecolor=Maroon,
+  citecolor=Blue,
+  urlcolor=blue,
   pdfcreator={LaTeX via pandoc}}
 \urlstyle{same} % disable monospaced font for URLs
 \usepackage{graphicx}
@@ -247,9 +242,14 @@ about conjunction}
 \usepackage[normalem]{ulem}
 \usepackage{makecell}
 \usepackage{xcolor}
-\ifLuaTeX
+\ifluatex
   \usepackage{selnolig}  % disable illegal ligatures
 \fi
+
+\title{Appendix: Bayes factor, likelihood ratio, and the difficulty
+about conjunction}
+\author{Marcello Di Bello and Rafal Urbaniak}
+\date{}
 
 \begin{document}
 \maketitle
@@ -503,6 +503,8 @@ at least one probabilistic measure fitting the DAG according to which
 they are independent. So, at least, no false independence can be
 inferred from the DAG, and all the dependencies are built into it.
 
+\raf{M: The structure of the exposition is not perfectly clear. Maybe add  subsection titles to demarcate the parts about Bayesian networks in general and those about the conjuction paradox specifically.}
+
 Now, getting back to the conjunction problem, the d-separations entailed
 by these networks differ (examples can be found in Table
 \ref{tab:indepBNS})---in fact, \textsf{DAG1} entails 31 d-separations,
@@ -570,6 +572,8 @@ b\indep \n A \et a \vert \n B \label{eq:I5c} & \hspace{2cm}\mbox{\footnotesize D
 b \indep a \vert B \label{eq:I6} & \hspace{2cm}\mbox{\footnotesize DAG1 , DAG2} 
 \end{align}
 
+\raf{M: Can this list be more compact? What's the difference with the table with d-separation?}
+
 Some caveats. In \eqref{eq:I1} the conditioning on \(a\) is not
 essential, because it's not on the path between the nodes: the key
 reason why the independence remains upon this conditioning is that there
@@ -604,6 +608,8 @@ relation to conjunction. Let's abbreviate: \begin{align*}
 BF_A  & =  \frac{\pr{a \vert A}}{\pr{a}},\\
 BF_B & = \frac{\pr{b \vert B}}{\pr{b}}
 \end{align*}
+
+\raf{M: For readability, the formulation you use later in FACT 3 is better i.e. "For any probabilistic measure P appropriate for (or compatible with) DAG 1", instead of the numbered assumptions that are hard to keep track. This comment applies to FACT 1 here and FACT 2 below, and all the corollaries.}
 
 \begin{fact} If the independence assumptions \eqref{eq:indAB}, \eqref{eq:indab}, \eqref{eq:I4} and \eqref{eq:I5} hold (all of which are entailed by \textsf{DAG1}), then 
 $BF_{AB} = BF_A \times BF_B$. \label{fac:BFindep}
@@ -645,10 +651,12 @@ then \(a > \mathsf{max}(b,c)\) and that if \(b, c<1\), then
 \end{corollary}
 
 Now, does a similar claim if we drop the independence assumption
-specific to \textsf{DAG1}? A claim somewhat weaker than Fact
-\ref{fac:BFindep} can be proven without employing independencies
-entailed by \textsf{DAG1}, relying only on some independencies entailed
-by \textsf{DAG2}. Let's abbreviate: \begin{align*}
+specific to \textsf{DAG1}?
+\raf{M: I think this is a good place to insert the results of the simulations, showing that the product in FACT 1 fails when there is dependence between hypotheses A and B, along with some other facts. Next, you can prove the claim that aggregation is still satisfied with slightly weaker assumptions even when A and B are dependent.}A
+claim somewhat weaker than Fact \ref{fac:BFindep} can be proven without
+employing independencies entailed by \textsf{DAG1}, relying only on some
+independencies entailed by \textsf{DAG2}. Let's abbreviate:
+\begin{align*}
 BF^{'}_{B} & = \frac{\pr{b \vert B}}{\pr{b\vert a}} \\
 BF^{'}_{A} & = \frac{\pr{a \vert A}}{\pr{a \vert b}}
 \end{align*}
@@ -682,6 +690,8 @@ there are at lest two paths. One starts with an additional disjunctive
 assumption that either \(\pr{b\vert a} \leq \pr{b}\) or
 \(\pr{a \vert b} \leq \pr{a}\).
 
+\raf{M: This reasoning here is muddled and does not lead very far. You later show with the simulation that these assumptiosn are false. Unless there is something interesting to learn from the fact they are false, I would remove this corollary.}
+
 \begin{corollary} Suppose \eqref{eq:I4} and \eqref{eq:I5}  hold and $BF_{BA}, BF_{B} >1$. 
 Then if either $\pr{b\vert a} \leq \pr{b}$ or \linebreak  $\pr{a \vert b} \leq \pr{a}$, we have $BF_{AB}\geq BF_{A}, BF_{B}$. \label{cor:BFweaker}
 \end{corollary}
@@ -702,6 +712,7 @@ Similarly, if the other disjunct holds, we run an analogous argument, this time 
 \end{proof}
 
 \mar{R: added this paragraph and another collorary, check}
+\raf{M: I would remove the paragraph above (se comments above), so I would remove this paragraph, as well.}
 
 However, the problem with this assumption is that if it holds, this
 means that one item of evidence makes the other item of evidence at
@@ -714,6 +725,8 @@ hypothesis---witnesses attesting to the erratic driving, the presence of
 the harm, and so on, more likely.
 
 Another approach uses a conjunction of assumptions.
+
+\raf{M: I think the key claim is FACT 3 which you prove nicely later. Fact 3,  combined with this corollary and Fact 2, gives the result with want. I wonder if the argument can be consolidated into just one FACT more succintly.}
 
 \begin{corollary} Suppose \eqref{eq:I4} and \eqref{eq:I5}  hold and $BF_{BA}, BF_{B} >1$. 
 Then if both $\pr{a\vert b} \leq \pr{a \vert A}$ and \linebreak  $\pr{b \vert a} \leq \pr{b\vert B}$, we have $BF_{AB}\geq BF_{A}, BF_{B}$. \label{cor:BFweaker2}
@@ -782,8 +795,9 @@ is visualized in Figure \ref{fig:BFfails}.
 The picture doesn't change when we move to \textsf{DAG2} (Figure
 \ref{fig:BFind2}). One reason this is interesting is that this suggests
 that the additional assumption we used in the proof of Corollary
-\ref{cor:BFweaker} was not needed. We will take a closer look at this
-issue soon.\\
+\ref{cor:BFweaker} was not needed.
+\raf{M: Not sure about the significance of this.} We will take a closer
+look at this issue soon.\\
 What does change, however, is that the joint BF is no longer the result
 of multiplying the individual BFs. Nevertheless, the values are fairly
 close (Figure \ref{fig:BFmulti}).
@@ -817,6 +831,8 @@ fact, even more can be said. In the simulation
 \(\pr{b \vert a}> \pr{b}\) around 50\% of the time, and the same holds
 for \(\pr{b \vert a}> \pr{b}\), so the assumptions of Corollary
 \ref{cor:BFweaker} fail.
+
+\raf{M: Paragraphs here are too exploratory. Better to get to the point. The structrure should be: (1) agreggation succeeds with independence of A and B (algebraic proof); (2) simulation of relevant results when A and B are dependent, claims that fail/hold; (3) algebraic proof that aggregation succeeds with slightly weaker assumptions (discovered through simulation).}
 
 So do the assumptions of Corollary \ref{cor:BFweaker2}:
 \(\pr{a \vert b } > \pr {a \vert A}\) around 50\% of the time and the
@@ -861,7 +877,7 @@ cases for both DAGs can be inspected in Figure \ref{fig:BFdistr}.
 \textsf{DAG 2}}
 
 \ali{R: this subsection is new, check statements and proofs in detail.}
-\mar{R: this subsection is new, check statements and proofs in detail.}
+\raf{M: checkd this subsection, looks good, nice proof!}
 
 Let us start with the following lemma.
 
@@ -925,6 +941,8 @@ For the second conjunct, notice that we have a similar reasoning, albeit it reli
 
 \noindent The rest of the reasoning for this case is algebraically the same as the one used above. This completes the proof. 
 \end{proof}
+
+\raf{M: For readability, it might help to plot the visual relationship between P(a|b) and P(a|A), just as a further clarification about the algebraic claim.}
 
 \hypertarget{likelihood-ratio-claims-and-proofs}{%
 \subsection*{Likelihood ratio: claims and
@@ -1087,6 +1105,8 @@ of the individual likelihood ratios (Figures \ref{fig:LRabovePlot} and
 
 Here's an example of one of many \textsf{BNs} in which an individual
 likelihood exceeds the joint likelihood.
+
+\raf{M: Very interesting. This is intuitive. If the two items of evidence are not independent lines of evidence, they might not always strengthen one another. This happens in 14 per cent of the cases, not too often. Is there a pattern? Could be explored in chapter on corroborationor or cross-examination.}
 
 \begin{figure}
 \begin{subfigure}[!ht]{0.45\textwidth}
