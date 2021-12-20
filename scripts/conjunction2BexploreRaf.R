@@ -220,6 +220,37 @@ conjunctionTable2B %>% filter( BFAs > 1 & BFBs >1 & AifBs)
 
 
 
+getwd() #this should be the project directory
+getwd()
+conjunctionTable2dep <- readRDS(file = "datasets/conjunctionTableDepAli2.RDS")
+
+
+colnames(conjunctionTable2dep)
+
+conjunctionTable2dep$minIndividual <- pmin(conjunctionTable2dep$Aifas, conjunctionTable2dep$Bifbs)
+conjunctionTable2dep$diffIndividualMin <- conjunctionTable2dep$ABifabs - conjunctionTable2dep$minIndividual 
+
+
+positiveDEP <-  conjunctionTable2dep %>% filter(ABifabs > ABs)
+
+
+plotABindBelow2DEP <-  ggplot(positiveDEP, aes(x = diffIndividualMin))+geom_histogram(aes( y = ..density..), bins = 60)+
+  xlab("P(AB|ab) -  min(P(A|a), P(B|b))")+ggtitle("DAG 2, compared to the the minimum (failure rate ca. 60%)")+
+  labs(subtitle = expression(paste("Assuming  P(AB|ab) > P(AB)")))+xlim(c(-.7,1))+theme_tufte()
+
+
+mean(positiveDEP$ABifabs < positiveDEP$Aifas & positiveDEP$ABifabs < positiveDEP$Bifbs )
+
+
+
+
+plotBFindAbove <- conjunctionTable %>% filter(BFAs > 1 & BFBs > 1) %>% ggplot( aes(x = BFdifsMax))+geom_histogram(aes( y = ..density..), bins = 40)+
+  xlab(expression(paste(BF[AB] - max,"(",BF[A], ", ", BF[B],")")))+ggtitle("Compared to  the maximum")+
+  labs(subtitle = expression(paste("Assuming ",  BF[A], ", ",   BF[B] > 1)))+xlim(c(0,3))
+
+
+
+
 
 
 
