@@ -9,7 +9,7 @@ graphviz.plot(conjunctionDAG)
 
 # set seed and number of iterations
 set.seed(321)
-n <- 1000
+n <- 10000
 
 # initialize the variables
 As <- numeric(n)
@@ -189,7 +189,7 @@ conjunctionTableDep <- data.frame(As,Bs,aifAs,aifnAs,bifBs,bifnBs,
                                ABifabs,BFAs,BFBs, BFABs,
                                LRAs, LRBs, LRAabs, LRBabs, LRABs)
 
-
+nrow(conjunctionTableDep)
 
 
 

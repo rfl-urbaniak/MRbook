@@ -9,7 +9,7 @@ doubleDepDAG <- model2network("[a|A:b][b|B][AB|A:B][A][B|A]")
 graphviz.plot(doubleDepDAG)
 
 set.seed(123)
-n <- 1000
+n <- 10000
 
 As <- numeric(n)
 Bs <- numeric(n)
@@ -237,6 +237,9 @@ conjunctionTableDoubleDep <- data.frame(As,Bs,aifAs,aifnAs,bifBs,bifnBs,aifAbs,
                                    ABifabs,BFAs,BFBs, BFABs, BFAprimes, BFBprimes,
                                    LRAs, LRBs, LRAabs, LRBabs, LRABs)
 
+
+
+nrow(conjunctionTableDoubleDep)
 
 saveRDS(conjunctionTableDoubleDep, file = "datasets/doubleDependencyTable3(fixedEvidence).RDS")
 

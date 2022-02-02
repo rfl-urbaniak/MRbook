@@ -29,14 +29,14 @@ LRabFails <- con %>% filter(LRAabs > LRABs & LRBabs > LRABs )
 nrow(LRabFails)/nrow(con)
 #!!!
 #If no assumption about the direction of support is made, 
-#around 12% of the time  (around twice less often if the usual LRs are used), 
+#around 12.7% of the time  (around twice less often if the usual LRs are used), 
 #the separate LRs with fixed evidence are both greater than the joint LR.
 LRabFails2 <- conDep %>% filter(LRAabs > LRABs & LRBabs > LRABs )
 nrow(LRabFails2)/nrow(conDep)
-## The frequency goes slightly up to around 14\% if we switch to BN2.
+## The frequency goes slightly up to around 13\% if we switch to BN2.
 LRabFails3 <- con2Dep %>% filter(LRAabs > LRABs & LRBabs > LRABs )
 nrow(LRabFails3)/nrow(con2Dep)
-## and is only .4\% higher if additionally we allow for the dependency between the items of evidence.
+## and is around the same value if additionally we allow for the dependency between the items of evidence.
 
 
 
@@ -71,21 +71,22 @@ mean(aboveLR2$LRABs > aboveLR2$minLR & aboveLR2$LRABs < aboveLR2$maxLR)
 mean(aboveLR3$LRABs > aboveLR3$minLR & aboveLR3$LRABs < aboveLR3$maxLR)
 
 ## !!!
-## Around 73\% of joint likelihoods (75% for BN2, 70\% for BN3) are between the individual ones, 
+## Around 70\% of joint likelihoods (75% for BN2, 72\% for BN3) are between the individual ones, 
 mean(aboveLR$LRABs < aboveLR$minLR)
 mean(aboveLR2$LRABs < aboveLR2$minLR)
 mean(aboveLR3$LRABs < aboveLR3$minLR)
 
 
-## no joint LR is below the minimal for BN1, but already 1.2\% for BN2 and 2\% for BN3.
+## no joint LR is below the minimal for BN1, but already around 2\% for both BN2 and  BN3.
 
 
 mean(aboveLR$LRABs > aboveLR$LRAabs & aboveLR$LRABs > aboveLR$LRBabs)
 mean(aboveLR2$LRABs > aboveLR2$LRAabs & aboveLR2$LRABs > aboveLR2$LRBabs)
 mean(aboveLR3$LRABs > aboveLR3$LRAabs & aboveLR3$LRABs > aboveLR3$LRBabs)
 
-##!! ## around 27\% of the time, the joint LR is strictly greater than both of the individual LRs with evidence fixed for BN1, 
-##23\% for BN2, and 27\% for BN3.
+##!! ## around 30\% of the time, the joint LR is strictly greater than both of the individual LRs with evidence fixed for BN1, 
+##22\% for BN2, and 26\% for BN3.
+
 
 
 
