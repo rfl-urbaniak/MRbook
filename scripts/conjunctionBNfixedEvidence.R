@@ -4,12 +4,20 @@ library(gRain)
 source("scripts/CptCreate.R")
 
 
+
+
+
+#need to add these things:
+#LRABab = P(ab | AB)   /   P(ab| ~AB)
+#LRAab = P(ab |A) / P(ab|~ A)    abifAs/ abifnAs
+#LRBab = P(ab |B) / P(ab | ~B)
+
 conjunctionDAG <- model2network("[a|A][b|B][AB|A:B][A][B]")
 
 graphviz.plot(conjunctionDAG)
 
 set.seed(123)
-n <- 2
+n <- 10000
 
 As <- numeric(n)
 Bs <- numeric(n)
@@ -32,6 +40,15 @@ BFABs <-  numeric(n)
 LRAs <- numeric(n)
 LRBs <- numeric(n)
 LRABs <- numeric(n)
+
+
+#this is needed for  LR with joint evidence fixed
+abifAs <- numeric(n)
+abifnAs <- numeric(n)
+abifBs <- numeric(n)
+abifnBs <- numeric(n)
+LRAabs <- numeric(n)
+LRBabs <- numeric(n)
 
 
 
@@ -87,6 +104,8 @@ conjunctionJNb <-  setEvidence(conjunctionJN, nodes = c("b"),
 Bifbs[i]  <- querygrain(conjunctionJNa, node = "B")[[1]][[1]] 
 
 
+
+
 conjunctionJNAB <- setEvidence(conjunctionJN, nodes = c("A", "B"), 
                                states = c("1", "1"))
 
@@ -119,19 +138,54 @@ abIfnABs[i] <- ((1- ABifabs[i]) * abs[i])/(1-ABs[i])
 
 
 LRABs[i] <- abifABs[i] / abIfnABs[i]
+
+#this adds individual LR with fixed joint evidence
+conjunctionJNA <-  setEvidence(conjunctionJN, nodes = c("A"), 
+                               states = c("1"))
+abifAs[i] <- querygrain(conjunctionJNA, node = c("a","b"), 
+              type = "joint")[1,1]
+
+conjunctionJNnA <-  setEvidence(conjunctionJN, nodes = c("A"), 
+                               states = c("0"))
+
+abifnAs[i] <- querygrain(conjunctionJNnA, node = c("a","b"), 
+                        type = "joint")[1,1]
+
+LRAabs[i] <- abifAs[i]/abifnAs[i]
+
+
+conjunctionJNB <-  setEvidence(conjunctionJN, nodes = c("B"), 
+                               states = c("1"))
+abifBs[i] <- querygrain(conjunctionJNB, node = c("a","b"), 
+                        type = "joint")[1,1]
+
+conjunctionJNnB <-  setEvidence(conjunctionJN, nodes = c("B"), 
+                                states = c("0"))
+
+abifnBs[i] <- querygrain(conjunctionJNnB, node = c("a","b"), 
+                         type = "joint")[1,1]
+
+LRBabs[i] <- abifBs[i]/abifnBs[i]
+
+
+
+
+
 }
 
 conjunctionTable <- data.frame(As,Bs,aifAs,aifnAs,bifBs,bifnBs,
                              as, bs, Aifas, Bifbs, abs, abifABs,abIfnABs,ABs,
                              ABifabs,BFAs,BFBs, BFABs,
-                             LRAs, LRBs, LRABs)
+                             LRAs, LRBs, LRAabs, LRBabs, LRABs)
 
 
 
 conjunctionTable
 
+nrow(conjunctionTable)
+
 getwd()
-saveRDS(conjunctionTable, file = "../datasets/conjunctionTable2.RDS")
+saveRDS(conjunctionTable, file = "datasets/conjunctionTable3(jointEvidence).RDS")
 
 
 
