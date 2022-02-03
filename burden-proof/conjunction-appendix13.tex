@@ -1,20 +1,15 @@
 % Options for packages loaded elsewhere
 \PassOptionsToPackage{unicode}{hyperref}
 \PassOptionsToPackage{hyphens}{url}
-\PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
+\PassOptionsToPackage{dvipsnames,svgnames*,x11names*}{xcolor}
 %
 \documentclass[
   10pt,
   dvipsnames,enabledeprecatedfontcommands]{scrartcl}
-\title{Appendix: Bayes factor, likelihood ratio, and the difficulty
-about conjunction}
-\author{Marcello Di Bello and Rafal Urbaniak}
-\date{}
-
 \usepackage{amsmath,amssymb}
 \usepackage{lmodern}
-\usepackage{iftex}
-\ifPDFTeX
+\usepackage{ifxetex,ifluatex}
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
   \usepackage{textcomp} % provide euro and other symbols
@@ -36,10 +31,10 @@ about conjunction}
   pdftitle={Appendix: Bayes factor, likelihood ratio, and the difficulty about conjunction},
   pdfauthor={Marcello Di Bello and Rafal Urbaniak},
   colorlinks=true,
-  linkcolor={Maroon},
-  filecolor={Maroon},
-  citecolor={Blue},
-  urlcolor={blue},
+  linkcolor=Maroon,
+  filecolor=Maroon,
+  citecolor=Blue,
+  urlcolor=blue,
   pdfcreator={LaTeX via pandoc}}
 \urlstyle{same} % disable monospaced font for URLs
 \usepackage{graphicx}
@@ -248,9 +243,14 @@ about conjunction}
 \usepackage[normalem]{ulem}
 \usepackage{makecell}
 \usepackage{xcolor}
-\ifLuaTeX
+\ifluatex
   \usepackage{selnolig}  % disable illegal ligatures
 \fi
+
+\title{Appendix: Bayes factor, likelihood ratio, and the difficulty
+about conjunction}
+\author{Marcello Di Bello and Rafal Urbaniak}
+\date{}
 
 \begin{document}
 \maketitle
@@ -591,8 +591,6 @@ So, moving from nodes to events, here is a list of independencies
 between propositions used in the arguments that follow. We also marked
 whether they are entailed by a either of the two DAGs.
 
-\vspace{-3mm}
-
 \begin{figure}
 \begin{subfigure}[!ht]{0.45\textwidth}
 \begin{align} A\indep B  \label{eq:indAB}     &\hspace{2cm}\mbox{\footnotesize DAG1}\\
@@ -642,10 +640,6 @@ relation to conjunction. Let's abbreviate: \begin{align*}
 BF_A  & =  \frac{\pr{a \vert A}}{\pr{a}},\\
 BF_B & = \frac{\pr{b \vert B}}{\pr{b}}
 \end{align*}
-
-\raf{M: For readability, the formulation you use later in FACT 3 is better i.e. "For any probabilistic measure P appropriate for (or compatible with) DAG 1", instead of the numbered assumptions that are hard to keep track. This comment applies to FACT 1 here and FACT 2 below, and all the corollaries.}
-
-\mar{R: I sort of can see your point, but this would weaken the content of the theorems. I see your point about readability, but the proper identification of the exact independencies that are needed and NOTHING more has value. Not all independencies entailed by the DAGs are needed. }
 
 \begin{fact} If the independence assumptions \eqref{eq:indAB}, \eqref{eq:indab}, \eqref{eq:I4} and \eqref{eq:I5} hold (all of which are entailed by \textsf{DAG1}), then 
 $BF_{AB} = BF_A \times BF_B$. \label{fac:BFindep}
@@ -732,10 +726,6 @@ If instead of obtaining $\pr{a}\pr{b \vert a}$ in the denominator we deploy the 
 \end{align*}
 
 \end{proof}
-
-\raf{M: I think the key claim is FACT 3 which you prove nicely later. Fact 3,  combined with this corollary and Fact 2, gives the result with want. I wonder if the argument can be consolidated into just one FACT more succintly.}
-
-\mar{R: I wouldn't do that. This way we have a claim about the relationship between BF and LR, and this formulation allows us to notice and focus on cases in which aggregation fails. I think it's nice to give this in these installments.}
 
 And here is how we get to aggregation in this setting.
 
@@ -857,8 +847,6 @@ cases for both DAGs can be inspected in Figure \ref{fig:BFdistr}.
 \addcontentsline{toc}{subsection}{Assumptions of Corollary
 \ref{cor:BFweaker2} and \textsf{DAG 2}}
 
-\ali{R: this subsection is new, check statements and proofs in detail.}
-
 Let us start with the following lemma.
 
 \begin{lemma} For any probabilistic measure $\mathsf{P}$, if $BF_A >1$, then $LR_A>1$.\label{lem:BFLR}
@@ -921,9 +909,6 @@ For the second conjunct, notice that we have a similar reasoning, albeit it reli
 
 \noindent The rest of the reasoning for this case is algebraically the same as the one used above. This completes the proof. 
 \end{proof}
-
-\raf{M: For readability, it might help to plot the visual relationship between P(a|b) and P(a|A), just as a further clarification about the algebraic claim.}
-\mar{R: I am not convinced; P(a|b) is a function of P(a|A) and two other variables, and visualisation of functions of three arguments aren't very transparent. I could try out various simplifying assumptions or particular cases, but the point of the general claim is not to use them, no?}
 
 \hypertarget{likelihood-ratio-claims-and-proofs}{%
 \subsection*{Likelihood ratio: claims and
@@ -1087,10 +1072,6 @@ of the individual likelihood ratios (Figures \ref{fig:LRabovePlot} and
 An example of one of many \textsf{BNs} in which an individual likelihood
 exceeds the joint likelihood can be inspected in Figure
 \ref{tab:CPTconjunctionBNL}.
-
-\raf{M: Very interesting. This is intuitive. If the two items of evidence are not independent lines of evidence, they might not always strengthen one another. This happens in 14 per cent of the cases, not too often. Is there a pattern? Could be explored in chapter on corroborationor or cross-examination.}
-
-\mar{R: Maybe, we'll keep this in mind.}
 
 \begin{figure}
 \begin{subfigure}[!ht]{0.45\textwidth}
@@ -1256,5 +1237,40 @@ a &  &  & Pr\\
 \caption{Aggregation failure.} 
 \label{fig:aggregationFails}
 \end{figure}
+
+\mar{R: Two new passages on fixed joint evidence, check.}
+
+Finally, you might recall that in the chapter we distinguished two
+variants of the distribution requirement, (DIS1) and (DIS2). The former
+has been in the focus so far, and the latter differs in keeping the
+evidence fixed at \(a \et b\), even when calculating individual LRs. So,
+sticking to LR, distribution in this variant pertains to the joint LR
+and the following two ratios:
+\(\nicefrac{\pr{a\et b \vert A}}{\pr{a \et b \vert \n A}}\) and
+\(\nicefrac{\pr{a\et b \vert B}}{\pr{a \et b \vert \n B}}\). To make
+sure that switching to (DIS2) doesn't make things easier for legal
+probabilists, we ran 30k simulations (10k for each BN type), and
+inspected the status of aggregation and distribution for these ratios.
+
+Here are the results. If no assumption about the direction of support is
+made, around 12.7\% of the time (around twice less often than if the
+usual individual LRs are used), the individual LRs with fixed evidence
+are both greater than the joint LR---this is for \textsf{DAG1}, the
+frequency goes slightly up to around 13\% if we switch to \textsf{DAG2}
+and is around the same value if additionally we allow for the dependency
+between the items of evidence (\textsf{DAG3}). Assuming individual LRs
+are above one, around 70\% of joint likelihoods (75\% for BN2, 72\% for
+BN3) are between the individual ones, no joint LR is below the minimum
+of the individual ratios for \textsf{DAG1}, but is so around 2\% times
+for both \textsf{DAG2} and \textsf{DAG3}. This is one important
+difference: even aggregation can fail if dependencies are present, if we
+keep joint evidence fixed in all the ratios. As for distribution, there
+are no major surprises: around 30\% of the time, the joint LR is
+strictly greater than both of the individual LRs with evidence fixed for
+\textsf{DAG1}, 22\% for \textsf{DAG2}, and 26\% for \textsf{DAG3}. In
+short, keeping the joint evidence fixed across all ratios makes things
+even harder, when it comes to preserving aggregation and distribution.
+
+.
 
 \end{document}

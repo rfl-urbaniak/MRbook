@@ -71,7 +71,7 @@
 \usepackage{nicefrac}
 \newcommand*{\QED}{\hfill \footnotesize {\sc Q.e.d.}}
 \usepackage{floatrow}
-\usepackage[titletoc]{appendix}
+%\usepackage[titletoc]{appendix}
 %\renewcommand\thesubsection{\Alph{subsection}}
 
 \usepackage[textsize=footnotesize]{todonotes}
@@ -3139,9 +3139,13 @@ points at 0:
 \end{align}
 
 (Log-likelihood), our good old likelihood ratio, and (Kemeny--Oppenheim)
-are ordinally equivalent (and no other pair on the list is). Further
-grouping and assessment of the confirmation measures for a given purpose
-is facilitated by the following facts:
+are ordinally equivalent (and no other pair on the list is). The former
+makes calculations of joint support additive, and the former has the
+nice feature of ranging from \(-1\) to \(1\) and having 0 as a neutral
+point, so if one accepts the use of likelihood ratio, these two also can
+be used on some occassions when these additional features are justified.
+Further grouping and assessment of the confirmation measures for a given
+purpose is facilitated by the following facts:
 
 \begin{itemize}
 \item
@@ -3272,6 +3276,65 @@ Measure & Reason not to use\\
 \caption{Reasons not to use various confirmation measures in legal fact-finding applications.}
 \label{tab:confirmation}
 \end{table}
+
+\mar{R: so here's my account of the Heckerman's result, take a look}
+
+Finally, here is a somewhat abstract, yet important approach to
+confirmation measures due to (Heckerman, 1988), which constitutes a
+fairly strong motivation to use likelihood ratio. Suppose you have
+background information \(e\), and consider a hypothesis \(H\) when you
+obtain a piece of evidence \(E\). A belief update, \(U(H, E, e)\),
+together with your prior stance of \(H\), should determine your
+posterior belief in \(H\). If we denote conditional belief in \(H\)
+given \(E\), without assuming it's probabilistic yet, as \(H\vert E\),
+this means that there should be an \(f\) such that: \begin{align*}
+H \vert Ee & = f(U(H,E,e), H \vert e)
+\end{align*}
+
+\noindent where, on this approach, \(H \vert Ee, U(H,E,e),\) and
+\(H \vert e\), are all real numbers, and \(f\) is required to be
+continuous in both arguments and monotonically increasing when the other
+is held constant. Call this the \textbf{update requirement}. Bayesian
+updating is a particular case: the selection of \(H\) and \(e\), with a
+joint distribution in the background, determines a function from
+\(\pr{H \vert E}\) to \(\pr{H \vert Ee}\).
+
+Further, assume the \textbf{consistency property}: if the arguments are
+logically equivalent, then belief update yields the same value:
+\begin{align*}
+[H_1 \Leftrightarrow H_2, E_1 \Leftrightarrow E_2] \Rightarrow U(H_1, E_1, e_1) = U(H_2, E_2, e_2)
+\end{align*}
+
+The next assumption has it that when you update on two items of
+evidence, the order of updating shouldn't matter and the result should
+be the same as updating on the joint evidence. The
+\textbf{combination property} requires that there is a function \(g\)
+that is continuous in both arguments and monotonically increasing in
+each argument when the other is held constant such that: \begin{align*}
+U(H, E_1E_2,e) & =  g(U(H,E_1, e), U(H, E_2, E_1e))
+\end{align*} A general result in group theory by Aczel is that any
+continuous monotonic function of two arguments that satisfies the
+associativity relation must be additive in some transformed space. In
+this particular case, the result entails that any update that satisfies
+the update condition, and the consistency and combination properties is
+the arithmetic difference of a posterior and prior belief up to an
+arbitrary monotonic transformation, that is, that there are monotonic
+functions \(h\) and \(i\) such that: \begin{align*}
+h(U(H,E,e)) & = i(H\vert Ee) - i(H\vert e)
+\end{align*} In the probabilistic context, where \(H\vert E\) is
+\(\pr{H\vert E}\), the likelihood ratio satisifies the update
+requirement and has the combination and consistency properties.
+Accordingly, the transformation that makes it additive is the
+logarithmic function.
+
+Now, the \emph{independence correspondence property} has it that if
+\(E_1\) and \(E_2\) are conditionally independent given \(H\) and given
+\(\n H\), then \(U(H, E_2, E_1e) = U(H, E_2, e)\). The key result is
+that any probabilistic update satisfying the independence correspondence
+must be a monotonic transformation of the likelihood ratio. This means
+that there is a list of fairly intuitive general conditions on what an
+update function should behave like which entails that it is just a
+variant of the likelihood ratio.
 
 \hypertarget{references}{%
 \section*{References}\label{references}}
@@ -3509,6 +3572,10 @@ Hawthorne, J., \& Fitelson, B. (2004). Discussion: Re-solving irrelevant
 conjunction with probabilistic independence, \emph{71}(4), 505--514.
 University of Chicago Press. Retrieved from
 \url{https://doi.org/10.1086/423626}
+
+\leavevmode\hypertarget{ref-Heckerman1988axiomatic}{}%
+Heckerman, D. (1988). Ax axiomatic framework for belief updates.
+\emph{Machine Intelligence and Pattern Recognition}, \emph{5}, 11--22.
 
 \leavevmode\hypertarget{ref-klobuchar2006improving}{}%
 Klobuchar, A., Steblay, N. K. M., \& Caligiuri, H. L. (2006). Improving
