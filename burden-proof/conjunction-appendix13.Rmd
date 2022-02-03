@@ -337,8 +337,7 @@ In what follows, however, we will  use a finer level of granularity, being very 
 
 
 So, moving from nodes to events, here is a list of independencies between propositions  used in the arguments that follow.  We also marked whether they are entailed by a either of the two DAGs.
-
-\vspace{-3mm}
+  
 
 \begin{figure}
 \begin{subfigure}[!ht]{0.45\textwidth}
@@ -391,9 +390,9 @@ BF_B & = \frac{\pr{b \vert B}}{\pr{b}}
 \end{align*}
 
 
-\raf{M: For readability, the formulation you use later in FACT 3 is better i.e. "For any probabilistic measure P appropriate for (or compatible with) DAG 1", instead of the numbered assumptions that are hard to keep track. This comment applies to FACT 1 here and FACT 2 below, and all the corollaries.}
+<!-- \raf{M: ybility, the formulation you use later in FACT 3 is better i.e. "For any probabilistic measure P appropriate for (or compatible with) DAG 1", instead of the numbered assumptions that are hard to keep track. This comment applies to FACT 1 here and FACT 2 below, and all the corollaries.} -->
 
-\mar{R: I sort of can see your point, but this would weaken the content of the theorems. I see your point about readability, but the proper identification of the exact independencies that are needed and NOTHING more has value. Not all independencies entailed by the DAGs are needed. }
+<!-- \mar{R: I sort of can see your point, but this would weaken the content of the theorems. I see your point about readability, but the proper identification of the exact independencies that are needed and NOTHING more has value. Not all independencies entailed by the DAGs are needed. } -->
 
 
 
@@ -525,9 +524,9 @@ If instead of obtaining $\pr{a}\pr{b \vert a}$ in the denominator we deploy the 
 
 <!-- Another approach uses a conjunction of assumptions. -->
 
-\raf{M: I think the key claim is FACT 3 which you prove nicely later. Fact 3,  combined with this corollary and Fact 2, gives the result with want. I wonder if the argument can be consolidated into just one FACT more succintly.}
+<!-- \raf{M: I think the key claim is FACT 3 which you prove nicely later. Fact 3,  combined with this corollary and Fact 2, gives the result with want. I wonder if the argument can be consolidated into just one FACT more succintly.} -->
 
-\mar{R: I wouldn't do that. This way we have a claim about the relationship between BF and LR, and this formulation allows us to notice and focus on cases in which aggregation fails. I think it's nice to give this in these installments.}
+<!-- \mar{R: I wouldn't do that. This way we have a claim about the relationship between BF and LR, and this formulation allows us to notice and focus on cases in which aggregation fails. I think it's nice to give this in these installments.} -->
 
 And here is how we get to aggregation in this setting.
 
@@ -746,7 +745,7 @@ annotate_figure(plotBFDistrJoint, top = text_grob("Distribution failures for BF"
 
 ##  Assumptions of Corollary \ref{cor:BFweaker2} and \textsf{DAG 2} {-}
 
-\ali{R: this subsection is new, check statements and proofs in detail.}
+<!-- \ali{R: this subsection is new, check statements and proofs in detail.} -->
 
 
 
@@ -817,8 +816,8 @@ For the second conjunct, notice that we have a similar reasoning, albeit it reli
 \noindent The rest of the reasoning for this case is algebraically the same as the one used above. This completes the proof. 
 \end{proof}
 
-\raf{M: For readability, it might help to plot the visual relationship between P(a|b) and P(a|A), just as a further clarification about the algebraic claim.}
-\mar{R: I am not convinced; P(a|b) is a function of P(a|A) and two other variables, and visualisation of functions of three arguments aren't very transparent. I could try out various simplifying assumptions or particular cases, but the point of the general claim is not to use them, no?}
+<!-- \raf{M: For readability, it might help to plot the visual relationship between P(a|b) and P(a|A), just as a further clarification about the algebraic claim.} -->
+<!-- \mar{R: I am not convinced; P(a|b) is a function of P(a|A) and two other variables, and visualisation of functions of three arguments aren't very transparent. I could try out various simplifying assumptions or particular cases, but the point of the general claim is not to use them, no?} -->
 
 
 
@@ -1120,9 +1119,9 @@ annotate_figure(LRabovePlotDep, top = text_grob("Distances of the joint LR from 
 
 An example of one of many \textsf{BNs} in which an individual likelihood exceeds the joint likelihood can be inspected in Figure \ref{tab:CPTconjunctionBNL}.
 
-\raf{M: Very interesting. This is intuitive. If the two items of evidence are not independent lines of evidence, they might not always strengthen one another. This happens in 14 per cent of the cases, not too often. Is there a pattern? Could be explored in chapter on corroborationor or cross-examination.}
+<!-- \raf{M: Very interesting. This is intuitive. If the two items of evidence are not independent lines of evidence, they might not always strengthen one another. This happens in 14 per cent of the cases, not too often. Is there a pattern? Could be explored in chapter on corroborationor or cross-examination.} -->
 
-\mar{R: Maybe, we'll keep this in mind.}
+<!-- \mar{R: Maybe, we'll keep this in mind.} -->
 
 ```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%"}
 source("../scripts/CptCreate.R")
@@ -1454,4 +1453,21 @@ aggregationFailurePlot
 \label{fig:aggregationFails}
 \end{figure}
 
+\mar{R: Two new passages on fixed joint evidence, check.}
+Finally, you might recall that in the chapter we distinguished two variants of the distribution requirement, (DIS1) and (DIS2). The former  has been in the focus so far, and the latter differs in keeping the evidence fixed at $a \et b$, even when calculating individual LRs. So, sticking to LR, distribution in this variant  pertains to the joint LR and the following two ratios: $\nicefrac{\pr{a\et b \vert A}}{\pr{a \et b \vert \n A}}$ and  $\nicefrac{\pr{a\et b \vert B}}{\pr{a \et b \vert \n B}}$. To make sure that switching to (DIS2) doesn't make things easier for legal probabilists, we ran 30k simulations (10k for each BN type), and inspected the status of aggregation and distribution for these ratios. 
 
+Here are the results. If no assumption about the direction of support is made, 
+ around 12.7\% of the time  (around twice less often than if the usual 
+ individual LRs are used),  the individual LRs with fixed evidence are both greater than the joint LR---this is for \textsf{DAG1}, the frequency goes slightly up to around 13\% if we switch to \textsf{DAG2} and is around the same value if additionally we allow for the dependency between the items of evidence (\textsf{DAG3}). Assuming individual LRs are above one, around 70\% of joint likelihoods (75\% for BN2, 72\% for BN3) are between the individual ones, no joint LR is below the minimum of the individual ratios for \textsf{DAG1}, but is so around 2\% times  for both \textsf{DAG2} and  \textsf{DAG3}. This is one important difference: even aggregation can fail if dependencies are present, if we keep joint evidence fixed in all the ratios. As for distribution, there are no major surprises:  around 30\% of the time, the joint LR is strictly greater than both of the individual LRs with evidence fixed for \textsf{DAG1},  22\% for \textsf{DAG2}, and 26\% for \textsf{DAG3}. In short, keeping the joint evidence fixed across 
+ all ratios makes things even harder, when it comes to preserving aggregation and distribution.
+
+ 
+ 
+ 
+.   
+ 
+ 
+ 
+ 
+ 
+ 
