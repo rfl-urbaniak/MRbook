@@ -37,6 +37,46 @@
   urlcolor=blue,
   pdfcreator={LaTeX via pandoc}}
 \urlstyle{same} % disable monospaced font for URLs
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
 \usepackage{graphicx}
 \makeatletter
 \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
@@ -705,66 +745,68 @@ probabilities. Confirmation measures are concerned with (1) rather than
 (2), and thus they are unsuitable for the evaluation of legal evidence
 in trial proceedings.
 
-\hypertarget{the-risk-of-false-positive-and-its-impact}{%
-\section{\texorpdfstring{The risk of false positive and its impact
-\label{sec:fp}}{The risk of false positive and its impact }}\label{the-risk-of-false-positive-and-its-impact}}
+\hypertarget{match-evidence-and-error-probabilities}{%
+\section{\texorpdfstring{Match evidence and error probabilities
+\label{sec:fp}}{Match evidence and error probabilities }}\label{match-evidence-and-error-probabilities}}
 
 The two conditional probabilities that make up the likelihood
 ratio---\(\pr{E \vert H}\) and \(\pr{E \vert \neg H}\)---should be used
 in the evaluation of any form of evidence, both quantitative and
-non-quantitative. This sections examines how a DNA match, the most
-widely used form of quantitative evidence, should be evaluated using the
+non-quantitative. This section examines how a DNA match, the most widely
+used form of quantitative evidence, should be evaluated by means of the
 likelihood ratio. The argument formulated here can be generalized to any
 form of `match evidence.' The match can be between genetic profiles,
-fingerprints, blood type, bite marks, etc.
+fingerprints, blood types, bite marks, etc.
 
-Suppose an expert testifies that there is a genetic, DNA match between
+Consider an expert testimony that there is a genetic, DNA match between
 the traces at the crime scene and a sample from the defendant. This
 statement is evidence that the defendant was the \textit{source} of the
 traces---that the materials found at the scene originated from the
 defendant. The match can also be evidence that the defendant was present
 at the scene or committed the crime, but these claims are more
-questionable, as the chain of inferences becomes weaker. We will discuss
+questionable, as the chain of inferences is weaker. We will discuss
 these complications later in section \ref{sec:lhTwoSTain}. For
-simplicity, let us now focus on the source hypothesis. So the likelihood
-ratio we should be concerned with is the following:
+simplicity, let us now focus on the source hypothesis.
 
+The likelihood ratio we should be concerned with is the following:
 \[\frac{\pr{\textsf{match} \vert \textsf{source}}}{\pr{\textsf{match} \vert \neg \textsf{source}}}.\]
 
-How strongly does a DNA match support the hypothesis that the defendant
-is the source? To answer this question, the simplest analysis relies on
-the \textbf{random match probability}, the probability that a random
-person, unrelated to the crime, would coincidentally match the crime
-scene profile. This probability coincides (roughly) with the denominator
-of the likelihood ratio, that is, the probability that someone who is
-not the source would match. When experts testify about a DNA match, they
-often only provide the random match probability as an indicator of
-evidential strength. But this does not agree with the format recommended
-by the likelihood ratio which instead would include both conditional
-probabilities, \(\pr{\textsf{match} \vert \neg \textsf{source}}\) as
-well as \(\pr{\textsf{match} \vert \textsf{source}}\)? The random match
+\noindent How strongly does a match favor the hypothesis that the
+defendant is the source? To answer this question, the simplest analysis
+relies on the \textbf{random match probability}, the probability that a
+random person, unrelated to the crime, would coincidentally match the
+crime scene profile. This probability coincides (roughly) with the
+denominator of the likelihood ratio, that is, the probability that
+someone who is not the source would match. When experts testify about a
+DNA match, they often only provide the random match probability as an
+indicator of evidential strength. The format recommended by the
+likelihood ratio would instead include both conditional probabilities,
+\(\pr{\textsf{match} \vert \neg \textsf{source}}\) as well as
+\(\pr{\textsf{match} \vert \textsf{source}}\). The random match
 probability, however, is often an impressively low number, say 1 in 100
-million. So, arguably, if this number is low, that would be enough to
-ensure that the likelihood ratio is significantly above one provided the
-numerator, \(\pr{\textsf{match} \vert \textsf{source}}\), is close to
-one. For practical purposes, then, the lower the random match
-probability, the more strongly incriminating the match.
+million. If this number is low, that is enough to ensure that the
+likelihood ratio is significantly above one provided the numerator,
+\(\pr{\textsf{match} \vert \textsf{source}}\), is close to one. For
+practical purposes, then, the lower the random match probability, the
+more strongly incriminating the match.
 
 This analysis is simple, but lacks precision in at least two respects.
 First, it assumes that \(\pr{\textsf{match} \vert \textsf{source}}\) is
 close to one. Is this true? There could well be false negative matches.
 A DNA match need not track with 100\% probability the fact that the
 suspect is the source. In addition---and more importantly---equating the
-probability \(\pr{\textsf{match} \vert \neg \textsf{source}}\) with the
+denominator \(\pr{\textsf{match} \vert \neg \textsf{source}}\) with the
 random match probability ignores the risk of false positive matches.
-This risk is not negligible (Shaer, 2016). A coincidental match is not
-the same thing as a false positive match. For suppose two
-individuals---say the perpetrator and the defendant---happen to share
-the same DNA profile by coincidence. If an expert states that the crime
-scene sample and the defendant's sample match, this would be a
-coincidental match, not a false positive match. Instead, if the two
-samples do not actually match, but the expert says that they do, this
-would count as a false positive match, not a coincidental match.
+This risk is not negligible (Shaer, 2016). So two distinct errors are at
+issue here, a false positive match and a coincidental match. For suppose
+two individuals---say the perpetrator and the defendant---happen to
+share the same DNA profile by coincidence. If an expert states that the
+crime scene sample and the defendant's sample match, this would be a
+coincidental match, not a false positive match. This risk of error is
+captured by the random match probability. But if the two samples do not
+actually match, and yet the expert says that they do, this would count
+as a false positive match, not a coincidental match. This risk of error
+is not captured by the random match probability.
 
 Unlike a coincidental match, a false positive match is often caused by a
 human error in a number of circumstances (see W. C. Thompson, 2013 for a
@@ -779,16 +821,16 @@ more exhaustive treatment and multiple examples):
   (2012), the genetic material was carried over by the paramedics. In
   one case, German police invested a considerable amount of time and
   effort searching for the so-called Phantom of Heilbronn, whose DNA
-  profile was associated with many crimes. A bounty of 300k EUR was
+  profile was associated with many crimes. A bounty of EUR 300,000 was
   placed on her head. It turned out she was an innocent employee
   involved in the production of cotton swabs used across the country.
 \item
   \textbf{Mislabeling of samples.} For instance, in 2011 the Las Vegas
-  Metropolitan Police Department acknowledge that samples of two men
+  Metropolitan Police Department acknowledged that samples of two men
   suspected of a 2001 robbery were switched, leading to the exclusion of
-  the perpetrator and four years of incarceration of the other suspect.
+  the perpetrator and four years of incarceration for the other suspect.
   The mistake came to light only because the perpetrator was later on
-  arrested for an unrelated crime.
+  arrested for another crime.
 \item
   \textbf{Misinterpretation of test results.} Single-source sample
   comparison is not easily prone to misrepresentation, but evidence
@@ -804,33 +846,6 @@ more exhaustive treatment and multiple examples):
   alleles are missing. Ultimately, there is an element of subjectivity
   in mixed DNA interpretation.
 \end{itemize}
-
-False positive DNA matches are not easy to detect for practical and
-theoretical reasons. Since DNA evidence carries so much weight in court,
-it is unusual to proceed with further DNA tests that are costly and
-time-consuming. It is also unusual that a defendant or their family
-could afford to pay for further DNA tests. Even more troubling is that
-errors from contamination or mislabeling of samples often cannot be
-detected with further DNA testing, because they will replicate the same
-mis-identification. Sometimes, a lab discovers its own errors and
-reports them, but this is rare (W. C. Thompson, 2013). Unfortunately, no
-serious attempt has been made to systematically quantify the relevant
-error rates. Anecdotal information suggest that false positive matches
-take place more often than coincidental matches would entail, but how
-often remains unclear (W. C. Thompson, 2013). Regular proficiency tests
-used in accredited DNA laboratories involve comparison of samples from
-known sources, but they are criticized for being unrealistically easy
-(yet, it happens that analysts fail them). Sometimes, corrective action
-files are made available. They usually show relatively few false
-positive errors.\footnote{For instance, the Santa Clara County district
-  attorney's crime laboratory between 2003 and 2007 caught 14 instances
-  of evidence cross-contamination with staff DNA, three of contamination
-  by unknown person, and six of DNA contamination from other samples,
-  three cases of DNA sample switch, one mistake in which the analyst
-  reported an incorrect result, and three errors in the computation of
-  the statistics to be reported.} But because of the fragmentary
-information available, it is premature to conclude there is no reason
-for concern.
 
 \begin{center}
 \begin{figure}
@@ -860,16 +875,16 @@ $M$ & There is a true match (true match).
 \noindent A true match is the fact that two samples actually carry the
 same genetic profile, while a reported match is a statement made by an
 expert that two samples match. A true match will exist not only if the
-suspect is the source, but also if, even though the susoect is not the
+suspect is the source, but also if, even though the suspect is not the
 source, the profiles are in fact the same due to a random, coincidental
 match. Similarly, a reported match might arise not only if there is a
 true match, but also if a false positive error has been made. These
 possibilities are represented in Figure \ref{fig:fpp}.
 
-In this more precise set up, the evidence whose strength is to be
-assessed is the \textit{reported} match relative to the pair of
-hypotheses \(S\) and \(\neg S\). So the likelihood ratio we are after
-has the form: \[\frac{\pr{R \vert S}}{\pr{R \vert \neg S}}.\]
+In this set-up, the evidence whose strength is to be assessed is the
+\textit{reported} match relative to the pair of hypotheses \(S\) and
+\(\neg S\). So the likelihood ratio we are after has the form:
+\[\frac{\pr{R \vert S}}{\pr{R \vert \neg S}}.\]
 
 \noindent With a few manipulations and assumptions, the likelihood ratio
 can be written as:\footnote{By the law of total probability, the
@@ -908,7 +923,8 @@ and the suspect is not the source (because of a random, coincidental
 match), or there is no true match, and a false positive error has been
 made in the identification process. To make the different sources of
 error more salient---false negative matches, false positive matches and
-random matches---the likelihood ratio can be written as follows:
+random or coincidental matches---the likelihood ratio can be written, as
+follows:
 
 \begin{align}
 \label{eq:LRfp4b}
@@ -928,18 +944,17 @@ coincidence of nature, the possibility that someone who is not the
 source (\(\neg S\)) could still be---coincidentally---a true match
 (\(M\)).
 
-We now examine the impact of the two error probabilities on the
+Let's now examine the impact of the two error probabilities on the
 likelihood ratio, holding fixed certain values of the random match
 probability. Figure \ref{fig:fpplr} shows the impact of the false
-positive probability FPP (between 0 and 0.05 probability) assuming
-random match probabilities in the order of \(10^{-9}\) (often reported
-in the case of two single-source samples over ten or more loci) and
-\(10^{-3}\) (sometimes obtained by means of less discriminating tests
-when the comparison involves a mixed sample). Even a small increase in
-the false positive probability can lower the likelihood ratio
-dramatically. Interestingly, however, the additional impact of the false
-negative probability is negligible, as shown in Figure
-\ref{fig:fpfnplr}.
+positive probability FPP (for values between 0 and .05) assuming random
+match probabilities in the order of \(10^{-9}\) (often reported in the
+case of two single-source samples over ten or more loci) and \(10^{-3}\)
+(sometimes obtained by means of less discriminating tests when the
+comparison involves a mixed sample). Even a small increase in the false
+positive probability can lower the likelihood ratio dramatically.
+Interestingly, however, the additional impact of the false negative
+probability is negligible, as shown in Figure \ref{fig:fpfnplr}.
 
 \begin{figure}
 
@@ -969,18 +984,18 @@ a \textit{negative} (reported) match \(\neg R\). By replacing \(R\) with
 \noindent Keep in mind that the negative reported match \(\neg R\) is
 evidence \textit{against} the source hypothesis \(S\) so long as the
 likelihood ratio is below one. At the extreme, if the false negative
-probability FNP is zero, the numerator is zero. So the the likelihood
+probability FNP is zero, the numerator is zero. Thus, the likelihood
 ratio will be zero, as it should. In such a case, the negative match is
 completely exculpatory, and the posterior probability that the suspect
 is the source will also be zero. If the false negative probability is
 not zero, the likelihood ratio will be greater than zero. The greater
 the likelihood ratio (for values between 0 and 1), the weaker the value
 of the exculpatory match. As Figure \ref{fig:fpfnplr-exc} shows, the
-likelihood ratio progressively moved way from zero as the fasle negative
-error probability increase. However, the impact of the false
-\textit{positive} probability on the likelihood ratio is nearly null,
-especially if the random match probability is low (as is usually the
-case).
+likelihood ratio progressively moves away from zero as the false
+negative error probability increases. Interestingly, however, the impact
+of the false \textit{positive} probability FFP on the likelihood ratio
+is essentially null, especially if the random match probability is low
+(as is usually the case).
 
 \begin{figure}
 
@@ -989,117 +1004,138 @@ case).
 \label{fig:fpfnplr-exc}
 \end{figure}
 
-A curious phenomenon is worth explaining at this point. The risk of a
-false positive match (or FPP) has a significant impact on the value of a
-positive, incriminating DNA match. The likelihood ratio drops
-significantly as Figure \ref{fig:fpfnplr} shows. Curiously, the risk of
-a false negative match (or FNP) appears to have a minimal impact on the
-value of a negative, exculpatory DNA match. Figure \ref{fig:fpfnplr-exc}
-shows that even a false negative probability as high as 5\% has a minor
-effect on the likelihood ratio, which remains close to zero. How can
-this be explained? Is there an asymmetry between exculpatory and
-incriminating DNA matches? Not quite. The difference is just an artifact
-of using the likelihood ratio as a measure of evidential strength. Error
-probabilities for a positive or negative match affect the posterior
-probability of the source hypothesis equally strongly. It suffices to
-perform the calculations for the relevant posterior probabilities to
-convince oneself this is in fact the case. As expected, a positive match
-followed by a negative match, each subject to the same error
-probabilities, would have no impact on the posterior probability of the
-source hypothesis.\footnote{Suppose the random match probability is
-  \(10^{-3}\) and the prior probability of \(S\) is .5. Without taking
-  into account the error probabilities, a positive match would bring the
-  probability of \(S\) from .5 to .99. Instead, taking into account a
-  false positive probability of 0.05, a positive match would bring the
-  probability of \(S\) from .5 to just about .94. What about a negative
-  match? Without taking into account the error probabilities, a negative
-  match would bring the probability of \(S\) from .5 to 0. Instead,
-  taking into account a false negative probability of 0.05, a negative
-  match would bring the probability of \(S\) from .5 to just about .04.
-  But if we were to combine positive and negative matches, their
-  combined impact on the probability of \(s\) would be null.} While the
-likelihood ratio is helpful for assessing the value of items of
-evidence, it should be interpreted carefully, a point to which we will
-return later in this chapter.
-
-Let us take stock of the discussion. Likelihood ratios are useful in the
-evaluation and comparison of the impact of positive and negative error
-rates. Even a seemingly small error rate trumps the random match
+So, even a seemingly small error probability trumps the random match
 probability. If there are good reasons to worry about random matches,
-there are even stronger reasons to worry about error rates. While they
-have not been studied systematically, our analysis shows which error
-rates we should be concerned about and in which circumstances. We have
-seen that the impact of error rates is not the same, contrary to what
-one might intuitively think. The false positive probability has a marked
-impact on the value of incriminating DNA evidence (positive matches),
-while the false negative probability has a marked impact on the value of
-exculpatory DNA evidence (negative matches).\footnote{As noted in the
-  prceeding paragraph, the behavior of false positive and false negative
-  error is not perfectly symmetric when we measure evidential value in
-  terms of the likelihood ratio. But it is ultimately symmetric since a
-  positive match followed by a negative match makes no impact on the
-  probability of the source hypothesis.} A false negative probability
-has a negligible impact on the value of incriminating DNA evidence, and
-conversely, false positive probability have a negligible impact on the
-value of exculpatory DNA evidence. So, besides the random match
-probability, the false positive probability matters for assessing the
-value of a positive match, and the false positive probability matters
-for assessing the value of a negative match. Both error probabilities
-should be studied, even though they are most relevant in different
-circumstances.
+there are even better reasons to worry about error probabilities. In
+addition, our analysis shows which error probabilities we should be
+concerned about and in which circumstances. The impact of error
+probabilities is not uniform, contrary to what one might intuitively
+think. The false positive probability has a marked impact on the value
+of incriminating DNA evidence (positive matches), while the false
+negative probability has a marked impact on the value of exculpatory DNA
+evidence (negative matches).\footnote{The behavior of false positive and
+  false negative error is not perfectly symmetric when evidential value
+  is measured by the likelihood ratio. Even a small false positive
+  probability can cause the likelihood ratio to drop significantly, as
+  Figure \ref{fig:fpplr} and \ref{fig:fpfnplr} show. But the risk of a
+  false negative match (or FNP) appears to have a minimal impact on the
+  value of a negative, exculpatory DNA match. Figure
+  \ref{fig:fpfnplr-exc} shows that even a false negative probability as
+  high as 5\% has a minor effect on the likelihood ratio, which remains
+  relatively close to zero. But the asymmetry is just an artifact of
+  using the likelihood ratio as a measure of evidential strength. Error
+  probabilities for a positive or negative match affect the posterior
+  probability of the source hypothesis equally strongly. For suppose the
+  random match probability is \(10^{-3}\) and the prior probability of
+  \(S\) is .5. Without taking into account the error probabilities, a
+  positive match would bring the probability of \(S\) from .5 to .99.
+  Instead, taking into account a false positive probability of 0.05, a
+  positive match would bring the probability of \(S\) from .5 to just
+  about .94. What about a negative match? Without taking into account
+  the error probabilities, a negative match would bring the probability
+  of \(S\) from .5 to 0. Instead, taking into account a false negative
+  probability of 0.05, a negative match would bring the probability of
+  \(S\) from .5 to just about .04. Furthermore, a positive match
+  followed by a negative match, each subject to the same error
+  probabilities, would have no impact on the posterior probability of
+  the source hypothesis. All in all, the likelihood ratio should be
+  interpreted carefully, a point to which we will return later in this
+  chapter.} Conversely, a false negative probability has a negligible
+impact on the value of incriminating DNA evidence, while a false
+positive probability has a negligible impact on the value of exculpatory
+DNA evidence.
 
-Buckleton, Bright, \& Taylor (2018) derive a more general formula for
-the likelihood ratio. First, they make the conceptual distinction
-between the probability that an error occurs (\(E\)) and the probability
-that a match is reported if it does. Mind your head: here \(E\) stands
-for error, not for evidence! In terms of our notation, we have:
+But, no doubt, these claims are still rather hypothetical.
+Unfortunately, no serious attempt has been made to systematically
+quantify the relevant error probabilities. Sometimes, a lab discovers
+its own errors and reports them, but this is rare (W. C. Thompson,
+2013). Anecdotal information suggest that false positive matches take
+place more often than coincidental matches would entail, but how often
+remains unclear (W. C. Thompson, 2013). Regular proficiency tests used
+in accredited DNA laboratories involve comparison of samples from known
+sources, but they are criticized for being unrealistically easy (yet, it
+happens that analysts fail them). Sometimes, corrective action files are
+made available. They usually show relatively few false positive
+errors.\footnote{For instance, the Santa Clara County district
+  attorney's crime laboratory between 2003 and 2007 caught 14 instances
+  of evidence cross-contamination with staff DNA, three of contamination
+  by unknown person, and six of DNA contamination from other samples,
+  three cases of DNA sample switch, one mistake in which the analyst
+  reported an incorrect result, and three errors in the computation of
+  the statistics to be reported.} But because of the fragmentary data
+available, it is premature to conclude there is no reason for concern.
+
+More data should be collected for plugging in the right values of false
+positive and false negative probabilities in the likelihood ratio. As
+some have suggested \todo{add references}, the relevant error
+probabilities should be case-specific. The objective is to assess the
+risk of error for \textit{this} match, not a match in general. To this
+end, the data should be fine-grained enough to track the performance of
+laboratories or technicians who adopt specific procedures, safeguards or
+protocols. Say three scenarios could occur: scenario 1 (all safeguards
+are followed); scenario 2 (almost all safeguards are followed); and
+scenario 3 (half of the safeguards are followed). Data should indicate
+the match error probabilities in each scenario. In addition, as experts
+who testify about a match (or lack thereof) are cross-examined, this
+process should elicit the case-specific information necessary to know
+which safeguards were followed and which weren't. The information
+elicited during cross-examination can be combined in the likelihood
+ratio together with data about false positive and false negative error
+probabilities. This would yield a case-specific assessment of the value
+of match evidence. This process of gathering individualized information
+paired with performance data about error probabilities under different
+scenarios is no different from what is needed to correctly assess the
+value of eyewitness testimony, our next topic.
+
+Before we move on, however, it is worth noting that the formula for the
+likelihood ratio of a DNA match in (\ref{eq:LRfp4}) and
+(\ref{eq:LR-match-exc}) was derived, in a more general form, by
+Buckleton, Bright, \& Taylor (2018). We briefly go through their
+derivation. First, they make the conceptual distinction between the
+probability that an error occurs, \(\pr{ERR}\), and the probability that
+a match is reported if an error occurs, \(\pr{R \vert ERR}\). Let
+\(err\) denote the probability of error, and we assume it to be
+independent of the source hypothesis:\\
 \begin{align*}
-e & = \pr{E} = \pr{E \vert S} = \pr{E \vert \n S}
-\end{align*} \noindent That is, we denote the probability of error as
-\(e\), and we assume it doesn't depend on whether the prosecution
-hypothesis is true (whether the suspect is the source).
-
-Separately, the formula includes the probability of a reported match if
-an error occurs, also assumed to be independent of whether the
-prosecution hypothesis is true: \begin{align*}
-k =  \pr{R \vert E, S} = \pr{R \vert E, \n S}
-\end{align*} \noindent Further, it is assumed that the probability of
-false negatives is zero (\(\pr{R \vert S, \n E} =1\)) and the
-probability of reported match if no error occurs and the defense
-hypothesis is true is RMP (\(\pr{R \vert \n E, \n S}=RMP\)).
-
-Now the derivation: \begin{align*}
+err & = \pr{ERR} = \pr{ERR \vert S} = \pr{ERR \vert \n S}
+\end{align*} \noindent  Separately, let \(k\) denote the probability of
+a reported match if an error occurs, also assumed to be independent of
+whether the source hypothesis is true: \begin{align*}
+k & = \pr{R \vert ERR} = \pr{R \vert ERR, S} = \pr{R \vert ERR, \n S}
+\end{align*} \noindent  Now the derivation: \begin{align*}
 LR & = \frac{\pr{R\vert S}}
 {\pr{R \vert \n S}}\\
-& = \frac{\pr{R \vert \n E, S}\pr{\n E \vert S} + \pr{R \vert E, S}\pr{E \vert S}}
-{\pr{R \vert \n E, \n S}\pr {\n E \vert \n S} + \pr{R \vert E, \n S}\pr{E \vert \n S}}\\
-& = \frac{1(1-e) + ke}
-{RMP(1-e)+ke}  = \frac{1-e+ke}{RMP  - e\times RMP + ke} \\
-& = \frac{1 - (1-k)e}{RMP(1-e)+ke}
-\end{align*}
+& = \frac{\pr{R \vert \n ERR, S}\pr{\n ERR \vert S} + \pr{R \vert ERR, S}\pr{ERR \vert S}}
+{\pr{R \vert \n ERR, \n S}\pr {\n ERR \vert \n S} + \pr{R \vert ERR, \n S}\pr{ERR \vert \n S}}\\
+& = \frac{1\times (1-err) + k\times err}
+{RMP\times (1-err)+k\times err}  = \frac{1-err+k\times err}{RMP  - err\times RMP + k \times err} \\
+& = \frac{1 - (1-k)err}{RMP\times (1-err)+k\times err}
+\end{align*} \noindent As before, the likelihood ratio is the ratio of
+the probabilities of a reported match if the suspect is the source and
+if the suspect is not the source. The numerator \(\pr{R\vert S}\) can be
+split into two possible scenarios: an error has not been made, or an
+error has been made. Accordingly, the numerator in the second line uses
+the law of total probability to split \(\pr{R\vert S}\) into these two
+options. Similarly, the numerator \(\pr{R\vert \n S}\) can be split into
+two cases: the suspect is not the source, but we are dealing with a
+random match, or the suspect is not the source, and an error has been
+made. An application of the law of total probability in the denominator
+mirrors this. The rest of the argument is just rewriting in terms of
+abbreviations, and algebraic manipulation. The probability of a reported
+match \(R\) if no error occurs \textit{and} the source hypothesis is
+false is the random match probability RMP, so
+\(\pr{R \vert \n ERR, \n S}=RMP\). The probability that a reported match
+occurs when the source hypothesis is true and no error has made is
+assumed to be one, so \(\pr{R \vert S, \n ERR} =1\).
 
-Let's take it slow. First, the likelihood ratio is just the ratio of
-probabilities of a reported match (1) if the suspect is the source and
-(2) if the suspect is not the source.
+\todo{this bit still needs polishing}
 
-Now, think of \(\pr{R\vert S}\). This can be split into two possible
-scenarios: an error has not been made, or an error has been made.
-Accordingly, the numerator in the second line uses the law of total
-probability to split \(\pr{R\vert S}\) into these two options.
-
-Similarly, \(\pr{R\vert \n S}\) can be split into two cases: the suspect
-is not the source, but we are dealing with a random match, or the
-suspect is not the source, and an error has been made. An application of
-the law of total probability in the denominator mirrors this. The rest
-of the argument is just rewriting in terms of abbreviations, and
-algebraic manipulation.
-
-Note now that if you think of an error as something that guarantees a
-mistaken identification, \(k\) becomes \(1\) and \(e\) becomes the false
+Finally, if you think of an error as something that guarantees a
+mistaken reported match, \(k\) becomes \(1\) and \(e\) becomes the false
 positive rate. On this assumption straightforward algebraic manipulation
 gives: \begin{align*}
- \frac{1 - (1-k)e}{RMP(1-e)+ke} & = \frac{1-e+e}{RMP(1-e)+e}\\
- & = \frac{1}{RMP - e\times RMP + e} = \frac{1}{1 + e(1-RMP)}
+ \frac{1 - (1-k)\times err}{RMP\times (1-err)+k\times err} & = \frac{1-err+err}{RMP(1-err)+err}\\
+ & = \frac{1}{RMP - e\times RMP + err} = \frac{1}{1 + err\times(1-RMP)}
 \end{align*} \noindent which is the same as the formula obtained by
 Colin Aitken, Taroni, \& Thompson (2003) if we take \(e\) to be FPP, as
 we should on the assumption that \(k=1\).
@@ -1111,26 +1147,26 @@ we should on the assumption that \(k=1\).
 So far we paid attention to DNA evidence, a form of quantitative
 evidence widely used in trial proceedings. But the question arises
 whether evidence that is not explicitly quantitative, for example,
-eyewitness testimony, can also be evaluated using likelihood ratio. We
-show that the answer is affirmative. In fact, there is no sharp divide
-between quantitative and non-quantitative evidence. The statement that
-the crime scene DNA matches the defendant's DNA is qualitative, but its
-value is best assessed by means of numerical information, such as error
-rates and the random match probability. Similarly, a witness testifying
-`I saw him!' carries a lot of weight in a court of law, but again, its
-value is best assessed by means of numerical information, such as data
-about the risks of false identifications. These risks should not be
-downplayed nor exaggerated. As we will show, quantitative information
-can be used to this effect and can be combined in a principled manner
-into the likelihood ratio.
+eyewitness testimony, can also be evaluated by means of the likelihood
+ratio. We show that the answer is affirmative. In fact, there is no
+sharp divide between quantitative and non-quantitative evidence. The
+statement that the crime scene DNA matches the defendant's DNA is
+qualitative, but its value is best assessed by means of numerical
+information, such as error rates and the random match probability.
+Similarly, a witness testifying `I saw him!' carries a lot of weight in
+a court of law, but again, its value is best assessed by means of
+numerical information, such as data about the risks of a false
+identification. These risks should not be downplayed nor exaggerated. As
+we will show, quantitative information can be used to this effect and
+can be combined in a principled manner in the likelihood ratio.
 
 To start, there is plenty of quantitative information about the risks of
-false eyewitness identifications. Consider first statistics about false
+a false eyewitness identification. Consider first statistics about false
 convictions. The rate of false convictions in death penalty cases in the
 United States is estimated at about 4\% (Gross, O'Brien, Hu, \& Kennedy,
 2014). How much can be attributed to false eyewitness identifications is
 hard to say exactly, but presumably quite a bit. In fact, a study of 340
-exoneration in the years 1989-2003 shows that around 90\% of false
+exonerations in the years 1989-2003 shows that around 90\% of false
 convictions in rape cases resulted from a false eyewitness
 identification. This percentage comes close to 100\% in rape convictions
 in which the victim and the defendant were of difference races. In
@@ -1140,14 +1176,14 @@ identification by one or multiple eyewitnesses. \todo{REFERENCE MISSING}
 Field studies offer an equally discouraging picture. These studies show
 that, in line-up identifications, eyewitnesses select filler individuals
 at a rate of 20-24\% (Klobuchar, Steblay, \& Caligiuri, 2006) . That is,
-around 20\% of the time, an innocent person in a police line-up is
+around 20-24\% of the time, an innocent person in a police line-up is
 incorrectly identified as the perpetrator. Similarly, a field study in
 Greater London (Wright \& McDaid, 1996) and another study in Sacramento,
 California (Behrman \& Davey, 2001) indicate that the false
 identification rate is around 20\%. Even in experimental
 settings---where witnesses are less emotionally taxed---eyewitnesses
-identify a filler indiividual from a line-up in approximately 20\% of
-the cases (S. G. Thompson, 2007).
+identify a filler individual from a line-up in approximately 20\% of the
+cases (S. G. Thompson, 2007).
 
 In light of these empirical results and similar studies, the justice
 systems has grown suspicious of eyewitness evidence over the last twenty
@@ -1157,52 +1193,92 @@ identification should be assessed in the individual circumstances, and
 that blanketed statements that eyewitnesses are unreliable---even when
 backed up by well-researched statistics---are not very helpful. After
 all, judges and jurors should make determinations about the reliability
-of a specific eyewitness identification, not about eyewitness
-reliability in general. Cross-examination is often thought to be the
-tool for this individualized assessment of the risk of error.\footnote{The
-  evidence law scholars Henry Wigmore in his monumental treatise on the
-  law of evidence famously asserted that `cross-examination is greatest
-  legal engine ever invented for the discovery of truth.' This assertion
+of a specific eyewitness identification, not in general.
+
+Cross-examination is often thought to be the tool for an individualized
+assessment of the risk of error.\footnote{The evidence law scholars
+  Henry Wigmore in his monumental treatise on the law of evidence
+  famously asserted that `cross-examination is greatest legal engine
+  ever invented for the discovery of truth.' This assertion, however,
   has been subject to little empirical testing.}
 \todo{reference missing} Unfortunately, empirical studies suggest that
 cross-examination is ineffective at detecting false identifications. In
 a series of experiments, subjects were asked to cross-examine
-eyewitnesses to determine whether witnesses made accurate or mistaken
+eyewitnesses to determine whether they made accurate or mistaken
 identifications. Subjects showed little or no ability to make such
 discrimination (Wells \& Olson, 2003, p. 285). In another experiment, a
-representative sample of \(48\) witnesses was cross-examined. Subjects
-(\(n = 96\)) viewing the cross-examinations showed little ability to
-distinguish accurate from false identifications (Lindsay, Wells, \&
-Rumpel, 1981).
+sample of \(48\) witnesses was cross-examined. Subjects (\(n = 96\))
+viewing the cross-examination showed little ability to distinguish
+accurate from false identifications (Lindsay, Wells, \& Rumpel, 1981).
 
-The ineffectiveness of cross-examination at detecting a false
-identification might stem from its reliance on intuitive, folk
-assessment of the risks of error, not on well-researched quantitative
-data. The research on eyewitness testimony can improve this state of
-affairs. Much of this research examines the conditions under which an
-identification goes awry. These conditions are typically divided into
-system variables and estimator variables (Behrman \& Davey, 2001; Wells
-\& Olson, 2003) . The former refer to how the identification took place
-in a regimented setting, say whether it was a line-up or a
+The ineffectiveness of cross-examination at detecting errors might stem
+from its reliance on an intuitive, folk assessment of the risks of
+error, not on well-researched quantitative data. To remedy this,
+empirical research has identified a few canonical factors that affect
+the ability of a witness to correctly identify faces. These factors are
+typically divided into system variables and estimator variables (Behrman
+\& Davey, 2001; Wells \& Olson, 2003). The former refer to how the
+identification took place in a regimented setting, say whether it was a
+line-up or a
 showup;\footnote{A showup refers to the observation of a single suspect by a witness in the field, typically at the crime scene. A lineup refers to the presentation of the suspect and several foils, either live or via photographs.}
 whether the line-up was simultaneous or sequential; whether the witness
-identified a suspect prior to the line-up; etc. Estimator variables,
-instead, refer to the environmental conditions. These variables include
-distance, lighting conditions, time, the presence of a weapon, etc.
+identified someone prior to the line-up; etc. Instead, estimator
+variables refer to environmental conditions. The ability of a witness to
+make correct identifications is impaired by brief exposure, poor
+visibility (bad lighting or long distance) and a long interval between
+the first exposure and the moment of recollection. Other factors include
+the race of the alleged perpetrator (cross-racial identifications tend
+to be less reliable), stress (high stress can lead to worse memory), and
+weapon focus (the presence of a weapon leads to an impaired ability to
+recognize the perpetrator).
 
-An additional factor to consider is the confidence of the witness in the
-identification. It is a point of contention whether or not confidence is
-positively correlated with an accurate identification. A meta-analysis
-by Wixted \& Wells (2017) offers a nuanced but overall optimistic
-picture. Their analysis focuses on identifications under
-\emph{pristine conditions}. They require, for example, a double-blind
-line-up containing one suspect and at least five fillers with no
-resemblance to the suspect. The witness is cautioned that the offender
-might not be in the line-up and there is no expectation that they
-identify someone. Needless to say, very few police departments run their
-lineups in pristine conditions. But, as it turns out, if the
-identification occurs under pristine conditions, the high confidence of
-the witness in the identification is strongly predictive of an accurate
+A growing body of research in psychology has began to quantify the
+effects of estimator variables on people's ability of recognizing faces.
+According to a recent study (see Figure \ref{eyewitness-distance}), the
+ratio of hits to false alarms is (roughly) 75\% to 15\% at 0 yard
+distance; 70\% to 20\% at 10 yard distance; 65\% to 25\% at 20 yard
+distance; 60\% to 30\% at 30 yard distance; 55\% to 35\% at 40 yard
+distance \citep{lampinen2014}. \todo{add reference} These numbers can be
+used to fill in the conditional probabilities in the likelihood ratio
+for an eyewitness identification. Let \(\textsf{id}\) be the statement
+the the witness identifies the defendant as the person present at the
+scene, and let \(\textsf{presence}\) denotes the fact that the witness
+was actually at the scene. The likelihood ratio of interest would look
+like this:
+\[\frac{\pr{\textsf{id} \vert \textsf{presence}}}{\pr{\textsf{id} \vert \neg \textsf{presence}}}\]
+
+\noindent Depending on the distance, different numbers can be plugged
+into the numerator and the denominator. If, for example, the distance is
+10 yards, the numerator should be .7 and the denominator 0.2. Thus, the
+likelihood ratio would be 3.5, an indication that the eyewitness
+identification is probative evidence but its value is somewhat limited.
+This analysts is, of course, rather elementary and it is offered as
+illustrative. More-fine grained quantitative data are needed so that the
+different environmental conditions can be taked into consideration, such
+as distance, lighting, stress level,weapon focus, etc.
+
+\begin{figure}
+
+\begin{center}\includegraphics[width=0.5\linewidth]{eyewitness-distance} \end{center}
+\caption{Hits and false alarms in eyewitness identification 
+as distance increases.}
+\label{eyewitness-distance}
+\end{figure}
+
+Research has also tackled the impact of system variables, especially in
+connection to another factor, witness confidence in the identification.
+It is a point of contention whether or not confidence is positively
+correlated with accuracy. A meta-analysis by Wixted \& Wells (2017)
+offers a nuanced but overall optimistic picture. Their analysis focuses
+on identifications under \emph{pristine conditions}, which require a
+certain set-up of system variables. Pristine conditions require, for
+example, a double-blind line-up containing one suspect and at least five
+fillers with no resemblance to the suspect. The witness is cautioned
+that the offender might not be in the line-up and there is no
+expectation that they identify someone. Needless to say, very few police
+departments run their lineups in pristine conditions. But, as it turns
+out, if the identification occurs under pristine conditions, the high
+confidence of the witness is strongly predictive of an accurate
 identification. Most interestingly, witnesses with high confidence under
 pristine conditions should be around 90\% accurate, a rather encouraging
 figure.\footnote{The extent to which initial high confidence under
@@ -1210,34 +1286,13 @@ figure.\footnote{The extent to which initial high confidence under
   of target-present lineups. In lab studies the base rate is about 50\%,
   but in real-life circumstances, the best estimate is about 35\%.}
 
-So, a more individualized assessment of the risks of false eyewitness
-identification can be made by taking into account estimator and system
-variables, as well as other relevant factors such as eyewitness
-confidence. Cross-examination serves a similar purpose. Questions about
-time of day, distance, stress level, etc. elicit information about
-estimator variable as well as system variables. Empirical research on
-eyewitness testimony can supply numerical information about the
-significance of these variables. It can help to answer questions such
-as, how much does poor visibility or distance increase the risk of a
-false identification? Ideally, properly formatted data about all the
-factors we discussed could be used to develop a multivariate model. This
-model would allow an assessment of the risks of a false identification
-under a variety of relatively well-specified circumstances elicited
-during cross-examination. We are far from reaching this state of
-maturity, but even with the current research, an expert who is aware of
-the literature we have cited and of the specific circumstances of the
-case could assess the risks of a false identification quantitatively. An
-untrained jury member unaided by numerical data---even after
-cross-examination---is unlikely to arrive at a better assessment of the
-risks of error involved.
-
-So consider two scenarios in which we numerically estimate the
-reliability of the eyewitness evidence in line with the research we just
-discussed. In one, such an expert recognizes the identification
+To illustrate, consider two scenarios in which we numerically estimate
+the reliability of eyewitness testimony in line with the research we
+just discussed. In one, such an expert recognizes the identification
 conditions as pristine and testifies: the probability of the testimony
 if the suspect in fact is the perpetrator (\(\pr{E\vert H}\)) is
 \(.9\% \pm .05\), and the false positive probability
-(\(\pr{E \vert \n H}\)) is \(.1\pm .03\). In scenario two, the
+(\(\pr{E \vert \n H}\)) is \(.1\pm .03\). In the second scenario, the
 conditions were not pristine, and the expert testifies that
 \(\pr{E\vert H}=.8 \pm .05\) and \(\pr{E\vert \n H}=.25 \pm .05\). We
 get two different \emph{ranges} of likelihood ratios, \(lr_1\) and
@@ -1251,15 +1306,29 @@ the minimum and the maximum are as follows: \begin{align*}
 \end{align*} \noindent so the expert can testify that the likelihood
 ratio is in the range of 2.5-4.25.
 
-Now, suppose further evidence is put forward to the effect that the
-suspect blood type matches the crime scene sample. Say the probability
-of a match if the suspect is the source is simply 1, while the
-probability of a random match is .05. The likelihood of this evidence
-alone is \(\nicefrac{1}{.05}= 20\). Assuming independence, the joint
-likelihood for total evidence is obtained by multiplying separate
-likelihood ratios. Now, without any commitment to the priors, the impact
-of likelihood ratio ranges on any prior probability can be quantified
-and visualized, as in Figure \ref{fig:eyewitness3}.
+The examples could continue, but the general point is this. A
+case-specific assessment of the risks of false eyewitness identification
+can be carried out by taking into account estimator and system
+variables, as well as other relevant factors such as eyewitness
+confidence. Ideally, properly formatted data about all the factors we
+discussed could be used to develop a multivariate model. This model
+would allow an assessment of the risks of a false identification under a
+variety of relatively well-specified circumstances. We are far from
+reaching this state of maturity, but even with the current research, an
+expert who is aware of the literature we have cited and of the specific
+circumstances of the case could assess the risks of a false
+identification quantitatively. An untrained jury member unaided by
+numerical data---even after viewing cross-examination---is unlikely to
+arrive at a better assessment of the risks of error involved. The
+approach we are advocating is continuous with the practice of
+cross-examination as tool to detect false identifications. Questions
+about time of day, distance, stress level, etc. elicit information about
+estimator variables as well as system variables. Empirical research on
+eyewitness testimony can supply numerical information about the
+significance of these variables. It can help to answer questions such
+as, how much does poor visibility or distance increase the risk of a
+false identification? So numerical information is likely to strengthen
+the role and effectiveness of cross-examination, not replace it.
 
 \begin{figure}[h]
 
@@ -1267,25 +1336,6 @@ and visualized, as in Figure \ref{fig:eyewitness3}.
 \caption{Impact of converging items of  evidence on the posteriors.}
 \label{fig:eyewitness3}
 \end{figure}
-
-What about conflicting evidence? Suppose this time the conditions were
-pristine, the expert's evaluation of the eyewitness evidence in pristine
-conditions is as before, but the witness identified someone else than
-the suspect (evidence \(E\)), while DNA evidence (evidence \(D\))
-supports the prosecution hypothesis \(H\) with \textsf{LR} = 300 (this
-is, say, because we take the false positive probability seriously).
-Then, the range of plausible likelihood ratios for eyewitness evidence
-alone is:
-
-\begin{align*}
-\left[\frac{.07}{.95}, \frac{.13}{.85}    \right ]  & \approx [.073,.15]
-\end{align*}
-
-In contrast, if the eyewitness is a friend of the suspect, so that you
-estimate \(\pr{E \vert H}\) to be .6, while the conditions were
-sub-optimal, so that \(\pr{E\vert \n H} = .8\pm .05\), the likelihood
-ratio range is \(.7-.8\) and the impact of such eyewitness evidence is
-quite different.
 
 \vspace{1mm}
 \footnotesize
@@ -1299,73 +1349,151 @@ quite different.
 \label{fig:eyewitness4}
 \end{figure}
 
-The key observation here is that whether exculpatory eyewitness
-testimony can in fact be sufficient to acquit in light of incriminating
-DNA evidence depends on the particulars: both on the quality of the
-eyewitness testimony and on the realistic assessment of the likelihood
-ratio for the DNA evidence (incorporating the probability of false
-positives), and on what priors other pieces of evidence led us to so far
-prior to the evaluation of such items of evidence. The devil is in the
-detail, and it is not always the case that one should trump the other.
+We conclude this section by addressing the question whether an
+eyewitness identification is stronger or weaker evidence than a DNA
+match. When the two conflict---say eyewitness evidence is exculpatory
+and the DNA match is incriminating---which should prevail? It is
+tempting to reason thus. Since DNA evidence is scientific, it is
+stronger evidence and thus should trump eyewitness evidence. We argue
+against these blanketed statements. Whether exculpatory eyewitness
+testimony is sufficient to acquit in light of incriminating DNA evidence
+depends on the particulars: both on the quality of the eyewitness
+testimony and on the realistic assessment of the likelihood ratio for
+the DNA evidence (incorporating the probability of false positives). The
+devil is in the detail.
 
-The reader might be disappointed: simply saying ``it depends'' does not
-seem to help much. However, keep in mind that there are well known items
-in the literature, on one hand, in psychology, illustrating that human
-jurors tend to value eyewitness evidence over statistical evidence
-(Niedermeier, Kerr, \& Messeé, 1999; Wells, 1992; Wells \& Olson, 2003),
-and, on the other hand, in epistemology, attempting to explain this
-intuition in a philosophically principled manner (Bolinger, 2020; Smith,
-2017; Thomson,
-1986).\mar{R: try to come up with  more references in this passage, think about this.}
-In line with a more balanced view (Redmayne, 2008), our approach
-suggests that while the psychological effect exists, there are multiple
-cases in which the preference for eyewitness evidence is mistaken, and
-relegates the identification and evaluation of factors that contribute
-to its proper evaluation to actual empirical research. If the situation
-is complicated, the best that can be done is take its complexity
-seriously, and quantitative methods are much more fit for this task than
-juror's intuitions or general philosophical statements.
+As an illustration, consider the case People v. Rush, 165 Misc. 2d 821
+(N.Y.~Sup.~Ct.~1995) . A rape victim identified the defendant from a
+photograph a few weeks after the event. She also identified the
+defendant in a line-up two weeks later. At trial, however, she
+identified a spectator as her assailant, not the defendant. So, the
+eyewitness evidence was ultimately exculpatory. The defendant was seen
+in the vicinity of the crime scene three days prior. A DNA expert
+testified to a positive match between the crime scene genetic material
+and the defendant. The expert also testified that the random match
+probability was 1 in 500 million. Confronted with the question whether
+to believe the exculpatory eyewitness testimony or the incriminating DNA
+match, the court---somewhat emphatically---wrote:
 
-Here is an example of real-life complexities that the considerations in
-this section can clarify to some extent. In
-\emph{The People of the State of New York v. Bansheen Rush} (Supreme
-Court of New York, 1995), a rape victim identified the defendant from
-photographic a few weeks after the event, identified the defendant in a
-corporeal lineup two weeks later, but at trial identified a spectator as
-her assailant, so the previous identifying evidence has been
-precluded.\footnote{Interestingly, Articles 60.25 and 60.30 of the \emph{Rules of Evidence and Related Matters} referred to at this point by the court do not say anything about mixed eyewitness evidence of this sort: they only define eyewitness evidence as requiring recognition after the event in a proper  procedure (not at trial).}
-The defendant had been seen in the vicinity of the crime location three
-days before the crime. A DNA expert provided a positive match and
-testified that the random match probability is 1 in 500 million. The
-court found the DNA evidence alone to legally sufficient to support the
-guilty verdict.
+\begin{quote}
+There can be little doubt, however, that the perils of eyewitness identification testimony far exceed those presented by DNA expert testimony ... This court is, therefore, satisfied that the testimony of even one DNA expert that there is a genetic match between the semen recovered from the victim of a rape and the blood of the defendant, a total stranger, and the statistical probability that anyone else was the source of that semen are 1 in 500 million is legally sufficient to support a guilty verdict. The defendant's motion for a trial order of dismissal is, therefore, denied.
+\end{quote}
 
-In light of our discussion so far, this deserves a few remarks. First,
-the circumstances of the first two are not described in sufficient
-detail to decide how the existing research applies. To correctly deploy
-the results, information would be needed on how much the two first
-identification conditions departed from pristine conditions and in what
-respects. Moreover, it is known that the quality of testimony decreases
-with time, and is even less reliable in a stressful situation such as
-the trial. So, overall, the three testimonies jointly still constituted
-positive identifying evidence, albeit weakened by the mistake (made in
-the most stressful conditions and with much more time between the crime
-and the identification), but without further details, it is hard to
-judge the extent or estimate the joint reliability quantitatively.
-Second, while the random match probability has been fairly low, some
-doubts remain as no estimates of false positive probability are
-available, and so it is difficult to estimate its impact on the final
-likelihood ratio of the DNA evidence.
+What are we to make of this statement? In light of our discussion, this
+decision is surprising. The specific circumstances of the first
+eyewitness identifications are not examined by the court in sufficient
+detail. We would need to know how much the two identifications departed
+from pristine conditions and in what respects. The same applies to the
+third testimony, when the defendant identifies a person the courtroom as
+her perpetrator. Perhaps we should give little weigh to this testimony.
+Without any further details, it is hard to make a determination. The
+court seems to give almost no weight to the eyewitness testimonies,
+whether they are incriminating or exculpatory. For the sake of argument,
+let's follow the court in this exercise. The court framed the question
+as one of whether A DNA match alone can be enough to sustain a
+conviction. Now, aramdom match probability of 1 over 500 million,
+correspond to a likelihood ratio of 20 (if the false positive
+probability is .05) and 99 (if the false positive probability is 0.1).
+Are these number enough to warrant a conviction? If teh prior
+probability is about if gulty is about 10\% (a quite high starting point
+already), the posterior probability of guilt would only 90\% if the
+false positive probability is as as low as 1\%. The posterior would be
+even lower, 66\%, if the false positive probability reaches 5\%. These
+numbers should give us pause and doubt the decision of the court. And
+these relatively low probability do not take into account the
+exculpatory value of the eyewitness testimony. Say we given the third
+eyewitness testimony an exculpatory value of 0.5. This would enough to
+bring the posterior probability of guilt further below to 83\% and 50\%
+respectively, a far cry for what is needed to convict an individual.
 
-Again, this might be disappointing, if the reader expected a precise
-numerical evaluation. However, this is still far from useless: it
-suggests that the eyewitness evidence preclusion was over-cautions, that
-more attention should have been paid to the detailed circumstances of
-the first two identifications, and that more reliable research is needed
-on false positive probabilities in DNA identifications for such cases to
-facilitate the handling of such unusual cases. If these elements had
-been in place, one could, in principle, be more specific about the value
-of the joint evidence.
+We do not intend these remark to show that the court was wrong. It had
+better access to the trial record and could better evaluate the specific
+circumstances of the case. Our point is twofold. First, the random match
+probability was fairly low, but exclusively rely on it was a mistake
+Doubts remain about the false positive probability, which can have a
+significant impact on the value of an incriminating match. Second, the
+exculpatory eyewitness testimony might have a very low value, but it
+might still be enough to weaken the incriminating DNA match to create a
+reasonable doubt. The court seems to have committed the mistake---at
+least conceptually---that since the balance of the evidence tips against
+the accused, this was enough to convict. While might be true in civil
+case, it certainly is true for a criminal case. We will return to this
+pint when we discussion the standard of proof.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{priorOdds }\OtherTok{\textless{}{-}} \DecValTok{1}\SpecialCharTok{/}\DecValTok{10}
+\NormalTok{rmp }\OtherTok{\textless{}{-}} \DecValTok{1}\SpecialCharTok{/}\DecValTok{500000000}
+\NormalTok{fpp }\OtherTok{\textless{}{-}} \FloatTok{0.01}
+\DecValTok{1}\SpecialCharTok{/}\NormalTok{((rmp}\SpecialCharTok{+}\NormalTok{fpp}\SpecialCharTok{*}\NormalTok{(}\DecValTok{1}\SpecialCharTok{{-}}\NormalTok{rmp)))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 99.99998
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{lr }\OtherTok{\textless{}{-}} \DecValTok{1}\SpecialCharTok{/}\NormalTok{((rmp}\SpecialCharTok{+}\NormalTok{fpp}\SpecialCharTok{*}\NormalTok{(}\DecValTok{1}\SpecialCharTok{{-}}\NormalTok{rmp)))}
+
+\NormalTok{postOdds }\OtherTok{\textless{}{-}}\NormalTok{ lr}\SpecialCharTok{*}\NormalTok{priorOdds}
+\NormalTok{posteriorProb }\OtherTok{\textless{}{-}}\NormalTok{ postOdds}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\NormalTok{postOdds)}
+\NormalTok{posteriorProb}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.9090909
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{postOdds }\OtherTok{\textless{}{-}} \FloatTok{0.5}\SpecialCharTok{*}\NormalTok{lr}\SpecialCharTok{*}\NormalTok{priorOdds}
+\NormalTok{posteriorProb }\OtherTok{\textless{}{-}}\NormalTok{ postOdds}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\NormalTok{postOdds)}
+\NormalTok{posteriorProb}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.8333333
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{fpp }\OtherTok{\textless{}{-}} \FloatTok{0.05}
+\DecValTok{1}\SpecialCharTok{/}\NormalTok{((rmp}\SpecialCharTok{+}\NormalTok{fpp}\SpecialCharTok{*}\NormalTok{(}\DecValTok{1}\SpecialCharTok{{-}}\NormalTok{rmp)))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 20
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{lr }\OtherTok{\textless{}{-}} \DecValTok{1}\SpecialCharTok{/}\NormalTok{((rmp}\SpecialCharTok{+}\NormalTok{fpp}\SpecialCharTok{*}\NormalTok{(}\DecValTok{1}\SpecialCharTok{{-}}\NormalTok{rmp)))}
+\NormalTok{postOdds }\OtherTok{\textless{}{-}}\NormalTok{ lr}\SpecialCharTok{*}\NormalTok{priorOdds}
+\NormalTok{posteriorProb }\OtherTok{\textless{}{-}}\NormalTok{ postOdds}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\NormalTok{postOdds)}
+\NormalTok{posteriorProb}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.6666667
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{postOdds }\OtherTok{\textless{}{-}} \FloatTok{0.5}\SpecialCharTok{*}\NormalTok{lr}\SpecialCharTok{*}\NormalTok{priorOdds}
+\NormalTok{posteriorProb }\OtherTok{\textless{}{-}}\NormalTok{ postOdds}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\NormalTok{postOdds)}
+\NormalTok{posteriorProb}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.5
+\end{verbatim}
 
 The discussion in this section points towards an approach that we will
 be developing in other chapters.\(\,\)\todo{crossref} The evaluation of
@@ -3281,11 +3409,6 @@ Biedermann, A., Hicks, T., Taroni, F., Champod, C., \& Aitken, C.
 {Response} to {Fenton} et al. \emph{Science \& Justice}, \emph{54}(4),
 316--318.
 
-\leavevmode\hypertarget{ref-bolinger2020individualized}{}%
-Bolinger, R. J. (2020). Explaining the justificatory asymmetry between
-statistical and individualized evidence. \emph{The social epistemology
-of legal trials}. Routledge.
-
 \leavevmode\hypertarget{ref-brennan2012ethics}{}%
 Brennan, J. (2012). \emph{The ethics of voting}. Princeton University
 Press.
@@ -3501,12 +3624,6 @@ National Research Council. (1996). \emph{The evaluation of forensic
 {DNA} evidence {\emph{{[}NRC II{]}}}}. Committee on {DNA} technology in
 {F}orensic {S}cience, {N}ational {R}esearch {C}ouncil.
 
-\leavevmode\hypertarget{ref-niedermeierEtAl1999}{}%
-Niedermeier, K. E., Kerr, N. L., \& Messeé, L. A. (1999). Jurors' use of
-naked statistical evidence: Exploring bases and implications of the
-{Wells} effect. \emph{Journal of Personality and Social Psychology},
-\emph{76}(4), 533--542.
-
 \leavevmode\hypertarget{ref-pardo2013NaturePurposeEvidence}{}%
 Pardo, M. S. (2013). The {Nature} and {Purpose} of {Evidence Theory}.
 \emph{Vanderbilt Law Review}, \emph{66}, 547--613.
@@ -3515,10 +3632,6 @@ Pardo, M. S. (2013). The {Nature} and {Purpose} of {Evidence Theory}.
 Park, R. C., Tillers, P., Moss, F. C., Risinger, D. M., Kaye, D. H.,
 Allen, R. J., Gross, S. R., et al. (2010). Bayes {Wars Redivivus} -- {An
 Exchange}. \emph{International Commentary on Evidence}, \emph{8}(1).
-
-\leavevmode\hypertarget{ref-redmayne2008exploring}{}%
-Redmayne, M. (2008). Exploring the proof paradoxes. \emph{Legal Theory},
-\emph{14}(4), 281--309. Cambridge University Press.
 
 \leavevmode\hypertarget{ref-Royall1997}{}%
 Royall, R. M. (1997). \emph{Statistical evidence: A likelihood
@@ -3529,10 +3642,6 @@ Shaer, M. (2016). The false promise of DNA testing. \emph{The Atlantic}.
 Retrieved from
 \url{https://www.theatlantic.com/magazine/archive/2016/06/a-reasonable-doubt/480747/}
 
-\leavevmode\hypertarget{ref-Smith2018evidence}{}%
-Smith, M. (2017). When does evidence suffice for conviction?
-\emph{Mind}.
-
 \leavevmode\hypertarget{ref-sprenger2019bayesian}{}%
 Sprenger, J., \& Hartmann, S. (2019). \emph{Bayesian philosophy of
 science}. Oxford University Press.
@@ -3541,10 +3650,6 @@ science}. Oxford University Press.
 Stockmarr, A. (1999). Likelihood {Ratios} for {Evaluating DNA Evidence
 When} the {Suspect} is {Found Through} a {Database Search}.
 \emph{Biometrics}, \emph{55}(3), 671--677.
-
-\leavevmode\hypertarget{ref-Rush1995}{}%
-Supreme Court of New York, K. C. (1995). \emph{The people of the state
-of new york, plaintiff, v. Basheen rush, defendant}.
 
 \leavevmode\hypertarget{ref-taroni2006bayesian}{}%
 Taroni, F., Biedermann, A., Bozza, S., Garbolino, P., \& Aitken, C.
@@ -3562,19 +3667,10 @@ infallibility. In S. Krimsky \& J. Gruber (Eds.), \emph{Genetic
 explanations: Sense and nonsense} (pp. 227--347). Harvard University
 Press.
 
-\leavevmode\hypertarget{ref-thomson1986liability}{}%
-Thomson, J. J. (1986). Liability and individualized evidence. \emph{Law
-and Contemporary Problems}, \emph{49}(3), 199--219. JSTOR.
-
 \leavevmode\hypertarget{ref-triggsCommentWhyEffect}{}%
 Triggs, C. M., \& Buckleton, J. S. (2004). Comment on: {Why} the effect
 of prior odds should accompany the likelihood ratio when reporting {DNA}
 evidence. \emph{Law, Probability and Risk}, \emph{3}, 73--82.
-
-\leavevmode\hypertarget{ref-wells1992naked}{}%
-Wells, G. L. (1992). Naked statistical evidence of liability: Is
-subjective probability enough? \emph{Journal of Personality and Social
-Psychology}, \emph{62}(5), 739--752. American Psychological Association.
 
 \leavevmode\hypertarget{ref-wells2003EyewitnessTestimony}{}%
 Wells, G. L., \& Olson, E. A. (2003). Eyewitness {Testimony}.
