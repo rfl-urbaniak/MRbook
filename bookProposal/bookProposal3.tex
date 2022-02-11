@@ -28,8 +28,6 @@
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
 \IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
 \hypersetup{
-  pdftitle={Boosting Legal Probabilism},
-  pdfauthor={Marcello Di Bello and Rafal Urbaniak},
   colorlinks=true,
   linkcolor=Maroon,
   filecolor=Maroon,
@@ -58,8 +56,9 @@
 
 % %packages
 \usepackage{booktabs}
-\usepackage[left]{showlabels}
+%\usepackage[left]{showlabels}
 \usepackage{multirow}
+\usepackage{multicol}
 \usepackage{subcaption}
 
 \usepackage{graphicx}
@@ -106,7 +105,7 @@
 \usepackage{mathtools}
 
 \usepackage{geometry}
- \geometry{a4paper,left=35mm,top=20mm,}
+ \geometry{a4paper,left=17mm, right = 17mm,top=25mm, bottom = 25mm}
 
 
 %environments
@@ -232,22 +231,32 @@
   \usepackage{selnolig}  % disable illegal ligatures
 \fi
 
-\title{Boosting Legal Probabilism}
-\author{Marcello Di Bello and Rafal Urbaniak}
-\date{}
+\author{}
+\date{\vspace{-2.5em}}
 
 \begin{document}
-\maketitle
+
+\begin{center}
+
+$\, $
+
+\vspace{-10mm}
+
+\textbf{\huge  Boosting Legal Probabilism \linebreak \normalsize  bayesian network methods for narrations in legal fact-finding}
+\vspace{2mm}
+
+Marcello Di Bello and Rafal Urbaniak
+\end{center}
+
+\vspace{-4mm}
 
 \hypertarget{the-book}{%
 \section{The Book}\label{the-book}}
 
+\vspace{-2mm}
+
 \hypertarget{brief-description}{%
 \subsection{Brief Description}\label{brief-description}}
-
-\footnotesize In one or two paragraphs, describe the work, including its
-rationale, approach, and pedagogy. (This book is\ldots{} It does\ldots{}
-Its distinguishing features are\ldots)
 
 \normalsize
 
@@ -265,10 +274,17 @@ affirmative. Legal probabilists have made considerable progress, but
 also faced robust skepticism by legal theorists and philosophers. Our
 book `Boosting Legal Probabilism' examines the most important objections
 to this research program and articulates a version of legal probabilism
-that is able to address many, if not all, of these objections.
+that is able to address many, if not all, of these
+objections.\todo{Added this bit on normativity, not sure if it should be here or later, take a look.}
+While the approach is normative, a strong emphasis is placed on being
+informed by the descriptive perspective---actual practice (1) is a
+source of problems and tasks that need to be addressed, (2) can inspire
+the formulation of various norms, (3) is useful in philosophical
+evaluation of various norms if their informal counterparts have already
+been discussed by the practitioners.
 
 We begin with the simple version of the theory. It comprises two key
-elements: first, Bayes' theorem for assessing the weight of the
+elements: first, Bayes' theorem for assessing the strength of the
 evidence, and second, probability thresholds as decision criteria. This
 simple version of legal probabilism is promising in many ways, but also
 falls prey to several difficulties, including the problem of
@@ -288,6 +304,21 @@ fact-finding: argumentation theory and relative plausibility. To add
 precision to the claims made in the book, the analytic argument is
 supplemented by computer simulations and \textbf{\textsf{R}} code
 implementation.
+
+The key positive contributions of the book are:
+
+\begin{itemize}
+\item A systematic introduction to the state of the art.
+\item A clear explanation of how the developments lead to the incorporation of insights from the narrative approach to legal fact-finding.
+\item The development of a rich formal framework based on Bayesian networks, meant to capture various features usually associated with narrations (such as coherence, completeness, or coverage).
+\item An extensive discussion of existing methods of handling multiple Bayesian methods and a proposal of improving on them for applications to legal fact-finding.
+
+\item An explication of various notions formulated within the argumentation theory in terms of the newly developed framework.
+\item An explanation of how the framework handles the philosophical objections to legal probabilism.
+\item A discussion connecting the framework to decision theory.
+\item An argument to the effect that when it comes to deployment of the framework, the tension accuracy and fairness is only apparent.
+\item A comparison of the approach to other philosophical accounts of legal fact-finding.
+\end{itemize}
 
 `Boosting Legal Probabilism' is aimed at philosophers with an interest
 in legal epistemology and epistemology more generally. Many of the
@@ -310,10 +341,29 @@ reformers. Some chapters present original research and require technical
 background in probability theory. Others are introductory, suitable for
 an advanced undergraduate course.
 
+\vspace{-3mm}
+
 \hypertarget{outline}{%
 \subsection{Outline}\label{outline}}
 
+\todo{Added this short description of parts, as requested bo Sophie. Check.}
+
+The book is divided into three chapter clusters. Part I covers the
+current state of legal probabilism and the challenges it has faced. Part
+II introduces and motivates the philosophical moves and formal choices
+that we will make later on, by a focused discussion of the key formal
+tools used by legal probabilism so far and the issues that come up with
+their deployment in legal fact-finding. In Part III we develop our own
+approach and motivate it from the epistemological perspective. Part IV
+is devoted to a decision-theoretic perspective on our approach. Part V
+focuses on accuracy and fairness considerations, as pertinent to our
+approach.
+
+\vspace{2mm}
+
 \noindent \textbf{Part I - Legal Probabilism and Its Foes}
+
+\vspace{2mm}
 
 \noindent The first part of the book will instill interest in legal
 probabilism among unfamiliar readers and refresh seasoned readers about
@@ -429,23 +479,27 @@ the story. In turn, these events are linked to their supporting
 evidence. An example of a Bayesian network with a story node (or
 scenario node to use Vlek's terminology) is depicted below:
 
+\vspace{-2mm}
+
 \begin{center}
 \includegraphics[width=8cm]{vlek-scenario-node.pdf}
  \end{center}
 
-Since the story node unifies the different parts of a story, changes in
-the probabilities of these parts can be used to model the notion of
-coherence. The stronger the (positive) probabilistic dependence between
-the different parts, the more coherent the story. To model conflicts of
-evidence, a Bayesian network can be built that comprises two competing
-stories, say, one story put forward by the prosecution and another by
-the defense, each supported by their own evidence. The network would
-specify that these stories are incompatible and cannot be true
-concurrently. Another approach to model conflicting evidence and
-competing stories was developed by Norman Fenton and his research group.
-Separate stories are represented by separate Bayesian networks, and
-Bayesian model comparison is then used for assessing the comparative
-evidential support of the competing stories.
+\vspace{-2mm}
+
+\noindent Since the story node unifies the different parts of a story,
+changes in the probabilities of these parts can be used to model the
+notion of coherence. The stronger the (positive) probabilistic
+dependence between the different parts, the more coherent the story. To
+model conflicts of evidence, a Bayesian network can be built that
+comprises two competing stories, say, one story put forward by the
+prosecution and another by the defense, each supported by their own
+evidence. The network would specify that these stories are incompatible
+and cannot be true concurrently. Another approach to model conflicting
+evidence and competing stories was developed by Norman Fenton and his
+research group. Separate stories are represented by separate Bayesian
+networks, and Bayesian model comparison is then used for assessing the
+comparative evidential support of the competing stories.
 
 \textbf{Chapter 7} assesses Vlek's story node approach as an account of
 coherence. The critical argument is followed by a positive proposal. We
@@ -458,27 +512,28 @@ engage with the rich philosophical literature on the topic. After the
 critical argument, the chapter articulates a more adequate probabilistic
 account of coherence. We define a formal notion of `story coherence'
 that reflects properties of the Bayesian network used to model the
-evidence. We show that our formal notion of coherence addresses the
-objections against probabilistic accounts of coherence in the
-philosophical literature.
-\raf{M: This sentence is too vague in its positive part. Can we say something mroe specific?}
+evidence. We show that our formal notion of coherence
+\todo{added bit on background causal knowledge, take a look} that
+incorporates background causal knowledge addresses the objections
+against probabilistic accounts of coherence in the philosophical
+literature.
 
 \textbf{Chapter 8} focuses on conflicts between pieces of evidence.
-Neither Vlek's story node approch nor Fenton's model comparison approach
-adequately capture how pieces of evidence and competing stories may
-conflict with one another. The complex adversarial dialectic that takes
-place in a trial cannot be modeled by simply averaging different
+Neither Vlek's story node approach nor Fenton's model comparison
+approach adequately capture how pieces of evidence and competing stories
+may conflict with one another. The complex adversarial dialectic that
+takes place in a trial cannot be modeled by simply averaging different
 Bayesian networks (Fenton) or postulating relationships of
 incompatibility between different story nodes (Vlek). We need an account
 of more fine-grained notions, such as undercutting and rebutting
-evidence, and more generally we need an account of how cross-examimation
+evidence, and more generally we need an account of how cross-examination
 operates at trial. What cross-examination often accomplishes is not so
 much the creation of an alternative story, but the reinterpretation of
 an existing story by supplying additional information. We show that this
-process of reintepretation can be represented formally as the refinement
-of an existing Bayesian network. Conflicts between pieces of evidence
-such as undercutting and rebutting can be modeled by drawing additional
-arrows between evidence nodes and hypothesis nodes.
+process of re-interpretation can be represented formally as the
+refinement of an existing Bayesian network. Conflicts between pieces of
+evidence such as undercutting and rebutting can be modeled by drawing
+additional arrows between evidence nodes and hypothesis nodes.
 
 The reverse of the phenomenon of conflicting evidence is that of
 converging evidence, in particular, the fact that one piece of evidence
@@ -488,11 +543,10 @@ probabilism. \textbf{Chapter 9} surveys the literature on corroboration
 and the main difficulties that have been leveled against proposed
 probabilistic accounts. The chapter then formalizes a notion of
 corroboration using Bayesian networks that overcomes most of the
-difficulties of exisisting accounts.
-\raf{M: ANYTHING ELSE TO DESCRIBE THE POSITIVE ACCOUNT?}
+difficulties of existing accounts.
 
 \textbf{Chapter 10} draws some general morals after comparing legal
-probabilism 1.02---as fomulated in the previous two chapters---to other
+probabilism 1.02---as formulated in the previous two chapters---to other
 accounts of judicial fact-finding, in particular, argumentation theory
 and relative plausibility. Argumentation theory is well suited to model
 conflicts between evidence, but cannot easily model the fact that
@@ -518,10 +572,9 @@ simple legal probabilism in which evidential support is modeled by the
 posterior probability of a hypothesis given the evidence or the
 likelihood ratio. Legal probabilism 1.02, however, offers a richer
 account. In it, evidential support also depends on the degree of
-specificity and coherence of the story put forward, and the extent to
-which the supporting evidence withstands objections. These
-features---specificity and coherence, as well as resistance to
-objections---can serve to formulate decision criteria that are not
+specificity, completeness, and coherence of the story put forward, and
+the extent to which the supporting evidence withstands objections. These
+features can serve to formulate decision criteria that are not
 unidimensional thresholds. Criteria for trial decisions are discussed
 more extensively in the next part of the book.
 
@@ -675,8 +728,6 @@ that understanding the standard of proof as the combination of a `high
 probability' and `narrative specificity' (as we have argued in earlier
 chapters) is a more rational model of the standard of proof.
 
-\raf{M: Anythign to add or remove?}
-
 \textbf{Chapter 17} turns to the fairness of trial decisions. What does
 it means for trial decisions to be fair? In a formalistic sense,
 fairness merely requires that every rule be applied to all defendants in
@@ -703,7 +754,6 @@ probability of liability be above a fixed threshold. Thus, the
 multidimensional account of the standard of proof we have proposed fares
 relatively well in light of normative criteria such as accuracy
 (previous chapter) and fairness (this chapter).
-\raf{M: Anythign to add or remove?}
 
 \textbf{Chapter 18} draws some conclusions and points to open problems
 for legal probabilism. We emphasize that our aim in the book is to show
@@ -723,13 +773,13 @@ our theoretical findings can be implemented in the trial setting, but
 leave a more precise articulation of the challenges of implementation
 for future work.
 
-\raf{M: ANYTHING TO ADD HERE?}
+\newpage
 
-\todo{Question: don't we plan to have a chapter on the priors?}
+\vspace{-4mm}
 
-\vspace{3mm}
-
-\noindent \textbf{Table of contents}
+\begin{center}\textbf{\large Table of contents}\end{center}
+\begin{multicols}{2}
+\footnotesize
 
 \renewcommand{\labelenumi}{\Roman{enumi}}
 \renewcommand{\labelenumii}{\arabic{enumii}}
@@ -957,32 +1007,28 @@ for future work.
 \end{enumerate}
 \end{enumerate}
 
+\end{multicols}
+
+\normalsize
+
 \hypertarget{outstanding-features-of-the-book}{%
 \subsection{Outstanding Features of the
 Book}\label{outstanding-features-of-the-book}}
 
 \begin{itemize}
 \item
-  `Booosting Legal Probabilism' is divided into different parts, each
-  tackling a distinct domain and level of analysis. The first half (PART
-  II and PART III) examines how the evidence presented at trial should
-  be assessed, weighed and evaluated using the tools of probability
-  theory. The second half examines decisions at trial. The book offers a
-  probability-based explication of legal standards of proof that is
-  theoretically plausible (PART IV). In addition, the book also provides
-  a normative justification of the proposed theory based on how
-  standards of proof would perform in terms of accuracy and fairness
-  under competing definitions (PART V).
+  `Booosting Legal Probabilism' is the first comprehensive sustained
+  philosophical examination of legal probabilism and how it fares
+  against well-known objections. It is also conciliatory in admitting
+  that many insights delivered by the critics of legal probabilism are
+  valid and should be incorporated within the probabilistic approach to
+  legal fact-finding.
 \item
   The book is interdisciplinary. It closely engages with the literature
   in philosophy (see, for example, the discussion about coherence and
-  corroboration) as well as literature outside philosophy in artificial
-  intelligence and forensic science (see, for example, the discussion pf
-  Vlek's story node approach and Fenton's everaging).
-\item
-  `Booosting Legal Probabilism' is the first comprehensive sustained
-  philosophical examination of legal probabilism and how it fares
-  against well-known objections.
+  corroboration) as well as literature outside philosophy, in artificial
+  intelligence and in forensic science (see, for example, the discussion
+  of Vlek's story node approach and Fenton's averaging).
 \item
   The philosophical argument in defense of legal probabilism is
   accompanied by mathematical proofs as well as an \textbf{\textsf{R}}
@@ -999,27 +1045,26 @@ Book}\label{outstanding-features-of-the-book}}
   accuracy and fairness of trial decisions (Chapters 14, 16 and 17),
   etc. We will make sure to describe several tracks that readers could
   follow depending on their interests.
+\item
+  `Booosting Legal Probabilism' is divided into different parts, each
+  tackling a distinct domain and level of analysis. The first half (Part
+  II and Part III) examines how the evidence presented at trial should
+  be assessed, weighed and evaluated using the tools of probability
+  theory. The second half examines decisions at trial. The book offers a
+  probability-based explication of legal standards of proof that is
+  theoretically plausible (Part IV). In addition, the book also provides
+  a normative justification of the proposed theory based on how
+  standards of proof would perform in terms of accuracy and fairness
+  under competing definitions (Part V).
 \end{itemize}
-
-\raf{M: What else?}
 
 \hypertarget{apparatus}{%
 \subsection{Apparatus}\label{apparatus}}
 
-\footnotesize a. Will the book include photographs, line drawings,
-cases, questions, problems, glossaries, bibliography, references,
-appendices, etc.?
-
-\footnotesize b. If the book is a text, do you plan to provide
-supplementary material to accompany it? (Teacher's manual, study guide,
-solutions, answers, workbook, anthology, or other material.)
-
-\vspace{2mm}
-
-\normalsize
+\vspace{-2mm}
 
 Besides the customary list of references at the end, the book will
-contain several graphs and plots, Bayesian networks, and other data
+contain multiple graphs and plots, Bayesian networks, and other data
 visualizations generated via the \textbf{\textsf{R}} package
 \texttt{ggplot2} as is standard in publications in statistics and
 machine learning.
@@ -1028,136 +1073,46 @@ Since computer simulations play an integral part in the argument, the
 book will be accompanied by supplementary materials available on-line.
 These materials will contain the \textbf{\textsf{R}} source code for the
 simulations along with tutorials for readers interested in learning the
-technical details.
+technical details. Some of the derivations and results will be also
+supported by associated \textbf{\textsf{Mathematica}} notebooks, which
+will also be made freely available.
 
 \hypertarget{competition}{%
 \subsection{Competition}\label{competition}}
 
-\footnotesize a. Consider the existing books in this field and discuss
-specifically their strengths and weaknesses. Spell out how your book
-will be similar to, as well as different from, competing works.
-
-\begin{enumerate}
-\def\labelenumi{\alph{enumi}.}
-\setcounter{enumi}{1}
-\item
-  Consider what aspects of topical coverage are similar to or different
-  from the competition. What topics have been left out of competing
-  books and what topics have been left out of yours?
-\item
-  Please discuss each competing book in a separate paragraph. (If
-  possible, please provide us with the publisher and date of publication
-  as well.) This information will provide the reviewers and the
-  publisher a frame of reference for evaluating your material. Remember,
-  you are writing for reviewers and not for publication, so be as frank
-  as possible regarding your competition. Give credit where credit is
-  due, and show how you can do it better.
-\end{enumerate}
-
 \normalsize
 
 Several books in print cover topics at the intersection of evidence, law
-and probability. They, however, do not have the same aims as our book.
+and probability. They, however, do not have the same aims as our book,
+and since they can be sensibly grouped with respect to how our book will
+differ from them, we'll discuss them in batches accordingly.
 
-Consider first books written by legal theories and philosophers, such as
-Stein (2005), \textit{Foundations of Evidence Law}, Oxford University
-Press; Ho (2008),
-\textit{A Philosophy of Evidence Law: Justice in the Search for Truth},
-Oxford University Press; Haack (2014),
-\textit{Evidence Matters: Science, Proof, and Truth in the Law},
-Cambridge University Press; Nance (2016),
-\textit{The Burdens of Proof: Discriminatory Power, Weight of Evidence, and Tenacity of Belief},
-Cambridge University Press; Dahlman, Stein, and Tuzet (eds.) (2021),
-\textit{Philosophical Foundations of Evidence Law}, Oxford University
-Press. These books offer original theories of evidence law, the
-standards of proof and legal decision-making under uncertainty. They
-address, from a philosophical perspective, many of the conceptual
-difficulties that we examine in our book. But they do not develop a
-probabilistic theory of evidence and decision-making that crucially
-relies on Bayesian networks. Nor do they combine analytical arguments,
-mathematical proofs and computer simulations.
+\todo{double check if all references have publishers}
 
-Many books by forensic scientists and computer scientists have
-championed applications of Bayesian networks to legal evidence
-evaluation, for example, Taroni, Aitken, Garbolino and Biedermann (2006)
-\textit{Bayesian Networks and Probabilistic Inference in Forensic Science},
-Wiley; Taroni, Bozza, Biedermann, Garbolino and Aitken (2010),
-\textit{Data Analysis in Forensic Science: A Bayesian Decision Perspective},
-Wiley; Fenton and Neil (2012/2018)
-\textit{Risk Assessment and Decision Analysis with Bayesian Networks},
-Chapman and Hall/CRC Press. These books are groundbreaking in that they
-offer a detailed examination of how expert evidence can be assessed
-using Bayesian networks. They, however, do not address philosophical
-problems such as the problem of naked statistical evidence or the
-difficulty of conjunction, nor do they aim to offer a novel theory of
-the standard of proof. Unlike our book, they do not address normative
-questions such as the accuracy or fairness of trial decisions.
+\begin{itemize}
 
-Several books exists about Bayesian networks that are more general in
-content, such as Scutari and Denis (2014),
-\textit{Bayesian Networks With Examples in R}, Chapman and Hall/CRC
-Press. Many books also examine how our minds rely on evidence to
-understand the world and solve problems, such as Lagnado (2021),
-\textit{Explaining the Evidence: How the Mond Investigates the World},
-Cambridge University Press. We do not review these books in any detail.
-They differ from our book mostly because they lack a focus on legal
-applications.
+\item Consider first the key books written by legal theories and philosophers, such as 
+Stein (2005), \textit{Foundations of Evidence Law}, Oxford University Press; Ho (2008), \textit{A Philosophy of Evidence Law: Justice in the Search for Truth}, Oxford University Press; Haack (2014), \textit{Evidence Matters: Science, Proof, and Truth in the Law}, Cambridge University Press; Nance (2016), \textit{The Burdens of Proof: Discriminatory Power, Weight of Evidence, and Tenacity of Belief}, Cambridge University Press;    Dahlman, Stein, and Tuzet (eds.) (2021), \textit{Philosophical Foundations of Evidence Law}, Oxford University Press.
+These books offer original theories of evidence law, the standards of proof and legal decision-making  under uncertainty.   They address, from a philosophical perspective, many of the conceptual difficulties that we examine in our book. But they do not develop a probabilistic theory of evidence and decision-making that crucially relies on Bayesian networks.  Nor do they combine analytic arguments, mathematical proofs and computer simulations.  They also focus on rather abstract examples and their use of real-life cases and discussions between the practitioners is rather limited.
 
-There are books that focus exclusively on the evaluation of statistical
-and probabilistic evidence at trial. They include Robertson and Vignaux
-(1995),
-\textit{Interpreting Evidence: Evaluating Forensic Science in the Courtroom},
-Wiley {[}second edition: Robertson, Vignaux and Berger, published in
-2016{]}; Lucy (2005),
-\textit{Introduction to Statistics for Forensic Scientists}, Wiley;
-Finkelstein (2010), \textit{Statistics for Lawyers}, Springer; Balding
-and Steele (2015),
-\textit{Weight-of-Evidence for Forensic DNA Profiles}, Wiley; Buckleton,
-Bright and Taylor (eds.) (2016)
-\textit{Forensic DNA Evidence Interpretation}, CRC Press. These books
-differ from our own because they are more specific, often focusing on
-just DNA evidence or select forms of expert evidence. Besides DNA and
-expert evidence, our book also covers common forms of evidence, such as
-eyewitness testimony. In addition, these books are written from the
-perspective of forensic science and do not examine many related
-philosophical questions.
+\item  Many books by forensic scientists and computer scientists  have championed applications of Bayesian networks to legal evidence evaluation, for example, Taroni, Aitken, Garbolino and Biedermann (2006) \textit{Bayesian Networks and Probabilistic Inference in Forensic Science}, Wiley;   Taroni,  Bozza,  Biedermann, Garbolino and  Aitken (2010), \textit{Data Analysis in Forensic Science: A Bayesian Decision Perspective}, Wiley; Fenton and Neil (2012/2018) \textit{Risk Assessment and Decision Analysis with Bayesian Networks}, Chapman and Hall/CRC Press. These books are groundbreaking in that they offer a detailed examination of how expert evidence can be assessed using Bayesian networks. They, however, do not address philosophical problems such as the problem of naked statistical evidence or the difficulty of conjunction, nor do they aim to offer a novel theory of the standard of proof, and they make no connection to the  narrative approach or evidence evaluation criteria brought up by the critics of legal probabilism. Unlike our book, they do not address normative questions such as the accuracy or fairness of trial decisions.
 
-Finally, a few books focus on the legal and ethical problems that arise
-from relying on statistical and actuarial evidence at trial and in the
-criminal justice system more generally. These books include Schauer
-(2006), \textit{Profiles, Probabilities and Stereotypes}, Belknap Press;
-Harcourt (2008),
-\textit{Against Prediction: Profiling, Policing, and Punishing in an Actuarial Age},
-University of Chicago Press. Some chapters of our book discuss actuarial
-and statistical evidence, but this is not our sole focus. In addition,
-the authors of these books do not rely on legal probabilism as their
-guiding theoretical framework.
+\item Several books exists about Bayesian networks that are more general in content. Some of them focus on the technical dimension,  such as Scutari and  Denis (2014), \textit{Bayesian Networks With Examples in R}, (Neapolitan 2004), \emph{Learning Bayesian Networks} or Fenton, Neli and Martin (2013), \emph{Risk Assessment and Decision Analysis with Bayesian Networks}. Some are more psychological and use Bayesian networks to examine how our minds rely on evidence to understand the world and solve problems, such as Spirtes, Glymour and Scheines (2000), \emph{Causation, Prediction and Search}, Glymour (2001),  \emph{The mind's arrows. Bayes Nets and Graphical Causal Models in Psychology}, or Lagnado (2021), \textit{Explaining the Evidence: How the Mond Investigates the World}, Cambridge University Press. \todo{More needs to be said about Lagnado, as he does focus on legal evidence} These general books  lack  focus on legal applications (some legal applications are discussed in Fenton, but the coverage is fairly narrow as compared to our intent---the authors focus on covering on presenting a few technical representation methods of various types of evidence). 
+
+
+
+\item There are books that focus exclusively on the evaluation of statistical and probabilistic evidence at trial. They include Robertson and Vignaux (1995), \textit{Interpreting Evidence: Evaluating Forensic Science in the Courtroom}, Wiley [second edition:  Robertson, Vignaux and Berger, published in 2016];  Lucy (2005), \textit{Introduction to Statistics for Forensic Scientists}, Wiley;  Finkelstein (2010), \textit{Statistics for Lawyers}, Springer; Balding and Steele (2015), \textit{Weight-of-Evidence for Forensic DNA Profiles}, Wiley;  Buckleton, Bright and Taylor (eds.) (2016) \textit{Forensic DNA Evidence Interpretation}, CRC Press. These books differ from our own because they are more specific, often focusing on just  DNA evidence or select forms of expert evidence. Besides DNA and expert evidence, our book also covers common forms of evidence, such as eyewitness testimony. In addition, these books are written from the perspective of forensic science and do not examine the   philosophical issues that are in the focus in our book, and they do not develop a general approach to the probabilistic modelling of narrations.
+
+\item  Finally, a few books focus on the legal and ethical problems that arise from relying on statistical and actuarial evidence at trial and in the criminal justice system more generally. These books include Schauer (2006), \textit{Profiles, Probabilities and Stereotypes}, Belknap Press; Harcourt (2008), \textit{Against Prediction: Profiling, Policing, and Punishing in an Actuarial Age}, University of Chicago Press. Some chapters of our book discuss  actuarial and statistical evidence, but this is not our sole focus. In addition, the authors of these books do not rely on legal probabilism as their guiding theoretical framework.
+
+
+\end{itemize}
 
 \hypertarget{market-considerations}{%
 \section{Market Considerations}\label{market-considerations}}
 
 \hypertarget{the-primary-market}{%
 \subsection{The Primary Market}\label{the-primary-market}}
-
-\footnotesize
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\item
-  What is the major market for the book? (Scholarly/professional, text,
-  reference, trade?)
-\item
-  If this is a text, for what course is the book intended? Is the book a
-  core text or a supplement? What type of student takes this course?
-  What is the level? (Major or non-major; freshman, senior, graduate?)
-  Do you offer this course yourself? If so, how many times have you
-  given it? Is your text class-tested?
-\item
-  If the market is scholarly/professional, reference, or trade, how may
-  it best be reached? (Direct mail, relevant journals, professional
-  associations, libraries, book or music stores?) For what type of
-  reader is your book intended?
-\end{enumerate}
 
 \normalsize
 
@@ -1175,6 +1130,26 @@ Statistics in the Law, Math on Trial. We have ourselves taught similar
 courses in the past and felt the need of a book such as ours. We believe
 other instructors felt the same.
 
+\hypertarget{status-of-the-work}{%
+\section{Status of the Work}\label{status-of-the-work}}
+
+We plan 16 chapters, two of which already exist, so 14 remain. We
+predict each chapter will take around 2 months to complete, which
+results in 28 months of work. We add eight months for proofreading,
+delays, revisions and running various versions of the chapters by our
+colleagues, so overall the fairly lenient schedule suggests completion
+after three years.
+
+With appendices the existing chapters have around 32k words each. We
+expect the early chapters chapters (including appendices) to be shorter,
+and the later chapters to be of approximately that length, the whole
+book being around 350k words.
+
+It is not clear how many graphs will be needed. Early chapters won't
+need many, the existing chapters have around 10-15 each (including
+appendices). Supposing this is the number for eight chapters, we seem to
+be looking at 80-100 graphs and visualizations.
+
 We have already used some of the materials on which this book is based
 in graduate seminars, for example, in the seminar Bayesian Networks in
 the Philosophy that one of us taught at Arizona State in Spring 2021. We
@@ -1190,109 +1165,51 @@ in Spring 2022. This conference gathers some of the leading scholars in
 law, philosophy, forensic science and psychology interested in topics at
 the intersection of law, evidence, probability and decision-making.
 
-\hypertarget{status-of-the-work}{%
-\section{Status of the Work}\label{status-of-the-work}}
-
-\footnotesize
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\tightlist
-\item
-  Do you have a timetable for completing the book?
-\end{enumerate}
-
-\begin{enumerate}
-\def\labelenumi{\alph{enumi}.}
-\item
-  What portion or percentage of the material is now complete?
-\item
-  When do you expect to have a complete manuscript?
-\end{enumerate}
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\setcounter{enumi}{1}
-\tightlist
-\item
-  What do you estimate to be the size of the completed book?
-\end{enumerate}
-
-\begin{enumerate}
-\def\labelenumi{\alph{enumi}.}
-\item
-  Double spaced typewritten pages normally reduce about one-third when
-  set in type; e.g., 300 typewritten pages make about 200 printed pages.
-  There are about 450 words on a printed page.
-\item
-  Approximately how many photographs do you plan to include?
-\item
-  Approximately how many line drawings (charts, graphs, diagrams, etc. )
-  will you need?
-\item
-  Do you plan to include material requiring permission (text, music,
-  lyrics, illustrations)? To what extent? Have you started the
-  permissions request process?
-\end{enumerate}
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\setcounter{enumi}{2}
-\tightlist
-\item
-  Do you plan to class-test the material in your own or other sections
-  of the course? (Any material distributed to students should be
-  protected by copyright notice on the material.)
-\end{enumerate}
-
-\normalsize
+We do not plan to include any material requiring additional copywright
+permissions.
 
 \hypertarget{sample-chapters}{%
 \section{Sample Chapters}\label{sample-chapters}}
 
-Select one or two chapters of the manuscript that are an integral part
-of the book. They should be those you consider the best-written ones,
-and do not have to be in sequence. For example, you might submit
-chapters 3, 7, and 14 of a 20-chapter book, so long as these chapters
-represent the content and reflect your writing style and pedagogy in the
-best possible light. It is also advisable to submit any chapter that is
-particularly innovative or unique. Sample chapters should contain rough
-sketches, charts, hand-written musical examples or xerox reproductions,
-and description of photographs to be included. The material need not be
-in final form, although it should be carefully prepared and represent
-your best work. In your preparation, emphasis should be on readability.
-Please do not bind your manuscript, as we will have to unbind it in
-order to make photocopies for reviewers. Also be sure all pages are
-numbered either consecutively or double-numbered by chapter.
+Two sample chapters with their appendices are attached to this
+submission.
 
 \hypertarget{reviews}{%
 \section{Reviews}\label{reviews}}
 
-If we are interested in your project, we will commission outside
-reviewers to read and evaluate your proposal. We will, of course, obtain
-the best available reviewers to consider your work. If you wish to
-suggest the names of experts in your field whom you believe to be
-ideally suited to evaluate your proposal, you may provide their names,
-titles, and email addresses. While we are unlikely to approach these
-scholars to act as reviewers themselves, we may ask them for their
-suggestions for peer readers. Naturally, we do not reveal the names of
-reviewers without their permission.
+\begin{itemize}
+
+\item Floris Bex
+
+\item Alex Biedermann
+
+\item Edward Cheng
+
+\item Christian Dahlman
+
+\item Norman Fenton
+
+\item David Lagnado
+
+\item Anne Hsu
+
+\item Brian Hedden
+
+\item Silja Renooij
+
+\item Frederick Schauer
+
+\item Silvia Bozza
+
+\item Bart Verheij
+
+
+
+\end{itemize}
 
 \hypertarget{author-background}{%
 \section{Author Background}\label{author-background}}
 
-Please include a current CV or brief biography of your writing,
-teaching, and/or educational background and experience. Be sure to list
-any books that you have previously published, and any other information
-about yourself on why you are qualified to write this book.
-
-\hypertarget{response-time}{%
-\section{Response Time}\label{response-time}}
-
-Please allow at least 6-10 weeks for the manuscript proposal evaluation
-and review process. We will contact you as soon as we have had a chance
-to thoroughly examine your manuscript proposal. Thank you for your
-interest in Oxford University Press. We look forward to reading your
-materials.
+Two CVs are attached to this submission.
 
 \end{document}
