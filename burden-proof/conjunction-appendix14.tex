@@ -326,18 +326,18 @@ independence}\label{bayesian-networks-and-probabilistic-independence}}
 \addcontentsline{toc}{subsection}{Bayesian networks and probabilistic
 independence}
 
-We begin with a quick refresher of the basic notions. A Bayesian network
+We begin with a refresher of the basic notions. A Bayesian network
 consists of a graphical part---a directed acyclic graph (DAG)---and a
-probability measure defined over the nodes in the graph. Bayesian
-networks satisfy the Markov condition. That is, any node is
+probability measure defined over the nodes (variables) in the graph.
+Bayesian networks satisfy the Markov condition. That is, any node is
 conditionally independent of its nondescentants (including ancestors),
 given its parents. If a probabilistic measure \(\pr{}\) that is defined
-over the variables in a graph \(\mathsf{G}\) respects the Markov
-condition, \(\pr{}\) is said to be compatible with \(\mathsf{G}\). The
-graph \(\mathsf{G}\) and the measure \(\pr{}\) can then be combined to
-constitute a Bayesian network.
+over the nodes (variables) in a graph \(\mathsf{G}\) respects the Markov
+condition, \(\pr{}\) is said to be compatible with \(\mathsf{G}\). Graph
+\(\mathsf{G}\) and measure \(\pr{}\) can then be combined to form a
+Bayesian network.
 
-The graphical counterpart of probabilistic independence is the so-called
+The graphical counterpart of probabilistic independence is
 \textbf{d-separation}, \(\indep_d\). Two nodes, \(X\) and \(Y\), are
 d-separated given a set of nodes
 \(\mathsf{Z}\)---\(X\indep_d Y \vert \mathsf{Z}\) --- iff for every
@@ -376,12 +376,8 @@ such that either (see Figure \ref{fig:connectionsBN}):
 \label{fig:connectionsBN}
 \end{figure}
 
-\noindent Finally, two sets of nodes, \(\mathsf{X}\) and \(\mathsf{Y}\),
-are d-separated given \(\mathsf{Z}\) if every node in \(\mathsf{X}\) is
-d-separated from every node in \(\mathsf{Y}\) given \(\mathsf{Z}\).
-
-Serial, converging and diverging connections can represent common
-scenarios. Consider a serial connection first.
+\noindent Serial, converging and diverging connections represent common
+scenarios. Consider the nodes:
 
 \footnotesize 
 \begin{center}
@@ -402,25 +398,10 @@ Yet, once we find out that \(B\) is true, we expect the profile match,
 and whether \(G\) holds has no further impact on the probability of
 \(M\).
 
-Take an example of a diverging connection. Say you have two coins, one
-fair, one biased. Conditional on which coin you have chosen, the results
-of subsequent tosses are independent. But if you don't know which coin
-you have chosen, the result of previous tosses give you some information
-about which coin it is, and this has an impact on your estimate of the
-probability of heads in the next toss. Whether a coin is fair, \(F\), or
-not has an impact on the result of the first toss, \(H1\), and on the
-result of the second toss, \(H2\). So \(H1 \leftarrow F \rightarrow H2\)
-seems to be appropriate. Now, on one hand, so long as you do not know
-whether \(F\), the truth of \(H1\) increases the probability of \(H2\).
-On the other hand, once you know that \(F\) is true, \(H1\) and \(H2\)
-become independent, and so conditioning on the parent in a fork makes
-its childern independent (provided there is no other open path between
-them in the graph).
-
 For converging connections, let \(G\) and \(B\) be as above, and let:
 
 \begin{center}
-\begin{tabular}{@{}lp{5.3cm}@{}}\toprule
+\begin{tabular}{@{}lp{6.3cm}@{}}\toprule
 Node & Proposition \\ \midrule 
 $O$ & The crime scene stain comes from the offender.\\
 \bottomrule
@@ -439,12 +420,30 @@ However, if you do find out that \(B\) is true---that the stain comes
 from the suspect---then whether the crime stain comes from the offender
 becomes relevant for whether the suspect is guilty.
 
-Interestingly, it can be proven that if two sets of nodes are
-d-separated given a third one, they are independent given the third one,
-for any probabilistic measures compatible with a given DAG. However,
-lack of d-separation does not necessarily entail dependence for any
-probabilistic measure compatible with a given DAG. It only allows for
-it: if nodes are d-separated, there is at least one probabilistic
+Take an example of a diverging connection. Say you have two coins, one
+fair, one biased. Conditional on which coin you have chosen, the results
+of subsequent tosses are independent. But if you don't know which coin
+you have chosen, the result of previous tosses give you some information
+about which coin it is, and this has an impact on your estimate of the
+probability of heads in the next toss. Whether a coin is fair, \(F\), or
+not has an impact on the result of the first toss, \(H1\), and on the
+result of the second toss, \(H2\). So \(H1 \leftarrow F \rightarrow H2\)
+seems to be appropriate. Now, on one hand, so long as you do not know
+whether \(F\), the truth of \(H1\) increases the probability of \(H2\).
+On the other hand, once you know that \(F\) is true, \(H1\) and \(H2\)
+become independent, and so conditioning on the parent in a fork makes
+its childern independent (provided there is no other open path between
+them in the graph).
+
+As a final piece of terminology, two sets of nodes, \(\mathsf{X}\) and
+\(\mathsf{Y}\), are d-separated given \(\mathsf{Z}\) if every node in
+\(\mathsf{X}\) is d-separated from every node in \(\mathsf{Y}\) given
+\(\mathsf{Z}\). Interestingly, it can be proven that if two sets of
+nodes are d-separated given a third one, they are independent given the
+third one, for any probabilistic measures compatible with a given DAG.
+However, lack of d-separation does not necessarily entail dependence for
+any probabilistic measure compatible with a given DAG. It only allows
+for it: if nodes are d-separated, there is at least one probabilistic
 measure fitting the DAG according to which they are dependent. So, at
 least, no false independencies can be inferred from the DAG, and all the
 dependencies are built into it.
@@ -455,18 +454,18 @@ problem}\label{independencies-in-the-conjunction-problem}}
 \addcontentsline{toc}{subsection}{Independencies in the conjunction
 problem}
 
-One assumption often made in the formulation of the conjunction problem
-is that hypotheses \(A\) and \(B\) are probabilistically independent. We
-will endorse this assumption, but also relax it to see whether the
-problem subsides (it does not). In particular, we will consider the two
-Bayesian networks shown in Figure \ref{fig:conjunctionBNs}. They
-represent two hypotheses, \(A\) and \(B\), their supporting pieces of
-evidence, \(a\) and \(b\), and their conjunction \(AB\). The difference
-is that a direct dependence between the hypotheses exists in the second
-network. In the Bayesian networks in this appendix, the conditional
-probability table for the conjunction node \(AB\) mirrors the truth
-table for the conjunction in propositional logic, as in Table
-\ref{tab:CPTconjunction2}.
+Back to the difficulty with conjunction. One assumption often made in
+the formulation of the problem is that hypotheses \(A\) and \(B\) are
+probabilistically independent. We will endorse this assumption, but also
+relax it to see whether the problem subsides (it does not). In
+particular, we will consider the two Bayesian networks shown in Figure
+\ref{fig:conjunctionBNs}. They represent two hypotheses, \(A\) and
+\(B\), their supporting pieces of evidence, \(a\) and \(b\), and their
+conjunction \(AB\).\footnote{In the Bayesian networks in this appendix,
+  the conditional probability table for the conjunction node \(AB\)
+  mirrors the truth table for the conjunction in propositional logic, as
+  in Table \ref{tab:CPTconjunction2}.} The difference is that a direct
+dependence between the hypotheses exists in the second network.
 
 \vspace{1mm}
 \footnotesize
@@ -520,14 +519,14 @@ AB &  &  & Pr\\
 
 \normalsize
 
-Unsurprisingly, the d-separations entailed by the two networks differ.
-Examples can be found in Table \ref{tab:indepBNS}. In fact,
-\textsf{DAG1} entails 31 d-separations, while \textsf{DAG2} entails 22
-of them. One warning about the notation. Nodes represent variables, and
-so each d-separation entails a probabilistic statement about all
-combination of the node states (=values of variables) involved. For
-instance, assuming each node is binary with two possible states, 1 and
-0, \mbox{$B   \indep_d\,\,  a $} entails that for any
+Unsurprisingly, the relations of d-separation entailed by the two
+networks differ. Examples can be found in Table \ref{tab:indepBNS}. In
+fact, \textsf{DAG1} entails 31 d-separations, while \textsf{DAG2}
+entails 22 of them. One warning about the notation. Nodes represent
+variables, and so each d-separation entails a probabilistic statement
+about all combination of the node states (values of variables) involved.
+For instance, assuming each node is binary with two possible states, 1
+and 0, \mbox{$B   \indep_d\,\,  a $} entails that for any
 \mbox{$ B_i, a_i \in \{0, 1\}$} we have
 \(\pr{B = B_i} = \pr{B = B_i \vert a = a_i}\).
 
@@ -608,7 +607,7 @@ entail independence given \(B=1\). For instance, one's final grade might
 depend on hard work if the teacher is fair, but this might fail if the
 teacher is not fair. We hope this ambiguity in notation will cause no
 confusion. Whether we talk about nodes or states (or events,
-proposition) should be clear from the context.
+propositions) should be clear from the context.
 
 \hypertarget{bayes-factor-claims-and-proofs}{%
 \subsection*{Bayes factor: claims and
@@ -616,13 +615,33 @@ proofs}\label{bayes-factor-claims-and-proofs}}
 \addcontentsline{toc}{subsection}{Bayes factor: claims and proofs}
 
 We start with the Bayes factor \(\pr{E \vert H}/\pr{E}\) as our measure
-of evidential support. The objective here is to study how the support
-toward the conjunction \(A\wedge B\) compares with the support toward
-the individual claims \(A\) and \(B\). Let's first abbreviate:
-\begin{align*}
+of evidential support. For ease of reference, we use the following
+abbreviations: \begin{align*}
 BF_A  & =  \frac{\pr{a \vert A}}{\pr{a}},\\
-BF_B & = \frac{\pr{b \vert B}}{\pr{b}}
+BF_B & = \frac{\pr{b \vert B}}{\pr{b}},\\\
+BF_{AB}  & =  \frac{\pr{a\wedge b \vert A \wedge B}}{\pr{a \wedge b}}
 \end{align*}
+
+\noindent The objective here is to study how the combined support
+\(BF_{AB}\) toward the conjunction \(A\wedge B\) compares with the
+individual supports \(BF_A\) and \(BF_B\) toward the individual claims
+\(A\) and \(B\). We prove the following general theorem:
+
+\begin{theorem}
+Given a measure $\pr{}$ compatible with \textsf{DAG1}, if both $BF_A$ and $BF_B$ 
+are grater than one, then $BF_{AB}\geq \mathsf{max}(BF_{A},BF_{B})$.
+The same holds for a measure compatible with \textsf{DAG2}.
+\label{thm:aggregationBf}
+\end{theorem}
+
+\noindent In other words, the combined support \(BF_{AB}\) is never
+below the individual supports \(BF_A\) and \(BF_B\), whether claims
+\(A\) and \(B\) are independent (\textsf{DAG1}) or not (\textsf{DAG2}).
+
+\begin{proof}
+For \textsf{DAG1}, the theorem holds by Fact \ref{fac:BFindep} (and corollary). For 
+\textsf{DAG2}, the theorem holds by Fact \ref{fac:BFdep} (and corollary), Lemma \ref{lem:BFLR}, and Fact \ref{fact:BFweaker3}. 
+\end{proof}
 
 \begin{fact} If the independence assumptions \eqref{eq:indAB}, \eqref{eq:indab}, \eqref{eq:I4} and \eqref{eq:I5} hold (all of which are entailed by \textsf{DAG1}), then 
 $BF_{AB} = BF_A \times BF_B$. \label{fac:BFindep}
@@ -637,7 +656,7 @@ $BF_{AB} = BF_A \times BF_B$. \label{fac:BFindep}
 &\mbox{\,\,\,\,\,\,\, (chain rule)} \\
 \end{align*}
 
-\noindent Now, let's deploy the respective independence assumptions, as follows:
+\noindent Next, we apply the relevant independence assumptions:
 
 \begin{align*}
 &  = \frac{\pr{A} \times \overbrace{\pr {B \vert A}}^{ \pr{B} \mbox{\footnotesize \, by \eqref{eq:indAB}}}  \times
@@ -652,22 +671,22 @@ $BF_{AB} = BF_A \times BF_B$. \label{fac:BFindep}
 
 \end{proof}
 
-This fact has the following straigthforward consequences which simply
-follow from the simple fact that if \(a = b \times c\) and \(b, c>1\),
-then \(a > \mathsf{max}(b,c)\) and that if \(b, c<1\), then
+This fact has the following straightforward consequences. They hold
+because, if \(a = b \times c\) and \(b, c>1\), then
+\(a > \mathsf{max}(b,c)\), and if \(b, c<1\), then
 \(a < \mathsf{min}(b,c)\).
 
-\begin{corollary} If the independence assumptions \eqref{eq:indAB}, \eqref{eq:indab}, \eqref{eq:I4} and \eqref{eq:I5} hold, and $BF_{A}$ and $BF_{B}$ are both greater than 1, then $BF_{AB}$ is greater than one. In fact,  $BF_{AB}$ is then greater than  $\mathsf{max}(BF_{A},BF_{B})$. \label{cor:BFind2}
+\begin{corollary} If the independence assumptions \eqref{eq:indAB}, \eqref{eq:indab}, \eqref{eq:I4} and \eqref{eq:I5} hold, and $BF_{A}$ and $BF_{B}$ are both greater than 1, then $BF_{AB}$ is greater than one. In fact,  $BF_{AB}$ is  greater than  $\mathsf{max}(BF_{A},BF_{B})$. \label{cor:BFind2}
 \end{corollary}
 
 \begin{corollary} If the independence assumptions \eqref{eq:indAB}, \eqref{eq:indab}, \eqref{eq:I4} and \eqref{eq:I5} hold, and $BF_{A}$ and $BF_{B}$ are both strictly less than 1, then $BF_{AB}$  is less than  $\mathsf{min}(BF_{A}, BF_{B})$. \label{cor:BFind3}
 \end{corollary}
 
-Do these claims hold after dropping the independence assumptions
-specific to \textsf{DAG1}? For one thing, if we shift to \textsf{DAG 2},
-the joint \textsf{BF} can no longer be obtained by multiplying the
-individual ones, although multiplication provides a a decent
-approximation (see Figure \ref{fig:BFmulti}).
+This establishes Theorem \ref{thm:aggregationBf} for \textsf{DAG 1}.
+After dropping the independence assumptions specific to \textsf{DAG1}
+and shifting to \textsf{DAG 2}, the combined \(BF_{AB}\) can no longer
+be obtained by multiplying the individual ones, although multiplication
+still provides a decent approximation (see Figure \ref{fig:BFmulti}).
 
 \begin{figure}[H]
 
@@ -676,21 +695,20 @@ approximation (see Figure \ref{fig:BFmulti}).
 \label{fig:BFmulti}
 \end{figure}
 
-However, as long as the probabilistic measure fits \textsf{DAG 2},
-aggregation for \textsf{BF}s is still satisfied. First, let's
-abbreviate: \begin{align*}
+However, if the probabilistic measure fits \textsf{DAG 2}, Theorem
+\ref{thm:aggregationBf} is still satisfied. First, we abbreviate:
+\begin{align*}
 BF^{'}_{B} & = \frac{\pr{b \vert B}}{\pr{b\vert a}} \\
 BF^{'}_{A} & = \frac{\pr{a \vert A}}{\pr{a \vert b}}
-\end{align*} \noindent Now, a claim weaker than Fact \ref{fac:BFindep}
-can be proven by relying only on the independencies entailed by
-\textsf{DAG2}.
+\end{align*} \noindent A claim weaker than Fact \ref{fac:BFindep} can be
+proven by relying only on the independencies entailed by \textsf{DAG2}.
 
 \begin{fact} If \eqref{eq:I4} and \eqref{eq:I5}  hold (and they do in BNs based on \textsf{DAG 2}), then $BF_{AB} =  BF_{A}\times BF^{'}_{B}  = BF_{B} \times BF^{'}_{A}$. \label{fac:BFdep}
 \end{fact}
 
 \begin{proof}
 
-We start with the definition of conditional probability and the chain rule, as in the proof of Fact \ref{fac:BFindep}, but now we use fewer  independencies (all of them entailed by \textsf{DAG2}). 
+We start with the definition of conditional probability and the chain rule, as in the proof of Fact \ref{fac:BFindep}, but now we use fewer independencies (all of them entailed by \textsf{DAG2}). 
 
  \begin{align*}
 \frac{\pr{a \wedge b\vert A\wedge B}}{\pr{a \wedge b}} &
@@ -709,10 +727,7 @@ If, instead of obtaining $\pr{a}\pr{b \vert a}$ in the denominator, we deploy th
 
 \end{proof}
 
-And here is how we get to aggregation in this setting.
-
-\begin{corollary} Suppose \eqref{eq:I4} and \eqref{eq:I5}  hold (they are entailed by \textsf{DAG 2}), and $BF_{BA}, BF_{B} >1$. 
-Then if both $\pr{a\vert b} \leq \pr{a \vert A}$ and  $\pr{b \vert a} \leq \pr{b\vert B}$, we have $BF_{AB}\geq BF_{A}, BF_{B}$. \label{cor:BFweaker2}
+\begin{corollary} Suppose \eqref{eq:I4} and \eqref{eq:I5}  hold (they are entailed by \textsf{DAG 2}), and $BF_{BA}, BF_{B} >1$. Then if both $\pr{a\vert b} \leq \pr{a \vert A}$ and  $\pr{b \vert a} \leq \pr{b\vert B}$, we have $BF_{AB}\geq BF_{A}, BF_{B}$. \label{cor:BFweaker2}
 \end{corollary}
 
 \begin{proof}
@@ -723,22 +738,17 @@ BF_{AB} &= BF^{'}_{A} \times BF_{B} \geq BF_{B}
 \noindent The argument for the other comparison is analogous.
 \end{proof}
 
-Notice the claim relies on some additional assumptions, which at least
-seem plausible in usual legal contexts. If, say, \(a\) is used
-asevidence for \(A\), we often expect \(A\) and \(a\) to be fairly
-strongly connected, that is, we expect \(\pr{a\vert A}\) to be rather
-high, while the connection between different pieces of evidence for
-different hypotheses, intuitively, is not expected to be as strong. We
-provide a proof of the assumptions below.
+The proof of Theorem \ref{thm:aggregationBf} for \textsf{DAG 2} is not
+complete yet. This corollary relies on the additional assumptions
+\(\pr{a\vert b} \leq \pr{a \vert A}\) and
+\(\pr{b \vert a} \leq \pr{b\vert B}\). They seem plausible. If, say,
+\(a\) is used as evidence for \(A\), we often expect \(A\) and \(a\) to
+be fairly strongly connected, that is, we expect \(\pr{a\vert A}\) to be
+rather high, while the connection between different pieces of evidence
+for different hypotheses, intuitively, is not expected to be as strong.
+We provide a proof of these assumptions below.
 
-\hypertarget{assumptions-of-corollary-and}{%
-\subsection*{\texorpdfstring{Assumptions of Corollary
-\ref{cor:BFweaker2} and
-\textsf{DAG 2}}{Assumptions of Corollary  and }}\label{assumptions-of-corollary-and}}
-\addcontentsline{toc}{subsection}{Assumptions of Corollary
-\ref{cor:BFweaker2} and \textsf{DAG 2}}
-
-Let us start with the following lemma.
+We start with the following lemma.
 
 \begin{lemma} For any probabilistic measure $\mathsf{P}$, if $BF_A >1$, then $LR_A>1$.\label{lem:BFLR}
 \end{lemma}
@@ -765,6 +775,7 @@ Now the main claim.
 \begin{fact}
 For any probabilistic measure $\mathsf{P}$ appropriate for \textsf{DAG 2}, if $BF_A >1$, then $\pr{a \vert A} \geq \pr{a \vert b}$ and 
 $\pr{b \vert B} \geq \pr{b \vert a}$.
+\label{fact:BFweaker3}
 \end{fact}
 
 \begin{proof}
@@ -798,7 +809,7 @@ For the second conjunct, notice that we have a similar reasoning, albeit it reli
 \underbrace{\pr{b \vert a \et \n B}}_{\pr{b \vert \n B} \mbox{\footnotesize \, by \eqref{eq:I3b2}}}\pr{\n B \vert a}  & &   (\mbox{chain rule}) \\
 \end{align*}
 
-\noindent The rest of the reasoning for this case is algebraically the same as the one used above. This completes the proof. 
+\noindent The rest of the reasoning for this case is algebraically the same as the one used above.
 \end{proof}
 
 \hypertarget{bayes-factor-simulations}{%
