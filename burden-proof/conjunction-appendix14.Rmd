@@ -90,7 +90,7 @@ The graphical counterpart of probabilistic independence is \textbf{d-separation}
 
 \vspace{1mm}
 
-```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%"}
+```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "75%"}
 serial <- dagitty("
     dag{
         X -> Z 
@@ -114,7 +114,7 @@ converging <- dagitty("
 
 \begin{figure}[H]
 \hspace{2mm}\begin{subfigure}[!ht]{0.25\textwidth}
-```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%", dpi = 300, fig.width=1, fig.height=2}
+```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "75%", dpi = 300, fig.width=1, fig.height=2}
 coordinates(serial) <- list( x=c(X = 2, Z = 2, Y = 2),
                                             y=c(X = 1, Z = 2, Y = 3) )
 drawdag(serial, 
@@ -124,7 +124,7 @@ drawdag(serial,
 \end{subfigure} 
 \hspace{5mm}\scalebox{1}{\begin{subfigure}[!ht]{0.32\textwidth}
 \vspace{1mm}
-```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%", dpi = 300,fig.width=1, fig.height=2}
+```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "75%", dpi = 300,fig.width=1, fig.height=2}
 coordinates(diverging) <- list( x=c(X = 1, Z = 2, Y = 3) ,
                                             y=c(X = 2, Z = 1, Y = 2) )
 drawdag(diverging, 
@@ -134,7 +134,7 @@ drawdag(diverging,
 \end{subfigure}}
 \hspace{5mm}\scalebox{1}{\begin{subfigure}[!ht]{0.32\textwidth}
 \vspace{1mm}
-```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%", dpi = 300,fig.width=1, fig.height=2}
+```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "75%", dpi = 300,fig.width=1, fig.height=2}
 coordinates(converging) <- list( x=c(X = 1, Z = 2, Y = 3) ,
                                             y=c(X = 1, Z = 2, Y = 1) )
 drawdag(converging, 
@@ -195,7 +195,7 @@ two hypotheses, $A$ and $B$, their supporting pieces of evidence, $a$ and $b$, a
 
 \vspace{1mm}
 \footnotesize
-```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%"}
+```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "75%"}
 source("../scripts/CptCreate.R")
 source("../scripts/kableCPTs.R")
 conjunctionDAG <- model2network("[a|A][b|B][AB|A:B][A][B]")
@@ -252,7 +252,7 @@ daggityConjunctionDag2 <- dagitty("
 
 \begin{figure}[H]
 \hspace{2mm}\scalebox{1}{\begin{subfigure}[!ht]{0.45\textwidth}
-```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%", dpi = 300,fig.width=2.5, fig.height=2}
+```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "75%", dpi = 300,fig.width=2.5, fig.height=2}
 #graphviz.plot(conjunctionDAG, layout = "dot")
 coordinates(daggityConjunctionDag) <- list( x=c(a = 1, A = 2, AB = 3, B = 4, b = 5) ,
                                             y=c(a = 3, A = 1, AB = 2, B = 1, b = 3) )
@@ -281,7 +281,7 @@ drawdag(daggityConjunctionDag2,
 
 
 \begin{table}[h]
-```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%"}
+```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "75%"}
 CPkable2("conjunctionBN","AB") %>%   
                           kable_styling(latex_options=c("striped","HOLD_position")) 
 ```
@@ -293,7 +293,7 @@ CPkable2("conjunctionBN","AB") %>%
 \newpage 
 \vspace{1mm}
 \footnotesize
-```{r,echo=FALSE,eval=FALSE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%"}
+```{r,echo=FALSE,eval=FALSE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "75%"}
 DAG1Ind <- impliedConditionalIndependencies(daggityConjunctionDag, type  = "all.pairs")
 
 DAG2Ind <- impliedConditionalIndependencies(daggityConjunctionDag2, type  = "all.pairs")
@@ -361,9 +361,58 @@ But Figure \ref{tab:indepBNS-states} is about \textit{states} rather than nodes.
 <!---In what follows, however, we will  use a finer level of granularity, being very explicit on what independence assumptions \emph{between propositions} are used in the derivations.---> Each particular instantiation of a node (a state) corresponds to a proposition, for example, $A = 1$ means that the proposition corresponding to $A$ holds, while $A = 0$ means that the negation of $A$ holds. Crucially, an expression such as \mbox{$b\indep A \et a \vert \n B$} should be understood as a claim about states (events, propositions), which  means  the same as  $\pr{b = 1 \vert B = 0}   = \pr{b = 1 \vert A = 1, a = 1, B = 0}$. The distinction betwen nodes and their states (or variables and their values) matters because  independence conditional on $B= 0$ doesn't entail independence given $B=1$. For instance, one's final grade might depend on hard work if the teacher is fair, but this might fail if the teacher is not fair. <!---, and, second, sometimes only some of the independencies entailed by a Bayesian network will be actually required for a given claim to hold, and we want to be explicit about such cases.---> We hope this ambiguity in notation will cause no confusion. Whether we talk about nodes or states (or events, propositions) should be clear from the context.  
 
 
-## Bayes factor: claims and proofs {-}
 
-We start with the Bayes factor $\pr{E \vert H}/\pr{E}$ as our measure of evidential support.
+## Posterior probabilities {-}
+
+We first examine how posterior probabilities behave in the conjunction problem.
+The joint posterior $\pr{A\wedge B \vert a\wedge b}$ is often lower than 
+the individual posterior $\pr{A \vert a}$ and $\pr{B \vert b}$, whether the hypotheses $A$ and $b$ are 
+independent or not. We establish this fact via a computer simulation.
+We simulated 10,000 random Bayesian networks based on \textsf{DAG1} (independent hypotheses) and \textsf{DAG2} (dependent hypotheses). If any such network has an equal probability of occurring, the joint posterior is lower than both individual posteriors 68% of the time for \textsf{DAG1}, and around 60% for \textsf{DAG2}. Figure \ref{fig:posteriorFailure} displays the distributions of the distances 
+of the joint posterior from the lowest of the individual posteriors. 
+
+
+```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "75%", warning =- FALSE, message = FALSE}
+conjunctionTable2 <- readRDS(file = "../datasets/conjunctionTable2.RDS")
+
+conjunctionTable2$minIndividual <- pmin(conjunctionTable2$Aifas, conjunctionTable2$Bifbs)
+conjunctionTable2$diffIndividualMin <- conjunctionTable2$ABifabs - conjunctionTable2$minIndividual 
+
+positive <- conjunctionTable2[conjunctionTable2$ABifabs > conjunctionTable2$ABs, ]
+
+plotABindBelow2a <-  ggplot(positive, aes(x = diffIndividualMin))+geom_histogram(aes( y = ..density..), bins = 60)+
+xlab("P(AB|ab) -  min(P(A|a), P(B|b))")+ggtitle("DAG 1, failure rate ca. 68%")+
+labs(subtitle = expression(paste("Assuming  P(AB|ab) > P(AB)")))+xlim(c(-.3,1))+theme_tufte()
+
+conjunctionTable2dep <- readRDS(file = "../datasets/conjunctionTableDepAli2.RDS")
+
+conjunctionTable2dep$minIndividual <- pmin(conjunctionTable2dep$Aifas, conjunctionTable2dep$Bifbs)
+conjunctionTable2dep$diffIndividualMin <- conjunctionTable2dep$ABifabs - conjunctionTable2dep$minIndividual 
+
+positiveDEP <-  conjunctionTable2dep[ conjunctionTable2dep$ABifabs > conjunctionTable2dep$ABs,]
+
+plotABindBelow2DEP <-  ggplot(positiveDEP, aes(x = diffIndividualMin))+geom_histogram(aes( y = ..density..), bins = 60)+
+  xlab("P(AB|ab) -  min(P(A|a), P(B|b))")+ggtitle("DAG 2, Failure rate ca. 60%")+
+  labs(subtitle = expression(paste("Assuming  P(AB|ab) > P(AB)")))+xlim(c(-.7,1))+theme_tufte()
+
+plotABfaila <- ggarrange(plotABindBelow2a, plotABindBelow2DEP, ncol = 2)
+
+```
+
+
+\begin{figure}[H]
+
+```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "75%", message = FALSE, warning = FALSE}
+annotate_figure(plotABfaila, top = text_grob("Distances of the joint posterior from the lowest individual posterior",size = 13))
+```
+\caption{Even assuming the joint support is positive, the joint posterior often is lower than individual posteriors.}
+\label{fig:posteriorFailure}
+\end{figure}
+
+
+## Bayes factor: proofs {-}
+
+Next, we turn to the Bayes factor as our measure of evidential support.
 For ease of reference, we use the following abbreviations:
 \begin{align*}
 BF_A  & =  \frac{\pr{a \vert A}}{\pr{a}},\\
@@ -372,8 +421,8 @@ BF_{AB}  & =  \frac{\pr{a\wedge b \vert A \wedge B}}{\pr{a \wedge b}}
 \end{align*}
 
 \noindent
-The objective here is to study how the combined support $BF_{AB}$ toward the conjunction $A\wedge B$ 
-compares with the individual supports $BF_A$ and $BF_B$ toward the individual claims $A$ and $B$.
+The objective here is to study how the combined support $BF_{AB}$
+compares to the individual supports $BF_A$ and $BF_B$.
 We prove the following general theorem:
 
 \begin{theorem}
@@ -442,7 +491,7 @@ This fact has the following straightforward consequences. They hold because, if 
 This establishes Theorem \ref{thm:aggregationBf} for \textsf{DAG 1}. After dropping the independence assumptions specific to \textsf{DAG1} and shifting to \textsf{DAG 2}, the combined $BF_{AB}$ can no longer be obtained by multiplying the individual ones, although multiplication still provides a decent approximation (see Figure \ref{fig:BFmulti}).  
 
 \begin{figure}[H]
-```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%", warning = FALSE, message = FALSE, results = FALSE}
+```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "75%", warning = FALSE, message = FALSE, results = FALSE}
 conjunctionTable2dep <- readRDS(file = "../datasets/conjunctionTable2Braf.RDS")
 ggplot(conjunctionTable2dep, aes(y = BFABs, x = (BFAs * BFBs)))+geom_point(alpha= 0.2, size = .5)+
   xlab(expression(paste(BF[A], "*", BF[B] )))+
@@ -618,55 +667,16 @@ For the second conjunct, notice that we have a similar reasoning, albeit it reli
 
 ## Bayes factor: simulations {-}
 
-First, let's look at the distributions of the distances of the joint posterior from the minimum of the individual posteriors (Figure \ref{fig:posteriorFailure}). 
 
+Computer simulations provide additional insights. The joint $BF_AB$ may be lower than the individual $BF_A$ and $BF_B$. Simulated cases in which $BF_{AB} < BF_{A}, BF_{B}$ are about 25\% of the total (which is twice higher than for the likelihood ratio; more o this later). The structure of such cases is visualized in Figure \ref{fig:BFfails}.    
 
-
-```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%", warning =- FALSE, message = FALSE}
-conjunctionTable2 <- readRDS(file = "../datasets/conjunctionTable2.RDS")
-
-conjunctionTable2$minIndividual <- pmin(conjunctionTable2$Aifas, conjunctionTable2$Bifbs)
-conjunctionTable2$diffIndividualMin <- conjunctionTable2$ABifabs - conjunctionTable2$minIndividual 
-
-positive <- conjunctionTable2[conjunctionTable2$ABifabs > conjunctionTable2$ABs, ]
-
-plotABindBelow2a <-  ggplot(positive, aes(x = diffIndividualMin))+geom_histogram(aes( y = ..density..), bins = 60)+
-xlab("P(AB|ab) -  min(P(A|a), P(B|b))")+ggtitle("DAG 1, failure rate ca. 68%")+
-labs(subtitle = expression(paste("Assuming  P(AB|ab) > P(AB)")))+xlim(c(-.3,1))+theme_tufte()
-
-conjunctionTable2dep <- readRDS(file = "../datasets/conjunctionTableDepAli2.RDS")
-
-conjunctionTable2dep$minIndividual <- pmin(conjunctionTable2dep$Aifas, conjunctionTable2dep$Bifbs)
-conjunctionTable2dep$diffIndividualMin <- conjunctionTable2dep$ABifabs - conjunctionTable2dep$minIndividual 
-
-positiveDEP <-  conjunctionTable2dep[ conjunctionTable2dep$ABifabs > conjunctionTable2dep$ABs,]
-
-plotABindBelow2DEP <-  ggplot(positiveDEP, aes(x = diffIndividualMin))+geom_histogram(aes( y = ..density..), bins = 60)+
-  xlab("P(AB|ab) -  min(P(A|a), P(B|b))")+ggtitle("DAG 2, Failure rate ca. 60%")+
-  labs(subtitle = expression(paste("Assuming  P(AB|ab) > P(AB)")))+xlim(c(-.7,1))+theme_tufte()
-
-plotABfaila <- ggarrange(plotABindBelow2a, plotABindBelow2DEP, ncol = 2)
-
-```
-
-
-\begin{figure}[H]
-
-```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%", message = FALSE, warning = FALSE}
-annotate_figure(plotABfaila, top = text_grob("Distances of the joint posterior from the lower individual posterior",size = 13))
-```
-\caption{Even assuming the joint support is positive, the joint posterior quite often is lower than individual posteriors.}
-\label{fig:posteriorFailure}
-\end{figure}
-
-
-
-Now, let's look at simulations based on \textsf{DAG1} (Figure \ref{fig:DAG1BF}). We  can illustrate the distribution of Bayes factors in the two separate scenarios used as assumptions of the above corollaries. 
+<!---We distinguish cases in which the individual factors are greater than one (positive support) and lower than one (negative support). The picture doesn't change 
+--->
 
 
 \vspace{1mm}
 \footnotesize
-```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=FALSE, fig.show = "hold", out.width = "100%", warning = FALSE, message = FALSE}
+```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=FALSE, fig.show = "hold", out.width = "75%", warning = FALSE, message = FALSE}
 old <- theme_set(theme_tufte())
 conjunctionTable <-  readRDS(file = "../datasets/conjunctionTable.RDS")
 conjunctionTable$maxBF <- pmax(conjunctionTable$BFAs, conjunctionTable$BFBs)
@@ -690,34 +700,9 @@ plotBFind <- ggarrange(plotBFindBelow, plotBFindAbove, ncol = 2)
 ```
 \normalsize
 
-
-
-\begin{figure}
-```{r BFind,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%", warning = FALSE, message = FALSE, results = FALSE}
-annotate_figure(plotBFind, top = text_grob("Distances of the joint BF from the individual BFs (DAG1)", 
-                size = 13)) 
-```
-\caption{Distances of the joint Bayes factor from maxima and minima of individual Bayes factors, depending on whether the individual support levels are both positive or both negative. Simulation based on 100k Bayesian networks build over the DAG of \textsf{DAG1}.}
-\label{fig:DAG1BF}
-\end{figure}
-
-
-For the DAG corresponding to \textsf{DAG1}, the simulated frequency of cases in which $BF_{AB} < BF_{A}, BF_{B}$ is 25\% (which is twice higher than for the likelihood ratio), and the structure of such cases is visualized in Figure \ref{fig:BFfails}.   The picture doesn't change when we move to \textsf{DAG2} (Figure \ref{fig:BFind2}). 
-
-\begin{figure}
-```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%", warning = FALSE, message = FALSE, results = FALSE}
-BFfails <- conjunctionTable %>% filter(BFAs > BFABs & BFBs > BFABs ) 
-scatter3D(BFfails$BFAs,BFfails$BFBs,BFfails$BFABs,pch=3,cex=0.1, alpha = .5, colvar = NULL, box = TRUE, grid = TRUE,theta=50, phi = 10, axis.ticks = TRUE, ticktype= "detailed",xlab= "BF(A)", ylab="BF(B)",zlab="BF(AB)",main="Cases in which BF(AB) < BF(A), BF(B) (frequency=.25)", cex.lab = .6, cex.axis = .4, cex.main = .8)
-```
-\caption{Ca. 25k cases (out of simulated 100k) in which the joint BF is below each of the individual BFs.}
-\label{fig:BFfails}
-\end{figure}
-
-
-
 \vspace{1mm}
 \footnotesize
-```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=FALSE, fig.show = "hold", out.width = "100%", warning = FALSE, message = FALSE}
+```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=FALSE, fig.show = "hold", out.width = "75%", warning = FALSE, message = FALSE}
 old <- theme_set(theme_tufte())
 conjunctionTable2 <-  readRDS(file = "../datasets/conjunctionTable2raf.RDS")
 conjunctionTable2$maxBF <- pmax(conjunctionTable2$BFAs, conjunctionTable2$BFBs)
@@ -742,41 +727,50 @@ plotBFind2 <- ggarrange(plotBFindBelow2, plotBFindAbove2, ncol = 2)
 ```
 \normalsize
 
+\begin{figure}
+```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "80%", warning = FALSE, message = FALSE, results = FALSE}
+BFfails <- conjunctionTable %>% filter(BFAs > BFABs & BFBs > BFABs ) 
+scatter3D(BFfails$BFAs,BFfails$BFBs,BFfails$BFABs,pch=3,cex=0.1, alpha = .5, colvar = NULL, box = TRUE, grid = TRUE,theta=50, phi = 10, axis.ticks = TRUE, ticktype= "detailed",xlab= "BF(A)", ylab="BF(B)",zlab="BF(AB)",main="Cases in which BF(AB) < BF(A), BF(B) (frequency=.25)", cex.lab = .6, cex.axis = .4, cex.main = .8)
+```
+\caption{25k cases (out of simulated 100k) in which the joint BF is below each of the individual BFs.}
+\label{fig:BFfails}
+\end{figure}
+
+\noindent
+This result should not be surprising. It happens when $BF_A$ and $BF_B$ are lower than one. When they are greater than one, the joint $BF_{AB}$ exceeds the individual ones. The distribution of Bayes factors based on \textsf{DAG1} are displayed in Figure \ref{fig:DAG1BF}. Interestingly, the distribution is unchanged under \textsf{DAG2} (Figure \ref{fig:BFind2}). 
+
+
+These simulations and the earlier theorem demonstrate that, whenever individual $BF_A$ and $BF_B$ are above a fixed threshold, so is the combined $BF_{AB}$. This fact justifies the principle of aggregation, as explained in the main text of the chapter. However, the converse does not hold. Whenever $BF_{AB}$ is above a threshold, $BF_A$ or $BF_B$ may be below the threshold. Such cases for  \textsf{DAG1} and  \textsf{DAG2} are displayed in Figure  \ref{fig:BFdistr}.
+Hence, the converse of aggregation, the principle of distribution, fail in some cases. 
+
+\begin{figure}
+```{r BFind,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "80%", warning = FALSE, message = FALSE, results = FALSE}
+annotate_figure(plotBFind, top = text_grob("Distances of the joint BF from the individual BFs (DAG1)", 
+                size = 13)) 
+```
+\caption{Distances of the joint Bayes factor from maxima and minima of individual Bayes factors, depending on whether the individual support levels are both positive or both negative. Simulation based on 100k Bayesian networks build over the DAG of \textsf{DAG1}.}
+\label{fig:DAG1BF}
+\end{figure}
 
 
 
 \begin{figure}
-```{r BFind2,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%", warning = FALSE, message = FALSE, results = FALSE}
+```{r BFind2,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "75%", warning = FALSE, message = FALSE, results = FALSE}
 annotate_figure(plotBFind2, top = text_grob("Distances of the joint BF from the individual BFs (DAG2)", 
                  size = 13)) 
 ```
 
-\caption{Distances of the joint Bayes factor from maxima and minima of individual Bayes factors, depending on whether the individual support levels are both positive or both negative. Simulation based on 100k Bayesian networks build over the DAG of \textsf{DAG2}.}
+\caption{Distances of the joint Bayes factor from maxima and minima of individual Bayes factors, depending on whether the individual support levels are both positive or both negative. Simulation based on 100k Bayesian networks build over \textsf{DAG2}.}
 \label{fig:BFind2}
 \end{figure}
 
 
 
+
+<!---
 While Corollary \ref{cor:BFweaker2} required additional assumptions to prove that the joint \textsf{BF} will be at least as high as the individual \textsf{BFs}, this assumption is not \emph{explicitly} build into the simulation, and nevertheless the consequent comes out satisfied. In fact, even more can be said. In the simulation $\pr{b \vert a}> \pr{b}$ around 50\% of the time, and the same holds for $\pr{b \vert a}> \pr{b}$, so the assumptions of Corollary \ref{cor:BFweaker} in general fail. However,  it falls out of the \textsf{DAG 2} setup and the assumption that the individual Bayes factor is greater than 1 (this assumption is essential, the claim fails without it) that  $\pr{a \vert b} \leq \pr{a \vert A}$ and $\pr{b \vert a} \leq \pr{b \vert B}$, and so, still both $BF^{'}_{A}$ and $BF^{'}_{B}$ are above one if the individual Bayes factors are above one, even though the former might be lower the latter (respectively).  We will turn to proving this very soon.
+--->
  
- 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-How about distribution? Note that in principle a failure of distribution can occur whenever the joint \textsf{BF} is strictly greater than at least one of the individual $\textsf{BFs}$. The distribution of such cases for both DAGs can be inspected in Figure  \ref{fig:BFdistr}.
 
 \vspace{1mm}
 \footnotesize
@@ -825,26 +819,12 @@ annotate_figure(plotBFDistrJoint, top = text_grob("Distribution failures for BF"
 
 
 
-## Likelihood ratio: claims and proofs {-}
+## Likelihood ratio:  proofs {-}
 
 
+We now turn to the likelihood ratio. For ease of reference, 
+we use the following abbreviations:
 
-
-
-
-
-
-
-
-
-
-Now, let's turn to the likelihood understood as:
-
-\begin{align*}
-\frac{\pr{E \vert H}}{\pr{E \vert \neg H}} & =
-\frac{\textit{sensitivity}}{\textit{1- specificity}}\end{align*}
-
-\noindent Let's introduce the following abbreviations:
 \begin{align*}
 LR_{AB} &= \frac{\pr{a\wedge b \vert a\wedge B}}{\pr{a \wedge b \vert \neg (A\wedge B)}}\\
 LR_A & = \frac{\pr{a \vert A}}{\pr{a \vert \n A}} \\
@@ -881,9 +861,6 @@ We deploy the relevant independencies as follows:
 \end{align*}
 
 
-
-
-
 \noindent The denominator of $LR_{AB}$ is more complicated, mostly because of the conditioning on  $\neg (A \wedge B)$.
 
 \scalebox{.85}{\parbox{1\linewidth}{
@@ -915,11 +892,12 @@ The simplification of the other two summanda is analogous (albeit with slightly 
 \end{proof}
 
 
-
 ## Likelihod ratio: simulations {-}
 
-
-While the analytic approach turns out to be cumbersome, let's inspect the problem using simulations. First of all, there are cases in which the joint likelihood ratio are lower than each of the individual likelihood ratios. Their frequency is twice lower than the corresponding frequency for the Bayes factor (recall Figure \ref{fig:BFfails}). For the DAG corresponding to both \textsf{DAG}s, the simulated frequency of cases in which $LR_{AB} < LR_{A}, LR_{B}$ is 12-12.5\% and the distribution of such cases, somewhat of a different shape, is visualized in Figure \ref{fig:LRfails} (the picture for \textsf{DAG2} is very similar).
+In the case of the likelihood ratio, the analytic approach is cumbersome. Instead, 
+we most rely on computer simulations. First of all, the joint $LR_{AB}$ can be 
+lower than any of the individual $LR_A$ and $LR_B$. Based on \textsf{DAG1} and \textsf{DAG2}, 
+the frequency of such cases in which $LR_{AB} < LR_{A}, LR_{B}$ is about 12.5\%, half the frequency for the Bayes factor. <!--- (recall Figure \ref{fig:BFfails}).--->  The distribution of these cases is displayed in Figure \ref{fig:LRfails}.
 
 \begin{figure}
 ```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%"}
@@ -929,12 +907,12 @@ scatter3D(LRfails$LRAs,LRfails$LRBs,LRfails$LRABs,pch=3,cex=0.1, alpha = .5, col
 # LRfails2 <- conjunctionTable2 %>% filter(LRAs > LRABs & LRBs > LRABs ) 
 # scatter3D(LRfails2$LRAs,LRfails2$LRBs,LRfails2$LRABs,pch=3,cex=0.1, alpha = .5, colvar = NULL, box = TRUE, grid = TRUE,theta=50, phi = 10, axis.ticks = TRUE, ticktype= "detailed",xlab= "LR(A)", ylab="LR(B)",zlab="LR(AB)",main="Cases in which LR(AB) < LR(A), LR(B) (frequency=.12) (DAG2)", cex.lab = .6, cex.axis = .4, cex.main = .8)
 ```
-\caption{Ca. 25k cases (out of simulated 100k) in which the joint BF is below each of the individual BFs.}
+\caption{12.5k cases (out of simulated 100k) in which the joint BF is below each of the individual BFs.  The picture for \textsf{DAG2} is very similar.}
 \label{fig:LRfails}
 \end{figure}
 
+Consider now cases in which both individual likelihood ratios are above one. Interestingly, one of the individual likelihood ratios, $LR_A$ or $LR_B$, may be greater than the joint $LR{AB}$ (see example in Figure \ref{tab:CPTconjunctionBNL}). This does not happen with the Bayes factor. But even though the joint likelihood ratio can be lower than the maximum, it is never lower than the minimum of the individual likelihood ratios (Figures \ref{fig:LRabovePlot} and \ref{fig:LRabovePlotDep}). Conversely, if both both individual likelihood ratios are below one, the joint likelihood ratio can be higher than their minimum, but is never higher than their maximum (Figures \ref{fig:LRlowerPlot} and \ref{fig:LRlowerPlot2}).  
 
-Interestingly, even if the individual likelihood ratios are $<1$, the joint likelihood ratio can be higher than their minimum, but is never higher than their maximum (Figures \ref{fig:LRlowerPlot} and \ref{fig:LRlowerPlot2}). 
 
 \vspace{1mm}
 \footnotesize
@@ -974,20 +952,6 @@ plotLRindAbove2 <- conjunctionTable %>% filter(LRAs > 1 & LRBs > 1) %>% ggplot( 
 LRabovePlot <- ggarrange(plotLRindAbove,plotLRindAbove2, ncol = 2)
 ```
 \normalsize
-
-\begin{figure}
-
-```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%"} 
-#LRbelowPlot
-annotate_figure(LRbelowPlot, top = text_grob("Distances of the joint LR from the individual LRs (negative support) \n50% joint LRs between the individual ones (DAG1)" , size = 13))
-```
-
-\caption{Distances of joint likelihood ratios for the minima and the maxima of the individual likelihood ratios if the individual likelihood ratios are below 1, DAG used in \textsf{DAG1}.} 
-\label{fig:LRlowerPlot}
-\end{figure}
-
-
-
 
 
 
@@ -1037,81 +1001,8 @@ LRabovePlotDep <- ggarrange(plotLRindAboveDep,plotLRindAbove2Dep, ncol = 2)
 ```
 \normalsize
 
-\begin{figure}
-
-```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%"} 
-#LRbelowPlot
-annotate_figure(LRbelowPlotDep, top = text_grob("Distances of the joint LR from the individual LRs (negative support) \nStill, 50% joint LRs between the individual ones (DAG2)" , size = 13))
-```
-
-\caption{Distances of joint likelihood ratios for the minima and the maxima of the individual likelihood ratios if the individual likelihood ratios are below 1, DAG used in \textsf{DAG2}.} 
-\label{fig:LRlowerPlot2}
-\end{figure}
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Once the individual likelihood ratios are above 1, the joint likelihood ratio can be lower than the maximum, but is not lower than the minimum of the individual likelihood ratios (Figures \ref{fig:LRabovePlot} and \ref{fig:LRabovePlotDep}).
-
-
-\begin{figure}
-
-```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%"} 
-#LRbelowPlot
-annotate_figure(LRabovePlot, top = text_grob("Distances of the joint LR from the individual LRs (positive support) \n70%  of joint LRs between the individual ones (DAG1)",
-                 size = 13, hjust = .5))
-```
-
-\caption{Distances of joint likelihood ratios for the minima and the maxima of the individual likelihood ratios if the individual likelihood ratios are above 1, DAG used in \textsf{DAG1}.}
-\label{fig:LRabovePlot}
-\end{figure}
-
-
-
-
-
-\begin{figure}
-
-```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%"} 
-#LRbelowPlot
-annotate_figure(LRabovePlotDep, top = text_grob("Distances of the joint LR from the individual LRs (positive support) \nStill, 70%  of joint LRs between the individual ones (DAG2)",
-                 size = 13, hjust = .5))
-```
-
-\caption{Distances of joint likelihood ratios for the minima and the maxima of the individual likelihood ratios if the individual likelihood ratios are above 1, DAG used in \textsf{DAG2}.}
-\label{fig:LRabovePlotDep}
-\end{figure}
-
-An example of one of many \textsf{BNs} in which an individual likelihood exceeds the joint likelihood can be inspected in Figure \ref{tab:CPTconjunctionBNL}.
-
-<!-- \raf{M: Very interesting. This is intuitive. If the two items of evidence are not independent lines of evidence, they might not always strengthen one another. This happens in 14 per cent of the cases, not too often. Is there a pattern? Could be explored in chapter on corroborationor or cross-examination.} -->
-
-<!-- \mar{R: Maybe, we'll keep this in mind.} -->
 
 ```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%"}
 source("../scripts/CptCreate.R")
@@ -1215,16 +1106,72 @@ A & Pr\\
 graphviz.chart(conjunctionBNL, type = "barprob")
 ```
 \end{subfigure}
-\caption{A counterexample to distribution. $LR_A  \approx 2.11$, $LR_B \approx 1.183$,  $LR_{AB} \approx 1.319$. \newline  $BF_A \approx  1.06, BF_B \approx	1.076, BF_{AB}\approx	1.14$.}
+\caption{$LR_A  \approx 2.11$, $LR_B \approx 1.183$,  $LR_{AB} \approx 1.319$. \newline  $BF_A \approx  1.06, BF_B \approx	1.076, BF_{AB}\approx	1.14$.}
 \label{tab:CPTconjunctionBNL}
+\end{figure}
+
+\begin{figure}
+
+```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%"} 
+#LRbelowPlot
+annotate_figure(LRabovePlot, top = text_grob("Distances of the joint LR from the individual LRs (positive support) \n70%  of joint LRs between the individual ones (DAG1)",
+                 size = 13, hjust = .5))
+```
+
+\caption{Distances of joint likelihood ratios for the minima and the maxima of the individual likelihood ratios if the individual likelihood ratios are above 1, DAG used in \textsf{DAG1}.}
+\label{fig:LRabovePlot}
+\end{figure}
+
+\begin{figure}
+
+```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%"} 
+#LRbelowPlot
+annotate_figure(LRabovePlotDep, top = text_grob("Distances of the joint LR from the individual LRs (positive support) \nStill, 70%  of joint LRs between the individual ones (DAG2)",
+                 size = 13, hjust = .5))
+```
+
+\caption{Distances of joint likelihood ratios for the minima and the maxima of the individual likelihood ratios if the individual likelihood ratios are above 1, DAG used in \textsf{DAG2}.}
+\label{fig:LRabovePlotDep}
+\end{figure}
+
+
+\begin{figure}
+
+```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%"} 
+#LRbelowPlot
+annotate_figure(LRbelowPlot, top = text_grob("Distances of the joint LR from the individual LRs (negative support) \n50% joint LRs between the individual ones (DAG1)" , size = 13))
+```
+
+\caption{Distances of joint likelihood ratios for the minima and the maxima of the individual likelihood ratios if the individual likelihood ratios are below 1, DAG used in \textsf{DAG1}.} 
+\label{fig:LRlowerPlot}
+\end{figure}
+
+
+\begin{figure}
+
+```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%"} 
+#LRbelowPlot
+annotate_figure(LRbelowPlotDep, top = text_grob("Distances of the joint LR from the individual LRs (negative support) \nStill, 50% joint LRs between the individual ones (DAG2)" , size = 13))
+```
+
+\caption{Distances of joint likelihood ratios for the minima and the maxima of the individual likelihood ratios if the individual likelihood ratios are below 1, DAG used in \textsf{DAG2}.} 
+\label{fig:LRlowerPlot2}
 \end{figure}
 
 
 
+## Keeping evidence fixed
 
 
 
-Note that the result for joint Bayes factors for  \textsf{DAG 2} depended on two independencies that fell out of the dag: that $a$ and $b$ are independent both conditional on $A$ and conditional on $\n A$. A natural question is: does  aggregation hold once this independence is dropped? To investigate, we run a simulation based on \textsf{DAG 3}, illustrated in Figure \ref{fig:dag3}.
+
+
+
+
+
+## Dependent evidence {-}
+
+Both \textsf{DAG 1} and \textsf{DAG 2} ensures that the items of evidence are conditionally independent on their respective hypothesis (specifically, that $a$ is independent both conditional on $A$ and conditional on $\n A$, and the same for $b$ and $B$.).^[In fact, \textsf{DAG 1} ensure that they are also unconditionally independent.] The results established so far, then, rests of this assumption. What happens if this independence is dropped? To investigate this question, we run a simulation based on \textsf{DAG 3}, illustrated in Figure \ref{fig:dag3}.
 
 \vspace{1mm}
 \footnotesize

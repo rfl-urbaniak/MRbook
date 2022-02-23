@@ -356,19 +356,19 @@ such that either (see Figure \ref{fig:connectionsBN}):
 \begin{figure}[H]
 \hspace{2mm}\begin{subfigure}[!ht]{0.25\textwidth}
 
-\begin{center}\includegraphics[width=1\linewidth]{conjunction-appendix14_files/figure-latex/unnamed-chunk-2-1} \end{center}
+\begin{center}\includegraphics[width=0.75\linewidth]{conjunction-appendix14_files/figure-latex/unnamed-chunk-2-1} \end{center}
 \subcaption{\textsf{Serial: Pipe}}
 \end{subfigure} 
 \hspace{5mm}\scalebox{1}{\begin{subfigure}[!ht]{0.32\textwidth}
 \vspace{1mm}
 
-\begin{center}\includegraphics[width=1\linewidth]{conjunction-appendix14_files/figure-latex/unnamed-chunk-3-1} \end{center}
+\begin{center}\includegraphics[width=0.75\linewidth]{conjunction-appendix14_files/figure-latex/unnamed-chunk-3-1} \end{center}
 \subcaption{\textsf{Diverging: Fork}}
 \end{subfigure}}
 \hspace{5mm}\scalebox{1}{\begin{subfigure}[!ht]{0.32\textwidth}
 \vspace{1mm}
 
-\begin{center}\includegraphics[width=1\linewidth]{conjunction-appendix14_files/figure-latex/unnamed-chunk-4-1} \end{center}
+\begin{center}\includegraphics[width=0.75\linewidth]{conjunction-appendix14_files/figure-latex/unnamed-chunk-4-1} \end{center}
 \subcaption{\textsf{Converging:Collider}}
 \end{subfigure}}
 \normalsize
@@ -475,7 +475,7 @@ dependence between the hypotheses exists in the second network.
 \begin{figure}[H]
 \hspace{2mm}\scalebox{1}{\begin{subfigure}[!ht]{0.45\textwidth}
 
-\begin{center}\includegraphics[width=1\linewidth]{conjunction-appendix14_files/figure-latex/unnamed-chunk-6-1} \end{center}
+\begin{center}\includegraphics[width=0.75\linewidth]{conjunction-appendix14_files/figure-latex/unnamed-chunk-6-1} \end{center}
 \subcaption{\textsf{DAG1}}
 \end{subfigure}} 
 \hspace{5mm}\begin{subfigure}[!ht]{0.45\textwidth}
@@ -609,23 +609,46 @@ teacher is not fair. We hope this ambiguity in notation will cause no
 confusion. Whether we talk about nodes or states (or events,
 propositions) should be clear from the context.
 
-\hypertarget{bayes-factor-claims-and-proofs}{%
-\subsection*{Bayes factor: claims and
-proofs}\label{bayes-factor-claims-and-proofs}}
-\addcontentsline{toc}{subsection}{Bayes factor: claims and proofs}
+\hypertarget{posterior-probabilities}{%
+\subsection*{Posterior probabilities}\label{posterior-probabilities}}
+\addcontentsline{toc}{subsection}{Posterior probabilities}
 
-We start with the Bayes factor \(\pr{E \vert H}/\pr{E}\) as our measure
-of evidential support. For ease of reference, we use the following
-abbreviations: \begin{align*}
+We first examine how posterior probabilities behave in the conjunction
+problem. The joint posterior \(\pr{A\wedge B \vert a\wedge b}\) is often
+lower than the individual posterior \(\pr{A \vert a}\) and
+\(\pr{B \vert b}\), whether the hypotheses \(A\) and \(b\) are
+independent or not. We establish this fact via a computer simulation. We
+simulated 10,000 random Bayesian networks based on \textsf{DAG1}
+(independent hypotheses) and \textsf{DAG2} (dependent hypotheses). If
+any such network has an equal probability of occurring, the joint
+posterior is lower than both individual posteriors 68\% of the time for
+\textsf{DAG1}, and around 60\% for \textsf{DAG2}. Figure
+\ref{fig:posteriorFailure} displays the distributions of the distances
+of the joint posterior from the lowest of the individual posteriors.
+
+\begin{figure}[H]
+
+
+\begin{center}\includegraphics[width=0.75\linewidth]{conjunction-appendix14_files/figure-latex/unnamed-chunk-11-1} \end{center}
+\caption{Even assuming the joint support is positive, the joint posterior often is lower than individual posteriors.}
+\label{fig:posteriorFailure}
+\end{figure}
+
+\hypertarget{bayes-factor-proofs}{%
+\subsection*{Bayes factor: proofs}\label{bayes-factor-proofs}}
+\addcontentsline{toc}{subsection}{Bayes factor: proofs}
+
+Next, we turn to the Bayes factor as our measure of evidential support.
+For ease of reference, we use the following abbreviations:
+\begin{align*}
 BF_A  & =  \frac{\pr{a \vert A}}{\pr{a}},\\
 BF_B & = \frac{\pr{b \vert B}}{\pr{b}},\\\
 BF_{AB}  & =  \frac{\pr{a\wedge b \vert A \wedge B}}{\pr{a \wedge b}}
 \end{align*}
 
 \noindent The objective here is to study how the combined support
-\(BF_{AB}\) toward the conjunction \(A\wedge B\) compares with the
-individual supports \(BF_A\) and \(BF_B\) toward the individual claims
-\(A\) and \(B\). We prove the following general theorem:
+\(BF_{AB}\) compares to the individual supports \(BF_A\) and \(BF_B\).
+We prove the following general theorem:
 
 \begin{theorem}
 Given a measure $\pr{}$ compatible with \textsf{DAG1}, if both $BF_A$ and $BF_B$ 
@@ -690,7 +713,7 @@ still provides a decent approximation (see Figure \ref{fig:BFmulti}).
 
 \begin{figure}[H]
 
-\begin{center}\includegraphics[width=1\linewidth]{conjunction-appendix14_files/figure-latex/unnamed-chunk-10-1} \end{center}
+\begin{center}\includegraphics[width=0.75\linewidth]{conjunction-appendix14_files/figure-latex/unnamed-chunk-12-1} \end{center}
 \caption{In DAG2, the result of multiplying individual BFs does not equal the joint BF, but often is a good approximation thereof. Axes restricted to $0,60$ (one extreme outlier lying close to the diagonal dropped).}
 \label{fig:BFmulti}
 \end{figure}
@@ -816,22 +839,16 @@ For the second conjunct, notice that we have a similar reasoning, albeit it reli
 \subsection*{Bayes factor: simulations}\label{bayes-factor-simulations}}
 \addcontentsline{toc}{subsection}{Bayes factor: simulations}
 
-First, let's look at the distributions of the distances of the joint
-posterior from the minimum of the individual posteriors (Figure
-\ref{fig:posteriorFailure}).
+Computer simulations provide additional insights. The joint \(BF_AB\)
+may be lower than the individual \(BF_A\) and \(BF_B\). Simulated cases
+in which \(BF_{AB} < BF_{A}, BF_{B}\) are about 25\% of the total (which
+is twice higher than for the likelihood ratio; more o this later). The
+structure of such cases is visualized in Figure \ref{fig:BFfails}.
 
-\begin{figure}[H]
+\vspace{1mm}
+\footnotesize
 
-
-\begin{center}\includegraphics[width=1\linewidth]{conjunction-appendix14_files/figure-latex/unnamed-chunk-12-1} \end{center}
-\caption{Even assuming the joint support is positive, the joint posterior quite often is lower than individual posteriors.}
-\label{fig:posteriorFailure}
-\end{figure}
-
-Now, let's look at simulations based on \textsf{DAG1} (Figure
-\ref{fig:DAG1BF}). We can illustrate the distribution of Bayes factors
-in the two separate scenarios used as assumptions of the above
-corollaries.
+\normalsize
 
 \vspace{1mm}
 \footnotesize
@@ -840,57 +857,42 @@ corollaries.
 
 \begin{figure}
 
-\begin{center}\includegraphics[width=1\linewidth]{conjunction-appendix14_files/figure-latex/BFind-1} \end{center}
+\begin{center}\includegraphics[width=0.8\linewidth]{conjunction-appendix14_files/figure-latex/unnamed-chunk-15-1} \end{center}
+\caption{25k cases (out of simulated 100k) in which the joint BF is below each of the individual BFs.}
+\label{fig:BFfails}
+\end{figure}
+
+\noindent This result should not be surprising. It happens when \(BF_A\)
+and \(BF_B\) are lower than one. When they are greater than one, the
+joint \(BF_{AB}\) exceeds the individual ones. The distribution of Bayes
+factors based on \textsf{DAG1} are displayed in Figure \ref{fig:DAG1BF}.
+Interestingly, the distribution is unchanged under \textsf{DAG2} (Figure
+\ref{fig:BFind2}).
+
+These simulations and the earlier theorem demonstrate that, whenever
+individual \(BF_A\) and \(BF_B\) are above a fixed threshold, so is the
+combined \(BF_{AB}\). This fact justifies the principle of aggregation,
+as explained in the main text of the chapter. However, the converse does
+not hold. Whenever \(BF_{AB}\) is above a threshold, \(BF_A\) or
+\(BF_B\) may be below the threshold. Such cases for \textsf{DAG1} and
+\textsf{DAG2} are displayed in Figure \ref{fig:BFdistr}. Hence, the
+converse of aggregation, the principle of distribution, fail in some
+cases.
+
+\begin{figure}
+
+\begin{center}\includegraphics[width=0.8\linewidth]{conjunction-appendix14_files/figure-latex/BFind-1} \end{center}
 \caption{Distances of the joint Bayes factor from maxima and minima of individual Bayes factors, depending on whether the individual support levels are both positive or both negative. Simulation based on 100k Bayesian networks build over the DAG of \textsf{DAG1}.}
 \label{fig:DAG1BF}
 \end{figure}
 
-For the DAG corresponding to \textsf{DAG1}, the simulated frequency of
-cases in which \(BF_{AB} < BF_{A}, BF_{B}\) is 25\% (which is twice
-higher than for the likelihood ratio), and the structure of such cases
-is visualized in Figure \ref{fig:BFfails}. The picture doesn't change
-when we move to \textsf{DAG2} (Figure \ref{fig:BFind2}).
-
 \begin{figure}
 
-\begin{center}\includegraphics[width=1\linewidth]{conjunction-appendix14_files/figure-latex/unnamed-chunk-14-1} \end{center}
-\caption{Ca. 25k cases (out of simulated 100k) in which the joint BF is below each of the individual BFs.}
-\label{fig:BFfails}
-\end{figure}
+\begin{center}\includegraphics[width=0.75\linewidth]{conjunction-appendix14_files/figure-latex/BFind2-1} \end{center}
 
-\vspace{1mm}
-\footnotesize
-
-\normalsize
-
-\begin{figure}
-
-\begin{center}\includegraphics[width=1\linewidth]{conjunction-appendix14_files/figure-latex/BFind2-1} \end{center}
-
-\caption{Distances of the joint Bayes factor from maxima and minima of individual Bayes factors, depending on whether the individual support levels are both positive or both negative. Simulation based on 100k Bayesian networks build over the DAG of \textsf{DAG2}.}
+\caption{Distances of the joint Bayes factor from maxima and minima of individual Bayes factors, depending on whether the individual support levels are both positive or both negative. Simulation based on 100k Bayesian networks build over \textsf{DAG2}.}
 \label{fig:BFind2}
 \end{figure}
-
-While Corollary \ref{cor:BFweaker2} required additional assumptions to
-prove that the joint \textsf{BF} will be at least as high as the
-individual \textsf{BFs}, this assumption is not \emph{explicitly} build
-into the simulation, and nevertheless the consequent comes out
-satisfied. In fact, even more can be said. In the simulation
-\(\pr{b \vert a}> \pr{b}\) around 50\% of the time, and the same holds
-for \(\pr{b \vert a}> \pr{b}\), so the assumptions of Corollary
-\ref{cor:BFweaker} in general fail. However, it falls out of the
-\textsf{DAG 2} setup and the assumption that the individual Bayes factor
-is greater than 1 (this assumption is essential, the claim fails without
-it) that \(\pr{a \vert b} \leq \pr{a \vert A}\) and
-\(\pr{b \vert a} \leq \pr{b \vert B}\), and so, still both
-\(BF^{'}_{A}\) and \(BF^{'}_{B}\) are above one if the individual Bayes
-factors are above one, even though the former might be lower the latter
-(respectively). We will turn to proving this very soon.
-
-How about distribution? Note that in principle a failure of distribution
-can occur whenever the joint \textsf{BF} is strictly greater than at
-least one of the individual \(\textsf{BFs}\). The distribution of such
-cases for both DAGs can be inspected in Figure \ref{fig:BFdistr}.
 
 \vspace{1mm}
 \footnotesize
@@ -904,18 +906,14 @@ cases for both DAGs can be inspected in Figure \ref{fig:BFdistr}.
 \label{fig:BFdistr}
 \end{figure}
 
-\hypertarget{likelihood-ratio-claims-and-proofs}{%
-\subsection*{Likelihood ratio: claims and
-proofs}\label{likelihood-ratio-claims-and-proofs}}
-\addcontentsline{toc}{subsection}{Likelihood ratio: claims and proofs}
+\hypertarget{likelihood-ratio-proofs}{%
+\subsection*{Likelihood ratio: proofs}\label{likelihood-ratio-proofs}}
+\addcontentsline{toc}{subsection}{Likelihood ratio: proofs}
 
-Now, let's turn to the likelihood understood as:
+We now turn to the likelihood ratio. For ease of reference, we use the
+following abbreviations:
 
 \begin{align*}
-\frac{\pr{E \vert H}}{\pr{E \vert \neg H}} & =
-\frac{\textit{sensitivity}}{\textit{1- specificity}}\end{align*}
-
-\noindent Let's introduce the following abbreviations: \begin{align*}
 LR_{AB} &= \frac{\pr{a\wedge b \vert a\wedge B}}{\pr{a \wedge b \vert \neg (A\wedge B)}}\\
 LR_A & = \frac{\pr{a \vert A}}{\pr{a \vert \n A}} \\
 LR_B & = \frac{\pr{b \vert B}}{\pr{b \vert \n B}}.
@@ -949,9 +947,6 @@ We deploy the relevant independencies as follows:
  & = \pr{a \vert A} \times \pr{b \vert B} 
  &\mbox{(algebraic manipulation)} 
 \end{align*}
-
-
-
 
 
 \noindent The denominator of $LR_{AB}$ is more complicated, mostly because of the conditioning on  $\neg (A \wedge B)$.
@@ -989,25 +984,29 @@ The simplification of the other two summanda is analogous (albeit with slightly 
 simulations}\label{likelihod-ratio-simulations}}
 \addcontentsline{toc}{subsection}{Likelihod ratio: simulations}
 
-While the analytic approach turns out to be cumbersome, let's inspect
-the problem using simulations. First of all, there are cases in which
-the joint likelihood ratio are lower than each of the individual
-likelihood ratios. Their frequency is twice lower than the corresponding
-frequency for the Bayes factor (recall Figure \ref{fig:BFfails}). For
-the DAG corresponding to both \textsf{DAG}s, the simulated frequency of
-cases in which \(LR_{AB} < LR_{A}, LR_{B}\) is 12-12.5\% and the
-distribution of such cases, somewhat of a different shape, is visualized
-in Figure \ref{fig:LRfails} (the picture for \textsf{DAG2} is very
-similar).
+In the case of the likelihood ratio, the analytic approach is
+cumbersome. Instead, we most rely on computer simulations. First of all,
+the joint \(LR_{AB}\) can be lower than any of the individual \(LR_A\)
+and \(LR_B\). Based on \textsf{DAG1} and \textsf{DAG2}, the frequency of
+such cases in which \(LR_{AB} < LR_{A}, LR_{B}\) is about 12.5\%, half
+the frequency for the Bayes factor. The distribution of these cases is
+displayed in Figure \ref{fig:LRfails}.
 
 \begin{figure}
 
 \begin{center}\includegraphics[width=1\linewidth]{conjunction-appendix14_files/figure-latex/unnamed-chunk-17-1} \end{center}
-\caption{Ca. 25k cases (out of simulated 100k) in which the joint BF is below each of the individual BFs.}
+\caption{12.5k cases (out of simulated 100k) in which the joint BF is below each of the individual BFs.  The picture for \textsf{DAG2} is very similar.}
 \label{fig:LRfails}
 \end{figure}
 
-Interestingly, even if the individual likelihood ratios are \(<1\), the
+Consider now cases in which both individual likelihood ratios are above
+one. Interestingly, one of the individual likelihood ratios, \(LR_A\) or
+\(LR_B\), may be greater than the joint \(LR{AB}\) (see example in
+Figure \ref{tab:CPTconjunctionBNL}). This does not happen with the Bayes
+factor. But even though the joint likelihood ratio can be lower than the
+maximum, it is never lower than the minimum of the individual likelihood
+ratios (Figures \ref{fig:LRabovePlot} and \ref{fig:LRabovePlotDep}).
+Conversely, if both both individual likelihood ratios are below one, the
 joint likelihood ratio can be higher than their minimum, but is never
 higher than their maximum (Figures \ref{fig:LRlowerPlot} and
 \ref{fig:LRlowerPlot2}).
@@ -1017,55 +1016,10 @@ higher than their maximum (Figures \ref{fig:LRlowerPlot} and
 
 \normalsize
 
-\begin{figure}
-
-
-\begin{center}\includegraphics[width=1\linewidth]{conjunction-appendix14_files/figure-latex/unnamed-chunk-19-1} \end{center}
-
-\caption{Distances of joint likelihood ratios for the minima and the maxima of the individual likelihood ratios if the individual likelihood ratios are below 1, DAG used in \textsf{DAG1}.} 
-\label{fig:LRlowerPlot}
-\end{figure}
-
 \vspace{1mm}
 \footnotesize
 
 \normalsize
-
-\begin{figure}
-
-
-\begin{center}\includegraphics[width=1\linewidth]{conjunction-appendix14_files/figure-latex/unnamed-chunk-21-1} \end{center}
-
-\caption{Distances of joint likelihood ratios for the minima and the maxima of the individual likelihood ratios if the individual likelihood ratios are below 1, DAG used in \textsf{DAG2}.} 
-\label{fig:LRlowerPlot2}
-\end{figure}
-
-Once the individual likelihood ratios are above 1, the joint likelihood
-ratio can be lower than the maximum, but is not lower than the minimum
-of the individual likelihood ratios (Figures \ref{fig:LRabovePlot} and
-\ref{fig:LRabovePlotDep}).
-
-\begin{figure}
-
-
-\begin{center}\includegraphics[width=1\linewidth]{conjunction-appendix14_files/figure-latex/unnamed-chunk-22-1} \end{center}
-
-\caption{Distances of joint likelihood ratios for the minima and the maxima of the individual likelihood ratios if the individual likelihood ratios are above 1, DAG used in \textsf{DAG1}.}
-\label{fig:LRabovePlot}
-\end{figure}
-
-\begin{figure}
-
-
-\begin{center}\includegraphics[width=1\linewidth]{conjunction-appendix14_files/figure-latex/unnamed-chunk-23-1} \end{center}
-
-\caption{Distances of joint likelihood ratios for the minima and the maxima of the individual likelihood ratios if the individual likelihood ratios are above 1, DAG used in \textsf{DAG2}.}
-\label{fig:LRabovePlotDep}
-\end{figure}
-
-An example of one of many \textsf{BNs} in which an individual likelihood
-exceeds the joint likelihood can be inspected in Figure
-\ref{tab:CPTconjunctionBNL}.
 
 \begin{figure}
 \begin{subfigure}[!ht]{0.45\textwidth}
@@ -1122,18 +1076,64 @@ A & Pr\\
 \normalsize
 \end{subfigure} \begin{subfigure}[!ht]{0.45\textwidth}
 
-\begin{center}\includegraphics[width=1\linewidth]{conjunction-appendix14_files/figure-latex/unnamed-chunk-25-1} \end{center}
+\begin{center}\includegraphics[width=1\linewidth]{conjunction-appendix14_files/figure-latex/unnamed-chunk-21-1} \end{center}
 \end{subfigure}
-\caption{A counterexample to distribution. $LR_A  \approx 2.11$, $LR_B \approx 1.183$,  $LR_{AB} \approx 1.319$. \newline  $BF_A \approx  1.06, BF_B \approx    1.076, BF_{AB}\approx   1.14$.}
+\caption{$LR_A  \approx 2.11$, $LR_B \approx 1.183$,  $LR_{AB} \approx 1.319$. \newline  $BF_A \approx  1.06, BF_B \approx  1.076, BF_{AB}\approx   1.14$.}
 \label{tab:CPTconjunctionBNL}
 \end{figure}
 
-Note that the result for joint Bayes factors for \textsf{DAG 2} depended
-on two independencies that fell out of the dag: that \(a\) and \(b\) are
-independent both conditional on \(A\) and conditional on \(\n A\). A
-natural question is: does aggregation hold once this independence is
-dropped? To investigate, we run a simulation based on \textsf{DAG 3},
-illustrated in Figure \ref{fig:dag3}.
+\begin{figure}
+
+
+\begin{center}\includegraphics[width=1\linewidth]{conjunction-appendix14_files/figure-latex/unnamed-chunk-22-1} \end{center}
+
+\caption{Distances of joint likelihood ratios for the minima and the maxima of the individual likelihood ratios if the individual likelihood ratios are above 1, DAG used in \textsf{DAG1}.}
+\label{fig:LRabovePlot}
+\end{figure}
+
+\begin{figure}
+
+
+\begin{center}\includegraphics[width=1\linewidth]{conjunction-appendix14_files/figure-latex/unnamed-chunk-23-1} \end{center}
+
+\caption{Distances of joint likelihood ratios for the minima and the maxima of the individual likelihood ratios if the individual likelihood ratios are above 1, DAG used in \textsf{DAG2}.}
+\label{fig:LRabovePlotDep}
+\end{figure}
+
+\begin{figure}
+
+
+\begin{center}\includegraphics[width=1\linewidth]{conjunction-appendix14_files/figure-latex/unnamed-chunk-24-1} \end{center}
+
+\caption{Distances of joint likelihood ratios for the minima and the maxima of the individual likelihood ratios if the individual likelihood ratios are below 1, DAG used in \textsf{DAG1}.} 
+\label{fig:LRlowerPlot}
+\end{figure}
+
+\begin{figure}
+
+
+\begin{center}\includegraphics[width=1\linewidth]{conjunction-appendix14_files/figure-latex/unnamed-chunk-25-1} \end{center}
+
+\caption{Distances of joint likelihood ratios for the minima and the maxima of the individual likelihood ratios if the individual likelihood ratios are below 1, DAG used in \textsf{DAG2}.} 
+\label{fig:LRlowerPlot2}
+\end{figure}
+
+\hypertarget{keeping-evidence-fixed}{%
+\subsection{Keeping evidence fixed}\label{keeping-evidence-fixed}}
+
+\hypertarget{dependent-evidence}{%
+\subsection*{Dependent evidence}\label{dependent-evidence}}
+\addcontentsline{toc}{subsection}{Dependent evidence}
+
+Both \textsf{DAG 1} and \textsf{DAG 2} ensures that the items of
+evidence are conditionally independent on their respective hypothesis
+(specifically, that \(a\) is independent both conditional on \(A\) and
+conditional on \(\n A\), and the same for \(b\) and \(B\).).\footnote{In
+  fact, \textsf{DAG 1} ensure that they are also unconditionally
+  independent.} The results established so far, then, rests of this
+assumption. What happens if this independence is dropped? To investigate
+this question, we run a simulation based on \textsf{DAG 3}, illustrated
+in Figure \ref{fig:dag3}.
 
 \vspace{1mm}
 \footnotesize
