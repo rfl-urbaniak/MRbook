@@ -28,7 +28,7 @@
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
 \IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
 \hypersetup{
-  pdftitle={Appendix: Bayes factor, likelihood ratio, and the difficulty about conjunction},
+  pdftitle={Appendix to `The Difficulty with Conjuction': Proofs and Simulations},
   pdfauthor={Marcello Di Bello and Rafal Urbaniak},
   colorlinks=true,
   linkcolor=Maroon,
@@ -113,6 +113,9 @@
 %environments
 \newtheorem{fact}{Fact}
 
+
+% allow page breaks in equations
+\allowdisplaybreaks
 
 
 %abbreviations
@@ -247,78 +250,27 @@
   \usepackage{selnolig}  % disable illegal ligatures
 \fi
 
-\title{Appendix: Bayes factor, likelihood ratio, and the difficulty
-about conjunction}
+\title{Appendix to `The Difficulty with Conjuction': Proofs and
+Simulations}
 \author{Marcello Di Bello and Rafal Urbaniak}
 \date{}
 
 \begin{document}
 \maketitle
 
-This appendix takes a closer look at the behavior of the Bayes factor
-and the likelihood ratio in the conjunction problem. We do so by
-building Direct Acyclic Graphs (DAGs) to study to what extent these
-measures of evidential support comply with the conjunction principle. We
-rely on analytic proofs, but when calculations become unmanageable, we
-rely instead on computer simulations. These simulations are conducted as
-follows. For each DAG of interest, 100,000 random Bayesian networks were
-generated whose probability tables had values sampled from the
-\textsf{Uniform(0,1)} distribution. For each of these networks, we
-calculated the relevant probabilities, Bayes factors, and likelihood
-ratios. Even for cases in which we derived analytic proofs, the results
-of a computer simulation sometimes provided additional insights.
-
-Now, for the conceptual development. First, we describe two
-\textsf{DAG}s at play: one of them represents a conjunction when the
-hypotheses are independent, and the other one drops this independence
-assumptions. We then discuss the relation between \textsf{DAG}s and
-independence, and introduce the independencies in the proofs used later
-on.
-
-Then we turn to the Bayes factor. First we prove that for if the
-stronger independence assumptions hold, the joint Bayes factor is just
-the result of multiplying the individual Bayes factors. It follows that
-aggregation is satisfied in such cases, if individual Bayes factors are
-greater than one. Once the hypotheses are not independent, a weaker
-result can be obtained, which entails that the aggregation is satisfied
-for the Bayes factor, if a certain additional constraint is satisfied.
-
-We investigate simulations based on the first \textsf{DAG}: in general,
-aggregation fails 25\% of the time if the individual Bayes factors are
-not constrained to be greater than one, but holds once this constraint
-is added. Switching to the second \textsf{DAG} does not change the
-picture, and so the question of whether the additional constraint needed
-for the weaker theorem holds in all Bayesian networks based on this
-\textsf{DAG}. Inspired by this observation, we show that in fact the
-additional constraint needed for aggregation to hold falls out of a pair
-of other independencies entailed by the second \textsf{DAG}. What the
-simulation reveal is that there is a large class of cases in which
-individual Bayes factors are above one, aggregation is satisfied, but
-distribution fails.
-
-Next, we turn to the likelihood ratio. Since the analytic approach is
-less feasible here, we approach Bayesian networks based on the simpler
-\textsf{DAG} analytically, but rely on simulations for cases in which
-the hypotheses are not assumed to be independent. Without any constraint
-on individual likelihood ratios, aggregation fails in 12.5\% cases
-(twice less often than aggregation for the Bayes factor). Another
-difference was that while the joint Bayes factor in cases with positive
-individual Bayes factor was always not less than the larger of the
-individual factors, now around 70\% of joint likelihood ratios falls
-between the individual ratios, and is no lower than the smaller of these
-(if the individual likelihood ratios are assumed to be greater than
-one). Thus, aggregation is satisfied if individual likelihood ratios
-equal at least one, but it no longer holds that the joint support is
-greater than any of the individual support levels. Still, distribution
-fails in a large class of cases.
-
-Finally, we identify cases in which aggregation can fail even if the
-individual BFs or LRs are at least one: this can happen if there is a
-direct dependence between the pieces of evidence.
-
-The \textsf{\textbf{R}} code we used in the simulations, calculations
-and visualizations is made available on the book website {[}LINK TO
-DOCUMENTATION TO BE ADDED LATER{]}.
+This appendix briefly describes the formalism of Bayesian networks,
+applies it to the difficulty with conjunction and then establishes
+several results about \textit{joint} posteriors, Bayes factors and
+likelihood ratios. We provide analytic proofs if possible. We rely on
+computer simulations whenever analytic proofs become
+unmanageable.\footnote{The R code for the simulations, calculations and
+  visualizations is available on the book website LINK TO DOCUMENTATION
+  TO BE ADDED LATER.} The simulations were conducted as follows. Given a
+direct acyclic graph (DAG) of interest (to be defined later), 100,000
+random Bayesian networks were generated whose probability measure had
+values sampled from the \textsf{Uniform(0,1)} distribution. For each of
+these networks, we calculated the relevant posterior probabilities,
+Bayes factors, and likelihood ratios.
 
 \hypertarget{bayesian-networks-and-probabilistic-independence}{%
 \subsection*{Bayesian networks and probabilistic
@@ -326,16 +278,15 @@ independence}\label{bayesian-networks-and-probabilistic-independence}}
 \addcontentsline{toc}{subsection}{Bayesian networks and probabilistic
 independence}
 
-We begin with a refresher of the basic notions. A Bayesian network
-consists of a graphical part---a directed acyclic graph (DAG)---and a
-probability measure defined over the nodes (variables) in the graph.
-Bayesian networks satisfy the Markov condition. That is, any node is
-conditionally independent of its nondescentants (including ancestors),
-given its parents. If a probabilistic measure \(\pr{}\) that is defined
-over the nodes (variables) in a graph \(\mathsf{G}\) respects the Markov
-condition, \(\pr{}\) is said to be compatible with \(\mathsf{G}\). Graph
-\(\mathsf{G}\) and measure \(\pr{}\) can then be combined to form a
-Bayesian network.
+A Bayesian network consists of a graphical part---a directed acyclic
+graph (DAG)---and a probability measure defined over the nodes
+(variables) in the graph. A Bayesian network satisfies the Markov
+condition. That is, any node is conditionally independent of its
+nondescentants (including ancestors), given its parents. If a
+probability measure \(\pr{}\) that is defined over the nodes (variables)
+in a graph \(\mathsf{G}\) respects the Markov condition, \(\pr{}\) is
+said to be compatible with \(\mathsf{G}\). Graph \(\mathsf{G}\) and
+measure \(\pr{}\) can then be combined to form a Bayesian network.
 
 The graphical counterpart of probabilistic independence is
 \textbf{d-separation}, \(\indep_d\). Two nodes, \(X\) and \(Y\), are
@@ -377,76 +328,19 @@ such that either (see Figure \ref{fig:connectionsBN}):
 \end{figure}
 
 \noindent Serial, converging and diverging connections represent common
-scenarios. Consider the nodes:
+scenarios.
 
-\footnotesize 
-\begin{center}
-\begin{tabular}{@{}lp{5.3cm}@{}}\toprule
-Node & Proposition \\ \midrule 
-$G$ & The suspect is guilty. \\
-$B$ & The blood stain comes from the suspect.\\
-$M$ & The crime scene stain and the suspect's blood share the same DNA profile.\\
-\bottomrule
-\end{tabular}
-\end{center}
-\normalsize
-
-\noindent This scenarios is naturally represented by the serial
-connection \(G \rightarrow B \rightarrow M\). If we don't know whether
-\(B\) holds, \(G\) has an indirect impact on the probability of \(M\).
-Yet, once we find out that \(B\) is true, we expect the profile match,
-and whether \(G\) holds has no further impact on the probability of
-\(M\).
-
-For converging connections, let \(G\) and \(B\) be as above, and let:
-
-\begin{center}
-\begin{tabular}{@{}lp{6.3cm}@{}}\toprule
-Node & Proposition \\ \midrule 
-$O$ & The crime scene stain comes from the offender.\\
-\bottomrule
-\end{tabular}
-\end{center}
-\normalsize
-
-\noindent Both \(G\) and \(O\) influence \(B\). If suspect guilty, it is
-more likely that the blood stain comes from him, and if the blood crime
-stain comes from the offender it is more likely to come from the suspect
-(for instance, more so than if it comes from the victim). Moreover,
-\(G\) and \(O\) seem independent. Whether the suspect is guilty does not
-have any bearing on whether the stain comes from the offender. Thus, a
-converging connection \(G\rightarrow B \leftarrow O\) seems appropriate.
-However, if you do find out that \(B\) is true---that the stain comes
-from the suspect---then whether the crime stain comes from the offender
-becomes relevant for whether the suspect is guilty.
-
-Take an example of a diverging connection. Say you have two coins, one
-fair, one biased. Conditional on which coin you have chosen, the results
-of subsequent tosses are independent. But if you don't know which coin
-you have chosen, the result of previous tosses give you some information
-about which coin it is, and this has an impact on your estimate of the
-probability of heads in the next toss. Whether a coin is fair, \(F\), or
-not has an impact on the result of the first toss, \(H1\), and on the
-result of the second toss, \(H2\). So \(H1 \leftarrow F \rightarrow H2\)
-seems to be appropriate. Now, on one hand, so long as you do not know
-whether \(F\), the truth of \(H1\) increases the probability of \(H2\).
-On the other hand, once you know that \(F\) is true, \(H1\) and \(H2\)
-become independent, and so conditioning on the parent in a fork makes
-its childern independent (provided there is no other open path between
-them in the graph).
-
-As a final piece of terminology, two sets of nodes, \(\mathsf{X}\) and
-\(\mathsf{Y}\), are d-separated given \(\mathsf{Z}\) if every node in
-\(\mathsf{X}\) is d-separated from every node in \(\mathsf{Y}\) given
-\(\mathsf{Z}\). Interestingly, it can be proven that if two sets of
-nodes are d-separated given a third one, they are independent given the
-third one, for any probabilistic measures compatible with a given DAG.
-However, lack of d-separation does not necessarily entail dependence for
-any probabilistic measure compatible with a given DAG. It only allows
-for it: if nodes are d-separated, there is at least one probabilistic
-measure fitting the DAG according to which they are dependent. So, at
-least, no false independencies can be inferred from the DAG, and all the
-dependencies are built into it.
+Two sets of nodes, \(\mathsf{X}\) and \(\mathsf{Y}\), are d-separated
+given \(\mathsf{Z}\) if every node in \(\mathsf{X}\) is d-separated from
+every node in \(\mathsf{Y}\) given \(\mathsf{Z}\). Interestingly, it can
+be proven that if two sets of nodes are d-separated given a third one,
+they are independent given the third one, for any probabilistic measures
+compatible with a given DAG. However, lack of d-separation does not
+necessarily entail dependence for any probabilistic measure compatible
+with a given DAG. It only allows for it: if nodes are d-separated, there
+is at least one probabilistic measure fitting the DAG according to which
+they are dependent. So, at least, no false independencies can be
+inferred from the DAG, and all the dependencies are built into it.
 
 \hypertarget{independencies-in-the-conjunction-problem}{%
 \subsection*{Independencies in the conjunction
@@ -454,18 +348,21 @@ problem}\label{independencies-in-the-conjunction-problem}}
 \addcontentsline{toc}{subsection}{Independencies in the conjunction
 problem}
 
-Back to the difficulty with conjunction. One assumption often made in
-the formulation of the problem is that hypotheses \(A\) and \(B\) are
-probabilistically independent. We will endorse this assumption, but also
-relax it to see whether the problem subsides (it does not). In
-particular, we will consider the two Bayesian networks shown in Figure
-\ref{fig:conjunctionBNs}. They represent two hypotheses, \(A\) and
-\(B\), their supporting pieces of evidence, \(a\) and \(b\), and their
-conjunction \(AB\).\footnote{In the Bayesian networks in this appendix,
-  the conditional probability table for the conjunction node \(AB\)
-  mirrors the truth table for the conjunction in propositional logic, as
-  in Table \ref{tab:CPTconjunction2}.} The difference is that a direct
-dependence between the hypotheses exists in the second network.
+An assumption often made in the formulation of the difficulty with
+conjunction is that hypotheses \(A\) and \(B\) are probabilistically
+independent. The theory of Bayesian networks helps to formulate this
+assumption precisely. The independence of the hypotheses is represented
+formally by \textsf{DAG1} in Figure \ref{fig:conjunctionBNs}. The graph
+contains nodes for the hypotheses \(A\) and \(B\), the supporting
+evidence \(a\) and \(b\), and the conjunctive hypothesis \(A\wedge B\).
+The conjunction node \(AB\) is a collider, which guarantees the
+independence of \(A\) and \(B\).\footnote{In the Bayesian networks in
+  this appendix, the conditional probability table for the conjunction
+  node \(AB\) mirrors the truth table for the conjunction in
+  propositional logic, as in Table \ref{tab:CPTconjunction2}.} To make
+our discussion more general, we will also consider graph \textsf{DAG2}.
+This graph relaxes the assumption of independence by drawing an
+additional arrow between hypotheses \(A\) and \(B\).
 
 \vspace{1mm}
 \footnotesize
@@ -593,15 +490,12 @@ b \indep a \vert B \label{eq:I6} & \hspace{2cm}\mbox{\footnotesize DAG1 , DAG2}
 
 An ambiguity in our notation is worth mentioning. Table
 \ref{tab:indepBNS} lists independencies between \emph{nodes}. But Figure
-\ref{tab:indepBNS-states} is about \textit{states} rather than nodes.
-Each particular instantiation of a node (a state) corresponds to a
-proposition, for example, \(A = 1\) means that the proposition
-corresponding to \(A\) holds, while \(A = 0\) means that the negation of
-\(A\) holds. Crucially, an expression such as
-\mbox{$b\indep A \et a \vert \n B$} should be understood as a claim
-about states (events, propositions), which means the same as
+\ref{tab:indepBNS-states} is about \textit{states} rather than nodes. An
+expression such as \mbox{$b\indep A \et a \vert \n B$} should be
+understood as a claim about states (events, propositions), which means
+the same as
 \(\pr{b = 1 \vert B = 0} = \pr{b = 1 \vert A = 1, a = 1, B = 0}\). The
-distinction betwen nodes and their states (or variables and their
+distinction between nodes and their states (or variables and their
 values) matters because independence conditional on \(B= 0\) doesn't
 entail independence given \(B=1\). For instance, one's final grade might
 depend on hard work if the teacher is fair, but this might fail if the
@@ -616,7 +510,7 @@ propositions) should be clear from the context.
 We first examine how posterior probabilities behave in the conjunction
 problem. The joint posterior \(\pr{A\wedge B \vert a\wedge b}\) is often
 lower than the individual posterior \(\pr{A \vert a}\) and
-\(\pr{B \vert b}\), whether the hypotheses \(A\) and \(b\) are
+\(\pr{B \vert b}\), whether the hypotheses \(A\) and \(B\) are
 independent or not. We establish this fact via a computer simulation. We
 simulated 10,000 random Bayesian networks based on \textsf{DAG1}
 (independent hypotheses) and \textsf{DAG2} (dependent hypotheses). If
@@ -638,9 +532,8 @@ of the joint posterior from the lowest of the individual posteriors.
 \subsection*{Bayes factor: proofs}\label{bayes-factor-proofs}}
 \addcontentsline{toc}{subsection}{Bayes factor: proofs}
 
-Next, we turn to the Bayes factor as our measure of evidential support.
-For ease of reference, we use the following abbreviations:
-\begin{align*}
+Next, we turn to the Bayes factor. For ease of reference, we use the
+following abbreviations: \begin{align*}
 BF_A  & =  \frac{\pr{a \vert A}}{\pr{a}},\\
 BF_B & = \frac{\pr{b \vert B}}{\pr{b}},\\\
 BF_{AB}  & =  \frac{\pr{a\wedge b \vert A \wedge B}}{\pr{a \wedge b}}
@@ -839,11 +732,11 @@ For the second conjunct, notice that we have a similar reasoning, albeit it reli
 \subsection*{Bayes factor: simulations}\label{bayes-factor-simulations}}
 \addcontentsline{toc}{subsection}{Bayes factor: simulations}
 
-Computer simulations provide additional insights. The joint \(BF_AB\)
+Computer simulations provide additional insights. The joint \(BF_{AB}\)
 may be lower than the individual \(BF_A\) and \(BF_B\). Simulated cases
 in which \(BF_{AB} < BF_{A}, BF_{B}\) are about 25\% of the total (which
-is twice higher than for the likelihood ratio; more o this later). The
-structure of such cases is visualized in Figure \ref{fig:BFfails}.
+is twice higher than for the likelihood ratio; more on this later). Such
+cases are displayed in Figure \ref{fig:BFfails}.
 
 \vspace{1mm}
 \footnotesize
@@ -857,38 +750,37 @@ structure of such cases is visualized in Figure \ref{fig:BFfails}.
 
 \begin{figure}
 
-\begin{center}\includegraphics[width=0.8\linewidth]{conjunction-appendix14_files/figure-latex/unnamed-chunk-15-1} \end{center}
+\begin{center}\includegraphics[width=0.7\linewidth]{conjunction-appendix14_files/figure-latex/unnamed-chunk-15-1} \end{center}
 \caption{25k cases (out of simulated 100k) in which the joint BF is below each of the individual BFs.}
 \label{fig:BFfails}
 \end{figure}
 
-\noindent This result should not be surprising. It happens when \(BF_A\)
-and \(BF_B\) are lower than one. When they are greater than one, the
-joint \(BF_{AB}\) exceeds the individual ones. The distribution of Bayes
-factors based on \textsf{DAG1} are displayed in Figure \ref{fig:DAG1BF}.
-Interestingly, the distribution is unchanged under \textsf{DAG2} (Figure
-\ref{fig:BFind2}).
+This result is nothing surprising. It happens when \(BF_A\) and \(BF_B\)
+are lower than one. When they are greater than one, the joint
+\(BF_{AB}\) exceeds the individual ones. The distribution of Bayes
+factors based on \textsf{DAG1} and \textsf{DAG2} are displayed in Figure
+\ref{fig:DAG1BF} and Figure \ref{fig:BFind2}. The distribution is
+unchanged in the two cases.
 
 These simulations and the earlier theorem demonstrate that, whenever
 individual \(BF_A\) and \(BF_B\) are above a fixed threshold, so is the
 combined \(BF_{AB}\). This fact justifies the principle of aggregation,
-as explained in the main text of the chapter. However, the converse does
-not hold. Whenever \(BF_{AB}\) is above a threshold, \(BF_A\) or
-\(BF_B\) may be below the threshold. Such cases for \textsf{DAG1} and
+as explained in the main text of the chapter. But the converse does not
+hold. Even when \(BF_{AB}\) is above a threshold, \(BF_A\) or \(BF_B\)
+may be below the threshold. Such cases for \textsf{DAG1} and
 \textsf{DAG2} are displayed in Figure \ref{fig:BFdistr}. Hence, the
-converse of aggregation, the principle of distribution, fail in some
-cases.
+converse of aggregation, the principle of distribution, fails.
 
 \begin{figure}
 
-\begin{center}\includegraphics[width=0.8\linewidth]{conjunction-appendix14_files/figure-latex/BFind-1} \end{center}
-\caption{Distances of the joint Bayes factor from maxima and minima of individual Bayes factors, depending on whether the individual support levels are both positive or both negative. Simulation based on 100k Bayesian networks build over the DAG of \textsf{DAG1}.}
+\begin{center}\includegraphics[width=0.7\linewidth]{conjunction-appendix14_files/figure-latex/BFind-1} \end{center}
+\caption{Distances of the joint Bayes factor from maxima and minima of individual Bayes factors, depending on whether the individual support levels are both positive or both negative. Simulation based on 100k Bayesian networks build over \textsf{DAG1}.}
 \label{fig:DAG1BF}
 \end{figure}
 
 \begin{figure}
 
-\begin{center}\includegraphics[width=0.75\linewidth]{conjunction-appendix14_files/figure-latex/BFind2-1} \end{center}
+\begin{center}\includegraphics[width=0.7\linewidth]{conjunction-appendix14_files/figure-latex/BFind2-1} \end{center}
 
 \caption{Distances of the joint Bayes factor from maxima and minima of individual Bayes factors, depending on whether the individual support levels are both positive or both negative. Simulation based on 100k Bayesian networks build over \textsf{DAG2}.}
 \label{fig:BFind2}
@@ -901,10 +793,12 @@ cases.
 
 \begin{figure}
 
-\begin{center}\includegraphics[width=1\linewidth]{conjunction-appendix14_files/figure-latex/plotBFDistr-1} \end{center}
+\begin{center}\includegraphics[width=0.7\linewidth]{conjunction-appendix14_files/figure-latex/plotBFDistr-1} \end{center}
 \caption{Distribution failure for the Bayes factor, \textsf{DAG 1}. The $x$ axis restricted to $(-3,15)$ for visibility.}
 \label{fig:BFdistr}
 \end{figure}
+
+\newpage
 
 \hypertarget{likelihood-ratio-proofs}{%
 \subsection*{Likelihood ratio: proofs}\label{likelihood-ratio-proofs}}
@@ -984,29 +878,29 @@ The simplification of the other two summanda is analogous (albeit with slightly 
 simulations}\label{likelihod-ratio-simulations}}
 \addcontentsline{toc}{subsection}{Likelihod ratio: simulations}
 
-In the case of the likelihood ratio, the analytic approach is
-cumbersome. Instead, we most rely on computer simulations. First of all,
-the joint \(LR_{AB}\) can be lower than any of the individual \(LR_A\)
-and \(LR_B\). Based on \textsf{DAG1} and \textsf{DAG2}, the frequency of
-such cases in which \(LR_{AB} < LR_{A}, LR_{B}\) is about 12.5\%, half
-the frequency for the Bayes factor. The distribution of these cases is
-displayed in Figure \ref{fig:LRfails}.
+Here the analytic approach is cumbersome. Instead, we mostly rely on
+computer simulations. First of all, the joint \(LR_{AB}\) can be lower
+than any of the individual \(LR_A\) and \(LR_B\). Based on \textsf{DAG1}
+and \textsf{DAG2}, the frequency of such cases in which
+\(LR_{AB} < LR_{A}, LR_{B}\) is about 12.5\%, half the frequency for the
+Bayes factor. The distribution of these cases is displayed in Figure
+\ref{fig:LRfails}.
 
 \begin{figure}
 
-\begin{center}\includegraphics[width=1\linewidth]{conjunction-appendix14_files/figure-latex/unnamed-chunk-17-1} \end{center}
-\caption{12.5k cases (out of simulated 100k) in which the joint BF is below each of the individual BFs.  The picture for \textsf{DAG2} is very similar.}
+\begin{center}\includegraphics[width=0.6\linewidth]{conjunction-appendix14_files/figure-latex/unnamed-chunk-17-1} \end{center}
+\caption{12.5k cases (out of simulated 100k) in which the joint LR is below each of the individual LRs.  The picture for \textsf{DAG2} is very similar.}
 \label{fig:LRfails}
 \end{figure}
 
 Consider now cases in which both individual likelihood ratios are above
 one. Interestingly, one of the individual likelihood ratios, \(LR_A\) or
-\(LR_B\), may be greater than the joint \(LR{AB}\) (see example in
+\(LR_B\), may be greater than the joint \(LR_{AB}\) (see example in
 Figure \ref{tab:CPTconjunctionBNL}). This does not happen with the Bayes
 factor. But even though the joint likelihood ratio can be lower than the
 maximum, it is never lower than the minimum of the individual likelihood
 ratios (Figures \ref{fig:LRabovePlot} and \ref{fig:LRabovePlotDep}).
-Conversely, if both both individual likelihood ratios are below one, the
+Conversely, if both individual likelihood ratios are below one, the
 joint likelihood ratio can be higher than their minimum, but is never
 higher than their maximum (Figures \ref{fig:LRlowerPlot} and
 \ref{fig:LRlowerPlot2}).
@@ -1076,7 +970,7 @@ A & Pr\\
 \normalsize
 \end{subfigure} \begin{subfigure}[!ht]{0.45\textwidth}
 
-\begin{center}\includegraphics[width=1\linewidth]{conjunction-appendix14_files/figure-latex/unnamed-chunk-21-1} \end{center}
+\begin{center}\includegraphics[width=0.7\linewidth]{conjunction-appendix14_files/figure-latex/unnamed-chunk-21-1} \end{center}
 \end{subfigure}
 \caption{$LR_A  \approx 2.11$, $LR_B \approx 1.183$,  $LR_{AB} \approx 1.319$. \newline  $BF_A \approx  1.06, BF_B \approx  1.076, BF_{AB}\approx   1.14$.}
 \label{tab:CPTconjunctionBNL}
@@ -1085,7 +979,7 @@ A & Pr\\
 \begin{figure}
 
 
-\begin{center}\includegraphics[width=1\linewidth]{conjunction-appendix14_files/figure-latex/unnamed-chunk-22-1} \end{center}
+\begin{center}\includegraphics[width=0.7\linewidth]{conjunction-appendix14_files/figure-latex/unnamed-chunk-22-1} \end{center}
 
 \caption{Distances of joint likelihood ratios for the minima and the maxima of the individual likelihood ratios if the individual likelihood ratios are above 1, DAG used in \textsf{DAG1}.}
 \label{fig:LRabovePlot}
@@ -1094,7 +988,7 @@ A & Pr\\
 \begin{figure}
 
 
-\begin{center}\includegraphics[width=1\linewidth]{conjunction-appendix14_files/figure-latex/unnamed-chunk-23-1} \end{center}
+\begin{center}\includegraphics[width=0.7\linewidth]{conjunction-appendix14_files/figure-latex/unnamed-chunk-23-1} \end{center}
 
 \caption{Distances of joint likelihood ratios for the minima and the maxima of the individual likelihood ratios if the individual likelihood ratios are above 1, DAG used in \textsf{DAG2}.}
 \label{fig:LRabovePlotDep}
@@ -1103,7 +997,7 @@ A & Pr\\
 \begin{figure}
 
 
-\begin{center}\includegraphics[width=1\linewidth]{conjunction-appendix14_files/figure-latex/unnamed-chunk-24-1} \end{center}
+\begin{center}\includegraphics[width=0.7\linewidth]{conjunction-appendix14_files/figure-latex/unnamed-chunk-24-1} \end{center}
 
 \caption{Distances of joint likelihood ratios for the minima and the maxima of the individual likelihood ratios if the individual likelihood ratios are below 1, DAG used in \textsf{DAG1}.} 
 \label{fig:LRlowerPlot}
@@ -1112,28 +1006,92 @@ A & Pr\\
 \begin{figure}
 
 
-\begin{center}\includegraphics[width=1\linewidth]{conjunction-appendix14_files/figure-latex/unnamed-chunk-25-1} \end{center}
+\begin{center}\includegraphics[width=0.7\linewidth]{conjunction-appendix14_files/figure-latex/unnamed-chunk-25-1} \end{center}
 
 \caption{Distances of joint likelihood ratios for the minima and the maxima of the individual likelihood ratios if the individual likelihood ratios are below 1, DAG used in \textsf{DAG2}.} 
 \label{fig:LRlowerPlot2}
 \end{figure}
 
+\newpage
+
+These simulations demonstrate that, whenever individual \(LR_A\) and
+\(LR_B\) are above a fixed threshold, so is the combined \(LR_{AB}\).
+This fact justifies the principle of aggregation, as explained in the
+main text of the chapter. The converse does not hold. Even when
+\(LR_{AB}\) is above a threshold, \(LR_A\) or \(LR_B\) may be below the
+threshold. Hence, as with the Bayes factor, the principle of
+distribution fails in some cases.
+
 \hypertarget{keeping-evidence-fixed}{%
-\subsection{Keeping evidence fixed}\label{keeping-evidence-fixed}}
+\subsection*{Keeping evidence fixed}\label{keeping-evidence-fixed}}
+\addcontentsline{toc}{subsection}{Keeping evidence fixed}
+
+Recall the distinction between the two variants of the distribution
+principle:
+
+\begin{align}
+S[a \wedge b, A\wedge B] \Rightarrow S[a, A] \wedge S[b, B] \tag{DIS1} \\
+S[a \wedge b, A\wedge B] \Rightarrow S[a \wedge b, A] \wedge S[a\wedge b, B] \tag{DIS2}
+\end{align}
+
+\noindent \(S\) is a placeholder for the standard of proof. The
+difference is whether or not the body of evidence is held constant. The
+failures of distributions considered so far were failures of (DIS1).
+Even when the combined Bayes factor or likelihood ratio meet a fixed
+threshold, the individual measures may not. One wonders whether (DIS2)
+could be easier to justify. To this end, consider:
+
+\begin{align*}
+LR_A^{ab}  & =  \frac{\pr{a \wedge b \vert A}}{\pr{a \wedge b}}\\
+LR_B^{ab} & = \frac{\pr{a \wedge b \vert B}}{\pr{a \wedge b}}\\\
+LR_{AB}^{ab}  & =  \frac{\pr{a\wedge b \vert A \wedge B}}{\pr{a \wedge b}}
+\end{align*}
+
+\noindent Note that the evidence \(a\wedge b\) is now held constant
+across cases. A computer simulation shows that, even when
+\(LR_{AB}^{ab}\) meets a fixed threshold, the individual \(LR_A^{ab}\)
+and \(LR_B^{ab}\) may not. For \textsf{DAG1}, the joint likelihood ratio
+\(LR_{AB}^{ab}\) is strictly greater than both of the individual
+likelihood ratio \(LR_{A}^{ab}\) and \(LR_{B}^{ab}\) in 30\% of the
+cases (22\% for \textsf{DAG2}). A similar conclusion holds for the Bayes
+factor. So keeping the evidence fixed does not make it any easier to
+justify distribution.\footnote{We run a number of computer simulations.
+  For the sake of completeness, here are the results. If no assumption
+  about the direction of support is made, around 12.7\% of the time
+  (twice less often than if the usual individual likelihood ratio are
+  used), the individual \(LR_A^{ab}\) and \(LR_B^{ab}\) are both greater
+  than the joint \(LR_{AB}^{ab}\). This holds for \textsf{DAG1}. The
+  frequency goes slightly up to around 13\% if we switch to
+  \textsf{DAG2}. Assuming the individual likelihood ratios are above
+  one, only about 70\% of joint likelihood ratios are between the
+  individual ones in \textsf{DAG1} (75\% for \textsf{DAG2}) . However,
+  no joint likelihood ratio is below the minimum of the individual
+  ratios for \textsf{DAG1}, as expected. Interestingly, the join
+  likelihood ratio may go below the minimum of the individual ones in
+  very rare cases, 2\% of the times, for \textsf{DAG2}. . So, strictly
+  speaking, aggregation can fail if dependencies are present so long as
+  the evidence is held constant.}
 
 \hypertarget{dependent-evidence}{%
 \subsection*{Dependent evidence}\label{dependent-evidence}}
 \addcontentsline{toc}{subsection}{Dependent evidence}
 
-Both \textsf{DAG 1} and \textsf{DAG 2} ensures that the items of
-evidence are conditionally independent on their respective hypothesis
-(specifically, that \(a\) is independent both conditional on \(A\) and
-conditional on \(\n A\), and the same for \(b\) and \(B\).).\footnote{In
-  fact, \textsf{DAG 1} ensure that they are also unconditionally
-  independent.} The results established so far, then, rests of this
-assumption. What happens if this independence is dropped? To investigate
-this question, we run a simulation based on \textsf{DAG 3}, illustrated
-in Figure \ref{fig:dag3}.
+\textsf{DAG 1} and \textsf{DAG 2} ensure that the items of evidence are
+conditionally independent on their respective hypothesis (specifically,
+that \(a\) is independent both conditional on \(A\) and conditional on
+\(\n A\), and the same for \(b\) and \(B\).).\footnote{In fact,
+  \textsf{DAG 1} ensure that they are also unconditionally independent.}
+The results established so far, then, rests on this assumption. What
+happens if this independence is dropped? To investigate this question,
+we run a simulation based on \textsf{DAG 3}, illustrated in Figure
+\ref{fig:dag3}. As it turns out, the joint likelihood ratio can be lower
+than both individual likelihood ratios and the joint Bayes factor lower
+than both individual Bayes factors in 14\% cases. Crucially, this occurs
+when the individual Bayes factor and likelihood ratios are greater than
+one. An example is given in Figure \ref{fig:CPTDoubleL}. This result is,
+of course, nothing surprising if we keep in mind that, in
+\textsf{DAG 3}, the items of evidence no longer count as independent
+lines of evidence.
 
 \vspace{1mm}
 \footnotesize
@@ -1143,17 +1101,10 @@ in Figure \ref{fig:dag3}.
 \begin{figure}[H]
 
 
-\begin{center}\includegraphics[width=1\linewidth]{conjunction-appendix14_files/figure-latex/unnamed-chunk-27-1} \end{center}
+\begin{center}\includegraphics[width=0.7\linewidth]{conjunction-appendix14_files/figure-latex/unnamed-chunk-27-1} \end{center}
 \caption{\textsf{DAG 3} with direct dependence between the pieces of evidence.}
 \label{fig:dag3}
 \end{figure}
-
-In fact, it turns out that simultaneously the joint likelihood ratio is
-lower than both individual likelihood ratios and the joint Bayes factor
-is lower than each individual Bayes factor in 14\% cases in which the
-individual Bayes factor (and therefore also the individual likelihood
-ratios) are greater than one. One particular counterexample is
-illustrated in Figure \ref{fig:CPTDoubleL}.
 
 \begin{figure}
 \hspace{2mm}\begin{subfigure}[ht!]{0.45\textwidth}
@@ -1218,52 +1169,12 @@ a &  &  & Pr\\
 \end{subfigure} 
 \hspace{5mm}\begin{subfigure}{0.45\textwidth}
 
-\begin{center}\includegraphics[width=1\linewidth]{conjunction-appendix14_files/figure-latex/unnamed-chunk-29-1} \end{center}
+\begin{center}\includegraphics[width=0.7\linewidth]{conjunction-appendix14_files/figure-latex/unnamed-chunk-29-1} \end{center}
 \subcaption{Marginal probabilities. }
 \end{subfigure} 
 \caption{A counterexample based on \textsf{DAG 3}, with independence between the items of evidence dropped.   $LR_A  \approx 1.063$, $LR_B \approx 1.159742$,  $LR_{AB} \approx 0.651$. $BF_A \approx  1.022, BF_B \approx  1.079, BF_{AB}\approx   0.699$.}
 \label{fig:CPTDoubleL}
 \end{figure}
-
-\begin{figure}
-
-\begin{center}\includegraphics[width=1\linewidth]{conjunction-appendix14_files/figure-latex/unnamed-chunk-31-1} \end{center}
-\caption{Aggregation failure.} 
-\label{fig:aggregationFails}
-\end{figure}
-
-\mar{R: Two new passages on fixed joint evidence, check.}
-
-Finally, you might recall that in the chapter we distinguished two
-variants of the distribution requirement, (DIS1) and (DIS2). The former
-has been in the focus so far, and the latter differs in keeping the
-evidence fixed at \(a \et b\), even when calculating individual LRs. So,
-sticking to LR, distribution in this variant pertains to the joint LR
-and the following two ratios:
-\(\nicefrac{\pr{a\et b \vert A}}{\pr{a \et b \vert \n A}}\) and
-\(\nicefrac{\pr{a\et b \vert B}}{\pr{a \et b \vert \n B}}\). To make
-sure that switching to (DIS2) doesn't make things easier for legal
-probabilists, we ran 30k simulations (10k for each BN type), and
-inspected the status of aggregation and distribution for these ratios.
-
-Here are the results. If no assumption about the direction of support is
-made, around 12.7\% of the time (around twice less often than if the
-usual individual LRs are used), the individual LRs with fixed evidence
-are both greater than the joint LR---this is for \textsf{DAG1}, the
-frequency goes slightly up to around 13\% if we switch to \textsf{DAG2}
-and is around the same value if additionally we allow for the dependency
-between the items of evidence (\textsf{DAG3}). Assuming individual LRs
-are above one, around 70\% of joint likelihoods (75\% for BN2, 72\% for
-BN3) are between the individual ones, no joint LR is below the minimum
-of the individual ratios for \textsf{DAG1}, but is so around 2\% times
-for both \textsf{DAG2} and \textsf{DAG3}. This is one important
-difference: even aggregation can fail if dependencies are present, if we
-keep joint evidence fixed in all the ratios. As for distribution, there
-are no major surprises: around 30\% of the time, the joint LR is
-strictly greater than both of the individual LRs with evidence fixed for
-\textsf{DAG1}, 22\% for \textsf{DAG2}, and 26\% for \textsf{DAG3}. In
-short, keeping the joint evidence fixed across all ratios makes things
-even harder, when it comes to preserving aggregation and distribution.
 
 .
 
