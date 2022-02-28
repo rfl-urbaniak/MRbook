@@ -47,12 +47,17 @@ about \textit{joint} posteriors, Bayes factors and likelihood ratios.
 We provide analytic proofs if possible. We rely on computer simulations whenever analytic proofs become unmanageable.^[The R code for the simulations, calculations and visualizations is available on the book website LINK TO DOCUMENTATION TO BE ADDED LATER.] 
 The simulations were conducted as follows. Given a direct acyclic graph (DAG) of interest (to be defined later), 100,000 random Bayesian networks were generated whose probability measures had values sampled from the \textsf{Uniform(0,1)} distribution. For each of these networks, we calculated the relevant posterior probabilities, Bayes factors, and likelihood ratios.
 
+\mar{added short summary here}
+We prove that for if the stronger independence assumptions hold, the joint Bayes factor is just the result of multiplying the individual Bayes factors.  It follows that aggregation is satisfied in such cases, if individual Bayes factors are greater than one. Once the hypotheses are not independent, a weaker result can be obtained, which entails that the aggregation is satisfied for the Bayes factor, if a certain additional constraint is satisfied.  In general, aggregation fails 25\% of the time if the individual Bayes factors are not constrained to be greater than one, but holds once this constraint is added. Simulations reveal  that there is a large class of cases in which individual Bayes factors are above one, aggregation is satisfied, but distribution fails.  As for likelihood ratios,  without any constraint on individual likelihood ratios, aggregation fails in 12.5\% cases (twice less often than aggregation for the Bayes factor). Assuming likelihood ratios above one,  around 70\% of joint likelihood ratios falls between the individual ratios, and is no lower than the smaller of these. Thus, aggregation is satisfied if individual likelihood ratios equal at least one, but it no longer holds that the joint support is greater than any of the individual support levels. Still, distribution fails in a large class of cases. Finally, we identify cases in which aggregation can fail even if the individual BFs or LRs are at least one: this can happen if there is a direct dependence between the pieces of evidence. 
+
+
+
 
 <!---This appendix takes a closer look at the behavior of posterior probabilities, 
 the Bayes factor and the likelihood ratio in the conjunction problem. 
 In particular, we rely on the theory of Bayesian networks to compare \textit{individual} and \textit{joint} posteriors, Bayes factors and likelihood ratios. 
 --->
-<!---With the output of such calculations, various questions can be asked and the answers visualized.---> <!---Even for cases in which we derived analytic proofs, the results of a computer simulation sometimes provided additional insights.--->
+<!---With the output of such calculations, various questions can be asked and the answers visualized.---> <!---Even r cases in which we derived analytic proofs, the results of a computer simulation sometimes provided additional insights.--->
 
 
 <!---
@@ -148,8 +153,7 @@ drawdag(converging,
 common scenarios. 
 
 
-<!---Consider the nodes:
-
+Two sets of nodes, $\mathsf{X}$ and $\mathsf{Y}$, are d-separated given $\mathsf{Z}$ if every node in $\mathsf{X}$ is d-separated from every node in $\mathsf{Y}$ given $\mathsf{Z}$. Interestingly, it can be proven that if two sets of nodes are d-separated given a third one, they are independent given the third one, for any probabilistic measures compatible with a given DAG. However, lack of d-separation does not necessarily entail dependence for any probabilistic measure compatible with a given DAG. It only allows for it: if nodes are d-separated, there is at least one probabilistic measure fitting the DAG according to which they are dependent. So, at least, no false  independencies can be inferred  from the DAG, and all the dependencies are built into it.\footnote{For an intuitive feel on how these types of connections should relate to independence, consider the following examples. Take the nodes:
 \footnotesize 
 \begin{center}
 \begin{tabular}{@{}lp{5.3cm}@{}}\toprule
@@ -160,14 +164,10 @@ $M$ & The crime scene stain and the suspect's blood share the same DNA profile.\
 \bottomrule
 \end{tabular}
 \end{center}
-\normalsize
 \noindent This scenarios is naturally represented by the serial connection $G \rightarrow B \rightarrow M$. If we don't know whether $B$ holds, $G$ has  an indirect impact on the probability of $M$. Yet, once we find out that $B$ is true, we expect $M$ to be true, and whether $G$ holds has no further impact on the probability of $M$.
 
---->
-
-<!---
-
 For converging connections, let  $G$ and $B$ be as above, and let:
+
 \begin{center}
 \begin{tabular}{@{}lp{7.3cm}@{}}\toprule
 Node & Proposition \\ \midrule 
@@ -175,17 +175,10 @@ $O$ & The crime scene stain comes from the offender.\\
 \bottomrule
 \end{tabular}
 \end{center}
-\normalsize
 
 \noindent Both $G$ and $O$ influence $B$. If suspect guilty, it is more likely that the blood stain comes from him, and if the blood crime stain comes from the offender it is more likely to come from the suspect (for instance, more so than if it comes from the victim). Moreover, $G$ and $O$ seem independent. Whether the suspect is guilty does not have any bearing on whether the stain comes from the offender. Thus, a converging connection $G\rightarrow B \leftarrow O$ seems appropriate. However, if you do find out that $B$ is true---that the stain comes from the suspect---then whether the crime stain comes from the offender becomes relevant for whether the suspect is guilty. 
 
---->
-
-<!---
-Take an example of a diverging connection.  Say you have two coins, one fair, one biased. Conditional on which coin you have chosen, the results of subsequent tosses are independent. But if you don't know which coin you have chosen, the result of previous tosses give you some information about which coin it is, and this has an impact on your estimate of the probability of heads in the next toss. Whether a coin is fair, $F$, or not has an impact on the result of the first toss, $H1$, and on the result of the second toss, $H2$.  So $H1 \leftarrow F \rightarrow H2$ seems to be appropriate. Now, on one hand, so long as you do not know whether $F$, the truth of $H1$ increases the probability of $H2$.  On the other hand, once you know that $F$ is true, $H1$ and $H2$ become independent, and so conditioning on the parent in a fork makes its childern independent (provided there is no other open path between them in the graph).
---->
-
-Two sets of nodes, $\mathsf{X}$ and $\mathsf{Y}$, are d-separated given $\mathsf{Z}$ if every node in $\mathsf{X}$ is d-separated from every node in $\mathsf{Y}$ given $\mathsf{Z}$. Interestingly, it can be proven that if two sets of nodes are d-separated given a third one, they are independent given the third one, for any probabilistic measures compatible with a given DAG. However, lack of d-separation does not necessarily entail dependence for any probabilistic measure compatible with a given DAG. It only allows for it: if nodes are d-separated, there is at least one probabilistic measure fitting the DAG according to which they are dependent. So, at least, no false  independencies can be inferred  from the DAG, and all the dependencies are built into it.
+Take an example of a diverging connection.  Say you have two coins, one fair, one biased. Conditional on which coin you have chosen, the results of subsequent tosses are independent. But if you don't know which coin you have chosen, the result of previous tosses give you some information about which coin it is, and this has an impact on your estimate of the probability of heads in the next toss. Whether a coin is fair, $F$, or not has an impact on the result of the first toss, $H1$, and on the result of the second toss, $H2$.  So $H1 \leftarrow F \rightarrow H2$ seems to be appropriate. Now, on one hand, so long as you do not know whether $F$, the truth of $H1$ increases the probability of $H2$.  On the other hand, once you know that $F$ is true, $H1$ and $H2$ become independent, and so conditioning on the parent in a fork makes its children independent (provided there is no other open path between them in the graph).}
 
 
 ## Independencies in the conjunction problem {-}
@@ -436,7 +429,7 @@ We prove the following general theorem:
 \begin{theorem}
 Given a measure $\pr{}$ compatible with \textsf{DAG1}, if both $BF_A$ and $BF_B$ 
 are grater than one, then $BF_{AB}\geq \mathsf{max}(BF_{A},BF_{B})$.
-The same holds for a measure compatible with \textsf{DAG2}.
+The same holds for any measure compatible with \textsf{DAG2}.
 \label{thm:aggregationBf}
 \end{theorem}
 
