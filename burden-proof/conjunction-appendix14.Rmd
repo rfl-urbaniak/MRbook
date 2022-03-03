@@ -44,11 +44,11 @@ library(tidyverse)
 This appendix briefly describes the formalism of Bayesian networks, applies 
 it to the difficulty with conjunction and then establishes several results 
 about \textit{joint} posteriors, Bayes factors and likelihood ratios. 
-We provide analytic proofs if possible. We rely on computer simulations whenever analytic proofs become unmanageable.^[The R code for the simulations, calculations and visualizations is available on the book website LINK TO DOCUMENTATION TO BE ADDED LATER.] 
-The simulations were conducted as follows. Given a direct acyclic graph (DAG) of interest (to be defined later), 100,000 random Bayesian networks were generated whose probability measures had values sampled from the \textsf{Uniform(0,1)} distribution. For each of these networks, we calculated the relevant posterior probabilities, Bayes factors, and likelihood ratios.
+We provide analytic proofs if possible. We rely on computer simulations whenever analytic proofs become unmanageable.^[The R code for the simulations, calculations and visualizations is available on the book website LINK TO DOCUMENTATION TO BE ADDED LATER.] The simulations were conducted as follows. Given a direct acyclic graph (DAG) of interest (to be defined later), 100,000 random Bayesian networks were generated whose probability measures had values sampled from the \textsf{Uniform(0,1)} distribution. For each of these networks, we calculated the relevant posterior probabilities, Bayes factors, and likelihood ratios.
 
-\mar{added short summary here}
-We prove that for if the stronger independence assumptions hold, the joint Bayes factor is just the result of multiplying the individual Bayes factors.  It follows that aggregation is satisfied in such cases, if individual Bayes factors are greater than one. Once the hypotheses are not independent, a weaker result can be obtained, which entails that the aggregation is satisfied for the Bayes factor, if a certain additional constraint is satisfied.  In general, aggregation fails 25\% of the time if the individual Bayes factors are not constrained to be greater than one, but holds once this constraint is added. Simulations reveal  that there is a large class of cases in which individual Bayes factors are above one, aggregation is satisfied, but distribution fails.  As for likelihood ratios,  without any constraint on individual likelihood ratios, aggregation fails in 12.5\% cases (twice less often than aggregation for the Bayes factor). Assuming likelihood ratios above one,  around 70\% of joint likelihood ratios falls between the individual ratios, and is no lower than the smaller of these. Thus, aggregation is satisfied if individual likelihood ratios equal at least one, but it no longer holds that the joint support is greater than any of the individual support levels. Still, distribution fails in a large class of cases. Finally, we identify cases in which aggregation can fail even if the individual BFs or LRs are at least one: this can happen if there is a direct dependence between the pieces of evidence. 
+
+Here is a summary of the main results. We show that, if the hypotheses are independent, the joint Bayes factor is just the result of multiplying the individual ones (Fact \ref{fac:BFindep}). It follows that the joint Bayes factor is never below any of the individual ones so long as these are greater than one (Theorem \ref{thm:aggregationBf} and Figure \ref{fig:DAG1BFF}). If the hypotheses are not independent, the joint Bayes factor is no longer the result of multiplying the individual ones, even though multiplication is a reasonable approximation in most cases (Figure \ref{fig:BFmulti}). Still, even without independence, the joint Bayes factor is never below any of the individual ones provided these are greater than one (Theorem \ref{thm:aggregationBf} and Figure \ref{fig:BFind2}). In general, if the individual Bayes factors are not constrained to be greater than one, the claim fails 25\% of the time (Figure \ref{fig:BFfails}). Further, simulations reveal a large class of cases in which individual Bayes factors are above one, and yet distribution fails. That is, even when the joint Bayes factor is above a given threshold, the individual Bayes factors may not meet the threshold (Figure \ref{fig:BFdistr}). Likelihood ratios follow a similar pattern with some notable differences. Without placing any constraint on the individual likelihood ratios, the join likelihood ratio is below the individual ones in 12.5\% cases (twice less often than for the Bayes factor; Figure \ref{fig:LRfails}). If the likelihood ratios are above one,  around 70\% of joint likelihood ratios fall between the individual ones (Figure \ref{fig:LRabovePlot} and \ref{fig:LRabovePlotDep}). Thus, the joint likelihood ratio is always greater than at least one of the individual ones if these are greater than one, but it does not hold that the joint likelihood ratio is greater than  \textit{both} the individual ones (Figure \ref{tab:CPTconjunctionBNL}). Again, distribution fails in a large class of cases as with the Bayes factor. Finally, we identify cases in which the joint Bayes factor or likelihood ratio can be below the individual ones even when these are greater than one. This can happen when there is a direct dependence between the pieces of evidence (Figure \ref{fig:CPTDoubleL}). 
+
 
 
 
@@ -150,10 +150,7 @@ drawdag(converging,
 \end{figure}
 
 \noindent Serial, converging and diverging connections represent 
-common scenarios. 
-
-
-Two sets of nodes, $\mathsf{X}$ and $\mathsf{Y}$, are d-separated given $\mathsf{Z}$ if every node in $\mathsf{X}$ is d-separated from every node in $\mathsf{Y}$ given $\mathsf{Z}$. Interestingly, it can be proven that if two sets of nodes are d-separated given a third one, they are independent given the third one, for any probabilistic measures compatible with a given DAG. However, lack of d-separation does not necessarily entail dependence for any probabilistic measure compatible with a given DAG. It only allows for it: if nodes are d-separated, there is at least one probabilistic measure fitting the DAG according to which they are dependent. So, at least, no false  independencies can be inferred  from the DAG, and all the dependencies are built into it.\footnote{For an intuitive feel on how these types of connections should relate to independence, consider the following examples. Take the nodes:
+common scenarios.\footnote{For an intuitive feel on how these types of connections should relate to independence, consider the following examples. Take the nodes:
 \footnotesize 
 \begin{center}
 \begin{tabular}{@{}lp{5.3cm}@{}}\toprule
@@ -180,6 +177,7 @@ $O$ & The crime scene stain comes from the offender.\\
 
 Take an example of a diverging connection.  Say you have two coins, one fair, one biased. Conditional on which coin you have chosen, the results of subsequent tosses are independent. But if you don't know which coin you have chosen, the result of previous tosses give you some information about which coin it is, and this has an impact on your estimate of the probability of heads in the next toss. Whether a coin is fair, $F$, or not has an impact on the result of the first toss, $H1$, and on the result of the second toss, $H2$.  So $H1 \leftarrow F \rightarrow H2$ seems to be appropriate. Now, on one hand, so long as you do not know whether $F$, the truth of $H1$ increases the probability of $H2$.  On the other hand, once you know that $F$ is true, $H1$ and $H2$ become independent, and so conditioning on the parent in a fork makes its children independent (provided there is no other open path between them in the graph).}
 
+Two sets of nodes, $\mathsf{X}$ and $\mathsf{Y}$, are d-separated given $\mathsf{Z}$ if every node in $\mathsf{X}$ is d-separated from every node in $\mathsf{Y}$ given $\mathsf{Z}$. Interestingly, it can be proven that if two sets of nodes are d-separated given a third one, they are independent given the third one, for any probabilistic measures compatible with a given DAG. However, lack of d-separation does not necessarily entail dependence for any probabilistic measure compatible with a given DAG. It only allows for it: if nodes are d-separated, there is at least one probabilistic measure fitting the DAG according to which they are dependent. So, at least, no false  independencies can be inferred  from the DAG, and all the dependencies are built into it.
 
 ## Independencies in the conjunction problem {-}
 
@@ -302,7 +300,7 @@ DAG2Ind <- impliedConditionalIndependencies(daggityConjunctionDag2, type  = "all
 \normalsize
 
 
-Unsurprisingly, the relations of d-separation entailed by the two networks differ. Examples can be found in Table \ref{tab:indepBNS}. In fact, \textsf{DAG1} entails 31 d-separations, while \textsf{DAG2} entails 22 of them.  One warning about the notation. Nodes represent variables, and so each d-separation entails a probabilistic statement about  all combination of the node states (values of variables) involved. For instance, assuming each node is binary with two possible states, 1 and 0, \mbox{$B   \indep_d\,\,  a $}  entails that for any \mbox{$ B_i, a_i \in \{0, 1\}$} we have $\pr{B = B_i} = \pr{B = B_i \vert a = a_i}$. 
+Unsurprisingly, the relations of d-separation entailed by the two networks differ. Examples can be found in Table \ref{tab:indepBNS}. In fact, \textsf{DAG1} entails 31 d-separations, while \textsf{DAG2} entails 22 of them.  Crucially, nodes represent variables, and thus each d-separation statement expresses a probabilistic statement about  all combination of the node states (values of variables) involved. For instance, assuming each node is binary with two possible states, 1 and 0, \mbox{$B   \indep_d\,\,  a $}  entails that for any \mbox{$ B_i, a_i \in \{0, 1\}$} we have $\pr{B = B_i} = \pr{B = B_i \vert a = a_i}$. The distinction between nodes and their states (or variables and their values) matters because  independence conditional on $B= 0$ doesn't entail independence given $B=1$. For instance, one's final grade might depend on hard work if the teacher is fair, but this might fail if the teacher is not fair.
 
 
 \begin{table}[h]
@@ -357,9 +355,10 @@ b \indep a \vert B \label{eq:I6} & \hspace{2cm}\mbox{\footnotesize DAG1 , DAG2}
 \end{figure}
 
 
+\noindent
 An ambiguity in our notation is worth mentioning. Table \ref{tab:indepBNS} lists independencies between \emph{nodes}.
 But Figure \ref{tab:indepBNS-states} is about \textit{states} rather than nodes.
-<!---In what follows, however, we will  use a finer level of granularity, being very explicit on what independence assumptions \emph{between propositions} are used in the derivations.---> <!---Each particular instantiation of a node (a state) corresponds to a proposition, for example, $A = 1$ means that the proposition corresponding to $A$ holds, while $A = 0$ means that the negation of $A$ holds. Crucially, ---> An expression such as \mbox{$b\indep A \et a \vert \n B$} should be understood as a claim about states (events, propositions), which  means  the same as  $\pr{b = 1 \vert B = 0}   = \pr{b = 1 \vert A = 1, a = 1, B = 0}$. The distinction between nodes and their states (or variables and their values) matters because  independence conditional on $B= 0$ doesn't entail independence given $B=1$. For instance, one's final grade might depend on hard work if the teacher is fair, but this might fail if the teacher is not fair. <!---, and, second, sometimes only some of the independencies entailed by a Bayesian network will be actually required for a given claim to hold, and we want to be explicit about such cases.---> We hope this ambiguity in notation will cause no confusion. Whether we talk about nodes or states (or events, propositions) should be clear from the context.  
+<!---In what follows, however, we will  use a finer level of granularity, being very explicit on what independence assumptions \emph{between propositions} are used in the derivations.---> <!---Each particular instantiation of a node (a state) corresponds to a proposition, for example, $A = 1$ means that the proposition corresponding to $A$ holds, while $A = 0$ means that the negation of $A$ holds. Crucially, ---> An expression such as \mbox{$b\indep A \et a \vert \n B$} should be understood as a claim about states (events, propositions), which  means  the same as  $\pr{b = 1 \vert B = 0}   = \pr{b = 1 \vert A = 1, a = 1, B = 0}$.  <!---, and, second, sometimes only some of the independencies entailed by a Bayesian network will be actually required for a given claim to hold, and we want to be explicit about such cases.---> We hope this ambiguity in notation will cause no confusion. Whether we talk about nodes or states (or events, propositions) should be clear from the context.  
 
 
 
@@ -738,7 +737,7 @@ scatter3D(BFfails$BFAs,BFfails$BFBs,BFfails$BFABs,pch=3,cex=0.1, alpha = .5, col
 \end{figure}
 
 
-This result is nothing surprising. It happens when $BF_A$ and $BF_B$ are lower than one. When they are greater than one, the joint $BF_{AB}$ exceeds the individual ones. The distribution of Bayes factors based on \textsf{DAG1} and \textsf{DAG2} are displayed in Figure \ref{fig:DAG1BF} and Figure \ref{fig:BFind2}. The distribution is unchanged in the two cases. 
+This result is nothing surprising. It happens when $BF_A$ and $BF_B$ are lower than one. When they are greater than one, the joint $BF_{AB}$ exceeds the individual ones. The distribution of Bayes factors based on \textsf{DAG1} and \textsf{DAG2} are displayed in Figure \ref{fig:DAG1BFF} and Figure \ref{fig:BFind2}. The distribution is unchanged in the two cases. 
 
 These simulations and the earlier theorem demonstrate that, whenever individual $BF_A$ and $BF_B$ are above a fixed threshold, so is the combined $BF_{AB}$. This fact justifies the principle of aggregation, as explained in the main text of the chapter. But the converse does not hold. Even when $BF_{AB}$ is above a threshold, $BF_A$ or $BF_B$ may be below the threshold. Such cases for  \textsf{DAG1} and  \textsf{DAG2} are displayed in Figure  \ref{fig:BFdistr}.
 Hence, the converse of aggregation, the principle of distribution, fails. 
@@ -748,8 +747,9 @@ Hence, the converse of aggregation, the principle of distribution, fails.
 annotate_figure(plotBFind, top = text_grob("Distances of the joint BF from the individual BFs (DAG1)", 
                 size = 13)) 
 ```
+
 \caption{Distances of the joint Bayes factor from maxima and minima of individual Bayes factors, depending on whether the individual support levels are both positive or both negative. Simulation based on 100k Bayesian networks build over \textsf{DAG1}.}
-\label{fig:DAG1BF}
+\label{fig:DAG1BFF}
 \end{figure}
 
 
@@ -763,6 +763,7 @@ annotate_figure(plotBFind2, top = text_grob("Distances of the joint BF from the 
 \caption{Distances of the joint Bayes factor from maxima and minima of individual Bayes factors, depending on whether the individual support levels are both positive or both negative. Simulation based on 100k Bayesian networks build over \textsf{DAG2}.}
 \label{fig:BFind2}
 \end{figure}
+
 
 
 
@@ -796,7 +797,9 @@ annotate_figure(plotBFDistrJoint, top = text_grob("Distribution failures for BF"
 \end{figure}
 
 
-
+\label{fig:DAG1BF}
+\label{fig:BFind2}
+\label{fig:BFdistr}
 
 
 <!-- \raf{M: For readability, it might help to plot the visual relationship between P(a|b) and P(a|A), just as a further clarification about the algebraic claim.} -->
