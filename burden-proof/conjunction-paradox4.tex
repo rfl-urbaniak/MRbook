@@ -734,21 +734,21 @@ count as independent lines of evidence despite not being
 \label{fig:conjunctionDAG2chapter}
 \end{figure}
 
-The difficulty with conjunction arises even without the independence of
-hypotheses \(A\) and \(B\), at least in a number of circumstances. Using
-a simulation we can study how often, in principle, the joint posterior
-\(\pr{A\wedge B \vert a \wedge b}\) is below both of the individual
-posteriors \(\pr{A \vert a}\) and \(\pr{B \vert b}\). To this end, we
-simulated 10,000 random Bayesian networks based on \textsf{DAG 1} and
-\textsf{DAG 2}. Assuming that each possible Bayesian network has an
-equal probability of occurring, the joint posterior is lower than both
-individual posteriors 68\% of the time for \textsf{DAG 1}, and around
-60\% for \textsf{DAG 2} (see the appendix for details). This result
-agrees with Schwartz \& Sober (2017) who point out that, if hypotheses
-\(A\) and \(B\) are probabilistically dependent on one another,
-aggregation will fail less often. Still, postulating a dependence
-between hypotheses does little for solving the difficulty with
-conjunction since a drop in the failure rate from 68\% to 60\% is
+The difficulty with conjunction arises even when hypotheses \(A\) and
+\(B\) are no longer assumed to be independent. Using a simulation we can
+study how often, in principle, the joint posterior
+\(\pr{A\wedge B \vert a \wedge b}\) is below both the individual
+posteriors \(\pr{A \vert a}\) and \(\pr{B \vert b}\). We simulated
+10,000 random Bayesian networks based on \textsf{DAG 1} (independent
+hypotheses) and \textsf{DAG 2} (dependent hypotheses). Assuming that
+each possible network has an equal probability of occurring, the joint
+posterior is lower than both individual posteriors 68\% of the time for
+\textsf{DAG 1}, and around 60\% for \textsf{DAG 2} (see the appendix for
+details). This result agrees with Schwartz \& Sober (2017) who point out
+that, if hypotheses \(A\) and \(B\) are probabilistically dependent on
+one another, aggregation will fail less often. Still, postulating a
+dependence between hypotheses does little for solving the difficulty
+with conjunction since a drop in the failure rate from 68\% to 60\% is
 limited.
 
 \vspace{1mm}
@@ -785,7 +785,10 @@ evidential support for the conjunction will often exceed that for the
 individual claims, a point already made by Dawid (1987) who wrote that
 `suitably measured, the support supplied by the conjunction of several
 independent testimonies exceeds that supplied by any of its
-constituents' (97).
+constituents' (97).\footnote{Dawid's claim holds for the Bayes factor,
+  but does not hold for the likelihood ratio. The joint likelihood ratio
+  may be lower than one of the individual likelihood ratios, although it
+  is not lower than both; more on this later in this section.}
 
 Dawid thought that vindicating aggregation was enough for the
 conjunction paradox to `evaporate.' But, as we show below, this is not
@@ -850,15 +853,15 @@ Under these circumstances, Dawid's claim that `the support supplied by
 the conjunction of several independent testimonies exceeds that supplied
 by any of its constituents' (if support is to be measured in terms of
 Bayes factor) is verified.\footnote{The result holds beyond two pieces
-  of evidence; see Figure \ref{fig:bfconjunction5}). Note that the order
-  is reversed if the items of evidence oppose the individual hypotheses.
-  Neutral evidence results in a combined Bayes factor of 1, no matter
-  the prior or the number of items of evidence.}
+  of evidence; see Figure \ref{fig:bfconjunction5}. On the other hand,
+  if both items of evidence oppose the individual hypotheses, the joint
+  Bayes factor will be lower than any of the individual ones. Neutral
+  evidence always results in a joint Bayes factor of one.}
 
 \begin{figure}[h]
 
 \begin{center}\includegraphics[width=0.9\linewidth]{conjunction-paradox4_files/figure-latex/bfconjunction5-1} \end{center}
-\caption{Bayes factor for one, two and five items of evidence and the corresponding claims, given different degrees of specificity and sensitivity of the evidence. The independence assumptions in Figure \ref{fig:conjunctionDAGchapter}, \textsf{DAG 1}, hold.}
+\caption{Joint Bayes factors for one, two and five items of evidence, for individual Bayes factors greater than one (positive support), equal to one (neutral support) and below one (negative support). The independence assumptions in Figure \ref{fig:conjunctionDAGchapter}, \textsf{DAG 1}, hold.}
 \label{fig:bfconjunction5}
 \end{figure}
 
@@ -894,8 +897,8 @@ ratio}\label{combined-support-likelihood-ratio}}
 
 We now run a similar argument for the likelihood ratio, another
 probabilistic measure of evidential strength. The likelihood
-ratio---extensively discussed in Chapter 5
-\todo{REFER TO EARLIER CHAPTER}---compares the probability of the
+ratio---extensively discussed in Chapter
+5\todo{REFER TO EARLIER CHAPTER}---compares the probability of the
 evidence on the assumption that a hypothesis of interest is true
 (\textit{sensitivity}) and the probability of the evidence on the
 assumption that the negation of the hypothesis is true
@@ -906,7 +909,7 @@ assumption that the negation of the hypothesis is true
 stronger the evidential support in favor of the hypothesis (as
 contrasted to its negation).
 
-The question is whether the combined support measured by the combined
+The question is whether the combined support measured by the joint
 likelihood ratio
 \[\frac{\pr{a\wedge b \vert A\wedge B}}{\pr{a \wedge b \vert \neg (A\wedge B)}}\]
 
@@ -925,10 +928,9 @@ LR_{AB} & = \frac{\pr{a\wedge b \vert A\wedge B}}{\pr{a \wedge b \vert \neg (A\w
  {\frac{\pr{\neg A}\pr{B \vert \neg A} \pr{a \vert \neg A}\pr{b \vert B} + \pr{A}\pr{\neg B \vert A} \pr{a \vert A }\pr{b \vert \neg B} + \pr{\neg A}\pr{\neg B \vert \neg A } \pr{a \vert \neg A}\pr{b \vert \neg B}}{\pr{\neg A}\pr{B \vert \neg A} + \pr{A}\pr{\neg B \vert A } + \pr{\neg A}\pr{\neg B \vert \neg A} }}
 \end{align*}
 
-\noindent This equality is fairly general. It holds whether or not
-hypotheses \(A\) and \(B\) are probabilistically independent. Given the
-many unknowns here, it pays to make some simplifications if only for
-illustrative purposes.
+\noindent This equality holds whether or not hypotheses \(A\) and \(B\)
+are probabilistically independent. But, given the many unknowns here, it
+pays to make some simplifications if only for illustrative purposes.
 
 The first temporary simplification we make is to assume that the
 sensitivity and specificity of the items of evidence are both equal to
@@ -956,26 +958,25 @@ What happens if the two simplifying assumptions are relaxed? If the
 items of evidence have different levels of sensitivity and specificity,
 the combined likelihood ratio never goes below the lower of the two
 individual likelihood ratios, but can be lower than the higher
-individual likelihood ratio. We established this claim by means of a
+individual likelihood ratio. We establish this claim by means of a
 computer simulation (see the appendix for details). This holds if the
 probabilistic measure fits \textsf{DAG 1} (independent hypotheses) or
-\textsf{DAG 2} (dependent hypotheses), but fails if there is direct
-dependence between the pieces of evidence.\footnote{The simplified
-  set-up from before does not contradict this claim but follows from it.
-  In the simplified set-up, both individual likelihood ratios were the
-  same, so whenever the joint likelihood was higher than the minimum of
-  the individual likelihood ratios, it was higher than the both of them.}
-In this sense, the joint likelihood ratio behaves differently than the
-joint Bayes factor since it is greater than the lowest of the individual
-likelihood ratios, rather than being greater than both of them.
-Consequently, Dawid's claim that `the support supplied by the
-conjunction of several independent testimonies exceeds that supplied by
-any of its constituents' should be weakened and restricted to cases in
-which there is no direct probabilistic dependence between the items of
-evidence. In such cases, the evidential support (when it is measured by
-the likelihood ratio) supplied by the conjunction of several independent
-items of evidence exceeds the support supplied by at least one
-individual item of evidence but possibly not all.
+\textsf{DAG 2} (dependent hypotheses), but fails---unsurprisingly---if
+there is direct dependence between the pieces of evidence.\footnote{The
+  simplified set-up from before does not contradict this claim but
+  follows from it. In the simplified set-up, both individual likelihood
+  ratios were the same, so whenever the joint likelihood was higher than
+  the minimum of the individual likelihood ratios, it was higher than
+  the both of them.} In this sense, the joint likelihood ratio behaves
+differently than the joint Bayes factor since it is greater than the
+lowest of the individual likelihood ratios, rather than being greater
+than both of them. Consequently, Dawid's claim that `the support
+supplied by the conjunction of several independent testimonies exceeds
+that supplied by any of its constituents' should be amended. When it is
+measured by the likelihood ratio, the evidential support supplied by the
+conjunction of several independent items of evidence exceeds the support
+supplied by at least one individual item of evidence but possibly not
+all.
 
 \hypertarget{vindicating-aggregation}{%
 \subsection{Vindicating aggregation}\label{vindicating-aggregation}}
@@ -992,22 +993,45 @@ where the function \(\text{min}\) returns the lowest of its arguments.
 
 This fact can be used to justify aggregation. To be sure, aggregation is
 not directly a principle about evidential strength. It is a principle
-about the standard of proof. So, to complete the argument, the standard
-of proof should be tied to evidential strength. How? The rule of
-decision could be: liability is proven according to the governing
-standard of proof in case the strength of the evidential
-support---measured by the Bayes factor or the likelihood ratio---meets a
-suitably high threshold. On this reading, the threshold should no longer
-be a posterior probability between 0 and 1, but a number somewhere above
-one. The greater this number, the more stringent the standard of proof,
-for any value above one.
+about the standard of proof. That is:
 
-The only question left at this point is, how to identify the appropriate
-evidential strength threshold? The answer isn't obvious. Below we
-examine two possible approaches. First, the threshold for the Bayes
-factor and the threshold for the likelihood ratio can be derived from
-the threshold for the posterior probability by manipulating two simple
-equations. Consider first the Bayes factor threshold. Since
+\[S[a, A] \wedge S[b, B] \Rightarrow  S[a \wedge b, A\wedge B],\] where
+the expression \(S[a, A]\) should be read as `evidence \(a\) supports
+claim \(A\) by standard \(S\),' and similarly for \(S[b, B]\) and
+\(S[a \wedge b, A\wedge B]\). So, to complete the argument, the standard
+of proof \(S\) should be tied to evidential strength \(\mathsf{str}\).
+How? The rule of decision could be: liability is proven according to the
+governing standard of proof in case the strength of the evidential
+support---measured by the Bayes factor or the likelihood ratio---meets a
+suitably high threshold. More formally:
+
+\[S[E, L] \Leftrightarrow \mathsf{str}[E, L]>t_{str},\] where \(E\) is
+the total evidence available and \(L\) is the claim that the defendant
+is criminally or civilly liable. On this reading, the threshold
+\(t_{str}\) is not a probability between 0 and 1, but a number somewhere
+above one. The greater this number, the more stringent the standard of
+proof, for any value above one.
+
+The only question left at this point concerns how one should identify
+the appropriate evidential strength threshold \(t_{str}\). The answer
+isn't obvious. Below we examine two possible approaches. The first
+approach consists in fixing the threshold \(s_{str}\) to some critical
+value. For example, the critical value for the likelihood ratio
+\(\nicefrac{\pr{E \vert L}}{\pr{E \vert \neg L}}\) can be fixed at 1 for
+civil trials and greater than 100 for criminal trials. Similar
+thresholds can be applied to the Bayes factor
+\(\nicefrac{\pr{E \vert L}}{\pr{E}}\). These values are plausible, since
+the evidence against the defendant in criminal cases should be stronger
+than in civil cases to justify a verdict of liability. But this approach
+raises a further question. Why should critical values such as 1 for
+civil trials and 100 for criminal trials be chosen? What is the
+rationale for their choice? Why not, say, 10 and 1,000? A second, more
+roundabout approach is better suited to address these questions.
+
+The threshold for the Bayes factor and the threshold for the likelihood
+ratio need not be fixed directly, but can instead be indirectly derived
+from the threshold for the posterior probability by manipulating two
+simple equations. Consider first the Bayes factor threshold. Since
 \begin{align*}
 \mathsf{ Bayes \: factor }=\frac{\mathsf{posterior }}{\mathsf{ prior}},
 \end{align*}
@@ -1034,71 +1058,71 @@ property of a decision threshold can be questioned, but a similar point
 applies to the posterior threshold \(t\): the higher the prior
 probability, the easier it is to meet the threshold.
 
-This approach is simple and elegant, but incurs a major shortcoming:
-aggregation still fails. There will be cases in which the conjuncts
-taken separately satisfy the decision standard \(t_{BF}\) or \(t_{LR}\),
-while the conjunction does not.\\
-To illustrate, consider a posterior probability threshold of \(.95\) as
-might be appropriate in a criminal case. If the individual claims \(A\)
-and \(B\) both have a prior probability of, \mbox{say $.1$,} the Bayes
-factor threshold \(t^A_{BF}=t_{BF}^B=\nicefrac{.95}{.1}=9.5\) for \(A\)
-or \(B\) individually. Note the superscripts \(A\) and \(B\). The Bayes
-factor threshold \(t_{BF}\) is indexed to the claim of interest because
-the threshold is prior-dependent and thus claim-dependent (since
-different claims have different prior probabilities). If, as is often
-assumed, claims \(A\) and \(B\) are probabilistically independent, the
-composite claim \(A \wedge B\) will be associated with the Bayes factor
-threshold \(t^{A\wedge B}_{BF}=\nicefrac{.95}{(.1\times .1)}=95\), a
-much higher value. Suppose each claim barely meet the 9.5 Bayes factor
-threshold. Given independence, the joint Bayes factor results from
-multiplying the individual Bayes factors, that is,
-\(9.5 \times 9.5=90.25\). This is not quite enough to meet
-\(t^{A\wedge B}_{BF}=95\). So aggregation fails. An analogous point
-holds for the likelihood ratio threshold.\footnote{Say \(A\) and \(B\)
-  have prior probabilities of \(.2\) and \(.3\) respectively. On this
-  approach, the likelihood ratio threshold for \(A\) and \(B\) will be
-  \(t_{LR}^{A}\approx 76\) and \(t_{LR}^{B}a\approx 44\), assuming
-  posterior probability threshold of 0.95. The likelihood ratio
-  threshold for the composite claim \(A \wedge B\) will be
-  \(t^{A\wedge B}_{LR}\approx 297\). Suppose the individual likelihood
-  ratios meet their threshold. And, for simplicity, suppose sensitivity
-  and specificity of the individual items of supporting evidence are the
-  same. In this case, for \(t_{LR}^{A}\) to be met, evidence \(a\)
-  should have sensitivity (and specificity) of at least 0.988. For
-  \(t_{LR}^{B}\) to be met, evidence \(b\) should have sensitivity (and
-  specificity) of 0.978. Given these values, the combined likelihood
-  ratio equals about 145, far short from the threshold
-  \(t^{A\wedge B}_{LR}\approx 297\).} The culprit is the fact that
-\(t_{BF}\) and \(t_{LR}\) have different values when applied to
-individual claims \(A\) and \(B\) as opposed to the composite claim
+This second approach allows for a principled method to identify the
+critical thresholds, but incurs a major shortcoming: aggregation still
+fails. There will be cases in which the conjuncts taken separately
+satisfy the decision standard \(t_{BF}\) or \(t_{LR}\), while the
+conjunction does not. To illustrate, consider a posterior probability
+threshold of \(.95\) as might be appropriate in a criminal case. If the
+individual claims \(A\) and \(B\) both have a prior probability of,
+\mbox{say $.1$,} the Bayes factor threshold
+\(t^A_{BF}=t_{BF}^B=\nicefrac{.95}{.1}=9.5\) for \(A\) or \(B\)
+individually. Note the superscripts \(A\) and \(B\). The Bayes factor
+threshold \(t_{BF}\) is indexed to the claim of interest because the
+threshold is prior-dependent and thus claim-dependent (since different
+claims have different prior probabilities). If, as is often assumed,
+claims \(A\) and \(B\) are probabilistically independent, the composite
+claim \(A \wedge B\) will be associated with the Bayes factor threshold
+\(t^{A\wedge B}_{BF}=\nicefrac{.95}{(.1\times .1)}=95\), a much higher
+value. Suppose each claim barely meet the 9.5 Bayes factor threshold.
+Given independence, the joint Bayes factor results from multiplying the
+individual Bayes factors, that is, \(9.5 \times 9.5=90.25\). This is not
+quite enough to meet \(t^{A\wedge B}_{BF}=95\). So aggregation fails. An
+analogous point holds for the likelihood ratio threshold.\footnote{Say
+  \(A\) and \(B\) have prior probabilities of \(.2\) and \(.3\)
+  respectively. On this approach, the likelihood ratio threshold for
+  \(A\) and \(B\) will be \(t_{LR}^{A}\approx 76\) and
+  \(t_{LR}^{B}a\approx 44\), assuming posterior probability threshold of
+  0.95. The likelihood ratio threshold for the composite claim
+  \(A \wedge B\) will be \(t^{A\wedge B}_{LR}\approx 297\). Suppose the
+  individual likelihood ratios meet their threshold. And, for
+  simplicity, suppose sensitivity and specificity of the individual
+  items of supporting evidence are the same. In this case, for
+  \(t_{LR}^{A}\) to be met, evidence \(a\) should have sensitivity (and
+  specificity) of at least 0.988. For \(t_{LR}^{B}\) to be met, evidence
+  \(b\) should have sensitivity (and specificity) of 0.978. Given these
+  values, the combined likelihood ratio equals about 145, far short from
+  the threshold \(t^{A\wedge B}_{LR}\approx 297\).} The culprit is the
+fact that \(t_{BF}\) and \(t_{LR}\) have different values when applied
+to individual claims \(A\) and \(B\) as opposed to the composite claim
 \(A \wedge B\).
 
 But not all hope is lost. Perhaps it is unsurprising that deriving the
 evidential strength threshold from the posterior probability threshold
 did not solve the problem. If there are reasons to reject the posterior
 probability threshold, these reasons also apply,
-\emph{mutatis mutandis}, to thresholds that are parasitic to it. The
-second approach we consider is more straightforward. It consists in
+\emph{mutatis mutandis}, to thresholds that are parasitic to it. Let us
+return to the first, more straightforward approach. It consists in
 fixing the evidential strength threshold independently of the posterior
 probability threshold and regardless of the prior probability of the
 hypothesis. Criminal cases would still have a higher decision threshold
 than civil cases, but the threshold would be constant across individual
-and composite claims.\footnote{ This approach raises the question of how
-  the threshold should be fixed in the first place. Since the threshold
-  is no longer derived from the posterior probability threshold,
-  standard decision theory cannot help here. We do not further examine
-  this question, since this approach is not part of our ultimate
-  solution to the conjunction paradox.} The good news is that the fixed
-threshold approach vindicates aggregation. The argument is easy. As seen
-previously, the combined evidential support is usually greater than at
-least one, if not all, individual evidential supports, whether measured
-by the Bayes factor or the likelihood ratio. So, for a fixed value of
-the threshold, whenever \(BF_A\) and \(BF_B\) meet the threshold
-\(t_{BF}\), usually also the combined Bayes factor \(BF_{AB}\) meets
-\(t_{BF}\). The same applies for the likelihood ratio threshold.
-Whenever \(LR_A\) and \(LR_B\) meet the threshold \(t_{LR}\), then
-usually also \(LR_{AB}\) meets \(t_{LR}\). Aggregation is finally
-vindicated!
+and composite claims. As noted before, however, this approach raises the
+question of how the critical thresholds should be fixed in the first
+place.\footnote{Since the threshold is no longer derived from the
+  posterior probability threshold, standard decision theory cannot help
+  here. We do not further examine this question, since this approach is
+  not part of our ultimate solution to the conjunction paradox.} But the
+good news is that the fixed threshold approach vindicates aggregation.
+The argument is easy. As seen previously, the combined evidential
+support is usually greater than at least one, if not all, individual
+evidential supports, whether measured by the Bayes factor or the
+likelihood ratio. So, for a fixed value of the threshold, whenever
+\(BF_A\) and \(BF_B\) meet the threshold \(t_{BF}\), usually also the
+combined Bayes factor \(BF_{AB}\) meets \(t_{BF}\). The same applies for
+the likelihood ratio threshold. Whenever \(LR_A\) and \(LR_B\) meet the
+threshold \(t_{LR}\), then usually also \(LR_{AB}\) meets \(t_{LR}\).
+Aggregation is finally vindicated!
 
 \hypertarget{the-failure-of-distribution}{%
 \subsection{The failure of
@@ -1109,53 +1133,59 @@ evidential strength threshold is held fixed across individual and
 composite claims, the principle of distribution becomes problematic.
 This is the other direction of the conjunction principle. Distribution
 posits that establishing the conjunction, by a governing standard of
-proof, is sufficient for establishing the individual conjuncts. This is
-a seemingly uncontroversial principle. How can it possibly fail? To be
-clear, the principle of distribution does not fail if the standard of
-proof is understood as a posterior probability threshold. After all, the
-probability of a conjunction cannot be higher than the probability of
-its conjuncts. But distribution does fail if the standard of proof is
-understood as an evidential strength threshold.
-
-For suppose the combined Bayes factor,
-\(\nicefrac{\pr{a \et b \vert A \et B}}{\pr{a \et b}}\), barely meets
-the threshold. The individual support, say
-\(\nicefrac{\pr{a \vert A}}{\pr{a}}\), could still be below the
-threshold unless \(\nicefrac{\pr{b \vert B}}{\pr{b}}=1\) (which should
-not happen if \(b\) positively supports \(B\)). The problem for
-likelihood ratio is analogous. Looking at the graphs in Figure
-\ref{fig:bfconjunction5} and Figure \ref{fig:jointLRMarcello} should be
-enough to convince oneself that this is the case. So---if the standard
-of proof is interpreted as a fixed evidential strength threshold---even
-though the conjunction \(A \et B\) was proven according to the desired
-standard, one of the individual claims might not.
-
-We have just shown that the following distribution principles fails:
+proof, is sufficient for establishing the individual conjuncts:
 \begin{align}
 S[a \wedge b, A\wedge B] \Rightarrow S[a, A] \wedge S[b, B], \tag{DIS1}
-\end{align} where \(S\) is a placeholder for the standard of proof. But,
-perhaps, principle (DIS1) is not as obviously intuitive as one might
-have thought. Since the evidence is not held constant throughout, the
-support supplied by \(a\wedge b\) could be stronger than that supplied
-by \(a\) and \(b\) individually. After all, the individual evidence
-\(a\) or \(b\) is weaker evidence than the combined evidence
-\(a\wedge b\). At least one might argue this way.
+\end{align} This is a seemingly uncontroversial principle. How can it
+possibly fail? To be clear, the principle of distribution does not fail
+if the standard of proof is understood as a posterior probability
+threshold. After all, the probability of a conjunction cannot be higher
+than the probability of its conjuncts. But distribution does fail if the
+standard of proof is understood as an evidential strength threshold.
+
+For suppose the joint Bayes factor,
+\(\nicefrac{\pr{a \et b \vert A \et B}}{\pr{a \et b}}\), barely meets
+the threshold. We have shown that, in a class of cases codified by
+\textsf{DAG1} and \textsf{DAG2}, the joint Bayes factor exceeds the
+individual ones. So, the joint Bayes factor can meet the threshold while
+the individual ones might not. The argument is analogous for the joint
+likelihood ratio and the individual ones. Looking at the graphs in
+Figure \ref{fig:bfconjunction5} and Figure \ref{fig:jointLRMarcello}
+should be enough to convince oneself that this is the case. So---if the
+standard of proof is interpreted as a fixed evidential strength
+threshold---even though the conjunction \(A \et B\) was proven according
+to the desired standard, one of the individual claims might not.
+
+We have just shown that principle (DS1) fails. But, perhaps, this
+principle is not as obviously intuitive as one might have thought. Since
+the evidence is not held constant throughout, the support supplied by
+\(a\wedge b\) could be stronger than that supplied by \(a\) and \(b\)
+individually. After all, the individual evidence \(a\) or \(b\) is
+weaker evidence than the combined evidence \(a\wedge b\). At least one
+might argue this way.
 
 To accommodate this line of reasoning, here is a weaker distribution
 principle: \begin{align}
 S[a \wedge b, A\wedge B] \Rightarrow S[a \wedge b, A] \wedge S[a\wedge b, B]. \tag{DIS2}
 \end{align}
 
-\noindent
-\mar{R: revised this bit in light of the stuff I added in the appendix.}
-This principle might seem less controversial because it holds the
-evidence constant. One would not want to claim that, while holding fixed
-evidence \(a\wedge b\), establishing the conjunction might not be enough
-for establishing one of the conjuncts. Yet, as explained in the
-appendix, (DIS2) is in no better position when it comes to the fate of
-aggregation and distribution. Distribution fails even without direct
-dependence between hypothesis, and aggregation starts to fail as soon as
-such a dependence is allowed.
+\noindent This principle holds the evidence constant throughout and
+seems less controversial. Indeed, it would be odd to say: the evidence
+establishes beyond a reasonable doubt that the defendant caused the
+victim's death \textit{and} did so intentionally, but the same evidence
+does not establish beyond a reasonable doubt that the defendant caused
+the victim's death. It would also be odd to say: the evidence
+establishes by preponderance that the defendant was speeding
+\textit{and} run a red light, but the same evidence does not establish
+by preponderance that the defendant was speeding. Yet, as explained in
+the appendix, the distribution principle (DIS2) is in no better position
+than (DIS1). If the standard of proof is understood as a fixed threshold
+on evidential strength, measured by the likelihood ratio or the Bayes
+factor, the principle (DIS2) would fail in a significant number of cases
+under \textsf{DAG1} (independent hypotheses) as well as \textsf{DAG2}
+(dependent hypotheses). This is a very serious difficulty for those who
+wish to analyze the standard of proof by means of the Bayes factor or
+the likelihood ratio.
 
 \hypertarget{the-comparative-strategy}{%
 \section{The comparative strategy}\label{the-comparative-strategy}}
@@ -1207,14 +1237,15 @@ should be suitably higher than \(\pr{H_d \vert E}\), or in other words,
 the ratio \(\nicefrac{\pr{H_p \vert E}}{\pr{H_d \vert E}}\) should be
 above a suitable threshold. Presumably, the ratio threshold should be
 higher for criminal than civil cases, for example, greater than one for
-civil cases and substantively above one for criminal cases.\footnote{In
-  the comparative approach---as Cheng (2012) shows---expected utility
-  theory can set the appropriate threshold as a function of the costs
-  and benefits of trial decisions. Suppose the costs of a false positive
-  is \(c_{FP}\) and that of a false negative is \(c_{FN}\), both greater
-  than zero. Intuitively, the decision rule should minimize the expected
-  costs (see Chapter YYY). That is, a finding against the defendant
-  would be acceptable whenever its expected
+civil cases and substantively above one for criminal
+cases.\todo{refer to earlier chapter}\footnote{In the comparative
+  approach---as Cheng (2012) shows---expected utility theory can set the
+  appropriate threshold as a function of the costs and benefits of trial
+  decisions. Suppose the costs of a false positive is \(c_{FP}\) and
+  that of a false negative is \(c_{FN}\), both greater than zero.
+  Intuitively, the decision rule should minimize the expected costs (see
+  Chapter 11). That is, a finding against the defendant would be
+  acceptable whenever its expected
   costs---\(\pr{H_d \vert E} \times c_{FP}\)---are smaller than the
   expected costs of an
   acquittal---\(\pr{H_p \vert E}\times c_{FN}\)---or in other words:
@@ -1236,11 +1267,13 @@ the negation of the other.\footnote{If two hypotheses are exclusive and
   \(\pr{H_p \vert E}>.95\), a common interpretation of proof beyond a
   reasonable doubt.}
 
-We will work through a stylized case used by Cheng himself. Suppose, in
-a civil case, the plaintiff claims that the defendant was speeding
-(\(S\)) and that the crash caused her neck injury (\(C\)). Here the
-plaintiff's hypothesis is \(S\et C\). Suppose, given evidence \(E\), the
-conjuncts, taken separately, meet the decision threshold: \begin{align}
+To see whether the comparative strategy just outlined solves the
+difficulty with conjunction, we will work through a stylized case used
+by Cheng himself. Suppose, in a civil case, the plaintiff claims that
+the defendant was speeding (\(S\)) and that the crash caused her neck
+injury (\(C\)). Here the plaintiff's hypothesis is \(S\et C\). Suppose,
+given evidence \(E\), the conjuncts, taken separately, meet the decision
+threshold: \begin{align}
  \nonumber 
  \frac{\pr{S\vert E}}{\pr{\neg S \vert E}} > 1   & & \frac{\pr{C\vert E}}{\pr{\neg C \vert E}} > 1
 \end{align} \noindent To see whether aggregation is satisfied, we check
@@ -1353,12 +1386,18 @@ hypotheses have been established by the same standard, specifically,
 whether \(\frac{\pr{E \vert C}}{\pr{E\vert \neg C}} > 1\) and
 \(\frac{\pr{E \vert S}}{\pr{E\vert \neg S}} > 1\). Focusing on a
 specific defense hypothesis, \(\n S\et \n C\), the following
-holds:\footnote{ \begin{align*}
+holds:\footnote{The total evidence \(E\) can be split into two items:
+  \(s\) (evidence for claim \(S\)) and \(c\) (evidence for claim \(C\)).
+  The inequality holds in \textsf{DAG1} and \textsf{DAG2}, by replacing
+  \(a\) and \(b\) with \(s\) and \(c\) and \(A\) and \(B\) with \(S\)
+  and \(C\), because: \begin{align*}
    \frac{\pr{E \vert S\et C}}{\pr{E\vert \n S\et \n C}} & = \frac{\pr{s \et c \vert S\et C}}{\pr{ s \et c \vert \n S\et \n C}} \\
   & =  \frac{\pr{s \vert S}\pr{c \vert C}}{\pr{ s \vert \n S} \pr{c \vert  \n C}} \\
   & =  \frac{\pr{s \et c \vert S}\pr{ s\et c \vert C}}{\pr{ s \et c \vert \n S} \pr{s\et c \vert  \n C}} \\
   & =  \frac{\pr{E \vert S}\pr{E \vert C}}{\pr{E \vert \n S} \pr{E \vert  \n C}}
-  \end{align*}} \begin{align}\label{eq:lr-multiplication-two}
+  \end{align*} The second and third steps in the derivation holds
+  because of the independencies in \textsf{DAG1} and \textsf{DAG2}.}\raf{M: I don't think this proof works. The third step does not hold in the Bayesian networks we have.}
+\begin{align}\label{eq:lr-multiplication-two}
 1 < \frac{\pr{E \vert S\et C}}{\pr{E\vert \n S\et \n C}} & = \frac{\pr{E\vert S}\pr{E\vert C}}{\pr{ E \vert \n S}\pr{E \vert \n C}}   
 \end{align}
 
