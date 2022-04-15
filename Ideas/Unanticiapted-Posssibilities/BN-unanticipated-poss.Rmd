@@ -1,0 +1,36 @@
+---
+title: "Bayes Networks for Unanticipated Possibilities"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r cars}
+library(bnlearn)
+
+dag <- empty.graph(nodes = c("H","E"))
+
+arc.set <- matrix(c("H", "E"),
+                  byrow = TRUE, ncol = 2,
+                  dimnames = list(NULL, c("from", "to"))
+                  )
+
+arcs(dag) <- arc.set
+nodes(dag)      
+arcs(dag)
+graphviz.plot(dag)
+
+H.lv <- c("affair", "friends")
+E.lv <- c("true", "false")
+H.prob <- array(c(0.1,0.9), dim = 2, dimnames = list(H = H.lv))
+E.prob <- array(c(0.9,0.1,0.5,0.5), dim = c(2,2), dimnames = list(E = E.lv, H = H.lv))
+cpt <- list(H = H.prob, E = E.prob)
+cpt
+bn <- custom.fit(dag, cpt)
+bn.fit.barchart(bn$E, main = "Travel",
+                xlab = "Pr(H | E)", ylab = "")
+```
+
+
