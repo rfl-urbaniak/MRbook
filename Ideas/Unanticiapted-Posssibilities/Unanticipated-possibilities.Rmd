@@ -295,7 +295,7 @@ Then, M and N form an exhaustive and exclusive pair. Which means that $\nicefrac
 (1) as new propositions become salient or new questions are asked, the Bayesian network is updated. Graphically, this is easy: just add or remove 
 arrows and nodes and you see fit. But how should be update the conditional probability tables? How much should we retain of the old conditional probability tables? 
 
-(2) Bayesian networks capture, to some degree, a certain causal structure among propositions. Note sure if we need the causal structure as such, but at least, they capture a probabilistic dependency. So that structure (causal or otherwise) will guide what we should retain of the old conditional probability table as we create a new, updated Bayesian network in response of awareness growth. 
+(2) Bayesian networks capture, to some degree, a certain causal structure among propositions. Note sure if we need the causal structure as such, but at least, they capture a probabilistic dependency. So that structure (causal or otherwise) will guide what we should retain of the old conditional probability table as we create a new, updated Bayesian network in response to awareness growth. 
 
 
 - Start with a simple network\[location\rightarrow perception\]. This is about something that happened (say, defendant was there versus defendant was somewhere else, so $location=there$ and $location=elsewhere$) and that witness seeing that it happened ($perception=sawDef$). We can assume that 
@@ -316,20 +316,27 @@ This will force to change also the downstream conditional probabilities, without
 
 - The above all cases of refinement, but note something old probability assignment are retained, while other times they are not retained. 
 
-- What about cases of expansion? Here reverse Bayesianism old and it can be captured by the Bayesian network with some tweaks. Start with the simple structure:
-\[E\rightarrow H\] 
-where $H$ hs two values, say $John$ and $Sue$. These are the two suspects. ASnd suppose that given the evidence one is more likely the culprit than the other. So, $\pr{E \vert H=John}>>>>\pr{E \vert H=Sue}$. Say the ratio is 10:1.But now other hypothesis comes along, say $H=Ela$, which seems much more plausible than either of the other two.  We want to retain that $H=John$ is more plausible than $H=Sue$, but also further information about $H=Ela$. This is a bit trickly but doable with a Bayesina network. 
+- What about cases of expansion? Here reverse Bayesianism holds and what goes on can be captured by the Bayesian network approach with some tweaks. Start with the simple structure:
+\[E\leftarrow H\] 
+where $H$ has two values, say $John$ and $Sue$. These are the two suspects. And suppose that given the evidence one is more plausibly the culprit than the other. So, $\pr{E \vert H=John}>>>>\pr{E \vert H=Sue}$. Say the ratio is 10:1. But now another hypothesis comes along, say $H=Ela$, which seems more plausible than either of the other two.  We want to retain that $H=John$ is more plausible than $H=Sue$, but also add the further information about $H=Ela$. This is tricky but doable with a Bayesian network.  Basically: 
+
+    (a) node $H$ is morphed onto =$H^*$ which now has three values instead of just two, adding $Ela$ as a possible value. 
+
+    (b) the arrow from $H$ to $E$ is removed and instead we have an arrow from $H^*$ to $E$. We now assess the evidence relative to $H^*$, no longer just $H$.
+    
+    \[E\leftarrow H^* \rightarrow H\] 
+
+    (c) we add an arrow that goes from $H^*$ to $H$, ensuring that $\pr{H=Joe \vert H^*=Joe}=1$ and
+$\pr{H=Sue \vert H^*=Joe}=0$, $\pr{H=Joe \vert H^*=Sue}=0$ and
+$\pr{H=Sue \vert H^*=Sue}=1$, and finally, $\pr{H=Joe \vert H^*=Ela}=0$ and
+$\pr{H=Sue \vert H^*=Ela}=0$. So that should ensure that the new value $Ela$ relates to the old values properly. 
+
+    (d) We ensure that $\pr{E \vert H=Sue}:\pr{E \vert H=Joe}=\pr{E \vert H^*=Sue}: \pr{E \vert H^*=Joe}$. So this is the conservativity that we put in place before and after the awareness growth. 
+
+- The more complicated examples by Steele and Stefansson can be handled by a similar construction.
 
 
-
-
-
-
-
-
-
-
-- This approach based on the causal structure should also be to handle the Mathani's cases. 
+- This approach based on the causal structure of the Bayesian network should also be to handle the Mathani's cases. 
 
 
 
