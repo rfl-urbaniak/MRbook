@@ -1,7 +1,6 @@
 install.packages("https://www.bnlearn.com/releases/bnlearn_latest.tar.gz", 
                  repos = NULL, type = "source")
 install.packages("BiocManager")
-
 if (!requireNamespace("BiocManager", quietly = TRUE))
   install.packages("BiocManager")
 BiocManager::install()
