@@ -6,14 +6,7 @@ library(ggthemes)
 library(gridExtra)
 library(rethinking)
 
-plotDistroPlain <- function(distro, title, mult = 1.2) {
-  plot <-  ggplot()+theme_tufte()+xlab("parameter values")+
-    ylab("probability")+theme(plot.title.position = "plot")+
-    ggtitle(title)+
-    geom_line(aes(x = ps,y = distro))+
-    ylim(c(0,mult * max(distro)))
-  return(plot)
-}
+
 
 
 setwd("imprecision_weight/")
@@ -61,6 +54,44 @@ SCfenton <- custom.fit(SallyClarkDAG,SallyClarkCPTfenton)
 
 
 
+#evidential stages with Fenton's BN
+
+SCfJN <- compile(as.grain(SCfenton))
+
+priorFenton <- querygrain(SCfJN, node = "Guilty")[[1]][1]
+
+SCfJNAbruising <- setEvidence(SCfJN, nodes = c("Abruising"), states = c("Yes"))
+(AbruisingFenton <- querygrain(SCfJNAbruising, node = "Guilty")[[1]][1])
+
+SCfJNAbruisingBbruising <- setEvidence(SCfJN, nodes = c("Abruising","Bbruising"),
+                                states = c("Yes","Yes"))
+
+(AbruisingBbruisingFenton <- querygrain(SCfJNAbruisingBbruising, node = "Guilty")[[1]][1])
+
+SCfJNAbruisingBbruisingNoDisease <- setEvidence(SCfJN, nodes = c("Abruising","Bbruising","Adisease","Bdisease"),
+                                         states = c("Yes","Yes", "No", "No"))
+(AbruisingBbruisingFentonNoDiseaseFenton <-   querygrain(SCfJNAbruisingBbruisingNoDisease, node = "Guilty")[[1]][1])
+
+
+SCfJNAbruisingBbruisingDiseaseA <- setEvidence(SCfJN, nodes = c("Abruising","Bbruising","Adisease","Bdisease"), 
+                                               states = c("Yes","Yes", "Yes", "No"))
+(AbruisingBbruisingFentonDiseaseAFenton <- querygrain(SCfJNAbruisingBbruisingDiseaseA, node = "Guilty")[[1]][1])
+
+
+SCfentonTable <- data.frame(stage = factor(c("prior", "bruising in A", "bruising in both",
+                                      "bruising in both, no disease", "bruising in both, disease on A only"),
+                                      levels = c("prior", "bruising in A", "bruising in both",
+                                                 "bruising in both, no disease", "bruising in both, disease on A only")),
+                            probability = c(priorFenton,AbruisingFenton,AbruisingBbruisingFenton,
+                                            AbruisingBbruisingFentonNoDiseaseFenton,AbruisingBbruisingFentonDiseaseAFenton))
+
+
+
+ggplot(SCfentonTable) + geom_point(aes(x = stage, y = probability, size = probability))+
+  scale_x_discrete(limits=rev, expand = c(0, 2)) +coord_flip()+theme_tufte(base_size = 14)+ scale_size(guide="none")+
+  theme(plot.title.position = "plot")+ggtitle("Impact of evidence according to Fenton's BN for the Sally Clark case") +
+  geom_text(aes(x = stage, y= probability, label= round(probability,2) ,hjust=-.45, vjust=-.4), size  = 4)+
+  scale_y_continuous(breaks = seq(0,.7, by =.1), limits = c(0,.8))
 
 
 
@@ -69,43 +100,6 @@ n <- 1000
 ps <- seq(0,1,  length.out =n)
 
 
-distroNorm <- function(mean, sigma){
-distro <-   dnorm(ps, mean, sigma)
-distro <- distro/sum(distro)
-return(distro)
-}
-
-sampleNorm <- function(mean, sigma){
-  sample(ps, size = 1e4, replace = TRUE,prob = distroNorm(mean,sigma))
-}
-
-
-distroBeta <- function(a, b){
-  distro <-   dbeta(ps, a, b)
-  distro <- distro/sum(distro)
-  return(distro)
-}
-
-
-sampleBeta <- function(a, b){
-  sample(ps, size = 1e4, replace = TRUE,prob = distroBeta(a,b))
-}
-
-
-plotSample <- function (sample, title, subtitle){
-  ggplot()+theme_tufte()+xlab(expression(theta))+
-    ylab("density")+theme(plot.title.position = "plot")+
-    ggtitle(title)+
-    geom_density(aes(x = sample ))+
-    labs(title = title, subtitle = subtitle)
-  }
-
-
-distroFromSamples <- function (samples){
-distro <-  density(samples, n = 1000)$y
-distro <- distro/sum(distro)
-return(distro)
-}
 
 
 
@@ -113,58 +107,33 @@ return(distro)
 
 set.seed(66)
 AsidsPrior <- sampleBeta(8,1)
-AsidsPriorPlot <- plotSample(AsidsPrior, "Asids prior", paste("Beta(9,1), median =", round(median(AsidsPrior),2), sep = "") )
-
 AbruisingIfSids <- sampleNorm(.02,.04)
-AbruisingIfSidsPlot <- plotSample(AbruisingIfSids, "AbruisingIfSids", 
-                                  paste("Norm(.02,.04), median =", round(median(AbruisingIfSids),2), sep = "") )
-
 AbruisingIfMurder <- sampleBeta(5,30)
-AbruisingIfMurderPlot <- plotSample(AbruisingIfMurder, "AbruisingIfMurder",
-                                    paste("Beta(5,30), median =", round(median(AbruisingIfMurder),2), sep = "") )
 AbruisingIfMurderPlot
 
 
 AdiseaseIfSids <- sampleNorm(.07,.3)
-AdiseaseIfSidsPlot <- plotSample(AdiseaseIfSids, "AdiseaseIfSids",
-                                    paste("Norm(.07,.3), median =", round(median(AdiseaseIfSids),2), sep = "") )
-
 
 AdiseaseIfMurder <- sampleNorm(.002,.05)
-AdiseaseIfMurderPlot <- plotSample(AdiseaseIfMurder, "AdiseaseIfMurder",
-                                 paste("Norm(.002,.05), median =", round(median(AdiseaseIfMurder),2), sep = "") )
 
 
 BbruisingIfSids <- sampleNorm(.02,.04)
-BbruisingIfSidsPlot <- plotSample(BbruisingIfSids, "BbruisingIfSids",
-                                   paste("Norm(.03,.08), median =", round(median(BbruisingIfSids),2), sep = "") )
 
 
 BbruisingIfMurder <- sampleBeta(6,4)
-BbruisingIfMurderPlot <- plotSample(BbruisingIfMurder, "BbruisingIfMurder",
-                                  paste("Norm(.03,.08), median =", round(median(BbruisingIfMurder),2), sep = "") )
 
 
 
 BdiseaseIfSids <- sampleNorm(.07,.3)
-BdiseaseIfSidsPlot <- plotSample(BdiseaseIfSids, "BdiseaseIfSids",
-                                    paste("Norm(.03,.08), median =", round(median(BdiseaseIfSids),2), sep = "") )
 
 
 BdiseaseIfAmurder   <- sampleNorm(.002,.05)
-BdiseaseIfAmurderPlot <- plotSample(BdiseaseIfAmurder, "BdiseaseIfAmurder",
-                                   paste("Norm(.002,.05), median =", round(median(BdiseaseIfAmurder),2), sep = "") )
 
 
 BcauseSidsIfAsids  <- sampleBeta(15,4)
-BcauseSidsIfAsidsPlot <- plotSample(BcauseSidsIfAsids, "BcauseSidsIfAsids",
-                                   paste("Norm(.002,.05), median =", round(median(BcauseSidsIfAsids),2), sep = "") )
 
 BcauseSidsIfAmurder <- sampleNorm(.0015,.04)
-BcauseSidsIfAmurderPlot <- plotSample(BcauseSidsIfAmurder, "BcauseSidsIfAmurder",
-                                   paste("Norm(.002,.05), median =", round(median(BcauseSidsIfAmurder),2), sep = "") )
 
-BcauseSidsIfAmurderPlot
 
 
 
@@ -181,8 +150,6 @@ SCprobsDF <- data.frame(AsidsPrior = AsidsPrior,
                         BcauseSidsIfAmurder = BcauseSidsIfAmurder) 
 
 SCBNs <- list()
-
-nrow(SCprobsDF)
 
 startTime <- Sys.time()
 for(i in 1: nrow(SCprobsDF)){
@@ -212,133 +179,97 @@ SCcpt <- list(Acause=AcauseP,Adisease = AdiseaseP,
 SCBNs[[i]] <- custom.fit(SCdag,SCcpt)
 }
 endTime <- Sys.time()
-time <- endTime - startTime
+timeBuildingBNs <- endTime - startTime
 
 
-time
+timeBuildingBNs
 
 
-#priors
-startTime <- Sys.time()
+#adding probabilities to DF
+
 GuiltPrior <- numeric(length(SCBNs))
-i <- 1
-for (i in 1:length(SCBNs)){
-SCJN <- compile(as.grain(SCBNs[[i]]))
-GuiltPrior[i] <- querygrain(SCJN, node = "Guilty")[[1]][1]
-}
-endTime <- Sys.time()
-time <- endTime - startTime
 
 
+AbruisingPrior <- numeric(length(SCBNs))
+AdiseasePrior <- numeric(length(SCBNs))
 
-GuiltPriorPlot <- plotSample(GuiltPrior, "GuiltPrior",
-                          paste("Norm(median =", 
-                   round(median(GuiltPrior),2), ", 89%HPDI = ", round(HPDI(GuiltPrior),2)[1],"-",round(HPDI(GuiltPrior),2)[2], sep = "") )
-
-GuiltPriorPlot
-
-
-#bruising on A
-startTime <- Sys.time()
 GuiltAbruising <- numeric(length(SCBNs))
+GuiltAbruisingNo <- numeric(length(SCBNs))
+
+GuiltAdisease <- numeric(length(SCBNs))
+GuiltAdiseaseNo <- numeric(length(SCBNs))
+
+GuiltABbruising <- numeric(length(SCBNs))
+GuiltABbruisingNoDisease <- numeric(length(SCBNs))
+
+GuiltABbruisingDiseaseA <- numeric(length(SCBNs))
+
+
+
+startTime <- Sys.time()
 for (i in 1:length(SCBNs)){
-SCJN <- compile(as.grain(SCBNs[[i]]))
+  
+
+  SCJN <- compile(as.grain(SCBNs[[i]]))
+GuiltPrior[i] <- querygrain(SCJN, node = "Guilty")[[1]][1]
+AbruisingPrior[i] <- querygrain(SCJN, node = "Abruising")[[1]][1]
+AdiseasePrior[i] <- querygrain(SCJN, node = "Adisease")[[1]][1]
+
+
+#Abruising Yes
 SCJNA <- setEvidence(SCJN,nodes = c("Abruising"), states = c("Yes"))
 GuiltAbruising[i] <- querygrain(SCJNA, node = "Guilty")[[1]][1]
+
+GuiltAbruising[i]
+
+#Abruising No
+SCJNANo <- setEvidence(SCJN,nodes = c("Abruising"), states = c("No"))
+GuiltAbruisingNo[i] <- querygrain(SCJNANo, node = "Guilty")[[1]][1]
+
+
+#Adisease Yes
+SCJNAd <- setEvidence(SCJN,nodes = c("Adisease"), states = c("Yes"))
+GuiltAdisease[i] <- querygrain(SCJNAd, node = "Guilty")[[1]][1]
+
+#Adisease No
+SCJNAdNo <- setEvidence(SCJN,nodes = c("Adisease"), states = c("No"))
+GuiltAdiseaseNo[i] <- querygrain(SCJNAdNo, node = "Guilty")[[1]][1]
+
+
+#Bruising in both
+SCJNAB <- setEvidence(SCJN,nodes = c("Abruising", "Bbruising"), states = c("Yes","Yes"))
+GuiltABbruising[i] <- querygrain(SCJNAB, node = "Guilty")[[1]][1]
+
+#Bruising in both no disease
+SCJNABNoDisease <- setEvidence(SCJN, nodes = c("Abruising","Bbruising","Adisease","Bdisease"),
+                               states = c("Yes","Yes", "No", "No"))
+
+GuiltABbruisingNoDisease[i] <- querygrain(SCJNABNoDisease, node = "Guilty")[[1]][1]
+
+#bruising in bith disease in first
+SCJNABDiseaseA <- setEvidence(SCJN, nodes = c("Abruising","Bbruising","Adisease","Bdisease"),
+                              states = c("Yes","Yes", "Yes", "No"))
+
+GuiltABbruisingDiseaseA[i] <- querygrain(SCJNABDiseaseA, node = "Guilty")[[1]][1]
 }
 endTime <- Sys.time()
-time <- endTime - startTime
-
-time
+timeProbs <- endTime - startTime
 
 
+timeProbs
 
-GuiltAbruisingPlot <- plotSample(GuiltAbruising, "GuiltAbruising",
-                             paste("median =", 
-                                   round(median(GuiltAbruising),2), ", 89%HPDI = ", round(HPDI(GuiltAbruising),2)[1],"-",
-                                   round(HPDI(GuiltAbruising),2)[2], sep = "") )
-
-
-GuiltAbruisingPlot
-
-
-#bruising on both
-startTime <- Sys.time()
-GuiltABbruising <- numeric(length(SCBNs))
-for (i in 1:length(SCBNs)){
-  SCJN <- compile(as.grain(SCBNs[[i]]))
-  SCJNAB <- setEvidence(SCJN,nodes = c("Abruising", "Bbruising"), states = c("Yes","Yes"))
-  GuiltABbruising[i] <- querygrain(SCJNAB, node = "Guilty")[[1]][1]
-}
-endTime <- Sys.time()
-time <- endTime - startTime
-
-time
-
-
-GuiltABbruisingPlot <- plotSample(GuiltABbruising, "GuiltABbruising",
-                                 paste("median =", 
-                                       round(median(GuiltABbruising),2), ", 89%HPDI = ", round(HPDI(GuiltABbruising),2)[1],"-",
-                                       round(HPDI(GuiltABbruising),2)[2], sep = "") )
-
-
-GuiltABbruisingPlot
+saveRDS(SCBNs, "datasets/SCBNs.rds")
 
 
 
-
-#Also, no disease
-startTime <- Sys.time()
-GuiltABbruisingNoDisease <- numeric(length(SCBNs))
-for (i in 1:length(SCBNs)){
-  SCJN <- compile(as.grain(SCBNs[[i]]))
-  SCJNABNoDisease <- setEvidence(SCJN, nodes = c("Abruising","Bbruising","Adisease","Bdisease"),
-                        states = c("Yes","Yes", "No", "No"))
-  GuiltABbruisingNoDisease[i] <- querygrain(SCJNABNoDisease, node = "Guilty")[[1]][1]
-}
-endTime <- Sys.time()
-time <- endTime - startTime
-
-time
+SCprobsFinal <- cbind(SCprobsDF,GuiltPrior, AbruisingPrior, AdiseasePrior,
+                      GuiltAbruising,  GuiltAbruisingNo, GuiltAdisease,  
+                      GuiltAdiseaseNo, GuiltABbruising,
+                      GuiltABbruisingNoDisease,
+                      GuiltABbruisingDiseaseA)
 
 
-
-GuiltABbruisingNoDiseasePlot <- plotSample(GuiltABbruisingNoDisease, "GuiltABbruisingNoDisease",
-                                  paste("median =", 
-                                        round(median(GuiltABbruisingNoDisease),2), ", 89%HPDI = ", round(HPDI(GuiltABbruisingNoDisease),2)[1],"-",
-                                        round(HPDI(GuiltABbruisingNoDisease),2)[2], sep = "") )
-
-
-GuiltABbruisingNoDiseasePlot
-
-
-#now, with disease in Child A
-startTime <- Sys.time()
-GuiltABbruisingDiseaseA <- numeric(length(SCBNs))
-for (i in 1:length(SCBNs)){
-  SCJN <- compile(as.grain(SCBNs[[i]]))
-  SCJNABDiseaseA <- setEvidence(SCJN, nodes = c("Abruising","Bbruising","Adisease","Bdisease"),
-                                 states = c("Yes","Yes", "Yes", "No"))
-  GuiltABbruisingDiseaseA[i] <- querygrain(SCJNABDiseaseA, node = "Guilty")[[1]][1]
-}
-endTime <- Sys.time()
-time <- endTime - startTime
-
-time
-
-
-
-
-GuiltABbruisingDiseaseAPlot <- plotSample(GuiltABbruisingDiseaseA, "GuiltABbruisingDiseaseA",
-                                           paste("median =", 
-                                                 round(median(GuiltABbruisingDiseaseA, na.rm=TRUE),2), ", 89%HPDI = ", 
-                                                 round(HPDI(GuiltABbruisingDiseaseA),2)[1],"-",
-                                                 round(HPDI(GuiltABbruisingDiseaseA),2)[2], sep = "") )
-
-
-GuiltABbruisingDiseaseAPlot
-
-
+saveRDS(SCprobsFinal, "datasets/SCprobsFinal.rds")
 
 
 
