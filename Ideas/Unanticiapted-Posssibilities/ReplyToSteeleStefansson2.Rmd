@@ -15,15 +15,20 @@ classoption: dvipsnames,enabledeprecatedfontcommands
 fontsize: 11pt
 documentclass: scrartcl
 urlcolor: blue
-bibliography: [/Users/mdibello/Desktop/Book-Legal-Prob/references/referencesMRbook.bib]
-csl: [/Users/mdibello/Desktop/Book-Legal-Prob/references/apa-6th-edition.csl]
+bibliography: referencesMRbook.bib
+csl: apa-6th-edition.csl
 indent: true
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(dagitty)
+library(rethinking)
 ```
 
+
+<!-- [/Users/mdibello/Desktop/Book-Legal-Prob/references/referencesMRbook.bib] -->
+<!-- [/Users/mdibello/Desktop/Book-Legal-Prob/references/apa-6th-edition.csl] -->
 
 # Introduction
 
@@ -53,9 +58,11 @@ different names for quite some time, at least since the eighties. This problem a
 of different contexts, for example, new scientific theories (Glymour, 1980, Why I am not a Bayesian; Chihara 1987, Some Problems for Bayesian Confirmation Theory; Earmann 1992, Bayes of Bust?), language changes
  and paradigm shifts (Williamson 2003, Bayesianism and Language Change), and theories of induction (Zabell, Predicting the Unpredictable).
 
-Now, of course, the algebra of propositions could in principle be so rich to contain anything that could possibly be conceived, expressed, thought of. Such an algebra would not need to change at any point in the future. God-like agents could be associated with such rich algebra of propositions, but this is hardly a plausible model of ordinary agents with bounded resources such as ourselves. To be sure, the algebra of propositions need not be so narrowly construed that it only contains propositions that are presently under consideration. The algebra may also contain propositions about which, even though they are not the object to present consideration, the agent has already formed, perhaps simplicity, a certain disposition to believe. In any event, a fully comprehensive algebra of propositions cannot be the answer here.
+Now, of course, the algebra of propositions could in principle be so rich to contain anything that could possibly be conceived, expressed, thought of. Such an algebra would not need to change at any point in the future. God-like agents could be associated with such rich algebra of propositions, but this is hardly a plausible model of ordinary agents with bounded resources such as ourselves. To be sure, the algebra of propositions need not be so narrowly construed that it only contains propositions that are presently under consideration. The algebra may also contain propositions about which, even though they are not the object to present consideration, the agent has already formed, perhaps simplicity, a certain disposition to believe. If, however, we have actual applications of probabilistic tools in mind, this is not a promising strategy. We are not God-like agents, probabilistic models are small-world models always restricted to a pre-specified set of variables, and some guidance as to how these should be revised when our awareness changes without the unrealistic assumption of us already having had the right algebra and probabilities to start with is desirable.
 
-A proposal that has attracted considerable scholarly attention in recent years is Reverse Bayesianism (Karni and Viero, 2015, Probabilistic Sophistication and Reverse Bayesianism; Wenmackers and Romeijn 2016, New Theory About Old Evidence; Bradely 2017, Decision Theory with A Human Face) . The idea  is to model awareness growth as a change in the algebra while ensuring that the probabilities of the propositions shared between the old and new algebra remain fixed under suitable constraints.  
+
+
+A proposal that has attracted considerable scholarly attention in recent years is Reverse Bayesianism (Karni and Viero, 2015, Probabilistic Sophistication and Reverse Bayesianism; Wenmackers and Romeijn 2016, New Theory About Old Evidence; Bradely 2017, Decision Theory with A Human Face) . The idea  is to model awareness growth as a change in the algebra while ensuring that the proportions of probabilities of the propositions shared between the old and new algebra remain the same in the sense to be specified.
 
 Let $\mathcal{F}$ be the initial algebra of propositions and let $\mathcal{F}^+$ the algebra after the agent's awareness state has grown.  Both algebras contain the contradictory and tautologous propositions $\perp$ and $\top$, and they are closed under connectives such as disjunction $\vee$, conjunction $\wedge$ and negation $\neg$. Denote by $X$ and $X^+$ the subsets of these algebras that contain only basic propositions, namely those without connectives. <!---Since   $\mathcal{F}\subseteq \mathcal{F}^+$, then also $X\subseteq X^+$. --->  \textbf{Reverse Bayesianism} posits that the ratio of probabilities for any basic propositions $A$ and $B$ in both $X$ and $X^+$---the basic propositions shared by the old and new algebra---remain constant through the process of awareness growth:
 \[\frac{\pr{A}}{\pr{B}} = \frac{\ppr{+}{A}}{\ppr{+}{B}},\] 
@@ -69,7 +76,10 @@ As the awareness state of an an agent grows, the agent would prefer not to throw
 Unfortunately, Reverse Bayesianism is not without complications. Steele and Stefánsson (2021, Belief Revision for Growing Awareness) argue that Reverse Bayesianism, when suitably formulated, can work in a limited class of cases, what they call \textit{awareness expansion}, but cannot work for \textit{awareness refinement} (more on this distinction later). Their argument rests on a number of ingenious counterexamples. 
 <!---We contend, however, that their counterexamples have limited applicability and thus constitute an overall weak argument against Reverse Bayesianism (\S \ \ref{sec:counterexamples}). --->
 
-We share Steele and Stefánsson's skepticism toward Reverse Bayesianism, but also believe their counterexamples have limited applicability. To remedy that, we strengthen their argument by providing a simpler counterexample that is less prone to objections (\S \ \ref{sec:counterexamples}) <!---(\S \ \ref{sec:better})--->. At the same time, we conjecture that the problem of awareness growth cannot be tackled in an algorithmic manner because subject-matter structural assumptions need to be made explicit. Thanks to its ability to model probabilistic dependencies, we think that the theory of Bayesian networks can help to theorize about awareness growth in the Bayesian framework. We offer two illustrations of this claim. First, we provide an example of awareness growth refinement that it is structurally different from other cases of refinement (\S \ \ref{sec:downstream}). Second, we model two scenarios from Anna Mathani, both intended to challenge Reverse Bayesianism (\S \ \ref{sec:mathani}). As we will see, Bayesian networks allow us to see more clearly which probability assignments should be retained during awareness growth and which ones should be modified. The choice is guided by how each scenario is modeled, not by general formal constraints. 
+We share Steele and Stefánsson's skepticism toward Reverse Bayesianism, but also believe their counterexamples have limited applicability.  We strengthen their argument by providing a simpler counterexample that is less prone to objections (\S \ \ref{sec:counterexamples}) <!---(\S \ \ref{sec:better})--->. At the same time, we conjecture that the problem of awareness growth cannot be tackled in an algorithmic manner because subject-matter assumptions, both probabilistic and structural, need to be made explicit. Thanks to its ability to model probabilistic dependencies, we think that the theory of Bayesian networks can help to theorize about awareness growth in the Bayesian framework. We offer two illustrations of this claim. First, we provide an example of awareness growth refinement that it is structurally different from other cases of refinement (\S \ \ref{sec:downstream}). Second, we model two scenarios from Anna Mathani, both intended to challenge Reverse Bayesianism (\S \ \ref{sec:mathani}). As we will see, Bayesian networks allow us to see more clearly which probability assignments should be retained during awareness growth and which ones should be modified. The choice is guided by the underlying structure of the scenarios, requires material knowledge and does not fall out from purely formal constraints. 
+
+
+
 
 <!---Our critique of Reverse Bayesianism is thus more fine-grained than Steele and Stefánsson's. Ultimately,  (\S \ \ref{sec:material}).  --->
 
@@ -130,7 +140,7 @@ Awareness Rigidity would require that:
  --->
 And conditional on $\neg\textit{Surprise}$, the probability of \textit{Affair} does not change. Thus,
 \[\ppr{+}{\textit{Affair} \vert  \textit{Secretive} \& \neg\textit{Surprise} } > \ppr{+}{\textit{Friends/acquaintances} \vert \textit{Secretive} \& \neg\textit{Surprise}}. \]
-Awareness Rigidity is vindicated. Reverse Bayesianism---the spirit of it, not the letter---stands.
+Awareness Rigidity is satisfied. Reverse Bayesianism---the spirit of it, not the letter---stands.
 
 This is not the end of the story, however. Steele and Stefánsson offer another counterexample that also works against Awareness Rigidity, this time targeting a case of refinement:
 
@@ -155,10 +165,12 @@ Note that this counterexample is a case of refinement. First, you categorize mov
 
 This is all well and good, but how strong of a counterexample is this? Steele and Stefánsson consider an objection:
 
-  > It might be argued that our examples are not illustrative of ... a simple growth in awareness; rather, our examples illustrate and should be expressed 
+\begin{quote}It might be argued that our examples are not illustrative of \dots a simple growth in awareness; rather, our examples illustrate and should be expressed 
   formally as complex learning experiences, where first there is a growth in awareness, and then 
   there is a further learning event ... In this way, one could argue that the awareness-growth 
-  aspect of the learning event always satisfies Reverse Bayesianism 
+  aspect of the learning event always satisfies Reverse Bayesianism.
+\end{quote}
+  
  
  \noindent 
 Admittedly, \textsc{Movies} 
@@ -210,13 +222,24 @@ the defendant was actually around the crime scene. After your awareness has grow
 
 \noindent
 This scenario is simpler because it consists of mere refinement. You wonder about the lighting conditions but you do not learn what they were.^[Strictly speaking, you are learning that it is *possible* that 
-the lighting conditions were bad. However, you do not condition on the proposition 'the lighting conditions were bad' or 'the lighting conditions were good' and thus you do not learn about the lighting conditions in the Bayesian sense.] Still, mere refinement in this scenario challenges Reverse Bayesianism and Awareness Rigidity. That this should be so is not easy to see. Fortunately, the theory of Bayesian networks helps to see why. 
+the lighting conditions were bad. However, you do not condition on the proposition 'the lighting conditions were bad' or 'the lighting conditions were good' as if you learned it with certainty, and thus you do not learn about the lighting conditions in the sense in which learning is understood in this paper.] Still, mere refinement in this scenario challenges Reverse Bayesianism and Awareness Rigidity. That this should be so is not easy to see. Fortunately, the theory of Bayesian networks helps to see why. 
 
 A Bayesian network is a formal model that consists of a graph accompanied by a probability distribution. The nodes in the graph represent random variables that can take different values. We will use 'nodes'  and 'variables' interchangeably. The nodes are connected by arrows, but no loops are allowed, hence the name direct acyclic graph (DAG). Bayesian networks are relied upon in many fields, but have been little used to model awareness growth.  We think instead they are a good framework for this purpose. Awareness growth can be modeled as a change in the graphical network---nodes and arrows are added or erased---as well as a change in the probability distribution from the old to the new network. 
 
-To model the scenario \textsc{Lighting} with Bayesian networks, 
-we start with this graph: 
-\[H \rightarrow E,\]
+To model  \textsc{Lighting} with Bayesian networks, 
+we start with this graph, which is the usual hypothesis-evidence idiom: 
+<!-- \[H \rightarrow E,\] -->
+
+```{r heDAG,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "50%", out.height= "30%"}
+lighting1DAGitty  <- dagitty("
+    dag{
+        H -> E
+      }")
+coordinates(lighting1DAGitty) <- list(x = c(H = 0, E = 1), y = c(H = 1, E = 1))
+drawdag(lighting1DAGitty , shapes =  list(H = "c", E = "c")) 
+```
+
+
 where $H$ is the hypothesis node and $E$ the evidence node. If an arrow goes from $H$ to $E$, the probability distribution associated with the Bayesian network should be defined by 
 conditional probabilities of the form $\pr{E=e \vert H=h}$, where uppercase letters represent the variables (nodes) and lower case letters represent the values of these variables.^[A major point of contention in the interpretation of Bayesian networks is is the meaning of the directed arrows. They could be interpreted causally---as though the direction of causality proceeds from the events described by the hypothesis to event described by the evidence---but they need not be. REFERENCES?] 
 Since you trust the evidence, you think that it is more likely under the hypothesis that the defendant was present at the crime scene than under the alternative hypothesis: 
@@ -229,8 +252,22 @@ Since you trust the evidence, you think that it is more likely under the hypothe
 
 Now, as you wonder about the lighting conditions,  the graph should 
 be amended:
-\[H \rightarrow E \leftarrow L,\]
-where the node $L$ can have two values, 
+<!-- \[H \rightarrow E \leftarrow L,\] -->
+
+```{r lighting2DAG,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "50%", out.height= "30%"}
+lighting2DAGitty  <- dagitty("
+    dag{
+        H -> E <- L
+      }")
+
+coordinates(lighting2DAGitty) <- list(x = c(H = 0, E = 1, L = 2), y = c(H = 0, E = 1, L = 0))
+drawdag(lighting2DAGitty , shapes =  list(H = "c", E = "c", L = "c")) 
+```
+
+
+
+
+\noindent where the node $L$ can have two values, 
 \textit{L=good} and \textit{L=bad}. A plausible way to update your 
 assessment of the evidence is as follows:
 \[\ppr{+}{\textit{E=seen} \vert \textit{H=present} \wedge \textit{L=good}} > \ppr{+}{\textit{E=seen} \vert \textit{H=absent} \wedge \textit{L=good}}\]
@@ -293,13 +330,13 @@ where $\ppr{\textit{E=seen}}{}$ and $\ppr{+, \textit{E=seen}}{}$ represent the a
 Unlike \textsc{Movies}, the counterexample \textsc{Lighting} works even though it only depicts
 a case of awareness growth that consists in refinement without learning. Defenders of Reverse Bayesianism and Awareness Rigidity can no longer claim that their theories work when awareness growth is not intertwined 
 with learning. So, Steele and Stefánsson's critique of these theories 
-sits now on firmer ground. But there is a more general lesson to be learned here. 
+sits now on a firmer ground. But there is a more general lesson to be learned here. 
 It has to do with the importance of modeling structural assumptions and the 
 role of Bayesian networks in theorizing about awareness growth.
 
-Steele and Stefánsson's arguemnt relies on the distinction between cases of awareness 
+Steele and Stefánsson's argument relies on the distinction between cases of awareness 
 and cases of expansion. Both \textsc{Movies} and \textsc{Lighting} are cases 
-of refinement, and they both violate Reverse Bayesianism. \textsc{Friends}, instead, is a case of expansion and does not violate Reverse Bayesian (understood as Awareness Rigidity). But this categorization is needlessly simplistic. As we shall now see, not all cases of refinement are the same, and it is important to understand and be able to model the structural differences that may arise between them. To illustrate what is at issue, consider this variation of the \textsc{Lighting} scenario:
+of refinement, and they both violate Reverse Bayesianism. \textsc{Friends}, instead, is a case of expansion and does not violate Reverse Bayesian (understood as Awareness Rigidity). But this categorization is too simple. As we shall  see, not all cases of refinement are the same, and it is important to understand and to be able to model the structural differences that may arise between them. To illustrate what is at issue, consider this variation of the \textsc{Lighting} scenario:
 
   > \textsc{Veracity}: A witness saw that the defendant was around the crime scene and you initially took this to be evidence that the witness was actually there. But then you worry that the witness might be lying or misremembering what happened. Perhaps, the witness was never there, made things up or mixed things up. 
   But despite that, you do not change anything of your initial assessment of the evidence. 
@@ -310,19 +347,30 @@ Once again, Bayesian networks prove to be a
 good analytic tool here. 
 
 The graphical network should initially look 
-like this:
-\[H\rightarrow E\]
-But, as your awareness grows, 
+like the initial DAG for \textsc{Lighting}.  But, as your awareness grows, 
 the graphical network should be updated:
-\[H\rightarrow E \rightarrow R\]
+
+
+
+```{r veracityDAG,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "50%", out.height= "30%"}
+veracityDAGitty  <- dagitty("
+    dag{
+        H -> E -> R
+      }")
+
+coordinates(veracityDAGitty) <- list(x = c(H = 0, E = 1, R = 2), y = c(H = 0, E = 0, R = 0))
+drawdag(veracityDAGitty , shapes =  list(H = "c", E = "c", R = "c")) 
+
+```
+
+<!-- \[H\rightarrow E \rightarrow R\] -->
 The hypothesis node $H$ bears on the 
 whereabouts of the defendant. Note the difference between $E$ and $R$. The evidence node bears on what the witness saw. The reporting node bears on what the witness reports to have seen. The chain of transmission from 'seeing' to 'reporting' may fail for various reasons, such as lying or confusion. 
 
-Even if \textsc{Veracity} is a case of refinement, the old and new probability functions agree with one another completely. The conditional probabilities, $\pr{E=e \vert H=h}$ should be the same as $\ppr{+}{E=e \vert H=h}$ for any values $e$ and $h$ of the variables $H$ and $E$ that are shared before and after awareness growth. Given the dependency structure of the two Bayesian networks---first, $H\rightarrow E$ and then $H\rightarrow E \rightarrow R$---the equality is easy to establish formally.^[GIVE PROOF]
-Thus, Reverse Bayesianism and Awareness Rigidity are perfectly fine in
-scenarios like \textsc{Veracity}.
+Even if \textsc{Veracity} is a case of refinement, the old and new probability functions agree with one another completely. The conditional probabilities, $\pr{E=e \vert H=h}$ should be the same as $\ppr{+}{E=e \vert H=h}$ for any values $e$ and $h$ of the variables $H$ and $E$ that are shared before and after awareness growth. In the Bayesian network, this falls out from   its structure, as the connection between $H$ and $E$ remains unchanged. Thus, Reverse Bayesianism and Awareness Rigidity are perfectly fine in
+scenarios such as \textsc{Veracity}.
 
-A possible confusion should be eliminated at this point. We do not intend to suggest that the assessment of the probability of the hypothesis \textit{H=present} should undergo no change at all. If you worry that the witness could have lied, shouldn't this affect your belief in what they said about the defendant's whereabouts? Surely so. But note that in \textsc{Veracity} an episode of awareness refinement takes place together with a form of retraction. Initially, what is taken to be known, after the learning episode, is that the witness \textit{saw} the defendant around the crime scene. But after the growth in awareness, you realize your learning is in fact limited to what the witness \textit{reported} to have seen. So the previous learning episode is retracted and replaced by a more careful statement of what you learned. This retraction will affect the probability you assign to the hypothesis \textit{H=seen}, but this does not conflict with Reverse Bayesianism or Awareness Rigidity. In \textsc{Lighting}, instead, no retraction of the evidence takes place. The evidence that is known remains the fact that the witness saw the defendant around the crime scene, even though that experience could have been misleading due to bad lighting conditions. 
+A possible confusion should be eliminated at this point. We do not intend to suggest that the assessment of the probability of the hypothesis \textit{H=present} should undergo no change at all. If you worry that the witness could have lied, shouldn't this affect your belief in what they said about the defendant's whereabouts? Surely so. But note that in \textsc{Veracity} an episode of awareness refinement takes place together with a form of retraction. Initially, what is taken to be known, after the learning episode, is that the witness \textit{saw} the defendant around the crime scene. But after the growth in awareness, you realize that your learning is in fact limited to what the witness \textit{reported} to have seen. So the previous learning episode is retracted and replaced by a more careful statement of what you learned. This retraction will affect the probability you assign to the hypothesis \textit{H=seen} conditional on your evidence, but this does not conflict with Reverse Bayesianism or Awareness Rigidity, as you re-conceptualized what your evidence actually is. In \textsc{Lighting}, instead, no retraction of the evidence takes place. The evidence that is known remains the fact that the witness saw the defendant around the crime scene, even though that experience could have been misleading due to bad lighting conditions. 
 
 
 <!---These remarks suggest that  Bayesian networks helped to distinguish two cases of refinement, exemplified by \textsc{Lighting} (and in a more complicated version, \textsc{Movies}) and \textsc{Veracity}. It is only in cases like \textsc{Lighting} in which Reverse Bayesianism and Awareness Rigidity should be given up, not in cases like \textsc{Veracity}. There may actually be other paradigmatic cases of refinement in which Reverse Bayesianism does or does not hold, but limitations of space and time compel us to move on.
@@ -332,20 +380,99 @@ A possible confusion should be eliminated at this point. We do not intend to sug
 \[H\rightarrow M \rightarrow E\]
 --->
 
-Where does this leave us? The following are now well-established: (a) Reverse Bayesianism (or its close cousin Awareness Rigidity) handles successfully cases of awareness expansion; (b) it also handles successfully cases of refinement like \textsc{Veracity}; but (c) it does fail in cases of refinement like \textsc{Lighting}. <!--- (and in the more complicated version \textsc{Movies}). ---> <!---The category 'refinement' 
+Where does this leave us? The following are now well-established: (a) Reverse Bayesianism (or its close cousin Awareness Rigidity) handles successfully at least some cases of awareness expansion; (b) it also handles successfully at least some cases cases of refinement such as \textsc{Veracity}; but (c) it does fail in cases of refinement like \textsc{Lighting}. <!--- (and in the more complicated version \textsc{Movies}). ---> <!---The category 'refinement' 
 which Steele and Stefánsson deploy in their analysis of awareness growth is too coarse.--->   So, ultimately, Steele and Stefánsson's critique only targets a subclass of refinement cases. The scope of this critique is therefore somewhat limited. 
 And yet, we do not think the prospects for Reverse Bayesianism are good. In this respect, we tend to agree with Steele and Stefánsson. But we conjecture that there is a deeper difficulty for Reverse Bayesianism, besides possible counterexamples that may be leveled against it. The deeper difficulty is that it seeks to provide a formal, almost algorithmic solution to the problem of awareness growth, and this formal aspiration is likely to lead us down the wrong path. 
 
 To see why, consider again the distinction between the two cases of refinement. 
  <!---But refinement is structurally different in the two cases. In  \textsc{Lighting}, the connection between the evidence and the hypothesis undergoes a change, since the lighting conditions affect the witness' ability to have reliable experiences of what happened. In \textsc{Veracity}, instead, the connection between the evidence and the hypothesis is not affected. At stake is the extent to which what the witness saw, if anything, is reported truthfully or not.
 --->
-Reverse Bayesianism is perfectly fine in scenarios like \textsc{Veracity}, but fails in scenarios like \textsc{Lighting}. What is that so? In one scenario, what the witness saw could have occurred under good or bad lighting conditions; in the other, what the witness saw could have been reported truthfully or untruthfully. The two scenarios are structurally different, and this difference can be appreciated by looking at the Bayesian networks used to model them.  <!---There may be other, more fine-grained distinctions to be made.--->
-In \textsc{Veracity}, the new node is added downstream. Since the conditional probabilities associated with the upstream nodes are unaffected, Reverse Bayesianism is vindicated. By contrast, in \textsc{Lighting}, the new node is added upstream. Since the conditional probabilities that are associated with the downstream nodes will often have to change, Reverse Bayesianism fails here. 
+Reverse Bayesianism is perfectly fine in scenarios like \textsc{Veracity}, but fails in scenarios like \textsc{Lighting}. Why is that so? In one scenario, what the witness saw could have occurred under good or bad lighting conditions; in the other, what the witness saw could have been reported truthfully or untruthfully. The two scenarios are structurally different, and this difference can be appreciated by looking at the Bayesian networks used to model them.  <!---There may be other, more fine-grained distinctions to be made.--->
+In \textsc{Veracity}, the new node is added downstream. Since the conditional probabilities associated with the upstream nodes are unaffected, Reverse Bayesianism is satisfied. By contrast, in \textsc{Lighting}, the new node is added upstream. Since the conditional probabilities that are associated with the downstream nodes will often have to change, Reverse Bayesianism fails here. 
 
 This discussion suggests a conjecture: structural---possibly causal---features about how we conceptualize a specific scenario seems to be the guiding principles about how we update the probability function through awareness growth, not a formal principle like Reverse Bayesianism. We further elaborate on this conjecture in the final section by drawing on some examples from Anna Mathani.
 
 #  Mathani's examples
 \label{sec:mathani}
+
+
+Mahtani offered the following counterexamples:
+
+
+\begin{quote}
+\textsc{Tenant}: You are staying at Bob's flat which he shares with his landlord. You know
+that Bob is a tenant, and that there is only one landlord, and that this landlord also
+lives in the flat. In the morning you hear singing coming from the shower room, and
+you try to work out from the sounds who the singer could be. At this point you have
+two relevant propositions that you consider possible, that it's the landlord singing ($Landlord$), or that Bob is the singer ($Bob$) \dots  the possibility suddenly occurs to you that there might be
+another tenant living in the same flat, and that perhaps that is the person singing in the
+shower ($Other$).
+\end{quote}
+
+
+\begin{quote} 
+\textsc{Tenant}: You know that I am holding a fair ten pence coin which I am about to toss. You
+have a credence of 0.5 that it will land $Heads$, and a credence of 0.5 that it will
+land $Tails$. You think that the tails side always shows an engraving of a lion. So you
+also  have a credence of 0.5 that it will land with the lion engraving face-up ($Lion$). You  become aware
+that  there are some ten pence coins that have an engraving of Stonehenge on the tails side, so you consider the proposition that the toss will end up with Stonehenge face-up ($Stonegenge$).
+
+
+
+\end{quote}
+
+\noindent The problem for Reverse Bayesianism with \textsc{Tenant} appears when you  consider the proposition is that the singer is a tenant ($Tenant$). Suppose you originally took $\mathsf{P}(Landlord) = \mathsf{P}(Bob) = .5$. Since $Bob$ and $Tenant$ originally are the same fact, $\mathsf{P}(Tenant)$ = .5. Since these  are propositions that you were originally aware of, they should remain in the same proportion after your awareness grows, that is you should have $\ppr{+}{Landlord} = \ppr{+}{Tenant} = k$. But also $Bob$ and $Tenant$, being the same fact, had the same probability, so you should also have  $\ppr{+}{Bob} = \ppr{+}{Tenant} = k$. But now, $Other$ entails $Tenant$ and $Bob$ and $Other$ is disjoint, so it follows that $\ppr{+}{Other} = 0$, clearly an undesired consequence. 
+
+
+The problem for Reverse Bayesianism with \textsc{Tails} is that you initially gave $Tails$ and $Lion$ the same credence so you should have $\ppr{+}{Tails} = \ppr{+}{Lion} = k$. But since $Lion$ and $Stonehenge$ are incompatible and the latter entails $Tails$, you should have \ppr{+}{Stonehenge} = 0$, again an undesirable conclusion.
+
+
+How do we approach these two cases using Bayesian networks? Let's start with \textsc{Tenants}. We start with the following DAG:
+
+
+```{r tenantsDAG,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "50%", out.height= "30%"}
+tenants1DAGitty  <- dagitty("
+    dag{
+        Bathroom -> Singing
+      }")
+coordinates(tenants1DAGitty) <- list(x = c(Bathroom = 0, Singing = 1), 
+                                     y = c(Bathroom = 1, Singing = 1))
+drawdag(tenants1DAGitty , shapes =  list(Bathroom = "c", Singing = "c"),
+        cex = .8, radius = 11) 
+```
+
+Initially, $Bathroom$ has three possible states, representing who is in the bathroom singing: $landlord$, $bob$, and $noone$. $Singing$ is a binary node with two possible values: $true$, and $false$. The original example is under-specified, so let's make some probabilities and run with them. Suppose that both Bob and you have the same probability of singing in the bathroom, say $.2$. Also, quite naturally, the probability of someone singing in an empty bathroom is 0. Say also that the prior probability of you being in the bathroom  is .1, the same as the probability of the landlord being in the bathroom. Now you learn $Singing = true$ and update accordingly. The posterior probabilities of $bob$ and $landlord$ now both equal .5, in line with Mahtani's example. After your awarness grows, $Bathroom$ now have one more possible state, $other$, which is also given prior probability of $.1$ (and the probability of $noone$ drops from .8 to .7). Now if you learn $Singing = true$ and update, the posterior probabilities of $bob$, $tenat$ and $other$ all equal $\nicefrac{1}{3}$, which is exactly as desired. 
+
+There are two  points here to observe. First,    there is no magic in modeling the problem with Bayesian networks. If somehow you know the priors for the candidates are the same (which the example, we take, already assumes), and assume the probabilities that Bob would sing or that the landlord would sing in bathroom is not impacted by the new possibility, the expected outcome falls out. Second, the assumptions made and needed are non-trivial material assumptions that should not and cannot fall out from purely formal considerations. As for priors, we can easily imagine that landlord uses the bathroom in the mornings more often, or tends to sing less. As for the impact of the new tenant, we can also easily imagine circumstances in which Bob is less likely to sing, say because now he is shy to sing in the presence of a new flatmate. 
+
+The same two points can be made with respect to \textsc{Tails}. Now the structure of the scenario is represented by the following DAG:
+
+
+```{r tailsDAG,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "50%", out.height= "30%"}
+tailsDAGitty  <- dagitty("
+    dag{
+        Outcome -> Image
+      }")
+coordinates(tailsDAGitty) <- list(x = c(Outcome = 0, Image = 1), 
+                                     y = c(Outcome = 1, Image = 1))
+drawdag(tailsDAGitty , shapes =  list(Outcome = "c", Image = "c"),
+        cex = .8, radius = 11) 
+```
+
+$Outcome$ has two states, $tails$ and $heads$. Initially, image has two states too: $none$ and $lions$. We know that images have no impact on the coin's fairness, so the priors for Outcome  are $.5$ each, and this doesn't change once you learn something about other images on the coin (again, a material assumption!). Initially, the probability of $none$ given $heads$ is 1 and $none$ given $tails$ is 0. Then you learn that not all images are those of a lion, so you need some new probabilities (not given in the original example). Say $lion$ given $tails$ has now the probability of $.9$. What was your original prior on $lion$? .5. What is it after the awareness growth? .45. Again, no surprises in the construction, and again, how we should build the network and which probabilities should shift is based on our material knowledge that does not and should not fall out of purely formal considerations. 
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
