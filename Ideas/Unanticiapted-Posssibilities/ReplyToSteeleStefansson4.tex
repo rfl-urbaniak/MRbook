@@ -1,26 +1,15 @@
 % Options for packages loaded elsewhere
 \PassOptionsToPackage{unicode}{hyperref}
 \PassOptionsToPackage{hyphens}{url}
-\PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
+\PassOptionsToPackage{dvipsnames,svgnames*,x11names*}{xcolor}
 %
 \documentclass[
   11pt,
   dvipsnames,enabledeprecatedfontcommands]{scrartcl}
-\title{Beyond Reverse Bayesianism:}
-\usepackage{etoolbox}
-\makeatletter
-\providecommand{\subtitle}[1]{% add subtitle to \maketitle
-  \apptocmd{\@title}{\par {\large #1 \par}}{}{}
-}
-\makeatother
-\subtitle{Awareness Growth in Bayesian Networks}
-\author{Marcello Di Bello and Rafal Urbaniak}
-\date{July 28, 2022}
-
 \usepackage{amsmath,amssymb}
 \usepackage{lmodern}
-\usepackage{iftex}
-\ifPDFTeX
+\usepackage{ifxetex,ifluatex}
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
   \usepackage{textcomp} % provide euro and other symbols
@@ -42,10 +31,10 @@
   pdftitle={Beyond Reverse Bayesianism:},
   pdfauthor={Marcello Di Bello and Rafal Urbaniak},
   colorlinks=true,
-  linkcolor={Maroon},
-  filecolor={Maroon},
-  citecolor={Blue},
-  urlcolor={blue},
+  linkcolor=Maroon,
+  filecolor=Maroon,
+  citecolor=Blue,
+  urlcolor=blue,
   pdfcreator={LaTeX via pandoc}}
 \urlstyle{same} % disable monospaced font for URLs
 \usepackage{graphicx}
@@ -65,29 +54,6 @@
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
 \setcounter{secnumdepth}{5}
-\newlength{\cslhangindent}
-\setlength{\cslhangindent}{1.5em}
-\newlength{\csllabelwidth}
-\setlength{\csllabelwidth}{3em}
-\newlength{\cslentryspacingunit} % times entry-spacing
-\setlength{\cslentryspacingunit}{\parskip}
-\newenvironment{CSLReferences}[2] % #1 hanging-ident, #2 entry spacing
- {% don't indent paragraphs
-  \setlength{\parindent}{0pt}
-  % turn on hanging indent if param 1 is 1
-  \ifodd #1
-  \let\oldpar\par
-  \def\par{\hangindent=\cslhangindent\oldpar}
-  \fi
-  % set entry spacing
-  \setlength{\parskip}{#2\cslentryspacingunit}
- }%
- {}
-\usepackage{calc}
-\newcommand{\CSLBlock}[1]{#1\hfill\break}
-\newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{#1}}
-\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{#1}\break}
-\newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
 %\documentclass{article}
 
 % %packages
@@ -267,9 +233,40 @@
 \usepackage{tikz}
 \usetikzlibrary{positioning,shapes,arrows}
 
-\ifLuaTeX
+\ifluatex
   \usepackage{selnolig}  % disable illegal ligatures
 \fi
+\newlength{\cslhangindent}
+\setlength{\cslhangindent}{1.5em}
+\newlength{\csllabelwidth}
+\setlength{\csllabelwidth}{3em}
+\newenvironment{CSLReferences}[2] % #1 hanging-ident, #2 entry spacing
+ {% don't indent paragraphs
+  \setlength{\parindent}{0pt}
+  % turn on hanging indent if param 1 is 1
+  \ifodd #1 \everypar{\setlength{\hangindent}{\cslhangindent}}\ignorespaces\fi
+  % set entry spacing
+  \ifnum #2 > 0
+  \setlength{\parskip}{#2\baselineskip}
+  \fi
+ }%
+ {}
+\usepackage{calc}
+\newcommand{\CSLBlock}[1]{#1\hfill\break}
+\newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{#1}}
+\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{#1}\break}
+\newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
+
+\title{Beyond Reverse Bayesianism:}
+\usepackage{etoolbox}
+\makeatletter
+\providecommand{\subtitle}[1]{% add subtitle to \maketitle
+  \apptocmd{\@title}{\par {\large #1 \par}}{}{}
+}
+\makeatother
+\subtitle{Awareness Growth in Bayesian Networks}
+\author{Marcello Di Bello and Rafal Urbaniak}
+\date{July 28, 2022}
 
 \begin{document}
 \maketitle
@@ -313,8 +310,8 @@ Bayesianism? Call this the problem of awareness growth.
 The algebra of propositions need not be so narrowly construed that it
 only contains propositions that are presently under consideration. The
 algebra may also contain propositions which, though outside the agent's
-present consideration, are still the target, perhaps implicitly, of the
-agent's disposition to believe.\footnote{Roussos (2021) notes that, for
+present consideration, are still the object, perhaps implicitly, of
+certain dispositions to believe.\footnote{Roussos (2021) notes that, for
   the sake of clarity, the problem of awareness growth should only
   address propositions which agents are \emph{truly} unaware of (say new
   scientific theories), not propositions that were temporarily forgotten
@@ -426,7 +423,7 @@ surprise party to celebrate your upcoming birthday---a possibility that
 you had not even entertained. Becoming aware of this possible
 explanation for your partner's behaviour makes you doubt that she is
 having an affair with your friend, relative, for instance, to their
-being warm friends. (Steele \& Stefánsson, 2021, sec. 5, Example 2)
+being warm friends. (Steele \& Stefánsson, 2021, Sec.~5, Example 2)
 \end{quote}
 
 \noindent Initially, the algebra only contains the hypotheses `my
@@ -485,7 +482,7 @@ more confident that the movie will have low-level language than
 high-level language. Moreover, since you associate low-level language
 with thrillers, this makes you more confident than you were before that
 the movie on offer is a thriller as opposed to a comedy. (Steele \&
-Stefánsson, 2021, sec. 5, Example 3)
+Stefánsson, 2021, Sec.~5, Example 3)
 \end{quote}
 
 \noindent This is a case of refinement. For you initially categorized
@@ -575,11 +572,11 @@ learn what they were.\footnote{The process of awareness growth in
   \textsc{Lighting} adds only one extra variable, lighting conditions,
   while \textsc{Movies} adds two extra variables, language difficulty
   and whether the owner is simple-minded or not. Further,
-  \textsc{Movies} contains a clear-cut case of learning, that is owner
-  \emph{is} simple-minded. This is not so in in \textsc{Lighting}.
-  Strictly speaking, you are learning that it is \emph{possible} that
-  the lighting conditions were bad. However, you are not conditioning on
-  the proposition `the lighting conditions were bad' or `the lighting
+  \textsc{Movies} contains a clear-cut case of learning, that the owner
+  \emph{is} simple-minded. This is not so in \textsc{Lighting}. Strictly
+  speaking, you are learning that it is \emph{possible} that the
+  lighting conditions were bad. However, you are not conditioning on the
+  proposition `the lighting conditions were bad' or `the lighting
   conditions were good.' So you are not learning about the lighting
   conditions in the sense in which learning is understood in this paper.}
 Still, mere refinement in this scenario challenges Reverse Bayesianism
@@ -760,7 +757,7 @@ does not warrant lowering your confidence in the truthfulness of the
 visual experience, only in the truthfulness of the \textit{reporting} of
 the experience. The distinction between the visual experience and its
 reporting is crucial here. Bayesian networks help to model this
-distinction precisely, and in this way see why \textsc{Lighting} and
+distinction precisely, and then see why \textsc{Lighting} and
 \textsc{Veracity} are structurally different cases of refinement.
 
 The graphical network should initially look like the initial DAG for
@@ -1015,64 +1012,64 @@ $\ppr{+}{Person}$ & \multicolumn{2}{c}{$Person$} & \\
 
 \hypertarget{refs}{}
 \begin{CSLReferences}{1}{0}
-\leavevmode\vadjust pre{\hypertarget{ref-bradley2017}{}}%
+\leavevmode\hypertarget{ref-bradley2017}{}%
 Bradley, R. (2017). \emph{Decision theory with a human face}. Cambridge
 University Press.
 
-\leavevmode\vadjust pre{\hypertarget{ref-chihara1987}{}}%
+\leavevmode\hypertarget{ref-chihara1987}{}%
 Chihara, C. S. (1987). Some problems for bayesian confirmation theory.
 \emph{British Journal for the Philosophy of Science}, \emph{38}(4),
 551--560.
 
-\leavevmode\vadjust pre{\hypertarget{ref-eerman1992}{}}%
+\leavevmode\hypertarget{ref-eerman1992}{}%
 Earman, J. (1992). \emph{Bayes or bust? A critical examination of
 bayesian confirmation theory}. MIT press.
 
-\leavevmode\vadjust pre{\hypertarget{ref-glymour1980}{}}%
+\leavevmode\hypertarget{ref-glymour1980}{}%
 Glymour, C. (1980). \emph{Theory and evidence}. Princeton University
 Press.
 
-\leavevmode\vadjust pre{\hypertarget{ref-howson1976}{}}%
+\leavevmode\hypertarget{ref-howson1976}{}%
 Howson, C. (1976). The development of logical probability. In
 \emph{Essays in memory of imre lakatos. Boston studies in the philosophy
 of science} (pp. 277--298). Springer.
 
-\leavevmode\vadjust pre{\hypertarget{ref-karniViero2015}{}}%
+\leavevmode\hypertarget{ref-karniViero2015}{}%
 Karni, E., \& Vierø, M.-L. (2015). Probabilistic sophistication and
 reverse bayesianism. \emph{Journal of Risk and Uncertainty Volume},
 \emph{50}, 189--208.
 
-\leavevmode\vadjust pre{\hypertarget{ref-lakatos1968}{}}%
+\leavevmode\hypertarget{ref-lakatos1968}{}%
 Lakatos, I. (1968). Changes in the problem of inductive logic.
 \emph{Studies in Logic and the Foundations of Mathematics}, \emph{51},
 315--417.
 
-\leavevmode\vadjust pre{\hypertarget{ref-mathani2020}{}}%
+\leavevmode\hypertarget{ref-mathani2020}{}%
 Mathani, A. (2020). Awareness growth and dispositional attitudes.
 \emph{Synthese}, \emph{198}(9), 8981--8997.
 
-\leavevmode\vadjust pre{\hypertarget{ref-roussos2021}{}}%
+\leavevmode\hypertarget{ref-roussos2021}{}%
 Roussos, J. (2021). Awareness growth and belief revision.
 \emph{Manuscript}.
 
-\leavevmode\vadjust pre{\hypertarget{ref-schaffer2016}{}}%
+\leavevmode\hypertarget{ref-schaffer2016}{}%
 Schaffer, J. (2016). Grounding in the image of causation.
 \emph{Philosophical Studies}, \emph{173}, 49--100.
 
-\leavevmode\vadjust pre{\hypertarget{ref-steeleStefansson2021}{}}%
+\leavevmode\hypertarget{ref-steeleStefansson2021}{}%
 Steele, K., \& Stefánsson, O. (2021). Belief revision for growing
 awareness. \emph{Mind}, \emph{130}(520), 1207--1232.
 
-\leavevmode\vadjust pre{\hypertarget{ref-wenmackersRomeijn2016}{}}%
+\leavevmode\hypertarget{ref-wenmackersRomeijn2016}{}%
 Wenmackers, S., \& Romeijn, J.-W. (2016). New theory about old evidence:
 A framework for open-minded bayesianism. \emph{Synthese Volume},
 \emph{193}, 1225--1250.
 
-\leavevmode\vadjust pre{\hypertarget{ref-williamson2003}{}}%
+\leavevmode\hypertarget{ref-williamson2003}{}%
 Williamson, J. (2003). Bayesianism and language change. \emph{Journal of
 Logic, Language, and Information}, \emph{12}(1), 53--97.
 
-\leavevmode\vadjust pre{\hypertarget{ref-zabell1992}{}}%
+\leavevmode\hypertarget{ref-zabell1992}{}%
 Zabell, S. (1992). Predicting the unpredictable. \emph{Synthese},
 \emph{90}(1), 205--232.
 
