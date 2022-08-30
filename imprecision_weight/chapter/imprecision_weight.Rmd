@@ -3,19 +3,22 @@ title: "“Weight of Evidence, Evidential Completeness and Accuracy”"
 author: "Rafal Urbaniak and Marcello Di Bello"
 output:
   pdf_document:
-  number_sections: true
-df_print: kable 
-keep_tex: true
-includes:
-  in_header:
-  - style.sty
+    number_sections: yes
+    df_print: kable
+    keep_tex: yes
+    toc: no
+    includes:
+      in_header: Rafal_latex7.sty
+  html_document:
+    toc: yes
+    df_print: paged
 classoption: dvipsnames,enabledeprecatedfontcommands
-fontsize: 11pt
+fontsize: 10pt
 documentclass: scrartcl
 urlcolor: blue
-bibliography: referencesMRbook.bib
-csl: apa-6th-edition.csl
-indent: true
+bibliography: ../../references/referencesMRbook.bib
+csl: [../../references/apa-6th-edition.csl]
+indent: yes
 ---
 
 
@@ -30,19 +33,79 @@ library(rethinking)
 
 
 
-# Philosophical motivations
+# Motivations
 
-## Keynes' conception of weight of evidence
+## Balance vs. weight
 
-Early example from CS Peirce (cited in Peden) and Keynes' similar example
+Suppose we want to represent our uncertainty about a proposition in terms of a single probability that we assign to it. It is not too difficult to inspire the intuition that this representation does not capture an important dimension of how our uncertainty connects with the evidence we have or have not obtained.  In a 1872 manuscript of \emph{The Fixation of Belief} (W3 295) C. S. Peirce gives an example meant to do exactly that.  
 
-Keynes introduces weight as follows. ‘As the relevant evidence at our disposal increases, the magnitude of probability may
-either decrease or increase, according as the new knowledge strengthens the unfavourable or favourable evidence; but
-something seems to have increased in either case—we have a more substantial basis on which to rest our conclusion . . . New
-evidence will sometimes decrease the probability of [the hypothesis] but will always increase its ‘weight’ (Keynes, 1921: 77).
+\begin{quote} When we have drawn a thousand times, if about half have been white, we have great confidence in this result. We now feel pretty sure that, if we were to make a large number of bets upon the color of single beans drawn from the bag, we could approximately insure ourselves in the long run by betting each time upon the white, a confidence which would be entirely wanting if, instead of sampling the bag by 1000 drawings, we had done so by only two.
+\end{quote}
+
+\noindent The objection is not too complicated. Your best estimate of the probability of $W=$`the next bean will be white' is .5 if half of the beans you have drawn randomly so far have been white, no matter whether you have drawn a thousand or only two of them. But this means that expressing your uncertainty about $W$ by locutions such as "my confidence in $W$ is .5' does not capture this intuitively important distinction. 
+
+Similar remarks can be found in Peirce's 1878 \emph{Probability of Induction}. There, he also proposes to represent uncertainty by at least two numbers, the first depending on the inferred probability, and the second measuring the amount of knowledge obtained; as the latter, Peirce proposed to use some dispersion-related measure of error (but then suggested that an error of that estimate should also be estimated and so, so that ideally more numbers representing errors would be needed). 
+
+Peirce himself did not call this the weight of evidence (and in fact, used the phrase rather to refer to the balance of evidence, W3 294) [CITE KASSER 2015]. However, his criticism of such an oversimplified representation of uncertainty anticipated what came to be called weight of evidence by Keynes in his 1921 \emph{A Treatise on Probability}:
+
+\begin{quote}
+As the relevant evidence at our disposal increases, the magnitude of the
+probability of the argument may either increase or decrease, according as the new knowledge strengthens the unfavourable or the favourable evidence; but something seems to have increased in either case,—we have a more substantial basis upon which to rest our conclusion. I express this by saying that an accession of new evidence increases the weight of an argument. New evidence will sometimes decrease the probability of an argument but it will always increase its `weight.' (p. 71)
+\end{quote}
+
+\noindent The key point is the same [CITE LEVI 2001]: the balance of probability alone cannot characterize all important aspects of evidential appraisal. Keynes also considered measuring weight of evidence in terms of the variance of the posterior distribution of a certain parameter, but was quite attached to the idea that weight should increase with new information, even if the dispersion increase with new evidence [TP 80-82], and so he proposed only a very rough sketch of  a positive sketch. Moreover, as he was uncertain how a measure of weight should be incorporated in further decision-making, the was skeptical about the practical significance of the notion.  [TP 83]
+
+But what is this positive sketch? On one hand, Keynes [TP 58-59] connects the notion of weight with relevance. Call evidence $E$ relevant to $X$ given $K$ just in case $\mathsf{Pr}(X\vert K \wedge E) \neq \mathsf{Pr}(X \vert K)$.^[As discussed in [CITE RUNDE 1990], Keynes also uses a slightly more convoluted notion of relevance to avoid equally strong items of opposite evidence turning out to be irrelevant; here we do not need to be concerned with this complication.] One postulate than can be found in the \emph{Treatise} [TP 84] is:^[RUNDE 1990 283 suggests Keynes allows for weight of evidence to decrease when new evidence increases the range of alternatives, but this is based on Keynes' claim that weight is increased when the number of alternatives is reduced, and Keynes does not directly say anything about the possibility of an increase of the number of alternatives.]
+
+\begin{tabular}{lp{11cm}}
+(R-monotonicity) & If $E$ is relevant to $X$ given $K$, where $K$ is background knowledge, $V(X\vert K \wedge E) > V(X\vert K)$, where $V$ is the weight of evidence.
+\end{tabular}
 
 
-## Informal desiderata  and Keynsian weight
+
+
+[RUNDE 1990, 280] suggests that Keynes at some point calls weight the completeness of information. This however, is a bit hasty, as Keynes only says that \emph{the degree of completeness of the information on which a probability is based does seem to be relevant, as well as the actual magnitude of the probabiltiy, in making practical decisions}. As later on we will argue that it is actually useful to distinguish evidential weight (how much evidence do we have?) and evidential completeness (do we have all the evidence that we would expect in a given case?), we rather prefer to extract a more modest postulate:
+
+\begin{tabular}{lp{11cm}}
+(Completeness) & If $E_1$ and $E_2$ are relevant items of evidence, and $E_2$ is (in a sense to be discussed) more complete than $E_1$,  $V(X\vert K \wedge E_2) > V(X\vert K \wedge E_1)$.
+\end{tabular}
+
+\noindent If we conceptualize $E_2$ being complete and $E_1$ being incomplete as $E_2$ being a maximal relevant conjunction of relevant claims one of which is $E_1$, (Completeness) follows from (R-monotonicity).
+
+Now, some requirements on how weight of evidence is related to the balance of probability. For one thing, Keynes insists that new (relevant) evidence might decrease probability but will always increase weight [TP 77]. Since (R-monotonicity) already captures the idea that weight will always increase, here we extract the other part of the claim:
+
+\begin{tabular}{lp{11cm}}
+(Possible decrease) & It is possible that   $V(X\vert K \wedge E) > V(X\vert K)$ while $\pr{X \vert K \wedge E} <  \pr (X\vert K)$.
+\end{tabular}
+
+Clearly, Keynes also endorsed the following two requirements of a very similar form:
+
+\begin{tabular}{lp{11cm}}
+(Possible increase) & It is possible that   $V(X\vert K \wedge E) > V(X\vert K)$ while $\pr{X \vert K \wedge E} >  \pr (X\vert K)$. \\
+(Possibly no change ) & It is possible that   $V(X\vert K \wedge E) > V(X\vert K)$ while $\pr{X \vert K \wedge E} =  \pr (X\vert K)$.
+\end{tabular}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Keynes
+is not referring to the sheer number of statements on the right hand side of a conditional probability P (H | E) or the sheer bulk of information that these statements
+contain. By “relevant evidence”, Keynes is only referring to the extent that E pro-
+vides information that is pertinent to H in particular. [Pedden3]
+
+
+
+## Examples and informal desiderata  
 
 - Go over Nance in particular, Cohen, some other sources?
 
@@ -93,6 +156,8 @@ Runde, Joyce, Weatherson, Peden
 
 <!-- PMI is a gain of (Shannon's) information over the realization of the hypothesis, if the hypothesis is almost sure, then no information is gained. WOE is an update of our prior odds, which does not depend on the value of those odds. -->
 
+## Skyrms and resilience?
+
 
 ## Imprecision and  weight with intervals
 
@@ -126,13 +191,19 @@ Keynes' later works and Peden's paper
 # Literature to discuss
 
 
-Feduzi, 2010, On Keynes’s conception of the weight of evidence
+Kasser, 2016, Two Conceptions of Weight of Evidence in Peirce’s Illustrations of the Logic of Science [DOWNLOADED]
 
-Cohen 1986, Twelve Questions about Keynes's Concept of Weight
+Feduzi, 2010, On Keynes’s conception of the weight of evidence [READ]
 
-Peden, WIlliam 2018, Imprecise probablity and the measurement of Keynes' weight of arguments
+Cohen 1986, Twelve Questions about Keynes's Concept of Weight [READ]
 
-Synthese 186 (2) 2012, volume on Keynesian weight [TO DOWNLOAD]
+Pedden, William 2018, Imprecise probability and the measurement of Keynes' weight of arguments
+
+Levi 2011, the weight of argument [DOWNLOADED]
+
+Skyrms 1977 resiliency, propensities [DOWNLOADED]
+
+Synthese 186 (2) 2012, volume on Keynesian weight [CHECKED, NOT MUCH ON WEIGHT ACTUALLY, NO NEED TO READ]
 
 
 Good, weight of evidence, survey
@@ -141,15 +212,15 @@ Good, PROBABILITY AND THE
 WEIGHING OF EVIDENCE
 
 
-David Hamer, Probability, anti-resilience, and the weight of expectation
+David Hamer, Probability, anti-resilience, and the weight of expectation [READ]
 
 
 William Peden, Imprecise Probability and the Measurement of Keynes's "Weight of Arguments"
 
 
-Runde, Keynesian Uncertainty and the weight of arguments [TO DOWNLOAD]
+Runde, Keynesian Uncertainty and the weight of arguments [DOWNLOADED]
 
-Weatherson, 2002, Keynes, uncertainty and interest rates  [TO DOWNLOAD}]
+Weatherson, 2002, Keynes, uncertainty and interest rates  [DOWNLOADED]
 
 Jeffrey M. Keisler, Value of information analysis: the state of application
 
