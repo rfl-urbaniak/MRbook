@@ -1,15 +1,19 @@
 % Options for packages loaded elsewhere
 \PassOptionsToPackage{unicode}{hyperref}
 \PassOptionsToPackage{hyphens}{url}
-\PassOptionsToPackage{dvipsnames,svgnames*,x11names*}{xcolor}
+\PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
 %
 \documentclass[
   10pt,
   dvipsnames,enabledeprecatedfontcommands]{scrartcl}
+\title{``Weight of Evidence, Evidential Completeness and Accuracy''}
+\author{Rafal Urbaniak and Marcello Di Bello}
+\date{}
+
 \usepackage{amsmath,amssymb}
 \usepackage{lmodern}
-\usepackage{ifxetex,ifluatex}
-\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+\usepackage{iftex}
+\ifPDFTeX
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
   \usepackage{textcomp} % provide euro and other symbols
@@ -31,10 +35,10 @@
   pdftitle={``Weight of Evidence, Evidential Completeness and Accuracy''},
   pdfauthor={Rafal Urbaniak and Marcello Di Bello},
   colorlinks=true,
-  linkcolor=Maroon,
-  filecolor=Maroon,
-  citecolor=Blue,
-  urlcolor=blue,
+  linkcolor={Maroon},
+  filecolor={Maroon},
+  citecolor={Blue},
+  urlcolor={blue},
   pdfcreator={LaTeX via pandoc}}
 \urlstyle{same} % disable monospaced font for URLs
 \usepackage{graphicx}
@@ -224,13 +228,9 @@
 \usepackage{tikz}
 \usetikzlibrary{positioning,shapes,arrows}
 
-\ifluatex
+\ifLuaTeX
   \usepackage{selnolig}  % disable illegal ligatures
 \fi
-
-\title{``Weight of Evidence, Evidential Completeness and Accuracy''}
-\author{Rafal Urbaniak and Marcello Di Bello}
-\date{}
 
 \begin{document}
 \maketitle
@@ -256,7 +256,7 @@ meant to do exactly that.
 the probability of \(W=\)`the next bean will be white' is .5 if half of
 the beans you have drawn randomly so far have been white, no matter
 whether you have drawn a thousand or only two of them. But this means
-that expressing your uncertainty about \(W\) by locutions such as "my
+that expressing your uncertainty about \(W\) by locutions such as ``my
 confidence in \(W\) is .5' does not capture this intuitively important
 distinction.
 
@@ -294,16 +294,27 @@ about the practical significance of the notion. {[}TP 83{]}
 But what is this positive sketch? On one hand, Keynes {[}TP 58-59{]}
 connects the notion of weight with relevance. Call evidence \(E\)
 relevant to \(X\) given \(K\) just in case
-\(\mathsf{Pr}(X\vert K \wedge E) \neq \mathsf{Pr}(X \vert K)\).\footnote{As
-  discussed in {[}CITE RUNDE 1990{]}, Keynes also uses a slightly more
-  convoluted notion of relevance to avoid equally strong items of
-  opposite evidence turning out to be irrelevant; here we do not need to
-  be concerned with this complication.} One postulate than can be found
-in the \emph{Treatise} {[}TP 84{]} is:\footnote{RUNDE 1990 283 suggests
-  Keynes allows for weight of evidence to decrease when new evidence
-  increases the range of alternatives, but this is based on Keynes'
-  claim that weight is increased when the number of alternatives is
-  reduced, and Keynes does not directly say anything about the
+\(\mathsf{Pr}(X\vert K \wedge E) \neq \mathsf{Pr}(X \vert K)\).\footnote{
+  Keynes also uses a slightly more convoluted notion of relevance to
+  avoid equally strong items of opposite evidence turning out to be
+  irrelevant (this objection has also been brought up by {[}COHEN 1986
+  TWELVE{]}). The more complex version is that a proposition \(E_1\) is
+  relevant to \(X\) given \(K\) just in case it entails a proposition
+  \(E_2\) such that
+  \(\pr{X\vert K \wedge E_2} \neq \mathsf{Pr}(X \vert K)\). {[}COHEN
+  1986 TWELVE{]} complaints that this still runs into difficulties.
+  Ignore \(K\), take an irrelevant proposition \(Z\). It entails
+  \(Z\vee X\) and \(\pr{Z \vee X\vert X \wedge E}=1\). Now, by Bayes'
+  theorem we have
+  \(\pr{X \vert E \wedge (Z \vee X)} = \frac{\pr{X \vert E}\times \pr{Z \vee X \vert X \wedge E}}{\pr{Z \vee X \vert E}} = \frac{\pr{X \vert E}}{\pr{Z \vee X \vert E}}\).
+  If the denominator differs from 1, the result differs from the
+  numerator. We will ignore such difficulties, as they are not of key
+  importance for the development of this chapter.} One postulate than
+can be found in the \emph{Treatise} {[}TP 84{]} is:\footnote{RUNDE 1990
+  283 suggests Keynes allows for weight of evidence to decrease when new
+  evidence increases the range of alternatives, but this is based on
+  Keynes' claim that weight is increased when the number of alternatives
+  is reduced, and Keynes does not directly say anything about the
   possibility of an increase of the number of alternatives.}
 
 \begin{tabular}{lp{11cm}}
@@ -513,6 +524,12 @@ weight}\label{completeness-tends-to-improve-weight}}
 \hypertarget{weight-tends-to-improve-accuracy}{%
 \subsection{Weight tends to improve
 accuracy}\label{weight-tends-to-improve-accuracy}}
+
+Here is a question asked by {[}COHEN 1986 TWELVE p.~276{]}: is it worth
+while knowing the weight of an argument without knowing its probability?
+In our terminology, questions inspired by Cohen's are: what's the point
+of weight considerations if we already have the distributions? Can
+weights be put to use if we do not have the distributions?
 
 \hypertarget{literature-to-discuss}{%
 \section{Literature to discuss}\label{literature-to-discuss}}
