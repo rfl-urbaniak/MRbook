@@ -4,9 +4,26 @@ getwd()
 source("scripts/CptCreate.R")
 source("scripts/kableCPTs.R")
 source("scripts/dagToDagitty.R")
+source("scripts/independenciesToFormulas.R")
+source("scripts/conjunctionToConstraints.R")
 
+
+dag1simpleDAG <- model2network("[a|A][b|B][A][B]")
+
+graphviz.plot(dag1simpleDAG)
 
 dag1extendedDAG <- model2network("[a|A][b|B][AB|A:B][A][B][aA|A:a][bB|B:b][ab|a:b]")
+
+
+dag1extendedDAGunique <- model2network("[a|A][b|B][C|A:B][A][B][D|A:a][E|B:b][F|a:b]")
+#AB:C
+#aAD
+#bBE
+#abF
+
+graphviz.plot(dag1extendedDAG)
+graphviz.plot(dag1extendedDAGunique)
+
 
 
 
@@ -67,69 +84,71 @@ dag1extendedDagitty <- dagToDagitty(dag1extendedDAG)
 
 
 dag1extendedIndependenciesMinimal  <- impliedConditionalIndependencies(dag1extendedDagitty)
+dag1extendedIndependenciesAll  <- impliedConditionalIndependencies(dag1extendedDagitty, type = "all.pairs")
 
 
 independencies <- dag1extendedIndependenciesMinimal
 
 
-formulas <- list()
 
-i <- 2
-
-triple <- independencies[[i]]
-
-triple$Xs <- paste(unlist(strsplit(triple$X, split = "")), collapse = "\\[And]")
-triple$Ys <- paste(unlist(strsplit(triple$Y, split = "")), collapse = "\\[And]")
-triple$Zs <- paste(unlist(strsplit(triple$Z, split = "")), collapse = "\\[And]")
+cat(unlist(formulas))
 
 
+graphviz.plot(dag1extendedDAGunique)
 
-a <- c("a","na")
-b <- c("b","nb")
-c <- c("c","nc")
-expand.grid(a =a, b = b, c= c)
-
-abc <- paste("Pr[(", triple$Xs,  ")|(" , triple$Ys, ")\\[And](",  triple$Zs,
-      ")] == Pr[(", triple$Xs,  ")|(" , triple$Zs, ")]", sep = "")
-
-nabc <- paste("Pr[\\[Not](", triple$Xs,  ")|(" , triple$Ys, ")\\[And](", 
-              triple$Zs,")] == Pr[\\[Not](", triple$Xs,  
-              ")|(" , triple$Zs, ")]", sep = "")
-
-anbc <- paste("Pr[(", triple$Xs,  ")|\\[Not](" , triple$Ys, ")\\[And](", 
-              triple$Zs, ")] == Pr[(", triple$Xs,  ")|(" ,
-              triple$Zs, ")]", sep = "")
+conjunction <- "D"
+conjunct1 <- "A"
+conjunct2 <- "a"
 
 
-nanbc <- paste("Pr[\\[Not](", triple$Xs,  ")|\\[Not](" , triple$Ys,
-               ")\\[And](",  triple$Zs,
-              ")] == Pr[\\[Not](", triple$Xs,  ")|(" , triple$Zs, ")]", sep = "")
+
+listDAG1 <- list(
+      c("C", "A", "B"),
+      c("D", "A", "a"), 
+      c("E", "B", "b"),
+      c("F", "a", "a")
+                 )
+
+constraintsDAG1 <- conjunctionsToConstraints(listDAG1)
 
 
-abnc <- paste("Pr[(", triple$Xs,  ")|(" , triple$Ys, ")\\[And] \\[Not](",
-              triple$Zs,")] == Pr[(", triple$Xs,  ")|\\[Not](", 
-              triple$Zs, ")]", sep = "")
+cat(unlist(constraintsDAG1))
 
-nabnc <- paste("Pr[\\[Not](", triple$Xs,  ")|(" , triple$Ys, ")\\[And] \\[Not](",
-              triple$Zs,")] == Pr[(", triple$Xs,  ")|\\[Not](", 
-              triple$Zs, ")]", sep = "")
+cat(constraints)
 
-anbnc <- paste("Pr[(", triple$Xs,  ")|\\[Not](" , triple$Ys, ")\\[And] \\[Not](",
-               triple$Zs,")] == Pr[(", triple$Xs,  ")|\\[Not](", 
-               triple$Zs, ")]", sep = "")
+d1simple <- dagToDagitty(dag1simpleDAG)
+d1simpleIndependencies <- impliedConditionalIndependencies(d1simple) #, type = "all.pairs")
+length(d1simpleIndependencies)
 
-nanbnc <- paste("Pr[\\[Not](", triple$Xs,  ")|\\[Not](" , triple$Ys, ")\\[And] \\[Not](",
-               triple$Zs,")] == Pr[\\[Not](", triple$Xs,  ")|\\[Not](", 
-               triple$Zs, ")]", sep = "")
+d1simpleIndependencies
+d1simpleFormulas <- independenciesToFormulas(d1simpleIndependencies)
+length(unlist(d1simpleFormulas))
 
-
-cat(paste(c(abc , nabc, anbc, nanbc, abnc, nabnc, 
-            anbnc, nanbnc), collapse = ", \n "))
+clipr::write_clip(unlist(d1simpleFormulas))
 
 
 
 
-##need to implement consistency check
+
+d1unique <- dagToDagitty(dag1extendedDAGunique)
+d1uniqueIndependencies  <- impliedConditionalIndependencies(d1unique, type = "all.pairs")
+length(d1uniqueIndependencies)
+d1formulas <- independenciesToFormulas(d1uniqueIndependencies)
+length(d1formulas)
+
+library(clipr)
+clipr::write_clip(cat(unlist(d1formulas)))
+
+clipr::write_clip(unlist(d1formulas))
+
+
+
+s##need to implement consistency check
+##need to remove repeated conjuncts
+## need to remove redundant 
+#Pr[(A \[And] B) | (a) \[And] \[Not] (A)] == 
+#Pr[(A \[And] B) | \[Not] (A)]
+
 
 contest <- gsub("[()]", "", abnc)
 library(stringr)
@@ -138,18 +157,7 @@ str_detect(contest, "\\[Not]")
 
 
 
+independencies[[8]]
 
 
-
-
-cat(anbc)
-
-cat(nanbc)
-
-
-Pr[A | b \[And] a] == Pr[A | a]
-
-triple$Y,
-
-graphviz.plot(dag1extendedDAG)
 
