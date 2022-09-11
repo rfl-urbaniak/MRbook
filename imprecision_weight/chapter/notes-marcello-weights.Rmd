@@ -2,8 +2,23 @@
 title: "Marcello's notes on Weight"
 author: ""
 date: "9/1/2022"
-output: pdf_document
+output:
+  pdf_document:
+    number_sections: true
+    df_print: kable 
+    keep_tex: true
+    includes:
+      in_header:
+        - Rafal_latex7.sty
+classoption: dvipsnames,enabledeprecatedfontcommands
+fontsize: 10pt
+documentclass: scrartcl
+urlcolor: blue
+bibliography: [../../references/referencesMRbook.bib]
+csl: [../../references/apa-6th-edition.csl]
+indent: true
 ---
+
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -22,6 +37,8 @@ Here is a possible structure that the chapter/paper on weight might take:
 
 (2) Illustrate how the different conceptions of weight play a role in 
 trial decision-making broadly construed (not just standards of proof, but also questions of admissibility, retrial, appeallate decision, etc.) Give at least one illustration each. 
+
+\todo{R: challenge: mix applicability in sson, without abandoning care about formal details}
 
 (3) Show why weighty evidence (under one or more of the conceptions of weight above) improves accuracy. 
 Note that accuracy here is understood as the distance of one's credence (or assigned probability) from the true value. Brier score is the most common measure of accuracy. Accuracy in this sense should be distinguished from accuracy in decision-making (say in terms of rates of false positive and false negative decisions). A separate question is whether decision-making informed by weighty evidence promotes the accuracy of decisions or not.
@@ -48,7 +65,11 @@ Hard to make it formally precise.
 
 - Attempts to count items of evidence are not promising. They are purely syntactical. They cannot justify why, intuitively, several shaky testimonies should be *less weighty* than fewer solid testimonies.  
 
+\todo{R; use the example in the criticism of counting}
+
 - One account is comparative. Take a body of evidence B and add an extra item of evidence, obtaining B+. Then, clearly B+ has more quantity of evidence than B. Comparison  can only be made when one body of evidence is a subset of the other. 
+
+\todo{R: In particular, can't help understand which way to branch if evidence is costly and we need to choose}
 
 - Another idea is to take a directional measures of the value of evidence, say the likelihood ratio, and make them adirectional. See Nance's book "The Burdens of Proof" section 3.5. The quantification of Keynesian Weight. So the weight of a body of evidence $E$ relative to a claim $H$ would be 
 \[\vert \ln (LR_H(E)) \vert, \] 
@@ -67,15 +88,21 @@ Nance does not believe (see again section 3.5) that a quantification of weight i
  if one tries to compute the weight of a mass of evidence by decomposing it into smaller pieces and adding up the weights of the pieces, the resulting sum will depend on how the decomposition is performed, and the sum of the weights of the pieces will, in general, not equal the weight of the total mass. (p. 153)
 \end{quote}
 
-However, Nance does not think we need a measure of quantity of evidence. He thinks that the only question relevant for legal decision-making is whether more evidence can be acquired at reasonable costs. So this brings us to the conception of weight as completeness of evidence. 
+\todo{This is interesting, need to compare it to Good's, which is additive, and I don't even know what Nance means by decomposition and why he thinks it should be unique, does he give an example anywhere?}
+
+However, Nance does not think we need a measure of quantity of evidence. He thinks that the only question relevant for legal decision-making is whether more evidence can be acquired at reasonable costs.
+\todo{Why TF spend so much time writing about weight of evidence then?? How to you even know if the cost of obtaining an item of evidence is worth it if you can't evaluate it's potential impact/weight?}
+So this brings us to the conception of weight as completeness of evidence. 
+
 
 ## Completeness
 
 Presumably there is a list of *all* items of evidence one would expect in a case, and thus completeness measures the gap between that list and the evidence actually presented. 
 
-\begin{itemize}
 
-\item This list can be drawn in a number of different ways: 
+- This list can be drawn in a number of different ways: 
+
+***
 
    (a) using a *script* (=this is the type of case in which one would normally expect to see these kinds of evidence); 
 
@@ -88,28 +115,50 @@ Presumably there is a list of *all* items of evidence one would expect in a case
 These options need not be exclusive We can view them  as describing 
 a natural progression and refinement. At first, the script identifies a generic complete list of items of evidence. Then, this generic list of complete items of evidence is further refined once we learn more specific details about the case at hand and settle on a detailed story about what happened.
 
-\item The \textbf{narrative-center conception of completeness} can be found in David Kaye 1986 piece "Do We Need a Calculus of Weight to Understand Proof Beyond a Reasonable Doubt?". For him a story $S$ makes a prediction about what the items of evidence that should exist and should not exist. Difference between these prediction and the evidence actually available form gaps, call them $G$. These gaps are part of the evidence also. They describe facts about what evidence was not found or not presented. So, briadly speaking, the evidence in a case included both $E$ (evidence presented) and $G$ (gaps, evidence not presented). For Kaye, the probability to be assessed is not $P(S \vert E)$, but rather, $P(S \vert E \wedge G)$. 
+
+***
+
+- The \textbf{narrative-center conception of completeness} can be found in David Kaye 1986 piece "Do We Need a Calculus of Weight to Understand Proof Beyond a Reasonable Doubt?".
+
+
+***
+
+For him a story $S$ makes a prediction about what the items of evidence that should exist and should not exist. Difference between these prediction and the evidence actually available form gaps, call them $G$. These gaps are part of the evidence also. They describe facts about what evidence was not found or not presented. So, briadly speaking, the evidence in a case included both $E$ (evidence presented) and $G$ (gaps, evidence not presented). For Kaye, the probability to be assessed is not $P(S \vert E)$, but rather, $P(S \vert E \wedge G)$. 
 
 Often $P(S \vert E) > P(S \vert E \wedge G)$, depending on the reason why the evidence is 
 missing. 
 
-\item Nance has a notion of completeness in mind when he talks about reasonable completeness. See his 1998 piece "Evidential Completeness and the Burden of Proof". He seems to have in mind a \textbf{cost-benefit analysis of completeness} more than a reasonable list of complete evidence. A body of evidence is, for him (pp. 627-628, article), reasonably complete (relative to a claim H), when 
+
+\todo{Yeah, I've read it. My worry: this only works if you build in the identification and gaps brute force. Nothing in this overly simplistic machinery tells you how to identify them and what their impact should be. We need to do better.}
+
+***
+
+
+
+- Nance has a notion of completeness in mind when he talks about reasonable completeness. See his 1998 piece "Evidential Completeness and the Burden of Proof". He seems to have in mind a \textbf{cost-benefit analysis of completeness} more than a reasonable list of complete evidence. 
+
+***
+
+A body of evidence is, for him (pp. 627-628, article), reasonably complete (relative to a claim H), when 
 
    (a) it is not missing any relevant evidence that it would be cost justified (=reasonable) to obtain, and 
    
    (b) it is missing a relevant item of evidence that---though currently impossible to obtain because of a fault (negligence, intentional destruction, etc.) of one of the parties---could have been obtained with no unreasonable costs. 
 
-\begin{itemize}
 
-\item[-] Because of condition (b), the same body of evidence could count as complete or incomplete deepening on the circumstances. For example, if DNA evidence is missing in a rape case, but there is a good justification for why it is missing 
+- Because of condition (b), the same body of evidence could count as complete or incomplete deepening on the circumstances. For example, if DNA evidence is missing in a rape case, but there is a good justification for why it is missing 
 (say, the lab samples were destroyed in an accident), the body of evidence missing DNA evidence could very well count as reasonably complete. But if there is no good justification for why the DNA evidence is missing, the same body of evidence could count as incomplete.
 
-\item[-] Focusing on (a), Nance does not speak of 
+- Focusing on (a), Nance does not speak of 
 a list of *reasonably complete* evidence. Nance in his book seems to think that evidence is complete if no more evidence can be acquired in a cost justified manner. He writes:
 
 \begin{quote}
 the decision whether Keynesian weight is adequate to proceed to the determination about the underlying hypothesis or claim does not depend on any such quantitative measure of either the weight of the evidence on hand or its degree of completeness. It depends, instead, on what further weight can be obtained and at what costs. (p. 156, book)
 \end{quote}
+
+
+
+
 
 He illustrates this point by proving a list of possible 
 further items of evidence, each associated with 
@@ -122,12 +171,22 @@ This creates a prioritization for the acquisition of additional evidence as long
 
 So, it seems, once the return on investigative cost is below a threshold ratio, there is no point in searching for and presenting further evidence, and thus the body of evidence available must be considered complete.  
 
-\end{itemize}
+***
 
-\item An open question about completeness is, how do we measure the gap between the complete list of evidence and the actual evidence available?  Counting the number of items of evidence missing does not seem a promising approach. It is merely syntactic. We seem to run into the same problems as with measuring quantity.  
-\item Connection with quantity: is a body of evidence that has more quantity also  more evidentially complete? 
 
-\end{itemize}
+\todo{Ok, I don't get this fully. So fine, reasonable completeness is supposed to be a necessary condition for making a decision, whatever the decision will be. But clearly we need to be able to distinguish cases where no further evidence can feasibly be obtained, the posterior probability is centered around a high value but uncertainty is still high, and so no conviction should be made (see some examples from my higher-order probability paper/Girona talk). So we still need some explanation of when such feasibility-restricted collection of evidence is sufficient, and some quantitative take on this, right? Am I missing something?}
+
+
+-  An open question about completeness is, how do we measure the gap between the complete list of evidence and the actual evidence available?  Counting the number of items of evidence missing does not seem a promising approach. It is merely syntactic. We seem to run into the same problems as with measuring quantity.  
+
+\todo{Ok, how about the complete list is an idiom-insipred-narration-developed wishlist. Then on one hand you need to pay attention to what you're missing, what the potential impact of it would be (my expected weight seems to do the job), and on the other, how telling the evidence that you already have you are. But also, you need to be able to distinguish various reason for incompleteness ---- not only cost-related, because it's a mixed bag. If the evidence has been purpsefully destroyed, the impact is different than if it has been destroyed by negligence, and thinking about this in terms of costs is useless, as both are cost-wise degenerate cases (you can't obtain these items of evidence at any cost)}
+
+
+
+- Connection with quantity: is a body of evidence that has more quantity also  more evidentially complete? 
+
+\todo{I think this question is too vague, I don't get it.}
+
 
 
 ## Resilience 
@@ -150,6 +209,9 @@ Resiliency over the whole language may be a requirement of unrealistic stringenc
 \end{quote}
 
 
+\todo{Right, and it is not insane to think that this list of potential pieces of further evidence that the decision should be ideally resilient to comes from the wishlist of complete evidence, no?}
+
+
 ## Informativeness (Rafal's account)
 
 The notion of weight/informativeness (in Rafal's formal account) is related but not identical to 
@@ -161,20 +223,31 @@ quantity, completeness, resilience. Weight refers to:
 
 **Questions**: How does this model of weight look in trial proceedings? How can it be applied? How would this conception of weight enter into a theory of decision-making? Do we identify a weight threshold, like a probability threshold?
 
+\todo{All valid questions. I propose we get started with going over the example in the Girona talk to identify which questions are unanswered, which need more work, and what the weak spots are.}
+
 **Question**: How does this conception relate to Joyce measure of weight for the case of chance hypotheses. 
 Let $P(X)\sum_x P(Ch(X)=x)x$, where $X$ is a statement such as "the coin comes up heads" and $Ch(X)=x$ stands for "The chance that the coin come sup heads is x". Weight is defined as (see Joyce, How Probabilities Reflect Evidence, p. 166):
 
 \[w(X, E) = \sum_x \vert P(Ch(X)=x)(x-P(X))^2 - P(Ch(X)=x \vert E)(x-Pr(X \vert E))^2\vert\]
 
 
+\todo{Like I said, I did think about this, this is briefly discussed in the HOP paper, but I agree
+this needs to be more extensively discussed in the chapter.}
+
 ## What else?
 
 There could be other notions that might be good to discuss, such as: *specificity* (how specific is the evidence), *intervals and imprecision*, etc. Need to state connection to other conceptions of weight.
+
+\todo{Yeh, imprecision is going to be a big thing in the chapter, as this is one of the modern strategies to make sense of Keynes. Not sure what to do with the notion of specificity, as this smells of Thompson and the blue bus problem, I don't think the notion has ever been successfully expicated. To be discussed.}
+
+
 
 
 # (2) Legal examples 
 
 ## Example: Salem Trial
+
+\todo{Where does this come from, has this been discussed in the literature? Oh wait, is that the one I brought up? :)}
 
 
 Aggravated murder case. Victim was stabbed to death in her house. 
@@ -237,9 +310,15 @@ is reasonably incomplete.
 - (*resilience test*) second assess whether missing evidence could have changed the verdict. 
 In legal jargon, this is the question of prejudice. 
 
+
+\todo{This is a great example for various reasons. One: completeness wrt. to list again seems to be a heuristics: coming up with an ideal list to be used (i) to guide evidence collection and interpretation and to (ii) estimate resiliency wrt. to potential impact of the missing items (although, to what extend the witness' testimony could be predicted and its impact evaluated?). To discuss }
+
+
+\todo{Question: do we want to spend time and effort developing a BN HOP treatment here? Worry: this might be too complex to clearly illustrate the basic points. Counter: so perhaps later in a chapter as a proof of concept?}
+
 ## Example: Tin Box Case
 
-Missing fingerprint evidence in a murder case due to police oversight. This is from Dahlman's paper circulated during the Girona workshop. Full quotatio below:
+Missing fingerprint evidence in a murder case due to police oversight. This is from Dahlman's paper circulated during the Girona workshop. \todo{I don't think I've seen this paper, would you mind forwarding it to me?} Full quotation below:
 
 \begin{quote}
 In 2005 a man walks into a Swedish police station and says that he wants to turn himself in. His
@@ -277,9 +356,15 @@ investigation, the evidence against AA is not sufficiently robust for the standa
 criminal cases.
 \end{quote}
 
+\todo{Wait, what happened with the sons??}
+
 **Comment**: Here again completeness and resilience are key. 
 
 - Given what we know about what happened, fingerprint evidence from the tin box is  missing ("the tin box was found open at the crime scene, but was never examined for fingerprints or DNA"). As in the Salem case, police have a justification ("police did not consider this necessary, since AA had confessed"), but it does not seem a very good one. So the evidence is reasonably incomplete. 
+
+\todo{Note, both cases failed not because the evidence was intentionally destroyed, but due to negligence.}
+
+\todo{Do we also have a neat example of evidence being intentionally destroyed and this actually having an impact on court's decision?}
 
 - Next, we have a resilience test, suggesting that fingerprint evidence could weaken the case against the defendant ("the results of this investigation could have produced evidence favorable to the defendant"). 
 
@@ -305,7 +390,7 @@ data base with 20 000 pictures of hands collected from the general Swedish popul
 forensic analyst finds 20 hands (1 in 1000) with severed fingers. At closer scrutiny, two of them
 (1 in 10 000) are severed in the same way as the hand in the beheading video, and match it
 just as well as BBs hand. The forensic analyst therefore concludes that the probability of a
-random match is approximately 1 in 10 000. The two matching hands in the reference data
+random match is approximately 1 in 10 000. \todo{Whoa, great example to talk about why HOP would do much better at gauging uncertainty here!!} The two matching hands in the reference data
 base belong to men who died before 2013 and can therefore be ruled out as suspects. BB is
 prosecuted for murdering the British journalist. The case for the prosecution is based on BBs
 affiliation with ISIS and the expert testimony of the forensic image analyst. BBs defense
@@ -328,12 +413,20 @@ sufficiently robust for the standard of proof in criminal cases.
 
 - Completeness and resilience still play a role here, but not so clearly as in the previous two examples.
 
+
+\todo{Nah, I'd say, two things, poor choice of reference class, and despite low frequency high uncertainty based on sample size. But I still need to think about this.}
+
 - In addition to completeness and resilience, this example best illustrates Rafal's model of weight/informativeness of evidence, since the evidence here is quantitative.  The distribution of the random match probability could be more or less spread out 
 depending on the data relied upon. 
+
+
+\todo{Ah, yeah, you already thought about the point I made. :)}
 
 - The notion of specificity seems applicable as well, since the random match probability 
 can be more or less specific to an individual, deepening on the specificity of the reference class used. 
 
+
+\todo{Maybe, but then I still don't think I have a good enough understanding of the notion and perhaps adding it to the mix in this chapter might be too much. To be discussed.}
 
 
 ## Example: DNA evidence assessment 
@@ -349,13 +442,27 @@ can be more or less specific to an individual, deepening on the specificity of t
 \end{quote} 
  The paucity of data available or the fact that the data available does not match perfectly the circumstances of the specific case at hand suggest that the probability assignment should be less weighty -- say the spread of the distribution should be greater. This fits with Rafal's account of weight.
  
+ \todo{Neat, it'd be great to have a worked-out example with an implementation. Can we find a precise enough example to work with in the literature?}
+ 
+ 
  \item Can Rafal's account of weight also apply to the assessment of source level propositions about which data are usually available and less controversial? There can be circumstances in which Rafal's weight might still be a useful notion. For example:
  
  (a) There could be multiple random match probabilities available but we do not know which should be applied. Simply taking the random match probability that is most favorable to the defendant would not be too one-sided. The missing finger case from before falls into this type of cases. 
+ 
+ 
+\todo{} OK, so purely combinatorial RMP probabilities have been criticized for being unrealistic, either because they don't take into account lab errors, or because they do not easily entail differences in frequencies between races (we need to read up on the details here if we are to use this example, but I remember an example with multiple possible classes in an early version of the SEP entry). Need to think about this.}
+
+
+
 
 (b) There is uncertainty about whether the defendant has a brother or a twin. If the defendant has a brother or a twin, the uncertainty about the RMP increases. The RMP might have to be lower than it actually is, or alternatively, the greater uncertainty can be captured by a greater spread of the distribution. This again seems to fit with Rafal's approach.
 
+\todo{Here too it'd be great to have an example precise enough for an implementation to be possible. Do you recall seeing one in the literature? }
+
 \item The general question here is whether things like the likelihood ratio---and only that---can capture all the different levels of uncertainty involved in the assessment of a DNA match or whether a more sophisticated approach, say using first-order probability \textit{plus} weight, is more appropriate. It seems that the Taroni/Biederman group would be opposed to this latter approach.
+
+\todo{If weight was something external; if it actually falls out from otherwise probabilistic phenomena standard in Bayesian data analysis, maybe not. But it will be good to discuss this potential source of disagreement: hey, you might think this is crazy and external, but actually it's natural once you agree the HOP approach makes sense and is in line with the usual methods of Bayesian data analysis. }
+
 
  \end{itemize}
  
@@ -378,6 +485,8 @@ Unlawful possession of firearm. Police stop defendant's
 vehicle and find illegal firearm. Police does not retain all the items found in a backpack in the car. 
 Defendant request missing evidence instructions at trial. Request is denied. Defendant appeals. Appeal court rejects because the items in the backpack did not seem at all relevant in understanding what happened.
 
+
+
 **Comments:**
 
 - The evidence was in some broad sense incomplete (items in backpack were not presented as evidence), but since they were clearly irrelevant or would have made no difference to the case, there is no need to request missing evidence instructions.
@@ -385,6 +494,9 @@ Defendant request missing evidence instructions at trial. Request is denied. Def
 - Here again e see an appeal to completeness as well as to resilience (missing evidence would have made no difference to the outcome since the missing evidence seems utterly irrelevant)
 
 - This case opens up a discussion about various legal rules, such as missing evidence and spoliation
+
+
+\todo{Ok, interesting, was there a deeper story explaining how there was no resilience and how the content of the backpack would explain something or undermine the decision? Otherwise a nice short example of a positive resiliency check, to be used in the chapater. }
 
 ## Example: Missing evidence instrcutions
 
@@ -413,6 +525,9 @@ Moreover, we have "recognized several dangers inherent in the use of a missing [
 Tyer v. United States, 912 A.2d 1150 (D.C. 2006)
 \end{quote}
 
+
+\todo{Ok, but are there any clear cases of the instruction being given and of the instruction being denied. }
+
 ## Example: Spoliation evidence rules
 
 
@@ -424,6 +539,8 @@ It was said by Chief Justice Shaw in the case of the Commonwealth v. Webster, 5 
 Graves v. United States, 150 U.S. 118, 14 S. Ct. 40, 37 L. Ed. 1021 (1893).
 \end{quote}
 
+
+\todo{Ok, need to use it when we talk about spoilation having diferent impact than negligence or than cost-consideration. }
 
 - The more recent doctrine seems more complicated, 
 more the general idea seems the same, with some qualifications:
