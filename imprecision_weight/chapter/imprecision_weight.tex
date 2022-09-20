@@ -1,15 +1,15 @@
 % Options for packages loaded elsewhere
 \PassOptionsToPackage{unicode}{hyperref}
 \PassOptionsToPackage{hyphens}{url}
-\PassOptionsToPackage{dvipsnames,svgnames*,x11names*}{xcolor}
+\PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
 %
 \documentclass[
   10pt,
   dvipsnames,enabledeprecatedfontcommands]{scrartcl}
 \usepackage{amsmath,amssymb}
 \usepackage{lmodern}
-\usepackage{ifxetex,ifluatex}
-\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+\usepackage{iftex}
+\ifPDFTeX
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
   \usepackage{textcomp} % provide euro and other symbols
@@ -25,18 +25,6 @@
   \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
 }{}
 \usepackage{xcolor}
-\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
-\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
-\hypersetup{
-  pdftitle={``Weight of Evidence, Evidential Completeness and Accuracy''},
-  pdfauthor={Rafal Urbaniak and Marcello Di Bello},
-  colorlinks=true,
-  linkcolor=Maroon,
-  filecolor=Maroon,
-  citecolor=Blue,
-  urlcolor=blue,
-  pdfcreator={LaTeX via pandoc}}
-\urlstyle{same} % disable monospaced font for URLs
 \usepackage{graphicx}
 \makeatletter
 \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
@@ -224,9 +212,21 @@
 \usepackage{tikz}
 \usetikzlibrary{positioning,shapes,arrows}
 
-\ifluatex
+\ifLuaTeX
   \usepackage{selnolig}  % disable illegal ligatures
 \fi
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same} % disable monospaced font for URLs
+\hypersetup{
+  pdftitle={``Weight of Evidence, Evidential Completeness and Accuracy''},
+  pdfauthor={Rafal Urbaniak and Marcello Di Bello},
+  colorlinks=true,
+  linkcolor={Maroon},
+  filecolor={Maroon},
+  citecolor={Blue},
+  urlcolor={blue},
+  pdfcreator={LaTeX via pandoc}}
 
 \title{``Weight of Evidence, Evidential Completeness and Accuracy''}
 \author{Rafal Urbaniak and Marcello Di Bello}
@@ -256,7 +256,7 @@ meant to do exactly that.
 the probability of \(W=\)`the next bean will be white' is .5 if half of
 the beans you have drawn randomly so far have been white, no matter
 whether you have drawn a thousand or only two of them. But this means
-that expressing your uncertainty about \(W\) by locutions such as "my
+that expressing your uncertainty about \(W\) by locutions such as ``my
 confidence in \(W\) is .5' does not capture this intuitively important
 distinction.
 
@@ -366,11 +366,16 @@ similar form:
 (Possibly no change ) & It is possible that   $V(X\vert K \wedge E) > V(X\vert K)$ while $\pr{X \vert K \wedge E} =  \pr {X\vert K}$.
 \end{tabular}
 
-Keynes is not referring to the sheer number of statements on the right
-hand side of a conditional probability P (H \textbar{} E) or the sheer
-bulk of information that these statements contain. By ``relevant
-evidence,'' Keynes is only referring to the extent that E pro- vides
-information that is pertinent to H in particular. {[}Pedden3{]}
+Interestingly, Keynes for quite a few years did not attempt to provide
+anything close to a formal explication of the notion, and did not spend
+too much time studying the issue. Various reasons for this has been
+proposed the literature, a prominent one {[}CITE FEDUZI 2010{]} being
+that from the decision-theoretic perspective no clear stopping rule
+emerged as to whether the evidence is weighty enough to make a decision.
+\todo{Should I talk about other theories here, or should we leave it as is without getting into interpretative details.}
+Later on we will see a sort of revival---some ideas later developed by
+Keynes has been used to explicate the notion of weight formally, and we
+will take a closer look at this proposal. \todo{REF section}
 
 \hypertarget{examples-and-informal-desiderata}{%
 \subsection{Examples and informal
@@ -406,7 +411,8 @@ been introduced by Good {[}CITE PROBABILITY AND THE WEIGHING OF EVIDENCE
 1950{]}. Let \(W(H:E)\) be the Good's weigh of evidence in favor of
 \(H\) provided by \(E\) (if we want to explicitly conditionalize on some
 background knowledge \(K\), we write \(W(H:E\vert K)\)). One assumption
-about \(W\) taken by Good is as follows:
+about \(W\) taken by Good is as
+follows:\todo{pays attention to different values of different items of evidence, which is better than just counting or supersets}
 
 \begin{tabular}{lp{11cm}}
 (Function) & ``It is natural to assume that $W(H:E)$ is some function of $\pr{E\vert H}$ and of $\pr{E\vert \neg H}$, say $f[\pr{E\vert H}, \pr{E \vert \neg H}]$. I cannot see how anything can be relevant to the weight of evidence other than the probability of the evidence given guilt and the probability given innocence.'' [cite Good 1985 p 250]
@@ -502,6 +508,65 @@ continuum of Good's weights, one for each particular value of
 Completeness, inclusion entails weight comparison, very limited
 applicability
 
+A question similar to ``how weighty is the evidence'' is ``how complete
+is it''? These are conceptually different: the former asks about how
+much information pertinent to a given hypotheses the evidence provides,
+or, about the amount of evidence relevant to that hypothesis, the latter
+seems to suggest a checklist approach on which the presence of various
+items of evidence is compared to some ideal list of what such items
+would be needed for the evidence to be complete. While we think that
+these notions, albeit related, should be clearly distinguished, the
+distinction has not always been made clearly in the literature, and some
+authors pursued the idea of explicating weight in terms of completeness.
+The best developed approach of this sort that we know of is due to
+{[}CITE FEDUZI 2010{]}. In this section we will present it and discuss
+its limitations.
+
+One advantage of the completeness approach is that the resolution of the
+stopping problem is more or less automatic: the agent should make the
+decision if the evidence is complete, and should collect more evidence
+if it is not.\footnote{Later on, when discussing Nance's approach to the
+  notion, we will see a complication: obtaining further evidence might
+  be practically unfeasible, and so it makes sense to distinguish ideal
+  completeness from reasonable completeness and base the practical
+  stopping rule on the former. For now, we put this complication aside.}
+
+Following {[}CITE FEDUZI 343{]}, let us use \(\Omega\) as the set of all
+items of possible evidence relevant for estimating the probability of
+the hypothesis \(H\). Let \(K\) be the agent's knowledge, the set of
+items of evidence already obtained by the agent, \(K \subseteq \Omega\).
+Then her relevant ignorance is \(I = \Omega \setminus K\). Then, Feduzi,
+following {[}CITE RUNDE 1990{]}, proposes to define the weight of
+information \(E\) provides about \(H\), \(V(H/E)\) as follows:
+\begin{align} \tag{Vdiv}  V(H/E) & = \frac{K}{K+I}.\end{align}
+\noindent While literally it does not make sense to divide sets by sets,
+we might charitably interpreting Feduzi as using \(\Omega, K\) and \(I\)
+the symbols ambiguously, standing for both the sets of items of
+evidence, and the amount of relevant information that the sets contain.
+The obvious difficulty is that it is not a successful explication (at
+least not yet), as we are not told how to get \(K\) and \(K+I\) as
+numerical values to be used in the division. But however we get them,
+let us see whether (Vdiv) can result in any insights when it comes to
+the stopping problem.
+
+Here is an example due to Feduzi {[}CITE 345{]} Joan in her research
+tries to establis who is the most quoted author in the literature on
+decision theory under ambiguity. \(\Omega\) is the set of all \(n\)
+papers (though of as items of evidence \(E_1, \dots, E_n\)). \(K_0\)
+contains the \(m\) papers that Joan inspected so far
+(\(E_1, \dots, E_m\), \(m<n\). \(I_0\) is the set of papers she did not
+look at yet, \(\Omega = K_0 \cup I_0\). However, Joan is aware only of a
+part of \(\Omega\), the papers in the field she believes exist, \(S\).
+Thus, her objective ignorance, \(I_0\), and her subjective ignorance,
+\(I_S = S- K\), diverge. Joan's assessment of weight is going to be
+\(\nicefrac{K}{K+I_s}\).
+
+Say Joan formulates a hypothesis, \(H\): ``Ellsberg is the most highly
+cited author in the ambiguity literature'' and that she is quite
+confident that the papers she had not looked at yet would not
+significantly affect the probability of \(H\). She thinks she has read
+enough, say \(\pr{H \vert K} = .7\) and \(V(H/K) = .8\).
+
 \hypertarget{skyrms-and-resilience}{%
 \subsection{Skyrms and resilience?}\label{skyrms-and-resilience}}
 
@@ -554,7 +619,7 @@ weights be put to use if we do not have the distributions?
 \section{Literature to discuss}\label{literature-to-discuss}}
 
 Kasser, 2016, Two Conceptions of Weight of Evidence in Peirce's
-Illustrations of the Logic of Science {[}DOWNLOADED{]}
+Illustrations of the Logic of Science {[}DOWNLOADED, COVERED{]}
 
 Feduzi, 2010, On Keynes's conception of the weight of evidence
 {[}READ{]}
