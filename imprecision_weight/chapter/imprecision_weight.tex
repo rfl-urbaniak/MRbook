@@ -981,24 +981,43 @@ edges are exactly the same.
 Another stab at explicating weight of evidence within the \textsf{IP}
 framework has been made by Joyce (2005). Joyce uses a density over
 chance hypotheses to account for the notion of evidential weight. He
-comceptualizes the weight of evidence as an increase of concentration of
+conceptualizes the weight of evidence as an increase of concentration of
 smaller subsets of chance hypotheses: \begin{align}
-\tag{Jpyce} w(X,E) & = sum_x \vert c(ch(X) = x  \vert E) \times (x - c(X\vert E))^2 - c(ch(X) = x) \times (x - c(X))^2\vert
+\tag{Joyce} w(X,E) & = \sum_x \vert c(ch(X) = x  \vert E) \times (x - c(X\vert E))^2 - c(ch(X) = x) \times (x - c(X))^2\vert
 \end{align}
 
 \noindent This looks a bit complicated, so let us take this slow.
-Suppose you have three that the coin bias is \(x\). \(H\) is the
-hypothesis that the next coin toss will come up heads. \(D\) is the
-observations that you have made.
+Suppose you only consider three chance hypotheses, that the coin bias is
+one of \(.4, .5,\) and \(.6\), that is, the hypotheses are
+\(ch(X) = .4, ch(X)=.5,\) and \(ch(X)=.6\). For each
+\(x\in \{.4, .5, .6\}\)) you attach a prior credence \(c(ch(X) = x)\) to
+the corresponding hypothesis. Say you start with equal priors, that is
+for all \(x\in \{.4, .5, .6\}\) you have
+\(c(ch(X) =x) = \nicefrac{1}{3}\). Then, your expected value of \(X\),
+which Joyce takes to be your credence in \(X\) simpliciter is
+\(\sum_x c(Ch(X)=x)x\), which is .5.
 
-where \(B=x\) is a coin bias hypothesis, \(D\) is the new data, \(H\) is
-the hypothesis that the next coin toss will come up heads, \(f\) is the
-density that corresponds to \(p\), \(f_D\) is the density obtained from
-\(f\) by conditionalizing on \(D\). Now imagine \(p\) is concentrated on
-a narrow range of hypotheses. Then \(f(B=x)\) is small/large for
-large/small \((x - p(X))^2\), so the minuend will tend to be small, and
-similarly for the subtrahend, so the whole number will be close to zero
-for a wide range of data \(D\).
+Now consider your evidence: you tossed the coin and observed, say, seven
+heads out of ten tosses. We need \(c(ch(X)=x \vert E)\). By Bayes, we
+have: \begin{align*}
+c(ch(X)=x \vert E) & = \frac{c(E \vert ch(X) =x) c(ch(X)=x )}{c(E)},
+\end{align*} \noindent so we need to calculate the likelihoods,
+\(c(E \vert ch(X) =x)\). We assume you are probabilistically coherent,
+that you defer to chances, and know the experimental setup, so that the
+likelihoods are calculated using the binomial distribution, i.e.~if the
+evidence is \(a\) heads and \(b\) tails: \begin{align*}
+c(E \vert ch(X) =x) & = {a+b \choose a}\,x ^a (1-x)^{b}
+\end{align*} \noindent Accordingly, in our example, the likelihoods
+(rounded) are .042, .117\$, and \(.214\) respectively. The denominator
+is calculated by taking
+\(c(E) = \sum_x c(E \vert ch(X) =x) c(ch(X)=x)\), which in our case
+turns out to be \(.124\). Putting these together, the values of
+\(c(ch(X)=x \vert E)\) are \(.113\) \(.312\), and \(.573\) (rounded).
+Then, your expected value, which Joyce to be your credence in \(X\)
+simpliciter conditional on \(E\) is \(\sum_x c(Ch(X)=x\vert E)x\), which
+is \(.54\).
+
+Now we can plug these into (Joyce).
 
 This approach is of limited applicability, though. For one thing, as
 Joyce admits, it is supposed to work when RA's credence is mediated by
