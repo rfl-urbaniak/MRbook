@@ -105,8 +105,10 @@ weightJoyce <- function (chanceHypotheses = c(.4, .5, .6),
         
         weight <- sum ( abs( top - bottom) )
         
-        return(list(hypotheses = chanceHypotheses, prior = credenceInHypotheses, posterior =  chxe, 
-                    cX = cX, cXe = cXe, weight = weight))  
+        return(list(hypotheses = chanceHypotheses, prior = credenceInHypotheses,
+                    posterior =  chxe, 
+                    cX = cX, cXe = cXe,  multiplierE = multiplierE, 
+                     multiplier = multiplier, top = top, bottom  = bottom, weight = weight))  
           }
 
 
@@ -190,12 +192,8 @@ outOf100df
 
 names(outOf100df) <- c("successes", "equal", ".5, .3, .2")
 names(outOf100df)
-# The arguments to gather():
-# - data: Data object
-# - key: Name of new key column (made from names of data columns)
-# - value: Name of new value column
-# - ...: Names of source columns that contain values
-# - factor_key: Treat the new key column as a factor (instead of character vector)
+
+
 outOf100dfLong  <- gather(data = outOf100df,
                          key = priors, value = w,
                          "equal", ".5, .3, .2", 
@@ -217,7 +215,7 @@ joyce100
 
 
 
-#now let's say we see 70% for increasing sample size
+#now let's say we see 10% for increasing sample size
 
 s <- seq(1,100)
 obs <- seq(10, 1000, by = 10)
@@ -240,36 +238,84 @@ for (i in  1:100){
 
 
 
-
-
-wbss <- data.frame( "sample size" = seq(1,100,1),
+wbss <- data.frame( "sample size" = obs,
                           equal = weightsBySampleSize, 
                           ".5, .3, .2" = weightsBySampleSizeLeft)
 
+wbss$frequency <- rep(.1, nrow(wbss))
+
 wbss
 
-names(wbss) <- c("sampleSize", "equal", ".5, .3, .2")
+s2 <- seq(1,500)
+obs2 <-2 *s2   
+
+s2
+
+obs2
+
+
+weightsBySampleSize2 <- numeric(length(s))
+weightsBySampleSizeLeft2 <- numeric(length(s))
+
+
+for (i in  1:500){
+  weightsBySampleSize2[i] <- weightJoyce(successes = s2[i],
+                                        trials = obs2[i])$weight
+}
+
+for (i in  1:500){
+  weightsBySampleSizeLeft2[i] <- weightJoyce(successes = s2[i],
+                                            trials = obs2[i],
+                                            credenceInHypotheses = c(.5, .3, .2))$weight
+}
+
+
+wbssHalf <- data.frame( "sample size" = obs2,
+                    equal = weightsBySampleSize2, 
+                    ".5, .3, .2" = weightsBySampleSizeLeft2)
+
+wbssHalf$frequency <- rep(.5, nrow(wbssHalf))
+
+
+names(wbss) <- c("sampleSize", "equal", ".5, .3, .2", "frequency")
+names(wbssHalf) <- c("sampleSize", "equal", ".5, .3, .2", "frequency")
+
 wbss
-# The arguments to gather():
-# - data: Data object
-# - key: Name of new key column (made from names of data columns)
-# - value: Name of new value column
-# - ...: Names of source columns that contain values
-# - factor_key: Treat the new key column as a factor (instead of character vector)
-wbssLong <- gather(data = wbss,
+
+wbssHalf
+
+
+wbssLong <- gather(data = rbind(wbss, wbssHalf),
                           key = priors, value = w,
                           "equal", ".5, .3, .2", 
                           factor_key=TRUE)
 
 
+head(wbssLong)
+
+ggplot(wbssLong)+geom_line(aes(x = sampleSize,
+                                y = w, color = priors,
+                                lty = as.factor(frequency)) )+
+  scale_x_continuous(breaks = seq(0,1000, by = 100))+theme_tufte(base_size = 14)+
+  ylab("w")+
+  xlab("sample size")+
+  #  scale_y_continuous(breaks = seq(0,0.01, by = .001))+
+  labs(title = "Joyce's weights  can drop with sample size",
+       subtitle = "(eventually they stop growing)",
+       lty = "observed frequency")+
+  theme(plot.title.position = "plot")
+
+
+
 
 joyceWBSS  <- ggplot(wbssLong)+geom_point(aes(x = sampleSize,
-                                                   y = w, color = priors) )+
+                                                   y = w, color = priors,
+                                              shape = frequency) )+
   scale_x_continuous(breaks = seq(0,1000, by = 10))+theme_tufte(base_size = 14)+
   ylab("w")+
   xlab("sample size")+
 #  scale_y_continuous(breaks = seq(0,0.01, by = .001))+
-  labs(title = "Joyce's weights change radically by frequency",
+  labs(title = "Joyce's weights  by sample size",
        subtitle = "")+
   theme(plot.title.position = "plot")
 
@@ -281,11 +327,12 @@ joyce100
 
 #outdated
 
+weightJoyce(successes = 50, trials = 500)
 
-weightJoyce(successes = 40, trials = 100)
+weightJoyce(successes = 100, trials = 1000)
 
 
-weightJoyce(successes = 40, trials = 100)$weight/
+weightJoyce(successes = 40, trials = 100)$weight
   weightJoyce(successes = 50, trials = 100)$weight
 
 

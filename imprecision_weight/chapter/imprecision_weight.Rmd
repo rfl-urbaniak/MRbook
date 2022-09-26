@@ -106,7 +106,7 @@ Clearly, Keynes also endorsed the following two requirements of a very similar f
 Now, back to the urn example. You might think the actually frequency observed should contribute more to the balance, not to the weight, at least in the sense that with the same number of observations, more extreme frequencies should not have lower weight:
 
 \begin{tabular}{lp{11cm}}
-(Frequency monotonicity) & For a fixed number of observations in a binomial experiment, for two observed frequencies $f_1$ and $f_2$, if $f_2$ is closer to $.5$ than $f_1, the weight of observing $f_1$ is not less than that of observing $f_2$.
+(Frequency monotonicity) & For a fixed number of observations in a binomial experiment, for two observed frequencies $f_1$ and $f_2$, if $f_2$ is closer to $.5$ than $f_1$, the weight of observing $f_1$ is not less than that of observing $f_2$.
 \end{tabular}
 
 
@@ -444,7 +444,7 @@ Moreover, the reader might have observed that the values of $w$ for our example 
 First, suppose we keep the same priors, and calculate $w$ depending on how many successes we have observed in the 10 tosses. The results are as follows:
 
 
-```{r joyceMeasure,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
+```{r joyceMeasure,echo=FALSE,eval=TRUE,fig.align = "center", cache=FALSE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
 weightJoyce <- function (chanceHypotheses = c(.4, .5, .6),
                          credenceInHypotheses =  c(1/3, 1/3, 1/3),
                          successes = 7,
@@ -513,7 +513,7 @@ joyce10  <- ggplot(outOf10dfLong)+geom_point(aes(x = successes,
 
 
 \begin{figure}
-```{r joyce1,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
+```{r joyce1,echo=FALSE,eval=TRUE,fig.align = "center", cache=FALSE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
 
 joyce10
 
@@ -529,7 +529,7 @@ joyce10
 The behavior of $w$ is even more unusual if the sample size is higher. In Figure \ref{fig:joyce2} we illustrate what happens with $n=100$, for various possible outcomes of 100 Bernoulli trials.
 
 
-```{r joyce2calculations,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
+```{r joyce2calculations,echo=FALSE,eval=TRUE,fig.align = "center", cache=FALSE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
 
 outOf100WeightsEqualPriors <- numeric(101)
 
@@ -574,9 +574,9 @@ joyce100  <- ggplot(outOf100dfLong)+geom_point(aes(x = successes,
 
 
 \begin{figure}
-```{r joyce2,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
+```{r joyce2,echo=FALSE,eval=TRUE,fig.align = "center", cache=FALSE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
 
-joyce10
+joyce100
 
 ```
 
@@ -585,7 +585,111 @@ joyce10
 \end{figure}
 
 
-Putting drastic shift in weights for frequencies not too far from the chance hypotheses, which we already observed, here we see a phenomenon that Figure \ref{fig:joyce1} did not reveal: for frequencies further from the chance hypotheses it seems that penalizing by squaring the distance from the expected values results in a flattening of the shift in weight. 
+So this measure might result in  drastic shift in weights even if the observed frequenciesa are not too far from the chance hypotheses. This we find undesirable. 
+
+In Figure \ref{fig:joyce3} we illustrate two other phenomena, which  might come up when the observed frequencies are kept fixed, but the sample size increases.
+
+
+
+
+```{r joyce3calculations,echo=FALSE,eval=TRUE,fig.align = "center", cache=FALSE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
+
+s <- seq(1,100)
+obs <- seq(10, 1000, by = 10)
+
+
+weightsBySampleSize <- numeric(length(s))
+weightsBySampleSizeLeft <- numeric(length(s))
+
+
+for (i in  1:100){
+weightsBySampleSize[i] <- weightJoyce(successes = s[i],
+                                      trials = obs[i])$weight
+}
+
+for (i in  1:100){
+  weightsBySampleSizeLeft[i] <- weightJoyce(successes = s[i],
+                                    trials = obs[i],
+                                    credenceInHypotheses = c(.5, .3, .2))$weight
+}
+
+
+wbss <- data.frame( "sample size" = obs,
+                          equal = weightsBySampleSize, 
+                          ".5, .3, .2" = weightsBySampleSizeLeft)
+
+wbss$frequency <- rep(.1, nrow(wbss))
+
+s2 <- seq(1,500)
+obs2 <-2 *s2   
+
+weightsBySampleSize2 <- numeric(length(s))
+weightsBySampleSizeLeft2 <- numeric(length(s))
+
+
+for (i in  1:500){
+  weightsBySampleSize2[i] <- weightJoyce(successes = s2[i],
+                                        trials = obs2[i])$weight
+}
+
+for (i in  1:500){
+  weightsBySampleSizeLeft2[i] <- weightJoyce(successes = s2[i],
+                                            trials = obs2[i],
+                                            credenceInHypotheses = c(.5, .3, .2))$weight
+}
+
+
+wbssHalf <- data.frame( "sample size" = obs2,
+                    equal = weightsBySampleSize2, 
+                    ".5, .3, .2" = weightsBySampleSizeLeft2)
+
+wbssHalf$frequency <- rep(.5, nrow(wbssHalf))
+
+
+names(wbss) <- c("sampleSize", "equal", ".5, .3, .2", "frequency")
+names(wbssHalf) <- c("sampleSize", "equal", ".5, .3, .2", "frequency")
+
+
+
+wbssLong <- gather(data = rbind(wbss, wbssHalf),
+                          key = priors, value = w,
+                          "equal", ".5, .3, .2", 
+                          factor_key=TRUE)
+
+
+joyceWBSS  <- ggplot(wbssLong)+geom_line(aes(x = sampleSize,
+                                y = w, color = priors,
+                                lty = as.factor(frequency)) )+
+  scale_x_continuous(breaks = seq(0,1000, by = 100))+theme_tufte(base_size = 14)+
+  ylab("w")+
+  xlab("sample size")+
+  #  scale_y_continuous(breaks = seq(0,0.01, by = .001))+
+  labs(title = "Joyce's weights  can drop with sample size",
+       subtitle = "(eventually they stop growing)",
+       lty = "observed frequency")+
+  theme(plot.title.position = "plot")
+
+
+```
+
+
+
+
+
+
+
+
+
+\begin{figure}
+```{r joyce3plot,echo=FALSE,eval=TRUE,fig.align = "center", cache=FALSE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
+joyceWBSS
+```
+
+\caption{Joyce's $w$ (the lower it is, the higher the weight) for two fixed success ratio across various observed successes in  Bernoulli trials (lines are used for smoothing).  Note large shifts with possible decrease in the beginning, and a flattening afterwards.}
+\label{fig:joyce2}
+\end{figure}
+
+What is the reason for this strange behavior? The shapinig of Joyce's weight is a balancing act. For instance, for frequency .1 with equal priors the weight is maximized at $n=90$ and starts dropping at $n=100$. Why? We start with three chance hypotheses, $.4, .5, .6$ with equal priors. Once the observations have been made, the posterior for the chance hypotheses is focused at the chance hypothesis .4 (its posterior is more or less .99999), and so is the credence in $X$ simpliciter (this expected value is .4000003). Now the weights are build by measuring square distance from the credence in $X$ simpliciter and since the expected value is nearly equal to the lowest chance hypothesis under consideration, the weight for the lowest chance hypothesis is $8.260660e-14$, so while the posterior for this hypothesis is very high, the weight is very low and its contribution to the weight calculation is severely limited. Ultimately, what happens with weight is now a matter of balancing the uneven posteriors with squared penalties (or rewards, really) for the distance from the expected value (which is pretty much the most likely hypothesis once you have made enough observations). Once you observe 10 successes in 1000 trials, the credence in $X$ simpliciter becomes $.4000001$, so the distance of the lowest chance hypothesis to it drops, and this weight drops "faster" than the resulting increase in the probability of the lowest chance hypothesis itself. The stabiliziation is achieved because further on the posterior for this hypothesis can only get closer to one (and closer to zero for all the other hypotheses).
 
 
 
@@ -601,29 +705,16 @@ Putting drastic shift in weights for frequencies not too far from the chance hyp
 
 
 
+Moreover, this approach is of limited applicability. For one thing, as Joyce admits, it is supposed to work when RA's credence is mediated by chance hypotheses. Depending on applications, such a mediation might be unavailable. Another issue is that  this might work for unimodal distributions when we  only consider the influx of new data points, but it's unlikely to give desired results if, say, the   evidence obtained  is  the testimony of disagreeing witnesses. This is because an essential part of the calculations relies on taking the expected value, and it is not too hard to imagine cases of diverging items of evidence resulting only in a small chance of the expected value. \todo{Should I further elaborate?}
+
+The approach insists that an agent's  stance towards a proposition should be represented as the expected value of the chance hypothesis---and we will argue against this view later on. At this point, what is crucial for us, the proposal employs probabilities or probability densities (if we go continuous) over parameter values. Even if we do not assume these are chances and treat them as, say, parameters that are potentially rational to accept in light of the evidence, by using this approach we no longer can represent uncertainty about a proposition in terms of a set of probability measures over any algebra containing the proposition itself (as the algebra now also needs to contain the chance hypotheses as well!). Perhaps, this is as it should be. But then, as I will argue later one, there are useful ways to go this way without turning to IP---after all, notice how the notion of a representor plays no role in Joyce's explication of weight whatsoever!
 
 
 
 
 
 
-
-This approach is of limited applicability, though. For one thing, as Joyce admits, it is supposed to work when RA's credence is mediated by chance hypotheses. Depending on applications, the assumption might fail.
-Another issue is that  this might work for unimodal distributions when we  only consider the influx of new data points, but it's hard to apply to the weight of evidence obtained by the testimony of disagreeing witnesses.
-
-Yet, he still insists that in such a case RA's stance towards a proposition should be represented as the expected value of this density---this is an assumption that I will drop.
-
- <!-- it doesn't seem much to help make sense of increasing the weight of evidence by means of obtaining information about new predictors, does it? See HAMMER 2012 where more detailed evidence in simulations is shown not to bring greater stability in probability assessment.  -->
-
-
-What is crucial for us, the proposal employs probability densities over parameter values. Even if we do not assume these are chances and treat them as, say, parameters that are potentially rational to accept in light of the evidence, by using this approach we violate (Locality). Perhaps, this is as it should be. But then, as I will argue later one, there are ways to reject (Locality) which can handle the difficulties that  IP faces without actually going all the way towards IP.  A proponent of IP who endorses Joyce's approach to the notion of  weight of evidence now is  in no position to criticize this alternative approach for violating (Locality).
-
-
-
-
-
-
-## Troubles with imprecise probabilism
+# Troubles with imprecise probabilism
 
 - \textsf{IP} has no means of distinguishing the situation in which you are about to toss a coin whose bias is either .4 or .6., and the one in which you are  about to toss a coin whose bias is either .4 or .6, and bias .4 is three times  more likely than .6.
 
