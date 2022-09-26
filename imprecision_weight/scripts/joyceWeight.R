@@ -107,8 +107,11 @@ weightJoyce <- function (chanceHypotheses = c(.4, .5, .6),
         
         return(list(hypotheses = chanceHypotheses, prior = credenceInHypotheses,
                     posterior =  chxe, 
-                    cX = cX, cXe = cXe,  multiplierE = multiplierE, 
-                     multiplier = multiplier, top = top, bottom  = bottom, weight = weight))  
+                    cX = cX, cXe = cXe, 
+                    multiplierE = multiplierE, 
+                     multiplier = multiplier,
+                    top = top, bottom  = bottom, 
+                    weight = weight))  
           }
 
 
@@ -307,6 +310,17 @@ ggplot(wbssLong)+geom_line(aes(x = sampleSize,
 
 
 
+ggplot(wbssLong)+geom_point(aes(x = sampleSize,
+                                y = w, color = priors,
+                                shape = frequency) )+
+  scale_x_continuous(breaks = seq(0,1000, by = 10))+theme_tufte(base_size = 14)+
+  ylab("w")+
+  xlab("sample size")+
+  #  scale_y_continuous(breaks = seq(0,0.01, by = .001))+
+  labs(title = "Joyce's weights  by sample size",
+       subtitle = "")+
+  theme(plot.title.position = "plot")
+
 
 joyceWBSS  <- ggplot(wbssLong)+geom_point(aes(x = sampleSize,
                                                    y = w, color = priors,
@@ -327,7 +341,9 @@ joyce100
 
 #outdated
 
-weightJoyce(successes = 50, trials = 500)
+weightJoyce(successes = 9, trials = 90)
+weightJoyce(successes = 10, trials = 100)
+
 
 weightJoyce(successes = 100, trials = 1000)
 
