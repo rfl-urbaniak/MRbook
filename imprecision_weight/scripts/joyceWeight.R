@@ -2,6 +2,7 @@ library(ggplot2)
 library(ggthemes)
 library(gridExtra)
 library(tidyr)
+library(philentropy)
 
 #start with a simple case of three hypotheses, ch %in% (0.4, .5, .6) with equal weight
 
@@ -339,71 +340,87 @@ joyceWBSS
 joyce100
 
 
+
+#now entropy-based weight for the same example
+
+
+weightEntropyCustomChances <- function(
+      hypotheses = c(.4, .5, .6),
+      prior = c(1/3, 1/3, 1/3),
+      successes  = 7,
+      trials = 10){
+      uniform <- rep(1,length(hypotheses))/ sum(rep(1,length(hypotheses)))
+      #chance of evidence given data
+      likelihood <- dbinom(x = successes, size = trials, prob = hypotheses)
+      #overall chance of evidence (denumerator)
+      evidence <-  sum(likelihood * prior)
+      #chance of x given evidence
+      posterior <- (likelihood * prior ) / evidence
+
+      weightOfPrior <- 1 - (H(prior)/H(uniform, unit  = "log2"))
+      weightOfPosterior <- 1 - (H(posterior)/H(uniform, unit  = "log2"))
+
+      weightDelta <- weightOfPosterior - weightOfPrior
+      return(list(prior = prior, weightOfPrior = weightOfPrior,
+              posterior = posterior,
+            weightOfPosterior = weightOfPosterior,
+            weightDelta = weightOfPosterior - weightOfPrior)
+      )
+}
+
+i <- 2
+
+weightEntropyCustomChances(successes = 6)
+
+
+outOfTenEntropyEqualPriors <- numeric(10)
+
+for(i in seq(1,11, by  = 1)){
+  outOfTenEntropyEqualPriors[i] <- 
+    weightEntropyCustomChances(successes = i-1)$weightDelta
+}
+
+
+outOfTenEntropyEqualPriors
+
+outOfTenEntropyLeftPriors <- numeric(10)
+
+for(i in seq(1,11, by  = 1)){
+  outOfTenEntropyLeftPriors[i] <- 
+    weightEntropyCustomChances(prior = c(.5, .3, .2), successes = i-1)$weightDelta
+}
+
+
+
+outOf10entropyDf <- data.frame( successes = seq(0,10,1),
+                         equal = outOfTenEntropyEqualPriors, ".5, .3, .2" =
+                           outOfTenEntropyLeftPriors)
+
+outOf10entropyDf
+
+names(outOf10entropyDf) <- c("successes", "equal", ".5, .3, .2")
+
+outOf10entropyDfLong  <- gather(data = outOf10entropyDf,
+                         key = priors, value = w,
+                         "equal", ".5, .3, .2", 
+                         factor_key=TRUE)
+
+
+
+outOf10Entropy  <- ggplot(outOf10entropyDfLong)+geom_point(aes(x = successes,
+                                                 y = w, color = priors) )+
+  scale_x_continuous(breaks = seq(0,10))+theme_tufte(base_size = 14)+ylab("W")+
+  xlab("successes in ten trials")+
+#  scale_y_continuous(breaks = seq(0,0.007, by = .001))+
+  labs(title = "Information-theoretic weights",
+       subtitle = "(sample size =1)")+theme(plot.title.position = "plot")
+
+outOf10Entropy
+
+
+
+
+
+
+
 #outdated
-
-weightJoyce(successes = 9, trials = 90)
-weightJoyce(successes = 10, trials = 100)
-
-
-weightJoyce(successes = 100, trials = 1000)
-
-
-weightJoyce(successes = 40, trials = 100)$weight
-  weightJoyce(successes = 50, trials = 100)$weight
-
-
-
-weightJoyce(successes = 2, trials = 100)$weight/weightJoyce(successes = 8, trials = 100)$weight
-
-
-
-
-
-weightJoyce(successes = , trials = 100)$weight/weightJoyce(successes = 40, trials = 100)$weight
-
-
-
-
-
-
-outOf100WeightsEqualPriors <- numeric(101)
-
-for(i in seq(1,101, by  = 1)){
-  outOf100WeightsEqualPriors[i] <- weightJoyce(successes = i-1, trials = 100)$weight
-}
-
-outOf100WeightsEqualPriors
-
-plot(outOf100WeightsEqualPriors)
-
-
-
-outOf100WeightsLeftPriors <- numeric(101)
-
-for(i in seq(1,101, by  = 1)){
-  outOf100WeightsLeftPriors[i] <- weightJoyce(credenceInHypotheses = c(.5, 3, .2), successes = i-1, 
-                                              trials = 100)$weight
-}
-
-
-outOf100WeightsLeftPriors
-
-plot(outOf100WeightsEqualPriors)
-
-plot(outOf100WeightsLeftPriors)
-
-#what your priors are makes huuuuuge difference to weight, comparison does not make sense
-#
-
-ggplot
-
-
-
-plot(outOfTenWeightsEqualPriors,outOfTenWeightsLeftPriors)
-
-
-
-
-
-
-
