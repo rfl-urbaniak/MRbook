@@ -33,6 +33,7 @@ library(ggthemes)
 library(gridExtra)
 library(tidyr)
 library(philentropy)
+library(latex2exp)
 
 ```
 
@@ -507,7 +508,7 @@ joyce10  <- ggplot(outOf10dfLong)+geom_point(aes(x = successes,
   scale_x_continuous(breaks = seq(0,10))+theme_tufte(base_size = 14)+ylab("w")+
   xlab("successes in ten trials")+
   scale_y_continuous(breaks = seq(0,0.007, by = .001))+
-  labs(title = "Joyce's weights change radically by frequency",
+  labs(title = "Joyce's weights change  by frequency",
        subtitle = "(sample size 10)")+theme(plot.title.position = "plot")
 ```
 
@@ -846,6 +847,141 @@ its corresponding HDI is \(m = [0,1]\). In this setting, clearly
 \(G\) than they are about \(M\), as desired.
 
 
+Another difficulty for \textsf{IP} is belief inertia. In this framework, the problem does not arise, as there is no problem with modeling learning from observation starting from a uniform prior.
+
+If you just start with a uniform density over $[0,1]$ as your prior, use binomial probability as likelihood, observing  any non-zero number of heads will exclude 0 and observing any non-zero number of  tails will exclude 1 from the basis of the posterior. Let's see an example with a grid approximation ($n=1k$). For simplicity assume there are only green and black balls. Our prior is uniform, and then, in subsequent steps, we observe one green ball, another green ball, and then a black ball. This is what  happens with the posterior as we go (Figure \ref{fig:intertia2}).
+
+```{r fig:inertia, eval = TRUE, echo=FALSE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%", message= FALSE, warning=FALSE}
+
+n <- 1000 #parameters 
+s <- 1e5  #sample size
+
+ps <- seq(from=0 , to=1 , length.out=n)
+
+prior <- rep(1/n , n) #uniform prior
+
+likelihood1g <- dbinom( 1 , size=1 , prob=ps)
+likelihood2g <- dbinom( 2 , size=2 , prob=ps)
+likelihood2g1b <- dbinom( 2 , size=3 , prob=ps)
+
+posterior1g <- likelihood1g * prior
+posterior2g <- likelihood2g * prior
+posterior2g1b <- likelihood2g1b * prior
+
+
+posterior1g <- posterior1g / sum(posterior1g)
+posterior2g <- posterior2g / sum(posterior2g)
+posterior2g1b <- posterior2g1b / sum(posterior2g1b)
+
+upperLimit <- .003
+
+InertiaPriorPlot <- ggplot()+geom_line(aes(x = ps, y = prior))+theme_tufte(base_size = 7)+xlab("p")+
+  ylab("probability")+theme(plot.title.position = "plot")+ggtitle("Prior")+
+  scale_x_continuous()+scale_y_continuous(limits = c(0,upperLimit))
+
+
+InertiaOneGPlot <- ggplot()+geom_line(aes(x = ps, y = posterior1g))+theme_tufte(base_size = 7)+xlab("p")+
+  ylab("probability")+theme(plot.title.position = "plot",
+                            axis.text.y = element_blank(),
+                            axis.title.y = element_blank(),
+                          axis.ticks.y =element_blank()
+)+ggtitle("Evidence: g")+
+  scale_y_continuous(limits = c(0,upperLimit))
+
+
+
+InertiaTwoGPlot <- ggplot()+geom_line(aes(x = ps, y = posterior2g))+theme_tufte(base_size = 7)+xlab("p")+
+  ylab("probability")+theme(plot.title.position = "plot"#, 
+#                        axis.text.y = element_blank(),
+#                            axis.title.y = element_blank(),
+#                            axis.ticks.y = element_blank()
+                  )+ggtitle("Evidence: g, g")+
+scale_y_continuous(limits = c(0,upperLimit))
+
+InertiaTwoGoneBluePlot <- ggplot()+geom_line(aes(x = ps, y = posterior2g1b))+theme_tufte(base_size = 7)+xlab("p")+
+  ylab("probability")+theme(plot.title.position = "plot",     axis.text.y = element_blank(),
+  axis.title.y = element_blank(),
+      axis.ticks.y = element_blank()
+           )+ggtitle("Evidence: g, g, b")+
+  scale_y_continuous(limits = c(0,upperLimit))
+```
+
+
+
+\begin{figure}[H]
+```{r fig:inertia2, echo=FALSE, eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
+grid.arrange(InertiaPriorPlot, InertiaOneGPlot,  InertiaTwoGPlot, InertiaTwoGoneBluePlot, ncol = 2, nrow = 2)
+```
+\caption{As observations of green, green and black come in, extreme parameter values drop out of the picture and the posterior is shaped by the evidence.}
+\label{fig:intertia2}
+\end{figure}
+
+To see how this approach is also capable of modeling  Rinard's example of inertia,  lets start with MaxEnt recommending even priors of the two chance hypotheses. In Figure 10 we see what usual calculations revise these priors to, as we obtain new evidence, again, say: green, green, black. This behaves completely as expected with no inertia in sight. Note how the observations initially support $H_1$, but exclude $H_1$ in the last stage. 
+
+```{r rinardCalculations, eval = TRUE, echo=FALSE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%", message= FALSE, warning=FALSE}
+
+ps <- seq(from=0 , to=1 , by = 0.01)
+
+prior <- ifelse( (ps == .1 | ps == 1), .5, 0 ) #prior information 
+
+likelihood1g <- dbinom( 1 , size=1 , prob=ps)
+likelihood2g <- dbinom( 2 , size=2 , prob=ps)
+likelihood2g1b <- dbinom( 2 , size=3 , prob=ps)
+
+posterior1g <- likelihood1g * prior
+posterior2g <- likelihood2g * prior
+posterior2g1b <- likelihood2g1b * prior
+
+
+posterior1g <- posterior1g / sum(posterior1g)
+posterior2g <- posterior2g / sum(posterior2g)
+posterior2g1b <- posterior2g1b / sum(posterior2g1b)
+
+priorPlot <- ggplot()+geom_bar(aes(x = ps, y = prior), stat = "identity")+theme_tufte()+xlab("p")+
+  ylab("probability")+theme(plot.title.position = "plot")+ggtitle("Prior")+
+  scale_x_continuous(breaks = c(.1,1))+scale_y_continuous(breaks = seq(0,1, by = .1))
+
+
+OneGPlot <- ggplot()+geom_bar(aes(x = ps, y = posterior1g), stat = "identity")+theme_tufte()+xlab("p")+
+  ylab("probability")+theme(plot.title.position = "plot"#,
+                            #axis.text.y = element_blank(),
+                            #axis.title.y = element_blank(),
+                            #axis.ticks.y = element_blank()
+                            )+ggtitle("Evidence: g")+
+  scale_x_continuous(breaks = c(.1,1))+scale_y_continuous(breaks = seq(0,1, by = .25))
+
+TwoGPlot <- ggplot()+geom_bar(aes(x = ps, y = posterior2g), stat = "identity")+theme_tufte()+xlab("p")+
+  ylab("probability")+theme(plot.title.position = "plot", 
+                            #axis.text.y = element_blank(),
+                            #axis.title.y = element_blank(),
+                            #axis.ticks.y = element_blank()
+                            )+ggtitle("Evidence: g, g")+
+  scale_x_continuous(breaks = c(.1,1))+scale_y_continuous(breaks = seq(0,1, by = .25))
+
+TwoGoneBluePlot <- ggplot()+geom_bar(aes(x = ps, y = posterior2g1b), stat = "identity")+theme_tufte()+xlab("p")+
+  ylab("probability")+theme(plot.title.position = "plot"
+                            #,   axis.text.y = element_blank(),
+                            #axis.title.y = element_blank(),
+                            #axis.ticks.y = element_blank()
+                            )+ggtitle("Evidence: g, g, b")+scale_x_continuous(breaks = c(.1,1))+scale_y_continuous(breaks = seq(0,1, by = .25))
+
+rinard <- grid.arrange(priorPlot, OneGPlot,  TwoGPlot, TwoGoneBluePlot, nrow = 2)
+
+```
+
+
+
+\begin{figure}[H]
+```{r fig:rinard2,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
+rinard
+```
+\caption{Learning in Rinard's example of belief inertia.}
+\label{fig:rinard2}
+\end{figure}
+
+
+
+
 \todo{Talk about other objections here}
 
 
@@ -1013,7 +1149,7 @@ H(\mathsf{uniform}) & = \sum_{i=1}^n \nicefrac{1}{n} \log_2 \frac{1}{\nicefrac{1
 \mathsf{w(P_i)} & = 1 - \left( \frac{H(\mathsf{P})}{\log_2(n)}\right)
 \end{align*}
 
-Let's first see how this plays out with beta distributions. The
+Let's first see how this plays out with beta distributions.^[The reader might ask: why not to use the Kullback-Leibler divergence from the uniform distribution instead? Because this divergence does not measure the difference in how informed the distribution is. For instance, the divergence between a uniform distribution with a grid of $1k$ and a distribution that gives probability 1 to one chance hypotheses and 0 to all others, measured either way, is not going to be large, whereas for our purposes the weight should be maximal: we just went from complete lack of information to complete certainty. This intuition is vindicated when we use $w$.] The
 advantage of looking at them first is that they have a fairly
 straightforward interpretation: \(\mathsf{beta(a,b)}\) is the
 distribution one should have when tossing a coin with unknown bias,
@@ -1094,13 +1230,392 @@ entropiesBetaPlot <- ggplot()+theme_tufte()+xlab("parameter values")+
 ```{r fig:betas3,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
 entropiesBetaPlot
 ```
-\caption{Examples of beta distributions with entropies and KL divergencies from the uniform distribution with grid approximation ($n=1000$). Note that distribution weight does not strongly depend on its expected value.}
+\caption{Examples of beta distributions with entropies and their weights with grid approximation ($n=1000$). Note that distribution weight does not strongly depend on its expected value.}
 \label{fig:betas}
 \end{figure}
 
 
 
-\todo{Back to the example employed by Joyce?}
+Now let us get back to the example we used to inspect the behavior of Joyce's proposal. Figure \ref{fig:entropyJoyceExamplePlot} illustrates dependency on frequency and on priors for sample size $10$, and \ref{fig:entropyJoyceExamplePlot100} for sample size 100.
+
+
+
+
+```{r entropyJoyceExample,echo=FALSE,eval=TRUE,fig.align = "center", cache=FALSE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
+weightEntropyCustomChances <- function(
+      hypotheses = c(.4, .5, .6),
+      prior = c(1/3, 1/3, 1/3),
+      successes  = 7,
+      trials = 10){
+      uniform <- rep(1,length(hypotheses))/ sum(rep(1,length(hypotheses)))
+      #chance of evidence given data
+      likelihood <- dbinom(x = successes, size = trials, prob = hypotheses)
+      #overall chance of evidence (denumerator)
+      evidence <-  sum(likelihood * prior)
+      #chance of x given evidence
+      posterior <- (likelihood * prior ) / evidence
+
+      weightOfPrior <- 1 - (H(prior)/H(uniform, unit  = "log2"))
+      weightOfPosterior <- 1 - (H(posterior)/H(uniform, unit  = "log2"))
+
+      weightDelta <- weightOfPosterior - weightOfPrior
+      return(list(prior = prior, weightOfPrior = weightOfPrior,
+              posterior = posterior,
+            weightOfPosterior = weightOfPosterior,
+            weightDelta = weightOfPosterior - weightOfPrior)
+      )
+}
+
+
+
+outOfTenEntropyEqualPriors <- numeric(10)
+
+for(i in seq(1,11, by  = 1)){
+  outOfTenEntropyEqualPriors[i] <- 
+    weightEntropyCustomChances(successes = i-1)$weightDelta
+}
+
+
+outOfTenEntropyLeftPriors <- numeric(10)
+
+for(i in seq(1,11, by  = 1)){
+  outOfTenEntropyLeftPriors[i] <- 
+    weightEntropyCustomChances(prior = c(.5, .3, .2), successes = i-1)$weightDelta
+}
+
+
+
+outOf10entropyDf <- data.frame( successes = seq(0,10,1),
+                         equal = outOfTenEntropyEqualPriors, ".5, .3, .2" =
+                           outOfTenEntropyLeftPriors)
+
+
+names(outOf10entropyDf) <- c("successes", "equal", ".5, .3, .2")
+
+outOf10entropyDfLong  <- gather(data = outOf10entropyDf,
+                         key = priors, value = w,
+                         "equal", ".5, .3, .2", 
+                         factor_key=TRUE)
+
+
+
+outOf10EntropyPlot  <- ggplot(outOf10entropyDfLong)+geom_point(aes(x = successes,
+                                                 y = w, color = priors) )+
+  scale_x_continuous(breaks = seq(0,10))+theme_tufte(base_size = 14)+ylab("W")+
+  xlab("successes in ten trials")+
+#  scale_y_continuous(breaks = seq(0,0.007, by = .001))+
+  labs(title = "Information-theoretic weights",
+       subtitle = "(sample size =10)")+theme(plot.title.position = "plot")
+
+
+
+
+
+outOf100EntropyEqualPriors <- numeric(101)
+
+for(i in seq(1,101, by  = 1)){
+  outOf100EntropyEqualPriors[i] <- 
+    weightEntropyCustomChances(successes = i-1,
+                               trials = 100)$weightDelta
+}
+
+
+outOf100EntropyEqualPriors
+
+outOf100EntropyLeftPriors <- numeric(101)
+
+for(i in seq(1,101, by  = 1)){
+  outOf100EntropyLeftPriors[i] <- 
+    weightEntropyCustomChances(prior = 
+      c(.5, .3, .2), successes = i-1,
+      trials = 100)$weightDelta
+}
+
+
+
+outOf100entropyDf <- data.frame( successes = seq(0,100,1),
+                                equal = outOf100EntropyEqualPriors, ".5, .3, .2" =
+                                  outOf100EntropyLeftPriors)
+
+outOf100entropyDf
+
+names(outOf100entropyDf) <- c("successes", "equal", ".5, .3, .2")
+
+outOf100entropyDfLong  <- gather(data = outOf100entropyDf,
+                                key = priors, value = w,
+                                "equal", ".5, .3, .2", 
+                                factor_key=TRUE)
+
+
+
+outOf100EntropyPlot  <- ggplot(outOf100entropyDfLong)+
+  geom_point(aes(x = successes,
+ y = w, color = priors), size = .5 )+
+  scale_x_continuous(breaks = seq(0,100, by = 5))+theme_tufte(base_size = 14)+ylab("W")+
+  xlab("successes in ten trials")+
+#    scale_y_continuous(breaks = seq(0,100, by = .001))+
+  labs(title = "Information-theoretic weights",
+       subtitle = "(sample size =100)")+theme(plot.title.position = "plot")
+
+s <- seq(1,100)
+obs <- seq(10, 1000, by = 10)
+
+
+EweightsBySampleSize <- numeric(length(s))
+EweightsBySampleSizeLeft <- numeric(length(s))
+
+
+for (i in  1:100){
+  EweightsBySampleSize[i] <- weightEntropyCustomChances(successes = s[i],
+                                        trials = obs[i])$weightDelta
+}
+
+
+for (i in  1:100){
+  EweightsBySampleSizeLeft[i] <- weightEntropyCustomChances(successes = s[i],
+                                            trials = obs[i],
+                                            prior = c(.5, .3, .2))$weightDelta
+}
+
+
+Ewbss <- data.frame( "sample size" = obs,
+                    equal = EweightsBySampleSize, 
+                    ".5, .3, .2" = EweightsBySampleSizeLeft)
+
+Ewbss$frequency <- rep(.1, nrow(Ewbss))
+
+
+s2 <- seq(1,500)
+obs2 <-2 *s2   
+
+
+EweightsBySampleSize2 <- numeric(length(s))
+EweightsBySampleSizeLeft2 <- numeric(length(s))
+
+
+for (i in  1:500){
+  EweightsBySampleSize2[i] <- weightEntropyCustomChances(successes = s2[i],
+                                         trials = obs2[i])$weightDelta
+}
+
+for (i in  1:500){
+  EweightsBySampleSizeLeft2[i] <- weightEntropyCustomChances(successes = s2[i],
+                                             trials = obs2[i],
+                                             prior = c(.5, .3, .2))$weightDelta
+}
+
+
+EwbssHalf <- data.frame( "sample size" = obs2,
+                        equal = EweightsBySampleSize2, 
+                        ".5, .3, .2" = EweightsBySampleSizeLeft2)
+
+EwbssHalf$frequency <- rep(.5, nrow(EwbssHalf))
+
+
+names(Ewbss) <- c("sampleSize", "equal", ".5, .3, .2", "frequency")
+names(EwbssHalf) <- c("sampleSize", "equal", ".5, .3, .2", "frequency")
+
+
+EwbssLong <- gather(data = rbind(Ewbss, EwbssHalf),
+                   key = priors, value = w,
+                   "equal", ".5, .3, .2", 
+                   factor_key=TRUE)
+
+ggplot(EwbssLong)+geom_line(aes(x = sampleSize,
+                               y = w, color = priors,
+                               lty = as.factor(frequency)) )+
+  scale_x_continuous(breaks = seq(0,1000, by = 100))+theme_tufte(base_size = 14)+
+  ylab("w")+
+  xlab("sample size")+
+  #  scale_y_continuous(breaks = seq(0,0.01, by = .001))+
+  labs(title = "Information-theoretic weights by  sample size",
+#       subtitle = "",
+       lty = "observed frequency")+
+  theme(plot.title.position = "plot")
+
+
+
+
+eWBSSplot  <- ggplot(EwbssLong)+geom_line(aes(x = sampleSize,
+                                              y = w, color = priors,
+lty = as.factor(frequency)) )+
+  scale_x_continuous(breaks = seq(0,1000, by = 100))+theme_tufte(base_size = 14)+
+  ylab("w")+
+  xlab("sample size")+
+  #  scale_y_continuous(breaks = seq(0,0.01, by = .001))+
+  labs(title = "Information-theoretic weights by  sample size",
+       subtitle = "")+
+  theme(plot.title.position = "plot")
+
+
+```
+
+
+
+\begin{figure}
+```{r entropyJoyceExamplePlot10,echo=FALSE,eval=TRUE,fig.align = "center", cache=FALSE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
+outOf10EntropyPlot
+```
+
+\caption{Entropy-based weight for for various observed successes in 10 Bernoulli trials. Three chance chypotheses: $.4, .5, .6$, and two sets of priors: equal and $.5, .3, .2$ respectively.}
+\label{fig:entropyJoyceExamplePlot}
+\end{figure}
+
+
+
+
+
+
+\begin{figure}
+```{r entropyJoyceExamplePlot100,echo=FALSE,eval=TRUE,fig.align = "center", cache=FALSE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
+outOf100EntropyPlot
+```
+
+\caption{Entropy-based weight for for various observed successes in 100 Bernoulli trials. Three chance chypotheses: $.4, .5, .6$, and two sets of priors: equal and $.5, .3, .2$ respectively.}
+\label{fig:entropyJoyceExamplePlot}
+\end{figure}
+
+
+
+
+We also should inspect the behavior of $w$ when the frequency is kept fixed, but the sample size increases (Figure \ref{fig:entropyJoyceExampleSampleSize}).
+
+
+\begin{figure}
+```{r entropyJoyceExampleSampleSize,echo=FALSE,eval=TRUE,fig.align = "center", cache=FALSE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
+eWBSSplot
+```
+
+\caption{Entropy-based weight for two observed frequencies for various sample sizes (lines used instead of points for smoothing). Three chance chypotheses: $.4, .5, .6$, and two sets of priors: equal and $.5, .3, .2$ respectively.}
+\label{fig:entropyJoyceExampleSampleSize}
+\end{figure}
+
+
+
+\todo{compare with Joyce, revise comments there and add comments here}
+
+
+Now, let us generalize and see how the measure behaves with respect to beta distributions. Two phenomena are as expected. First, the entropy decreases with the number of observations, and second, it decreases faster if the proportions are closer to the extremes. This is mirrored by the corresponding weights (Figure \ref{fig:weights}).
+
+\begin{figure}[H]
+```{r fig:weights,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
+weightsNo <-   ggplot(abs, aes(x = a + b, y = entProps, color = abs(a/(a+b)-.5)))+
+    geom_point( alpha = .9, size = .3)+theme_tufte(base_size = 7)+
+  xlab("a+b")+ylab("Weight")+ggtitle("Weight increases with the number of observations")+
+  labs(color = TeX("$|\\, \\frac{a}{a+b}   -.5 |$"), 
+       subtitle = "(faster if proportions are more extreme)")+
+  theme(plot.title.position = "plot")+
+scale_color_gradient(low="yellow1", high="dodgerblue4")
+
+
+weightsProp <- ggplot(abs, aes(x = a /(a + b), y = entProps, color = a + b))+
+  geom_point(size  = .4, alpha = .9)+theme_tufte(base_size = 7)+
+  xlab("a/(a+b)")+ylab("Weight")+ggtitle("Range of weights available at various proportions")+
+  scale_color_gradient(low="yellow1", high="dodgerblue4")+
+  labs(subtitle = "(higher if the number of observations higher)")+
+  theme(plot.title.position = "plot",axis.title.y=element_blank(), 
+       axis.text.y=element_blank(),
+        axis.ticks.y=element_blank())
+
+grid.arrange(weightsNo,weightsProp)
+```
+\caption{Weights of beta likelihoods for $a,b$ ranging from $0$ to $100$, versus the number of observations   and versus absolute distance of the proportion from .5.}
+\label{fig:weights}
+\end{figure}
+
+
+Moreover, the framework is capable of sensible comparison of weights for distributions of various shapes, including those involving all weights focused on a particular point (strictly speaking, a single bin in the grid approximation). Here are some  examples of shapes  worth looking at (Figure \ref{fig:weightsWeird}).
+
+
+```{r weightsWeird,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
+beta44 <-  densitiesBeta[[304]]
+unif5 <- c(rep(0, n/2),rep(1 , n/2)) #uniform from .5 
+unif5 <- unif5/sum(unif5)
+unif6 <- c(rep(0, .6 * n),rep(1 , n * .4)) #uniform from .6 
+unif6 <- unif6/sum(unif6)
+A <- dnorm(ps, .4, .05)
+B <- dnorm(ps, .6, .05)
+C <- ifelse(ps <= .5, A, B) 
+bimodal <- C / sum(C)
+centered <-   dnorm(ps, .5, .05)
+centered <- centered/sum(centered)
+twoEven <- rep(0,1000)
+twoEven[abs(ps -.4)  == min(abs(ps -.4))] <- .5
+twoEven[abs(ps -.6)  == min(abs(ps -.6))] <- .5
+twoUneven <- rep(0,1000)
+twoUneven[abs(ps -.4)  == min(abs(ps -.4))] <- .3
+twoUneven[abs(ps -.6)  == min(abs(ps -.6))] <- .7
+single5 <- rep(0,1000)
+single5[abs(ps -.5)  == min(abs(ps -.5))] <- 1
+single7 <- rep(0,1000)
+single7[abs(ps -.7)  == min(abs(ps -.7))] <- 1
+
+
+distributions <- c("beta(4,4)","unif(.5,1)", "unif(.6,1)", "bimodal(.4,.6,s=.05)", "norm(.5,.05)",
+                   "evenPoints(.4,.6)","unevenPoints(.4(.3),.6(.7)","single(.5)", "single(.7)")
+
+entPropSeq <- c(entProp(beta44),entProp(unif5),entProp(unif6),
+             entProp(bimodal),entProp(centered),entProp(twoEven),
+             entProp(twoUneven),entProp(single5),entProp(single7))
+
+
+hSeq <- c(H(beta44),H(unif5),H(unif6),
+          H(bimodal),H(centered),H(twoEven),
+          H(twoUneven),H(single5),H(single7))
+  
+  
+entPropTable <- data.frame(distributions, hSeq, entPropSeq)
+
+plotDistro <- function(distro, distroList) {
+plot <-  ggplot()+theme_tufte(base_size =  7 )+xlab("parameter values")+
+  ylab("probability")+theme(plot.title.position = "plot")+ylim(0,1)+
+  ggtitle(paste(entPropTable$distributions[distroList]))+
+  geom_line(aes(x = ps,y = distro))+annotate("text",
+    x = ps[which(distro == max(distro))][1],
+    y = max(distro) * 1.14,
+    label = paste("h =",round(entPropTable$hSeq[distroList],3), ", w = ",
+            round(entPropTable$entPropSeq[distroList],3)), size = 2)+
+  ylim(c(0,1.2 * max(distro)))
+return(plot)
+}
+
+
+
+multipleDistros <- grid.arrange(plotDistro(beta44,1),
+plotDistro(unif5,2),
+plotDistro(unif6,3),
+plotDistro(bimodal,4),
+plotDistro(centered,5),
+plotDistro(twoEven,6),
+plotDistro(twoUneven,7),
+plotDistro(single5,8),
+plotDistro(single7,9), nrow = 9, ncol  = 1, heights  = 1)
+```
+
+
+\begin{figure}[H]
+```{r fig:weightsWeird,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
+grid.arrange(plotDistro(beta44,1),plotDistro(unif5,2), plotDistro(unif6,3),plotDistro(bimodal,4),plotDistro(centered,5),
+plotDistro(twoEven,6),plotDistro(twoUneven,7),
+plotDistro(single5,8),plotDistro(single7,9), ncol = 3, nrow = 3)
+```
+\caption{Examples of various distributions with their entropies and weights, ordered by weights. (1) beta(4,4), (2) uniform starting from .5 to 1, (3), uniform strating from .6 to 1, (4) two normal distributions centered around .4 and .6 with standard deviation .05, glued at .5. (5) normal centered around .5 with the same standard deviation, (6) one that assigns .5 to each of .4  and .6, (7) One that assigns .3 to .4 and .7 to .6., (8) one that assigns all weight to .5, and (9) one that assigns all weight to .7.}
+
+\label{fig:weightsWeird}
+\end{figure}
+
+Note that the ordering of weights is as expected. Partial uniform likelihoods which exclude at least half of parameter values have more weight than a weak beta, and the weight increases as the non-zero interval of the partial uniform distribution decreases. A bimodal normal distribution "glued" from two normal distributions carries less weight than a unimodal normal distribution with the same standard deviation centered around the mean of the two modes, all these are way below point estimates. If multiple points have non-zero probability, the weight depends on how uneven the distribution is, whereas if full weight is given to a single point, the value of the parameter is known, the weight is maximal (=1) and does not depend on what the parameter is. 
+
+
+
+
+
+
+
+
+
+\todo{Comment about the desiderata listed in the beginning}
+
 
 
 
@@ -1114,10 +1629,207 @@ entropiesBetaPlot
 
 ## Completeness tends to improve weight
 
-## Weight tends to improve accuracy
+
+
+# Weight tends to improve accuracy
 
 
 Here is a question asked by [COHEN 1986 TWELVE p. 276]: is it worth while knowing the weight of an argument without knowing its probability? In our terminology, questions inspired by Cohen's are: what's the point of weight considerations if we already have the distributions? Can weights be put to use if we do not have the distributions?
+
+
+
+First, we need to explain how accuracy is to be measured in this framework. We already know what accuracy measures are on the market for single probability measures, and we know that proper scoring rules for representors are not forthcoming. What is the situation with the higher-order approach that we propose? The idea is conceptually straightforward. We take the inaccuracy of a (discretized) distribution $p$ from a given true chance/single rational probability hypothesis by taking the Kulback-Leibler divergence from the indicator distribution of this hypothesis to $p$. 
+
+More formally, take probability distribution $p$ over a grid-approximated parameter space, assigning probabilities $p_1, \dots, p_n$ to $\theta_1, \dots, \theta_n$ respectively. It is to be evaluated in terms of inaccuracy from the perspective of a given ``true'' value $\theta_k$.^[Two caveats: if you prefer to think of evaluation with respect to truth and falsehood only, the only "true values" to be used are 0 and 1. If on the other hand, you think the true distribution does not have to be an indicator distribution assigning value 1 to exactly one hypothesis, evaluate the Kullback-Leibler distance from this more complex distribution.  Such decisions can be accommodated in our framework.
+] The inaccuracy of $p$ if $\theta_k$ is the "true" value, is the divergence between $IndI^k$ and $p$.
+^[Another option is  continuous ranked probability score (CRPS) of a distribution $p$ with respect to a possible world $w$:
+\begin{align*}
+I(p,w) &= \int_{-\infty}^\infty \vert \mathsf{P}(x) - \mathbf{ 1 }(x\geq V(w))\vert ^2 \, dx
+\end{align*}
+\noindent where $\mathsf{P}$ is the cumulative probability corresponding to a given density, and
+\begin{align*}
+\mathbf{ 1 }(x \geq V(w)) & = \begin{cases} 1 & \text{ if } x \geq V(w)\\
+0 & \text{ o$\,$/w. }
+\end{cases}
+\end{align*}
+\noindent  The intuition here is that the measure takes the Cramer-Von-Mises measure of distance between densities, defined in terms of the area under the squared euclidean distances between the corresponding cumulative density functions:
+\begin{align*}
+\mathcal{C}(p,q) & = \int_{0}^{1} \vert P(x) - Q(x)\vert^2 \, dx
+\end{align*}
+\noindent and uses it to measure distance to an epistemically omniscient chance hypothesis, which either puts full weight on 0, if a given proposition is false, or on 1, otherwise. We do not use this measure, as it is more complicated than necessary, uses square distances instead of information-theoretic notions which makes it somewhat more arbitary (and we have seen how squaring played out in our discussion of Joyce's proposal), and because it has unintuitive features when it comes no multi-modal distributions (SEE AUTHOR'S PAPER FOR DETAILS)]
+
+
+\begin{align*}
+\mathcal{I}_{\mathsf{DKL}}^2(p, \theta_k) & = \mathsf{DKL}(Ind^k,p) \\
+& = \sum_{i=1}^n Ind^k_i \left( \log_2 Ind^k_i - \log_2 p_i \right)
+\end{align*}
+
+
+It has been proven [CITE AUTHOR'S PAPER] that the resulting measure of inaccuracy is a proper scoring rule. Another interesting feature of the framework is that the point made by Schoenfield against  \textsf{IP} does not apply here: there are cases in which accuracy considerations recommend an imprecise stance (that is, a multi-modal) distribution over a precise one.  Here is a quick example. Suppose the opponent will  produce two coins, one  with the distribution of Heads either normal around  $.3$, and one  normal around  $.5$, both with the standard deviation of $.05$, randomly pick one of these coins and then toss it. The agent knows the setup. Consider the following three (out of many) possible stances that the agent could take:
+
+
+
+
+```{r calculationsEMC,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
+
+plotDistroPlain <- function(distro, title, mult = 1.2) {
+  plot <-  ggplot()+theme_tufte(base_size = 7)+xlab("parameter values")+
+    ylab("probability")+theme(plot.title.position = "plot")+ylim(0,1)+
+    ggtitle(title)+
+    geom_line(aes(x = ps,y = distro))+
+    ylim(c(0,mult * max(distro)))
+  return(plot)
+}
+
+
+kld <- function(p,q) kullback_leibler_distance(p,q, testNA = TRUE, unit = "log2",
+                                               epsilon = 0.00001)
+
+n <- 1000
+ps <- seq(0,1,  length.out =n)
+ch1 <- c(rep(0,n-1),1)
+indicator1 <- as.numeric(ps >= 1)
+ch0 <- c(1, rep(0,n-1))
+indicator0 <- as.numeric(ps>=0)
+a <- dnorm(ps, .3, .05)
+b <- dnorm(ps, .5, .05)
+c <- ifelse(ps <= .4, a, b) 
+
+bimodal <- c / sum(c)
+bimodalCum <- cumsum(bimodal)
+distBi1 <- (bimodalCum - indicator1)^2
+distBi0 <- (bimodalCum - indicator0)^2
+
+centered <-   dnorm(ps, .4, .05)
+centered <- centered/sum(centered)
+centeredCum <- cumsum(centered)
+distCe1 <- (centeredCum - indicator1)^2
+distCe0 <- (centeredCum - indicator0)^2
+
+aw <- dnorm(ps, .2, .05)
+bw <- dnorm(ps, .6, .05)
+cw <- ifelse(ps <= .4, aw, bw) 
+bimodalWide <- cw / sum(cw)
+bimodalWideCum <- cumsum(bimodalWide)
+distBiW1 <- (bimodalWideCum - indicator1)^2
+distBiW0 <- (bimodalWideCum - indicator0)^2
+
+#now CVM distances from truth and falsehood
+#Bi wins in particular distances
+dc1 <- sum(distCe1)
+db1 <- sum(distBi1)
+dbw1 <- sum(distBiW1)
+dc0 <- sum(distCe0)
+db0 <- sum(distBi0)
+dbw0 <- sum(distBiW0)
+
+#now expected values
+expBi <- sum(ps * bimodal)
+expCe <- sum(ps * centered)
+expBiW <- sum(ps * bimodalWide)
+
+expCVMbi <- expBi * db1 + (1-expBi) * db0
+expCVMbW <- expBiW * dbw1 + (1-expBiW) * dbw0
+expCVMCe <- expCe * dc1 + (1-expCe) * dc0
+
+
+# now with KLD to omniscient function
+kldBi1 <- kld(ch1,bimodal)
+kldBi0 <- kld(ch0,bimodal)
+
+kldBiW1 <- kld(ch1,bimodalWide)
+kldBiW0 <- kld(ch0,bimodalWide)
+
+kldCe1 <- kld(ch1,centered)
+kldCe0 <- kld(ch0,centered)
+
+
+expKLDbi <- expBi * kldBi1 + (1-expBi) * kldBi0
+expKLDbW <- expBiW * kldBiW1 + (1-expBiW) * kldBiW0
+expKLDCe <- expCe * kldCe1 + (1-expCe) * kldCe0
+```
+
+
+
+
+
+\begin{figure}[H]
+```{r figEMC,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
+grid.arrange(plotDistroPlain(bimodal, "Bimodal, with modes at .3 and .5"),
+plotDistroPlain(centered, "Centered around .4"),
+plotDistroPlain(bimodalWide, "Wide bimodal, with modes at .2 and .6"), ncol = 1)
+```
+\caption{Three (out of many) candidate distributions for a Schoenfield-inspired example. All distributions are built from normal  distributions with standard deviation $.5$, the bimodal ones are "glued" in the middle.}
+\label{fig:EMC}
+\end{figure}
+
+
+For the three distributions we're discussing in this chapter, the inaccuracies calculated using CRPS  and KL divergence with respect to various potential true probability distributions look as in Figure \ref{fig:inaccuracies2}.
+
+\begin{figure}[H]
+```{r fig:inaccuracies2,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
+point <- function (value) ifelse(abs(ps - value) == min(abs(ps - value)), 1, 0)
+indicator <- function(pointf) ifelse( ps >= ps[min(which(pointf != 0))], 1,0  )
+
+cvm <- function(w,p){
+  cumw <-  cumsum(w)
+  cump <- cumsum(p)
+  dist <- (cump - cumw )^2
+  return(sum(dist))
+}
+
+inaccuracyChancy <- function(distro){
+crpss <- numeric(length(ps))
+klds <- numeric(length(ps))
+for(i in 1:length(ps)){
+chance <- point(ps[i])
+crpss[i] <- cvm(chance,distro)
+klds[i] <- kld(chance,distro)
+}
+df <- data.frame(ps,distro,crpss,klds)
+return(df)
+}
+
+InaBi <- inaccuracyChancy(bimodal)
+InaCe <- inaccuracyChancy(centered)
+InaBiW <- inaccuracyChancy(bimodalWide)
+
+
+bcplot <- plotDistroPlain(InaBi$crpss, "Bimodal: CRPS")+ylab("inaccuracy")+
+            xlab("true probability")
+
+bkplot <- plotDistroPlain(InaBi$klds, "Bimodal")+
+  ylab("inaccuracy")+xlab("true probability")
+
+
+ccplot <- plotDistroPlain(InaCe$crpss, "Centered: CRPS")+ylab("inaccuracy")+
+  xlab("true probability")
+
+ckplot <- plotDistroPlain(InaCe$klds, "Centered")+ylab("inaccuracy")+
+  xlab("true probability")
+
+bwcplot <- plotDistroPlain(InaBiW$crpss, "Bimodal wide: CRPS")+ylab("inaccuracy")+
+  xlab("true probability")
+
+bwkplot <- plotDistroPlain(InaBiW$klds, "Bimodal wide")+ylab("inaccuracy")+
+  xlab("true probability")
+
+library(gridExtra)
+#grid.arrange(bcplot, bkplot, ccplot, ckplot, bwcplot, bwkplot)
+grid.arrange(bkplot,  ckplot,  bwkplot)
+```
+\caption{KL divergence inaccuracies vs (omniscient functions corresponding to) $n$ true probability hypotheses for the three distributions discussed in this section.}
+\label{fig:inaccuracies2}
+\end{figure}
+
+
+
+
+
+
+
+
+
 
 
 

@@ -368,9 +368,6 @@ weightEntropyCustomChances <- function(
       )
 }
 
-i <- 2
-
-weightEntropyCustomChances(successes = 6)
 
 
 outOfTenEntropyEqualPriors <- numeric(10)
@@ -407,7 +404,7 @@ outOf10entropyDfLong  <- gather(data = outOf10entropyDf,
 
 
 
-outOf10Entropy  <- ggplot(outOf10entropyDfLong)+geom_point(aes(x = successes,
+outOf10EntropyPlot  <- ggplot(outOf10entropyDfLong)+geom_point(aes(x = successes,
                                                  y = w, color = priors) )+
   scale_x_continuous(breaks = seq(0,10))+theme_tufte(base_size = 14)+ylab("W")+
   xlab("successes in ten trials")+
@@ -415,7 +412,184 @@ outOf10Entropy  <- ggplot(outOf10entropyDfLong)+geom_point(aes(x = successes,
   labs(title = "Information-theoretic weights",
        subtitle = "(sample size =1)")+theme(plot.title.position = "plot")
 
-outOf10Entropy
+outOf10EntropyPlot
+
+
+
+
+
+
+outOf100EntropyEqualPriors <- numeric(101)
+
+for(i in seq(1,101, by  = 1)){
+  outOf100EntropyEqualPriors[i] <- 
+    weightEntropyCustomChances(successes = i-1,
+                               trials = 100)$weightDelta
+}
+
+
+outOf100EntropyEqualPriors
+
+outOf100EntropyLeftPriors <- numeric(101)
+
+for(i in seq(1,101, by  = 1)){
+  outOf100EntropyLeftPriors[i] <- 
+    weightEntropyCustomChances(prior = 
+      c(.5, .3, .2), successes = i-1,
+      trials = 100)$weightDelta
+}
+
+
+
+outOf100entropyDf <- data.frame( successes = seq(0,100,1),
+                                equal = outOf100EntropyEqualPriors, ".5, .3, .2" =
+                                  outOf100EntropyLeftPriors)
+
+outOf100entropyDf
+
+names(outOf100entropyDf) <- c("successes", "equal", ".5, .3, .2")
+
+outOf100entropyDfLong  <- gather(data = outOf100entropyDf,
+                                key = priors, value = w,
+                                "equal", ".5, .3, .2", 
+                                factor_key=TRUE)
+
+
+
+outOf100EntropyPlot  <- ggplot(outOf100entropyDfLong)+
+  geom_point(aes(x = successes,
+ y = w, color = priors), size = .5 )+
+  scale_x_continuous(breaks = seq(0,100, by = 5))+theme_tufte(base_size = 14)+ylab("W")+
+  xlab("successes in ten trials")+
+#    scale_y_continuous(breaks = seq(0,100, by = .001))+
+  labs(title = "Information-theoretic weights",
+       subtitle = "(sample size =1)")+theme(plot.title.position = "plot")
+
+
+outOf100EntropyPlot
+
+
+
+
+
+
+#now let's say we see 10% for increasing sample size
+
+s <- seq(1,100)
+obs <- seq(10, 1000, by = 10)
+
+
+
+
+
+EweightsBySampleSize <- numeric(length(s))
+EweightsBySampleSizeLeft <- numeric(length(s))
+
+
+for (i in  1:100){
+  EweightsBySampleSize[i] <- weightEntropyCustomChances(successes = s[i],
+                                        trials = obs[i])$weightDelta
+}
+
+
+for (i in  1:100){
+  EweightsBySampleSizeLeft[i] <- weightEntropyCustomChances(successes = s[i],
+                                            trials = obs[i],
+                                            prior = c(.5, .3, .2))$weightDelta
+}
+
+
+
+Ewbss <- data.frame( "sample size" = obs,
+                    equal = EweightsBySampleSize, 
+                    ".5, .3, .2" = EweightsBySampleSizeLeft)
+
+Ewbss$frequency <- rep(.1, nrow(Ewbss))
+
+Ewbss
+
+s2 <- seq(1,500)
+obs2 <-2 *s2   
+
+
+EweightsBySampleSize2 <- numeric(length(s))
+EweightsBySampleSizeLeft2 <- numeric(length(s))
+
+
+for (i in  1:500){
+  EweightsBySampleSize2[i] <- weightEntropyCustomChances(successes = s2[i],
+                                         trials = obs2[i])$weightDelta
+}
+
+for (i in  1:500){
+  EweightsBySampleSizeLeft2[i] <- weightEntropyCustomChances(successes = s2[i],
+                                             trials = obs2[i],
+                                             prior = c(.5, .3, .2))$weightDelta
+}
+
+
+EwbssHalf <- data.frame( "sample size" = obs2,
+                        equal = EweightsBySampleSize2, 
+                        ".5, .3, .2" = EweightsBySampleSizeLeft2)
+
+EwbssHalf$frequency <- rep(.5, nrow(EwbssHalf))
+
+
+names(Ewbss) <- c("sampleSize", "equal", ".5, .3, .2", "frequency")
+names(EwbssHalf) <- c("sampleSize", "equal", ".5, .3, .2", "frequency")
+
+
+EwbssLong <- gather(data = rbind(Ewbss, EwbssHalf),
+                   key = priors, value = w,
+                   "equal", ".5, .3, .2", 
+                   factor_key=TRUE)
+
+ggplot(EwbssLong)+geom_line(aes(x = sampleSize,
+                               y = w, color = priors,
+                               lty = as.factor(frequency)) )+
+  scale_x_continuous(breaks = seq(0,1000, by = 100))+theme_tufte(base_size = 14)+
+  ylab("w")+
+  xlab("sample size")+
+  #  scale_y_continuous(breaks = seq(0,0.01, by = .001))+
+  labs(title = "Information-theoretic weights by  sample size",
+#       subtitle = "",
+       lty = "observed frequency")+
+  theme(plot.title.position = "plot")
+
+
+
+ggplot(wbssLong)+geom_point(aes(x = sampleSize,
+                                y = w, color = priors,
+                                shape = frequency) )+
+  scale_x_continuous(breaks = seq(0,1000, by = 10))+theme_tufte(base_size = 14)+
+  ylab("w")+
+  xlab("sample size")+
+  #  scale_y_continuous(breaks = seq(0,0.01, by = .001))+
+  labs(title = "Joyce's weights  by sample size",
+       subtitle = "")+
+  theme(plot.title.position = "plot")
+
+
+eWBSSplot  <- ggplot(EwbssLong)+geom_point(aes(x = sampleSize,
+                                              y = w, color = priors,
+                                              shape = frequency) )+
+  scale_x_continuous(breaks = seq(0,1000, by = 100))+theme_tufte(base_size = 14)+
+  ylab("w")+
+  xlab("sample size")+
+  #  scale_y_continuous(breaks = seq(0,0.01, by = .001))+
+  labs(title = "Information-theoretic weights by  sample size",
+       subtitle = "")+
+  theme(plot.title.position = "plot")
+
+
+eWBSSplot
+
+joyceWBSS
+
+
+
+
+
 
 
 

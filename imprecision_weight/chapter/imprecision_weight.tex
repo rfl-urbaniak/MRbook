@@ -1437,6 +1437,43 @@ distribution is uniform for the MYSTERY urn, its corresponding HDI is
 \(G>M\). That is, the agent is more convinced about \(G\) than they are
 about \(M\), as desired.
 
+Another difficulty for \textsf{IP} is belief inertia. In this framework,
+the problem does not arise, as there is no problem with modeling
+learning from observation starting from a uniform prior.
+
+If you just start with a uniform density over \([0,1]\) as your prior,
+use binomial probability as likelihood, observing any non-zero number of
+heads will exclude 0 and observing any non-zero number of tails will
+exclude 1 from the basis of the posterior. Let's see an example with a
+grid approximation (\(n=1k\)). For simplicity assume there are only
+green and black balls. Our prior is uniform, and then, in subsequent
+steps, we observe one green ball, another green ball, and then a black
+ball. This is what happens with the posterior as we go (Figure
+\ref{fig:intertia2}).
+
+\begin{figure}[H]
+
+\begin{center}\includegraphics[width=1\linewidth]{imprecision_weight_files/figure-latex/fig:inertia2-1} \end{center}
+\caption{As observations of green, green and black come in, extreme parameter values drop out of the picture and the posterior is shaped by the evidence.}
+\label{fig:intertia2}
+\end{figure}
+
+To see how this approach is also capable of modeling Rinard's example of
+inertia, lets start with MaxEnt recommending even priors of the two
+chance hypotheses. In Figure 10 we see what usual calculations revise
+these priors to, as we obtain new evidence, again, say: green, green,
+black. This behaves completely as expected with no inertia in sight.
+Note how the observations initially support \(H_1\), but exclude \(H_1\)
+in the last stage.
+
+\begin{center}\includegraphics[width=1\linewidth]{imprecision_weight_files/figure-latex/rinardCalculations-1} \end{center}
+
+\begin{figure}[H]
+
+\caption{Learning in Rinard's example of belief inertia.}
+\label{fig:rinard2}
+\end{figure}
+
 \todo{Talk about other objections here}
 
 \hypertarget{information-theoretic-weight-of-evidence}{%
@@ -1598,34 +1635,93 @@ H(\mathsf{uniform}) & = \sum_{i=1}^n \nicefrac{1}{n} \log_2 \frac{1}{\nicefrac{1
 \mathsf{w(P_i)} & = 1 - \left( \frac{H(\mathsf{P})}{\log_2(n)}\right)
 \end{align*}
 
-Let's first see how this plays out with beta distributions. The
-advantage of looking at them first is that they have a fairly
-straightforward interpretation: \(\mathsf{beta(a,b)}\) is the
-distribution one should have when tossing a coin with unknown bias,
-having observed (or imagining to have observed) \(a\) heads and \(b\)
-tails, imagining that seeing one heads and one tails leaves you
-uninformed. From this perspective, \(\mathsf{beta(1,1)}\) is the uniform
-distribution, \(\mathsf{beta(40,10)}\) is the likelihood corresponding
-to 40 heads and 10 tails, and so on. To get a feel for what beta
-distributions look like, inspect Figure \ref{fig:betas}. Remember we're
-working with a grid approximation (\(n=1k\)).
+Let's first see how this plays out with beta distributions.\footnote{The
+  reader might ask: why not to use the Kullback-Leibler divergence from
+  the uniform distribution instead? Because this divergence does not
+  measure the difference in how informed the distribution is. For
+  instance, the divergence between a uniform distribution with a grid of
+  \(1k\) and a distribution that gives probability 1 to one chance
+  hypotheses and 0 to all others, measured either way, is not going to
+  be large, whereas for our purposes the weight should be maximal: we
+  just went from complete lack of information to complete certainty.
+  This intuition is vindicated when we use \(w\).} The advantage of
+looking at them first is that they have a fairly straightforward
+interpretation: \(\mathsf{beta(a,b)}\) is the distribution one should
+have when tossing a coin with unknown bias, having observed (or
+imagining to have observed) \(a\) heads and \(b\) tails, imagining that
+seeing one heads and one tails leaves you uninformed. From this
+perspective, \(\mathsf{beta(1,1)}\) is the uniform distribution,
+\(\mathsf{beta(40,10)}\) is the likelihood corresponding to 40 heads and
+10 tails, and so on. To get a feel for what beta distributions look
+like, inspect Figure \ref{fig:betas}. Remember we're working with a grid
+approximation (\(n=1k\)).
 
 \begin{figure}[H]
 
 
 \begin{center}\includegraphics[width=1\linewidth]{imprecision_weight_files/figure-latex/fig:betas3-1} \end{center}
-\caption{Examples of beta distributions with entropies and KL divergencies from the uniform distribution with grid approximation ($n=1000$). Note that distribution weight does not strongly depend on its expected value.}
+\caption{Examples of beta distributions with entropies and their weights with grid approximation ($n=1000$). Note that distribution weight does not strongly depend on its expected value.}
 \label{fig:betas}
 \end{figure}
 
-\todo{Back to the example employed by Joyce?}
+Now let us get back to the example we used to inspect the behavior of
+Joyce's proposal. Figure \ref{fig:entropyJoyceExamplePlot} illustrates
+dependency on frequency and on priors for sample size \(10\), and
+\ref{fig:entropyJoyceExamplePlot100} for sample size 100.
+
+\begin{center}\includegraphics[width=1\linewidth]{imprecision_weight_files/figure-latex/entropyJoyceExample-1} \end{center}
+
+\begin{figure}
+
+\begin{center}\includegraphics[width=1\linewidth]{imprecision_weight_files/figure-latex/entropyJoyceExamplePlot10-1} \end{center}
+
+\caption{Entropy-based weight for for various observed successes in 10 Bernoulli trials. Three chance chypotheses: $.4, .5, .6$, and two sets of priors: equal and $.5, .3, .2$ respectively.}
+\label{fig:entropyJoyceExamplePlot}
+\end{figure}
+
+\begin{figure}
+
+\begin{center}\includegraphics[width=1\linewidth]{imprecision_weight_files/figure-latex/entropyJoyceExamplePlot100-1} \end{center}
+
+\caption{Entropy-based weight for for various observed successes in 100 Bernoulli trials. Three chance chypotheses: $.4, .5, .6$, and two sets of priors: equal and $.5, .3, .2$ respectively.}
+\label{fig:entropyJoyceExamplePlot}
+\end{figure}
+
+We also should inspect the behavior of \(w\) when the frequency is kept
+fixed, but the sample size increases (Figure
+\ref{fig:entropyJoyceExampleSampleSize}).
+
+\begin{figure}
+
+\begin{center}\includegraphics[width=1\linewidth]{imprecision_weight_files/figure-latex/entropyJoyceExampleSampleSize-1} \end{center}
+
+\caption{Entropy-based weight for two observed frequencies for various sample sizes (lines used instead of points for smoothing). Three chance chypotheses: $.4, .5, .6$, and two sets of priors: equal and $.5, .3, .2$ respectively.}
+\label{fig:entropyJoyceExampleSampleSize}
+\end{figure}
+
+\todo{compare with Joyce, revise comments there and add comments here}
+
+Now, let us generalize and see how the measure behaves with respect to
+beta distributions. Two phenomena are as expected. First, the entropy
+decreases with the number of observations, and second, it decreases
+faster if the proportions are closer to the extremes. This is mirrored
+by the corresponding weights (Figure \ref{fig:weights}).
+
+\begin{figure}[H]
+
+\begin{center}\includegraphics[width=1\linewidth]{imprecision_weight_files/figure-latex/fig:weights-1} \end{center}
+\caption{Weights of beta likelihoods for $a,b$ ranging from $0$ to $100$, versus the number of observations   and versus absolute distance of the proportion from .5.}
+\label{fig:weights}
+\end{figure}
+
+\todo{Comment about the desiderata listed in the beginning}
 
 \hypertarget{completeness-tends-to-improve-weight}{%
 \subsection{Completeness tends to improve
 weight}\label{completeness-tends-to-improve-weight}}
 
 \hypertarget{weight-tends-to-improve-accuracy}{%
-\subsection{Weight tends to improve
+\section{Weight tends to improve
 accuracy}\label{weight-tends-to-improve-accuracy}}
 
 Here is a question asked by {[}COHEN 1986 TWELVE p.~276{]}: is it worth
@@ -1633,6 +1729,88 @@ while knowing the weight of an argument without knowing its probability?
 In our terminology, questions inspired by Cohen's are: what's the point
 of weight considerations if we already have the distributions? Can
 weights be put to use if we do not have the distributions?
+
+First, we need to explain how accuracy is to be measured in this
+framework. We already know what accuracy measures are on the market for
+single probability measures, and we know that proper scoring rules for
+representors are not forthcoming. What is the situation with the
+higher-order approach that we propose? The idea is conceptually
+straightforward. We take the inaccuracy of a (discretized) distribution
+\(p\) from a given true chance/single rational probability hypothesis by
+taking the Kulback-Leibler divergence from the indicator distribution of
+this hypothesis to \(p\).
+
+More formally, take probability distribution \(p\) over a
+grid-approximated parameter space, assigning probabilities
+\(p_1, \dots, p_n\) to \(\theta_1, \dots, \theta_n\) respectively. It is
+to be evaluated in terms of inaccuracy from the perspective of a given
+``true'\,' value \(\theta_k\).\footnote{Two caveats: if you prefer to
+  think of evaluation with respect to truth and falsehood only, the only
+  ``true values'' to be used are 0 and 1. If on the other hand, you
+  think the true distribution does not have to be an indicator
+  distribution assigning value 1 to exactly one hypothesis, evaluate the
+  Kullback-Leibler distance from this more complex distribution. Such
+  decisions can be accommodated in our framework.} The inaccuracy of
+\(p\) if \(\theta_k\) is the ``true'' value, is the divergence between
+\(IndI^k\) and \(p\). \footnote{Another option is continuous ranked
+  probability score (CRPS) of a distribution \(p\) with respect to a
+  possible world \(w\): \begin{align*}
+  I(p,w) &= \int_{-\infty}^\infty \vert \mathsf{P}(x) - \mathbf{ 1 }(x\geq V(w))\vert ^2 \, dx
+  \end{align*} \noindent where \(\mathsf{P}\) is the cumulative
+  probability corresponding to a given density, and \begin{align*}
+  \mathbf{ 1 }(x \geq V(w)) & = \begin{cases} 1 & \text{ if } x \geq V(w)\\
+  0 & \text{ o$\,$/w. }
+  \end{cases}
+  \end{align*} \noindent  The intuition here is that the measure takes
+  the Cramer-Von-Mises measure of distance between densities, defined in
+  terms of the area under the squared euclidean distances between the
+  corresponding cumulative density functions: \begin{align*}
+  \mathcal{C}(p,q) & = \int_{0}^{1} \vert P(x) - Q(x)\vert^2 \, dx
+  \end{align*} \noindent and uses it to measure distance to an
+  epistemically omniscient chance hypothesis, which either puts full
+  weight on 0, if a given proposition is false, or on 1, otherwise. We
+  do not use this measure, as it is more complicated than necessary,
+  uses square distances instead of information-theoretic notions which
+  makes it somewhat more arbitary (and we have seen how squaring played
+  out in our discussion of Joyce's proposal), and because it has
+  unintuitive features when it comes no multi-modal distributions (SEE
+  AUTHOR'S PAPER FOR DETAILS)}
+
+\begin{align*}
+\mathcal{I}_{\mathsf{DKL}}^2(p, \theta_k) & = \mathsf{DKL}(Ind^k,p) \\
+& = \sum_{i=1}^n Ind^k_i \left( \log_2 Ind^k_i - \log_2 p_i \right)
+\end{align*}
+
+It has been proven {[}CITE AUTHOR'S PAPER{]} that the resulting measure
+of inaccuracy is a proper scoring rule. Another interesting feature of
+the framework is that the point made by Schoenfield against \textsf{IP}
+does not apply here: there are cases in which accuracy considerations
+recommend an imprecise stance (that is, a multi-modal) distribution over
+a precise one. Here is a quick example. Suppose the opponent will
+produce two coins, one with the distribution of Heads either normal
+around \(.3\), and one normal around \(.5\), both with the standard
+deviation of \(.05\), randomly pick one of these coins and then toss it.
+The agent knows the setup. Consider the following three (out of many)
+possible stances that the agent could take:
+
+\begin{figure}[H]
+
+\begin{center}\includegraphics[width=1\linewidth]{imprecision_weight_files/figure-latex/figEMC-1} \end{center}
+\caption{Three (out of many) candidate distributions for a Schoenfield-inspired example. All distributions are built from normal  distributions with standard deviation $.5$, the bimodal ones are "glued" in the middle.}
+\label{fig:EMC}
+\end{figure}
+
+For the three distributions we're discussing in this chapter, the
+inaccuracies calculated using CRPS and KL divergence with respect to
+various potential true probability distributions look as in Figure
+\ref{fig:inaccuracies2}.
+
+\begin{figure}[H]
+
+\begin{center}\includegraphics[width=1\linewidth]{imprecision_weight_files/figure-latex/fig:inaccuracies2-1} \end{center}
+\caption{KL divergence inaccuracies vs (omniscient functions corresponding to) $n$ true probability hypotheses for the three distributions discussed in this section.}
+\label{fig:inaccuracies2}
+\end{figure}
 
 \hypertarget{literature-to-discuss}{%
 \section{Literature to discuss}\label{literature-to-discuss}}
