@@ -2,7 +2,10 @@
 title: A Higher-Order Probabilistic Approach to Imprecision, Weight of Evidence and
   Experts' Opinion Aggregation
 author: "Rafal Urbaniak"
-output: ioslides_presentation
+output:
+  ioslides_presentation:
+        widescreen: true
+        transition: 2.5
 ---
 
 ```{r setup, include=FALSE}
@@ -58,7 +61,7 @@ SCfenton <- custom.fit(SallyClarkDAG,SallyClarkCPTfenton)
 ## The Sally Clark BN (Fenton)
 
 
-```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%", warning=FALSE, message = FALSE, dpi = 800}
+```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "90%", warning=FALSE, message = FALSE, dpi = 800}
 graphviz.chart(SCfenton, type = "barprob", layout = "dot", draw.labels = TRUE,
   grid = FALSE, scale = c(0.75, 1.1), col = "black", 
   text.col = "black", bar.col = "black", main = NULL,
@@ -69,7 +72,7 @@ graphviz.chart(SCfenton, type = "barprob", layout = "dot", draw.labels = TRUE,
 
 ## The Sally Clark BN (Fenton)
 
-```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%", warning=FALSE, message = FALSE, dpi = 800}
+```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "90%", warning=FALSE, message = FALSE, dpi = 800}
 
 SCfJN <- compile(as.grain(SCfenton))
 
@@ -133,6 +136,62 @@ Run with various measures, especially focusing on extreme plausible values
 
 
 
+## Probabilistic opinion pooling
+
+<font size="3">
+
+
+### Independence preservation failure on linear pooling
+
+$p(X)   = p(Y)  = p(X\vert Y) = 1/3$
+
+$q(X)   =  q(Y) = q(X\vert Y) = 2/3$ 
+
+$r  =p/2+q/2$
+
+$r(X\cap Y)  = 5/18 \neq r(X)r(Y)=1/4$
+
+
+
+### Linear expert deference 
+
+$\mathsf{P}(A=B)  <1$
+
+$\mathsf{P}(r\vert A=a)  = a    \,\,\,\, \mathsf{P}(r\vert B=b)  = b$
+
+$\forall a,b \, \mathsf{P}(r \vert A =a, B = b)  =  \alpha a + \beta b$
+
+
+### The hard truth (Gallow)
+
+ For any proposition $r$, if $A$ and $B$ are random variables taking  values in the unit interval,  there is no  probability measure  $\mathsf{P}$ for which these conditions hold
+
+
+</font>
+
+
+
+
+
+## Synergy
+
+### The reasonable range assumption
+
+  For any group of peers whose credences in a proposition $X$ range from $x$ to $y$, the aggregated  credence is within  $[x, y]$ 
+
+### Example of synergy
+
+   A doctor  is fairly confident that a treatment dosage for a patient is correct (.97) and considers the opinion of a colleague, whose credence  is   0.96
+
+
+
+
+
+
+
+
+
+
 
 ## Higher-order and honesty {.build}
 
@@ -152,7 +211,7 @@ This type of fiber occurs in 25% of carpets in this town...
 ## Higher-order and honesty {.build}
 
 
-```{r carpets,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%", warning=FALSE, message = FALSE, dpi = 800}
+```{r carpets,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "90%", warning=FALSE, message = FALSE, dpi = 800}
 ps <- seq(0,1,by = 0.01)
 
 db40 <- dbeta(ps,11,31)
@@ -379,7 +438,7 @@ $\mathsf{wDelta}(\mathsf{posterior, prior}) = \vert \mathsf{adw}(\mathsf{posteri
 
 ## Weights of beta distributions
 
-```{r fig:betas,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
+```{r fig:betas,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "90%",   message = FALSE, warning = FALSE, results = FALSE}
 n <- 1000 #parameters 
 s <- 1e5  #sample size
 ps <- seq(from=0 , to=1 , length.out=n)
@@ -466,7 +525,7 @@ scatter3D(abs$a,abs$b,abs$entropy,
 
 
 
-```{r fig:weights,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
+```{r fig:weights,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "90%",   message = FALSE, warning = FALSE, results = FALSE}
 weightsNo <-   ggplot(abs, aes(x = a + b, y = entProps, color = abs(a/(a+b)-.5)))+
     geom_point( alpha = .9, size = .3)+theme_tufte()+
   xlab("a+b")+ylab("Weight")+ggtitle("Weight increases with the number of observations")+
@@ -496,7 +555,7 @@ ggarrange(weightsNo,weightsProp)
 
 ## Weights of beta distributions
 
-```{r weightsWeird,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
+```{r weightsWeird,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "80%",   message = FALSE, warning = FALSE, results = FALSE}
 beta44 <-  densitiesBeta[[304]]
 unif5 <- c(rep(0, n/2),rep(1 , n/2)) #uniform from .5 
 unif5 <- unif5/sum(unif5)
@@ -561,7 +620,7 @@ plotDistro(single7,9), nrow = 9, ncol  = 1, heights  = 1)
 ```
 
 
-```{r fig:weightsWeird,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
+```{r fig:weightsWeird,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "90%",   message = FALSE, warning = FALSE, results = FALSE}
 ggarrange(plotDistro(beta44,1),plotDistro(unif5,2), plotDistro(unif6,3),plotDistro(bimodal,4),plotDistro(centered,5),
 plotDistro(twoEven,6),plotDistro(twoUneven,7),
 plotDistro(single5,8),plotDistro(single7,9), ncol = 3, nrow = 3)
@@ -574,11 +633,194 @@ plotDistro(single5,8),plotDistro(single7,9), ncol = 3, nrow = 3)
 
 ## Weight in SC with HOP
 
-![](../images/SCposteriors2.png){#id .class width=100% height=100%}
+![](../images/SCposteriors2.png){#id .class width=90% height=90%}
+
+
+
+## Expected weight and completeness
+
+
+```{r SCexpectedWeights, echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%", warning=FALSE, message = FALSE, dpi = 800, warning = FALSE, message = FALSE, output = FALSE}
+SCprobsFinal <- readRDS("../datasets/SCprobsFinal.rds")
+attach(SCprobsFinal)
+source("../scripts/SCexpectedWeights.R")
+```
+
+```{r SCexpectedWeights2, echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%", warning=FALSE, message = FALSE, dpi = 800, warning = FALSE, message = FALSE, output = FALSE}
+SCweightsPlot 
+```
 
 
 
 
+## Back to synergy
+
+
+
+```{r synergy, echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "90%", warning=FALSE, message = FALSE, dpi = 800, warning = FALSE, message = FALSE, output = FALSE}
+expectedValue <- function (distro){
+  sum ( ps * distro)
+}
+
+n <- 1000
+ps <- seq(0,1,  length.out =n)
+d1 <- dbeta(ps,98,4)
+d1 <- d1/sum(d1)
+d2 <- dbeta(ps,97,5)
+d2 <- d2/sum(d2)
+
+#expectedValue(d1)
+#expectedValue(d2)
+
+
+weightsDoctors <- c(.7,.3)
+pooled <- weightsDoctors[1] * d1 + weightsDoctors[2] * d2
+
+#expectedValue(pooled)
+
+doctorsBetas <- dbeta(ps,98+97, 4+5)
+doctorsBetas <- doctorsBetas/sum(doctorsBetas)
+
+#expectedValue(doctorsBetas)
+
+ggplot()+theme_tufte()+xlab("parameter values")+ xlim(0.9,1)+
+  ylab("probability")+theme(plot.title.position = "plot")+ 
+  geom_line(aes(x = ps, y = d1), color = "grey")+
+  geom_line(aes(x = ps, y = d2), lty = 2, color = "grey")+  
+  geom_line(aes(x = ps, y = doctorsBetas), color = "skyblue", lty = 3)+ #POOLED
+  annotate(geom = "label", label = "beta(194,8), exp.=.955, mode=.96", x = .957, y = .028, color = "skyblue", fill = "white", size = 3) +
+  geom_line(aes(x = ps, y = pooled), color = "skyblue", lty = 4)+ #POOLED
+  annotate(geom = "label", label = "pooled (.7,.3), exp.=.957, mode = .966, eff. n = 85", x = .982, y = .0205, color = "skyblue", fill = "white", size = 3)+
+  ggtitle("Dr Alban and Dr Dre: credal states with the result of linear pooling and expansion")+
+  annotate(geom = "label", label = "Dr Alban, beta(98,4), exp. = .96, mode = .97", x = .973, y = .0225, fill = "white", size = 3)+
+  annotate(geom = "label", label = "Dr Dre, beta(97,5), exp.=.95, mode = .96", x = .94, y = .019, fill = "white", size = 3)+theme_tufte(base_size = 9)
+```
+
+
+
+
+## Back to synergy
+
+
+
+```{r seuss, echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "90%", warning=FALSE, message = FALSE, dpi = 800, warning = FALSE, message = FALSE, output = FALSE}
+d3 <- dbeta(ps,36,66)
+d3 <- d3/sum(d3)
+
+
+weightsDoctors <- c(.7,.3)
+pooled2 <- weightsDoctors[1] * d1 + weightsDoctors[2] * d3
+
+doctorsBetas2 <- dbeta(ps,98+36, 4+66)
+doctorsBetas2 <- doctorsBetas2/sum(doctorsBetas2)
+
+ggplot()+theme_tufte()+xlab("parameter values")+
+  ylab("probability")+theme(plot.title.position = "plot")+ 
+  geom_line(aes(x = ps, y = d1), color = "grey") +
+  geom_line(aes(x = ps, y = d3), lty = 2, color = "grey")+
+  geom_line(aes(x = ps, y = pooled2), color = "skyblue", lty = 3)+ #POOLED+  
+  geom_line(aes(x = ps, y = doctorsBetas2), color = "skyblue", lty = 4)+
+  annotate(geom = "label", label = " expanded, beta(134,70), exp.=.656, mode=.659",
+           x = .653, y = .0112, color = "skyblue", fill = "white", size = 3)+ #POOLED
+  annotate(geom = "label", label = "pooled (.7,.3), exp.=.778, modes = (.35,.969)",
+           x = .35, y = .0015, color = "skyblue", fill = "white", size = 3)+
+  annotate(geom = "label", label = "Dr Alban, beta(98,4), exp. = .96, mode = .97", x = .8, y = .02, fill = "white", size = 3)+
+  annotate(geom = "label", label = "Dr Seuss, beta(36,66), exp.=.352, mode = .35", x = .34, y = .007, fill = "white", size = 3)+
+ggtitle("Dr Alban and Dr Seuss: credal states with the result of linear pooling and expansion")
+```
+
+
+
+## Pooling vs expansion: simulated accuracy
+
+```{r fig:inaccuraciesSimulation,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "90%",   message = FALSE, warning = FALSE, results = FALSE}
+ps <- seq(0,1,  length.out =1000)
+point <- function (value) ifelse(abs(ps - value) == min(abs(ps - value)), 1, 0)
+indicator <- function(pointf) ifelse( ps >= ps[min(which(pointf != 0))], 1,0  )
+
+populationSize <- 100
+n <- 20
+m <- 20
+
+inaccuraciesList <- list()
+
+for(i in 1:100){
+averageIn <- numeric(101)
+newDensIn <- numeric(101)
+chanceHyps <- seq(0,1, by = 0.01)
+
+for (c in 1:101){
+realChance <- chanceHyps[c]
+population <- rbinom(populationSize, 1, realChance)
+
+sample1 <- sample(population, n, replace = FALSE)
+sample2 <- sample(population, m, replace = FALSE)
+
+dens1 <- dbeta(ps,sum(sample1)+1, (n-sum(sample1))+1)
+dens1 <- dens1/sum(dens1)
+
+dens2 <- dbeta(ps,sum(sample2)+1, m - sum(sample2)+1)
+dens2 <- dens2/sum(dens2)
+
+average <- .5 * dens1 + .5 * dens2
+
+overlaps <-seq(0,n, by = 1)
+overlapProbs <- dhyper(overlaps, m = n, n = populationSize - n, k = m)
+
+newAlpha <- numeric(n)
+newBeta <- numeric(n)
+for(ol in 0:n){
+newAlpha[ol+1] <- sum(sample2) - ol * mean(sample1)
+newAlpha[ol+1] <- newAlpha[ol+1] + sum(sample1)+1
+newBeta[ol+1] <- (m - sum(sample2)) - (ol - ol * mean(sample1))
+newBeta[ol+1] <- newBeta[ol+1] + (n - sum(sample1))+1
+}
+
+expAlpha <- weighted.mean(newAlpha,overlapProbs)
+expBeta <- weighted.mean(newBeta,overlapProbs)
+
+newDens <-   dbeta(ps,expAlpha, expBeta)
+newDens <- newDens/sum(newDens)
+
+chance <- point(realChance)
+
+averageIn[c] <- kld(chance,average)
+newDensIn[c] <- kld(chance,newDens)
+}
+
+
+inaccuraciesList[[i]] <- data.frame(chanceHyps, averageIn, newDensIn)
+}
+
+
+inaccuraciesDF <- do.call("rbind", inaccuraciesList)
+inaccuraciesDFlong <- melt(inaccuraciesDF, id.vars = "chanceHyps")
+colnames(inaccuraciesDFlong) <- c("chance","method","inaccuracy")
+
+ggplot(inaccuraciesDFlong, aes(x = chance, y = inaccuracy, color = method, group = method, lty = method))+
+  theme_tufte()+ylim(4.5,15)+ggtitle("Inaccuracies of linear averaging and expansion")+
+  scale_color_manual(name = "method", labels = c("averaging", "expansion"), values = c("dodgerblue4","yellow1"))+
+  theme(plot.title.position = "plot",legend.position = c(0.9, 0.9))+
+  geom_jitter(size = .1, alpha = .2)+
+  geom_smooth(se = TRUE, size = 1)+
+ guides(lty = FALSE)
+
+```
+
+
+## Wrapping up
+
+The higher-order approach
+
+> - Leads to more honesty in uncertainty assessment
+    
+>  - Is more sensible than sensitivity analysis
+    
+>  - Integrates with Bayesian data analysis
+
+> - Leads to an information-theoretic account of evidential weight
+
+> - Is computationally feasible
 
 
 
