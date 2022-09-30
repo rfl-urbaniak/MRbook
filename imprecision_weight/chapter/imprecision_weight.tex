@@ -1476,9 +1476,8 @@ in the last stage.
 
 \todo{Talk about other objections here}
 
-\hypertarget{information-theoretic-weight-of-evidence}{%
-\section{Information-theoretic weight of
-evidence}\label{information-theoretic-weight-of-evidence}}
+\hypertarget{weight-of-a-distribution}{%
+\section{Weight of a distribution}\label{weight-of-a-distribution}}
 
 In order to be able to explain our explication of the notion of weight
 of evidence, we first need to introduce the information-theoretic
@@ -1741,6 +1740,112 @@ given to a single point, the value of the parameter is known, the weight
 is maximal (=1) and does not depend on what the parameter is.
 
 \todo{Comment about the desiderata listed in the beginning}
+
+\hypertarget{weight-of-evidence}{%
+\section{Weight of evidence}\label{weight-of-evidence}}
+
+So far we have discussed the weight of a distribution, meant to measure
+how informed an agent is about an issue. If the agent starts with a
+uniform prior, this is a good enough approximation of how informed the
+evidence made them. But in general, how much more information is
+obtained is context-dependent. We want a prior-relative notion of
+weight, following the intuition that weight consideration should guide
+our information gathering also in making us stop collecting further
+evidence in light of what we already know. But for weight of evidence to
+have this feature, it has to depend on what we already know.
+
+So here is a general recipe. In a given context, consider your
+distribution for the target hypothesis \(H\) given what you already
+know. Then update on the evidence. This might increase the weight for
+\(H\), if the evidence confirms your conviction, or decrease it, if it
+goes against what the previous evidence tells you. Take the difference
+between the prior weight and the posterior weight (\(\Delta w\)) as your
+measure of the weight of evidence in that context. If you prefer to
+think that weight of evidence should be always positive, you might
+prefer the absolute value thereof. We, however, prefer to keep track of
+whether the evidence makes you more or less confused. The calculation
+goes along the following schema:
+
+\begin{enumerate}
+\item Start with a prior distribution over the parameter space of interest, and with distributions expressing the agent's uncertainty about other probabilities involved in the calculation of the posterior.
+\item Sample from these distributions.
+\item For each sample, treat it as a selection of precise probabilities, apply Bayes' theorem to calculate the posterior.
+\item The set of the results is the sampling distribution expressing your posterior uncertainty.
+\end{enumerate}
+
+For instance, suppose that you learn that if a child has been the victim
+of abuse, your prior given everything else you know is
+\(\mathsf{beta}(2,4)\) with median at .31, the conditional probability
+that they will have the habit of rocking if they have been a victim has
+a point estimate of .3. How strong is the evidence when you observe a
+given child rocks? Well, this depends on how probable rocking is given
+that the child has not been abused. This is the lesson that we learned
+in the chapter on likelihood ratio. So first, consider two scenarios, in
+which this conditional probability also receives a point estimate.
+First, \(.2\), then \(.05\). Finally, with conditional probabilities
+also being uncertain, say \(\pr{E \vert A}\) coming from normal
+distribution with \(\mu = .3, \sigma = .1\), truncated to \((0,1)\), and
+\(\pr{E\vert \n A}\) coming from normal distribution with \(\mu = .05\)
+and \(\sigma = .05\), corresponding to the idea that the sample of
+non-abused children is much larger, and the uncertainty about rocking
+about non-abused children is lower. The corresponding shifts from the
+prior to the posteriors (with sample size \(1e7\)) are pictured in
+Figure \ref{fig:abuse1}.
+
+\begin{figure}[H]
+
+\begin{center}\includegraphics[width=1\linewidth]{imprecision_weight_files/figure-latex/fig:abuse4-1} \end{center}
+\caption{Shifts from prior $\mathsf{beta}(2,4)$ to the posteriors, given various precise and imprecise conditional probabilities.}
+\label{fig:abuse1}
+\end{figure}
+
+Notably, likelihood function does not have to integrate (or sum, in the
+case of grid approximations) to 1. For instance, if the probability of
+the evidence is .8 no matter what \(\theta\) is, the sum will be \(.8n\)
+for \(n\) bins. Note that flat likelihoods like that, intuitively, are
+not informative with respect to the relevant hypotheses---they provide
+no guidance as to \(\theta\), and it doesn't matter at what value they
+fall flat. For this reason, and to make the weight calculations
+comparable, I propose that likelihoods first should be normalized to
+integrate/sum to 1, and then we should use the notion of weight we
+already introduced. To see how this works out, let's continue with the
+rocking example.
+
+Suppose you are slightly but vaguely suspicious, starting with
+\(\mathsf{beta}(2,4)\) prior (dashed in the figure below). Your original
+89\% HDI is (.052,.6). Now imagine two scenarios. In both you learn that
+the child rocks, but in the first you start with a linear likelihood
+function going from \(.1\) to \(.3\), and in the other the likelihood
+goes from \(.001\) to \(.95\). The likelihoods and the corresponding
+shifts in the posteriors and the HDIs are visualized in Figure
+\ref{fig:likelihood}. In each case, rocking, unsurprisingly, turns out
+to be insufficient evidence, even given that you started with some
+suspicion, but the impact of the evidence on the posteriors is
+different.
+
+\begin{figure}[H]
+
+\begin{center}\includegraphics[width=1\linewidth]{imprecision_weight_files/figure-latex/fig:likelihood-1} \end{center}
+\caption{Impact of evidence with linear likelihood based on point estimates. Prior marked with dashed line.}
+\label{fig:likelihood}
+\end{figure}
+
+Weights of normalized likelihoods are \(.006\) (left) and \(0.2\)
+(right), which captures the intuition that the second item of evidence
+is much stronger. Notice also that while the weight of the prior is
+\(0.052\), the posterior weights are not much different, \(.046\)
+(left), and \(0.049\) (right). This is because there is a sense your
+evidence made you more uncertain, as your posterior distributions'
+centers are closer to the middle. The lesson here is that the weights of
+posterior distributions might not be a good guide to weights of
+particular items of evidence, and that the framework can capture cases
+in which obtaining new evidence might make you more confused (albeit,
+perhaps, closer to the true). If needed, one can measure the change of
+weight between the prior and the posterior in terms of the difference
+between weights of the prior and the posterior, or the absolute value
+thereof. What if no precise likelihood is available? Then, higher-order
+densities about \(\pr{E \vert H}\) and \(\pr{E\vert \n H}\) will result
+in a density over potential likelihood ratios.
 
 \hypertarget{completeness-tends-to-improve-weight}{%
 \subsection{Completeness tends to improve

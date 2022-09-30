@@ -34,6 +34,9 @@ library(gridExtra)
 library(tidyr)
 library(philentropy)
 library(latex2exp)
+library(gridExtra)
+library(rethinking)
+library(truncnorm)
 
 ```
 
@@ -1623,7 +1626,123 @@ The calculation goes along the following schema:
 \end{enumerate}
 
 
-For instance, suppose that you learn that if a child has been the victim of abuse, the probability that they will have the habit of rocking is .3. How strong is the evidence when you observe a given child rocks? Well, this depends on how probable rocking is given that the child has not been abused. The likelihood ratio accounts for both elements in its evaluation of the evidence. This is the lesson that we learned in the chapter on likelihood ratio. 
+For instance, suppose that you learn that if a child has been the victim of abuse, your prior given everything else you know is $\mathsf{beta}(2,4)$ with median at .31, the conditional probability that they will have the habit of rocking if they have been a victim has a point estimate of .3. How strong is the evidence when you observe a given child rocks? Well, this depends on how probable rocking is given that the child has not been abused.  This is the lesson that we learned in the chapter on likelihood ratio. So first, consider two scenarios, in which this conditional probability also receives a point estimate. First, $.2$, then $.05$. Finally, with conditional probabilities also being uncertain, say $\pr{E \vert A}$ coming from normal distribution with $\mu = .3, \sigma = .1$, truncated to $(0,1)$, and $\pr{E\vert \n A}$ coming from normal distribution with $\mu = .05$ and $\sigma = .05$, corresponding to the idea that the sample of non-abused children is much larger, and the uncertainty about rocking about non-abused children is lower. The corresponding shifts from the prior to the posteriors (with sample size $1e7$) are pictured in Figure \ref{fig:abuse1}.
+
+
+
+```{r abuseCalculations,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
+
+
+ps <- seq(0,1, length.out = 1000)
+prior <- dbeta(ps,2,4)
+prior <- prior/sum(prior)
+
+priorSample <- sample(ps, prob = prior, size = 1e7, replace = TRUE)
+  
+peIfa <- .3
+peIfna <- .2
+pe <- peIfa * priorSample + (peIfna * (1-priorSample))
+pae <- (peIfa * priorSample)/pe
+priorHPDI <- HPDI(priorSample, prob = .89)
+paeHPDI <- HPDI(pae, prob = .89)
+
+abusePlot_3_2 <-  ggplot()+theme_tufte(base_size=7)+xlab("parameter values")+
+  ylab("density")+theme(plot.title.position = "plot")+
+  labs(title = "Prior beta(2,4) and posteriors in the abuse case",
+         subtitle = "P(E|A)=.3, P(E|~A)=.2")+
+  geom_density(aes(x = priorSample), lty =2 )+
+  geom_density(aes(x = pae), color = "skyblue" )+
+  annotate(geom = "label", 
+           label = paste("prior median: ", round(median(priorSample),2), ", 89% HPDI = (", round(priorHPDI[1],2), 
+                         ", ", round(priorHPDI[2],2), ")", sep = ""),
+           x = median(priorSample), y = 1.4, size = 2.5)+
+  annotate(geom = "label", 
+           label = paste("posterior median: ", round(median(pae),2), ", 89% HPDI = (", round(paeHPDI[1],2), 
+                         ", ", round(paeHPDI[2],2), ")", sep = ""),
+           x = median(pae), y = .8, size = 2.5)
+
+
+  
+  ## now say it's .3 vs. 0.001
+  
+peIfa2 <- .3
+peIfna2 <- .05
+peIfa2 * priorSample
+pe2 <- peIfa2 * priorSample + (peIfna2 * (1-priorSample))
+pae2 <- (peIfa2 * priorSample)/pe2
+priorHPDI <- HPDI(priorSample, prob = .89)
+pae2HPDI <- HPDI(pae2, prob = .89)
+
+
+abusePlot_3_05 <-  ggplot()+theme_tufte(base_size=7)+xlab("parameter values")+
+  ylab("density")+theme(plot.title.position = "plot")+
+  labs(title = "",
+       subtitle = "P(E|A)=.3, P(E|~A)=.05")+
+  geom_density(aes(x = priorSample), lty =2 )+
+  annotate(geom = "label", 
+           label = paste("prior median: ", round(median(priorSample),2), ", 89% HPDI = (", round(priorHPDI[1],2), 
+                         ", ", round(priorHPDI[2],2), ")", sep = ""),
+           x = median(priorSample), y = 1.4, size = 2.5)+
+    geom_density(aes(x = pae2), color = "skyblue", lty = 1 )+
+    annotate(geom = "label", 
+             label = paste("posterior median: ", round(median(pae2),2), ", 89% HPDI = (", round(pae2HPDI[1],2), 
+                           ", ", round(pae2HPDI[2],2), ")", sep = ""),
+             x = median(pae2), y = .8, size = 2.5)
+  
+
+  
+#now with uncertainty about conditional probabilities
+
+peIfa3 <- rtruncnorm(.3, sd = .1, n = 1e7, a = 0, b = 1)
+peIfna3 <- rtruncnorm(.05, sd = .05, n = 1e7, a  = 0, b = 1)
+pe3 <- peIfa3 * priorSample + (peIfna3 * (1-priorSample))
+pae3 <- (peIfa3 * priorSample)/pe3
+pae3HPDI <- HPDI(pae3, prob = .89)
+
+
+
+abusePlot_norm_3_05 <- ggplot()+theme_tufte(base_size=7)+xlab("parameter values")+
+  ylab("density")+theme(plot.title.position = "plot")+
+  labs(title = "",
+       subtitle = "P(E|A)~N(.3,.03), P(E|~A)~N(.05, .01)")+
+  geom_density(aes(x = priorSample), lty =2 )+
+  annotate(geom = "label", 
+           label = paste("prior median: ", round(median(priorSample),2), ", 89% HPDI = (", round(priorHPDI[1],2), 
+                         ", ", round(priorHPDI[2],2), ")", sep = ""),
+           x = median(priorSample), y = 1.4, size = 2.5)+
+  geom_density(aes(x = pae3), color = "skyblue", lty = 1 )+
+  annotate(geom = "label", 
+           label = paste("posterior median: ", round(median(pae3),2), ", 89% HPDI = (", round(pae3HPDI[1],2), 
+                         ", ", round(pae3HPDI[2],2), ")", sep = ""),
+           x = median(pae3), y = .8, size = 2.5)
+```
+
+
+
+
+
+
+
+
+\begin{figure}[H]
+```{r fig:abuse4,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
+grid.arrange(abusePlot_3_2,abusePlot_3_05,abusePlot_norm_3_05 , ncol = 1)
+```
+\caption{Shifts from prior $\mathsf{beta}(2,4)$ to the posteriors, given various precise and imprecise conditional probabilities.}
+\label{fig:abuse1}
+\end{figure}
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
