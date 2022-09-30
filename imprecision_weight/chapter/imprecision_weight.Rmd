@@ -990,7 +990,7 @@ rinard
 
 
 
-# Information-theoretic weight of evidence
+# Weight of a distribution
 
 
 In order to be able to explain our explication of the notion of weight of evidence, we first need 
@@ -1579,17 +1579,6 @@ plot <-  ggplot()+theme_tufte(base_size =  7 )+xlab("parameter values")+
 return(plot)
 }
 
-
-
-multipleDistros <- grid.arrange(plotDistro(beta44,1),
-plotDistro(unif5,2),
-plotDistro(unif6,3),
-plotDistro(bimodal,4),
-plotDistro(centered,5),
-plotDistro(twoEven,6),
-plotDistro(twoUneven,7),
-plotDistro(single5,8),
-plotDistro(single7,9), nrow = 9, ncol  = 1, heights  = 1)
 ```
 
 
@@ -1615,6 +1604,105 @@ Note that the ordering of weights is as expected. Partial uniform likelihoods wh
 
 
 \todo{Comment about the desiderata listed in the beginning}
+
+
+
+# Weight of evidence
+
+
+So far we have discussed the weight of a distribution, meant to measure how informed an agent is about an issue. If the agent starts with a uniform prior, this is a good enough approximation of how informed the evidence made them. But in general, how much more information is obtained is context-dependent. We want a prior-relative notion of weight, following the intuition that weight consideration should guide our information gathering also in making us   stop collecting further evidence in light of what we already know. But for weight of evidence to have this feature, it has to depend on what we already know. 
+
+So here is a general recipe. In a given context, consider your distribution for the target hypothesis $H$ given what you already know. Then update on the evidence. This might increase the weight for $H$, if the evidence confirms your conviction, or decrease it, if it goes against what the previous evidence tells you. Take the difference between the prior weight and the posterior weight ($\Delta w$) as your measure of the weight of evidence in that context. If you prefer to think that weight of evidence should be always positive, you might prefer the absolute value thereof. We, however, prefer to keep track of whether the evidence makes you more or less confused. 
+The calculation goes along the following schema:
+
+\begin{enumerate}
+\item Start with a prior distribution over the parameter space of interest, and with distributions expressing the agent's uncertainty about other probabilities involved in the calculation of the posterior.
+\item Sample from these distributions.
+\item For each sample, treat it as a selection of precise probabilities, apply Bayes' theorem to calculate the posterior.
+\item The set of the results is the sampling distribution expressing your posterior uncertainty.
+\end{enumerate}
+
+
+For instance, suppose that you learn that if a child has been the victim of abuse, the probability that they will have the habit of rocking is .3. How strong is the evidence when you observe a given child rocks? Well, this depends on how probable rocking is given that the child has not been abused. The likelihood ratio accounts for both elements in its evaluation of the evidence. This is the lesson that we learned in the chapter on likelihood ratio. 
+
+
+
+
+
+
+
+Notably, likelihood function does not have to integrate (or sum, in the case of grid approximations) to 1. For instance, if the probability of the evidence is .8 no matter what $\theta$ is, the sum will be $.8n$ for $n$ bins. Note that flat likelihoods like that, intuitively, are not informative with respect to the relevant hypotheses---they provide no guidance as to $\theta$, and it doesn't matter at what value they fall flat. For this reason, and to make the weight calculations comparable, I propose that likelihoods first should be normalized to integrate/sum to 1, and then we should use the notion of weight we already introduced. To see how this works out, let's continue with the rocking example. 
+
+Suppose you are slightly but vaguely suspicious, starting with $\mathsf{beta}(2,4)$ prior (dashed in the figure below). Your original 89\%  HDI is (.052,.6). Now imagine two scenarios. In both you learn that the child rocks, but in the first you start with a linear likelihood function going from $.1$ to $.3$, and in the other the likelihood goes from $.001$ to $.95$. The likelihoods and the corresponding shifts in the posteriors and the HDIs are visualized in Figure \ref{fig:likelihood}. In each case, rocking, unsurprisingly, turns out to be insufficient evidence, even given that you started with some suspicion, but the impact of the evidence on the posteriors is different. 
+
+
+
+\begin{figure}[H]
+```{r fig:likelihood,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
+
+
+plotDistroPlain <- function(distro, title = "", mult = 1.2) {
+  plot <-  ggplot()+theme_tufte(base_size=7)+xlab("parameter values")+
+    ylab("probability")+theme(plot.title.position = "plot")+ylim(0,1)+
+    ggtitle(title)+
+    geom_line(aes(x = ps,y = distro))+
+    ylim(c(0,mult * max(distro)))
+  return(plot)
+}
+
+prior <- dbeta(ps,2,4)
+prior <- prior/sum(prior)
+
+plotPrior <- plotDistroPlain(prior, "Prior probability")
+
+# samplePrior <- sample(ps, size = 1e4, prob = prior, replace = TRUE)
+# HPDI(samplePrior)
+
+likelihood1  <- ps * .3 + (1-ps)*.1
+likelihood01  <- ps * .95 + (1-ps)*.001
+
+posterior1 <- prior * likelihood1
+posterior1 <- posterior1/sum(posterior1)
+
+posterior01 <- prior * likelihood01
+posterior01 <- posterior1/sum(posterior01)
+
+# samplePosterior1 <- sample(ps, size = 1e4, prob = posterior1, replace = TRUE)
+# HPDI(samplePosterior1)
+
+# samplePosterior01 <- sample(ps, size = 1e4, prob = posterior01, replace = TRUE)
+# HPDI(samplePosterior01)
+
+plotLikelihood1 <- plotDistroPlain(likelihood1, "Likelihood with probability range (.1,.3)")
+
+plotLikelihood01 <- plotDistroPlain(likelihood01, "Likelihood with probability range (.001,.95)")
+
+plotPosterior1 <- plotDistroPlain(posterior1, "Posterior vs prior for (.1,.3)")+
+  geom_line(aes(x = ps, y = prior), color = "grey", lty =2)+ylim(0,.007)+
+  labs(subtitle = "HDI = (.078,.65)")
+
+plotPosterior01 <- plotDistroPlain(posterior01, "Posterior vs prior for (.001,.95)")+
+  geom_line(aes(x = ps, y = prior), color = "grey", lty =2)+ylim(0,.007)+
+  labs(subtitle = "HDI = (.067,.64)")
+
+grid.arrange(plotLikelihood1, plotLikelihood01, plotPosterior1, plotPosterior01)
+```
+\caption{Impact of evidence with linear likelihood based on point estimates. Prior marked with dashed line.}
+\label{fig:likelihood}
+\end{figure}
+
+Weights of normalized likelihoods are $.006$ (left) and $0.2$ (right), which captures the intuition that the second item of evidence is much stronger. Notice also that  while the weight of the prior is $0.052$, the posterior weights are not much different, $.046$ (left), and $0.049$ (right). This is because there is a sense your evidence made you more uncertain, as your posterior distributions' centers are closer to the middle. The lesson here is that the weights of posterior distributions might not be a good guide to weights of particular items of evidence, and that the framework can capture cases in which obtaining new evidence might make you more confused (albeit, perhaps, closer to the true). If needed, one can measure the change of weight between the prior and the posterior in terms of the difference between weights of the prior and the posterior, or the absolute value thereof. What if no precise likelihood is available? Then, higher-order densities about $\pr{E \vert H}$ and $\pr{E\vert \n H}$ will result in a density over potential likelihood ratios. 
+
+
+
+
+
+
+
+
+
+
+
 
 
 
