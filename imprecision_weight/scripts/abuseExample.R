@@ -2,10 +2,11 @@ library(ggplot2)
 library(ggthemes)
 library(gridExtra)
 library(rethinking)
+getwd()
+source("scripts/SCfunctions.R")
 
 
-
-ps <- seq(0,1, length.out = 1000)
+ps <- seq(0,1, length.out = 1001)
 prior <- dbeta(ps,2,4)
 prior <- prior/sum(prior)
 
@@ -85,6 +86,25 @@ ggplot()+theme_tufte(base_size=7)+xlab("parameter values")+
            label = paste("posterior median: ", round(median(pae2),2), ", 89% HPDI = (", round(pae2HPDI[1],2), 
                          ", ", round(pae2HPDI[2],2), ")", sep = ""),
            x = median(pae2), y = 2, size = 2.5)
+
+
+
+
+#now weights
+
+unif <-dbeta(ps,1,1)
+unif <- unif/sum(unif)
+hunif <- H(unif)
+
+weightAbs(prior)
+weightAbs(pae)
+
+
+
+
+
+
+
 
 
 

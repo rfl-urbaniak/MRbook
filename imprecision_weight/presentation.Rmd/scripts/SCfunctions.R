@@ -5,9 +5,11 @@ library(ggplot2)
 library(ggthemes)
 library(gridExtra)
 library(rethinking)
-#library(philentropy)
+library(philentropy)
 
 
+
+ps <- seq(0,1, length.out = 1001)
 
 plotDistroPlain <- function(distro, title, mult = 1.2) {
   plot <-  ggplot()+theme_tufte()+xlab("parameter values")+
@@ -51,8 +53,8 @@ plotSample <- function (sample, title, subtitle){
 }
 
 
-distroFromSamples <- function (samples){
-  distro <-  density(na.omit(samples), n = 1000)$y
+distroFromSamples <- function (samples, precision = 1000){
+  distro <-  density(na.omit(samples), n = precision)$y
   distro <- distro/sum(distro)
   return(distro)
 }
@@ -66,7 +68,7 @@ unif <- unif/sum(unif)
 hunif <- H(unif)
 weightAbs <- function(X) {1 - ( H(X)/hunif )  }
 weightRel <- function(posterior, prior) {1 - ( H(posterior)/H(prior) )  }
-
+weightDelta <- function(posterior, prior) {weightAbs(posterior) - weightAbs(prior)}
 
 
 
