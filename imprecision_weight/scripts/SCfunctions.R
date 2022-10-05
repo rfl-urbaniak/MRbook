@@ -9,12 +9,12 @@ library(philentropy)
 
 
 
-plotDistroPlain <- function(distro, title, mult = 1.2) {
+plotDistroPlain <- function(distro, title =  " ", multiplier = 1.2) {
   plot <-  ggplot()+theme_tufte()+xlab("parameter values")+
     ylab("probability")+theme(plot.title.position = "plot")+
     ggtitle(title)+
     geom_line(aes(x = ps,y = distro))+
-    ylim(c(0,mult * max(distro)))
+    ylim(c(0,multiplier * max(distro)))
   return(plot)
 }
 
@@ -51,8 +51,8 @@ plotSample <- function (sample, title, subtitle){
 }
 
 
-distroFromSamples <- function (samples){
-  distro <-  density(na.omit(samples), n = 1000)$y
+distroFromSamples <- function (samples, precision = 1001){
+  distro <-  density(na.omit(samples), n = precision)$y
   distro <- distro/sum(distro)
   return(distro)
 }
