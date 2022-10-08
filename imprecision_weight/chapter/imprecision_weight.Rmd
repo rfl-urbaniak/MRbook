@@ -38,6 +38,15 @@ library(gridExtra)
 library(rethinking)
 library(truncnorm)
 
+ps <- seq(0,1, length.out = 1001)
+getwd()
+source("../scripts/CptCreate.R")
+source("../scripts/SCfunctions.R")
+
+SCprobsFinal <- readRDS("../datasets/SCprobsFinal.rds")
+attach(SCprobsFinal)
+source("../scripts/SCplotCPTs.R")
+source("../scripts/SCplotDistros.R")
 ```
 
 
@@ -1610,6 +1619,218 @@ Note that the ordering of weights is as expected. Partial uniform likelihoods wh
 
 
 
+
+# Higher order probability and weight in BNs
+
+Consider the (simplified) BN developed by CITE FENTON to illustrate how conviction was unjustified in the Sally Clark case (Figure \ref{fig:scBNplot}). 
+
+
+```{r scBN,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "60%", warning=FALSE, message = FALSE, dpi = 800}
+#create SC DAG
+#define the structure of the Sally Clark BN
+SallyClarkDAG <- model2network("[Abruising|Acause][Adisease|Acause][Bbruising|Bcause][Bdisease|Bcause][Acause][Bcause|Acause][NoMurdered|Acause:Bcause][Guilty|NoMurdered]")
+SCdag <- model2network("[Abruising|Acause][Adisease|Acause][Bbruising|Bcause][Bdisease|Bcause][Acause][Bcause|Acause][NoMurdered|Acause:Bcause][Guilty|NoMurdered]")
+#plot 
+#graphviz.plot(SallyClarkDAG)
+
+
+#CPTs as used in Fenton & al.
+AcauseProb <-prior.CPT("Acause","SIDS","Murder",0.921659)
+AbruisingProb <- single.CPT("Abruising","Acause","Yes","No","SIDS","Murder",0.01,0.05)
+AdiseaseProb <- single.CPT("Adisease","Acause","Yes","No","SIDS","Murder",0.05,0.001)
+BbruisingProb <- single.CPT("Bbruising","Bcause","Yes","No","SIDS","Murder",0.01,0.05)
+BdiseaseProb <- single.CPT("Bdisease","Bcause","Yes","No","SIDS","Murder",0.05,0.001)
+BcauseProb <- single.CPT("Bcause","Acause","SIDS","Murder","SIDS","Murder",0.9993604,1-0.9998538)
+
+#E goes first; order: last variable through levels, second last, then first
+NoMurderedProb <- array(c(0, 0, 1, 0, 1, 0, 0,1,0,1,0,0), dim = c(3, 2, 2),dimnames = list(NoMurdered = c("both","one","none"),Bcause = c("SIDS","Murder"), Acause = c("SIDS","Murder")))
+
+#this one is definitional
+GuiltyProb <-  array(c( 1,0, 1,0, 0,1), dim = c(2,3),dimnames = list(Guilty = c("Yes","No"), NoMurdered = c("both","one","none")))
+
+# Put CPTs together
+SallyClarkCPTfenton <- list(Acause=AcauseProb,Adisease = AdiseaseProb,
+                      Bcause = BcauseProb,Bdisease=BdiseaseProb,
+                      Abruising = AbruisingProb,Bbruising = BbruisingProb,
+                      NoMurdered = NoMurderedProb,Guilty=GuiltyProb)
+
+# join with the DAG to get a BN
+SCfenton <- custom.fit(SallyClarkDAG,SallyClarkCPTfenton)
+```
+
+\begin{figure}
+```{r scBNplot,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "90%", warning=FALSE, message = FALSE, dpi = 800}
+graphviz.chart(SCfenton, type = "barprob", layout = "dot", draw.labels = TRUE,
+  grid = FALSE, scale = c(0.75, 1.1), col = "black", 
+  text.col = "black", bar.col = "black", main = NULL,
+  sub = NULL)
+```
+\caption{The BN developed by FENTON ET AL., with marginal prior probabilities.}
+\label{fig:scBNplot}
+\end{figure}
+
+The point to be illustrated was that with a sensible choice of probabilities for the conditional probability tables in the BN, conviction was not justified at any of the major stages (Table \ref{fig:SCfentonTable}). 
+
+
+```{r scStages,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "90%", warning=FALSE, message = FALSE, dpi = 800}
+
+SCfJN <- compile(as.grain(SCfenton))
+
+priorFenton <- querygrain(SCfJN, node = "Guilty")[[1]][1]
+
+SCfJNAbruising <- setEvidence(SCfJN, nodes = c("Abruising"), states = c("Yes"))
+AbruisingFenton <- querygrain(SCfJNAbruising, node = "Guilty")[[1]][1]
+
+SCfJNAbruisingBbruising <- setEvidence(SCfJN, nodes = c("Abruising","Bbruising"),
+                                states = c("Yes","Yes"))
+AbruisingBbruisingFenton <- querygrain(SCfJNAbruisingBbruising, node = "Guilty")[[1]][1]
+
+SCfJNAbruisingBbruisingNoDisease <- setEvidence(SCfJN, nodes = c("Abruising","Bbruising","Adisease","Bdisease"),
+                                         states = c("Yes","Yes", "No", "No"))
+AbruisingBbruisingFentonNoDiseaseFenton <-   querygrain(SCfJNAbruisingBbruisingNoDisease, node = "Guilty")[[1]][1]
+
+
+SCfJNAbruisingBbruisingDiseaseA <- setEvidence(SCfJN, nodes = c("Abruising","Bbruising","Adisease","Bdisease"), 
+                                               states = c("Yes","Yes", "Yes", "No"))
+AbruisingBbruisingFentonDiseaseAFenton <- querygrain(SCfJNAbruisingBbruisingDiseaseA, node = "Guilty")[[1]][1]
+
+
+SCfentonTable <- data.frame(stage = factor(c("prior", "bruising in A", "bruising in both",
+                                      "bruising in both, no disease", "bruising in both, disease on A only"),
+                                      levels = c("prior", "bruising in A", "bruising in both",
+                                                 "bruising in both, no disease", "bruising in both, disease on A only")),
+                            probability = c(priorFenton,AbruisingFenton,AbruisingBbruisingFenton,
+                                            AbruisingBbruisingFentonNoDiseaseFenton,AbruisingBbruisingFentonDiseaseAFenton))
+```
+
+
+\begin{figure}
+```{r SCfentonTable2,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%", warning=FALSE, message = FALSE, dpi = 800}
+ggplot(SCfentonTable) + geom_point(aes(x = stage, y = probability, size = probability))+
+  scale_x_discrete(limits=rev, expand = c(0, 2)) +coord_flip()+theme_tufte(base_size = 14)+ scale_size(guide="none")+
+  theme(plot.title.position = "plot")+ggtitle("Impact of evidence according to Fenton's BN for the Sally Clark case") +
+  geom_text(aes(x = stage, y= probability, label= round(probability,2) ,hjust=-.3, vjust=-.3), size  = 4)+
+  scale_y_continuous(breaks = seq(0,.7, by =.1), limits = c(0,.8))
+
+```
+\caption{The prior and posterior probabilities for Fenton's Sally Clark BN.}
+\label{fig:SCfentonTable}
+\end{figure}
+
+
+
+
+
+
+One reason the reader might worry is that the choice of the probabilities is fairly specific, and it is not obvious where such precise values should come from. The usual response REFS FOR SENSITIVITY ANALYSIS is that a range of such selections should be tested, perhaps with special focus on extreme but still plausible values. This approach, while resulting in more robustness, shares some of its difficulties with imprecise probabilism. 
+
+- Different probability measures are not distinguished in terms of their plausibility, and so this plausibility is not accounted for in the analysis.
+
+- If you were worried that the precise choice of one probability measure is unjustified, you might have a similar concern about the precise choice of the few extreme combinations relied on in the sensitivity analysis.
+
+- If in the sensitivity analysis the further decision is guided by the results for the extreme measures, they might be play an undeservedly strong role. [STORY ABOUT MAKING DAILY DECISION THIS WAY TO ILLUSTRATE]
+
+
+Some of these concerns are at least dampened when we deploy the higher order probabilities in the BN. For instance, your conditional probabilities might look as illustrated in Figure  \ref{fig:SCwithHOPa}. \todo{describe the sampling approach}
+
+\begin{figure}
+```{r fig:SCwithHOPa, echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "90%", warning=FALSE, message = FALSE, dpi = 800}
+
+
+
+grid.arrange(AbruisingIfSidsPlot+xlim(0,.4),AbruisingIfMurderPlot+xlim(0,.4))
+```
+
+\caption{}
+\label{fig:SCwithHOPa}
+\end{figure}
+
+
+
+
+
+
+
+
+
+\pagebreak 
+\begin{figure}
+```{r SCwithHOP, out.extra='angle=90', echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "160%", out.height= "200%", warning=FALSE, message = FALSE, dpi = 800}
+#SCprobsFinal <- readRDS("../datasets/SCprobsFinal.rds")
+#attach(SCprobsFinal)
+#source("../scripts/SCfunctions.R")
+#source("../scripts/SCplotCPTs.R")
+#source("../scripts/SCplotDistros.R")
+
+
+AsidsPriorPlotGrob <- ggplotGrob(AsidsPriorPlot+theme_tufte(base_size = 5))
+BcauseSidsIfAsidsPlotGrob <- ggplotGrob(BcauseSidsIfAsidsPlot+theme_tufte(base_size = 5))
+BcauseSidsIfAmurderPlotGrob<- ggplotGrob(BcauseSidsIfAmurderPlot+theme_tufte(base_size = 5)) 
+
+AbruisingIfSidsPlotGrob <- ggplotGrob(AbruisingIfSidsPlot+theme_tufte(base_size = 5)) 
+AbruisingIfMurderPlotGrob <- ggplotGrob(AbruisingIfMurderPlot+theme_tufte(base_size = 5)) 
+
+
+AdiseaseIfSidsPlotGrob <- ggplotGrob(AdiseaseIfSidsPlot+theme_tufte(base_size = 5)) 
+AdiseaseIfMurderPlotGrob <- ggplotGrob(AdiseaseIfMurderPlot+theme_tufte(base_size = 5)) 
+
+
+BbruisingIfSidsPlotGrob <- ggplotGrob(BbruisingIfSidsPlot+theme_tufte(base_size = 5)) 
+BbruisingIfMurderPlotGrob <- ggplotGrob(BbruisingIfMurderPlot+theme_tufte(base_size = 5)) 
+
+
+BdiseaseIfSidsPlotGrob <- ggplotGrob(BdiseaseIfSidsPlot+theme_tufte(base_size = 5)) 
+BdiseaseIfAmurderPlotGrob <- ggplotGrob(BdiseaseIfAmurderPlot+theme_tufte(base_size = 5)) 
+
+
+ggplot(data.frame(a=1)) + xlim(1, 40) + ylim(1, 60)+theme_void()+
+  annotation_custom(AsidsPriorPlotGrob, xmin = 9, xmax = 15, ymin = 49, ymax = 59)+
+  geom_label(aes(label = "Bcause", x = 25, y = 41),
+              size = 3 )+
+  geom_label(aes(label = "Acause", x = 12, y = 48),
+            size = 3 )+
+  geom_curve(aes(x = 13.5, y = 48.2, xend = 25, yend = 42.5), curvature = -.18,size = .3,
+             arrow = arrow(length = unit(.015, "npc")))+
+  annotation_custom(BcauseSidsIfAsidsPlotGrob, xmin = 17, xmax = 23, ymin = 47, ymax = 57)+
+  annotation_custom(BcauseSidsIfAmurderPlotGrob, xmin = 15, xmax = 21, ymin = 37, ymax = 47)+
+  geom_label(aes(label = "Abruising", x = 2, y = 41),
+             size = 3 )+
+  geom_curve(aes(x = 10.5, y = 48.2, xend = 2, yend = 42.5), curvature = .2,size = .3,
+             arrow = arrow(length = unit(.015, "npc")))+
+  annotation_custom(AbruisingIfSidsPlotGrob, xmin = 2, xmax = 8, ymin = 47, ymax = 57)+
+  annotation_custom(AbruisingIfMurderPlotGrob, xmin = 5, xmax = 11, ymin = 37, ymax = 47)+
+  geom_label(aes(label = "Adisease", x = 6, y = 21),
+             size = 3 )+
+  geom_curve(aes(x = 13, y = 46.2, xend = 6, yend = 23), curvature = -.45,size = .3,
+             arrow = arrow(length = unit(.015, "npc")))+
+  annotation_custom(AdiseaseIfSidsPlotGrob, xmin = 4.5, xmax = 10.5, ymin = 27, ymax = 37)+
+  annotation_custom(AdiseaseIfMurderPlotGrob, xmin = 9, xmax = 15, ymin = 17.5, ymax = 27.5)+
+  geom_label(aes(label = "Bbruising", x = 14, y = 12),
+             size = 3 ) +
+  geom_curve(aes(x = 24, y = 39.5, xend = 15.5, yend = 13.5), curvature = -.2,size = .3,
+                                    arrow = arrow(length = unit(.015, "npc")))+
+  annotation_custom(BbruisingIfSidsPlotGrob, xmin = 15.5, xmax = 21.5, ymin = 25, ymax = 35)+
+  annotation_custom(BbruisingIfMurderPlotGrob, xmin = 18.5, xmax = 24.5, ymin = 10, ymax = 20)+
+  geom_label(aes(label = "Bdisease", x = 33, y = 18),
+             size = 3 )  +
+  geom_curve(aes(x = 26, y = 39.5, xend = 33, yend = 19.5), curvature = -.2,size = .3,
+             arrow = arrow(length = unit(.015, "npc")))+
+  annotation_custom(BdiseaseIfSidsPlotGrob, xmin = 31, xmax = 37, ymin = 27, ymax = 37)+
+  annotation_custom(BdiseaseIfAmurderPlotGrob, xmin = 24.5, xmax = 30.5, ymin = 20, ymax = 30)
+
+```
+
+\caption{Example of a HOP approach tor the Sally Clark Case  approximated by sampling probabilities  and constructing 10k BNs.}
+\end{figure}
+
+
+\pagebreak 
+
+
+\todo{Do we still call them BNs? What do we call them?}
+
+
+
 # Weight of evidence
 
 
@@ -1809,7 +2030,7 @@ abuseExamplePlot
 
 
 
-# Weight tends to improve accuracy
+# Accuracy
 
 
 Here is a question asked by [COHEN 1986 TWELVE p. 276]: is it worth while knowing the weight of an argument without knowing its probability? In our terminology, questions inspired by Cohen's are: what's the point of weight considerations if we already have the distributions? Can weights be put to use if we do not have the distributions?
@@ -2005,6 +2226,8 @@ grid.arrange(bkplot,  ckplot,  bwkplot)
 
 
 
+
+# Weight and accuracy
 
 
 
