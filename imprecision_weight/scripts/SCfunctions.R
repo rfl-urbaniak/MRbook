@@ -65,20 +65,22 @@ unif <-dbeta(ps,1,1)
 unif <- unif/sum(unif)
 hunif <- H(unif)
 weightAbs <- function(X) {1 - ( H(X)/hunif )  }
-weightRel <- function(posterior, prior) {1 - ( H(posterior)/H(prior) )  }
+weightProp <- function(posterior, prior) {weightAbs(posterior)/weightAbs(prior)}
+weightDelta <- function (posterior,prior){ weightAbs(posterior) - weightAbs(prior)}
 
 
 
 
 
-plotPosterior <- function(distro, distroS, title, prior){
-  subtitle <- paste("adw = ", round(weightAbs(distro),3), ", rdw = ", round(weightRel(distro,prior),3), ", wDelta = ",  
+
+plotPosterior <- function(distro, distroS, title, prior, subsize = 4){
+  subtitle <- paste("absolute = ", round(weightAbs(distro),3), ", proportional = ", round(weightProp(distro,prior),3), ", delta = ",  
                     abs(round(weightAbs(distro) - weightAbs(prior),3))
-                    , ", median =", 
+                    , ",   \nmedian =", 
                     round(median(distroS, na.rm = TRUE),2), ", 89%HPDI = ", round(HPDI(distroS),2)[1],"-",round(HPDI(distroS),2)[2], sep = "")
   
   ggplot()+ geom_line(aes(x = ps, y = distro))+theme_tufte()+ylab("probability")+xlab(expression(theta))+
-    theme(plot.title.position = "plot")+
+    theme(plot.title.position = "plot", plot.subtitle = element_text(size = subsize) )+
     ggtitle(title)+
     labs(title = title, subtitle = subtitle)
 }
@@ -90,11 +92,6 @@ expectedFromSample <- function (distro) {
   probs <- distroFromSamples(distro)
   expProb <- sum(probs * ps)
   return(expProb)
-}
-
-
-wDelta <- function (distro,prior){
-  abs(round(weightAbs(distro) - weightAbs(prior),3))
 }
 
 

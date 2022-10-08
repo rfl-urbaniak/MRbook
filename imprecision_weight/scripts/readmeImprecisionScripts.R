@@ -12,10 +12,14 @@ file.edit("scripts/SCfunctions.R")
 #visualisations of distributions
    #plotDistroPlain(distro, title, mult = 1.2)
 
+   #plotPosterior(distro, distroS, title, prior)
+
 #weight
       #weightAbs - absolute weight
-      #
+      #weightProp(posterior, prior)
+      #weightProp(posterior, prior)
 
+# expectedFromSample
 
 
 

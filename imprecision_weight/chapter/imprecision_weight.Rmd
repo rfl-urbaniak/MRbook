@@ -1736,12 +1736,10 @@ Some of these concerns are at least dampened when we deploy the higher order pro
 \begin{figure}
 ```{r fig:SCwithHOPa, echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "90%", warning=FALSE, message = FALSE, dpi = 800}
 
-
-
 grid.arrange(AbruisingIfSidsPlot+xlim(0,.4),AbruisingIfMurderPlot+xlim(0,.4))
 ```
 
-\caption{}
+\caption{Example of approxmiated uncertainties about conditional probabilities in the Sally Clark case.}
 \label{fig:SCwithHOPa}
 \end{figure}
 
@@ -1821,13 +1819,62 @@ ggplot(data.frame(a=1)) + xlim(1, 40) + ylim(1, 60)+theme_void()+
 ```
 
 \caption{Example of a HOP approach tor the Sally Clark Case  approximated by sampling probabilities  and constructing 10k BNs.}
+\label{fig:SCwithHOP}
 \end{figure}
 
 
 \pagebreak 
 
+Using these we can investigate the impact of incoming evidence as it arrives (Figure \ref{fig:SCwithHOP2})
+
+
+\begin{figure}
+```{r SCwithHOP2, echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "90%", warning=FALSE, message = FALSE, dpi = 800, warning = FALSE, message = FALSE, output = FALSE}
+grid.arrange(GuiltPriorPlot, GuiltABbruisingPlot, GuiltABbruisingNoDiseasePlot, GuiltABbruisingDiseaseAPlot, ncol =2)
+```
+
+
+\caption{Impact of incoming evidence in the Sally Clark case.}
+\label{fig:SCwithHOP2}
+\end{figure}
+
+
+And we can use this tool to gauge our uncertainty about the likelihood ratios (Figure \ref{fig:SClrs}).
+
+
+\begin{figure}
+
+```{r SClrs, echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "90%", warning=FALSE, message = FALSE, dpi = 800, warning = FALSE, message = FALSE, output = FALSE}
+AbruisingLR <- AbruisingIfMurder / AbruisingIfSids
+
+AbruisingLRPlot <- plotSample(AbruisingLR,title = "LR: Abruising",  paste("median =", 
+                                                            round(median(AbruisingLR),2), ", 89%HPDI = ", 
+                                                            round(HPDI(AbruisingLR),2)[1],"-",round(HPDI(AbruisingLR),2)[2],
+                                                            sep = "") )+xlim(0,30)
+
+AdiseaseLR <- AdiseaseIfMurder / AdiseaseIfSids
+
+AdiseaseLRPlot <- plotSample(AdiseaseLR,title = "LR: Adisease",  paste("median =", 
+                                                                           round(median(AdiseaseLR, na.rm = TRUE),2), ", 89%HPDI = ", 
+                                                                           round(HPDI(AdiseaseLR),2)[1],"-",round(HPDI(AdiseaseLR),2)[2],
+                                                                           sep = "") )+xlim(0,3)
+ grid.arrange(AbruisingLRPlot, AdiseaseLRPlot, ncol =2)
+```
+
+\caption{Likelihood ratios forbruising and signs of disease in child A in the Sally Clark case.}
+\label{fig:SClrs}
+
+\end{figure}
+
+
+
+
 
 \todo{Do we still call them BNs? What do we call them?}
+
+
+
+
 
 
 
@@ -1934,7 +1981,7 @@ absolute <- round(c(weightAbs(prior), weightAbs(paeDistro),
               weightAbs(pae2Distro), weightAbs(pae3Distro), 
               weightAbs(pae4Distro)),3) 
 
-proportional <- round(absolute/weightAbs(prior) - 1, 3)
+proportional <- round(absolute/weightAbs(prior), 3)
 
 delta <-  round(absolute - weightAbs(prior),3)
 
@@ -1983,7 +2030,7 @@ abuseExamplePlot <- plotDistroPlain(paeDistro, multiplier = 4.5)+
 
 
 \begin{figure}[H]
-```{r fig:abuse4c,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
+```{r fig:abuse4d,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
 abuseExamplePlot
 ```
 \caption{Shifts from prior $\mathsf{beta}(2,4)$ to the posteriors, given various conditional probabilities.}
@@ -2015,10 +2062,91 @@ abuseExamplePlot
 
 
 
+# Weights in Bayesian Networks
+
+
+What results do we get when we apply the weight calculations to the guilt node in  the Sally Clark BNs?
+
+
+```{r fig:entropies19,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
+source("../scripts/SCplotDistros.R")
+source("../scripts/SCfunctions.R")
+
+
+GuiltPrior <- SCprobsFinal$GuiltPrior
+
+GuiltPriorPlot <- plotSample(GuiltPrior, "GuiltPrior",
+                             paste("median =",
+                                   round(median(SCprobsFinal$GuiltPrior),2), ", 89%HPDI = ", round(HPDI(SCprobsFinal$GuiltPrior),2)[1],"-",round(HPDI(SCprobsFinal$GuiltPrior),2)[2],
+                                   sep = "") )+xlim(0,1)
+
+GuiltPriorP <- distroFromSamples(GuiltPrior)
+priorPlotP <- plotPosterior(GuiltPriorP, GuiltPrior, "Guilt (prior)", prior = GuiltPriorP)
+
+
+GuiltABbruisingP <- distroFromSamples(GuiltABbruising)
+GuiltABbruisingPlotP <- plotPosterior(GuiltABbruisingP, GuiltABbruising, "Guilt (ABbruising)", prior = GuiltPriorP )
+
+GuiltABbruisingNoDiseaseP <- distroFromSamples(GuiltABbruisingNoDisease)
+GuiltABbruisingNoDiseasePlotP <- plotPosterior(GuiltABbruisingNoDiseaseP, GuiltABbruisingNoDisease, "Guilt (ABbruisingNoDisease)",
+                                                prior = GuiltPriorP )
+
+GuiltABbruisingDiseaseA <- GuiltABbruisingDiseaseA[!is.na(GuiltABbruisingDiseaseA)]
+GuiltABbruisingDiseaseAP <- distroFromSamples(GuiltABbruisingDiseaseA)
+GuiltABbruisingDiseaseAPlotP <- plotPosterior(GuiltABbruisingDiseaseAP,
+                                               GuiltABbruisingDiseaseA, "Guilt (ABbruisingDiseaseA)",prior = GuiltPriorP)
+
+
+SCguiltPlotP <- grid.arrange(priorPlotP+theme_tufte(base_size = 9),
+                             GuiltABbruisingPlotP+theme_tufte(base_size = 9),
+                             GuiltABbruisingNoDiseasePlotP+theme_tufte(base_size = 9),
+                             GuiltABbruisingDiseaseAPlotP+theme_tufte(base_size = 9), ncol =2)
+
+
+```
 
 
 
 
+\begin{figure}
+```{r fig:entropies2_19,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
+SCguiltPlotP
+```
+
+\caption{sds}
+\label{ig:entropies2}
+\end{figure}
+
+<!-- ![](../images/SCguiltPlotP3.png){#id .class width=90% height=90%} -->
+
+
+
+
+One use of weight is to use expected weight of still missing pieces of evidence to guide evidence gathering, especially with limited resources. Since we don't want to possible impacts of evidence to cancel each other, we use absolute distance of proportional change in weight from 1 in the expectancy calculations and in looking at possible outcomes, to which we should also be sensitive (Figure \ref{fig:SCexpectedWeights2}).
+
+
+
+
+
+## Expected weight 
+
+
+```{r SCexpectedWeightsb, echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%", warning=FALSE, message = FALSE, dpi = 800, warning = FALSE, message = FALSE, output = FALSE}
+source("../scripts/SCexpectedWeights.R")
+```
+
+\begin{figure}
+
+```{r SCexpectedWeights2b, echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%", warning=FALSE, message = FALSE, dpi = 800, warning = FALSE, message = FALSE, output = FALSE}
+SCweightsPlot 
+```
+
+
+
+\caption{Expected size (absolute value) of the proportional weight change calculations. Illustrated for bruising in child A, calculated for bruising and signs of disease in child A.}
+
+\ref{fig:SCexpectedWeights2}
+\end{figure}
 
 
 
