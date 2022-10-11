@@ -1,15 +1,15 @@
 % Options for packages loaded elsewhere
 \PassOptionsToPackage{unicode}{hyperref}
 \PassOptionsToPackage{hyphens}{url}
-\PassOptionsToPackage{dvipsnames,svgnames*,x11names*}{xcolor}
+\PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
 %
 \documentclass[
   10pt,
   dvipsnames,enabledeprecatedfontcommands]{scrartcl}
 \usepackage{amsmath,amssymb}
 \usepackage{lmodern}
-\usepackage{ifxetex,ifluatex}
-\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+\usepackage{iftex}
+\ifPDFTeX
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
   \usepackage{textcomp} % provide euro and other symbols
@@ -25,17 +25,6 @@
   \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
 }{}
 \usepackage{xcolor}
-\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
-\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
-\hypersetup{
-  pdftitle={Marcello's notes on Weight},
-  colorlinks=true,
-  linkcolor=Maroon,
-  filecolor=Maroon,
-  citecolor=Blue,
-  urlcolor=blue,
-  pdfcreator={LaTeX via pandoc}}
-\urlstyle{same} % disable monospaced font for URLs
 \usepackage{graphicx}
 \makeatletter
 \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
@@ -223,9 +212,20 @@
 \usepackage{tikz}
 \usetikzlibrary{positioning,shapes,arrows}
 
-\ifluatex
+\ifLuaTeX
   \usepackage{selnolig}  % disable illegal ligatures
 \fi
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same} % disable monospaced font for URLs
+\hypersetup{
+  pdftitle={Marcello's notes on Weight},
+  colorlinks=true,
+  linkcolor={Maroon},
+  filecolor={Maroon},
+  citecolor={Blue},
+  urlcolor={blue},
+  pdfcreator={LaTeX via pandoc}}
 
 \title{Marcello's notes on Weight}
 \author{}
@@ -375,6 +375,8 @@ Instead, the weight of \(E1\) is \(|ln(LR(E1))=|ln(2.0)|\) and the
 weight of \(E2\) is \(|ln(LR(E2|E1))=|ln(0.5)|\). Adding these two
 weights does not give rise to zero.
 
+\todo{R:Hm, this is an interesting argument, will need to work it out; at this point, I'm not convinced as it is not formulated in terms of a probability measure; will think more about this.}
+
 This suggest this \textit{decomposition principle} (also called
 additvity, see Rafal's discussion of Good):
 
@@ -390,6 +392,8 @@ The following \textit{commutative principle} should also hold:
 
 \textbf{Question}: Does Rafal's informativeness conception satisfy these
 principles?
+
+\todo{R: Well, the proportional change does not, wDelta might, will have to think about it.}
 
 \hypertarget{nance-weight-of-overall-evidence-available-versus-future-evidence}{%
 \subsubsection{Nance: weight of overall evidence available versus future
@@ -438,6 +442,7 @@ seem correct, as this would only be a measure of actual weight, not
 expected weight. The latter is more appropriate in the case of potential
 evidence. But Nance seems to think that the content of potential
 evidence can be ``roughly anticipated'':
+\todo{R: in my calculations now I look at expected and at the range as well.}
 
 \begin{quote}
 The task is complicated by the difficulty of assessing, however approximately, the weight of evidence that has not yet been obtained and so the content of which can only be roughly anticipated. (book, p. 156)
@@ -452,12 +457,15 @@ applies to a potential eyewitness testimony. And so on. The key here
 seems to be that weight is unidirectional and thus it does not mater
 what the actual value of the evidence is. Whether the test is positive
 or negative, it will have the same weight. This allows to bypass the
-problem of expected weight of evidence.
+problem of expected weight of
+evidence.\todo{R: why the same, you can have different conditional probabilities involved?}
 
 \textbf{Question}: Is it the case, under Rafal's account of weight, that
 the weight of a DNA test, positive or negative---or the weight of
 whatever other evidence that can take a positive or negative value---is
 the same in either direction?
+
+\todo{See my discussion of the absolute value}
 
 \hypertarget{completeness}{%
 \subsection{Completeness}\label{completeness}}
@@ -505,7 +513,7 @@ about what happened.
 \item
   The \textbf{narrative-center conception of completeness} can be found
   in David Kaye 1986 piece ``Do We Need a Calculus of Weight to
-  Understand Proof Beyond a Reasonable Doubt?''
+  Understand Proof Beyond a Reasonable Doubt?''.
 \end{itemize}
 
 \begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
@@ -525,6 +533,8 @@ why the evidence is missing.
 
 \todo{Yeah, I've read it. My worry: this only works if you build in the identification and gaps brute force. Nothing in this overly simplistic machinery tells you how to identify them and what their impact should be. We need to do better.}
 
+\todo{R: Either way, we need to discuss this approach in the chapter, not sure at which point.}
+
 \begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
 
 \hypertarget{nance-reasonable-completeness---cost-benefit-analysis-of-completeness}{%
@@ -536,7 +546,7 @@ completeness}\label{nance-reasonable-completeness---cost-benefit-analysis-of-com
 \item
   Nance has a notion of completeness in mind when he talks about
   reasonable completeness. See his 1998 piece ``Evidential Completeness
-  and the Burden of Proof.'' He seems to have in mind a
+  and the Burden of Proof''. He seems to have in mind a
   \textbf{cost-benefit analysis of completeness} more than a reasonable
   list of complete evidence.
 \end{itemize}
@@ -632,6 +642,8 @@ completeness}\label{difficulties-with-nances-resonable-completeness}}
   conceptually what we mean by weight.
 \end{itemize}
 
+\todo{R: agreed}
+
 \hypertarget{open-questions}{%
 \subsubsection{Open questions}\label{open-questions}}
 
@@ -665,6 +677,8 @@ completeness}\label{difficulties-with-nances-resonable-completeness}}
 \hypertarget{resilience}{%
 \subsection{Resilience}\label{resilience}}
 
+\todo{Do we discuss this notion in this chapter, or do we postpone this to another one, in which we also discuss the stability approach?}
+
 The evidence currently available might support a certain claim to some
 degree, say the LR or the posterior probability (or some other measures
 of balance) tips strongly in favor of the claim. But, would the balance
@@ -676,7 +690,7 @@ the evidence counts as not resilient.
 \begin{itemize}
 \tightlist
 \item
-  Skyrms' approach in his 1977 piece "Resiliency, Propensities, and
+  Skyrms' approach in his 1977 piece ``Resiliency, Propensities, and
   Causal Necessity:
 \end{itemize}
 
@@ -731,13 +745,12 @@ threshold, like a probability threshold?
 weight for the case of chance hypotheses. Let
 \(P(X)\sum_x P(Ch(X)=x)x\), where \(X\) is a statement such as ``the
 coin comes up heads'' and \(Ch(X)=x\) stands for ``The chance that the
-coin come sup heads is x.'' Weight is defined as (see Joyce, How
+coin come sup heads is x''. Weight is defined as (see Joyce, How
 Probabilities Reflect Evidence, p.~166):
 
-\[w(X, E) = \sum_x \vert P(Ch(X)=x)(x-P(X))^2 - P(Ch(X)=x \vert E)(x-Pr(X \vert E))^2\vert\]
+\todo{R: A somewhat longer discussion of Joyce is now in the chapter draft.}
 
-\todo{Like I said, I did think about this, this is briefly discussed in the HOP paper, but I agree
-this needs to be more extensively discussed in the chapter.}
+\[w(X, E) = \sum_x \vert P(Ch(X)=x)(x-P(X))^2 - P(Ch(X)=x \vert E)(x-Pr(X \vert E))^2\vert\]
 
 \hypertarget{what-else}{%
 \subsection{What else?}\label{what-else}}
@@ -826,6 +839,8 @@ Another useful paper on this debate is J.M. Curran, J.S. Buckleton, C.M.
 Triggs, B.S. Weir, Assessing uncertainty in DNA evidence caused by
 sampling effects, Sci. Justice 42 (2002) 29--37.
 
+\todo{ok, good, I side with Sjers, but a discussion of this is a good seagwey into moving from point estimates to HOP in the context of propositions; need to read the papers; let's talk about how much of this to include.}
+
 \emph{Rafal's comment}: If weight was something external; if it actually
 falls out from otherwise probabilistic phenomena standard in Bayesian
 data analysis, maybe not. But it will be good to discuss this potential
@@ -845,6 +860,8 @@ spread of the distribution. This again seems to fit with Rafal's
 approach.
 
 \todo{Here too it'd be great to have an example precise enough for an implementation to be possible. Do you recall seeing one in the literature? }
+
+\todo{R: Generally, RMP might  be misleading as it only reports aleatory uncertainty about one particular issue, ignoring aleatory uncertainty about other possibly relevant issues, and epistemic uncertainties. We can refer back to the stuff we said about false positives etc. in the likelihood ratio chapter.}
 
 Some papers about this issue:
 
@@ -867,11 +884,13 @@ this number if it was ‘‘important’’ for the decision making
 process. (p. 117)
 \end{quote}
 
+\todo{R: Ok, right, but there should be a quantitative approach to establish this, right? Like, fora regular person the probability that there is a family member who'd match and could be the culprit is veeeery low, so the expected impact of this option can be ignored (can it?), but if there is a sensible story increasing the probability of this scenario...}
+
 \begin{itemize}
 \tightlist
 \item
   Evett, Evaluating DNA profiles in a case where the defence is ``It was
-  my brother.'' This paper gives a fairly detailed and reliastic
+  my brother''. This paper gives a fairly detailed and reliastic
   scenaruio that may occur in practise:
 \end{itemize}
 
@@ -901,6 +920,8 @@ it or not, to assess his evidence it is necessary for the scientist to gain some
 idea of how the Court is thinking in relation to $\overline{C}_1$ and $\overline{C}_2$. The difficulties of
 doing this should not be underestimated. 
 \end{quote}
+
+\todo{R: right, this is a real-life argument for the Bayesian approach instead of LR: a serious case in which to report the overall strength of evidence, priors on options are needed; another strategy: report two LRs and leave the rest to the court, analogous to multiple RMPs for difference races of the assailant?}
 
 So the problme here is that since the denominator of the likelihood has
 two hypotheses, then their prior probabilities do matter and affect the
@@ -962,6 +983,8 @@ Unlike expert witnesses, appellate courts often prefer that only one reference c
 The uneasiness that appellate courts display when expert witnesses testify about multiple references classes is understandable. Perhaps, the reference class most favorable to the defendant should be selected, giving the accused the benefit of the doubt. This might be appropriate in some cases. But suppose the random match probability associated with a DNA match is 1 in 10 for people in group A, while it is 1 in 100 million for people in group B. Always going for the reference class that is most favorable to the defendant will in some cases weaken the incriminating force of DNA matches more than necessary.
 \end{quote}
 
+\todo{R: idea: model this with a BN where the HOP uncertainty about races is very high, while HOP uncertainty about particular LRs is very low, see what happens!}
+
 \hypertarget{dna-evidence-and-levels-of-propositions}{%
 \subsection{DNA evidence and levels of
 propositions}\label{dna-evidence-and-levels-of-propositions}}
@@ -980,6 +1003,8 @@ Concerns'' \textit{https://doi.org/10.3389/fgene.2016.00215}) says:
 \begin{quote}
  So, when a scientist is faced with assigning a probability for finding trace material given the proposition of handling an object by a person of interest (e.g., the activity of discharging a firearm), we do see no harm in referring to studies that have focused on rates of transfer not exactly the same in the alleged circumstances of the case. Although some features of the individual case at hand may differ, nothing will prevent the scientist from also judging that some additional case-tailored experiments should be conducted in order to extend their knowledge and understanding, but case backlogs and limited resources may render this difficult.
 \end{quote}
+
+\todo{Talk about "Uncertain Judgments"}
 
 The paucity of data available or the fact that the data available does
 not match perfectly the circumstances of the specific case at hand
@@ -1481,6 +1506,8 @@ recording of the call was erased and is no longer available. As a result, CCSF�
 prevented the jury from hearing what Okupnik communicated to SFSD in that call
 \end{quote}
 
+\todo{R: Seems like buck passing in evidence evaluation, no? Hey, just tell the jury and it's up to them what to do about this.}
+
 \hypertarget{federeal-rule-c-proc-37e}{%
 \subsubsection{Federeal Rule C Proc
 37(e)}\label{federeal-rule-c-proc-37e}}
@@ -1540,19 +1567,22 @@ Some have argued that there should be a unified set of rules about
 sanctions for all evidence, not just electronic evidence and
 non-electronic evidence. (Thomas Y. Allman, Amended Rule 37(e): What's
 New and What's Next in Spoliation?)
-\textbackslash textit\{judicature.duke.edu/wp-content/uploads/2020/10/may2017\_rule37.pdf\}
+\todo{If you use uderscore in regular text, it might not knit (it did not for me), as it is used in LaTeX for lower subscript. Use url}
+\url{judicature.duke.edu/wp-content/uploads/2020/10/may2017_rule37.pdf}
+
+\todo{Interesting, isn't that instead of two rules we should have somewhat different uncertainties about unintended deletion, which is much easier for electronic evidence?? This would be more unifying, no? Also, realistically this uncertainty should be HOP}
 
 \hypertarget{example-decker-v.-target-corp}{%
 \subsection{Example: Decker v. Target
 Corp}\label{example-decker-v.-target-corp}}
 
-Target customer slips, falls and gets insured in a Target store because
-of a flatbed, possibly left unattended. Costumer suffered serious
-injury, bleeding from the head etc. and had to be transposed to a
-hospital. Video surveillance footage was only preserved in part. And the
-rest was destroyed. Hard to reconstruct exactly what happened before the
-incident. Victim seeks adverse inference jurry instruction against
-Target for spoliation and bad faith.
+Target customer slips, falls and gets insured \todo{injured?} in a
+Target store because of a flatbed, possibly left unattended. Costumer
+suffered serious injury, bleeding from the head etc. and had to be
+transposed to a hospital. Video surveillance footage was only preserved
+in part. And the rest was destroyed. Hard to reconstruct exactly what
+happened before the incident. Victim seeks adverse inference jurry
+instruction against Target for spoliation and bad faith.
 
 Details of the case are as follows: Decker v. Target Corp, Case
 No.~1:16-cv-00171-JNP-BCW, Filed 10/10/2018
@@ -1645,6 +1675,8 @@ that in advance, the expected probability based on this added evidence
 current evidence. He proves this claim analytically in the appendix to
 his paper.
 
+\todo{R: read this paper, we need to discuss it, but the problems start with how he defines weight (if I remember well, certainty is just distance from the extreme values, right?)}
+
 \begin{quote}
 More generally, if the evidence is missing it cannot be known which way it points.
 It appears equally possible that the missing evidence would confirm the current factual conclusion as
@@ -1667,6 +1699,8 @@ structural features of a case (as captured by a Bayesian network) that
 do warrant changing one's probability assessment in virtue of learning
 that that could be other evidence (even though you do not know what that
 evidence actually is).
+
+\todo{But he isn't even right about cancelling out, this really depends on what the priors are, should I look at his analytic proof and discuss it in the chapter?}
 
 \textbf{Hamer's second claim} Hamer concludes that, since added evidence
 brings no expected change in probability, there is no need to add a
