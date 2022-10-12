@@ -1,0 +1,125 @@
+---
+title:  "Imprecision, information and weight of evidence"
+author: "Rafal Urbaniak & Marcello Di Bello"
+output:
+  ioslides_presentation:
+        widescreen: true
+        transition: 2.5
+        smaller: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_knit$set(root.dir = '../')
+library(plot3D)
+library(bnlearn)
+library(dagitty)
+library(Rgraphviz)
+library(gRain)
+library(ggplot2)
+library(ggthemes)
+library(gridExtra)
+library(reshape2)
+library(rethinking)
+library(ggforce)
+source("../scripts/CptCreate.R")
+```
+
+
+
+## Balance vs. weight
+
+### Precursors
+
+- Beans from a bag, two colors, same observed proportion, different sample sizes (C. S. Peirce, 1872).
+
+- The notion of weight: balance might remain the same while the amount of reelvant evidence shifts (Keynes 1921).
+
+### Desiderata 
+
+- **Balance undetermination** Different weight with the same balance are possible.
+
+
+- **Weak (strong) increase** In Bernoulli trials, weight does not decrease (increases) with sample size keeping frequency fixed.
+
+
+- **Frequency monotonicity** In Bernoulli trials, keeping sample size fixed, weight does not decrease as observed frequency goes further from .5.
+
+<!-- \begin{tabular}{lp{11cm}} -->
+<!-- (Possible increase) & It is possible that   $V(X\vert K \wedge E) > V(X\vert K)$ while $\pr{X \vert K \wedge E} >  \pr {X\vert K}$. \\ -->
+<!-- (Possibly no change ) & It is possible that   $V(X\vert K \wedge E) > V(X\vert K)$ while $\pr{X \vert K \wedge E} =  \pr {X\vert K}$. -->
+<!-- \end{tabular} -->
+
+
+<!-- - **completeness:** weight increases with completeness -->
+
+
+## No **unrestricted monotonicity**  
+
+- Straight flush has the probability of $\frac{40}{2,958,960}$. 
+
+- The player starts behaving confusingly and bluffing.
+
+(Weatherson, Joyce, Runde)
+
+## Weight and precise probablism
+
+Probabilities and Hamer's absolute distance from 1 or 0 depending on the balance fail at **Balance undetermination**.
+
+
+
+### Good's desiderata and weight
+
+- $W(H:E)$ is some function of $\mathsf{P}(E\vert H), \mathsf{P}(E\vert \neg H)$
+
+- $\mathsf{P}(H \vert E) = g[W(H:e), \mathsf{P}(H)]$
+
+- $W(H: E_1 \wedge E_2)  = W(H:E_1) + W(H:E_2 \vert E_1)$
+
+
+\[W(H:E)  = \log \frac{\mathsf{P}(E \vert H)}{\mathsf{P}(E\vert \neg H)}\]
+
+
+## Good's weight is not what we're after
+
+### Good's own example (expanded)
+
+- a die is selected at random from nine fair dice and one with bias  $\frac{1}{3}$. 
+
+-  Uniform prior gives you weight of evidence for the loaded die $log_{10}(.1)$, that is `r log10(.1)` (-10 db). 
+
+- Every time you toss it and obtain a six, you gain $log_{10}(\frac{\frac{1}{3}}{\frac{1}{6}})= log_{10}(2)$
+
+- Every time you toss it and obtain something else, the weight changes by $log_{10}(\frac{\frac{2}{3}}{\frac{5}{6}})= log_{10}(.8)$.
+
+
+## Good's weight is not what we're after
+
+
+```{r goodWEights,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "90%"}
+six <- seq(0,10, by = 1)
+others <- seq(0, 10, by  = 1)
+options <- expand.grid(six = six, others = others)
+options$weight  <- round(10 *( log10(.1) + options$six * log10(2) +
+                                 options$others * log10(.8)),1)
+
+ggplot(options, aes(x = six, y = others, fill = weight)) +
+  geom_tile(color = "white", lwd = .1,
+            linetype = 1)+
+  geom_text(aes(label = round(weight,2)), color = "white", size = 3)+
+  scale_fill_gradient(low = "black", high = "orangered")+
+  theme_tufte()+
+  ggtitle("Good's weights for up to 20 die tosses (db)")+
+  scale_x_continuous(breaks = seq(0,10, by = 1))+
+  scale_y_continuous(breaks = seq(0,10, by = 1))+
+  geom_circle(aes(x0 = 1, y0 = 4, r = .6),
+              inherit.aes = FALSE, color = "white", alpha = .8)+
+  geom_circle(aes(x0 = 2, y0 = 8, r = .6),
+              inherit.aes = FALSE, color = "white", alpha = .8)
+```
+
+
+
+
+
+

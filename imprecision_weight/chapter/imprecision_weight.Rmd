@@ -37,6 +37,7 @@ library(latex2exp)
 library(gridExtra)
 library(rethinking)
 library(truncnorm)
+library(ggforce)
 
 ps <- seq(0,1, length.out = 1001)
 getwd()
@@ -81,7 +82,7 @@ But what is this positive sketch? On one hand, Keynes [TP 58-59] connects the no
 
 
 
-[RUNDE 1990, 280] suggests that Keynes at some point calls weight the completeness of information. This however, is a bit hasty, as Keynes only says that \emph{the degree of completeness of the information on which a probability is based does seem to be relevant, as well as the actual magnitude of the probabiltiy, in making practical decisions}. As later on we will argue that it is actually useful to distinguish evidential weight (how much evidence do we have?) and evidential completeness (do we have all the evidence that we would expect in a given case?), we rather prefer to extract a more modest postulate:
+[RUNDE 1990, 280] suggests that Keynes at some point calls weight the completeness of information. This however, is a bit hasty, as Keynes only says that \emph{the degree of completeness of the information on which a probability is based does seem to be relevant, as well as the actual magnitude of the probabilitiy, in making practical decisions}. As later on we will argue that it is actually useful to distinguish evidential weight (how much evidence do we have?) and evidential completeness (do we have all the evidence that we would expect in a given case?), we rather prefer to extract a more modest postulate:
 
 \begin{tabular}{lp{11cm}}
 (Completeness) & If $E_1$ and $E_2$ are relevant items of evidence, and $E_2$ is (in a sense to be discussed) more complete than $E_1$,  $V(X\vert K \wedge E_2) > V(X\vert K \wedge E_1)$.
@@ -214,7 +215,11 @@ ggplot(options, aes(x = six, y = others, fill = weight)) +
   theme_tufte()+
   ggtitle("Good's weights for up to 20 die tosses (db)")+
   scale_x_continuous(breaks = seq(0,10, by = 1))+
-  scale_y_continuous(breaks = seq(0,10, by = 1))
+  scale_y_continuous(breaks = seq(0,10, by = 1))+
+  geom_circle(aes(x0 = 1, y0 = 4, r = .6),
+              inherit.aes = FALSE, color = "white", alpha = .8)+
+  geom_circle(aes(x0 = 2, y0 = 8, r = .6),
+              inherit.aes = FALSE, color = "white", alpha = .8)
 ```
 \caption{Good's weights in dbs, rounded, for all possible outcomes of up to 20 tosses of a die randomly selected from 10 dice nine of which were fair, and one is \nicefrac{1}{3} loaded towards six. $H=$`the die is loaded'.}
 \label{fig:goodWeight}
