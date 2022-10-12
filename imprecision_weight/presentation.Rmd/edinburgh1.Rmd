@@ -22,6 +22,9 @@ library(gridExtra)
 library(reshape2)
 library(rethinking)
 library(ggforce)
+library(tidyr)
+library(dplyr)
+library(truncnorm)
 source("../scripts/CptCreate.R")
 ```
 
@@ -93,7 +96,7 @@ Probabilities and Hamer's absolute distance from 1 or 0 depending on the balance
 - Every time you toss it and obtain something else, the weight changes by $log_{10}(\frac{\frac{2}{3}}{\frac{5}{6}})= log_{10}(.8)$.
 
 
-## Good's weight is not what we're after
+## Good's weight fails at weak increase
 
 
 ```{r goodWEights,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "90%"}
@@ -119,7 +122,362 @@ ggplot(options, aes(x = six, y = others, fill = weight)) +
 ```
 
 
+## Intervals
 
+### Kyburg's Evidential Probability
+
+$\mathsf{EP}(H \vert E \wedge K) = [x,y]$
+
+
+- Sharpening by richness (prefer frequencies from full joint distributions)
+
+- Sharpening by specificity (prefer proper subsets)
+
+- Sharpening by precision (pick single subinterval if it exists, otherwise, shortest possible cover of minimal subintervals)
+
+
+### Pedden's weight
+
+Let $\mathsf{EP}(H \vert E \wedge K) = [x,y]$, then:
+
+$\mathsf{WK(H\vert E\wedge K)}  = 1 - (y-x)$.
+
+
+
+## Troubles with EP
+
+- Pedden picks edges by error margins (sensitivity!)
+
+- Also, sensitivity to what happens around the edges only.
+
+- How to deploy outside of combinatorial or frequentist contexts?
+
+- Reasoning with intervals hard to model sensibly (does not preserve structural information)
+
+
+## Imprecise probabilities
+
+### Challenges to precise probabilism
+
+- insufficient responsiveness to evidence
+
+- fails to model indifference as sensitive to sweetening
+
+- can't distinguish between lack of knowledge and knowledge that $\mathsf{P}(X)=.5$
+
+- trouble with aggregation methods (independence preservation etc.)
+
+### Representor with pointwise Bayesian learning
+
+$\mathbb{P}_{t_1} = \{\mathsf{P}_{t_1}\vert \exists\, {\mathsf{P}_{t_0} \!\in  \mathbb{P}_{t_0}}\,\, \forall\, {H}\,\, \left[\mathsf{P}_{t_1}(H)=\mathsf{P}_{t_0}(H \vert E)\right] \}$
+
+
+##
+
+
+**Joyce:** $w(X,E)  = \sum_x \vert c(ch(X) = x  \vert E) \times (x - c(X\vert E))^2 - c(ch(X) = x) \times (x - c(X))^2\vert$
+
+
+| hypotheses |  .4 | .5 | .6|
+|------------|-----|----|---|
+|credences   |  1/3|1/3 |1/3|
+|$c(X) = \sum_x c(Ch(X)=x)x$ |    .5 | .5| .5|
+|$c(E \vert ch(X) =x)$ |  .042 | .117 | .214 |
+|$c(E) = \sum_x c(E \vert ch(X) =x) c(ch(X)=x)$ | .124 | .124| .124|
+|$c(ch(X)=x \vert E)$ | .113 | .312| .573 |
+|$c(X|E) = \sum_x c(Ch(X)=x\vert E)x$ |    .54 | .54| .54|
+|prior weights | 0.01 | 0 | .01|
+|posterior weights | .021| .002| .002|
+|w |  .0066 | .0066 | .0066| 
+
+
+##
+
+
+```{r joyceMeasure,echo=FALSE,eval=TRUE,fig.align = "center", cache=FALSE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
+weightJoyce <- function (chanceHypotheses = c(.4, .5, .6),
+                         credenceInHypotheses =  c(1/3, 1/3, 1/3),
+                         successes = 7,
+                         trials = 10){
+  
+        #chance of evidence given data
+        chex <- dbinom(successes, trials,  chanceHypotheses)
+        #overall chance of evidence (denumerator)
+        che <-  sum(chex * credenceInHypotheses)
+        #chance of x given evidence (by Bayes)
+        chxe <- (chex * credenceInHypotheses ) / che
+        
+        #credence in X before and after
+        cX <- sum (credenceInHypotheses * chanceHypotheses)
+        cXe <- sum (chxe * chanceHypotheses)
+        
+        multiplier <- (chanceHypotheses - cX)^2
+        multiplierE <- (chanceHypotheses - cXe)^2
+        
+        top <-  chxe   * multiplierE
+        bottom <- credenceInHypotheses * multiplier 
+        
+        weight <- sum ( abs( top - bottom) )
+        
+        return(list(hypotheses = chanceHypotheses, prior = credenceInHypotheses, posterior =  chxe, 
+                    cX = cX, cXe = cXe, weight = weight))  
+}
+
+outOfTenWeightsEqualPriors <- numeric(10)
+
+for(i in seq(1,11, by  = 1)){
+  outOfTenWeightsEqualPriors[i] <- 
+  weightJoyce(successes = i-1)$weight
+}
+
+
+outOfTenWeightsLeftPriors <- numeric(10)
+for(i in seq(1,11, by  = 1)){
+  outOfTenWeightsLeftPriors[i] <-   
+  weightJoyce(credenceInHypotheses = c(.5, .3, .2), 
+              successes = i-1)$weight
+}
+
+outOf10df <- data.frame( successes = seq(0,10,1),
+  equal = outOfTenWeightsEqualPriors, ".5, .3, .2" = outOfTenWeightsLeftPriors)
+
+names(outOf10df) <- c("successes", "equal", ".5, .3, .2")
+
+
+outOf10dfLong  <- gather(data = outOf10df,
+                    key = priors, value = w,
+                    "equal", ".5, .3, .2", 
+                    factor_key=TRUE)
+
+
+
+joyce10  <- ggplot(outOf10dfLong)+geom_point(aes(x = successes,
+                                    y = w, color = priors) )+
+  scale_x_continuous(breaks = seq(0,10))+theme_tufte(base_size = 14)+ylab("w")+
+  xlab("successes in ten trials")+
+  scale_y_continuous(breaks = seq(0,0.007, by = .001))+
+  labs(title = "Joyce's weights change  by frequency",
+       subtitle = "(sample size 10)")+theme(plot.title.position = "plot")
+```
+
+
+
+```{r joyce1,echo=FALSE,eval=TRUE,fig.align = "center", cache=FALSE, fig.show = "hold", out.width = "80%",   message = FALSE, warning = FALSE, results = FALSE}
+
+joyce10
+
+```
+
+
+
+##
+
+
+```{r joyce2calculations,echo=FALSE,eval=TRUE,fig.align = "center", cache=FALSE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
+
+outOf100WeightsEqualPriors <- numeric(101)
+
+for(i in seq(1,101, by  = 1)){
+  outOf100WeightsEqualPriors[i] <- 
+    weightJoyce(successes = i-1, trials = 100)$weight
+}
+
+
+outOf100WeightsLeftPriors <- numeric(101)
+
+for(i in seq(1,101, by  = 1)){
+  outOf100WeightsLeftPriors[i] <- weightJoyce(credenceInHypotheses = c(.5, .3, .2),
+                                              successes = i-1, trials  = 100)$weight
+}
+
+outOf100df <- data.frame( successes = seq(0,100,1),
+              equal = outOf100WeightsEqualPriors, 
+              ".5, .3, .2" = outOf100WeightsLeftPriors)
+
+names(outOf100df) <- c("successes", "equal", ".5, .3, .2")
+
+outOf100dfLong  <- gather(data = outOf100df,
+                         key = priors, value = w,
+                         "equal", ".5, .3, .2", 
+                         factor_key=TRUE)
+
+
+
+joyce100  <- ggplot(outOf100dfLong)+geom_point(aes(x = successes,
+                                                 y = w, color = priors), size = .8 )+
+  scale_x_continuous(breaks = seq(0,100, by = 5))+theme_tufte(base_size = 14)+ylab("w")+
+  xlab("successes in ten trials")+
+  scale_y_continuous(breaks = seq(0,0.01, by = .001))+
+  labs(title = "Joyce's weight displays strange patters",
+       subtitle = "(sample size 100)")+
+  theme(plot.title.position = "plot")
+```
+
+
+
+
+
+```{r joyce2,echo=FALSE,eval=TRUE,fig.align = "center", cache=FALSE, fig.show = "hold", out.width = "80%",   message = FALSE, warning = FALSE, results = FALSE}
+
+joyce100
+
+```
+
+
+
+
+##
+
+```{r joyce3calculations,echo=FALSE,eval=TRUE,fig.align = "center", cache=FALSE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
+
+s <- seq(1,100)
+obs <- seq(10, 1000, by = 10)
+
+
+weightsBySampleSize <- numeric(length(s))
+weightsBySampleSizeLeft <- numeric(length(s))
+
+
+for (i in  1:100){
+weightsBySampleSize[i] <- weightJoyce(successes = s[i],
+                                      trials = obs[i])$weight
+}
+
+for (i in  1:100){
+  weightsBySampleSizeLeft[i] <- weightJoyce(successes = s[i],
+                                    trials = obs[i],
+                                    credenceInHypotheses = c(.5, .3, .2))$weight
+}
+
+
+wbss <- data.frame( "sample size" = obs,
+                          equal = weightsBySampleSize, 
+                          ".5, .3, .2" = weightsBySampleSizeLeft)
+
+wbss$frequency <- rep(.1, nrow(wbss))
+
+s2 <- seq(1,500)
+obs2 <-2 *s2   
+
+weightsBySampleSize2 <- numeric(length(s))
+weightsBySampleSizeLeft2 <- numeric(length(s))
+
+
+for (i in  1:500){
+  weightsBySampleSize2[i] <- weightJoyce(successes = s2[i],
+                                        trials = obs2[i])$weight
+}
+
+for (i in  1:500){
+  weightsBySampleSizeLeft2[i] <- weightJoyce(successes = s2[i],
+                                            trials = obs2[i],
+                                            credenceInHypotheses = c(.5, .3, .2))$weight
+}
+
+
+wbssHalf <- data.frame( "sample size" = obs2,
+                    equal = weightsBySampleSize2, 
+                    ".5, .3, .2" = weightsBySampleSizeLeft2)
+
+wbssHalf$frequency <- rep(.5, nrow(wbssHalf))
+
+
+names(wbss) <- c("sampleSize", "equal", ".5, .3, .2", "frequency")
+names(wbssHalf) <- c("sampleSize", "equal", ".5, .3, .2", "frequency")
+
+
+
+wbssLong <- gather(data = rbind(wbss, wbssHalf),
+                          key = priors, value = w,
+                          "equal", ".5, .3, .2", 
+                          factor_key=TRUE)
+
+
+joyceWBSS  <- ggplot(wbssLong)+geom_line(aes(x = sampleSize,
+                                y = w, color = priors,
+                                lty = as.factor(frequency)) )+
+  scale_x_continuous(breaks = seq(0,1000, by = 100))+theme_tufte(base_size = 14)+
+  ylab("w")+
+  xlab("sample size")+
+  #  scale_y_continuous(breaks = seq(0,0.01, by = .001))+
+  labs(title = "Joyce's weights  can drop with sample size",
+       subtitle = "(eventually they stop growing)",
+       lty = "observed frequency")+
+  theme(plot.title.position = "plot")
+
+```
+
+
+
+
+
+
+
+
+
+```{r joyce3plot,echo=FALSE,eval=TRUE,fig.align = "center", cache=FALSE, fig.show = "hold", out.width = "80%",   message = FALSE, warning = FALSE, results = FALSE}
+joyceWBSS
+
+```
+
+## Problems with Joyce's weight
+
+- Unintuitive behavior around chance hypotheses
+
+- Failure of weak increase
+
+- no real use if representors
+
+- need to use of distributions over chance hypotheses
+
+- taking credence to be the expected value is non-trivial
+
+
+
+
+
+
+
+
+
+## General problems with IP
+
+### Belief inertia
+
+Point-wise updating can't make you leave the set of all possible measures.
+
+
+### Unclear mechanism of evidential constraints
+
+- "Drop measures excluded by the evidence". But how (other than degenerate cases)?
+
+- How exactly does non-testimonial evidence  of chances $\{ \mathsf{P}(X) = x\}$ or $\mathsf{P}(X) \in [x,y]$ is supposed to arise?
+
+
+### Wrong comparative predictions (Rinard)
+
+
+-  \textsf{GREEN} contains only green marbles, no information about \textsf{MYSTERY}
+
+- A marble will be drawn at random from each. You should be certain that the marble drawn from \textsf{GREEN}  will be green ($G$), and $G>M$.
+
+- IP: for each $r\in [0,1]$  your representor contains a $\mathsf{P}$ with $\pr{M}=r$. But then,  it also contains one with $\pr{M}=1$. 
+
+- So not for all $\mathsf{P}$  $\mathsf{P}(G) > \mathsf{P}(M)$, $G\neq M$!
+
+
+## General problems with IP
+
+### Proper scoring rule is impossible
+
+See results by Seidenfeld 2012, Mayo-Wilson 2016, Schoenfield 2017, Cambell-Moore 2020
+
+
+### Aggregating doesn't fly far
+
+- Taking unions leads to skepticism. What else?
+
+- Can't model synergy
 
 
 
