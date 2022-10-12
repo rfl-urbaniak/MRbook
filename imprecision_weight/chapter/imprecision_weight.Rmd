@@ -45,7 +45,7 @@ source("../scripts/CptCreate.R")
 source("../scripts/SCfunctions.R")
 
 SCprobsFinal <- readRDS("../datasets/SCprobsFinal.rds")
-attach(SCprobsFinal)
+attach(SCprobsFinal)      
 source("../scripts/SCplotCPTs.R")
 source("../scripts/SCplotDistros.R")
 ```
@@ -315,8 +315,7 @@ So the second difficulty is that  on this approach the weight of evidence become
 # Evidential probability and  weight 
 
 [PEDDEN 2018] \todo{REF} follows a suggestion from [KYBURG 1961]\todo{REF Kyburg. Probability and the Logic of Rational Belief. Wesleyan University Press, Mid-
-dletown Connecticut, 1961 and H. E. Kyburg and C. M. Teng. Uncertain Inference. Cambridge University Press, Cam-
-bridge, 2001.} He proposed using the degree of imprecision
+dletown Connecticut, 1961 and H. E. Kyburg and C. M. Teng. Uncertain Inference. Cambridge University Press, Cambridge, 2001.} He proposed using the degree of imprecision
 of the intervals in his probability system called Evidential Probability (EP). The key idea in EP is that evidential probabilities should be imprecise, and so accordingly an evidential probability function $\mathsf{EP}$ is of the form $\mathsf{EP}(H \vert E \wedge K) = [x,y]$, where the right-hand is the closed interval expressing the objective degree of support that $E\wedge K$ provide for $H$. 
 
 How is this interval to be determined, though? Kyburg's proposal is the following, if the hypothesis is about 
@@ -417,7 +416,7 @@ One key difference between Kyburg's \textsf{EP} and \textsf{IP} is that on the l
 How is weight of evidence to be measured on \textsf{IP} [@Kaplan1996decision; @joyce2005probabilities; @Sturgeon2008grain]? One line, analogous to the one taken by Pedden is   to take the edges of the resulting interval that captures changes in the weight of evidence  [@walley1991statistical]. If you know the proportion of beans is between .02 and 1, your interval is wider than it is if you know the proportion is between 0.72665. In this sense, this approach, admittedly, handles cases such as the beans example.
 
 
-The main question here, though, is that it is not clear how you are supposed to learn that the proportion of beans is such and such.  This is related to the problem of  belief inertia  [@Levi1980enterprise].  Say  you start drawing beans  knowing only that the true proportion of red beans  is in $(0,1)$  and then draw two beans both of which are red.  On \textsf{IP} your  initial credal state  is to be modeled by the set of all possible probability measures over your algebra of propositions.  Once you observe the two beans, each particular measure from your initial representor gets updated to a different one that assigns a higher probability to "red", but also each  measure in your original representor can be obtained by updating   some other measure in your original representor on the evidence (and the picture does not change if you continue with the remaining 2998 observations) . Thus, if you are to update your representor point-wise, you will  end up with the same representor set. Consequently, the edges of your resulting interval will remain the same. 
+The main question here, though, is that it is not clear how you are supposed to learn that the proportion of beans is such and such.  This is related to the problem of  belief inertia  [@Levi1980enterprise].  Say  you start drawing beans  knowing only that the true proportion of red beans  is in $(0,1)$  and then draw two beans both of which are red.  On \textsf{IP} your  initial credal state  is to be modeled by the set of all possible probability measures over your algebra of propositions.  Once you obser ve the two beans, each particular measure from your initial representor gets updated to a different one that assigns a higher probability to "red", but also each  measure in your original representor can be obtained by updating   some other measure in your original representor on the evidence (and the picture does not change if you continue with the remaining 2998 observations) . Thus, if you are to update your representor point-wise, you will  end up with the same representor set. Consequently, the edges of your resulting interval will remain the same. 
 
 Relatedly, recall that the main selling point for \textsf{IP} was its ability to account for how credal states are responsive to the evidence and the amount thereof. But it is not clear how to make sense of evidential constraints in a way that makes them go beyond testimonial evidence. On \textsf{IP} the representors are somehow to obey the evidential constraints: they are supposed to be point-wise updated on the evidence, and to  contain only those probabilistic measures that are not excluded by the evidence obtained so far. But how exactly does the evidence exclude probability measures?  This is not a  mathematical question: mathematically [@bradley2012uncertaintyPhD], evidential constraints are fairly easy to model, as they can take the form of the \emph{evidence of chances} $\{ \mathsf{P}(X) = x\}$ or $\mathsf{P}(X) \in [x,y]$, or be \emph{structural constraints} such as  "$X$ and $Y$ are independent" or "$X$ is more likely than $Y$." While it is clear that these constraints are something that an agent can come to accept if offered such information by an expert to which the agent completely defers, it  is not trivial to explain how  non-testimonial evidence can result in such constraints. 
 
@@ -543,7 +542,7 @@ joyce10
 \end{figure}
 
 
-
+note: grows slower if evidence is against what you believe!
 
 The behavior of $w$ is even more unusual if the sample size is higher. In Figure \ref{fig:joyce2} we illustrate what happens with $n=100$, for various possible outcomes of 100 Bernoulli trials.
 
@@ -708,7 +707,7 @@ joyceWBSS
 \label{fig:joyce2}
 \end{figure}
 
-What is the reason for this strange behavior? The shapinig of Joyce's weight is a balancing act. For instance, for frequency .1 with equal priors the weight is maximized at $n=90$ and starts dropping at $n=100$. Why? We start with three chance hypotheses, $.4, .5, .6$ with equal priors. Once the observations have been made, the posterior for the chance hypotheses is focused at the chance hypothesis .4 (its posterior is more or less .99999), and so is the credence in $X$ simpliciter (this expected value is .4000003). Now the weights are build by measuring square distance from the credence in $X$ simpliciter and since the expected value is nearly equal to the lowest chance hypothesis under consideration, the weight for the lowest chance hypothesis is $8.260660e-14$, so while the posterior for this hypothesis is very high, the weight is very low and its contribution to the weight calculation is severely limited. Ultimately, what happens with weight is now a matter of balancing the uneven posteriors with squared penalties (or rewards, really) for the distance from the expected value (which is pretty much the most likely hypothesis once you have made enough observations). Once you observe 10 successes in 1000 trials, the credence in $X$ simpliciter becomes $.4000001$, so the distance of the lowest chance hypothesis to it drops, and this weight drops "faster" than the resulting increase in the probability of the lowest chance hypothesis itself. The stabiliziation is achieved because further on the posterior for this hypothesis can only get closer to one (and closer to zero for all the other hypotheses).
+What is the reason for this strange behavior? The shaping of Joyce's weight is a balancing act. For instance, for frequency .1 with equal priors the weight is maximized at $n=90$ and starts dropping at $n=100$. Why? We start with three chance hypotheses, $.4, .5, .6$ with equal priors. Once the observations have been made, the posterior for the chance hypotheses is focused at the chance hypothesis .4 (its posterior is more or less .99999), and so is the credence in $X$ simpliciter (this expected value is .4000003). Now the weights are build by measuring square distance from the credence in $X$ simpliciter and since the expected value is nearly equal to the lowest chance hypothesis under consideration, the weight for the lowest chance hypothesis is $8.260660e-14$, so while the posterior for this hypothesis is very high, the weight is very low and its contribution to the weight calculation is severely limited. Ultimately, what happens with weight is now a matter of balancing the uneven posteriors with squared penalties (or rewards, really) for the distance from the expected value (which is pretty much the most likely hypothesis once you have made enough observations). Once you observe 10 successes in 1000 trials, the credence in $X$ simpliciter becomes $.4000001$, so the distance of the lowest chance hypothesis to it drops, and this weight drops "faster" than the resulting increase in the probability of the lowest chance hypothesis itself. The stabiliziation is achieved because further on the posterior for this hypothesis can only get closer to one (and closer to zero for all the other hypotheses).
 
 
 
