@@ -10,7 +10,7 @@ output:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
-knitr::opts_knit$set(root.dir = '../')
+#knitr::opts_knit$set(root.dir = '../')
 library(plot3D)
 library(bnlearn)
 library(dagitty)
@@ -25,6 +25,7 @@ library(ggforce)
 library(tidyr)
 library(dplyr)
 library(truncnorm)
+library(philentropy)
 source("../scripts/CptCreate.R")
 ```
 
@@ -36,7 +37,7 @@ source("../scripts/CptCreate.R")
 
 - Beans from a bag, two colors, same observed proportion, different sample sizes (C. S. Peirce, 1872).
 
-- The notion of weight: balance might remain the same while the amount of reelvant evidence shifts (Keynes 1921).
+- The notion of weight: balance might remain the same while the amount of relevant evidence shifts (Keynes 1921).
 
 ### Desiderata 
 
@@ -59,15 +60,20 @@ source("../scripts/CptCreate.R")
 
 ## No **unrestricted monotonicity**  
 
+
+### Weatherson, Joyce, Runde
+
 - Straight flush has the probability of $\frac{40}{2,958,960}$. 
 
 - The player starts behaving confusingly and bluffing.
 
-(Weatherson, Joyce, Runde)
+
 
 ## Weight and precise probablism
 
-Probabilities and Hamer's absolute distance from 1 or 0 depending on the balance fail at **Balance undetermination**.
+### Hamer's certainty
+
+Hamer's absolute distance from 1 or 0 depending on the balance fails at **Balance undetermination**.
 
 
 
@@ -426,7 +432,7 @@ joyceWBSS
 
 - Failure of weak increase
 
-- no real use if representors
+- no real use of representors
 
 - need to use of distributions over chance hypotheses
 
@@ -442,6 +448,10 @@ joyceWBSS
 
 ## General problems with IP
 
+### Still not evidence sensitive
+
+You still need to go higher-order to model some cases (e.g. uneven bias).
+
 ### Belief inertia
 
 Point-wise updating can't make you leave the set of all possible measures.
@@ -454,6 +464,10 @@ Point-wise updating can't make you leave the set of all possible measures.
 - How exactly does non-testimonial evidence  of chances $\{ \mathsf{P}(X) = x\}$ or $\mathsf{P}(X) \in [x,y]$ is supposed to arise?
 
 
+
+
+## General problems with IP
+
 ### Wrong comparative predictions (Rinard)
 
 
@@ -461,9 +475,11 @@ Point-wise updating can't make you leave the set of all possible measures.
 
 - A marble will be drawn at random from each. You should be certain that the marble drawn from \textsf{GREEN}  will be green ($G$), and $G>M$.
 
-- IP: for each $r\in [0,1]$  your representor contains a $\mathsf{P}$ with $\pr{M}=r$. But then,  it also contains one with $\pr{M}=1$. 
+- IP: for each $r\in [0,1]$  your representor contains a $\mathsf{P}$ with $\mathsf{P}(M)=r$. 
 
-- So not for all $\mathsf{P}$  $\mathsf{P}(G) > \mathsf{P}(M)$, $G\neq M$!
+- But then,  it also contains one with $\mathsf{P}(M)=1$. 
+
+- So not for all $\mathsf{P}$:  $\mathsf{P}(G) > \mathsf{P}(M)$, $G\neq M$!
 
 
 ## General problems with IP
@@ -478,6 +494,860 @@ See results by Seidenfeld 2012, Mayo-Wilson 2016, Schoenfield 2017, Cambell-Moor
 - Taking unions leads to skepticism. What else?
 
 - Can't model synergy
+
+
+
+
+## Second-order approach to uncertainty
+
+### Key idea
+
+Often, uncertainty is not a single-dimensional thing to be mapped on a single one-dimensional scale such as a real line. It is the whole shape of the whole distribution over parameter values that should be  taken under consideration. Summaries are just that.
+
+
+## Some simple examples
+
+
+```{r evidenceResponse1,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
+p <- seq(from=0 , to=1 , by = 0.001)
+FairDensity <- ifelse(p == .5, 1, 0)
+FairDF <- data.frame(p,FairDensity)
+FairPlot <- ggplot(FairDF, aes(x = p, y = FairDensity))+geom_line()+theme_tufte()+
+  xlab("parameter value")+ylim(c(0,1))+ylab("probability")+ggtitle("Fair coin")+
+  theme(plot.title.position = "plot")
+
+UniformPlot <- ggplot()+xlim(c(0,1))+stat_function(fun = dunif, args = list(min = 0, max = 1))+
+  ylim(0,1)+
+  theme_tufte()+
+  xlab("parameter value")+
+  ylab("probability density")+theme(plot.title.position = "plot")+ggtitle("Unknown bias")
+
+
+p <- seq(from=0 , to=1 , by = 0.001)
+TwoDensity <- ifelse(p == .4 | p == .6, .5, 0)
+TwoDF <- data.frame(p,TwoDensity)
+TwoPlot <- ggplot(TwoDF, aes(x = p, y = TwoDensity))+geom_line()+theme_tufte()+
+  xlab("parameter value")+ylim(c(0,1))+ylab("probability")+ggtitle("Two biases (insufficient reason)")+
+  theme(plot.title.position = "plot")+scale_x_continuous(breaks = c(.4,.6), labels = c(.4, .6))
+
+
+
+
+p <- seq(from=0 , to=1 , by = 0.001)
+TwoUnbalancedDensity <- ifelse(p == .4, .75, ifelse(p ==  .6, .25, 0))
+TwoUnbalancedDF <- data.frame(p,TwoUnbalancedDensity)
+
+TwoUnbalancedPlot <- ggplot(TwoUnbalancedDF, aes(x = p, y = TwoUnbalancedDensity))+geom_line()+theme_tufte()+
+  xlab("parameter value")+ylim(c(0,1))+ylab("probability")+ggtitle("Two unbalanced biases")+
+  theme(plot.title.position = "plot")+scale_x_continuous(breaks = c(.4,.6), labels = c(.4, .6))
+
+```
+
+
+```{r fig:evidenceResponse,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "90%"}
+grid.arrange(FairPlot,UniformPlot, TwoPlot, TwoUnbalancedPlot)
+```
+
+
+## Dealing with problems for IP
+
+- Much more evidence sensitive (and can go higher order if needed).
+
+- Seamless integration with Bayesian statistics explains learning.
+
+- Belief inertia does not arise.
+
+- HPDI comparison avoids Rinard's objection.
+
+- There is a proper scoring rule (Urbaniak 2022).
+
+- Evidence-based aggregation is accuracy-wise better than averaging and can model synergy.
+
+
+
+## Information theory crash-course
+
+
+```{r label,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "40%",   message = FALSE, warning = FALSE, results = FALSE}
+
+entDAG <- dagitty("
+    dag{
+        A -> B
+        A -> x
+        B -> C
+        B -> y
+        C -> D
+        C -> z
+      }")
+
+
+coordinates(entDAG) <- list( x=c(A = 1, B = 2, x = 2, C = 3, y = 3, D = 4, z = 4),
+                            y=c(A = 2, B = 3, x = 1, C = 2, y = 3, D = 2, z = 3) )
+drawdag(entDAG, shapes =  list(A = "c", B = "c", C = "c", D = "c"))
+```
+
+
+- \(m=8\) possible
+destinations can be reached by making decisions at
+\(\log_2(8)=3\) forks.
+
+- Surprise: $1/\mathsf{P}(x)$
+
+- Shannon information:
+$ log_2(\mathsf{surprise)) =  - log_2(\mathsf{P}(x)) $
+
+- Entropy is average Shannon information: 
+
+\[H(X)   = \sum \mathsf{P}(x_i) \log_2 \frac{1}{\mathsf{P}(x_i)} =
+- \sum \mathsf{P}(x_i) \log_2 \mathsf{P}(x_i)\]
+
+(the expected amount of information you receive once you learn what the value
+of \(X\) is).
+
+
+
+## Cross-entropy and KLD
+
+Say events arise according to a distribution \(\mathsf{P}\) but we predict them
+using a distribution \(\mathsf{Q}\).
+
+### Cross-entropy
+
+\[\mathsf{H}(\mathsf{P}, \mathsf{Q})  = \sum \mathsf{P}_i \log_2(\mathsf{Q}_i)\]
+
+### Kullback-Leibler divergence
+
+\[\mathsf{KLD}(\mathsf{P}, \mathsf{Q})  = H(\mathsf{P}, \mathsf{Q}) - H(\mathsf{P})\\
+= - \sum \mathsf{P}_i \log_2(\mathsf{Q}_i)  - \left(   - \sum \mathsf{P}_i \log_2 \mathsf{P}_i\right) \\
+ = - \sum \mathsf{P}_i\left( \log_2 \mathsf{Q}_i - \log_2\mathsf{P}_i\right)\\
+ =  \sum \mathsf{P}_i\left( \log_2 \mathsf{P}_i - \log_2\mathsf{Q}_i\right)\\
+ = \sum \mathsf{P}_i \log_2 \left( \frac{\mathsf{P}_i}{\mathsf{Q_i}}\right)
+\]
+
+## Weight of a distribution
+
+
+### Key idea
+
+The more informative a piece of evidence is, as compared to the uniform distribution, the more weight it has, on scale 0 to 1
+
+\[\mathsf{w(P_i)}  = 1 - \left( \frac{H(\mathsf{P})}{H(\mathsf{uniform})}\right)\]
+
+## Weight of a distribution
+
+
+```{r fig:betas,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
+n <- 1000 #parameters 
+s <- 1e5  #sample size
+ps <- seq(from=0 , to=1 , length.out=n)
+a <- seq(1,100,1)
+b <- seq(1,100,1)
+abs <- expand.grid(a=a,b=b)
+densitiesBeta <- list()
+
+for(i in 1:nrow(abs)){
+densitiesBeta[[i]] <- dbeta(ps,abs[i,1], abs[i,2])
+densitiesBeta[[i]] <- densitiesBeta[[i]]/sum(densitiesBeta[[i]])
+abs$entropy[i] <- H(densitiesBeta[[i]])
+}
+
+
+
+kld <- function(p,q) kullback_leibler_distance(p,q, testNA = TRUE, unit = "log2",
+                                               epsilon = 0.00001)
+klds <- numeric(length(densitiesBeta))
+for (i in 1:length(densitiesBeta)){
+  klds[i] <-   kld(densitiesBeta[[1]],densitiesBeta[[i]])
+}
+abs$klds <- klds
+
+
+eucs <- numeric(length(densitiesBeta))
+for (i in 1:length(densitiesBeta)){
+  eucs[i] <-   euclidean(densitiesBeta[[1]],densitiesBeta[[i]], testNA = TRUE)
+}
+
+abs$eucs <- eucs
+
+unif <-dbeta(ps,1,1)
+unif <- unif/sum(unif)
+hunif <- H(unif)
+entProp <- function(X) 1 - ( H(X)/hunif )  
+
+entProps <- numeric(length(densitiesBeta))
+for (i in 1:length(densitiesBeta)){
+  entProps[i] <-   entProp(densitiesBeta[[i]])
+}
+
+#str(abs$entProps)
+
+abs$entProps <- entProps
+```
+
+
+
+```{r fig:betas2,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "90%",   message = FALSE, warning = FALSE, results = FALSE}
+entropiesBetaPlot <- ggplot()+theme_tufte()+xlab("parameter values")+
+  ylab("probability")+theme(plot.title.position = "plot")+ylim(0,1)+
+  ggtitle("Examples of beta distributions with their entropies and weights")+
+  geom_line(aes(x = ps,y = densitiesBeta[[1]]), lty = 1)+annotate("text", x = .45, y = 0.007, label = "beta(1,1) \n h = 9.96, w = 0", size = 3) +
+  geom_line(aes(x = ps,y = densitiesBeta[[100]]), alpha = .6, lty = 2)+
+  annotate("text", x = .87, y = 0.05, label = "beta(100,1) \n h = 4.75, w = .52", size = 3)+ylim(0,0.1)+
+  geom_line(aes(x = ps,y = densitiesBeta[[940]]), alpha = .6, lty = 3)+
+  annotate("text", x = .79, y = 0.012, label = "beta(40,10)\n h = 7.83, w = .21", size = 3)+
+  geom_line(aes(x = ps,y = densitiesBeta[[8410]]), alpha = .6, lty = 4)+
+  annotate("text", x = .15, y = 0.018, label = "beta(10,85)\n h = 6.98, w = .3", size = 3)
+```
+
+
+
+```{r fig:betas3,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "90%",   message = FALSE, warning = FALSE, results = FALSE}
+entropiesBetaPlot
+```
+
+## Weak increase holds
+
+```{r entropyJoyceExample,echo=FALSE,eval=TRUE,fig.align = "center", cache=FALSE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
+weightEntropyCustomChances <- function(
+      hypotheses = c(.4, .5, .6),
+      prior = c(1/3, 1/3, 1/3),
+      successes  = 7,
+      trials = 10){
+      uniform <- rep(1,length(hypotheses))/ sum(rep(1,length(hypotheses)))
+      #chance of evidence given data
+      likelihood <- dbinom(x = successes, size = trials, prob = hypotheses)
+      #overall chance of evidence (denumerator)
+      evidence <-  sum(likelihood * prior)
+      #chance of x given evidence
+      posterior <- (likelihood * prior ) / evidence
+
+      weightOfPrior <- 1 - (H(prior)/H(uniform, unit  = "log2"))
+      weightOfPosterior <- 1 - (H(posterior)/H(uniform, unit  = "log2"))
+
+      weightDelta <- weightOfPosterior - weightOfPrior
+      return(list(prior = prior, weightOfPrior = weightOfPrior,
+              posterior = posterior,
+            weightOfPosterior = weightOfPosterior,
+            weightDelta = weightOfPosterior - weightOfPrior)
+      )
+}
+
+
+
+outOfTenEntropyEqualPriors <- numeric(10)
+
+for(i in seq(1,11, by  = 1)){
+  outOfTenEntropyEqualPriors[i] <- 
+    weightEntropyCustomChances(successes = i-1)$weightDelta
+}
+
+
+outOfTenEntropyLeftPriors <- numeric(10)
+
+for(i in seq(1,11, by  = 1)){
+  outOfTenEntropyLeftPriors[i] <- 
+    weightEntropyCustomChances(prior = c(.5, .3, .2), successes = i-1)$weightDelta
+}
+
+
+
+outOf10entropyDf <- data.frame( successes = seq(0,10,1),
+                         equal = outOfTenEntropyEqualPriors, ".5, .3, .2" =
+                           outOfTenEntropyLeftPriors)
+
+
+names(outOf10entropyDf) <- c("successes", "equal", ".5, .3, .2")
+
+outOf10entropyDfLong  <- gather(data = outOf10entropyDf,
+                         key = priors, value = w,
+                         "equal", ".5, .3, .2", 
+                         factor_key=TRUE)
+
+
+
+outOf10EntropyPlot  <- ggplot(outOf10entropyDfLong)+geom_point(aes(x = successes,
+                                                 y = w, color = priors) )+
+  scale_x_continuous(breaks = seq(0,10))+theme_tufte(base_size = 14)+ylab("W")+
+  xlab("successes in ten trials")+
+#  scale_y_continuous(breaks = seq(0,0.007, by = .001))+
+  labs(title = "Information-theoretic weights",
+       subtitle = "(sample size =10)")+theme(plot.title.position = "plot")
+
+
+
+
+
+outOf100EntropyEqualPriors <- numeric(101)
+
+for(i in seq(1,101, by  = 1)){
+  outOf100EntropyEqualPriors[i] <- 
+    weightEntropyCustomChances(successes = i-1,
+                               trials = 100)$weightDelta
+}
+
+
+outOf100EntropyEqualPriors
+
+outOf100EntropyLeftPriors <- numeric(101)
+
+for(i in seq(1,101, by  = 1)){
+  outOf100EntropyLeftPriors[i] <- 
+    weightEntropyCustomChances(prior = 
+      c(.5, .3, .2), successes = i-1,
+      trials = 100)$weightDelta
+}
+
+
+
+outOf100entropyDf <- data.frame( successes = seq(0,100,1),
+                                equal = outOf100EntropyEqualPriors, ".5, .3, .2" =
+                                  outOf100EntropyLeftPriors)
+
+outOf100entropyDf
+
+names(outOf100entropyDf) <- c("successes", "equal", ".5, .3, .2")
+
+outOf100entropyDfLong  <- gather(data = outOf100entropyDf,
+                                key = priors, value = w,
+                                "equal", ".5, .3, .2", 
+                                factor_key=TRUE)
+
+
+
+outOf100EntropyPlot  <- ggplot(outOf100entropyDfLong)+
+  geom_point(aes(x = successes,
+ y = w, color = priors), size = .5 )+
+  scale_x_continuous(breaks = seq(0,100, by = 5))+theme_tufte(base_size = 14)+ylab("W")+
+  xlab("successes in ten trials")+
+#    scale_y_continuous(breaks = seq(0,100, by = .001))+
+  labs(title = "Information-theoretic weights",
+       subtitle = "(sample size =100)")+theme(plot.title.position = "plot")
+
+s <- seq(1,100)
+obs <- seq(10, 1000, by = 10)
+
+
+EweightsBySampleSize <- numeric(length(s))
+EweightsBySampleSizeLeft <- numeric(length(s))
+
+
+for (i in  1:100){
+  EweightsBySampleSize[i] <- weightEntropyCustomChances(successes = s[i],
+                                        trials = obs[i])$weightDelta
+}
+
+
+for (i in  1:100){
+  EweightsBySampleSizeLeft[i] <- weightEntropyCustomChances(successes = s[i],
+                                            trials = obs[i],
+                                            prior = c(.5, .3, .2))$weightDelta
+}
+
+
+Ewbss <- data.frame( "sample size" = obs,
+                    equal = EweightsBySampleSize, 
+                    ".5, .3, .2" = EweightsBySampleSizeLeft)
+
+Ewbss$frequency <- rep(.1, nrow(Ewbss))
+
+
+s2 <- seq(1,500)
+obs2 <-2 *s2   
+
+
+EweightsBySampleSize2 <- numeric(length(s))
+EweightsBySampleSizeLeft2 <- numeric(length(s))
+
+
+for (i in  1:500){
+  EweightsBySampleSize2[i] <- weightEntropyCustomChances(successes = s2[i],
+                                         trials = obs2[i])$weightDelta
+}
+
+for (i in  1:500){
+  EweightsBySampleSizeLeft2[i] <- weightEntropyCustomChances(successes = s2[i],
+                                             trials = obs2[i],
+                                             prior = c(.5, .3, .2))$weightDelta
+}
+
+
+EwbssHalf <- data.frame( "sample size" = obs2,
+                        equal = EweightsBySampleSize2, 
+                        ".5, .3, .2" = EweightsBySampleSizeLeft2)
+
+EwbssHalf$frequency <- rep(.5, nrow(EwbssHalf))
+
+
+names(Ewbss) <- c("sampleSize", "equal", ".5, .3, .2", "frequency")
+names(EwbssHalf) <- c("sampleSize", "equal", ".5, .3, .2", "frequency")
+
+
+EwbssLong <- gather(data = rbind(Ewbss, EwbssHalf),
+                   key = priors, value = w,
+                   "equal", ".5, .3, .2", 
+                   factor_key=TRUE)
+
+# ggplot(EwbssLong)+geom_line(aes(x = sampleSize,
+#                                y = w, color = priors,
+#                                lty = as.factor(frequency)) )+
+#   scale_x_continuous(breaks = seq(0,1000, by = 100))+theme_tufte(base_size = 14)+
+#   ylab("w")+
+#   xlab("sample size")+
+#   #  scale_y_continuous(breaks = seq(0,0.01, by = .001))+
+#   labs(title = "Information-theoretic weights by  sample size",
+# #       subtitle = "",
+#        lty = "observed frequency")+
+#   theme(plot.title.position = "plot")
+
+
+
+
+eWBSSplot  <- ggplot(EwbssLong)+geom_line(aes(x = sampleSize,
+                                              y = w, color = priors,
+lty = as.factor(frequency)) )+
+  scale_x_continuous(breaks = seq(0,1000, by = 100))+theme_tufte(base_size = 14)+
+  ylab("w")+
+  xlab("sample size")+
+  #  scale_y_continuous(breaks = seq(0,0.01, by = .001))+
+  labs(title = "Information-theoretic weights by  sample size",
+       subtitle = "")+
+  theme(plot.title.position = "plot")
+```
+
+
+```{r entropyJoyceExampleSampleSize,echo=FALSE,eval=TRUE,fig.align = "center", cache=FALSE, fig.show = "hold", out.width = "90%",   message = FALSE, warning = FALSE, results = FALSE}
+eWBSSplot
+```
+
+## Works for a variety of shapes
+
+```{r weightsWeird,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
+beta44 <-  densitiesBeta[[304]]
+unif5 <- c(rep(0, n/2),rep(1 , n/2)) #uniform from .5 
+unif5 <- unif5/sum(unif5)
+unif6 <- c(rep(0, .6 * n),rep(1 , n * .4)) #uniform from .6 
+unif6 <- unif6/sum(unif6)
+A <- dnorm(ps, .4, .05)
+B <- dnorm(ps, .6, .05)
+C <- ifelse(ps <= .5, A, B) 
+bimodal <- C / sum(C)
+centered <-   dnorm(ps, .5, .05)
+centered <- centered/sum(centered)
+twoEven <- rep(0,1000)
+twoEven[abs(ps -.4)  == min(abs(ps -.4))] <- .5
+twoEven[abs(ps -.6)  == min(abs(ps -.6))] <- .5
+twoUneven <- rep(0,1000)
+twoUneven[abs(ps -.4)  == min(abs(ps -.4))] <- .3
+twoUneven[abs(ps -.6)  == min(abs(ps -.6))] <- .7
+single5 <- rep(0,1000)
+single5[abs(ps -.5)  == min(abs(ps -.5))] <- 1
+single7 <- rep(0,1000)
+single7[abs(ps -.7)  == min(abs(ps -.7))] <- 1
+
+
+distributions <- c("beta(4,4)","unif(.5,1)", "unif(.6,1)", "bimodal(.4,.6,s=.05)", "norm(.5,.05)",
+                   "evenPoints(.4,.6)","unevenPoints(.4(.3),.6(.7)","single(.5)", "single(.7)")
+
+entPropSeq <- c(entProp(beta44),entProp(unif5),entProp(unif6),
+             entProp(bimodal),entProp(centered),entProp(twoEven),
+             entProp(twoUneven),entProp(single5),entProp(single7))
+
+
+hSeq <- c(H(beta44),H(unif5),H(unif6),
+          H(bimodal),H(centered),H(twoEven),
+          H(twoUneven),H(single5),H(single7))
+  
+  
+entPropTable <- data.frame(distributions, hSeq, entPropSeq)
+
+plotDistro <- function(distro, distroList) {
+plot <-  ggplot()+theme_tufte(base_size =  7 )+xlab("parameter values")+
+  ylab("probability")+theme(plot.title.position = "plot")+ylim(0,1)+
+  ggtitle(paste(entPropTable$distributions[distroList]))+
+  geom_line(aes(x = ps,y = distro))+annotate("text",
+    x = ps[which(distro == max(distro))][1],
+    y = max(distro) * 1.14,
+    label = paste("h =",round(entPropTable$hSeq[distroList],3), ", w = ",
+            round(entPropTable$entPropSeq[distroList],3)), size = 2)+
+  ylim(c(0,1.2 * max(distro)))
+return(plot)
+}
+
+```
+
+
+```{r fig:weightsWeird,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "90%",   message = FALSE, warning = FALSE, results = FALSE}
+grid.arrange(plotDistro(beta44,1),plotDistro(unif5,2), plotDistro(unif6,3),plotDistro(bimodal,4),plotDistro(centered,5),
+plotDistro(twoEven,6),plotDistro(twoUneven,7),
+plotDistro(single5,8),plotDistro(single7,9), ncol = 3, nrow = 3)
+```
+
+
+
+## Abuse and rocking example
+
+```{r abuseCalculations,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
+source("../scripts/SCfunctions.R")
+
+set.seed(444)
+
+ps <- seq(0,1, length.out = 1001)
+prior <- dbeta(ps,2,4)
+prior <- prior/sum(prior)
+
+priorSample <- sample(ps, prob = prior, size = 1e7, replace = TRUE)
+
+peIfa <- .3
+peIfna <- .2
+pe <- peIfa * priorSample + (peIfna * (1-priorSample))
+pae <- (peIfa * priorSample)/pe
+priorHPDI <- round(HPDI(priorSample, prob = .89),3)
+paeHPDI <- round(HPDI(pae, prob = .89),3)
+
+## now say it's .3 vs. 0.001
+
+peIfa2 <- .3
+peIfna2 <- .05
+peIfa2 * priorSample
+pe2 <- peIfa2 * priorSample + (peIfna2 * (1-priorSample))
+pae2 <- (peIfa2 * priorSample)/pe2
+priorHPDI <- HPDI(priorSample, prob = .89)
+pae2HPDI <- round(HPDI(pae2, prob = .89),3)
+
+#now with uncertainty about conditional probabilities
+
+peIfa3 <- rtruncnorm(.3, sd = .1, n = 1e7, a = 0, b = 1)
+peIfna3 <- rtruncnorm(.05, sd = .05, n = 1e7, a  = 0, b = 1)
+pe3 <- peIfa3 * priorSample + (peIfna3 * (1-priorSample))
+pae3 <- (peIfa3 * priorSample)/pe3
+pae3HPDI <- round(HPDI(pae3, prob = .89),3)
+
+peIfa4 <- rtruncnorm(.6, sd = .05, n = 1e7, a = 0, b = 1)
+peIfna4 <- rtruncnorm(.01, sd = .03, n = 1e7, a  = 0, b = 1)
+pe4 <- peIfa4 * priorSample + (peIfna4 * (1-priorSample))
+pae4 <- (peIfa4 * priorSample)/pe4
+pae4HPDI <- round(HPDI(pae4, prob = .89),3)
+
+
+unif <-dbeta(ps,1,1)
+unif <- unif/sum(unif)
+hunif <- H(unif)
+
+distroFromSamples <- function (samples, precision = 1001){
+  distro <-  density(na.omit(samples), n = precision)$y
+  distro <- distro/sum(distro)
+  return(distro)
+}
+
+paeDistro <- distroFromSamples(samples = pae,  precision = 1001)
+
+pae2Distro <- distroFromSamples(pae2, precision = 1001)
+
+pae3Distro <- distroFromSamples(pae3, precision= 1001)
+
+pae4Distro <- distroFromSamples(pae4, precision= 1001)
+
+
+distribution <- c("prior", ".3/.2", ".3/.05",
+                   "tN(.3,.1)/tN(.05,.05)",
+                   "tN(.6, .05)/tN(.01,.03)")
+
+median <- round(c(median(priorSample), median(pae), median(pae2), median(pae3),
+                median(pae4)),3)
+
+
+HPDI <- c(paste(priorHPDI[1], ", " ,  priorHPDI[2], sep = "" ),
+           paste(paeHPDI[1], ", " ,  paeHPDI[2], sep = "" ),
+           paste(pae2HPDI[1], ", " ,  pae2HPDI[2], sep = "" ),
+           paste(pae3HPDI[1], ", " ,  pae3HPDI[2], sep = "" ),
+           paste(pae4HPDI[1], ", " ,  pae4HPDI[2], sep = "" )
+              )
+
+
+
+absolute <- round(c(weightAbs(prior), weightAbs(paeDistro),
+              weightAbs(pae2Distro), weightAbs(pae3Distro),
+              weightAbs(pae4Distro)),3)
+
+proportional <- round(absolute/weightAbs(prior), 3)
+
+delta <-  round(absolute - weightAbs(prior),3)
+
+stats <- rbind(distribution, median, HPDI, absolute,
+               proportional, delta)
+
+abuseExamplePlot <- plotDistroPlain(paeDistro, multiplier = 4.5)+
+  geom_line(aes(x = ps,y = prior), color = "grey", lty = 2)+
+  geom_line(aes(x = ps,y = pae2Distro), color = "skyblue")+
+  geom_line(aes(x = ps,y = pae3Distro), color = "orangered")+
+  geom_line(aes(x = ps,y = pae4Distro), color = "green")+
+  annotation_custom(tableGrob(stats,
+                  theme = ttheme_minimal(base_size = 6.5),
+                              ),
+                    xmin=0.15, xmax=0.7, ymin=0.005, ymax=0.009)+
+  theme(plot.title.position = "plot")+
+  labs(title ="Prior and  posteriors in the rocking example",
+       subtitle = "(with weights and weight shifts)")+
+  annotate(geom = "label",
+           label = "prior", x = .25, y = .0025, color = "grey")+
+  annotate(geom = "label",
+           label = ".3/.2", x = .41, y = .00225, size = 3)+
+  annotate(geom = "label",
+           label = ".3/.05", x = .8,
+           y = .0031, color = "skyblue", size = 3)+
+  annotate(geom = "label",
+           label = "tN(.3,.1)/tN(.05,.05)", x = .9,
+           y = .0023, color = "orangered", size = 3)+
+  annotate(geom = "label",
+           label = "tN(.6,.05)/tN(.01,.03)", x = .9,
+           y = .005, color = "green", size = 3)
+
+```
+
+
+
+
+
+```{r fig:abuse4d,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "90%",   message = FALSE, warning = FALSE, results = FALSE}
+abuseExamplePlot
+```
+
+
+
+
+
+
+## Weights in BNs
+
+
+
+
+```{r scBN,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "60%", warning=FALSE, message = FALSE, dpi = 800}
+#create SC DAG
+#define the structure of the Sally Clark BN
+SallyClarkDAG <- model2network("[Abruising|Acause][Adisease|Acause][Bbruising|Bcause][Bdisease|Bcause][Acause][Bcause|Acause][NoMurdered|Acause:Bcause][Guilty|NoMurdered]")
+SCdag <- model2network("[Abruising|Acause][Adisease|Acause][Bbruising|Bcause][Bdisease|Bcause][Acause][Bcause|Acause][NoMurdered|Acause:Bcause][Guilty|NoMurdered]")
+#plot
+#graphviz.plot(SallyClarkDAG)
+
+
+#CPTs as used in Fenton & al.
+AcauseProb <-prior.CPT("Acause","SIDS","Murder",0.921659)
+AbruisingProb <- single.CPT("Abruising","Acause","Yes","No","SIDS","Murder",0.01,0.05)
+AdiseaseProb <- single.CPT("Adisease","Acause","Yes","No","SIDS","Murder",0.05,0.001)
+BbruisingProb <- single.CPT("Bbruising","Bcause","Yes","No","SIDS","Murder",0.01,0.05)
+BdiseaseProb <- single.CPT("Bdisease","Bcause","Yes","No","SIDS","Murder",0.05,0.001)
+BcauseProb <- single.CPT("Bcause","Acause","SIDS","Murder","SIDS","Murder",0.9993604,1-0.9998538)
+
+#E goes first; order: last variable through levels, second last, then first
+NoMurderedProb <- array(c(0, 0, 1, 0, 1, 0, 0,1,0,1,0,0), dim = c(3, 2, 2),dimnames = list(NoMurdered = c("both","one","none"),Bcause = c("SIDS","Murder"), Acause = c("SIDS","Murder")))
+
+#this one is definitional
+GuiltyProb <-  array(c( 1,0, 1,0, 0,1), dim = c(2,3),dimnames = list(Guilty = c("Yes","No"), NoMurdered = c("both","one","none")))
+
+# Put CPTs together
+SallyClarkCPTfenton <- list(Acause=AcauseProb,Adisease = AdiseaseProb,
+                      Bcause = BcauseProb,Bdisease=BdiseaseProb,
+                      Abruising = AbruisingProb,Bbruising = BbruisingProb,
+                      NoMurdered = NoMurderedProb,Guilty=GuiltyProb)
+
+# join with the DAG to get a BN
+SCfenton <- custom.fit(SallyClarkDAG,SallyClarkCPTfenton)
+```
+
+```{r scBNplot,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "90%", warning=FALSE, message = FALSE, dpi = 800}
+graphviz.chart(SCfenton, type = "barprob", layout = "dot", draw.labels = TRUE,
+  grid = FALSE, scale = c(0.75, 1.1), col = "black",
+  text.col = "black", bar.col = "black", main = NULL,
+  sub = NULL)
+```
+
+
+
+## Weights in BNs
+
+```{r SCwithHOP, echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "90%", out.height= "90%", warning=FALSE, message = FALSE, dpi = 800}
+SCprobsFinal <- readRDS("../datasets/SCprobsFinal.rds")
+attach(SCprobsFinal)
+source("../scripts/SCfunctions.R")
+source("../scripts/SCplotCPTs.R")
+source("../scripts/SCplotDistros.R")
+
+
+AsidsPriorPlotGrob <- ggplotGrob(AsidsPriorPlot+theme_tufte(base_size = 5))
+BcauseSidsIfAsidsPlotGrob <- ggplotGrob(BcauseSidsIfAsidsPlot+theme_tufte(base_size = 5))
+BcauseSidsIfAmurderPlotGrob<- ggplotGrob(BcauseSidsIfAmurderPlot+theme_tufte(base_size = 5))
+
+AbruisingIfSidsPlotGrob <- ggplotGrob(AbruisingIfSidsPlot+theme_tufte(base_size = 5))
+AbruisingIfMurderPlotGrob <- ggplotGrob(AbruisingIfMurderPlot+theme_tufte(base_size = 5))
+
+
+AdiseaseIfSidsPlotGrob <- ggplotGrob(AdiseaseIfSidsPlot+theme_tufte(base_size = 5))
+AdiseaseIfMurderPlotGrob <- ggplotGrob(AdiseaseIfMurderPlot+theme_tufte(base_size = 5))
+
+
+BbruisingIfSidsPlotGrob <- ggplotGrob(BbruisingIfSidsPlot+theme_tufte(base_size = 5))
+BbruisingIfMurderPlotGrob <- ggplotGrob(BbruisingIfMurderPlot+theme_tufte(base_size = 5))
+
+
+BdiseaseIfSidsPlotGrob <- ggplotGrob(BdiseaseIfSidsPlot+theme_tufte(base_size = 5))
+BdiseaseIfAmurderPlotGrob <- ggplotGrob(BdiseaseIfAmurderPlot+theme_tufte(base_size = 5))
+
+
+ggplot(data.frame(a=1)) + xlim(1, 40) + ylim(1, 60)+theme_void()+
+  annotation_custom(AsidsPriorPlotGrob, xmin = 9, xmax = 15, ymin = 49, ymax = 59)+
+  geom_label(aes(label = "Bcause", x = 25, y = 41),
+              size = 3 )+
+  geom_label(aes(label = "Acause", x = 12, y = 48),
+            size = 3 )+
+  geom_curve(aes(x = 13.5, y = 48.2, xend = 25, yend = 42.5), curvature = -.18,size = .3,
+             arrow = arrow(length = unit(.015, "npc")))+
+  annotation_custom(BcauseSidsIfAsidsPlotGrob, xmin = 17, xmax = 23, ymin = 47, ymax = 57)+
+  annotation_custom(BcauseSidsIfAmurderPlotGrob, xmin = 15, xmax = 21, ymin = 37, ymax = 47)+
+  geom_label(aes(label = "Abruising", x = 2, y = 41),
+             size = 3 )+
+  geom_curve(aes(x = 10.5, y = 48.2, xend = 2, yend = 42.5), curvature = .2,size = .3,
+             arrow = arrow(length = unit(.015, "npc")))+
+  annotation_custom(AbruisingIfSidsPlotGrob, xmin = 2, xmax = 8, ymin = 47, ymax = 57)+
+  annotation_custom(AbruisingIfMurderPlotGrob, xmin = 5, xmax = 11, ymin = 37, ymax = 47)+
+  geom_label(aes(label = "Adisease", x = 6, y = 21),
+             size = 3 )+
+  geom_curve(aes(x = 13, y = 46.2, xend = 6, yend = 23), curvature = -.45,size = .3,
+             arrow = arrow(length = unit(.015, "npc")))+
+  annotation_custom(AdiseaseIfSidsPlotGrob, xmin = 4.5, xmax = 10.5, ymin = 27, ymax = 37)+
+  annotation_custom(AdiseaseIfMurderPlotGrob, xmin = 9, xmax = 15, ymin = 17.5, ymax = 27.5)+
+  geom_label(aes(label = "Bbruising", x = 14, y = 12),
+             size = 3 ) +
+  geom_curve(aes(x = 24, y = 39.5, xend = 15.5, yend = 13.5), curvature = -.2,size = .3,
+                                    arrow = arrow(length = unit(.015, "npc")))+
+  annotation_custom(BbruisingIfSidsPlotGrob, xmin = 15.5, xmax = 21.5, ymin = 25, ymax = 35)+
+  annotation_custom(BbruisingIfMurderPlotGrob, xmin = 18.5, xmax = 24.5, ymin = 10, ymax = 20)+
+  geom_label(aes(label = "Bdisease", x = 33, y = 18),
+             size = 3 )  +
+  geom_curve(aes(x = 26, y = 39.5, xend = 33, yend = 19.5), curvature = -.2,size = .3,
+             arrow = arrow(length = unit(.015, "npc")))+
+  annotation_custom(BdiseaseIfSidsPlotGrob, xmin = 31, xmax = 37, ymin = 27, ymax = 37)+
+  annotation_custom(BdiseaseIfAmurderPlotGrob, xmin = 24.5, xmax = 30.5, ymin = 20, ymax = 30)
+
+```
+
+
+
+
+
+## Weights in BNs
+
+
+```{r fig:entropies19,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "90%",   message = FALSE, warning = FALSE, results = FALSE}
+SCprobsFinal <- readRDS("../datasets/SCprobsFinal.rds")
+attach(SCprobsFinal)
+source("../scripts/SCplotDistros.R")
+source("../scripts/SCfunctions.R")
+
+
+GuiltPrior <- SCprobsFinal$GuiltPrior
+
+GuiltPriorPlot <- plotSample(GuiltPrior, "GuiltPrior",
+                             paste("median =",
+                                   round(median(SCprobsFinal$GuiltPrior),2), ", 89%HPDI = ", round(HPDI(SCprobsFinal$GuiltPrior),2)[1],"-",round(HPDI(SCprobsFinal$GuiltPrior),2)[2],
+                                   sep = "") )+xlim(0,1)
+
+GuiltPriorP <- distroFromSamples(GuiltPrior)
+priorPlotP <- plotPosterior(GuiltPriorP, GuiltPrior, "Guilt (prior)", prior = GuiltPriorP)
+
+
+GuiltABbruisingP <- distroFromSamples(GuiltABbruising)
+GuiltABbruisingPlotP <- plotPosterior(GuiltABbruisingP, GuiltABbruising, "Guilt (ABbruising)", prior = GuiltPriorP )
+
+GuiltABbruisingNoDiseaseP <- distroFromSamples(GuiltABbruisingNoDisease)
+GuiltABbruisingNoDiseasePlotP <- plotPosterior(GuiltABbruisingNoDiseaseP, GuiltABbruisingNoDisease, "Guilt (ABbruisingNoDisease)",
+                                                prior = GuiltPriorP )
+
+GuiltABbruisingDiseaseA <- GuiltABbruisingDiseaseA[!is.na(GuiltABbruisingDiseaseA)]
+GuiltABbruisingDiseaseAP <- distroFromSamples(GuiltABbruisingDiseaseA)
+GuiltABbruisingDiseaseAPlotP <- plotPosterior(GuiltABbruisingDiseaseAP,
+                                               GuiltABbruisingDiseaseA, "Guilt (ABbruisingDiseaseA)",prior = GuiltPriorP)
+
+
+SCguiltPlotP <- grid.arrange(priorPlotP+theme_tufte(base_size = 9),
+                             GuiltABbruisingPlotP+theme_tufte(base_size = 9),
+                             GuiltABbruisingNoDiseasePlotP+theme_tufte(base_size = 9),
+                             GuiltABbruisingDiseaseAPlotP+theme_tufte(base_size = 9), ncol =2)
+
+
+```
+
+
+
+
+<!-- ```{r fig:entropies2_19,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "90%",   message = FALSE, warning = FALSE, results = FALSE} -->
+<!-- SCguiltPlotP -->
+<!-- ``` -->
+
+
+
+<!-- ## Weights in BNs -->
+
+<!-- ```{r SCwithHOP2, echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "80%", warning=FALSE, message = FALSE, dpi = 800, warning = FALSE, message = FALSE, output = FALSE} -->
+<!-- SCprobsFinal <- readRDS("../datasets/SCprobsFinal.rds") -->
+<!-- attach(SCprobsFinal) -->
+
+<!-- grid.arrange(GuiltPriorPlot, GuiltABbruisingPlot, GuiltABbruisingNoDiseasePlot, GuiltABbruisingDiseaseAPlot, ncol =2) -->
+<!-- ``` -->
+
+
+
+
+
+
+## Expected weight
+
+```{r SCexpectedWeightsb, echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%", warning=FALSE, message = FALSE, dpi = 800, warning = FALSE, message = FALSE, output = FALSE}
+SCprobsFinal <- readRDS("../datasets/SCprobsFinal.rds")
+attach(SCprobsFinal)
+source("../scripts/SCexpectedWeights.R")
+```
+
+
+
+```{r SCexpectedWeights2b, echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "85%", warning=FALSE, message = FALSE, dpi = 800, warning = FALSE, message = FALSE, output = FALSE}
+SCweightsPlot
+```
+
+
+
+
+
+
+## Wrapping up
+
+The higher-order approach
+
+> - Leads to more honesty in uncertainty assessment
+
+>  - Is more sensible than sensitivity analysis
+
+>  - Integrates with Bayesian data analysis
+
+> - Leads to an information-theoretic account of evidential weight
+
+> - Is computationally feasible
+
+
+
+## Other things I wish I had time to discuss
+
+- connections with precise vs. imprecise probabilism in formal epistemology
+
+- problems with existing opinion aggregation methods and a higher-order approach
+
+- modeling synergy of multiple sources of information
+
+- further properties of weight
+
+- relation to evidential completeness
+
+<h2 align="center">Thank you!</h2>
 
 
 

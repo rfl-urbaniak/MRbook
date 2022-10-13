@@ -9,13 +9,13 @@ library(rethinking)
 
 
 
-setwd("imprecision_weight/")
+#setwd("imprecision_weight/")
 
 
 
 
 
-source("scripts/cptCreate.R")
+#source("scripts/cptCreate.R")
 
 
 #create SC DAG
