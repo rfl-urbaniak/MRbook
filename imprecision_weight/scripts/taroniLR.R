@@ -177,6 +177,8 @@ for(i in 1: nrow(opts)){
 # mean(lrsamples < .5)
 # mean(lrsamplesb < .5)
 # 
+## Now for optimization
+
 
 
 
