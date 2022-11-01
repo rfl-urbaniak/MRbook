@@ -226,6 +226,26 @@
 \ifluatex
   \usepackage{selnolig}  % disable illegal ligatures
 \fi
+\newlength{\cslhangindent}
+\setlength{\cslhangindent}{1.5em}
+\newlength{\csllabelwidth}
+\setlength{\csllabelwidth}{3em}
+\newenvironment{CSLReferences}[2] % #1 hanging-ident, #2 entry spacing
+ {% don't indent paragraphs
+  \setlength{\parindent}{0pt}
+  % turn on hanging indent if param 1 is 1
+  \ifodd #1 \everypar{\setlength{\hangindent}{\cslhangindent}}\ignorespaces\fi
+  % set entry spacing
+  \ifnum #2 > 0
+  \setlength{\parskip}{#2\baselineskip}
+  \fi
+ }%
+ {}
+\usepackage{calc}
+\newcommand{\CSLBlock}[1]{#1\hfill\break}
+\newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{#1}}
+\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{#1}\break}
+\newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
 
 \title{Weight Chapter Outline}
 \author{}
@@ -242,87 +262,216 @@
 \hypertarget{introduction}{%
 \section{Introduction}\label{introduction}}
 
-The probability we assign to a hypothesis expresses our epistemic
-uncertainty about the hypothesis. But another uncertainty is at play. It
-is the uncertainty about our assessment of the probability of the
-hypothesis.
-\todo{This is hasty, especially in light of Taroni et al. discussion, needs to be revised once our response is writtten. Also, not sure we need to bring up epistemic/aleatory already here}
-
-Consider a familiar example from the courtroom. A criminal defendant is
-standing trial. Traces that were found at the crime scene match the
-defendant's genetic profile. An expert testifies that the probability
-that a random person would coincidentally match is as low as 1 in 10
-billion. This extremely low probability can serve, together with other
-prior information, to assess the probability that the defendant was
-actually the source. Say the probability of the source hypothesis is
-assessed to be 95\%. This number expresses our uncertainty about the
-hypothesis. The problem is that the
-95\%\todo{I thought we agreed to not use percentages for probabilities throughought, unless we talk about frequencies?}
-probability rests, among other things, on the random match probability
-of 1 in 10 billion. This figure could itself be questioned. So, besides
-the uncertainty about the source hypothesis, there is uncertainty about
-the 95\% probability assigned to the sources hypothesis.
-
-Such higher order uncertainty is quite ubiquitous. For suppose we test
-positive for a certain disease. The test isn't infallible. So, based on
-the test result, the probability we should assign to the hypothesis that
-we are actually positive is somewhere below 100\%, say it is assessed to
-be 75\%. This number expresses our uncertainty about the hypothesis that
-we are positive. The 75\% figure is the output of applying Bayes'
-theorem, which however requires as inputs the base rate of the disease
-and the error rates of the test. These numbers are themselves uncertain.
-So the 75\% probability that we are positive carries its own
-uncertainty.
-
-Numbers carry with them an aura of objectivity. Their presentation by an
-expert might suggest they are not up for debate. But that would be a
-mistake. A skilled defense lawyer will inquiry about the credentials of
-the expert, the source of the data, their reliability. At one extreme,
-the numbers presented in a courtroom can be made up. In the infamous
-People v. Collins, the prosecutor made up the frequencies of certain
-identifying characteristics: interracial couple, driving a yellow
-convertible, women with ponytail, man with mustache, etc. But the
-numbers presented in a courtroom can also rest on well-established
-practices of data collection and genetic modeling, as in the case of
-random match probabilities for DNA evidence. All in all, second-order
-uncertainty comes in degrees, just like first-order uncertainty about a
-hypothesis of interest. We need a theory of both uncertainties.
-
-This chapter articulates a formal framework for modeling first-order
-uncertainty about hypotheses as well as uncertainty about the
-first-order uncertainty. The framework fits naturally with Bayesian
-statistics and can be implemented thorough Bayesian networks. We develop
-this framework as an improvement of imprecise probabilism in Bayesian
-epistemology. As the name suggests, imprecise probabilism posits that
-agents can be imprecise about the probabilities they assign. Instead of
-single probability measures, they can entertain multiple probability
-measures. The higher order framework we develop brings imprecise
-probabilism one step further. Imprecise probabilism assumes that the
-multiple probability measures which agents can entertain are all equally
-likely. The higher order approach relaxes this assumption. The possible
-probability measures can themselves be more or less probable.
-
-The two-tiered framework for modeling uncertainty will then serve to
-articulate a theory of evidential weight. (Need to add why a theory fo
-weight of evidence is important, etc.)
-
-\textbf{Side comment:} I think for expository clarity, we should
-emphasize two contributions here. One is the contribution to higher
-order uncertainty. This is an improvement on imprecise probabilism. This
-I think is already an important contribution that fares better than
-imprecise probabilism. The second contribution is the theory of weight
-that is built out of the higher order uncertainty framework. The two
-issues seems separate to me. One could be interested in question of
-higher order uncertainty and imprecise probabilism without being
-interested in questions of
-weight.\todo{To some extent, but one of the motivations behind moving away from precise probabilism is that it doesn't allow for distinguishing cases in which the weight of evidence is different}
+Consider three different items of match evidence:\footnote{These are
+  stylized after the evidence in the notorious Wayne Williams case.
+  Probabilities have been slightly but not unrealistically shifted to be
+  closer to each other to make a conceptual point. The original
+  probabilities were \(1/8000\) for the carpet evidence, 1/100 for the
+  dog fur, and 29/1148 for Wayne Williams' hair. Also, in our example we
+  assume carpets have been sampled, whereas the way the actual
+  probability has been arrived at was by tracking down the carpet
+  producer, investigating their sales record, assuming the carpets were
+  evenly distributed in 10 southeastern states, assuming the average
+  carpet is 12 feet long, and taking an estimate of total amount of
+  carpet in the country for granted. We abstract from such
+  considerations in this chapter.} The suspects dog's fur matches the
+dog fur found in a carpet wrapped around one of the bodies. A hair found
+on one of the victims matches that of the suspect. Carpet fibers in a
+carpet used to wrap a victim's body matches carpet fibers in the
+suspect's house. What are the fact-finders to make of this evidence? To
+start with, some probabilistic evaluation thereof should be useful.
 
 \hypertarget{precise-and-imprecise-probabilism}{%
 \section{Precise and imprecise
 probabilism}\label{precise-and-imprecise-probabilism}}
 
-\hypertarget{higher-oreder-probabilism}{%
-\section{Higher oreder probabilism}\label{higher-oreder-probabilism}}
+\textbf{Precise probabilism} (\textsf{PP}) holds that a rational agent's
+uncertainty about a hypothesis \(H\) is to be represented as a single,
+precise probability measure. This is an elegant and simple theory. But
+representing our uncertainty about a proposition in terms of a single,
+precise probability runs into a number of difficulties. Precise
+probabilism fails to capture an important dimension of how our
+uncertainty connects with the evidence we have or have not obtained.
+
+Start with a case of complete lack of evidence. You hold a coin in your
+hands but have no evidence whatsoever about its bias. You are completely
+ignorant. You then start tossing the coin and observe the outcome of ten
+tosses, half of which turn out to be heads. This is some evidence for
+the real bias being around .5. How do you represent your stances before
+and after the observations? Precise probabilism has difficulties
+modeling the difference between the two situations. If you deploy the
+principle of insufficient evidence, you would start with
+\(\mathsf{P}_0(H)=.5\) and end with \(\mathsf{P}_1(H)=.5\), as if
+nothing changed. If you do not deploy the principle of insufficient
+evidence, what do you do?
+
+Precise probabilism runs into difficulties even in cases that not depict
+complete lack of evidence. The following example---from the 1872
+manuscript `The Fixation of Belief' (W3 295) by C. S. Peirce---makes
+this clear:
+
+\begin{quote} When we have drawn a thousand times, if about half [of the beans] have been white, we have great confidence in this result  ... a confidence which would be entirely wanting if, instead of sampling the bag by 1000 drawings, we had done so by only two.
+\end{quote}
+
+\noindent The difficulty for precise probabilism is this. Your best
+estimate of the probability of `the next bean will be white' is .5 if
+half of the beans you have drawn randomly so far have been white, no
+matter whether you have drawn a thousand or only two of them. There is
+an intuitive difference between the two cases, but expressing one's
+uncertainty with a precise probability does not capture it.\footnote{Similar
+  remarks can be found in Peirce's 1878 \emph{Probability of Induction}.
+  There, he also proposes to represent uncertainty by at least two
+  numbers, the first depending on the inferred probability, and the
+  second measuring the amount of knowledge obtained; as the latter,
+  Peirce proposed to use some dispersion-related measure of error (but
+  then suggested that an error of that estimate should also be estimated
+  and so, so that ideally more numbers representing errors would be
+  needed).}
+
+Both examples---Peirce's bean example and the earlier one about lack of
+evidence---suggest that \textsf{PP} is not appropriately responsive to
+evidence. It ends up assigning a probability of .5 to situations in
+which one's evidence is quite different: when no evidence whatsoever is
+available for or against a hypothesis; when there is minimal evidence of
+equipoise between hypotheses (say, after only 2 draws); when there is
+strong evidence of equipoise (say, after 1000 draws).\footnote{Precise
+  probabilism suffers from other difficulties. For example it has
+  problems with formulating a sensible method of probabilistic opinion
+  aggregation Stewart \& Quintana (2018). A seemingly intuitive
+  constraint is that if every member agrees that \(X\) and \(Y\) are
+  probabilistically independent, the aggregated credence should respect
+  this. But this is hard to achieve if we stick to PP (Dietrich \& List,
+  2016). For instance, a \emph{prima facie} obvious method of linear
+  pooling does not respect this. Consider probabilistic measures \(p\)
+  and \(q\) such that \(p(X) = p(Y) = p(X\vert Y) = 1/3\) and
+  \(q(X) = q(Y) = q(X\vert Y) = 2/3\). On both measures, taken
+  separately, \(X\) and \(Y\) are independent. Now take the average,
+  \(r=p/2+q/2\). Then \(r(X\cap Y) = 5/18 \neq r(X)r(Y)=1/4\).}
+
+What if we give up the assumption that probability assignments should be
+precise? Unlike \textsf{PP}, \textbf{imprecise probabilism}
+(\textsf{IP}) holds that an agent's credal stance towards a hypothesis
+\(H\) is to be represented by means of a \emph{set of probability
+measures}, typically called a representor \(\mathbb{P}\), rather than a
+single measure \(\mathsf{P}\). The representor should include all and
+only those probability measures which are compatible (in a sense to be
+specified) with the evidence. For instance, if an agent knows that the
+coin is fair, their credal state would be captured by the singleton set
+\(\{\mathsf{P}\}\), where \(\mathsf{P}\) is a probability measure which
+assigns \(.5\) to \(H\). If, on the other hand, the agent knows nothing
+about the coin's bias, their credal state would rather be represented by
+means of the set of all probabilistic measures, as none of them is
+excluded by the available evidence. Note that the set of probability
+measures does not represent admissible options that the agent could
+legitimately pick from the set. Rather, the agent's credal state is
+essentially imprecise and should be represented by means of the whole
+set of probability measures.\footnote{For the development of IP see
+  (Fraassen, 2006; Gärdenfors \& Sahlin, 1982; Joyce, 2005; Kaplan,
+  1968; Keynes, 1921; Levi, 1974; Sturgeon, 2008; Walley, 1991),
+  (Bradley, 2019) is a good source of literature.}
+
+Imprecise probabilism shares some similarities with what we might call
+\textbf{interval probabilism} due to {[}KYBURG
+1961{]}\todo{REF Kyburg. Probability and the Logic of Rational Belief. Wesleyan University Press, Middletown Connecticut, 1961 and H. E. Kyburg and C. M. Teng. Uncertain Inference. Cambridge University Press, Cambridge, 2001.}.
+On interval probabilism, precise probabilities are replaced by intervals
+of probabilities. On imprecise probabilism, instead, precise
+probabilities are replaced by sets of probabilities. This makes
+imprecise probabilism more general since the probabilities of a
+proposition in the representor set do not have to form a closed
+interval. Both approaches, however, can model situations of complete
+lack of evidence by probability measures that assign values in the
+interval {[}0, 1{]}.
+\todo{M: can they model the Peirce's bean example,  not clear to me. Seems we need to mention this.}
+
+As more evidence is gathered, the interval might widen or shrink (in
+Kyburg's approach) or some probability measures might be added to, or
+removed from, the representor set (in imprecise probabilism). Learning
+is modeled in a somewhat idiosyncratic way in Kyburg's interval
+probabilism by performing operations on intervals.\footnote{EXPLAIN} The
+advantage of imprecise probabilism, instead, is that it provides a
+straightforward picture of learning from evidence, that is a natural
+extension of the classical Bayesian approach. This makes imprecise
+probabilism much preferable to interval probabilism. When faced with new
+evidence \(E\) between time \(t_0\) and \(t_1\), the representor set
+should be updated point-wise, running the standard Bayesian updating on
+each probability measure in the representor:
+\begin{align*} \label{eq:updateRepresentor}
+\mathbb{P}_{t_1} = \{\mathsf{P}_{t_1}\vert \exists\, {\mathsf{P}_{t_0} \!\in  \mathbb{P}_{t_0}}\,\, \forall\, {H}\,\, \left[\mathsf{P}_{t_1}(H)=\mathsf{P}_{t_0}(H \vert E)\right] \}.
+\end{align*}
+
+Unfortunately, because of this point-wise updating, imprecise
+probabilism runs into the problem of \textbf{belief inertia}. (Levi,
+1980). Consider again Peirce bean's example. Say you start drawing beans
+knowing only that the true proportion of red beans is in the interval
+\((0,1)\). \todo{M: open or closed interval?} This models a situation of
+lack of evidence. As you draw beans from the urn and discover their
+color, you should be able to learn something about the proportion of
+colors in the urn. This is not so with imprecise probabilism, however.
+For suppose you draw two beans both of which are red. On imprecise
+probabilism, your initial credal state is to be modeled by the set of
+all possible probability measures over your algebra of propositions.
+Once you observe the two beans, each particular measure from your
+initial representor gets updated to a different one that assigns a
+higher probability to ``red,'' but also each measure in your original
+representor can be obtained by updating some other measure in your
+original representor on the evidence (and the picture does not change if
+you continue with the remaining 2998 observations).
+\todo{M: Can this be more clear? Not sure I completely follow...} Thus,
+if you are to update your representor point-wise, you will end up with
+the same representor set. Consequently, the edges of your resulting
+interval will remain the same. In the end, it is not clear how you are
+supposed to learn that the proportion of beans is such and
+such.\footnote{ Here's another example from (Rinard, 2013). Either all
+  the marbles in the urn are green (\(H_1\)), or exactly one tenth of
+  the marbles are green (\(H_2\)). Your initial credence \([0,1]\) in
+  each. Then you learn that a marble drawn at random from the urn is
+  green (\(E\)). After conditionalizing each function in your
+  representor on this evidence, you end up with the the same spread of
+  values for \(H_1\) that you had before learning \(E\), and no matter
+  how many marbles are sampled from the urn and found to be green.}
+
+Some replies in defense of imprecise probabilism are available. One
+might insist that vacuous priors should not be used and that the
+framework gives the right results when the priors are non-vacuous. After
+all, you did not start with knowing truly nothing, then perhaps it is
+right to conclude that you will never learn anything. Another strategy
+is to say that, in a state of complete ignorance, a special updating
+rule should be deployed.\footnote{(Elkin, 2017) suggests the rule of
+  \emph{credal set replacement} that recommends that upon receiving
+  evidence the agent should drop measures rendered implausible, and add
+  all non-extreme plausible probability measures. This however, is
+  tricky: one needs a separate account of what makes a distribution
+  plausible or not. Elkin admits that he has no solution to this: ``But
+  how do we determine what the set of plausible probability measures is
+  relative to \(E\)? There is no precise rule that I am aware of for
+  determining such set at this moment, but I might say that the set can
+  sometimes be determined fairly easily'' {[}p.~83{]} He goes on to a
+  trivial example of learning that the coin is fair and dropping extreme
+  probabilities. This is far from a general account. One also needs a
+  principled account of why one should use a separate special update
+  rule when starting with complete ignorance.} But no matter what we
+think about belief inertia, other problems plague imprecise probabilism.
+
+One problem is that imprecise probabilism does not seem fine-grained
+enough. Consider a situation in which you are about to toss a coin whose
+bias is either .4 or .6. Say you have two coins and you know, for sure,
+that the probability of heads is .4. if you toss one coin and .6 if you
+toss the other coin. But you do not know which is which. You pick one of
+the two at random and toss it. You do not know the probability of heads
+on that toss, but you know it must be either .4 or .6. This situation
+can be easily represented by imprecise probabilism. The representator
+would contain two probability measures, one that assigns .4. and the
+other that assigns .6 to the hypothesis `this coin lands heads.' But now
+suppose you have information that the lighter coin is more likely the
+one with the .4 bias. You have picked the lighter coin. So, upon tossing
+this coin, you should be more confident that the probability of heads is
+.4. rather than .6. Imprecise probabilism cannot represent this
+situation, at least not without moving to higher-order probabilities, in
+which case it is no longer clear whether the object-level imprecision
+performs any valuable task.
+
+\hypertarget{higher-order-probabilism}{%
+\section{Higher order probabilism}\label{higher-order-probabilism}}
 
 These two sections will describe the three main frameworks of
 probabilism: precise, imprecise, and higher order probabilism. They
@@ -589,6 +738,81 @@ can change the probability of the hypothesis.
 This section addresses the question, why care about weight?
 
 \hypertarget{conclusion}{%
-\section{Conclusion}\label{conclusion}}
+\section*{Conclusion}\label{conclusion}}
+\addcontentsline{toc}{section}{Conclusion}
+
+\hypertarget{refs}{}
+\begin{CSLReferences}{1}{0}
+\leavevmode\hypertarget{ref-bradley2019imprecise}{}%
+Bradley, S. (2019). {Imprecise Probabilities}. In E. N. Zalta (Ed.),
+\emph{The {Stanford} encyclopedia of philosophy} ({S}pring 2019).
+\url{https://plato.stanford.edu/archives/spr2019/entries/imprecise-probabilities/};
+Metaphysics Research Lab, Stanford University.
+
+\leavevmode\hypertarget{ref-Dietrich2016pooling}{}%
+Dietrich, F., \& List, C. (2016). Probabilistic opinion pooling. In A.
+Hajek \& C. Hitchcock (Eds.), \emph{Oxford handbook of philosophy and
+probability}. Oxford: Oxford University Press.
+
+\leavevmode\hypertarget{ref-Lee2017impreciseEpistemology}{}%
+Elkin, L. (2017). \emph{Imprecise probability in epistemology} (PhD
+thesis). Ludwig-Maximilians-Universit{ä}t;
+Ludwig-Maximilians-Universität München.
+
+\leavevmode\hypertarget{ref-Elkin2018resolving}{}%
+Elkin, L., \& Wheeler, G. (2018). Resolving peer disagreements through
+imprecise probabilities. \emph{Noûs}, \emph{52}(2), 260--278.
+\url{https://doi.org/10.1111/nous.12143}
+
+\leavevmode\hypertarget{ref-VanFraassen2006vague}{}%
+Fraassen, B. C. V. (2006). Vague expectation value loss.
+\emph{Philosophical Studies}, \emph{127}(3), 483--491.
+\url{https://doi.org/10.1007/s11098-004-7821-2}
+
+\leavevmode\hypertarget{ref-Gardenfors1982unreliable}{}%
+Gärdenfors, P., \& Sahlin, N.-E. (1982). Unreliable probabilities, risk
+taking, and decision making. \emph{Synthese}, \emph{53}(3), 361--386.
+\url{https://doi.org/10.1007/bf00486156}
+
+\leavevmode\hypertarget{ref-joyce2005probabilities}{}%
+Joyce, J. M. (2005). How probabilities reflect evidence.
+\emph{Philosophical Perspectives}, \emph{19}(1), 153--178.
+
+\leavevmode\hypertarget{ref-Kaplan1968decision}{}%
+Kaplan, J. (1968). Decision theory and the fact-finding process.
+\emph{Stanford Law Review}, \emph{20}(6), 1065--1092.
+
+\leavevmode\hypertarget{ref-keynes1921treatise}{}%
+Keynes, J. M. (1921). \emph{A treatise on probability, 1921}. London:
+Macmillan.
+
+\leavevmode\hypertarget{ref-Levi1974ideterminate}{}%
+Levi, I. (1974). On indeterminate probabilities. \emph{The Journal of
+Philosophy}, \emph{71}(13), 391. \url{https://doi.org/10.2307/2025161}
+
+\leavevmode\hypertarget{ref-Levi1980enterprise}{}%
+Levi, I. (1980). \emph{The enterprise of knowledge: An essay on
+knowledge, credal probability, and chance}. MIT Press.
+
+\leavevmode\hypertarget{ref-Rinard2013against}{}%
+Rinard, S. (2013). Against radical credal imprecision. \emph{Thought: A
+Journal of Philosophy}, \emph{2}(1), 157--165.
+\url{https://doi.org/10.1002/tht3.84}
+
+\leavevmode\hypertarget{ref-Stewart2018pooling}{}%
+Stewart, R. T., \& Quintana, I. O. (2018). Learning and pooling, pooling
+and learning. \emph{Erkenntnis}, \emph{83}(3), 1--21.
+\url{https://doi.org/10.1007/s10670-017-9894-2}
+
+\leavevmode\hypertarget{ref-Sturgeon2008grain}{}%
+Sturgeon, S. (2008). Reason and the grain of belief. \emph{No{û}s},
+\emph{42}(1), 139--165. Retrieved from
+\url{http://www.jstor.org/stable/25177157}
+
+\leavevmode\hypertarget{ref-walley1991statistical}{}%
+Walley, P. (1991). \emph{Statistical reasoning with imprecise
+probabilities}. Chapman; Hall London.
+
+\end{CSLReferences}
 
 \end{document}
