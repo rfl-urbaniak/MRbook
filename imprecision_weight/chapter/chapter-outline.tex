@@ -415,9 +415,11 @@ evidence (Figure \ref{fig:lines}).
 
 \end{figure}
 
+\todo{Revise this structure description once the chapter is done}
+
 This is the gist of our chapter: whenever honest density estimates are
 available (and they should be available for match evidence evaluation
-methods whose reliability has been properly studies), it is those
+methods whose reliability has been properly studied), it is those
 densities that should be reported and used in further reasoning. This
 avoids hiding actual aleatory uncertainties under the carpet, and allows
 for more correct reasoning where interval-based representation might
@@ -429,7 +431,20 @@ First, it places it in the context of philosophical discussions
 surrounding a proper probabilistic representation of uncertainty. The
 main alternatives on the market are precise probabilism and imprecise
 probabilism. We argue that both options are problematic and should be
-superseded by the second-order representation. Second,
+superseded by the second-order representation whenever possible. Second,
+having gained this perspective, we visit a recent discussion in the
+forensic science literature, where a prominent proposal is that the
+experts, even if they use densities, should integrate and present only
+point estimates to the fact-finders. We disagree. Third, we explain how
+the approach can be used in more complex situations in which multiple
+items of evidence and multiple propositions interact---and the idea is
+that such complexities can be handled by sampling from distributions and
+approximating densities using multiple Bayesian Networks in the
+calculations. Last but not least, we turn to the notion of weight of
+evidence. Having distinguished quite a few notions in the vicinity, we
+explain how the framework we propose allows for a more successful
+explication and implementation of the notion of weight of evidence than
+the ones currently available on the market.
 
 \hypertarget{three-probabilisms}{%
 \section{Three probabilisms}\label{three-probabilisms}}
@@ -439,10 +454,10 @@ and higher-order. Precise probabilism, as the name suggests, posits that
 an agent' credal state is modeled by a single, precise probability
 measure. Imprecise probabilism replaces precise probabilities by sets of
 probability measures, while higher-order probabilism relies on
-distributions over probability measures. There are good reasons to
-abandon precise probabilism and endorse higher-order probabilism.
-Imprecise probabilism is a step in the right direction, but as we will
-see, it suffers from too many difficulties of its own.
+distributions over parameter values. There are good reasons to abandon
+precise probabilism and endorse higher-order probabilism. Imprecise
+probabilism is a step in the right direction, but as we will see, it
+suffers from too many difficulties of its own.
 
 \hypertarget{precise-probabilism}{%
 \subsection{Precise Probabilism}\label{precise-probabilism}}
@@ -453,64 +468,50 @@ precise probability measure. This is an elegant and simple theory. But
 representing our uncertainty about a proposition in terms of a single,
 precise probability runs into a number of difficulties. Precise
 probabilism fails to capture an important dimension of how our
-uncertainty connects with the evidence we have or have not obtained. For
-consider this example:
+uncertainty connects with the evidence we have or have not obtained.
+Consider the following simple examples:
 
 \begin{quote}
 \textbf{No evidence v. fair coin}
-You hold a coin in your hands but have no evidence 
-whatsoever about its bias. You are completely ignorant. Compare this situation with when 
-you start tossing the coin and observe the outcome of ten tosses, 
-half of which turn out to be heads and half of which turns out to be tails. 
-That half of the outcomes were heads is some evidence that the coin is fair: its 
-real bias should be be around .5.
+You are about to toss a coin, but have no evidence 
+whatsoever about its bias. You are completely ignorant. Sticking to \s{PP} you  follow the principle of insufficient evidence and assign probability .5 to the outcome being \emph{heads}.  Compare this to the situation  in which you know the coin is fair. Sticking to PP, you assign the same probability to the outcome of the next toss being \emph{heads}. 
 \end{quote}
 
-\noindent How do you represent your stances before and after the
-observations? Precise probabilism has difficulties modeling the
-difference between the two situations. If you deploy the principle of
-insufficient evidence, you would start with \(\mathsf{P}_0(H)=.5\) and
-end with \(\mathsf{P}_1(H)=.5\), as if nothing changed. If you do not
-deploy the principle of insufficient evidence, what do you do?
-
-Precise probabilism runs into trouble even without complete lack of
-evidence. An example from the 1872 manuscript `The Fixation of Belief'
-(W3 295) by C. S. Peirce makes this clear:
-
-\begin{quote} \textbf{Peirce's beans:} When we have drawn a thousand times, if about half [of the beans] have been white, we have great confidence in this result  ... a confidence which would be entirely wanting if, instead of sampling the bag by 1000 drawings, we had done so by only two.
+\begin{quote}
+\textbf{Learning from ignorance}
+You start  tossing the former coin, toss it ten times and observe \emph{heads} five times. You started with your bias estimate at .5, but you also end with your bias estimate at .5. Clearly, you have learned something, but whatever that is, it is not captured in the representaiton recommended by \s{PP}.
 \end{quote}
 
-\noindent The difficulty for precise probabilism is this. Your best
-estimate of the probability of `the next bean will be white' is .5 if
-half of the beans you have drawn randomly so far have been white, no
-matter whether you have drawn a thousand or only two of them. There is
-an intuitive difference between the two cases, but expressing one's
-uncertainty with a precise probability does not capture it.\footnote{Similar
-  remarks can be found in Peirce's 1878 \emph{Probability of Induction}.
-  There, he also proposes to represent uncertainty by at least two
-  numbers, the first depending on the inferred probability, and the
-  second measuring the amount of knowledge obtained; as the latter,
-  Peirce proposed to use some dispersion-related measure of error (but
-  then suggested that an error of that estimate should also be estimated
-  and so, so that ideally more numbers representing errors would be
-  needed).}
-
-Both examples---Peirce's bean example and the earlier one about lack of
-evidence---suggest that precise probabilism is not appropriately
-responsive to evidence. It ends up assigning a probability of .5 to
-situations in which one's evidence is quite different: when no evidence
-is available about the coin's bias; when there is little evidence that
-the coin is fair (say, after only 2 draws); when there is strong
-evidence that the coin is fair (say, after 1000 draws).\footnote{Precise
-  probabilism suffers from other difficulties. For example it has
-  problems with formulating a sensible method of probabilistic opinion
-  aggregation Stewart \& Quintana (2018). A seemingly intuitive
-  constraint is that if every member agrees that \(X\) and \(Y\) are
-  probabilistically independent, the aggregated credence should respect
-  this. But this is hard to achieve if we stick to PP (Dietrich \& List,
-  2016). For instance, a \emph{prima facie} obvious method of linear
-  pooling does not respect this. Consider probabilistic measures \(p\)
-  and \(q\) such that \(p(X) = p(Y) = p(X\vert Y) = 1/3\) and
+\noindent Clearly, precise probabilism has difficulties modeling such
+situations.\footnote{Examples of this sort date back to C. S. Peirce,
+  who in his 1872 manuscript `The Fixation of Belief' (W3 295) comments:
+  ``when we have drawn a thousand times, if about half {[}of the
+  beans{]} have been white, we have great confidence in this result
+  \ldots{} a confidence which would be entirely wanting if, instead of
+  sampling the bag by 1000 drawings, we had done so by only two.'\,'
+  Similar remarks can be found in Peirce's 1878
+  \emph{Probability of Induction}. There, he also proposes to represent
+  uncertainty by at least two numbers, the first depending on the
+  inferred probability, and the second measuring the amount of knowledge
+  obtained; as the latter, Peirce proposed to use some
+  dispersion-related measure of error (but then suggested that an error
+  of that estimate should also be estimated and so, so that ideally more
+  numbers representing errors would be needed).} The examples suggest
+that precise probabilism is not appropriately responsive to evidence. It
+ends up assigning a probability of .5 to situations in which one's
+evidence is quite different: when no evidence is available about the
+coin's bias; when there is little evidence that the coin is fair (say,
+after only 2 draws); when there is strong evidence that the coin is fair
+(say, after 1000 draws).\footnote{Precise probabilism suffers from other
+  difficulties. For example, it has problems with formulating a sensible
+  method of probabilistic opinion aggregation Stewart \& Quintana
+  (2018). A seemingly intuitive constraint is that if every member
+  agrees that \(X\) and \(Y\) are probabilistically independent, the
+  aggregated credence should respect this. But this is hard to achieve
+  if we stick to \s{PP} (Dietrich \& List, 2016). For instance, a
+  \emph{prima facie} obvious method of linear pooling does not respect
+  this. Consider probabilistic measures \(p\) and \(q\) such that
+  \(p(X) = p(Y) = p(X\vert Y) = 1/3\) and
   \(q(X) = q(Y) = q(X\vert Y) = 2/3\). On both measures, taken
   separately, \(X\) and \(Y\) are independent. Now take the average,
   \(r=p/2+q/2\). Then \(r(X\cap Y) = 5/18 \neq r(X)r(Y)=1/4\).}
@@ -527,18 +528,18 @@ The representor should include all and only those probability measures
 which are compatible (in a sense to be specified) with the evidence. For
 instance, if an agent knows that the coin is fair, their credal state
 would be captured by the singleton set \(\{\mathsf{P}\}\), where
-\(\mathsf{P}\) is a probability measure which assigns \(.5\) to \(H\).
-If, on the other hand, the agent knows nothing about the coin's bias,
-their credal state would rather be represented by means of the set of
-all probabilistic measures, as none of them is excluded by the available
-evidence. Note that the set of probability measures does not represent
-admissible options that the agent could legitimately pick from. Rather,
-the agent's credal state is essentially imprecise and should be
-represented by means of the entire set of probability
+\(\mathsf{P}\) is a probability measure which assigns \(.5\) to
+\emph{heads}. If, on the other hand, the agent knows nothing about the
+coin's bias, their credal state would rather be represented as the set
+of all probabilistic measures, as none of them is excluded by the
+available evidence. Note that the set of probability measures does not
+represent admissible options that the agent could legitimately pick
+from. Rather, the agent's credal state is essentially imprecise and
+should be represented by means of the entire set of probability
 measures.\footnote{For the development of imprecise probabilism, see
   (Fraassen, 2006; Gärdenfors \& Sahlin, 1982; Joyce, 2005; Kaplan,
   1968; Keynes, 1921; Levi, 1974; Sturgeon, 2008; Walley, 1991),
-  (Bradley, 2019) is a good source of literature.}
+  (Bradley, 2019) is a good source of further references.}
 
 Imprecise probabilism shares some similarities with what we might call
 \textbf{interval probabilism} due to {[}KYBURG
