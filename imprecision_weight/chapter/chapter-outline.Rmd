@@ -36,6 +36,8 @@ library(philentropy)
 library(latex2exp)
 library(gridExtra)
 library(rethinking)
+library(bnlearn)
+library(gRain)
 # library(truncnorm)
 # library(ggforce)
 
@@ -78,7 +80,8 @@ pointImpactPlot <- ggplot()+geom_line(aes(x = prior, y = posterior))+xlim(0,.07)
   theme_tufte(base_size = 10)+labs(title = "Prior vs. posterior, based on point estimates",
                                    subtitle = "Joint evidence: dog & hair")+
   geom_vline(xintercept = threshold, lty = 2, size =.5, alpha = .7)+
-  annotate(geom = "label", label = "posterior > .99", x = .067, y =.95, size = 2.5)
+  annotate(geom = "label", label = "posterior > .99", x = .067, y =.95, size = 2.5)+
+  theme(plot.title.position = "plot")
 ```
 
 
@@ -134,7 +137,8 @@ charitableImpactPlot <- ggplot()+geom_line(aes(x = prior, y = posteriorL))+xlim(
   geom_vline(xintercept = thresholdL, lty = 2, size =.5, alpha = .7)+
   annotate(geom = "label", label = "posterior > .99", x = .305, y =.95, size = 2.5)+ylab(
     "posterior"
-  )
+  )+
+  theme(plot.title.position = "plot")
 ```
 
 
@@ -179,7 +183,8 @@ densities1Plot <- ggplot()+
   #  annotate(geom  = "label", label = "carpet", x =  0.045, y = 140)+
   annotate(geom  = "label", label = "hair", x =  0.035, y = 80)+
   annotate(geom  = "label", label = "dog", x =  0.06, y = 15)+
-  labs(title = "Conditional densities for  individual items of evidence if the source hypothesis is false")
+  labs(title = "Conditional densities for  individual items of evidence if the source hypothesis is false")+
+  theme(plot.title.position = "plot")
 
 densities2Plot <- ggplot()+  
   xlab("probability")+
@@ -191,7 +196,8 @@ densities2Plot <- ggplot()+
   geom_vline(xintercept = 0.000144, lty = 3, size = .8)+
   geom_vline(xintercept = 0.001742, lty = 3, size  = .8)+
   labs(title = "Conditional density for joint evidence", 
-       subtitle = "(with .99 and .9 HPDIs)")
+       subtitle = "(with .99 and .9 HPDIs)")+
+  theme(plot.title.position = "plot")
 ```
 
 
@@ -227,7 +233,8 @@ jointPosteriorDF <-   do.call(cbind, jointPosterior)
 
 
 minimaPlot <- ggplot()+geom_density(aes(x = minima))+
-  theme_tufte(base_size = 10)+ggtitle("Minimal priors sufficient for posterior >.99")+xlab("minimal prior")
+  theme_tufte(base_size = 10)+ggtitle("Minimal priors sufficient for posterior >.99")+xlab("minimal prior")+
+  theme(plot.title.position = "plot")
 
 minimaGrob <- ggplotGrob(minimaPlot)
 
@@ -335,7 +342,8 @@ densitiesLinesPlot <- ggplot()+geom_line(aes(x = prior, y = jointPosteriorDF[,1]
   geom_line(aes(x = prior, y = jointPosteriorDF[,100]), alpha = alpha, size = size)+
   xlim(0,.1)+theme_tufte(base_size = 10)+ylab("posterior")+
   annotation_custom(minimaGrob, xmin = .025, xmax = .1, ymin = 0.01, ymax = 0.8)+
-  ggtitle("Posterior vs prior (100 sampled lines)")
+  ggtitle("Posterior vs prior (100 sampled lines)")+
+  theme(plot.title.position = "plot")
 ```
 
 
@@ -398,7 +406,7 @@ a proposition in terms of a single, precise probability runs into a number of di
 Precise probabilism fails to 
 capture an important dimension of how our uncertainty 
 connects with the evidence we have or have not obtained.
-Consider the following simple examples:
+Consider the following simple examples (we will be using examples with coins for a bit, but the points are general and hold for all sampling based frequency estimation methods, including those of random match probability for various pieces of forensic evidence):
 
 \begin{quote}
 \textbf{No evidence v. fair coin}
@@ -411,9 +419,6 @@ whatsoever about its bias. You are completely ignorant. Sticking to \s{PP} you  
 \textbf{Learning from ignorance}
 You start  tossing the former coin, toss it ten times and observe \emph{heads} five times. You started with your bias estimate at .5, but you also end with your bias estimate at .5. Clearly, you have learned something, but whatever that is, it is not captured in the representaiton recommended by \s{PP}.
 \end{quote}
-
-
-
 
 
 
@@ -430,65 +435,70 @@ What if we give up the assumption that probability assignments should be precise
 **Imprecise probabilism** (\textsf{IP}) holds that  an agent's credal stance towards a hypothesis $H$ is to be represented by means of a *set of probability measures*, typically called a  representor $\mathbb{P}$, rather than a single measure $\mathsf{P}$. The representor should include all and only those probability measures which are compatible (in a sense to be specified) with the evidence.  For instance, if an agent knows that the coin is fair, their credal state  would  be captured by the singleton set $\{\mathsf{P}\}$, where $\mathsf{P}$ is a probability measure which assigns $.5$ to \emph{heads}. If, on the other hand, the agent knows nothing about the coin's bias, their credal state would rather be represented as  the set of all probabilistic measures, as none of them is excluded by the available evidence. Note that the set of probability measures does not represent admissible options that the agent could legitimately pick from. Rather, the agent's credal state is essentially imprecise and should be represented by means of the entire set of probability measures.^[For  the development of imprecise probabilism, see [@keynes1921treatise;@Levi1974ideterminate; @Gardenfors1982unreliable; @Kaplan1968decision;  @joyce2005probabilities; @VanFraassen2006vague; @Sturgeon2008grain; @walley1991statistical], [@bradley2019imprecise] is a good source of further references.] 
 
 
-
-Imprecise probabilism shares some similarities with what we might call 
-**interval probabilism** due to [KYBURG 1961]\todo{REF Kyburg. Probability and the Logic of Rational Belief. Wesleyan University Press, Middletown Connecticut, 1961 and H. E. Kyburg and C. M. Teng. Uncertain Inference. Cambridge University Press, Cambridge, 2001.}. On interval probabilism, precise probabilities are replaced 
-by intervals of probabilities. On imprecise probabilism, instead, precise probabilities are replaced by sets of probabilities. <!---The key difference between Kyburg's \textsf{EP} and \textsf{IP} is that on the latter we use sets of probability measure instead of intervals.---> This makes imprecise probabilism more general since the probabilities of a proposition in the representor set do not have to form a closed interval. Both approaches, however, can model situations of complete lack of evidence by probability measures that assign values in the interval [0, 1]. 
-
-As more evidence is gathered, the interval might widen or shrink (in Kyburg's approach) 
-or some probability measures will be added to, and others removed from, the representor 
-set (in imprecise probabilism). Learning is modeled in a somewhat idiosyncratic way in Kyburg's interval probabilism by performing operations on intervals.^[EXPLAIN] The advantage of imprecise probabilism, instead, is that 
-it provides a straightforward picture of learning from evidence, that is a natural extension of the classical Bayesian approach. This makes imprecise probabilism much preferable to interval probabilism. 
-When faced with new evidence $E$ between time $t_0$ and $t_1$, the representor set 
-should be updated point-wise,  running the standard Bayesian updating on each probability measure in the representor: 
+Imprecise probabilism, at least \emph{prima facie}, offers a straightforward picture of learning from evidence, that is a natural extension of the classical Bayesian approach. When faced with new evidence $E$ between time $t_0$ and $t_1$, the representor set  should be updated point-wise,  running the\todo{REF Kyburg. Probability and the Logic of Rational Belief. Wesleyan University Press, Middletown Connecticut, 1961 and H. E. Kyburg and C. M. Teng. Uncertain Inference. Cambridge University Press, Cambridge, 2001.} standard Bayesian updating on each probability measure in the representor:^[Imprecise probabilism shares some similarities with what we might call 
+**interval probabilism** due to [KYBURG 1961]. On interval probabilism, precise probabilities are replaced  by intervals of probabilities. On imprecise probabilism, instead, precise probabilities are replaced by sets of probabilities.  This makes imprecise probabilism more general, since the probabilities of a proposition in the representor set do not have to form a closed interval. 
+Moreover, learning on Kyburg's approach is somewhat  idiosyncratic and is strongly connected to reference classes and selection and reshaping rules for intervals. See [PEDDEN] for a introduction. As we have already signaled, as intervals do not contain probabilistic information sufficient to guide reasoning with multiple propositions and items of evidence, we keep our focus on \s{IP}, which is the more promising candidate method.] 
 \begin{align*} \label{eq:updateRepresentor}
 \mathbb{P}_{t_1} = \{\mathsf{P}_{t_1}\vert \exists\, {\mathsf{P}_{t_0} \!\in  \mathbb{P}_{t_0}}\,\, \forall\, {H}\,\, \left[\mathsf{P}_{t_1}(H)=\mathsf{P}_{t_0}(H \vert E)\right] \}.
 \end{align*}
 
-\textbf{Marcello's comment: can imprecise probabilism model Peirce's bean example?  Not clear to me. Did not find mention of this in the draft. Seems we need to mention this. Here would be a good place to illustrate how the point-wise updating work in the bean's example.}
 
-Unfortunately, because of this point-wise updating, imprecise probabilism runs into the problem of **belief inertia**. <!---The main question here, though, is that it is not clear how you are supposed to learn that the proportion of beans is such and such.  This is related to the problem of  belief inertia ---> 
-[@Levi1980enterprise].  Consider again Peirce bean's example. 
-Say  you start drawing beans  knowing only that the true proportion of red beans is in the interval $(0,1)$. \todo{M: open or closed interval?} This models a situation of lack of evidence. As you draw beans from the urn and discover their color, you should be able to learn something about the proportion of colors in the urn. This is not so with imprecise probabilism, however. For suppose you draw two beans both of which are red. On imprecise probabilism, your  initial credal state  is to be modeled by the set of all possible probability measures over your algebra of propositions.  Once you observe the two beans, each particular measure from your initial representor gets updated to a different one that assigns a higher probability to "red", but also each  measure in your original representor can be obtained by updating   some other measure in your original representor on the evidence (and the picture does not change if you continue with the remaining 2998 observations). \todo{M: Can this be more clear? Not sure I completely follow...} Thus, if you are to update your representor point-wise, you will  end up with the same representor set. Consequently, the edges of your resulting interval will remain the same. In the end, it is not clear how you are supposed to learn that the proportion of beans is such and such.^[ 
+The hope is at least that if we start with a range of probabilities that is not extremely wide, point-wise learning will behave appropriately.^[The hope is also that \s{IP} offers a feasible aggregation method [@Elkin2018resolving;@Stewart2018pooling]: just put all representors together in one set, and voil\'a! However, this is a very conservative method which quickly leads to extremely few points of agreement, and we are not aware of any successful practical deployment of this method.] For instance, if we start with a prior probability of \emph{heads} equal to .4 or .6, then those measure should be updated to something closer to $.5$ once we learn that a given coin has already been tossed  ten times with the observed number of heads equal 5 (call this evidence $E$). This would mean that if the initial range of values was $[.4,.6]$ the posterior range of values should be more narrow. But even this seemingly straightforward piece of reasoning is hard to model if we want to avoid using densities. For to calculate $\pr{\s{heads}\vert E}$ we need to calculate $\pr{E \vert \s{heads}}\pr{\s{heads}}$ and divide it by $\pr{E} = \pr{E \vert \s{heads}}\pr{\s{heads}} + \pr{E} = \pr{E \vert \neg \s{heads}}\pr{\neg \s{heads}}$. The tricky part is obtaining the conditional probabilities $\pr{E \vert  \s{heads}}$ and $\pr{E \vert \neg \s{heads}}$ in a principle manner without explicitly going second-order, estimating the parameter value and using beta distributions. 
+
+
+The situation is even more difficult if we start with complete lack of knowledge, as imprecise probabilism runs into the problem of **belief inertia**  [@Levi1980enterprise]. Say  you start tossing a coin  knowing nothing about its bias. The range of possibilities is $[0,1]$. After a few tosses, once you observed at least one tail and at least one heads, you have excluded the measures assigning 0 or 1 to \emph{heads}. But what else have you learned? Let's charitably agree that   each particular measure from your initial representor gets updated to  one that is closer to .5, but also now each value in your original interval  can be obtained by updating   some *other* measure in your original representor on the evidence, and the picture does not change  no matter how many observations you have made.  For instance, some measure that initially assigned .4 to \s{heads} might now assign \s{.45} to \s{heads}, but now a measure that assigned .37 to heads has been updated to one that assigns $.4$ to \s{heads}. Thus, if you are to update your representor point-wise, you will  end up with the same representor set. Consequently, the edges of your resulting interval will remain the same. In the end, it is not clear how you are supposed to learn that the proportion of beans is such and such.^[ 
 Here's another example from [@Rinard2013against]. Either all the marbles in the urn are green ($H_1$), or exactly one tenth of the marbles are green ($H_2$). Your initial credence $[0,1]$ in each. Then you learn that a marble drawn at random from the urn is green ($E$). After conditionalizing each function in your representor on this evidence, you end up with the  the same spread of values for $H_1$ that you had  before learning $E$, and  no matter  how many marbles are sampled from the urn and found to be green.]
 
 <!---Some replies in defense of imprecise probabilism are available.--->
 Some downplay the problem of belief inertia. They insist that vacuous priors should not be used and that imprecise probabilism gives the right results when the priors are non-vacuous. After all, if you started with knowing truly nothing, then perhaps it is right to conclude that you will never learn anything. Another strategy is to say that, in a state of complete ignorance, a special updating rule should be deployed.^[[@Lee2017impreciseEpistemology] suggests the rule of  \emph{credal set replacement} that recommends that upon receiving evidence the agent should  drop measures rendered implausible, and add all non-extreme plausible probability measures. This however, is tricky: one  needs a separate account of what makes a distribution plausible or not.  Elkin admits that he has no solution to this: "But how do we determine what the set of plausible probability measures is relative to $E$? There is no precise rule that I am aware of for determining such set at this moment, but I might say that the set can sometimes be determined fairly easily" [p. 83] He goes on to a trivial example of learning that the coin is fair and dropping extreme probabilities. This is far from a general account. One also needs a  principled account of why one should use a separate special update rule when starting with complete ignorance.] But no matter what we think about belief inertia, other problems plague imprecise probabilism.
-Two problems are particularly pressing. 
+ Three  more problems are particularly pressing. 
 
 
-\textbf{Marcello's comment: I did not add the bit about how we learn about constraints in imprecise probabilism. Might need to go here as a further difficulty about imprecise probabilism. I could not understand the argment. To be discussed.}
+<!-- \textbf{Marcello's comment: I did not add the bit about how we learn about constraints in imprecise probabilism. Might need to go here as a further difficulty about imprecise probabilism. I could not understand the argment. To be discussed.} -->
 
 One problem is that imprecise probabilism fails to capture intuitions 
 we have about evidence and uncertainty in a number of scenarios. Consider this example:
 
 \begin{quote}
 \textbf{Even v. uneven bias:}
-\todo{M: embellished example a bit. check! } You have two coins and you know, for sure, that the probability of getting heads is .4, if you toss one coin, and .6, if you toss the other coin. But you do not know which is which. You pick one of the two at random and toss it. You do not know the probability of heads on that toss, but you know it must be either .4 or .6. Contrast this with a case of uneven bias. Say the two coins have different weights, and you have information that the lighter coin is three times more likely to have a .4 bias than a .6 bias. Suppose you pick the lighter coin. So, upon tossing this coin, you should be three times more confident that the probability of getting heads is .4. rather than .6.
+\todo{M: embellished example a bit. check! } You have two coins and you know, for sure, that the probability of getting heads is .4, if you toss one coin, and .6, if you toss the other coin. But you do not know which is which. You pick one of the two at random and toss it.  Contrast this with an uneven case. You have four coins and you know that three of them have bias $.4$ and one of them has bias $.6$. You pick a coin at random and plan to toss it. You should be three times more confident that the probability of getting heads is .4. rather than .6.
 \end{quote}
 
 \noindent
 The first situation can be easily represented by imprecise probabilism. The representor would contain two probability measures, one that assigns .4. and the other that assigns .6 to the hypothesis 'this coin lands heads'.  But imprecise probabilism cannot represent the second situation, at least not without moving to higher-order probabilities, in which case it is no longer clear whether the object-level imprecision performs any valuable task.^[Other scenarios can be constructed in which imprecise probabilism fails to capture distinctive intuitions about evidence and uncertainty; see, for example, [@Rinard2013against].  Suppose you know of two urns, \textsf{GREEN} and \textsf{MYSTERY}. You  are  certain \textsf{GREEN} contains only green marbles, but have no information about \textsf{MYSTERY}. A marble will be drawn at random from each. You should be certain that the marble drawn from \textsf{GREEN}  will be green ($G$), and you should be more confident about this than about the proposition that the marble from \textsf{MYSTERY} will be green ($M$). In line with how lack of information is to be represented on \textsf{IP}, for each $r\in [0,1]$  your representor contains a $\mathsf{P}$ with $\pr{M}=r$. But then,  it also contains one with $\pr{M}=1$. This means that it is not the case that for any probability measure  $\mathsf{P}$ in your representor, $\mathsf{P}(G) > \mathsf{P}(M)$, that is, it is not the case that RA is more confident of $G$ than of $M$. This is highly counter-intuitive.] 
 
-Besides descriptive inadequacy, an even deeper, foundantional problem exists for imprecise probabilism. This problem affects imprecise probabilism, but not precise probabilism. It arises when we reflect on the notion of the accuracy of  imprecise credal states. A variety of workable \textbf{scoring rules} for measuring the accuracy of a single credence function, such as the Brier score, are available. One key feature that some key candidates have is that they are \emph{proper}: any agent will score her own credence function to be more accurate than every other credence function. After all, if an agent thought a different credence is more accurate, they should switch to it.  The availability of such scoring rules underlies an array of accuracy-oriented arguments for precise probabilism (roughly, if your precisse credence follows the axioms of probability theory, no other credence is going to be more accurate than yours whatever the facts are).  When we turn to imprecise probabilism, there are impossibility results to the effect that no proper scoring rules are available for representors. So, as many have noted, the prospects for an accuracy-based argument for imprecise probabilism look dim  [@seidenfeld2012forecasting; @Mayo-Wilson2016scoring; @Schoenfield2017accuracy; @CampbellMoore2020accuracy].
+Second, besides descriptive inadequacy, an even deeper, foundational problem exists for imprecise probabilism. This problem affects imprecise probabilism, but not precise probabilism. It arises when we reflect on the notion of the accuracy of  imprecise credal states. A variety of workable \textbf{scoring rules} for measuring the accuracy of a single credence function, such as the Brier score, are available. One key feature that some key candidates have is that they are \emph{proper}: any agent will score her own credence function to be more accurate than every other credence function. After all, if an agent thought a different credence is more accurate, they should switch to it.  The availability of such scoring rules underlies an array of accuracy-oriented arguments for precise probabilism (roughly, if your precise credence follows the axioms of probability theory, no other credence is going to be more accurate than yours whatever the facts are).  When we turn to imprecise probabilism, there are impossibility results to the effect that no proper scoring rules are available for representors. So, as many have noted, the prospects for an accuracy-based argument for imprecise probabilism look dim  [@seidenfeld2012forecasting; @Mayo-Wilson2016scoring; @Schoenfield2017accuracy; @CampbellMoore2020accuracy]. Moreover, as shown by  [@Schoenfield2017accuracy], if an accuracy measure satisfies some basic formal constraints, it will never strictly recommend an imprecise stance, as for any imprecise stance there will be a precise one with the same accuracy. 
 
 
-\textbf{Marcello's comment: tried to keep the difficulties for imprecise probabilism to a minimum. Some can go in footnotes. We need to discuss which other difficulties you think should be added, if any, and in what order.}
+Third, on \s{IP}, much is made of the notion of representors containing probability measures compatible with evidence---the idea is that thanks to this feature, imprecise credal stances are evidence-responsive in a way precise probabilistic stances are not. But how exactly does the evidence exclude probability measures?  This is not a  mathematical question: mathematically [@bradley2012uncertaintyPhD], evidential constraints are fairly easy to model, as they can take the form of the \emph{evidence of chances} $\{ \mathsf{P}(X) = x\}$ or $\mathsf{P}(X) \in [x,y]$, or be \emph{structural constraints} such as  "$X$ and $Y$ are independent" or "$X$ is more likely than $Y$." While it is clear that these constraints are something that an agent can come to accept if offered such information by an expert to which the agent completely defers, it  is not trivial to explain how  non-testimonial evidence can result in such constraints.  Most of the  examples  in the literature start with the assumption that the agent is told by a believable source that the chances are such-and-such, or that the experimental set-up is such that the agent  knows that such and such structural constraint is satisfied. But outside of such ideal circumstances what observations exactly would need to be made to come to accept such constraints remains unclear.^[And the question is urging: even if you were lucky enough to run into an expert that you completely trust that provides you with a constraint like this, how exactly did the expert come to learn the constraint? The chain of testimonial evidence has to end somewhere! Admittedly, there are straightforward degenerate cases: if you see the outcome of a coin toss to be heads, you reject the measure with $\mathsf{P}(H)=0$, and similarly for tails. Another class of cases might arise if you are randomly drawing objects from a finite set where the real frequencies are already known, because this finite set has been inspected. But such extreme cases aside, what else? Mere consistency constraint wouldn't get the agent very far in the game of excluding probability measures, as way too many probability measures are strictly speaking still consistent with the observations for evidence to result in epistemic progress.] 
+
+Bradley suggests that "statistical evidence might inform [evidential] constraints [\dots and that evidence] of causes might inform structural constraints" [125-126]. This, however, is far cry from a clear account of how exactly this should proceed. Now, one suggestion might be that once a statistical significance threshold is selected, a given set of observations with a selection of background modeling assumptions yields a credible interval. But this is to admit that to reach such constraints we already have to start with a second-order approach, and drop information about the densities, focusing only on the intervals obtained with fixed margins of errors. But as we already illustrated, if you have the information about densities to start with, there is no clear advantage to going imprecise instead, and there are multiple problems associated with this move. Moreover, such moves require a choice of an error margin, which is extra-epistemic, and it is not clear what advantage there is to dropping information contained in second-order probabilities based on extra-epistemic considerations of this sort. 
+
+
+
+
+
+
+
+
 
 ## Higher order probabilism
 
-There is, however, a view in the neighborhood that fares better: a second-order perspective. \todo{Maybe add reference to Jouyce here as well?} In fact, <!---some intuitions very much like this approach shines through---> some of the comments by the proponents of imprecise probabilism go in this direction. <!---One example that we have already seen is Joyce's use of chance hypotheses in his explication of weight. Another  case is ---> Richard Bradley <!---,  in his discussion of belief inertia --> compares the measures in a representor to committee members, each voting on a particular issue, say the true chance or bias of a coin. As they acquire more evidence, the committee members will often converge on a specific chance hypothesis. Bradley writes:
+There is, however, a view in the neighborhood that fares better: a second-order perspective. \todo{Maybe add reference to Jouyce here as well?} In fact, some of the comments by the proponents of imprecise probabilism tend to go in this direction. For instance,  Seamus Bradley \todo{Watch out, there are multiple Bradleys! I mean Seamus}  compares the measures in a representor to committee members, each voting on a particular issue, say the true chance or bias of a coin. As they acquire more evidence, the committee members will often converge on a specific chance hypothesis. He writes:
 \begin{quote}
 \dots the committee members are "bunching up". Whatever measure you put over the set of probability functions---whatever "second order probability" you use---the "mass" of this measure gets more and more concentrated around the true chance hypothesis' [BRADLEY p. 157] 
 \end{quote}
 
 \noindent
-Note, however, that such bunching up cannot be modeled by  imprecise probabilism.^[Bradley seems to be aware of that, which would explain the use of scare quotes: when he talks about the option of using second-order probabilities in decision theory, he  insists that  'there is no justification for saying that there is more of your representor here or there.' ~[p.~195]]
- 
-And the idea that one should use  higher-order probabilities  has also been suggested by critics of imprecise probabilism. For example, @Carr2020impreciseEvidence argues <!---that indeterminate evidence does not require representors: instead,---> imprecise evidence requires uncertainty about what credences to have.  On Carr's approach, one should use vague credences, assigning various weights to probabilities---agent's credence in propositions about either what credences the evidence supports, or about objective chances. Carr, however, does not articulate this suggestion more fully and does not explain how her approach would fare against the difficulties pestering precise ad imprecise probabilism.
+Note, however, that such bunching up cannot be modeled by  imprecise probabilism.^[Bradley seems to be aware of that, which would explain the use of scare quotes: when he talks about the option of using second-order probabilities in decision theory, he  insists that  'there is no justification for saying that there is more of your representor here or there.' ~[p.~195]]  
 
-Our goal now is to develop a higher-order approach that can handle the problems that imprecise probabilism runs into. <!--- Once this alternative is in place, we will propose an explication of the notion of weight of evidence developed in a principled manner relying on the ideas from information theory,  and argue that it performs much better than its predecessors. --->
-The key idea is that uncertainty is not a single-dimensional thing to be mapped on a single one-dimensional scale such as a real line. It is the whole shape of the whole distribution over parameter values that should be  taken under consideration.\todo{REF} ^[Bradley admits this much [90], and so does  Konek in his rejection of locality [59]. For instance, Konek disagrees with: (1)  $X$ is more probable than $Y$ just in case $p(X)>p(Y)$, (2)  $D$ positively supports $H$ if $p_D(H)> p(H)$, or (3)  $A$ is preferable to $B$ just in case the expected utility of $A$ w.r.t. $p$ is larger than that of $B$.] From this perspective,  sometimes, when an agent is asked about her credal stance towards $X$, they  can refuse to summarize it in terms of a point value $\mathsf{P}(X)$, instead expressing it in terms of a probability (density) distribution $f_x$ treating  $\mathsf{P}(X)$ as a random variable. Coming back to an example we already argued imprecise probabilism cannot handle, when the agent knows that the real chance is  either .4 or .6 but the former is three times more likely, she might refuse to summarize her credal state by saying that $\mathsf{PR}(H) = .75 \times .4 + .25 \times .6 = .45$.^[More generally, on this perspective, <!---against Joyce,---> the agent might deny that   $\int_{0}^{1} x f(x) \, dx$ is their object-level credence in $X$, if $f$ is the probability density over possible object-level probability values and $f$ is not sufficiently concentrated around a single value for such a one-point summary to do the justice to the complexity of the agent's credal state. Whether this expectation should be used in betting behavior is a separate problem, here we focus on epistemic issues.] This approach in fact lines up with common practice in Bayesian statistics, where the primary role of uncertainty representation is assigned to the whole distribution, and summaries such as the mean, mode standard deviation,  mean absolute deviation, or highest posterior density intervals are only summary ways of representing the uncertainty involved in a given study, to be used mostly due to practical restrictions. 
+Similarly, @joyce2005probabilities, in a paper defending imprecise probabilism in fact  uses a density over chance hypotheses to account for the notion of evidential weight and      conceptualizes the  weight of evidence  as an increase of concentration of smaller subsets of chance hypotheses, without any reference to representors in his explication of the notion of weight (we will get back to his explication when we discuss the notion of weight of evidence).
+ 
+ 
+ 
+The idea that one should use  higher-order probabilities  has also been suggested by critics of imprecise probabilism. For example, @Carr2020impreciseEvidence argues that sometimes   evidence requires uncertainty about what credences to have.  On Carr's approach, one should use vague credences, assigning various weights to probabilities---agent's credence in propositions about either what credences the evidence supports, or about objective chances. Carr, however, does not articulate this suggestion more fully, does not develop it formally, and does not explain how her approach would fare against the difficulties pestering precise ad imprecise probabilism.
+
+Our goal now is to develop a higher-order approach that can handle the problems that imprecise probabilism runs into.  The key idea is that uncertainty is not a single-dimensional thing to be mapped on a single one-dimensional scale such as a real line. It is the whole shape of the whole distribution over parameter values that should be  taken under consideration.\todo{REF} ^[Bradley admits this much [90], and so does  Konek  [59]. For instance, Konek disagrees with: (1)  $X$ is more probable than $Y$ just in case $p(X)>p(Y)$, (2)  $D$ positively supports $H$ if $p_D(H)> p(H)$, or (3)  $A$ is preferable to $B$ just in case the expected utility of $A$ w.r.t. $p$ is larger than that of $B$.] From this perspective,  sometimes, when an agent is asked about her credal stance towards $X$, they  can refuse to summarize it in terms of a point value $\mathsf{P}(X)$, instead expressing it in terms of a probability (density) distribution $f_x$ treating  $\mathsf{P}(X)$ as a random variable. Coming back to an example we already argued imprecise probabilism cannot handle, when the agent knows that the real chance is  either .4 or .6 but the former is three times more likely, she might refuse to summarize her credal state by saying that $\mathsf{P}(H) = .75 \times .4 + .25 \times .6 = .45$.^[More generally, on this perspective, the agent might deny that   $\int_{0}^{1} x f(x) \, dx$ is their object-level credence in $X$, if $f$ is the probability density over possible object-level probability values and $f$ is not sufficiently concentrated around a single value for such a one-point summary to do the justice to the complexity of the agent's credal state. Whether this expectation should be used in betting behavior is a separate problem, here we focus on epistemic issues.] This approach in fact lines up with common practice in Bayesian statistics, where the primary role of uncertainty representation is assigned to the whole distribution, and summaries such as the mean, mode standard deviation,  mean absolute deviation, or highest posterior density intervals are only summary ways of representing the uncertainty involved in a given study, to be used mostly due to practical restrictions. 
 
 
 From this perspective, the scenarios we discussed---some of which imprecise probabilism has hard time distinguishing---can be easily represented in the manner illustrated in Figure \ref{fig:evidenceResponse}.  
@@ -531,7 +541,7 @@ TwoUnbalancedPlot <- ggplot(TwoUnbalancedDF, aes(x = p, y = TwoUnbalancedDensity
 
 \begin{figure}
 
-```{r fig:evidenceResponse,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%"}
+```{r fig:evidenceResponse2,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%"}
 grid.arrange(FairPlot,UniformPlot, TwoPlot, TwoUnbalancedPlot)
 ```
 \caption{Examples of RA's distributions responding to various types of evidence for typical cases brought up in the literature.}
@@ -542,15 +552,19 @@ grid.arrange(FairPlot,UniformPlot, TwoPlot, TwoUnbalancedPlot)
 \end{figure}
 
 
+How is learning about frequencies modeled on this approach, assuming independence and constant frequency/probability for all the observations? The Bayes way. You start with some prior density $p$ over the parameter values. For instance, if you start with complete lack of information, $p$ might be uniform. Then you observe the data $D$ which is basically the number of successes $s$ in a certain number of observations $n$. For each particular possible value $\theta$ of the parameter, the probability of $D$ conditional on $\theta$ follows the binomial distribution. The probability of $D$ is obtained by integration. That is:
+
+\begin{align*}
+p(\theta \vert D) & = \frac{p(D\vert \theta)p(\theta)}{p(D)}\\
+& = \frac{\theta^s (1-\theta)^{(n - s)}p(\theta)}{\int \theta'^s (1-\theta')^{(n - s)}p(\theta')\,\, d\theta'}
+\end{align*}
 
 
-\textbf{Marcello's: Should we say how high order probabilism (1) handles the Peirce's bean example and also (2) how learning is modelled in the higher order approach. I did not see these items (1) clerarly discussed in the draft, there is some discussion of (2), see below, but perhpas it should more upfront? What is the updating rule exactly and how does it differ from the point-wise rule in imprecise probabilism? To be discussed.}
 
 
+For instance, belief inertia does not arise. If you just start with a uniform density over $[0,1]$ as your prior, use binomial probability as likelihood, observing  any non-zero number of heads will exclude 0 and observing any non-zero number of  tails will exclude 1 from the basis of the posterior, and the posterior distribution becomes more centered around the parameter estimate as the observations come in. Let's see an example with a grid approximation ($n=1k$) and coin tossing (grid approximation allows us also to talk about probabilities rather than densities).  Our prior is uniform, and then, in subsequent steps, we observe heads,  another heads, and then tails. This is what  happens with the posterior as we go (Figure \ref{fig:intertia2}).
 
-Another difficulty for imprecise probabilism is belief inertia. In the higher-order probabilism, the problem does not arise, as there is no problem with modeling learning from observation starting from a uniform prior. If you just start with a uniform density over $[0,1]$ as your prior, use binomial probability as likelihood, observing  any non-zero number of heads will exclude 0 and observing any non-zero number of  tails will exclude 1 from the basis of the posterior. Let's see an example with a grid approximation ($n=1k$). For simplicity assume there are only green and black balls. Our prior is uniform, and then, in subsequent steps, we observe one green ball, another green ball, and then a black ball. This is what  happens with the posterior as we go (Figure \ref{fig:intertia2}).
-
-```{r fig:inertia, eval = TRUE, echo=FALSE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%", message= FALSE, warning=FALSE}
+```{r fig:inertia2, eval = TRUE, echo=FALSE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%", message= FALSE, warning=FALSE}
 
 n <- 1000 #parameters 
 s <- 1e5  #sample size
@@ -574,17 +588,17 @@ posterior2g1b <- posterior2g1b / sum(posterior2g1b)
 
 upperLimit <- .003
 
-InertiaPriorPlot <- ggplot()+geom_line(aes(x = ps, y = prior))+theme_tufte(base_size = 7)+xlab("p")+
+InertiaPriorPlot <- ggplot()+geom_line(aes(x = ps, y = prior))+theme_tufte(base_size = 7)+xlab("parameter")+
   ylab("probability")+theme(plot.title.position = "plot")+ggtitle("Prior")+
   scale_x_continuous()+scale_y_continuous(limits = c(0,upperLimit))
 
 
-InertiaOneGPlot <- ggplot()+geom_line(aes(x = ps, y = posterior1g))+theme_tufte(base_size = 7)+xlab("p")+
+InertiaOneGPlot <- ggplot()+geom_line(aes(x = ps, y = posterior1g))+theme_tufte(base_size = 7)+xlab("parameter")+
   ylab("probability")+theme(plot.title.position = "plot",
                             axis.text.y = element_blank(),
                             axis.title.y = element_blank(),
                           axis.ticks.y =element_blank()
-)+ggtitle("Evidence: g")+
+)+ggtitle("Evidence: h")+
   scale_y_continuous(limits = c(0,upperLimit))
 
 
@@ -594,43 +608,285 @@ InertiaTwoGPlot <- ggplot()+geom_line(aes(x = ps, y = posterior2g))+theme_tufte(
 #                        axis.text.y = element_blank(),
 #                            axis.title.y = element_blank(),
 #                            axis.ticks.y = element_blank()
-                  )+ggtitle("Evidence: g, g")+
+                  )+ggtitle("Evidence: h, h")+
 scale_y_continuous(limits = c(0,upperLimit))
 
-InertiaTwoGoneBluePlot <- ggplot()+geom_line(aes(x = ps, y = posterior2g1b))+theme_tufte(base_size = 7)+xlab("p")+
+InertiaTwoGoneBluePlot <- ggplot()+geom_line(aes(x = ps, y = posterior2g1b))+theme_tufte(base_size = 7)+xlab("parameter")+
   ylab("probability")+theme(plot.title.position = "plot",     axis.text.y = element_blank(),
   axis.title.y = element_blank(),
       axis.ticks.y = element_blank()
-           )+ggtitle("Evidence: g, g, b")+
+           )+ggtitle("Evidence: h, h, t")+
   scale_y_continuous(limits = c(0,upperLimit))
 ```
 
 
 
 \begin{figure}[H]
-```{r fig:inertia2, echo=FALSE, eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
+```{r fig:inertia3, echo=FALSE, eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
 grid.arrange(InertiaPriorPlot, InertiaOneGPlot,  InertiaTwoGPlot, InertiaTwoGoneBluePlot, ncol = 2, nrow = 2)
 ```
-\caption{As observations of green, green and black come in, extreme parameter values drop out of the picture and the posterior is shaped by the evidence.}
+\caption{As observations of heads, heads and tails come in, extreme parameter values drop out of the picture and the posterior is shaped by the evidence.}
 \label{fig:intertia2}
 \end{figure}
 
 
-# Higher-order legal probabilism
-
-\textbf{Marcello: After coin tossing examples, turn to legal examples that illustrate why high order probabilism outperform precise and impreicse probabilism in legal applications. For simplicity, might be better to separate the more philosohical discussion (previous section) from the legal discussion (this section), or else  things might become too messy too quickly. To be discussed.}
-
-\begin{itemize}
 
 
 
-\item[-] Give an example like Peirce's using varying sample sizes to estimate relative proportion of some identifying feature in match evidence, handwriting, genetic profile, fiber, etc. DNA evidence or a simpler form of match evidence (see e.g. the Georgia v. Wayne Williams case) should do here. This can connect back to DNA evidence example in the introduction.\todo{I'm thinking severed fingers, dogs and DNA, will cook up an example preparing for later critical comments about Taroni}
 
 
 
-\item[-] The "negation problem" by Cohen (little evidence in favor of H, so Pr(H) is low, cannot mean there is a lot of evidence in favor of not-H, Pr(not-H) is high). 
+# Higher-order probabilities and Bayesian networks
 
-\end{itemize}
+
+The reader might be worried: how can we handle the computational complexity that comes with moving to higher-order probabilities? The  answer is, as long as we have decent ways of either basing densities on sensible priors and data, or eliciting densities from experts (CITE UNCERTAIN JUDMENTS), implementation is not computationally unfeasible, as we can approximate densities using sampling. To illustrate, let us start with a  simplified BN developed by CITE FENTON to illustrate how conviction was unjustified in the Clark case (Figure \ref{fig:scBNplot}).
+ to illustrate a point about the notorious Sally Clark case (Figure \ref{fig:scBNplot}).^[R. v. Clark (EWCA Crim 54, 2000) is a classic  example of how the lack of probabilistic independence between events can be easily overlooked. Sally Clark's first son died in 1996 soon after birth, and her second son died in similar circumstances a few years later in 1998.  At trial, the paediatrician Roy Meadow testified that the probability that a child from such a  family would die of Sudden Infant Death Syndrome (SIDS) was 1 in 8,543.  Meadow calculated that therefore the probability of both children dying of SIDS was approximately  1 in 73 million. Sally Clark was convicted of murdering her  infant sons (the conviction was ultimately reversed on appeal). The calculation illegitimately assumes independence,  as the  environmental or genetic factors may predispose a family to SIDS. The winning appeal was based on new evidence: signs of a potentially lethal disease---contrary to what was assumed in the original case---were found in one of the bodies.]  The  arrows  depict  relationships  of  influence  between  variables. \textsf{Amurder} and \textsf{Bmurder} are binary nodes corresponding to whether Sally  Clark’s  sons,   call  them A and B, were murdered. These  influence  whether  signs of disease (\textsf{Adisease} and \textsf{Bdisease}) and bruising (\textsf{Abruising} and \textsf{Bbruising}) were present. Also, since  son A died first, whether A was murdered casts some light on the probability of son B being murdered.
+
+```{r scBN,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "60%", warning=FALSE, message = FALSE, dpi = 800}
+#create SC DAG
+#define the structure of the Sally Clark BN
+SallyClarkDAG <- model2network("[Abruising|Acause][Adisease|Acause][Bbruising|Bcause][Bdisease|Bcause][Acause][Bcause|Acause][NoMurdered|Acause:Bcause][Guilty|NoMurdered]")
+SCdag <- model2network("[Abruising|Acause][Adisease|Acause][Bbruising|Bcause][Bdisease|Bcause][Acause][Bcause|Acause][NoMurdered|Acause:Bcause][Guilty|NoMurdered]")
+#plot 
+#graphviz.plot(SallyClarkDAG)
+
+
+#CPTs as used in Fenton & al.
+AcauseProb <-prior.CPT("Acause","SIDS","Murder",0.921659)
+AbruisingProb <- single.CPT("Abruising","Acause","Yes","No","SIDS","Murder",0.01,0.05)
+AdiseaseProb <- single.CPT("Adisease","Acause","Yes","No","SIDS","Murder",0.05,0.001)
+BbruisingProb <- single.CPT("Bbruising","Bcause","Yes","No","SIDS","Murder",0.01,0.05)
+BdiseaseProb <- single.CPT("Bdisease","Bcause","Yes","No","SIDS","Murder",0.05,0.001)
+BcauseProb <- single.CPT("Bcause","Acause","SIDS","Murder","SIDS","Murder",0.9993604,1-0.9998538)
+
+#E goes first; order: last variable through levels, second last, then first
+NoMurderedProb <- array(c(0, 0, 1, 0, 1, 0, 0,1,0,1,0,0), dim = c(3, 2, 2),dimnames = list(NoMurdered = c("both","one","none"),Bcause = c("SIDS","Murder"), Acause = c("SIDS","Murder")))
+
+#this one is definitional
+GuiltyProb <-  array(c( 1,0, 1,0, 0,1), dim = c(2,3),dimnames = list(Guilty = c("Yes","No"), NoMurdered = c("both","one","none")))
+
+# Put CPTs together
+SallyClarkCPTfenton <- list(Acause=AcauseProb,Adisease = AdiseaseProb,
+                      Bcause = BcauseProb,Bdisease=BdiseaseProb,
+                      Abruising = AbruisingProb,Bbruising = BbruisingProb,
+                      NoMurdered = NoMurderedProb,Guilty=GuiltyProb)
+
+# join with the DAG to get a BN
+SCfenton <- custom.fit(SallyClarkDAG,SallyClarkCPTfenton)
+```
+
+
+
+\begin{figure}[H]
+```{r scBNplot2,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "80%", warning=FALSE, message = FALSE, dpi = 800}
+graphviz.chart(SCfenton, type = "barprob", layout = "dot", #draw.labels = TRUE,
+  grid = FALSE, scale = c(0.75, 1.1), col = "black", 
+  text.col = "black", bar.col = "black", main = NULL,
+  sub = NULL)
+```
+\caption{The BN developed by FENTON ET AL., with marginal prior probabilities.}
+\label{fig:scBNplot}
+\end{figure}
+
+
+
+The point to be illustrated was that with a sensible choice of probabilities for the conditional probability tables in the BN, conviction was not justified at any of the major stages (Figure \ref{fig:SCfentonTable}). 
+
+
+```{r scStages,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "80%", warning=FALSE, message = FALSE, dpi = 800}
+
+SCfJN <- compile(as.grain(SCfenton))
+
+priorFenton <- querygrain(SCfJN, node = "Guilty")[[1]][1]
+
+SCfJNAbruising <- setEvidence(SCfJN, nodes = c("Abruising"), states = c("Yes"))
+AbruisingFenton <- querygrain(SCfJNAbruising, node = "Guilty")[[1]][1]
+
+SCfJNAbruisingBbruising <- setEvidence(SCfJN, nodes = c("Abruising","Bbruising"),
+                                states = c("Yes","Yes"))
+AbruisingBbruisingFenton <- querygrain(SCfJNAbruisingBbruising, node = "Guilty")[[1]][1]
+
+SCfJNAbruisingBbruisingNoDisease <- setEvidence(SCfJN, nodes = c("Abruising","Bbruising","Adisease","Bdisease"),
+                                         states = c("Yes","Yes", "No", "No"))
+AbruisingBbruisingFentonNoDiseaseFenton <-   querygrain(SCfJNAbruisingBbruisingNoDisease, node = "Guilty")[[1]][1]
+
+
+SCfJNAbruisingBbruisingDiseaseA <- setEvidence(SCfJN, nodes = c("Abruising","Bbruising","Adisease","Bdisease"), 
+                                               states = c("Yes","Yes", "Yes", "No"))
+AbruisingBbruisingFentonDiseaseAFenton <- querygrain(SCfJNAbruisingBbruisingDiseaseA, node = "Guilty")[[1]][1]
+
+
+SCfentonTable <- data.frame(stage = factor(c("prior", "bruising in A", "bruising in both",
+                                      "bruising in both, no disease", "bruising in both, disease on A only"),
+                                      levels = c("prior", "bruising in A", "bruising in both",
+                                                 "bruising in both, no disease", "bruising in both, disease on A only")),
+                            probability = c(priorFenton,AbruisingFenton,AbruisingBbruisingFenton,
+                                            AbruisingBbruisingFentonNoDiseaseFenton,AbruisingBbruisingFentonDiseaseAFenton))
+```
+
+
+\begin{figure}
+```{r SCfentonTable2,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%", warning=FALSE, message = FALSE, dpi = 800}
+ggplot(SCfentonTable) + geom_point(aes(x = stage, y = probability, size = probability))+
+  scale_x_discrete(limits=rev, expand = c(0, 2)) +coord_flip()+theme_tufte(base_size = 14)+ scale_size(guide="none")+
+  theme(plot.title.position = "plot")+ggtitle("Impact of evidence according to Fenton's BN for the Sally Clark case") +
+  geom_text(aes(x = stage, y= probability, label= round(probability,2) ,hjust=-.3, vjust=-.3), size  = 4)+
+  scale_y_continuous(breaks = seq(0,.7, by =.1), limits = c(0,.8))
+
+```
+
+\caption{The prior and posterior probabilities for Fenton's Sally Clark BN.}
+
+\label{fig:SCfentonTable}
+
+\end{figure}
+
+
+
+One reason the reader might worry is that the choice of the probabilities is fairly specific, and it is not obvious where such precise values should come from. We have already discussed how frequency and probability estimates usually come at least with some aleatory uncertainty around them that cannot be represented by first-order probabilities.  The usual response REFS FOR SENSITIVITY ANALYSIS is that a range of such selections should be tested, perhaps with special focus on extreme but still plausible values. We have already discussed how much care is needed on such approach as it to some extent ignores the shape of the underlying distributions. Crucially, on the sensitivity approach different probability measures (or point estimates) are not distinguished in terms of their plausibility, and so this plausibility is not accounted for in the analysis. Moreover, if in the sensitivity analysis the further decision is guided by the results for the extreme measures, they might be play an undeservedly strong role. [STORY ABOUT MAKING DAILY DECISION THIS WAY TO ILLUSTRATE]
+
+
+Some of these concerns are at least dampened when we deploy the higher order probabilities in the BN. The general method is as follows. Each particular node in a precise BN has a probability table determined by a finite list of numbers. If it's a root node, its probability table is determined by one number, if it's a node with one parent, its table is determined by two numbers etc. Now, suppose that instead of precise numbers we have densities over parameter values for those determining numbers. Densities of interests can then be approximated by (1) sampling parameter values from the specified distributions, (2) plugging them into the construction of the BN, and (3) evaluating the probability of interest in that precise BN. The list of the probabilities thus obtained will approximate the density fo interest. In what follows we will work with sample sizes of 10k.  For instance, your conditional probabilities might look as illustrated in Figure  \ref{fig:SCwithHOPa}.  One of them is based on a truncated normal distribution to emphasize that the framework give us much freedom in the specification of distributions. 
+
+\begin{figure}
+```{r fig:SCwithHOPa, echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "90%", warning=FALSE, message = FALSE, dpi = 800}
+
+grid.arrange(AbruisingIfSidsPlot+xlim(0,.4),AbruisingIfMurderPlot+xlim(0,.4))
+```
+
+\caption{Example of approximated uncertainties about conditional probabilities in the Sally Clark case.}
+\label{fig:SCwithHOPa}
+\end{figure}
+
+
+\begin{figure}
+```{r SCwithHOP, out.extra='angle=90', echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "160%", out.height= "200%", warning=FALSE, message = FALSE, dpi = 800}
+#SCprobsFinal <- readRDS("../datasets/SCprobsFinal.rds")
+#attach(SCprobsFinal)
+#source("../scripts/SCfunctions.R")
+#source("../scripts/SCplotCPTs.R")
+#source("../scripts/SCplotDistros.R")
+
+
+AsidsPriorPlotGrob <- ggplotGrob(AsidsPriorPlot+theme_tufte(base_size = 5))
+BcauseSidsIfAsidsPlotGrob <- ggplotGrob(BcauseSidsIfAsidsPlot+theme_tufte(base_size = 5))
+BcauseSidsIfAmurderPlotGrob<- ggplotGrob(BcauseSidsIfAmurderPlot+theme_tufte(base_size = 5)) 
+
+AbruisingIfSidsPlotGrob <- ggplotGrob(AbruisingIfSidsPlot+theme_tufte(base_size = 5)) 
+AbruisingIfMurderPlotGrob <- ggplotGrob(AbruisingIfMurderPlot+theme_tufte(base_size = 5)) 
+
+
+AdiseaseIfSidsPlotGrob <- ggplotGrob(AdiseaseIfSidsPlot+theme_tufte(base_size = 5)) 
+AdiseaseIfMurderPlotGrob <- ggplotGrob(AdiseaseIfMurderPlot+theme_tufte(base_size = 5)) 
+
+
+BbruisingIfSidsPlotGrob <- ggplotGrob(BbruisingIfSidsPlot+theme_tufte(base_size = 5)) 
+BbruisingIfMurderPlotGrob <- ggplotGrob(BbruisingIfMurderPlot+theme_tufte(base_size = 5)) 
+
+
+BdiseaseIfSidsPlotGrob <- ggplotGrob(BdiseaseIfSidsPlot+theme_tufte(base_size = 5)) 
+BdiseaseIfAmurderPlotGrob <- ggplotGrob(BdiseaseIfAmurderPlot+theme_tufte(base_size = 5)) 
+
+
+ggplot(data.frame(a=1)) + xlim(1, 40) + ylim(1, 60)+theme_void()+
+  annotation_custom(AsidsPriorPlotGrob, xmin = 9, xmax = 15, ymin = 49, ymax = 59)+
+  geom_label(aes(label = "Bcause", x = 25, y = 41),
+              size = 3 )+
+  geom_label(aes(label = "Acause", x = 12, y = 48),
+            size = 3 )+
+  geom_curve(aes(x = 13.5, y = 48.2, xend = 25, yend = 42.5), curvature = -.18,size = .3,
+             arrow = arrow(length = unit(.015, "npc")))+
+  annotation_custom(BcauseSidsIfAsidsPlotGrob, xmin = 17, xmax = 23, ymin = 47, ymax = 57)+
+  annotation_custom(BcauseSidsIfAmurderPlotGrob, xmin = 15, xmax = 21, ymin = 37, ymax = 47)+
+  geom_label(aes(label = "Abruising", x = 2, y = 41),
+             size = 3 )+
+  geom_curve(aes(x = 10.5, y = 48.2, xend = 2, yend = 42.5), curvature = .2,size = .3,
+             arrow = arrow(length = unit(.015, "npc")))+
+  annotation_custom(AbruisingIfSidsPlotGrob, xmin = 2, xmax = 8, ymin = 47, ymax = 57)+
+  annotation_custom(AbruisingIfMurderPlotGrob, xmin = 5, xmax = 11, ymin = 37, ymax = 47)+
+  geom_label(aes(label = "Adisease", x = 6, y = 21),
+             size = 3 )+
+  geom_curve(aes(x = 13, y = 46.2, xend = 6, yend = 23), curvature = -.45,size = .3,
+             arrow = arrow(length = unit(.015, "npc")))+
+  annotation_custom(AdiseaseIfSidsPlotGrob, xmin = 4.5, xmax = 10.5, ymin = 27, ymax = 37)+
+  annotation_custom(AdiseaseIfMurderPlotGrob, xmin = 9, xmax = 15, ymin = 17.5, ymax = 27.5)+
+  geom_label(aes(label = "Bbruising", x = 14, y = 12),
+             size = 3 ) +
+  geom_curve(aes(x = 24, y = 39.5, xend = 15.5, yend = 13.5), curvature = -.2,size = .3,
+                                    arrow = arrow(length = unit(.015, "npc")))+
+  annotation_custom(BbruisingIfSidsPlotGrob, xmin = 15.5, xmax = 21.5, ymin = 25, ymax = 35)+
+  annotation_custom(BbruisingIfMurderPlotGrob, xmin = 18.5, xmax = 24.5, ymin = 10, ymax = 20)+
+  geom_label(aes(label = "Bdisease", x = 33, y = 18),
+             size = 3 )  +
+  geom_curve(aes(x = 26, y = 39.5, xend = 33, yend = 19.5), curvature = -.2,size = .3,
+             arrow = arrow(length = unit(.015, "npc")))+
+  annotation_custom(BdiseaseIfSidsPlotGrob, xmin = 31, xmax = 37, ymin = 27, ymax = 37)+
+  annotation_custom(BdiseaseIfAmurderPlotGrob, xmin = 24.5, xmax = 30.5, ymin = 20, ymax = 30)
+
+```
+
+\caption{Example of a HOP approach tor the Sally Clark Case  approximated by sampling probabilities  and constructing 10k BNs.}
+\label{fig:SCwithHOP}
+\end{figure}
+
+
+Using these we can investigate the impact of incoming evidence as it arrives (Figure \ref{fig:SCwithHOP2}). We start with the prior density for the \s{Guilt} node. Then, we update with the evidence of signs of bruising in both children. Next, we consider what would have happened if also both children showed no sign of potentially lethal disease. Finally, we look at the (simplified) evidential situation at the time of the appeal: signs of bruising in both children, and signs of lethal disease discovered in only the first child. One thing to notice that even in the strongest scenario against Sally Clark (third visualization), while the median of the posterior distribution was above .95, the uncertainty around that median is still too wide to legitimize conviction as the lower limit of the 89\% HPDI  is at .83. This illustrates the idea that taking the point estimates and running with them might lead to overconfidence, and that paying attention to uncertainties about the estimates can make an important difference to our decisions and their accuracy.
+
+
+
+
+\begin{figure}
+```{r SCwithHOP2, echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "90%", warning=FALSE, message = FALSE, dpi = 800, warning = FALSE, message = FALSE, output = FALSE}
+grid.arrange(GuiltPriorPlot, GuiltABbruisingPlot, GuiltABbruisingNoDiseasePlot, GuiltABbruisingDiseaseAPlot, ncol =2)
+```
+
+
+\caption{Impact of incoming evidence in the Sally Clark case.}
+\label{fig:SCwithHOP2}
+\end{figure}
+
+
+Moreover, if we are interested in likelihood ratios, the same approach can be used: sample from the selected distribution appropriate for the conditional probabilities at hand, then divide the corresponding samples, obtaining a sample of likelihood ratios, approximating the density capturing the recommended uncertainty about the likelihood ratio. For instance, we can use this tool to gauge our uncertainty about the likelihood ratios corresponding to the signs of bruising in son A and the presence of the symptomps of a potentially lethal disease in son A (Figure \ref{fig:SClrs}).
+
+
+\begin{figure}[H]
+
+```{r SClrs, echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "90%", warning=FALSE, message = FALSE, dpi = 800, warning = FALSE, message = FALSE, output = FALSE}
+AbruisingLR <- AbruisingIfMurder / AbruisingIfSids
+
+AbruisingLRPlot <- plotSample(AbruisingLR,title = "LR: Abruising",  paste("median =", 
+                                                            round(median(AbruisingLR),2), ", 89%HPDI = ", 
+                                                            round(HPDI(AbruisingLR),2)[1],"-",round(HPDI(AbruisingLR),2)[2],
+                                                            sep = "") )+xlim(0,30)
+
+AdiseaseLR <- AdiseaseIfMurder / AdiseaseIfSids
+
+AdiseaseLRPlot <- plotSample(AdiseaseLR,title = "LR: Adisease",  paste("median =", 
+                                                                           round(median(AdiseaseLR, na.rm = TRUE),2), ", 89%HPDI = ", 
+                                                                           round(HPDI(AdiseaseLR),2)[1],"-",round(HPDI(AdiseaseLR),2)[2],
+                                                                           sep = "") )+xlim(0,3)
+ grid.arrange(AbruisingLRPlot, AdiseaseLRPlot, ncol =2)
+```
+
+\caption{Likelihood ratios forbruising and signs of disease in child A in the Sally Clark case.}
+\label{fig:SClrs}
+
+\end{figure}
+
+
+
+\todo{Discuss the negation problem?}
+
+
+<!-- \begin{itemize} -->
+
+<!-- \item[-] Give an example like Peirce's using varying sample sizes to estimate relative proportion of some identifying feature in match evidence, handwriting, genetic profile, fiber, etc. DNA evidence or a simpler form of match evidence (see e.g. the Georgia v. Wayne Williams case) should do here. This can connect back to DNA evidence example in the introduction.\todo{I'm thinking severed fingers, dogs and DNA, will cook up an example preparing for later critical comments about Taroni} -->
+
+
+
+<!-- \item[-] The "negation problem" by Cohen (little evidence in favor of H, so Pr(H) is low, cannot mean there is a lot of evidence in favor of not-H, Pr(not-H) is high).  -->
+
+<!-- \end{itemize} -->
 
 <!--
 \item[(a1)] Use example by Peirce (sampling 100 v. sampling 1000 times, with equal sample proportion). Balance of evidence for/against a certain hypothesis seems the same, but the informational basis (weight) is wider in the second case.
@@ -641,11 +897,20 @@ grid.arrange(InertiaPriorPlot, InertiaOneGPlot,  InertiaTwoGPlot, InertiaTwoGone
 \item[(b)] Another intuitive example is, one thing is absolute ignorance about an event (or suspension of judgment because of lack of knowledge), and another thing is having equal information for/against. Assigning in both cases a sharp probability of .5 fails to capture the intuitive difference. In one case the informational basis is very limited, or non-existent, while in the other the informal basis is wider, even though the balance might seem the same. 
 --->
 
-\textbf{Comment:} What is now in **sections 8**, **9** and **10** should go in these two sections. I would remove all the stuff about Joyce (since this is about weight), but basically all the materials we need are in those sections. Also, what is now in **section 12** ("Higher order probability and weight in BNs") should be part of these two sections.To talk about "higher ordar Bayesian networks" there is not need to introduce all the stuff about weight. In fact, a reader interested in Bayesian networks might want to learn about higher order Bayesian networks even though they are not interested in weight. 
+<!-- \textbf{Comment:} What is now in **sections 8**, **9** and **10** should go in these two sections. I would remove all the stuff about Joyce (since this is about weight), but basically all the materials we need are in those sections. Also, what is now in **section 12** ("Higher order probability and weight in BNs") should be part of these two sections.To talk about "higher ordar Bayesian networks" there is not need to introduce all the stuff about weight. In fact, a reader interested in Bayesian networks might want to learn about higher order Bayesian networks even though they are not interested in weight.  -->
 
 
-\textbf{Possible addition:} To give the reader an intuitive picture, we could provide three Bayesian networks for the diagnostic example from the introduction section. The first network has the shape with $D \rightarrow T$, and is just how one would do things in the standard way with sharp probabilities. The second network contains multiple probability measures about (a) the prior probability of $D$ and second-order uncertainty about the error rates that go into the conditional table for $P(T | D)$. This is the network using imprecise probabilism. This is also something like "sensitivity analysis". \todo{Right, but not with the diagnosis; let's use the legal examples to start with}
-Finally, the third network contains distributions over multiple probability distributions---the higher order approach.  The same could be done for the DNA match example. This comparison would convey succinctly the first major contribution of the chapter. The three Bayesian networks will also nicely connect with the two motivating examples right at the start of the chapter. You use the Sally Clark case as an illustration. This goes even one step further, but it might be good to have a simple illustration even with a simple match-source Bayesian network.
+<!-- \textbf{Possible addition:} To give the reader an intuitive picture, we could provide three Bayesian networks for the diagnostic example from the introduction section. The first network has the shape with $D \rightarrow T$, and is just how one would do things in the standard way with sharp probabilities. The second network contains multiple probability measures about (a) the prior probability of $D$ and second-order uncertainty about the error rates that go into the conditional table for $P(T | D)$. This is the network using imprecise probabilism. This is also something like "sensitivity analysis". \todo{Right, but not with the diagnosis; let's use the legal examples to start with} -->
+<!-- Finally, the third network contains distributions over multiple probability distributions---the higher order approach.  The same could be done for the DNA match example. This comparison would convey succinctly the first major contribution of the chapter. The three Bayesian networks will also nicely connect with the two motivating examples right at the start of the chapter. You use the Sally Clark case as an illustration. This goes even one step further, but it might be good to have a simple illustration even with a simple match-source Bayesian network. -->
+
+
+
+
+
+
+
+
+
 
 
 # Weight of evidence
