@@ -52,7 +52,315 @@ source("../scripts/SCplotDistros.R")
 
 # Introduction
 
-Consider three different  items of match evidence:^[These are stylized after the evidence in the notorious Wayne Williams case. Probabilities have been slightly but not unrealistically shifted to be closer to each other to make a conceptual point. The original probabilities were $1/8000$ for the carpet evidence, 1/100 for the dog fur, and 29/1148 for Wayne Williams' hair. Also, in our example we assume  carpets have been sampled, whereas the way the actual probability has been arrived at was by tracking down the carpet producer, investigating their sales record, assuming the carpets were evenly distributed in 10 southeastern states, assuming the average carpet is 12 feet long, and taking an estimate of total amount of carpet in the country for granted. We abstract from such considerations in this chapter.]  The suspects dog's fur matches the dog fur found in a carpet wrapped around one of the bodies. A hair found on one of the victims matches that of the suspect. Carpet fibers in a carpet used to wrap a victim's body matches carpet fibers in the suspect's house. What are the fact-finders to make of this evidence? To start with, some probabilistic evaluation thereof should be useful. 
+Consider two different  items of match evidence:^[These are stylized after two items of  evidence in the notorious Wayne Williams case. Probabilities have been slightly but not unrealistically shifted to be closer to each other to make a conceptual point. The original probabilities were  1/100 for the dog fur, and 29/1148 for Wayne Williams' hair.]  The suspects dog's fur matches the dog fur found in a carpet wrapped around one of the bodies (\textsf{dog}). A hair found on one of the victims matches that of the suspect (\textsf{hair}). What are the fact-finders to make of this evidence? To start with, some probabilistic evaluation thereof should be useful. 
+
+
+```{r introStarts,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%"}
+ps <- seq(0,1,length.out = 1001)
+
+hairMean <-  29/1148
+hairA <- 30
+hairB <- 1149
+
+dogMean <- 2/78
+dogA <- 3
+dogB <- 79
+
+lik0 <- hairMean * dogMean
+prior <- seq(0,.3, by = 0.001)
+priorH0 <- 1-prior
+denomin <- lik0 * priorH0 + prior
+num <-  lik0 * priorH0
+posterior <- 1- num/denomin
+threshold <- min(prior[posterior > .99])
+
+pointImpactPlot <- ggplot()+geom_line(aes(x = prior, y = posterior))+xlim(0,.07)+
+  theme_tufte(base_size = 10)+labs(title = "Prior vs. posterior, based on point estimates",
+                                   subtitle = "Joint evidence: dog & hair")+
+  geom_vline(xintercept = threshold, lty = 2, size =.5, alpha = .7)+
+  annotate(geom = "label", label = "posterior > .99", x = .067, y =.95, size = 2.5)
+```
+
+
+Accordingly, an expert testifies that the probability of a random person's hair matching the reference sample is `r hairMean`, and it so happens that the probability of a random dog's hair matching the reference sample is very close, `r dogMean`. You assume that the probabilities of matches if the suspect (respectively, the suspect's dog) is the source is one, and that these probabilities of a match are independent of each other conditional on either truth value of the source hypothesis ($\mathsf{source}$ and $\neg \mathsf{source}$). Then, to evaluate the total impact of the evidence on the source hypothesis you calculate: 
+\begin{align*}
+\pr{\s{dog}\wedge \s{hair} \vert \neg \s{source}} & = \pr{\s{dog} \vert \neg \s{source}} \times \pr{\s{hair} \vert \neg \s{source}} \\
+& =  `r hairMean` \times  `r dogMean` = `r hairMean * dogMean`
+\end{align*}
+This seems like a low number. To get a better grip on how this should be interpreted, the expert shows you how the posterior depends on the prior, given this evidence (Figure \ref{fig:impactOfPoint}. The posterior of .99 is reached as soon as your prior is higher than  `r threshold`.
+
+
+\begin{figure}[H]
+
+```{r impactOfPoint4,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "80%", warning = FALSE, message = FALSE}
+pointImpactPlot
+```
+
+\caption{Impact of dog fur and human hair evidence on the prior, point estimates.}
+
+\label{fig:impactOfPoint}
+
+\end{figure}
+
+While perhaps not sufficient for conviction, the evidence seems pretty solid: a minor additional piece of evidence could tip the scale. But then, you reflect on what you have been told and ask the expect: \emph{wait, but how do you know these exact point probabilities? There must be some aleatory uncertainties around these estimates, and we should pay attention to these!} The expert agrees, and tells you that in fact the hair evidence estimate is based on 29 matches found in a database of size 1148, and the dog evidence estimate was based on finding two matches in a reference class of size 78. 
+
+
+```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%"}
+#carpetSamples <- sample(ps, 1e4, replace = TRUE, prob = dbeta(ps, carpetA, carpetB))
+set.seed(231)
+hairSamples <- sample(ps, 1e4, replace = TRUE, prob = dbeta(ps, hairA, hairB))
+dogSamples <- sample(ps, 1e4, replace = TRUE, prob = dbeta(ps, dogA, dogB))
+
+#carpetHPDI <- HPDI(carpetSamples, prob  =.9)
+hairHPDI <- HPDI(hairSamples, prob  =.99)
+dogHPDI <- HPDI(dogSamples, prob  =.99)
+```
+
+
+
+Well, that means the point estimates did not tell us the whole story, you think. What to do next? You might try to factor what you have been just told into your evaluation, but unless you have some training in probability, you might have hard time doing this correctly. So instead, you push the expert further: \emph{well, with a 99\% margin of errors, what are the ranges for these estimates, what are the worst-case and best-case scenarios?} The expert thinks for a while about giving you confidence intervals, but abandons this idea, as they are deeply problematic.^[We discussed this in a previous chapter XXX.] So instead, he decides to tell you what the credible intervals are. He says: \emph{if we start with uniform priors, then the  highest posterior density ranges in which the true frequencies lie with posterior probability of .99 are (.015,.037) for hair and (.002, .103) for fur.}
+
+
+```{r charitableImpact,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%"}
+lik0l <- .037 * .103
+denominL <- lik0l * priorH0 + prior
+numL <-  lik0l * priorH0
+posteriorL <- 1- numL/denominL
+thresholdL <- min(prior[posteriorL > .99])
+
+charitableImpactPlot <- ggplot()+geom_line(aes(x = prior, y = posteriorL))+xlim(0,.32)+
+  theme_tufte(base_size = 10)+labs(title = "Prior vs. posterior, charitable reading",
+                                   subtitle = "Joint evidence: dog & hair")+
+  geom_vline(xintercept = thresholdL, lty = 2, size =.5, alpha = .7)+
+  annotate(geom = "label", label = "posterior > .99", x = .305, y =.95, size = 2.5)+ylab(
+    "posterior"
+  )
+```
+
+
+
+With good intentions, you calculate the estimate that is the most charitable to the suspect. $\mathsf{P}_{char}(\s{dog}\wedge \s{hair} \vert \neg \s{source})  = .037 * .103 =.003811$. This number is around `r round(.003811/lik0,2)` times greater than the original estimate! You ask what the impact of evidence on the prior would be given this scenario, and the answer is that now the prior needs to be higher than `r thresholdL` for the posterior to be above .99 (Figure \ref{fig:impactOfCharitable}). You are not convinced that the evidence is fairly strong anymore.  
+
+
+
+\begin{figure}[H]
+
+```{r fig:charitableImpact7,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "80%", warning = FALSE, message = FALSE}
+charitableImpactPlot
+```
+
+\caption{Impact of dog fur and human hair evidence on the prior, charitable reading.}
+
+\label{fig:impactOfCharitable}
+
+\end{figure}
+
+
+But you made an important blunder. Just because the worst-case probability estimate for one event is $x$ and the worst-case probability estimate for another independent event is $y$, it does not follow that the worst-case probability estimate for their conjunction is  $xy$, if the margin of error is kept fixed. The intuitive reason is quite simple: just because the probability of an extreme (or larger absolute) value $x$ for one variable is .01, and so it is for the value  $y$ of another independent variable, it does not follow that the probability that those two independent variables take values $x$ and $y$ simultaneously is the same. This probability is actually much smaller.  
+
+In fact, if you knew what distributions the expert used (it should have been beta distributions in this context), you could work your way back and calculate the .99 highest posterior density interval for the conjunction, which is $(0.000023,  0.002760)$. The proper charitable reading would then require the prior to be above .215 for the posterior to be above .99. Still not enough to convict, but at least now we worked out the consequences of the aleatory uncertainties involved provided the margin of error is fixed. Is this good enough?
+
+Well, it seems the interval presentation instead of doing us good led us into error --- the general phenomenon is that intervals do **not** contain enough information to reliably reason about such things as reliability, margins of errors and so on. Even if we are happy with the interval that we obtained, we won't be able to correctly obtain a new interval once a new item of evidence is included. That is, unless we proceed through the densities. 
+
+Another problem is that looking at intervals might be useful if the underlying distributions are fairly symmetrical. But in our case, they might not be. For instance, Figure \ref{fig:densities} illustrates are the beta densities for dog fur and human hair, together with sampling-approximated density for the joint evidence. Crucially, the distribution is not symmetric, and so switching the margin of error moves the right edge of the interval much faster towards lower values. If you were only informed about the edges of the interval, you would be oblivious to such phenomena and the fact that the most likely value does **not** simply lie in the middle between the edges of the interval. 
+
+
+```{r densitiesEvidence,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%"}
+
+jointEvidence <- dogSamples * hairSamples
+
+
+densities1Plot <- ggplot()+  
+  geom_line(aes(x = ps, y = dbeta(ps, hairA, hairB)), lty  = 2)+
+  geom_line(aes(x = ps, y = dbeta(ps, dogA, dogB)), lty = 3)+xlim(0,.15)+
+  xlab("probability")+
+  ylab("density")+
+  theme_tufte(base_size = 10)+
+  #  annotate(geom  = "label", label = "carpet", x =  0.045, y = 140)+
+  annotate(geom  = "label", label = "hair", x =  0.035, y = 80)+
+  annotate(geom  = "label", label = "dog", x =  0.06, y = 15)+
+  labs(title = "Conditional densities for  individual items of evidence if the source hypothesis is false")
+
+densities2Plot <- ggplot()+  
+  xlab("probability")+
+  ylab("density")+
+  theme_tufte(base_size = 10)+
+  geom_density(aes(x= jointEvidence))+
+  geom_vline(xintercept = 0.002760, lty = 2, size = .5)+
+  geom_vline(xintercept = 0.000023, lty = 2, size  = .5)+
+  geom_vline(xintercept = 0.000144, lty = 3, size = .8)+
+  geom_vline(xintercept = 0.001742, lty = 3, size  = .8)+
+  labs(title = "Conditional density for joint evidence", 
+       subtitle = "(with .99 and .9 HPDIs)")
+```
+
+
+
+\begin{figure}[H]
+
+```{r fig:densities,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "80%", warning = FALSE, message = FALSE}
+grid.arrange(densities1Plot,densities2Plot, ncol = 1 )
+```
+
+\caption{Beta densities for individual items of evidence and the resulting joint density with .99 and .9 highest posterior density intervals, assuming the sample sizes as discussed and independence, with uniform priors.}
+
+\label{fig:densities}
+
+\end{figure}
+
+
+This means that a better representation of the uncertainty involving the dependence of the posterior on the prior involves multiple possible lines whose density mirrors the density around the probability of the evidence (Figure \ref{fig:lines}).
+
+
+```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%", warning = FALSE, message = FALSE}
+jointPosterior <- list()
+minima <- numeric(1e4)
+for (s in 1:1e4){
+  lik <- jointEvidence[s] 
+  denomin <- lik * priorH0 + prior
+  num <-  lik * priorH0
+  posterior <- 1- num/denomin
+  jointPosterior[[s]] <- posterior      
+  minima[s] <- min(prior[posterior > .99])
+        }
+jointPosteriorDF <-   do.call(cbind, jointPosterior)
+
+
+minimaPlot <- ggplot()+geom_density(aes(x = minima))+
+  theme_tufte(base_size = 10)+ggtitle("Minimal priors sufficient for posterior >.99")+xlab("minimal prior")
+
+minimaGrob <- ggplotGrob(minimaPlot)
+
+alpha = .3
+size = .08
+densitiesLinesPlot <- ggplot()+geom_line(aes(x = prior, y = jointPosteriorDF[,1]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,2]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,3]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,4]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,5]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,6]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,7]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,8]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,9]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,10]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,11]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,12]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,13]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,14]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,15]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,16]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,17]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,18]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,19]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,20]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,21]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,22]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,23]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,24]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,25]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,26]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,27]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,28]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,29]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,30]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,31]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,32]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,33]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,34]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,35]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,36]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,37]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,38]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,39]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,40]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,41]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,42]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,43]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,44]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,45]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,46]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,47]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,48]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,49]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,50]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,51]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,52]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,53]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,54]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,55]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,56]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,57]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,58]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,59]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,60]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,61]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,62]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,63]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,64]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,65]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,66]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,67]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,68]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,69]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,70]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,71]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,72]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,73]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,74]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,75]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,76]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,77]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,78]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,79]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,80]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,81]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,82]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,83]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,84]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,85]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,86]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,87]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,88]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,89]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,90]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,91]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,92]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,93]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,94]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,95]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,96]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,97]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,98]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,99]), alpha = alpha, size = size)+
+  geom_line(aes(x = prior, y = jointPosteriorDF[,100]), alpha = alpha, size = size)+
+  xlim(0,.1)+theme_tufte(base_size = 10)+ylab("posterior")+
+  annotation_custom(minimaGrob, xmin = .025, xmax = .1, ymin = 0.01, ymax = 0.8)+
+  ggtitle("Posterior vs prior (100 sampled lines)")
+```
+
+
+
+
+\begin{figure}[H]
+
+```{r fig:lines3,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "80%", warning = FALSE, message = FALSE}
+densitiesLinesPlot
+```
+
+\caption{100 lines illustrating the uncertainty about the dependence of the posterior on the prior given aleatory uncertainty about the evidence, with the distribution of the minimal priors required for the posterior to be above .99.}
+
+\label{fig:lines}
+
+\end{figure}
+
+
+
+This is the gist of our chapter: whenever honest density estimates are available (and they should be available for match evidence evaluation methods whose reliability has been properly studies), it is those densities that should be reported and used in further reasoning. This avoids hiding actual aleatory uncertainties under the carpet, and allows for more correct reasoning where interval-based representation might either lead one astray or leave one oblivious to important probabilistic considerations.  
+
+The rest of this chapter expands on this idea in a few dimensions. First, it places it in the context of philosophical discussions surrounding a proper probabilistic representation of uncertainty. The main alternatives on the market are precise probabilism and imprecise probabilism. We argue that both options are problematic and should be superseded by the second-order representation. Second, 
+
+
+
 
 
 

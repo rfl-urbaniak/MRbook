@@ -1,15 +1,19 @@
 % Options for packages loaded elsewhere
 \PassOptionsToPackage{unicode}{hyperref}
 \PassOptionsToPackage{hyphens}{url}
-\PassOptionsToPackage{dvipsnames,svgnames*,x11names*}{xcolor}
+\PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
 %
 \documentclass[
   10pt,
   dvipsnames,enabledeprecatedfontcommands]{scrartcl}
+\title{Weight Chapter Outline}
+\author{}
+\date{\vspace{-2.5em}9/1/2022}
+
 \usepackage{amsmath,amssymb}
 \usepackage{lmodern}
-\usepackage{ifxetex,ifluatex}
-\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+\usepackage{iftex}
+\ifPDFTeX
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
   \usepackage{textcomp} % provide euro and other symbols
@@ -30,10 +34,10 @@
 \hypersetup{
   pdftitle={Weight Chapter Outline},
   colorlinks=true,
-  linkcolor=Maroon,
-  filecolor=Maroon,
-  citecolor=Blue,
-  urlcolor=blue,
+  linkcolor={Maroon},
+  filecolor={Maroon},
+  citecolor={Blue},
+  urlcolor={blue},
   pdfcreator={LaTeX via pandoc}}
 \urlstyle{same} % disable monospaced font for URLs
 \usepackage{graphicx}
@@ -53,6 +57,29 @@
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
 \setcounter{secnumdepth}{5}
+\newlength{\cslhangindent}
+\setlength{\cslhangindent}{1.5em}
+\newlength{\csllabelwidth}
+\setlength{\csllabelwidth}{3em}
+\newlength{\cslentryspacingunit} % times entry-spacing
+\setlength{\cslentryspacingunit}{\parskip}
+\newenvironment{CSLReferences}[2] % #1 hanging-ident, #2 entry spacing
+ {% don't indent paragraphs
+  \setlength{\parindent}{0pt}
+  % turn on hanging indent if param 1 is 1
+  \ifodd #1
+  \let\oldpar\par
+  \def\par{\hangindent=\cslhangindent\oldpar}
+  \fi
+  % set entry spacing
+  \setlength{\parskip}{#2\cslentryspacingunit}
+ }%
+ {}
+\usepackage{calc}
+\newcommand{\CSLBlock}[1]{#1\hfill\break}
+\newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{#1}}
+\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{#1}\break}
+\newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
 %\documentclass{article}
 
 % %packages
@@ -132,6 +159,7 @@
 \newcommand{\prr}[1]{\mbox{$\mathtt{P}_{prior}(#1)$}}
 \newcommand{\prp}[1]{\mbox{$\mathtt{P}_{posterior}(#1)$}}
 
+\newcommand{\s}[1]{\mbox{$\mathsf{#1}$}}
 
 
 \newtheorem{q}{\color{blue}Question}
@@ -223,33 +251,9 @@
 \usepackage{tikz}
 \usetikzlibrary{positioning,shapes,arrows}
 
-\ifluatex
+\ifLuaTeX
   \usepackage{selnolig}  % disable illegal ligatures
 \fi
-\newlength{\cslhangindent}
-\setlength{\cslhangindent}{1.5em}
-\newlength{\csllabelwidth}
-\setlength{\csllabelwidth}{3em}
-\newenvironment{CSLReferences}[2] % #1 hanging-ident, #2 entry spacing
- {% don't indent paragraphs
-  \setlength{\parindent}{0pt}
-  % turn on hanging indent if param 1 is 1
-  \ifodd #1 \everypar{\setlength{\hangindent}{\cslhangindent}}\ignorespaces\fi
-  % set entry spacing
-  \ifnum #2 > 0
-  \setlength{\parskip}{#2\baselineskip}
-  \fi
- }%
- {}
-\usepackage{calc}
-\newcommand{\CSLBlock}[1]{#1\hfill\break}
-\newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{#1}}
-\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{#1}\break}
-\newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
-
-\title{Weight Chapter Outline}
-\author{}
-\date{\vspace{-2.5em}9/1/2022}
 
 \begin{document}
 \maketitle
@@ -262,24 +266,170 @@
 \hypertarget{introduction}{%
 \section{Introduction}\label{introduction}}
 
-Consider three different items of match evidence:\footnote{These are
-  stylized after the evidence in the notorious Wayne Williams case.
-  Probabilities have been slightly but not unrealistically shifted to be
-  closer to each other to make a conceptual point. The original
-  probabilities were \(1/8000\) for the carpet evidence, 1/100 for the
-  dog fur, and 29/1148 for Wayne Williams' hair. Also, in our example we
-  assume carpets have been sampled, whereas the way the actual
-  probability has been arrived at was by tracking down the carpet
-  producer, investigating their sales record, assuming the carpets were
-  evenly distributed in 10 southeastern states, assuming the average
-  carpet is 12 feet long, and taking an estimate of total amount of
-  carpet in the country for granted. We abstract from such
-  considerations in this chapter.} The suspects dog's fur matches the
-dog fur found in a carpet wrapped around one of the bodies. A hair found
-on one of the victims matches that of the suspect. Carpet fibers in a
-carpet used to wrap a victim's body matches carpet fibers in the
-suspect's house. What are the fact-finders to make of this evidence? To
-start with, some probabilistic evaluation thereof should be useful.
+Consider two different items of match evidence:\footnote{These are
+  stylized after two items of evidence in the notorious Wayne Williams
+  case. Probabilities have been slightly but not unrealistically shifted
+  to be closer to each other to make a conceptual point. The original
+  probabilities were 1/100 for the dog fur, and 29/1148 for Wayne
+  Williams' hair.} The suspects dog's fur matches the dog fur found in a
+carpet wrapped around one of the bodies (\textsf{dog}). A hair found on
+one of the victims matches that of the suspect (\textsf{hair}). What are
+the fact-finders to make of this evidence? To start with, some
+probabilistic evaluation thereof should be useful.
+
+Accordingly, an expert testifies that the probability of a random
+person's hair matching the reference sample is 0.0252613, and it so
+happens that the probability of a random dog's hair matching the
+reference sample is very close, 0.025641. You assume that the
+probabilities of matches if the suspect (respectively, the suspect's
+dog) is the source is one, and that these probabilities of a match are
+independent of each other conditional on either truth value of the
+source hypothesis (\(\mathsf{source}\) and \(\neg \mathsf{source}\)).
+Then, to evaluate the total impact of the evidence on the source
+hypothesis you calculate: \begin{align*}
+\pr{\s{dog}\wedge \s{hair} \vert \neg \s{source}} & = \pr{\s{dog} \vert \neg \s{source}} \times \pr{\s{hair} \vert \neg \s{source}} \\
+& =  0.0252613 \times  0.025641 = \ensuremath{6.4772626\times 10^{-4}}
+\end{align*} This seems like a low number. To get a better grip on how
+this should be interpreted, the expert shows you how the posterior
+depends on the prior, given this evidence (Figure
+\ref{fig:impactOfPoint}. The posterior of .99 is reached as soon as your
+prior is higher than 0.061.
+
+\begin{figure}[H]
+
+
+\begin{center}\includegraphics[width=0.8\linewidth]{chapter-outline_files/figure-latex/impactOfPoint4-1} \end{center}
+
+\caption{Impact of dog fur and human hair evidence on the prior, point estimates.}
+
+\label{fig:impactOfPoint}
+
+\end{figure}
+
+While perhaps not sufficient for conviction, the evidence seems pretty
+solid: a minor additional piece of evidence could tip the scale. But
+then, you reflect on what you have been told and ask the expect:
+\emph{wait, but how do you know these exact point probabilities? There must be some aleatory uncertainties around these estimates, and we should pay attention to these!}
+The expert agrees, and tells you that in fact the hair evidence estimate
+is based on 29 matches found in a database of size 1148, and the dog
+evidence estimate was based on finding two matches in a reference class
+of size 78.
+
+Well, that means the point estimates did not tell us the whole story,
+you think. What to do next? You might try to factor what you have been
+just told into your evaluation, but unless you have some training in
+probability, you might have hard time doing this correctly. So instead,
+you push the expert further:
+\emph{well, with a 99\% margin of errors, what are the ranges for these estimates, what are the worst-case and best-case scenarios?}
+The expert thinks for a while about giving you confidence intervals, but
+abandons this idea, as they are deeply problematic.\footnote{We
+  discussed this in a previous chapter XXX.} So instead, he decides to
+tell you what the credible intervals are. He says:
+\emph{if we start with uniform priors, then the  highest posterior density ranges in which the true frequencies lie with posterior probability of .99 are (.015,.037) for hair and (.002, .103) for fur.}
+
+With good intentions, you calculate the estimate that is the most
+charitable to the suspect.
+\(\mathsf{P}_{char}(\s{dog}\wedge \s{hair} \vert \neg \s{source}) = .037 * .103 =.003811\).
+This number is around 5.88 times greater than the original estimate! You
+ask what the impact of evidence on the prior would be given this
+scenario, and the answer is that now the prior needs to be higher than
+0.274 for the posterior to be above .99 (Figure
+\ref{fig:impactOfCharitable}). You are not convinced that the evidence
+is fairly strong anymore.
+
+\begin{figure}[H]
+
+
+\begin{center}\includegraphics[width=0.8\linewidth]{chapter-outline_files/figure-latex/fig:charitableImpact7-1} \end{center}
+
+\caption{Impact of dog fur and human hair evidence on the prior, charitable reading.}
+
+\label{fig:impactOfCharitable}
+
+\end{figure}
+
+But you made an important blunder. Just because the worst-case
+probability estimate for one event is \(x\) and the worst-case
+probability estimate for another independent event is \(y\), it does not
+follow that the worst-case probability estimate for their conjunction is
+\(xy\), if the margin of error is kept fixed. The intuitive reason is
+quite simple: just because the probability of an extreme (or larger
+absolute) value \(x\) for one variable is .01, and so it is for the
+value \(y\) of another independent variable, it does not follow that the
+probability that those two independent variables take values \(x\) and
+\(y\) simultaneously is the same. This probability is actually much
+smaller.
+
+In fact, if you knew what distributions the expert used (it should have
+been beta distributions in this context), you could work your way back
+and calculate the .99 highest posterior density interval for the
+conjunction, which is \((0.000023, 0.002760)\). The proper charitable
+reading would then require the prior to be above .215 for the posterior
+to be above .99. Still not enough to convict, but at least now we worked
+out the consequences of the aleatory uncertainties involved provided the
+margin of error is fixed. Is this good enough?
+
+Well, it seems the interval presentation instead of doing us good led us
+into error --- the general phenomenon is that intervals do \textbf{not}
+contain enough information to reliably reason about such things as
+reliability, margins of errors and so on. Even if we are happy with the
+interval that we obtained, we won't be able to correctly obtain a new
+interval once a new item of evidence is included. That is, unless we
+proceed through the densities.
+
+Another problem is that looking at intervals might be useful if the
+underlying distributions are fairly symmetrical. But in our case, they
+might not be. For instance, Figure \ref{fig:densities} illustrates are
+the beta densities for dog fur and human hair, together with
+sampling-approximated density for the joint evidence. Crucially, the
+distribution is not symmetric, and so switching the margin of error
+moves the right edge of the interval much faster towards lower values.
+If you were only informed about the edges of the interval, you would be
+oblivious to such phenomena and the fact that the most likely value does
+\textbf{not} simply lie in the middle between the edges of the interval.
+
+\begin{figure}[H]
+
+
+\begin{center}\includegraphics[width=0.8\linewidth]{chapter-outline_files/figure-latex/fig:densities-1} \end{center}
+
+\caption{Beta densities for individual items of evidence and the resulting joint density with .99 and .9 highest posterior density intervals, assuming the sample sizes as discussed and independence, with uniform priors.}
+
+\label{fig:densities}
+
+\end{figure}
+
+This means that a better representation of the uncertainty involving the
+dependence of the posterior on the prior involves multiple possible
+lines whose density mirrors the density around the probability of the
+evidence (Figure \ref{fig:lines}).
+
+\begin{figure}[H]
+
+
+\begin{center}\includegraphics[width=0.8\linewidth]{chapter-outline_files/figure-latex/fig:lines3-1} \end{center}
+
+\caption{100 lines illustrating the uncertainty about the dependence of the posterior on the prior given aleatory uncertainty about the evidence, with the distribution of the minimal priors required for the posterior to be above .99.}
+
+\label{fig:lines}
+
+\end{figure}
+
+This is the gist of our chapter: whenever honest density estimates are
+available (and they should be available for match evidence evaluation
+methods whose reliability has been properly studies), it is those
+densities that should be reported and used in further reasoning. This
+avoids hiding actual aleatory uncertainties under the carpet, and allows
+for more correct reasoning where interval-based representation might
+either lead one astray or leave one oblivious to important probabilistic
+considerations.
+
+The rest of this chapter expands on this idea in a few dimensions.
+First, it places it in the context of philosophical discussions
+surrounding a proper probabilistic representation of uncertainty. The
+main alternatives on the market are precise probabilism and imprecise
+probabilism. We argue that both options are problematic and should be
+superseded by the second-order representation. Second,
 
 \hypertarget{three-probabilisms}{%
 \section{Three probabilisms}\label{three-probabilisms}}
@@ -736,8 +886,8 @@ weight}\label{formal-characterization-of-weight}}
 
 Higher order probabilism is then put to use to deliver a theory of
 weight. What is now in \textbf{section 11} (``Weight of a
-distribution'') and \textbf{sections 13} and \textbf{14} (" Weight of
-evidence" and ``Weights in Bayesian Networks'') forms the bulk of the
+distribution'') and \textbf{sections 13} and \textbf{14} ('' Weight of
+evidence'' and ``Weights in Bayesian Networks'') forms the bulk of the
 theory.
 
 We should also demonstrate that the proposed theory of weight does meet
@@ -788,7 +938,7 @@ ratios, then this can be seen as a generalization of thoughts that many
 other had -- say that the absolute value of the likelihood ratio is a
 measure of weight (Nance, Glenn Shafer) or that likelihood ratio must be
 a measure of weight (Good; see current \textbf{section 4}). So I think
-using "``higher order likelihood ratio'' could be a more appealing way
+using ````higher order likelihood ratio'' could be a more appealing way
 to sell the idea of weight of evidence since most people are already
 familiar with likelihood ratios.
 
@@ -894,98 +1044,98 @@ This section addresses the question, why care about weight?
 
 \hypertarget{refs}{}
 \begin{CSLReferences}{1}{0}
-\leavevmode\hypertarget{ref-bradley2019imprecise}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-bradley2019imprecise}{}}%
 Bradley, S. (2019). {Imprecise Probabilities}. In E. N. Zalta (Ed.),
 \emph{The {Stanford} encyclopedia of philosophy} ({S}pring 2019).
 \url{https://plato.stanford.edu/archives/spr2019/entries/imprecise-probabilities/};
 Metaphysics Research Lab, Stanford University.
 
-\leavevmode\hypertarget{ref-CampbellMoore2020accuracy}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-CampbellMoore2020accuracy}{}}%
 Campbell-Moore, C. (2020). \emph{Accuracy and imprecise probabilities}.
 
-\leavevmode\hypertarget{ref-Carr2020impreciseEvidence}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-Carr2020impreciseEvidence}{}}%
 Carr, J. R. (2020). Imprecise evidence without imprecise credences.
 \emph{Philosophical Studies}, \emph{177}(9), 2735--2758.
 \url{https://doi.org/10.1007/s11098-019-01336-7}
 
-\leavevmode\hypertarget{ref-Dietrich2016pooling}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-Dietrich2016pooling}{}}%
 Dietrich, F., \& List, C. (2016). Probabilistic opinion pooling. In A.
 Hajek \& C. Hitchcock (Eds.), \emph{Oxford handbook of philosophy and
 probability}. Oxford: Oxford University Press.
 
-\leavevmode\hypertarget{ref-Lee2017impreciseEpistemology}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-Lee2017impreciseEpistemology}{}}%
 Elkin, L. (2017). \emph{Imprecise probability in epistemology} (PhD
 thesis). Ludwig-Maximilians-Universit{ä}t;
 Ludwig-Maximilians-Universität München.
 
-\leavevmode\hypertarget{ref-Elkin2018resolving}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-Elkin2018resolving}{}}%
 Elkin, L., \& Wheeler, G. (2018). Resolving peer disagreements through
 imprecise probabilities. \emph{Noûs}, \emph{52}(2), 260--278.
 \url{https://doi.org/10.1111/nous.12143}
 
-\leavevmode\hypertarget{ref-VanFraassen2006vague}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-VanFraassen2006vague}{}}%
 Fraassen, B. C. V. (2006). Vague expectation value loss.
 \emph{Philosophical Studies}, \emph{127}(3), 483--491.
 \url{https://doi.org/10.1007/s11098-004-7821-2}
 
-\leavevmode\hypertarget{ref-Gardenfors1982unreliable}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-Gardenfors1982unreliable}{}}%
 Gärdenfors, P., \& Sahlin, N.-E. (1982). Unreliable probabilities, risk
 taking, and decision making. \emph{Synthese}, \emph{53}(3), 361--386.
 \url{https://doi.org/10.1007/bf00486156}
 
-\leavevmode\hypertarget{ref-joyce2005probabilities}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-joyce2005probabilities}{}}%
 Joyce, J. M. (2005). How probabilities reflect evidence.
 \emph{Philosophical Perspectives}, \emph{19}(1), 153--178.
 
-\leavevmode\hypertarget{ref-Kaplan1968decision}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-Kaplan1968decision}{}}%
 Kaplan, J. (1968). Decision theory and the fact-finding process.
 \emph{Stanford Law Review}, \emph{20}(6), 1065--1092.
 
-\leavevmode\hypertarget{ref-keynes1921treatise}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-keynes1921treatise}{}}%
 Keynes, J. M. (1921). \emph{A treatise on probability, 1921}. London:
 Macmillan.
 
-\leavevmode\hypertarget{ref-Levi1974ideterminate}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-Levi1974ideterminate}{}}%
 Levi, I. (1974). On indeterminate probabilities. \emph{The Journal of
 Philosophy}, \emph{71}(13), 391. \url{https://doi.org/10.2307/2025161}
 
-\leavevmode\hypertarget{ref-Levi1980enterprise}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-Levi1980enterprise}{}}%
 Levi, I. (1980). \emph{The enterprise of knowledge: An essay on
 knowledge, credal probability, and chance}. MIT Press.
 
-\leavevmode\hypertarget{ref-Mayo-Wilson2016scoring}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-Mayo-Wilson2016scoring}{}}%
 Mayo-Wilson, C., \& Wheeler, G. (2016). Scoring imprecise credences: A
 mildly immodest proposal. \emph{Philosophy and Phenomenological
 Research}, \emph{92}(1), 55--78.
 \url{https://doi.org/10.1111/phpr.12256}
 
-\leavevmode\hypertarget{ref-Rinard2013against}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-Rinard2013against}{}}%
 Rinard, S. (2013). Against radical credal imprecision. \emph{Thought: A
 Journal of Philosophy}, \emph{2}(1), 157--165.
 \url{https://doi.org/10.1002/tht3.84}
 
-\leavevmode\hypertarget{ref-Schoenfield2017accuracy}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-Schoenfield2017accuracy}{}}%
 Schoenfield, M. (2017). The accuracy and rationality of imprecise
 credences. \emph{Noûs}, \emph{51}(4), 667--685.
 \url{https://doi.org/10.1111/nous.12105}
 
-\leavevmode\hypertarget{ref-seidenfeld2012forecasting}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-seidenfeld2012forecasting}{}}%
 Seidenfeld, T., Schervish, M., \& Kadane, J. (2012). Forecasting with
 imprecise probabilities. \emph{International Journal of Approximate
 Reasoning}, \emph{53}, 1248--1261.
 \url{https://doi.org/10.1016/j.ijar.2012.06.018}
 
-\leavevmode\hypertarget{ref-Stewart2018pooling}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-Stewart2018pooling}{}}%
 Stewart, R. T., \& Quintana, I. O. (2018). Learning and pooling, pooling
 and learning. \emph{Erkenntnis}, \emph{83}(3), 1--21.
 \url{https://doi.org/10.1007/s10670-017-9894-2}
 
-\leavevmode\hypertarget{ref-Sturgeon2008grain}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-Sturgeon2008grain}{}}%
 Sturgeon, S. (2008). Reason and the grain of belief. \emph{No{û}s},
 \emph{42}(1), 139--165. Retrieved from
 \url{http://www.jstor.org/stable/25177157}
 
-\leavevmode\hypertarget{ref-walley1991statistical}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-walley1991statistical}{}}%
 Walley, P. (1991). \emph{Statistical reasoning with imprecise
 probabilities}. Chapman; Hall London.
 
