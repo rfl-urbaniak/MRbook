@@ -54,6 +54,9 @@ source("../scripts/SCplotDistros.R")
 
 # Introduction
 
+
+\textbf{M's comment: Nice exmaple and discussion. The only thing I would change (besides being clearer on certain stuff, see comments below) is make clear that we are after three strategies: precise probabilism (use precise probabilities for rando match probabilities), interval approach (senstivity analysys), and then higher-order approach. I think that sequence of moves should emerge from the discussion as it foreshadoes what is to come.)}
+
 Consider two different  items of match evidence:^[These are stylized after two items of  evidence in the notorious Wayne Williams case. Probabilities have been slightly but not unrealistically shifted to be closer to each other to make a conceptual point. The original probabilities were  1/100 for the dog fur, and 29/1148 for Wayne Williams' hair.]  The suspects dog's fur matches the dog fur found in a carpet wrapped around one of the bodies (\textsf{dog}). A hair found on one of the victims matches that of the suspect (\textsf{hair}). What are the fact-finders to make of this evidence? To start with, some probabilistic evaluation thereof should be useful. 
 
 
@@ -84,7 +87,7 @@ pointImpactPlot <- ggplot()+geom_line(aes(x = prior, y = posterior))+xlim(0,.07)
   theme(plot.title.position = "plot")
 ```
 
-
+\todo{M:Can we just say, about 0.02 or 2 percent? Do we need such precise numbers? And why do they have to be the same number?}
 Accordingly, an expert testifies that the probability of a random person's hair matching the reference sample is `r hairMean`, and it so happens that the probability of a random dog's hair matching the reference sample is very close, `r dogMean`. You assume that the probabilities of matches if the suspect (respectively, the suspect's dog) is the source is one, and that these probabilities of a match are independent of each other conditional on either truth value of the source hypothesis ($\mathsf{source}$ and $\neg \mathsf{source}$). Then, to evaluate the total impact of the evidence on the source hypothesis you calculate: 
 \begin{align*}
 \pr{\s{dog}\wedge \s{hair} \vert \neg \s{source}} & = \pr{\s{dog} \vert \neg \s{source}} \times \pr{\s{hair} \vert \neg \s{source}} \\
@@ -105,7 +108,7 @@ pointImpactPlot
 
 \end{figure}
 
-While perhaps not sufficient for conviction, the evidence seems pretty solid: a minor additional piece of evidence could tip the scale. But then, you reflect on what you have been told and ask the expect: \emph{wait, but how do you know these exact point probabilities? There must be some aleatory uncertainties around these estimates, and we should pay attention to these!} The expert agrees, and tells you that in fact the hair evidence estimate is based on 29 matches found in a database of size 1148, and the dog evidence estimate was based on finding two matches in a reference class of size 78. 
+While perhaps not sufficient for conviction\todo{M: conviction might not be the right word here}, the evidence seems pretty solid: a minor additional piece of evidence could tip the scale. But then, you reflect on what you have been told and ask the expect: \emph{wait, but how do you know these exact point probabilities? There must be some aleatory uncertainties around these estimates, and we should pay attention to these!} The expert agrees, and tells you that in fact the hair evidence estimate is based on 29 matches found in a database of size 1148, and the dog evidence estimate was based on finding two matches in a reference class of size 78. 
 
 
 ```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%"}
@@ -121,7 +124,7 @@ dogHPDI <- HPDI(dogSamples, prob  =.99)
 
 
 
-Well, that means the point estimates did not tell us the whole story, you think. What to do next? You might try to factor what you have been just told into your evaluation, but unless you have some training in probability, you might have hard time doing this correctly. So instead, you push the expert further: \emph{well, with a 99\% margin of errors, what are the ranges for these estimates, what are the worst-case and best-case scenarios?} The expert thinks for a while about giving you confidence intervals, but abandons this idea, as they are deeply problematic.^[We discussed this in a previous chapter XXX.] So instead, he decides to tell you what the credible intervals are. He says: \emph{if we start with uniform priors, then the  highest posterior density ranges in which the true frequencies lie with posterior probability of .99 are (.015,.037) for hair and (.002, .103) for fur.}
+Well, that means the point estimates did not tell us the whole story, you think. What to do next? \todo{M: This paragrph is too complicated. Can't we just say: suppose we use these intervals (and then specific how they were arrived at in a footnote).}You might try to factor what you have been just told into your evaluation, but unless you have some training in probability, you might have hard time doing this correctly. So instead, you push the expert further: \emph{well, with a 99\% margin of errors, what are the ranges for these estimates, what are the worst-case and best-case scenarios?} The expert thinks for a while about giving you confidence intervals, but abandons this idea, as they are deeply problematic.^[We discussed this in a previous chapter XXX.] So instead, he decides to tell you what the credible intervals are. He says: \emph{if we start with uniform priors, then the  highest posterior density ranges in which the true frequencies lie with posterior probability of .99 are (.015,.037) for hair and (.002, .103) for fur.}
 
 
 ```{r charitableImpact,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%"}
@@ -160,13 +163,15 @@ charitableImpactPlot
 \end{figure}
 
 
-But you made an important blunder. Just because the worst-case probability estimate for one event is $x$ and the worst-case probability estimate for another independent event is $y$, it does not follow that the worst-case probability estimate for their conjunction is  $xy$, if the margin of error is kept fixed. The intuitive reason is quite simple: just because the probability of an extreme (or larger absolute) value $x$ for one variable is .01, and so it is for the value  $y$ of another independent variable, it does not follow that the probability that those two independent variables take values $x$ and $y$ simultaneously is the same. This probability is actually much smaller.  
+But you made an important blunder. \todo{M: Ok, interetsing...}Just because the worst-case probability estimate for one event is $x$ and the worst-case probability estimate for another independent event is $y$, it does not follow that the worst-case probability estimate for their conjunction is  $xy$, if the margin of error is kept fixed. The intuitive reason is quite simple: just because the probability of an extreme (or larger absolute) value $x$ for one variable is .01, and so it is for the value  $y$ of another independent variable, it does not follow that the probability that those two independent variables take values $x$ and $y$ simultaneously is the same. This probability is actually much smaller.  
 
 In fact, if you knew what distributions the expert used (it should have been beta distributions in this context), you could work your way back and calculate the .99 highest posterior density interval for the conjunction, which is $(0.000023,  0.002760)$. The proper charitable reading would then require the prior to be above .215 for the posterior to be above .99. Still not enough to convict, but at least now we worked out the consequences of the aleatory uncertainties involved provided the margin of error is fixed. Is this good enough?
 
-Well, it seems the interval presentation instead of doing us good led us into error --- the general phenomenon is that intervals do **not** contain enough information to reliably reason about such things as reliability, margins of errors and so on. Even if we are happy with the interval that we obtained, we won't be able to correctly obtain a new interval once a new item of evidence is included. That is, unless we proceed through the densities. 
+Well, it seems the interval presentation instead of doing us good led us into error --- the general phenomenon is that intervals do **not** contain enough information to reliably reason about such things as reliability, margins of errors and so on. \todo{M: What are reliability and margin of error?}Even if we are happy with the interval that we obtained, we won't be able to correctly obtain a new interval once a new item of evidence is included. That is, unless we proceed through the densities. 
+\todo{M: This point seems crucial. How to combine intervals? Might need more explanation.}
 
-Another problem is that looking at intervals might be useful if the underlying distributions are fairly symmetrical. But in our case, they might not be. For instance, Figure \ref{fig:densities} illustrates are the beta densities for dog fur and human hair, together with sampling-approximated density for the joint evidence. Crucially, the distribution is not symmetric, and so switching the margin of error moves the right edge of the interval much faster towards lower values. If you were only informed about the edges of the interval, you would be oblivious to such phenomena and the fact that the most likely value does **not** simply lie in the middle between the edges of the interval. 
+Another problem is that looking at intervals might be useful if the underlying distributions are fairly symmetrical. But in our case, they might not be. For instance, Figure \ref{fig:densities} illustrates are the beta densities for dog fur and human hair, together with sampling-approximated density for the joint evidence. \todo{M: So the point is that the intervals might be the same but the densities might be different. How do we get these densities though?} Crucially, the distribution is not symmetric, and so switching the margin of error moves the right edge of the interval much faster towards lower values. If you were only informed about the edges of the interval, you would be oblivious to such phenomena and the fact that the most likely value does **not** simply lie in the middle between the edges of the interval. 
+\todo{M: That's intersting, but can we make it more concrete? Does it really make a difference, an objector might say.}
 
 
 ```{r densitiesEvidence,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%"}
@@ -216,6 +221,7 @@ grid.arrange(densities1Plot,densities2Plot, ncol = 1 )
 
 
 This means that a better representation of the uncertainty involving the dependence of the posterior on the prior involves multiple possible lines whose density mirrors the density around the probability of the evidence (Figure \ref{fig:lines}).
+\todo{M: Interesting, but from the last graph, the prior needed for .99 posterior has to be around 0.1, though we are given a distribution. So what what are we to make of this?}
 
 
 ```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%", warning = FALSE, message = FALSE}
@@ -369,6 +375,11 @@ The rest of this chapter expands on this idea in a few dimensions. First, it pla
 
 
 
+\textbf{M's comment: On the structure of the chapter. So basically, the strcture of the chapter would be: (1) higher order approach in general, (2) illustration 1 (first application): DNA evidence debate Taroni, etc., (2) illustration 2 (second application): combing items of evidence, complex cases, etc. and (3)
+illustration 3 (theory): modeling weight.}
+
+\textbf{M's comment: We might concede that the higher order approach outlined in the introduction might not always be pratically useful, or its applicabiolity might be limited. Not sure. Need to discuss. Perhaps once the discussion about DNA evidence is in place, this will become more clear. One question might be: what kind of information do we need to get the higher order approach going? Regardless of its applicability---we can say, we want to leave this decision to practionares in the end---the higher order approach has important theorical significance because it allows to model notions such as weight.}
+
 
 
 
@@ -410,6 +421,7 @@ Consider the following simple examples (we will be using examples with coins for
 
 \begin{quote}
 \textbf{No evidence v. fair coin}
+\todo{M: Might be better to separate the scenario itself (which can be used later) from what PP would say about it.}
 You are about to toss a coin, but have no evidence 
 whatsoever about its bias. You are completely ignorant. Sticking to \s{PP} you  follow the principle of insufficient evidence and assign probability .5 to the outcome being \emph{heads}.  Compare this to the situation  in which you know the coin is fair. Sticking to PP, you assign the same probability to the outcome of the next toss being \emph{heads}. 
 \end{quote}
@@ -417,9 +429,10 @@ whatsoever about its bias. You are completely ignorant. Sticking to \s{PP} you  
 
 \begin{quote}
 \textbf{Learning from ignorance}
-You start  tossing the former coin, toss it ten times and observe \emph{heads} five times. You started with your bias estimate at .5, but you also end with your bias estimate at .5. Clearly, you have learned something, but whatever that is, it is not captured in the representaiton recommended by \s{PP}.
+You start  tossing the former coin \todo{M: Which former coin? The one you "know" is fair? Potentially confusing.}, toss it ten times and observe \emph{heads} five times. You started with your bias estimate at .5, but you also end with your bias estimate at .5. Clearly, you have learned something, but whatever that is, it is not captured in the representaiton recommended by \s{PP}.
 \end{quote}
 
+\todo{M: Shoudl we add the bean example in main text? Sample size is different which is key in the earlier examples about match evidence? Why put it in a footnote?}
 
 
 \noindent
