@@ -1122,9 +1122,6 @@ First, let's think about the idea that uncertainty is supposed to be about propo
 
 # Weight of evidence
 
-\todo{Yeh, I think in the end this will be another chapter}
-
-The chapter now turns to the weight of evidence and its formalization. 
 
 
 \textbf{Comment:} It is conceptually important to separate the discussion about precise, imprecise, and higher order probabilism (previous sections) from weight (this section). Weight of evidence is one way in which higher order probabilism can be put to use. It can be confusing to run the discussion of higher order probabilism together with weight of evidence. Higher order probabilism can still make perfect sense even if no theory of weight cen be worked out. 
@@ -1141,6 +1138,203 @@ Here we can discuss monotonicity, completeness, strong increase, etc (see curren
 
 
 ## Formal characterization of weight
+
+
+Our account of weight of evidence will be information-theoretic. 
+To develop this account, we will first sketch an 
+account of information, based on Shannon's 
+theory of information.  
+
+### Entropy of a distribution
+
+
+Let $X$ be a random variable and $P$ 
+a probability distribution over its values.
+Shannon's measure of information, $H(X)$, reads:
+ <!---If the outcomes are equally likely, \(h(x)\) doesn't depend
+on the choice of \(x\). However, if the distribution is not uniform,
+this will not be the case.--->
+<!---A measure of (lack of) information
+contained in a whole distribution,  is \emph{entropy},  which is the
+average Shannon information:---> 
+<!---\begin{align*}
+H(X)  & = \sum \mathsf{P}(x_i) \log_2 \frac{1}{\mathsf{P}(x_i)} =
+- \sum \mathsf{P}(x_i) \log_2 \mathsf{P}(x_i)
+\end{align*} \noindent 
+--->
+\begin{align*}
+H(X)  & =
+- \sum \mathsf{P}(x_i) \log_2 \mathsf{P}(x_i)
+\end{align*} \noindent 
+Suppose the random variable $X$ can take two 
+values---outcome 1 and outcome 0---whose probabilities 
+are .5 each. Then, $H(X)=1$. On the other hand, if the outcomes are not equally likely, $H(X)$ will return a value lower than one. At the extreme, if one outcome is close to certainty (and thus the other is extremely unlikely), $H(X)$ would return a value close to zero.  
+
+To make sense of this, $H(X)$ can be thought as a measure of the \textit{entropy} (i.e. the lack of information) contained in the whole distribution associated with random variable $X$. <!---Note that entropy is not the measure of
+information contained in a distribution. It is rather the opposite:--->
+So, in this sense, $H(X)$ is greatest when the outcomes are regarded 
+as equally probable (maximum entropy), and smallest when one outcome 
+is regarded as certain (lowest entropy).
+On other hand hand, $H(X)$ is also a measure of information, specifically, 
+the \textit{expected amount of information} one would receive upon learning the actual value of $X$. After all, the less informative a distribution, the more you expect to learn when you find out the value of $X$, the higher the entropy.^[Since working with continuous distributions is not straightforward, we will be using \emph{grid approximations} of continuous distributions: we will split \(X\) into a 1000 bins and use the normalized densities for their centers to obtain their corresponding
+probabilities. As long as we do not change our level of precision (which
+would inevitably lead to changes in entropy) in our comparisons, this is
+not a problem. An additional advantage is that now we do not have to deal
+with the intricacies of explicit analytic calculations for continuous
+variables.]  
+
+
+### Informativeness of a distribution
+
+
+Since $H(X)$ can be thought as the entropy of a distribution, we will switch to the notation $H(P)$. This notation emphasizes the distribution $P$ rather then the random variable $X$.  The entropy of a distribution is to be contrasted with its informativeness, which we will denote by $W(P)$, the weight of the distribution.
+To measure the weight (or informativeness) of a distribution, it is best to compare it to the least informative distribution, the uniform distribution. The idea is that the more informative a distribution, as compared to the uniform distribution, the more weight it has, on scale 0 to 1: if the drop from uncertainty is complete, the entropy drops to zero, and we would like the weight to be 1, if the drop is null we would like to be zero, and if the drop is half, we would like to be .5 (and so on for other proportions). This can be achieved by the following definition:
+\begin{align*}
+\mathsf{w(P_i)} & = 1 - \left( \frac{H(\mathsf{P})}{H(\mathsf{uniform})}\right)
+\end{align*}
+\noindent where $\mathsf{P}$ is probability distribution of interest and baseline uniform distribution.^[Since we are using grip approximation, $\mathsf{P}$ is the discrete probability distribution for a given number of bins $n$, and uniform is the discrete uniform distribution for the same number of bins. In some contexts it might make sense to measure improvement with respect to a non-uniform prior. In such cases,  $H(\mathsf{uniform})$ is to be replaced by $H(\mathsf{prior})$.  Note that the entropy of a uniform distribution is pretty straightforward, so we can simplify:
+\begin{align*}
+H(\mathsf{uniform}) & = \sum_{i=1}^n \nicefrac{1}{n} \log_2 \frac{1}{\nicefrac{1}{n}} \\
+& = \log_2(n) \\
+\mathsf{w(P_i)} & = 1 - \left( \frac{H(\mathsf{P})}{\log_2(n)}\right)
+\end{align*}
+]
+
+The behavior of the proposed measure of weight can be illustrated using distributions of various of shapes, displayed in Figure \ref{fig:weightsWeird}). <!---Note that the ordering of weights is as expected. Partial uniform likelihoods which exclude at least half of parameter values have more weight than a weak beta, and the weight increases as the non-zero interval of the partial uniform distribution decreases.---> A bimodal normal distribution "glued" from two normal distributions carries less weight than a unimodal normal distribution with the same standard deviation centered around the mean of the two modes. <!---, all these are way below point estimates.---> 
+If multiple points have non-zero probability, the weight depends on how uneven the distribution is. If the distribution falls entirely on a single point, <!--- the value of the parameter is known,---> 
+the weight is maximal (=1), as expected. <!--- and does not depend on what the parameter is.---> 
+
+
+```{r fig:betas,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
+n <- 1000 #parameters 
+s <- 1e5  #sample size
+ps <- seq(from=0 , to=1 , length.out=n)
+a <- seq(1,100,1)
+b <- seq(1,100,1)
+abs <- expand.grid(a=a,b=b)
+densitiesBeta <- list()
+
+for(i in 1:nrow(abs)){
+densitiesBeta[[i]] <- dbeta(ps,abs[i,1], abs[i,2])
+densitiesBeta[[i]] <- densitiesBeta[[i]]/sum(densitiesBeta[[i]])
+abs$entropy[i] <- H(densitiesBeta[[i]])
+}
+
+
+
+kld <- function(p,q) kullback_leibler_distance(p,q, testNA = TRUE, unit = "log2",
+                                               epsilon = 0.00001)
+klds <- numeric(length(densitiesBeta))
+for (i in 1:length(densitiesBeta)){
+  klds[i] <-   kld(densitiesBeta[[1]],densitiesBeta[[i]])
+}
+abs$klds <- klds
+
+
+eucs <- numeric(length(densitiesBeta))
+for (i in 1:length(densitiesBeta)){
+  eucs[i] <-   euclidean(densitiesBeta[[1]],densitiesBeta[[i]], testNA = TRUE)
+}
+
+abs$eucs <- eucs
+
+unif <-dbeta(ps,1,1)
+unif <- unif/sum(unif)
+hunif <- H(unif)
+entProp <- function(X) 1 - ( H(X)/hunif )  
+
+entProps <- numeric(length(densitiesBeta))
+for (i in 1:length(densitiesBeta)){
+  entProps[i] <-   entProp(densitiesBeta[[i]])
+}
+
+#str(abs$entProps)
+
+abs$entProps <- entProps
+```
+
+
+
+```{r weightsWeird,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
+beta44 <-  densitiesBeta[[304]]
+unif5 <- c(rep(0, n/2),rep(1 , n/2)) #uniform from .5 
+unif5 <- unif5/sum(unif5)
+unif6 <- c(rep(0, .6 * n),rep(1 , n * .4)) #uniform from .6 
+unif6 <- unif6/sum(unif6)
+A <- dnorm(ps, .4, .05)
+B <- dnorm(ps, .6, .05)
+C <- ifelse(ps <= .5, A, B) 
+bimodal <- C / sum(C)
+centered <-   dnorm(ps, .5, .05)
+centered <- centered/sum(centered)
+twoEven <- rep(0,1000)
+twoEven[abs(ps -.4)  == min(abs(ps -.4))] <- .5
+twoEven[abs(ps -.6)  == min(abs(ps -.6))] <- .5
+twoUneven <- rep(0,1000)
+twoUneven[abs(ps -.4)  == min(abs(ps -.4))] <- .3
+twoUneven[abs(ps -.6)  == min(abs(ps -.6))] <- .7
+single5 <- rep(0,1000)
+single5[abs(ps -.5)  == min(abs(ps -.5))] <- 1
+single7 <- rep(0,1000)
+single7[abs(ps -.7)  == min(abs(ps -.7))] <- 1
+
+
+distributions <- c("beta(4,4)","unif(.5,1)", "unif(.6,1)", "bimodal(.4,.6,s=.05)", "norm(.5,.05)",
+                   "evenPoints(.4,.6)","unevenPoints(.4(.3),.6(.7)","single(.5)", "single(.7)")
+
+entPropSeq <- c(entProp(beta44),entProp(unif5),entProp(unif6),
+             entProp(bimodal),entProp(centered),entProp(twoEven),
+             entProp(twoUneven),entProp(single5),entProp(single7))
+
+
+hSeq <- c(H(beta44),H(unif5),H(unif6),
+          H(bimodal),H(centered),H(twoEven),
+          H(twoUneven),H(single5),H(single7))
+  
+  
+entPropTable <- data.frame(distributions, hSeq, entPropSeq)
+
+plotDistro <- function(distro, distroList) {
+plot <-  ggplot()+theme_tufte(base_size =  7 )+xlab("parameter values")+
+  ylab("probability")+theme(plot.title.position = "plot")+ylim(0,1)+
+  ggtitle(paste(entPropTable$distributions[distroList]))+
+  geom_line(aes(x = ps,y = distro))+annotate("text",
+    x = ps[which(distro == max(distro))][1],
+    y = max(distro) * 1.14,
+    label = paste("h =",round(entPropTable$hSeq[distroList],3), ", w = ",
+            round(entPropTable$entPropSeq[distroList],3)), size = 2)+
+  ylim(c(0,1.2 * max(distro)))
+return(plot)
+}
+
+```
+
+
+\begin{figure}[H]
+```{r fig:weightsWeird,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
+grid.arrange(plotDistro(beta44,1),plotDistro(unif5,2), plotDistro(unif6,3),plotDistro(bimodal,4),plotDistro(centered,5),
+plotDistro(twoEven,6),plotDistro(twoUneven,7),
+plotDistro(single5,8),plotDistro(single7,9), ncol = 3, nrow = 3)
+```
+\caption{Examples of various distributions with their entropies and weights, ordered by weights. (1) beta(4,4), (2) uniform starting from .5 to 1, (3), uniform strating from .6 to 1, (4) two normal distributions centered around .4 and .6 with standard deviation .05, glued at .5. (5) normal centered around .5 with the same standard deviation, (6) one that assigns .5 to each of .4  and .6, (7) One that assigns .3 to .4 and .7 to .6., (8) one that assigns all weight to .5, and (9) one that assigns all weight to .7.}
+
+\label{fig:weightsWeird}
+\end{figure}
+
+
+### Weight of evidence
+
+So far we have discussed the weight of a distribution, meant to measure how informed an agent is about an issue. If the agent starts with a uniform prior, this is a good enough approximation of how informed the evidence made them. But in general, how much more information is obtained is context-dependent. We want a prior-relative notion of weight, following the intuition that weight considerations should guide our information gathering also in making us stop collecting further evidence in light of what we already know. But for weight of evidence to have this feature, it has to depend on what we already know. 
+
+So here is a general recipe. In a given context, consider your distribution for the target hypothesis $H$ given what you already know. Then update on the evidence. This might increase the weight for $H$, if the evidence confirms your conviction, or decrease it, if it goes against what the previous evidence tells you. Take the difference between the prior weight and the posterior weight ($\Delta w$) as your measure of the weight of evidence in that context. If you prefer to think that weight of evidence should be always positive, you might prefer the absolute value thereof. We, however, prefer to keep track of whether the evidence makes you more or less confused. 
+The calculation goes along the following schema:
+
+\begin{enumerate}
+\item Start with a prior distribution over the parameter space of interest, and with distributions expressing the agent's uncertainty about other probabilities involved in the calculation of the posterior.
+\item Sample from these distributions.
+\item For each sample, treat it as a selection of precise probabilities, apply Bayes' theorem to calculate the posterior.
+\item The set of the results is the sampling distribution expressing your posterior uncertainty.
+\end{enumerate}
 
 Higher order probabilism is then put to use to deliver a theory of weight. What is now in **section 11** ("Weight of a distribution") and **sections 13** and **14** (" Weight of evidence" and "Weights in Bayesian Networks") forms the bulk of the theory. 
 
