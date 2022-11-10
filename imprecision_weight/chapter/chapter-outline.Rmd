@@ -98,15 +98,11 @@ This seems like a low number. To get a better grip on how this should be interpr
 
 
 \begin{figure}[H]
-
 ```{r impactOfPoint4,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "80%", warning = FALSE, message = FALSE}
 pointImpactPlot
 ```
-
 \caption{Impact of dog fur and human hair evidence on the prior, point estimates.}
-
 \label{fig:impactOfPoint}
-
 \end{figure}
 
 While perhaps not sufficient for accepting the source hypothesis\todo{M: conviction might not be the right word here; R: better now?}, the evidence seems pretty solid: a minor additional piece of evidence could tip the scale. But then, you reflect on what you have been told and ask the expect: \emph{wait, but how do you know these exact point probabilities? There must be some aleatory uncertainties around these estimates, and we should pay attention to these!} The expert agrees, and tells you that in fact the hair evidence estimate is based on 29 matches found in a database of size 1148, and the dog evidence estimate was based on finding two matches in a reference class of size 78. 
@@ -152,15 +148,11 @@ With good intentions, you calculate the estimate that is the most charitable to 
 
 
 \begin{figure}[H]
-
 ```{r fig:charitableImpact7,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "80%", warning = FALSE, message = FALSE}
 charitableImpactPlot
 ```
-
 \caption{Impact of dog fur and human hair evidence on the prior, charitable reading.}
-
 \label{fig:impactOfCharitable}
-
 \end{figure}
 
 
@@ -211,15 +203,11 @@ densities2Plot <- ggplot()+
 
 
 \begin{figure}[H]
-
 ```{r fig:densities,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "80%", warning = FALSE, message = FALSE}
 grid.arrange(densities1Plot,densities2Plot, ncol = 1 )
 ```
-
 \caption{Beta densities for individual items of evidence and the resulting joint density with .99 and .9 highest posterior density intervals, assuming the sample sizes as discussed and independence, with uniform priors.}
-
 \label{fig:densities}
-
 \end{figure}
 
 
@@ -359,7 +347,6 @@ densitiesLinesPlot <- ggplot()+geom_line(aes(x = prior, y = jointPosteriorDF[,1]
 
 
 \begin{figure}[H]
-
 ```{r fig:lines3,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "80%", warning = FALSE, message = FALSE}
 densitiesLinesPlot
 ```
@@ -558,15 +545,11 @@ TwoUnbalancedPlot <- ggplot(TwoUnbalancedDF, aes(x = p, y = TwoUnbalancedDensity
 ```
 
 
-\begin{figure}
-
+\begin{figure}[H]
 ```{r fig:evidenceResponse2,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%"}
 grid.arrange(FairPlot,UniformPlot, TwoPlot, TwoUnbalancedPlot)
 ```
 \caption{Examples of RA's distributions responding to various types of evidence for typical cases brought up in the literature.}
-
-
-
 \label{fig:evidenceResponse}
 \end{figure}
 
@@ -749,7 +732,7 @@ SCfentonTable <- data.frame(stage = factor(c("prior", "bruising in A", "bruising
 ```
 
 
-\begin{figure}
+\begin{figure}[H]
 ```{r SCfentonTable2,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%", warning=FALSE, message = FALSE, dpi = 800}
 ggplot(SCfentonTable) + geom_point(aes(x = stage, y = probability, size = probability))+
   scale_x_discrete(limits=rev, expand = c(0, 2)) +coord_flip()+theme_tufte(base_size = 10)+ scale_size(guide="none")+
@@ -774,18 +757,17 @@ One reason the reader might worry is that the choice of the probabilities is fai
 
 Some of these concerns are at least dampened when we deploy the higher order probabilities in the BN. The general method is as follows. Each particular node in a precise BN has a probability table determined by a finite list of numbers. If it's a root node, its probability table is determined by one number, if it's a node with one parent, its table is determined by two numbers etc. Now, suppose that instead of precise numbers we have densities over parameter values for those determining numbers. Densities of interests can then be approximated by (1) sampling parameter values from the specified distributions, (2) plugging them into the construction of the BN, and (3) evaluating the probability of interest in that precise BN. The list of the probabilities thus obtained will approximate the density fo interest. In what follows we will work with sample sizes of 10k.  For instance, your conditional probabilities might look as illustrated in Figure  \ref{fig:SCwithHOPa}.  One of them is based on a truncated normal distribution to emphasize that the framework give us much freedom in the specification of distributions. 
 
-\begin{figure}
+\begin{figure}[H]
 ```{r fig:SCwithHOPa, echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "90%", warning=FALSE, message = FALSE, dpi = 800}
 
 grid.arrange(AbruisingIfSidsPlot+xlim(0,.4),AbruisingIfMurderPlot+xlim(0,.4))
 ```
-
 \caption{Example of approximated uncertainties about conditional probabilities in the Sally Clark case.}
 \label{fig:SCwithHOPa}
 \end{figure}
 
 
-\begin{figure}
+\begin{figure}[H]
 ```{r SCwithHOP, out.extra='angle=90', echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "160%", out.height= "200%", warning=FALSE, message = FALSE, dpi = 800}
 #SCprobsFinal <- readRDS("../datasets/SCprobsFinal.rds")
 #attach(SCprobsFinal)
@@ -861,7 +843,7 @@ Using these we can investigate the impact of incoming evidence as it arrives (Fi
 
 
 
-\begin{figure}
+\begin{figure}[H]
 ```{r SCwithHOP2, echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "90%", warning=FALSE, message = FALSE, dpi = 800, warning = FALSE, message = FALSE, output = FALSE}
 grid.arrange(GuiltPriorPlot, GuiltABbruisingPlot, GuiltABbruisingNoDiseasePlot, GuiltABbruisingDiseaseAPlot, ncol =2)
 ```
@@ -929,9 +911,44 @@ AdiseaseLRPlot <- plotSample(AdiseaseLR,title = "LR: Adisease",  paste("median =
 <!-- \textbf{Possible addition:} To give the reader an intuitive picture, we could provide three Bayesian networks for the diagnostic example from the introduction section. The first network has the shape with $D \rightarrow T$, and is just how one would do things in the standard way with sharp probabilities. The second network contains multiple probability measures about (a) the prior probability of $D$ and second-order uncertainty about the error rates that go into the conditional table for $P(T | D)$. This is the network using imprecise probabilism. This is also something like "sensitivity analysis". \todo{Right, but not with the diagnosis; let's use the legal examples to start with} -->
 <!-- Finally, the third network contains distributions over multiple probability distributions---the higher order approach.  The same could be done for the DNA match example. This comparison would convey succinctly the first major contribution of the chapter. The three Bayesian networks will also nicely connect with the two motivating examples right at the start of the chapter. You use the Sally Clark case as an illustration. This goes even one step further, but it might be good to have a simple illustration even with a simple match-source Bayesian network. -->
 
+## Impact of false positives in DNA identification
+
+Let us get back to the problem we already discussed in Chapter XXX: the question of the extent to which the probability of a false positive impacts the value of DNA match evidence. We already argued that the probability of false positives is non-negligible. Here we will focus on using higher-order probability to make sense of a comment in an important paper on the topic
+
+\begin{quote}
+If, as commentators have suggested, the rate of false positives is between 1 in 100 and 1 in 1000, or even less, then one might argue that the jury can safely rule out
+the prospect that the reported match in their case is due to error and can proceed to consider the probability of a coincidental match. For reasons we will explain more fully below, this argument is fallacious and profoundly misleading \dots As we will explain below, the probability that a reported match occurred due to error in a particular case can be much higher, or lower, than the false positive probability.
+\end{quote}
 
 
-\pagebreak 
+Let us use Bayes' theorem again to think about false positives. This time, instead of on likelihood ratios, we focus on posterior probability. The posterior probability of the source hypothesis ($S$) conditional on the match evidence ($E$) is:
+
+\begin{align*}
+\pr{S \vert E} &   =  \frac{\pr{E\vert S} \pr{S} } {\pr{E}}\\
+& = \frac{\overbrace{\pr{E\vert S}}^1 \pr{S}}{\underbrace{\pr{E\vert S}}_1 \pr{S} + \underbrace{\pr{E \vert RM}}_1 \pr{RM} + \underbrace{\pr{E \vert FP}}_1 \pr{FP}} \\ & = \frac{\pr{S}}{\pr{S} + \pr{RM} + \pr{FP}} 
+\end{align*}
+
+For simplicity we take the false negative rate to be zero, that is we assume $\pr{E\vert S} =1$. We also assume there are three ways the evidence could arise: the source hypothesis is true, a random match ($RM$) occurred, or we are dealing with a false positive ($FP$).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\pagebreak
 
 # Objections to the higher-order approach
 
