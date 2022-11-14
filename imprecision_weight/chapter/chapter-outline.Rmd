@@ -38,7 +38,8 @@ library(gridExtra)
 library(rethinking)
 library(bnlearn)
 library(gRain)
-# library(truncnorm)
+library(reshape2)
+library(truncnorm)
 # library(ggforce)
 
 ps <- seq(0,1, length.out = 1001)
@@ -913,13 +914,14 @@ AdiseaseLRPlot <- plotSample(AdiseaseLR,title = "LR: Adisease",  paste("median =
 
 ## Impact of false positives in DNA identification
 
-Let us get back to the problem we already discussed in Chapter XXX: the question of the extent to which the probability of a false positive impacts the value of DNA match evidence. We already argued that the probability of false positives is non-negligible. Here we will focus on using higher-order probability to make sense of a comment in an important paper on the topic
+Let us get back to the problem we already discussed in Chapter 5: the question of the extent to which the probability of a false positive impacts the value of DNA match evidence. We already argued that the probability of false positives is non-negligible. Here higher-order probability will assist us in  thinking through a comment in an important paper on the topic:
 
 \begin{quote}
 If, as commentators have suggested, the rate of false positives is between 1 in 100 and 1 in 1000, or even less, then one might argue that the jury can safely rule out
-the prospect that the reported match in their case is due to error and can proceed to consider the probability of a coincidental match. For reasons we will explain more fully below, this argument is fallacious and profoundly misleading \dots As we will explain below, the probability that a reported match occurred due to error in a particular case can be much higher, or lower, than the false positive probability.
+the prospect that the reported match in their case is due to error and can proceed to consider the probability of a coincidental match. For reasons we will explain more fully below, this argument is fallacious and profoundly misleading \dots As we will explain below, the probability that a reported match occurred due to error in a particular case can be much higher, or lower, than the false positive probability. [@Thomason2003How-the-Probabi, 3]
 \end{quote}
 
+One option would be to use these interval edges to investigate the consequences of the risk of a false positive in DNA identification. But, we hope to have already convinced the reader, the consequences of doing so might be too skeptical, and it would be much better if we had a sensible distribution  to reason with. 
 
 Let us use Bayes' theorem again to think about false positives. This time, instead of on likelihood ratios, we focus on posterior probability. The posterior probability of the source hypothesis ($S$) conditional on the match evidence ($E$) is:
 
@@ -929,6 +931,202 @@ Let us use Bayes' theorem again to think about false positives. This time, inste
 \end{align*}
 
 For simplicity we take the false negative rate to be zero, that is we assume $\pr{E\vert S} =1$. We also assume there are three ways the evidence could arise: the source hypothesis is true, a random match ($RM$) occurred, or we are dealing with a false positive ($FP$).
+
+
+```{r fpPointCalculations,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%"}
+ps <- seq(0,1, length.out = 100001)
+prior <- seq(0,1, by = 0.001)
+posterior <- function(prior, rmp = 10e-9, fpp){ 
+  return ( prior/(prior + rmp + fpp) )
+}
+pristinePosterior <- posterior(prior, rmp = 1e-9, fpp = 0)
+charitablePosterior <-  posterior(prior, rmp = 1e-9, fpp = 0.01)
+```
+
+
+Now, let us start with calculations which ignore false positive risk and take $FP=0$. Suppose RMP is $10e-9$ (as in some of the examples we discussed in Chapter 5). The relation between priors and the posteriors is illustrated with dashed orange line in Figure \ref{fig:fplinesPlot} (to be explained fully later on), and the evidence seems quite strong: the minimal prior sufficient for the posterior to be above .99 is  `r min(prior[pristinePosterior >= .99])`. 
+
+Next, let us run charitable calculations with the upper edge of the interval offered for $FP$, 0.01. Then, the posterior of $.99$ is reached only once the prior is above .99, and the evidence seems rather weak. So which is it?  None. Running with the extreme scenario over-appreciates and running with the point estimate under-appreciates the uncertainty involved.  What matters between the edges matters.
+
+
+Consider two scenarios. In both you think that with 99\% certainty the false positive rate is between 0.001 and 0.01. On one approach you think that any value between these values (with a slight leeway on top) is equally likely, while on the other you think that it is 50\% likely that $FP$ is below .0033. The latter distribution, while being centered closer to zero has another features: it is long-tailed, so at the same time you do not think that $FP$s above .01 are impossible---you allow for the rare possibility of a false positive being much higher (say, if some specific conditions or circumstances arise, but you have no knowledge of how to identify them, because extensive studies on false positives are only forthcoming), in line with the passage quoted above. These distributions are illustrated in Figure \ref{fig:fppdistros}.
+
+
+
+
+
+```{r fpSampling,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%"}
+set.seed(1233)
+fpdN <- ifelse(ps > 0 & ps <= .01015, 1, 0) 
+fpdN <- fpdN/sum(fpdN)
+fpdNsample <- sample(ps, 1e5, replace = TRUE, prob = fpdN)
+set.seed(1233)
+fpdWsample <- sample(ps, 1e5, replace = TRUE,
+                     prob = dtruncnorm(ps, a = 0, b = 1, 
+                                       mean = 0.0005,
+                                       sd = .004))
+
+fpnPlot <- ggplot()+geom_density(aes(x =  fpdNsample))+xlim(0,.02)+theme_tufte(base_size  = 10) + theme(plot.title.position =  "plot")+ labs(title = "Uniform (0, .01015)", subtitle = "Approximated with 10e5 sampled values")+ylab("density")+xlab("false positive rate")
+
+
+fpwPlot <- ggplot()+geom_density(aes(x =  fpdWsample))+xlim(0,.02)+theme_tufte(base_size  = 10) + theme(plot.title.position =  "plot")+ labs(title = "Truncated normal (.0005, .004) ", subtitle = "Approximated with 10e5 sampled values")+ylab("density")+xlab("false positive rate")
+
+# fpGrid <- grid.arrange(fpnPlot, fpwPlot,ncol=2,top=textGrob("Examples of FP densities with the same interval"))
+```
+
+
+
+
+
+\begin{figure}[H]
+
+
+```{r fig:fppdistros, echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "80%", warning=FALSE, message = FALSE, dpi = 800, warning = FALSE, message = FALSE, output = FALSE}
+grid.arrange(fpnPlot, fpwPlot,ncol=2,top=textGrob("Examples of FP densities with the same interval"))
+```
+
+
+\caption{Two examples of assumptions about the false positive rates, both having pretty much the same 99\% highest density intervals. (Top) all error rates are equally likely, (Bottom) the most likely values are closer to 0, but also some high values while unlikely are possible.}
+
+\label{fig:fppdistros}
+
+\end{figure}
+
+
+Let us use sampling from the distributions to investigate what differences arise depending on what one's second-order convictions about error rates are.  First, we  ask what  the distributions of minimal priors sufficient for the posteriors being above .99 for these two options are (if the minimum is 1 this means that no prior results in such a posterior). The answer is illustrated in Figure \ref{fig:fppMinima}.
+
+
+```{r fpMinima,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%"}
+set.seed(1233)
+fpdNsample <- sample(ps, 1e4, replace = TRUE, prob = fpdN)
+fpdWsample <- sample(ps, 1e4, replace = TRUE,
+                     prob = dtruncnorm(ps, a = 0, b = 1, 
+                                       mean = 0.0005,
+                                       sd = .004))
+posteriorN <- list()
+posteriorW <- list()
+minimaN <- numeric(1e4)
+minimaW <- numeric(1e4)
+
+for (s in 1:1e4){
+  fppN <-    fpdNsample[s] 
+  fppW <-    fpdWsample[s] 
+  
+  posteriorN[[s]] <- posterior(prior = prior, 
+                               fpp = fpdNsample[s])
+  posteriorW[[s]] <- posterior(prior = prior, 
+                               fpp = fpdWsample[s])
+}
+
+for (s in 1:1e4){
+minimaN[s] <- ifelse(sum(posteriorN[[s]]> .99) >0,
+                     min(prior[posteriorN[[s]] > .99]), 1)
+minimaW[s] <- ifelse(sum(posteriorW[[s]]> .99) >0, 
+                     min(prior[posteriorW[[s]] > .99]), 1)
+}
+
+posteriorNDF <-   do.call(cbind, posteriorN)
+posteriorWDF <-   do.call(cbind, posteriorW)
+minimasDF <- data.frame(minima = c(minimaN, minimaW),
+                        prior = c(rep("uniform", 1e4) , 
+                                  rep("trnormal", 1e4)) )
+
+minimaPlot <- ggplot(minimasDF)+
+  geom_histogram(aes(x = minima, fill = prior, y = ..count../sum(..count..)), 
+                 bins = 50, position = "dodge2")+
+  theme_tufte(base_size = 10)+
+  ggtitle("Minimal priors sufficient for posterior >.99")+
+  ylab("Second-order probability")+theme(legend.position = c(0.9,.9),
+                                         plot.title.position = "plot")+
+                                         scale_fill_brewer(type = "qual")
+```
+
+
+
+
+
+
+
+\begin{figure}[H]
+
+
+```{r fig:fppMinima, echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "80%", warning=FALSE, message = FALSE, dpi = 800, warning = FALSE, message = FALSE, output = FALSE}
+minimaPlot
+```
+
+
+\caption{The distribution of minimal priors sufficient for the posterior being above .99 on the two distributions of false positive rates. Note that the truncated normal distribution has its bulk towards the left, but at the same time has higher ratio of evens in which this posterior is never reached. }
+
+\label{fig:fppMinima}
+
+\end{figure}
+
+Notice how the uniform distribution which seriously "thinks" that all false positive rates in the interval are equally likely leads to highly skeptical evaluation of the evidence. On both approaches the evidence is insufficient for conviction, but 95\% of the minima on  the truncated normal distribution  are below .8, whereas the 95th quantile for the minima for the uniform distribution is rather unsurprisingly at .95. That is, the truncated normal gives a more balanced and honest picture that the charitable reading which runs only with one extreme value.
+
+Another perspective on the impact of such differences can be taken by inspecting a large number of lines (in our case, 300) of how the posterior depends on the posterior: their density corresponds to the density of the false positive rates. We illustrate these in Figure \ref{fig:fplinesPlot}.
+
+
+
+```{r fpLines,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%"}
+posteriorNDFsubset <- as.data.frame(posteriorNDF[,1:300])
+posteriorNDFsubset$prior <- prior
+posteriorNDFsubsetLong <- melt(posteriorNDFsubset, id.vars = "prior")
+
+posteriorWDFsubset <- as.data.frame(posteriorWDF[,1:300])
+posteriorWDFsubset$prior <- prior
+posteriorWDFsubsetLong <- melt(posteriorWDFsubset, id.vars = "prior")
+
+alpha = .05
+size = .2
+
+
+posteriorNplot <- ggplot()+
+  geom_line(data = posteriorNDFsubsetLong, 
+            aes(x = prior,
+                y = value, group = variable),
+                alpha = alpha, size = size)+
+  theme_tufte(base_size = 10)+ylab("posterior")+
+  geom_line(aes(x = prior, y = pristinePosterior), 
+            color = "orangered", lty = 3, size = 1.1)+
+  geom_line(aes(x = prior, y = charitablePosterior),
+            color = "dodgerblue4", lty = 2, size = 1.1)+
+  labs(title = "Uniform fpp density")+theme(plot.title.position = "plot")+
+  xlim(0,.25)
+  
+
+
+posteriorWplot <- ggplot()+
+  geom_line(data = posteriorWDFsubsetLong, 
+            aes(x = prior,
+                y = value, group = variable),
+            alpha = alpha, size = size)+
+  theme_tufte(base_size = 10)+ylab("posterior")+
+  geom_line(aes(x = prior, y = pristinePosterior), 
+            color = "orangered", lty = 3, size = 1.1)+
+  geom_line(aes(x = prior, y = charitablePosterior),
+            color = "dodgerblue4", lty = 2, size = 1.1)+
+  labs(title = "Trnormal fpp density")+theme(plot.title.position = "plot")+
+  xlim(0,.25)
+```
+
+
+
+
+
+\begin{figure}[H]
+```{r fig:fplinesPlot2, echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "80%", warning=FALSE, message = FALSE, dpi = 800, warning = FALSE, message = FALSE, output = FALSE}
+grid.arrange(posteriorNplot, posteriorWplot,  ncol = 1,
+     top=textGrob("Posterior vs prior, impact of two fpp densities"))
+```
+\caption{Impact of prior on the posterior assumign two different densitites for false positive rates. Note how both the "pristine" error-free point estimate (orange) and the charitable version (blue) are quite far from where the bulks of the distributions in fact are. Note also how the trnormal density allows for even more charitable cases, which results from it being long-tailed.}
+\label{fig:fplinesPlot}
+\end{figure}
+
+
+
+
+
+Suppose now you indeed are convinced that the distribution over possible false probability values indeed matters for the evaluation of DNA evidence. But where do we take these distributions from, you might ask. The problem is, studies on false positives are very limited and so only give a rough and foggy picture. Ideally, better experiments and studies which would allow for a better justification of the choice of a distribution, should be conducted. However, this does not mean that until then we should stick to using point estimates and interval edges. Once the functional form of the distribution, such as truncated normal or beta, which are known to be pretty standard and reliable in such contexts, are chosen, only a few numbers need to be elicited from experts to be able to construct a density. For instance, once we agree on the truncated normal form, it is enough that the expert says that the 99\% interval is as the one we used, and that she believes with more than 50\% confidence the false positive rates to be below $.033$ for the curve to be determined. There is, of course, some idealization involved, and having to rely on such elicitation is not perfect. But it is still better than asking the experts for single point estimates and relying on these.
 
 
 

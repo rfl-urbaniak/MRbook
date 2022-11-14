@@ -24,12 +24,16 @@ set.seed(1233)
 fpdN <- ifelse(ps > 0 & ps <= .01015, 1, 0) 
 fpdN <- fpdN/sum(fpdN)
 
-fpdNsample <- sample(ps, 1e4, replace = TRUE, prob = fpdN)
+fpdNsample <- sample(ps, 1e5, replace = TRUE, prob = fpdN)
+
+median(fpdNsample)
 
 ggplot()+geom_line(aes(x = ps, y = fpdN))+xlim(0,.02)
 
 
 ggplot()+geom_density(aes(x = fpdNsample))+xlim(0,.02)
+
+mean(fpdNsample)
 
 mean(fpdNsample <= .01)
 
@@ -37,21 +41,34 @@ mean(fpdNsample <= .01)
 
 
 set.seed(1233)
-fpdWsample <- sample(ps, 1e4, replace = TRUE,
+fpdWsample <- sample(ps, 1e5, replace = TRUE,
                      prob = dtruncnorm(ps, a = 0, b = 1, 
                                        mean = 0.0005,
                                        sd = .004))
 
+mean(fpdWsample)
+
+fpnPlot <- ggplot()+geom_density(aes(x =  fpdNsample))+xlim(0,.02)+theme_tufte(base_size  = 10) + theme(plot.title.position =  "plot")+ labs(title = "Uniform (0, .01015)", subtitle = "Approximated with 10e5 sampled values")+ylab("density")
 
 
-ggplot()+geom_density(aes(x = fpdWsample))+xlim(0,.04)
+fpwPlot <- ggplot()+geom_density(aes(x =  fpdWsample))+xlim(0,.02)+theme_tufte(base_size  = 10) + theme(plot.title.position =  "plot")+ labs(title = "Truncated normal (.0005, .004) ", subtitle = "Approximated with 10e5 sampled values")+ylab("density")
+
+
+fpwPlot
+
+
+grid.arrange(fpnPlot, fpwPlot,nrow=2,top=textGrob("Examples of FP densities with the same interval"))
+
+
+
+ggplot()++geom_line(aes(x = ps, y = fpdN)) +geom_density(aes(x = fpdWsample))+xlim(0,.04)
 
 mean(fpdWsample <= .01)
 
 max(fpdWsample)
 
 
-prior <- seq(0,1, by = 0.001)
+prior <- seq(0,1, by = 0.0001)
 posterior <- function(prior, rmp = 10e-9, fpp){ 
   return ( prior/(prior + rmp + fpp) )
 }
@@ -60,7 +77,23 @@ posterior <- function(prior, rmp = 10e-9, fpp){
 
 pristinePosterior <- posterior(prior, rmp = 1e-9, fpp = 0)
 min(prior[pristinePosterior >= .99])
+charitablePosterior <-  posterior(prior, rmp = 1e-9, fpp = 0.01)
+min(prior[charitablePosterior >= .99])
 
+
+xint <- min(prior[pristinePosterior >= .99])
+
+ggplot()+geom_line(aes(x = prior, y = pristinePosterior), col = "orangered")+theme_tufte()+
+geom_vline(xintercept = xint, lty  = 2, size = 1 )+
+  theme_tufte()+geom_line(aes(x = prior, y = charitablePosterior), col = "skyblue")
+
+
+set.seed(1233)
+fpdWsample <- sample(ps, 1e4, replace = TRUE,
+                     prob = dtruncnorm(ps, a = 0, b = 1, 
+                                       mean = 0.0005,
+                                       sd = .004))
+fpdNsample <- sample(ps, 1e4, replace = TRUE, prob = fpdN)
 
 
 
@@ -81,8 +114,6 @@ for (s in 1:1e4){
 }
 
 
-str(posteriorN)
-
 
 for (s in 1:1e4){
 minimaN[s] <- ifelse(sum(posteriorN[[s]]> .99) >0, min(prior[posteriorN[[s]] > .99]), 1)
@@ -90,7 +121,6 @@ minimaW[s] <- ifelse(sum(posteriorW[[s]]> .99) >0, min(prior[posteriorW[[s]] > .
 }
 
 
-plot(prior,posteriorN[[5]])
 
 
 posteriorN[[23]] >.99
