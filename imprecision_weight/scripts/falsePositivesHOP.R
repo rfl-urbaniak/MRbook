@@ -107,10 +107,10 @@ for (s in 1:1e4){
   fppN <-    fpdNsample[s] 
   fppW <-    fpdWsample[s] 
   
-  posteriorN[[s]] <- posterior(prior = prior, fpp = fpdNsample[s])
-  posteriorW[[s]] <- posterior(prior = prior, fpp = fpdWsample[s])
-
-
+  posteriorN[[s]] <- posterior(prior = prior, 
+                               fpp = fpdNsample[s])
+  posteriorW[[s]] <- posterior(prior = prior, 
+                               fpp = fpdWsample[s])
 }
 
 
@@ -120,37 +120,31 @@ minimaN[s] <- ifelse(sum(posteriorN[[s]]> .99) >0, min(prior[posteriorN[[s]] > .
 minimaW[s] <- ifelse(sum(posteriorW[[s]]> .99) >0, min(prior[posteriorW[[s]] > .99]), 1)
 }
 
-
-
-
-posteriorN[[23]] >.99
-
-min(prior[posteriorN[[4]] >.99])
-
-
 posteriorNDF <-   do.call(cbind, posteriorN)
 posteriorWDF <-   do.call(cbind, posteriorW)
 
-str(posteriorNDF)
-str(prior)
-
-length(minimaN)
-
-length(minimaW)
 
 minimasDF <- data.frame(minima = c(minimaN, minimaW),
-                        prior = c(rep("narrow", 1e4) , rep("wide", 1e4)) )
+                        prior = c(rep("uniform", 1e4) , rep("trnormal", 1e4)) )
+
+
+
 
 
 minimaPlot <- ggplot(minimasDF)+geom_histogram(aes(x = minima, fill = prior, 
-                                                   y = ..count../sum(..count..)), bins = 40,
+                                                   y = ..count../sum(..count..)), bins = 50,
                                                position = "dodge2")+
   theme_tufte(base_size = 10)+ggtitle("Minimal priors sufficient for posterior >.99")+
-  ylab("Second-order probability")+theme(legend.position = c(0.9,.9))
+  ylab("Second-order probability")+theme(legend.position = c(0.9,.9), plot.title.position = "plot")+scale_fill_brewer(type = "qual")
 
 
 
 minimaPlot
+
+?quantile
+
+quantile(minimaN, probs = c(.95,.99))
+
 
 
 minimaGrob <- ggplotGrob(minimaNPlot)
@@ -170,15 +164,35 @@ posteriorWDFsubsetLong <- melt(posteriorWDFsubset, id.vars = "prior")
 alpha = .05
 size = .2
 
-posteriorNplot <- ggplot(posteriorNDFsubsetLong, aes(x = prior, y = value, group = variable))+
-  geom_line(alpha = alpha, size = size)+
-  theme_tufte(base_size = 10)+ylab("posterior")+geom_line(aes(x = prior, y = pristinePosterior), 
-                                                          color = "orangered")
+
+posteriorNplot <- ggplot()+
+  geom_line(data = posteriorNDFsubsetLong, 
+            aes(x = prior,
+                y = value, group = variable),
+                alpha = alpha, size = size)+
+  theme_tufte(base_size = 10)+ylab("posterior")+
+  geom_line(aes(x = prior, y = pristinePosterior), 
+            color = "orangered", lty = 3, size = 1.1)+
+  geom_line(aes(x = prior, y = charitablePosterior),
+            color = "dodgerblue4", lty = 2, size = 1.1)+
+  labs(title = "Posterior vs prior (uniform fpp density)")+theme(plot.title.position = "plot")
+  
 
 
-posteriorWplot <- ggplot(posteriorWDFsubsetLong, aes(x = prior, y = value, group = variable))+
-  geom_line(alpha = alpha, size = size)+
-  theme_tufte(base_size = 10)+ylab("posterior")
+posteriorWplot <- ggplot()+
+  geom_line(data = posteriorWDFsubsetLong, 
+            aes(x = prior,
+                y = value, group = variable),
+            alpha = alpha, size = size)+
+  theme_tufte(base_size = 10)+ylab("posterior")+
+  geom_line(aes(x = prior, y = pristinePosterior), 
+            color = "orangered", lty = 3, size = 1.1)+
+  geom_line(aes(x = prior, y = charitablePosterior),
+            color = "dodgerblue4", lty = 2, size = 1.1)+
+  labs(title = "Posterior vs prior (trnormal fpp density)")+theme(plot.title.position = "plot")
+
+posteriorWplot
+
 
 
 
