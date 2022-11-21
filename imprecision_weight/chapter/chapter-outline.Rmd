@@ -1600,10 +1600,69 @@ the weight is maximal (=1), as expected. <!--- and does not depend on what the p
 
 
 
+
+
+```{r weightsWeird,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
+beta44 <-  densitiesBeta[[304]]
+unif5 <- c(rep(0, n/2),rep(1 , n/2)) #uniform from .5 
+unif5 <- unif5/sum(unif5)
+unif6 <- c(rep(0, .6 * n),rep(1 , n * .4)) #uniform from .6 
+unif6 <- unif6/sum(unif6)
+A <- dnorm(ps, .4, .05)
+B <- dnorm(ps, .6, .05)
+C <- ifelse(ps <= .5, A, B) 
+bimodal <- C / sum(C)
+centered <-   dnorm(ps, .5, .05)
+centered <- centered/sum(centered)
+twoEven <- rep(0,1000)
+twoEven[abs(ps -.4)  == min(abs(ps -.4))] <- .5
+twoEven[abs(ps -.6)  == min(abs(ps -.6))] <- .5
+twoUneven <- rep(0,1000)
+twoUneven[abs(ps -.4)  == min(abs(ps -.4))] <- .3
+twoUneven[abs(ps -.6)  == min(abs(ps -.6))] <- .7
+single5 <- rep(0,1000)
+single5[abs(ps -.5)  == min(abs(ps -.5))] <- 1
+single7 <- rep(0,1000)
+single7[abs(ps -.7)  == min(abs(ps -.7))] <- 1
+
+
+distributions <- c("beta(4,4)","unif(.5,1)", "unif(.6,1)", "bimodal(.4,.6,s=.05)", "norm(.5,.05)",
+                   "evenPoints(.4,.6)","unevenPoints(.4(.3),.6(.7)","single(.5)", "single(.7)")
+
+entPropSeq <- c(entProp(beta44),entProp(unif5),entProp(unif6),
+             entProp(bimodal),entProp(centered),entProp(twoEven),
+             entProp(twoUneven),entProp(single5),entProp(single7))
+
+
+hSeq <- c(H(beta44),H(unif5),H(unif6),
+          H(bimodal),H(centered),H(twoEven),
+          H(twoUneven),H(single5),H(single7))
+  
+  
+entPropTable <- data.frame(distributions, hSeq, entPropSeq)
+
+plotDistro <- function(distro, distroList) {
+plot <-  ggplot()+theme_tufte(base_size =  7 )+xlab("parameter values")+
+  ylab("probability")+theme(plot.title.position = "plot")+ylim(0,1)+
+  ggtitle(paste(entPropTable$distributions[distroList]))+
+  geom_line(aes(x = ps,y = distro))+annotate("text",
+    x = ps[which(distro == max(distro))][1],
+    y = max(distro) * 1.14,
+    label = paste("h =",round(entPropTable$hSeq[distroList],3), ", w = ",
+            round(entPropTable$entPropSeq[distroList],3)), size = 2)+
+  ylim(c(0,1.2 * max(distro)))
+return(plot)
+}
+
+```
+
+
 \begin{figure}[H]
-
-DISPLAY GRAPHS WITH DISTR OF VARIOUS SHAPES AND WEIGHT
-
+```{r fig:weightsWeird,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
+grid.arrange(plotDistro(beta44,1),plotDistro(unif5,2), plotDistro(unif6,3),plotDistro(bimodal,4),plotDistro(centered,5),
+plotDistro(twoEven,6),plotDistro(twoUneven,7),
+plotDistro(single5,8),plotDistro(single7,9), ncol = 3, nrow = 3)
+```
 \caption{Examples of various distributions with their entropies and weights, ordered by weights. (1) beta(4,4), (2) uniform starting from .5 to 1, (3), uniform strating from .6 to 1, (4) two normal distributions centered around .4 and .6 with standard deviation .05, glued at .5. (5) normal centered around .5 with the same standard deviation, (6) one that assigns .5 to each of .4  and .6, (7) One that assigns .3 to .4 and .7 to .6., (8) one that assigns all weight to .5, and (9) one that assigns all weight to .7.}
 
 \label{fig:weightsWeird}
