@@ -266,40 +266,48 @@
 \hypertarget{introduction}{%
 \section{Introduction}\label{introduction}}
 
-\textbf{M's comment: Nice exmaple and discussion. The only thing I would change (besides being clearer on certain stuff, see comments below) is make clear that we are after three strategies: precise probabilism (use precise probabilities for rando match probabilities), interval approach (senstivity analysys), and then higher-order approach. I think that sequence of moves should emerge from the discussion as it foreshadoes what is to come.)}
+A defendant in a criminal case may face multiple items of incriminating
+evidence, and their overall strength can sometimes be assessed using
+probabilities. For example, suppose hair found at the crime scene
+matches the defendant hair (call this evidence, \textsf{hair}). In
+addition, the defendant owns a dog whose fur matches the dog fur found
+in a carpet wrapped around one of the bodies (call this evidence,
+\textsf{dog}).\footnote{The hair evidence and the dog fur evidence are
+  stylized after two items of evidence in the notorious 1981 Wayne
+  Williams case.}
+\todo{CITE: H A Deadman, Fiber Evidence and the Wayne Williams Trial (Part I), FBI Law Enforcement Bulletin Volume: 53 Issue: 3 Dated: (March 1984) Pages: 12-20 and H A Deadman, Fiber Evidence and the Wayne Williams Trial (Conclusion), bFBI Law Enforcement Bulletin Volume:: 53 Issue: 5 Dated: (May 1984) Pages: 10-19.}
+What are the fact-finders to make of this evidence?
 
-Consider two different items of match evidence:\footnote{These are
-  stylized after two items of evidence in the notorious Wayne Williams
-  case. Probabilities have been slightly but not unrealistically shifted
-  to be closer to each other to make a conceptual point. The original
-  probabilities were 1/100 for the dog fur, and 29/1148 for Wayne
-  Williams' hair.} The suspects dog's fur matches the dog fur found in a
-carpet wrapped around one of the bodies (\textsf{dog}). A hair found on
-one of the victims matches that of the suspect (\textsf{hair}). What are
-the fact-finders to make of this evidence? To start with, some
-probabilistic evaluation thereof should be useful.
-
-Accordingly, an expert testifies that the probability of a random
-person's hair matching the reference sample is about 0.0253, and it so
-happens that so is the probability of a random dog's hair matching the
-reference sample, 0.0256.\footnote{We modified the actual reported
-  probabilities slightly to emphasize the point that we will elaborate
-  further on: the same first-order probabilities, even if they sound
-  precise, might result from various items of evidence connected to
-  various levels of second-order uncertainty.} You assume that the
-probabilities of matches if the suspect (respectively, the suspect's
-dog) is the source is one, and that these probabilities of a match are
-independent of each other conditional on either truth value of the
-source hypothesis (\(\mathsf{source}\) and \(\neg \mathsf{source}\)).
+To evaluate the strength of the evidence, an expert provides random
+match probabilities for each item of match evidence. The expert
+testifies that the probability of a random person's hair matching the
+reference sample is about 0.0253, and the probability of a random dog's
+hair matching the reference sample happens to be about the same,
+0.0256.\footnote{Probabilities have been slightly but not
+  unrealistically modified to be closer to each other in order to make a
+  conceptual point. The original probabilities were 1/100 for the dog
+  fur, and 29/1148 for Wayne Williams' hair. We modified the actual
+  reported probabilities slightly to emphasize the point that we will
+  elaborate further on: the same first-order probabilities, even when
+  they sound precise, may be affected by second-order uncertainty to
+  different extents.} Suppose these probabilities are independent of
+each other conditional on the source hypothesis, namely that the
+defendant (or the defendant's dog) is the source of the hair (or dog
+fur) found at the scene (call this hypothesis, \(\mathsf{source}\))
 Then, to evaluate the total impact of the evidence on the source
-hypothesis you calculate: \begin{align*}
+hypothesis, you calculate: \begin{align*}
 \pr{\s{dog}\wedge \s{hair} \vert \neg \s{source}} & = \pr{\s{dog} \vert \neg \s{source}} \times \pr{\s{hair} \vert \neg \s{source}} \\
 & =  0.0252613 \times  0.025641 = \ensuremath{6.4772626\times 10^{-4}}
 \end{align*} This seems like a low number. To get a better grip on how
 this should be interpreted, the expert shows you how the posterior
-depends on the prior, given this evidence (Figure
-\ref{fig:impactOfPoint}. The posterior of .99 is reached as soon as your
-prior is higher than 0.061.
+probability of the source hypothesis (based on the two two items of
+match evidence) depends on the prior probabilities (Figure
+\ref{fig:impactOfPoint}). The posterior of .99 is reached as soon as the
+prior is higher than 0.061.\footnote{These calculations assume that the
+  probability of a match if the suspect (or the suspect's dog) is the
+  source is one.} While perhaps not sufficient for believing outright
+the source hypothesis, the evidence is quite strong: a minor additional
+piece of evidence could tip the scale against the defendant.
 
 \begin{figure}[H]
 
@@ -308,39 +316,39 @@ prior is higher than 0.061.
 \label{fig:impactOfPoint}
 \end{figure}
 
-While perhaps not sufficient for accepting the source hypothesis, the
-evidence seems pretty solid: a minor additional piece of evidence could
-tip the scale. But then, you reflect on what you have been told and ask
-the expect:
-\emph{wait, but how do you know these exact point probabilities? There must be some aleatory uncertainties around these estimates, and we should pay attention to these!}
-The expert agrees, and tells you that in fact the hair evidence estimate
-is based on 29 matches found in a database of size 1148, and the dog
-evidence estimate was based on finding two matches in a reference class
-of size 78.
+Unfortunately, such probabilistic assessment of the two items of match
+evidence left out something crucial. You reflect on what you have been
+told and ask the expert: how can you know these random match
+probabilities with precision? Shouldn't we also be mindful of the
+uncertainty about these numbers? The expert agrees, and tells you that
+in fact the random match probability for the hair evidence is based on
+29 matches found in a database of size 1148, while the random match
+probability for the dog evidence is based on finding two matches in a
+reference database of size 78.
 
-Well, that means the point estimates did not tell us the whole story,
-you think. What to do next? You might try to factor what you have been
-just informally told into your evaluation, but unless you have some
-training in probability, you might have hard time doing this correctly.
-So instead, you push the expert further:
-\emph{well, with a 99\% margin of errors, what are the ranges for these estimates, what are the worst-case and best-case scenarios?}
-The expert gives you their estimate of credible intervals.\footnote{Roughly,
-  the 99\% credible interval is the narrowest interval to which the
-  expert thinks the true parameter belongs with probability .99. For a
-  discussion of what credible intervals are, how they differ from
-  confidence intervals, and why confidence intervals should not be used,
-  see the discussion in Chapter XXXX.} He says:
-\emph{if we start with uniform priors, the intervals are are (.015,.037) for hair and (.002, .103) for fur.}
+The expert's answer makes apparent that that precise random match
+probabilities do not tell the whole story. What to do, then? You ask the
+expert for guidance: what are reasonable ranges of the random match
+probabilities? What are the worst-case and best-case scenarios? The
+expert responds with 99\% credible intervals---specifically, starting
+with uniform priors, the ranges of the random match probabilities are
+(.015,.037) for hair evidence and (.002, .103) for fur
+evidence.\footnote{Roughly, the 99\% credible interval is the narrowest
+  interval to which the expert thinks the true parameter belongs with
+  probability .99. For a discussion of what credible intervals are; how
+  they differ from confidence intervals; and why confidence intervals
+  should not be used, see the discussion in Chapter XXX.}
 
-With good intentions, you calculate the estimate that is the most
-charitable to the suspect.
-\(\mathsf{P}_{char}(\s{dog}\wedge \s{hair} \vert \neg \s{source}) = .037 * .103 =.003811\).
-This number is around 5.88 times greater than the original estimate! You
-ask what the impact of evidence on the prior would be given this
-scenario, and the answer is that now the prior needs to be higher than
-0.274 for the posterior to be above .99 (Figure
-\ref{fig:impactOfCharitable}). You are not convinced that the evidence
-is fairly strong anymore.
+With good intentions, you redo your calculations using the upper bounds
+of the two intervals. Using the upper bounds would result in random
+match probabilities that are most favorable to the defendant. That is,
+\(\mathsf{P}_{def}(\s{dog}\wedge \s{hair} \vert \neg \s{source}) = .037 * .103 =.003811\).
+This number is around 5.88 times greater than the original estimate
+\ensuremath{6.4772626\times 10^{-4}}! Now the prior probability of the
+source hypothesis needs to be higher than 0.274 for the posterior
+probability to be above .99 (Figure \ref{fig:impactOfCharitable}). You
+are no longer convinced that the two items of match evidence are strong
+incriminating evidence.
 
 \begin{figure}[H]
 
@@ -349,17 +357,23 @@ is fairly strong anymore.
 \label{fig:impactOfCharitable}
 \end{figure}
 
-But you made an important blunder. Just because the worst-case
-probability estimate for one event is \(x\) and the worst-case
-probability estimate for another independent event is \(y\), it does not
-follow that the worst-case probability estimate for their conjunction is
-\(xy\), if the margin of error is kept fixed. The intuitive reason is
-quite simple: just because the probability of an extreme (or larger
-absolute) value \(x\) for one variable is .01, and so it is for the
-value \(y\) of another independent variable, it does not follow that the
-probability that those two independent variables take values \(x\) and
-\(y\) simultaneously is the same. This probability is actually much
-smaller.
+For one thing, it is clear that simply using precise random match
+probabilities is too unfavorable toward the defendant. On the other
+hand, you wonder whether your new assessment of the evidence is too
+conservative and too favorable toward the defendant. The problem, then,
+is to avoid underestimating and overestimating the value of the
+evidence.
+
+In your calculations, you made an important blunder. Just because the
+worst-case probability for one event is \(x\) and the worst-case
+probability for another independent event is \(y\), it does not follow
+that the worst-case probability for their conjunction is \(xy\), if the
+margin of error is kept fixed. The intuitive reason is simple: just
+because the probability of an extreme (or larger absolute) value \(x\)
+for one variable is .01, and so it is for the value \(y\) of another
+independent variable, it does not follow that the probability that those
+two independent variables take values \(x\) and \(y\) simultaneously is
+the same. This probability is actually much smaller.
 
 In fact, if you knew what distributions the expert used (it should have
 been beta distributions in this context), you could work your way back
@@ -406,21 +420,6 @@ risk at play.
 \begin{center}\includegraphics[width=0.8\linewidth]{chapter-outline_files/figure-latex/fig:densities-1} \end{center}
 \caption{Beta densities for individual items of evidence and the resulting joint density with .99 and .9 highest posterior density intervals, assuming the sample sizes as discussed and independence, with uniform priors.}
 \label{fig:densities}
-\end{figure}
-
-This means that a better representation of the uncertainty involving the
-dependence of the posterior on the prior involves multiple possible
-lines whose density mirrors the density around the probability of the
-evidence (Figure \ref{fig:lines}).
-
-\begin{figure}[H]
-
-\begin{center}\includegraphics[width=0.8\linewidth]{chapter-outline_files/figure-latex/fig:lines3-1} \end{center}
-
-\caption{100 lines illustrating the uncertainty about the dependence of the posterior on the prior given aleatory uncertainty about the evidence, with the distribution of the minimal priors required for the posterior to be above .99.}
-
-\label{fig:lines}
-
 \end{figure}
 
 \todo{Revise this structure description once the chapter is done}
@@ -1558,49 +1557,299 @@ much, but being a ratio of other numbers is not one of them.
 \hypertarget{weight-of-evidence}{%
 \section{Weight of evidence}\label{weight-of-evidence}}
 
-\textbf{Comment:} It is conceptually important to separate the
-discussion about precise, imprecise, and higher order probabilism
-(previous sections) from weight (this section). Weight of evidence is
-one way in which higher order probabilism can be put to use. It can be
-confusing to run the discussion of higher order probabilism together
-with weight of evidence. Higher order probabilism can still make perfect
-sense even if no theory of weight cen be worked out.
+We now illustrate one of the theoretical payoffs of higher-order
+probabilism. It allows to develop an elegant theory of the weight of
+evidence that outperforms existing proposals. We will start with an
+informal sketch of the idea of the weight of evidence, as opposed to the
+balance of the evidence. We will then explore a few attempts at modeling
+this idea, first based on precise probabilism and then based on
+imprecise probabilism. Finally, we will show how higher -order
+probabilism can offer a better theory.
 
 \hypertarget{motivating-examples}{%
 \subsection{Motivating examples}\label{motivating-examples}}
 
-This section should start with illustrative examples of the
-weight/balance distinction and why ``balance alone'' isn't enough to
-model the evidential uncertainty relative to a hypothesis of interest.
-These examples should be chosen carefully. We can use legal and
-non-legal examples. The driving intuition is given by Keynes with the
-weight/balance distinction. Some of the examples we saw earlier in
-talking about imprecise probabilism can be mentioned here again, such as
-(a1) and (a2), and perhaps also (b) and (c).
+In the 1872 manuscript \emph{The Fixation of Belief} (W3 295), C. S.
+Peirce makes the following observation about sampling from a bag of
+beans that are either black or white:
 
-Upshot is that uncertainty cannot be captured by balance of evidence
-alone. There is a further dimension to uncertainty. So we need a theory
-that can accommodate this further level of uncertainty. This theory is
-essentially the higher order probabilism introduced before.
+\begin{quote} When we have drawn a thousand times, if about half have been white, we have great confidence in this result ... a confidence which would be entirely wanting if, instead of sampling the bag by 1000 drawings, we had done so by only two.
+\end{quote}
 
-\hypertarget{desiderata}{%
-\subsection{Desiderata}\label{desiderata}}
+\noindent In both cases, our best assessment of the probability that the
+next draw will be a black bean is .5, but how sure we should be of that
+assessment is quite different depending on whether it is based on two or
+one thousands draws. In other words, the \emph{weight} of the evidence
+seems much greater after drawing 1,000 beans and finding out that half
+are black, compared to drawing just two beans and again finding out that
+half are black. The weight of the evidence is different in the two
+cases, but its \emph{balance}---understood here as the relative
+proportion of black-to-white beans---is the same.
 
-Here we can discuss monotonicity, completeness, strong increase, etc
-(see current \textbf{section 1}). We can list the intuitive properties
-(based on the example we presented in both philosophy and law) that any
-theory of weight (and perhaps also of completeness/resilience, but on
-these notions, see later) should be able to capture. We should try to
-keep these requirements as simple as possible and leave complications to
-footnotes.
+Similar remarks can be found in Peirce's 1878
+\emph{Probability of Induction}. There, he also proposes to represent
+uncertainty by at least two numbers, the first depending on the inferred
+probability, and the second measuring the amount of knowledge obtained.
+For the latter, Peirce proposes to use some dispersion-related measure
+of error (but then suggests that an error of that estimate should also
+be estimated and so on, so that ideally more numbers representing errors
+would be needed).
 
-\hypertarget{formal-characterization-of-weight}{%
-\subsection{Formal characterization of
-weight}\label{formal-characterization-of-weight}}
+Peirce did not use the expression the weight of evidence (and, in fact,
+he used the phrase to refer to the balance of evidence, W3 294) {[}CITE
+KASSER 2015{]}. However, his remarks anticipated what came to be called
+weight of evidence by Keynes in his 1921
+\emph{A Treatise on Probability}:
 
-Our account of weight of evidence will be information-theoretic. To
-develop this account, we will first sketch an account of information,
-based on Shannon's theory of information.
+\begin{quote}
+As the relevant evidence at our disposal increases, the magnitude of the
+probability of the argument may either increase or decrease, according as the new knowledge strengthens the unfavourable or the favourable evidence; but something seems to have increased in either case---we have a more substantial basis upon which to rest our conclusion. I express this by saying that an accession of new evidence increases the weight of an argument. (p. 71)
+\end{quote}
+
+\noindent The key point is the same {[}CITE LEVI 2001{]}: since the
+balance of probability alone cannot characterize all important aspects
+of evidential appraisal, another dimension---the weight of an
+argument---must be deployed to quantify uncertainty.
+
+Keynes entertained the possibility of measuring weight of evidence in
+terms of the variance of the posterior distribution of a certain
+parameter, but was quite attached to the idea that weight should
+increase with new information, even if the dispersion may increase with
+new evidence {[}TP 80-82{]}. So he proposed only a very rough sketch of
+a positive proposal. Moreover, he was unclear how a measure of weight
+could be part of decision-making. He was ultimately skeptical about the
+practical significance of the notion. {[}TP 83{]}
+
+\hypertarget{monotonicity}{%
+\subsection{Monotonicity?}\label{monotonicity}}
+
+It is instructive to examine more closely Keynes' claim that the weight
+of evidence, unlike its balance, always increases as more evidence is
+taken into account. While balance can oscillate one direction or the
+other, weight would seem to always increase. We can state this
+requirement as follows:
+
+\begin{tabular}{lp{11cm}}
+(Monotonicity) & If $E$ is relevant to $X$ given $K$, where $K$ is background knowledge, $V(X\vert K \wedge E) > V(X\vert K)$, where $V$ is the weight of evidence.
+\end{tabular}
+
+\noindent Monotonicity is corroborated by Peirce's example about drawing
+from a bag of beans. As the sample size increases and the relative
+proportion of black-to-white beans remains constant, the weight of the
+evidence increases. That is:
+
+\begin{tabular}{lp{11cm}}
+(Weak increase) & In urn-like cases, the evidential weight obtained by a larger sample is greater, if the relative frequencies in the samples remain the same.
+\end{tabular}
+
+\noindent This formulation can be strengthened by dropping the
+assumption of equal relative frequencies:
+
+\begin{tabular}{lp{11cm}}
+(Strong increase) & In urn-like cases, the evidential weight obtained by a larger sample is higher.
+\end{tabular}
+
+\noindent We think there are good reasons to reject Monotonicity and
+Strong Increase, but we agree with Weak Increase. Monotonicity and
+Strong Increase are consistent with a certain conception of the weight
+of evidence, what we might call \emph{quantity} of evidence. After all,
+there is no doubt that, as more evidence is taken into account, the
+quantity of the evidence must increase. But the weight of evidence need
+not be identified with its quantity alone. As more evidence is taken
+into account, the new evidence may speak less clearly in favor or
+against a hypothesis. For consider this example:
+
+\begin{quote}
+\textbf{A (possibly) rigged lottery:} Initially, you think the lottery  is  fair. You have no reason to doubt that. So, you calculate precisely the probability that a certain ticket number will be drawn. Then, rumors begin to surface that the lottery is rigged and that only numbers that satisfy a complicated equation will be drawn. You now have more relevant evidence at your disposal, but that evidence is more confusing and muddled than before. 
+\end{quote}
+
+\noindent Arguably, this is a scenario in which the quantity of evidence
+has increased, but the weight of evidence has not. If this is right,
+weight and quantity can come apart.
+
+So, we seek a theory of evidential weight that can model two intuitions.
+The first is that, as the sample size increases, the weight of the
+evidence must also increase (under certain conditions, along the lines
+of Weak Increase). The second intuition is that that, even when the
+quantity of evidence increases, the weight of evidence might not (as
+illustrated by the example of the rigged lottery).
+
+\hypertarget{weight-and-precise-probabilism}{%
+\subsection{Weight and precise
+probabilism}\label{weight-and-precise-probabilism}}
+
+An obvious place to look for a theory of the weight of evidence is
+within precise probabilism. Without aiming to be exhaustive, we will
+argue that our best bet is to look beyond precise probabilism.
+
+\hypertarget{absolute-value-of-the-likelihood-ratio}{%
+\subsubsection{Absolute value of the likelihood
+ratio}\label{absolute-value-of-the-likelihood-ratio}}
+
+The first attempt is a generalization of the likelihood ratio as a
+measure of the value (or strength) of a piece of evidence relative to a
+pair of competing hypotheses. Crucially, the likelihood ratio is a
+\emph{directional} measure: the evidence may be favorable or unfavorable
+to a hypothesis (compared to another). By contrast, Keynes' remarks
+suggests that weight of evidence is a non-directional measure. It always
+increases no matter the balance. To strip the likelihood ratio of its
+directionality, it is enough to take the absolute value of the natural
+log.
+\todo{CITE: Nance's book "The Burdens of Proof" section 3.5. The quantification of Keynesian Weight.}
+The weight of evidence \(E\) relative to the pair of hypotheses
+\(H, H'\) would be \[\vert \ln (LR_{H, H'}(E)) \vert, \] where
+\(LR_{H, H'}(E)=\frac{P(E \vert H)}{P(E \vert H')}\). By the properties
+of logarithms, \(ln(1/x) = -ln(x)\), so two items of evidence of
+equivalent strength---but opposite directionality---would have the same
+weight. So, for example, \(|ln(1/3)|= |ln(3)| = 1.61\).
+
+This account is simple and elegant, but faces two difficulties. The
+first is technical in nature. As many have pointed out, there is a
+problem with decomposition. Consider two items of evidence that, taken
+together, have a likelihood ratio of one, say one has a likelihood ratio
+of 1/3 and the other of 3. Assuming they are probabilistically
+independent given a hypothesis of interest, their combined likelihood
+ratio results from multiplying the individual likelihood ratios. Thus,
+their combined weight would be zero since
+\(\ln (LR_H(E1 \wedge E_2))=0\). However, by adding the weights one by
+one, the combined weight would be different from zero, since
+\(|ln(1/3)| + |ln(3)| = 3.22\). So, do the two items of evidence have
+zero weight or not? Depending on how evidence is decomposed, it appears
+to have different weights.
+
+There might be a technical fix to the problem of decomposition. But
+another, conceptually deeper problem exists. Whether the log of the
+likelihood has a positive or negative sign, its absolute value is always
+positive. Therefore, as more evidence is added, the weight of evidence
+would always increase. This shows that this account agrees with
+Monotonicity and Strong Increase, and in this sense, it only captures
+the notion of quantity of evidence. The problem, then, is that it cannot
+capture the intuition underlying the scenario of the rigged lottery in
+which, even when quantity increases, weight does not.
+
+\hypertarget{completeness-and-resilience}{%
+\subsubsection{Completeness and
+resilience}\label{completeness-and-resilience}}
+
+Another strategy, within precise probabilism, is to model notions that
+are related, albeit not identical, to weight. The literature has
+suggested that precise probabilism contains the conceptual resources to
+model two related ideas: resilience (or stability) and completeness.
+
+Consider completeness first. \todo{CITE KAYE} Roughly, the proposal is
+this: whenever the evidence available is missing information that one
+would reasonably expect to see in a case, this fact must be taken into
+account in assessing the probability of the hypothesis of interest. So,
+instead of merely assessing \(P(H \vert E)\), one should assess
+\(P(H \vert E \wedge M)\), where \(M\) is the known fact that some
+evidence is missing. On this proposal, the missing evidence is not a
+higher-order fact about the currently available evidence, but itself a
+fact that counts as evidence together with other facts.
+
+A good account of completeness should address a number of questions. For
+example, under what circumstances, should an item of evidence count as
+missing? Admittedly, there are cases in which it is clear that evidence
+is missing, say because it was destroyed, lost or could not be retrieved
+or collected for one reason or another. But evidence could be missing in
+a more speculative sense. For example, if it is routine to see
+breathalyzer evidence in drunk driving cases, what should one make of
+the fact that such evidence is missing in a given case?\footnote{The
+  more general worry here is that evidence is always incomplete.
+  Peirce's example of drawing from a bag of beans makes this clear. In
+  principle, more draws could be made and more evidence could be
+  gathered.} Another difficulty concerns the impact that the missing
+evidence should have on the other evidence. For example, in a case of
+tax fraud, suppose the recording of phone conversation was deleted by
+accident. There is no dispute about that. Now, should this fact increase
+or decrease the probability that the defendant committed fraud?
+
+Turn to resilience now. A precise probability assessment of \(H\) based
+on some evidence \(E\), say \(P(H \vert E)\), is resilient (or stable)
+whenever it does not wiggle too much relative to a reasonable set of
+additional items of evidence \(E'\) that can be conditioned on. In other
+words, \(P(H \vert E)\) is \emph{resilient enough} if and only if the
+absolute difference \(| P(H | E) - P(H \vert E \wedge E')|\) (for any
+element \(E'\) of a reasonable set of additional evidence) is within a
+certain acceptable limit.\todo{CITE SKYRMS}
+
+Resilience consists in evaluating a probability based on evidence not
+yet available. The evidence could take different values---for example,
+in a criminal case, the additional evidence could be exculpatory or
+incriminating. How can additional evidence whose value is unknown affect
+one's assessment of the probability of a hypothesis? Another question is
+which further items of evidence should be included is the reasonable
+set. Obviously, that set must be restricted somehow, or else no
+probability assessment would ever be resilient. A good account of
+resilience should address these questions.
+
+Both resilience and completeness plays a role in trials proceedings. On
+appeal, a defendant might argue that, had additional evidence be taken
+into account, the verdict would have been different. Questions of
+missing evidence are also routinely brought up in litigation. And the
+rules of evidence often deal with questions of missing evidence and
+offer a variety of remedies, from jury instructions to sanctions. In
+this sense, a good theory of how evidence is assessed at trial should
+include an account of completeness and resilience.
+
+Suppose for now that attempts at formalizing resilience and completeness
+can be successful---and we think they can be. A question remains,
+however. Are resilience and completeness the theory of weight we are
+looking for? This is far from clear. We conjecture that weight,
+completeness and resilience are conceptually distinct notions and also
+play distinct roles in legal fact-finding. So it is best not to conflate
+them. Or at any rate, before identifying one with other, a good account
+of each is needed. We sketch a few ideas about these three notions
+towards the end.
+
+\hypertarget{weight-and-imprecise-probabilism}{%
+\subsection{Weight and imprecise
+probabilism}\label{weight-and-imprecise-probabilism}}
+
+A theory of weight can also be formulated using the conceptual resources
+of imprecise probabilism. Unlike resilience and completeness, this
+theory aims to model weight upfront.
+\todo{CITE WEATHERSON ON WEIGHT AND IMPRECISE PROBABILISM} The idea is
+this: a body of evidence is weightier whenever the representor set of
+probability measures compatible with the evidence is smaller. Consider a
+case of complete ignorance about the bias of a coin. The representor set
+will contain \emph{any} probability measure. This corresponds to
+complete lack of evidence and null weight, as expected. At the other
+extreme, consider a case in which the fairness of the coin is known for
+sure. The supporting evidence here would have maximal weight and the
+representor set would only contain the precise probability measure that
+assigns .5 to the two outcomes. All other intermediate cases would fall
+somewhere in between.\footnote{More formally, let \(x_1\) and \(x_2\)
+  the two extreme probability assignments in the representator set
+  compatible with the available evidence \(E\). Then, the weight of
+  \(E\) would be 1-\(x_1-x_2\). As expected, if there is only one
+  probability measure, the weight would be one.}
+
+This account accommodates the intuition underlying the rigged lottery
+example. As more evidenced is accumulated, the representor set can
+become larger and include more probability measures than before. Thus,
+weight of evidence can decrease even when the quantity of evidence
+increases. For this reason, a theory of weight based on imprecise
+probabilism is promising. Its shortcoming, however, is that it inherits
+the difficulties of imprecise probabilism, which we have already
+mentioned. For example, recall that imprecise probabilism cannot model a
+situation in which an epistemic agent believes that the coin could
+biased .8 or .4, but thinks that one biased in more likely than the
+other. Arguably, evidence compatible with the coin having two equally
+likely biases should possess different weight than evidence compatible
+with the coin having two biases one more likely than the other. The
+latter situation is closer to full weight---the situation in which the
+exact bias of the coin is known for sure. A theory of weight based on
+imprecise probabilism is ill-equipped to accommodate these nuances.
+
+\hypertarget{weight-and-higher-order-probabilism}{%
+\subsection{Weight and higher order
+probabilism}\label{weight-and-higher-order-probabilism}}
+
+We are finally ready to present our own account of the weight of
+evidence. This accout has two distinctive features. First, it is based
+on higher-order probabilism. Second, it is information-theoretic. To
+develop this account, we will begin with a sketch of Shannon's theory of
+information.
 
 \hypertarget{entropy-of-a-distribution}{%
 \subsubsection{Entropy of a
@@ -1611,23 +1860,32 @@ its values. Shannon's measure of information, \(H(X)\), reads:
 \begin{align*}
 H(X)  & =
 - \sum \mathsf{P}(x_i) \log_2 \mathsf{P}(x_i)
-\end{align*} \noindent  Suppose the random variable \(X\) can take two
-values---outcome 1 and outcome 0---whose probabilities are .5 each.
-Then, \(H(X)=1\). On the other hand, if the outcomes are not equally
-likely, \(H(X)\) will return a value lower than one. At the extreme, if
-one outcome is close to certainty (and thus the other is extremely
-unlikely), \(H(X)\) would return a value close to zero.
+\end{align*} \noindent  Consider the simple case in which \(X\) can take
+two values---outcome 1 and outcome 0---whose probabilities are \(p\) and
+\(1-p\). Figure (\textbf{REFER TO PLOT of H(X)}) shows \(H(X)\) as a
+function of \(p\). As is apparent from the graph, \(H(X)\) is greatest
+when the two outcomes have an equal probability of .5. The more the
+probabilities deviate from .5, the more \(H(X)\) approaches zero.
 
-To make sense of this, \(H(X)\) can be thought as a measure of the
-\textit{entropy} (i.e.~the lack of information) contained in the whole
-distribution associated with random variable \(X\). So, in this sense,
-\(H(X)\) is greatest when the outcomes are regarded as equally probable
-(maximum entropy), and smallest when one outcome is regarded as certain
-(lowest entropy). On other hand hand, \(H(X)\) is also a measure of
-information, specifically, the \textit{expected amount of information}
-one would receive upon learning the actual value of \(X\). After all,
-the less informative a distribution, the more you expect to learn when
-you find out the value of \(X\), the higher the entropy.\footnote{Since
+To make sense of this, \(H(X)\) can be thought as the \textit{entropy}
+(i.e.~the lack of information) contained in the distribution associated
+with random variable \(X\). When the two outcomes have equal
+probability, entropy is greatest. When they have different
+probabilities, one outcome will be more probable than the other. The
+more probable one of the outcomes (and thus the less likely the other),
+the lower the entropy. Intuitively, \(H(X)\) captures the idea that
+entropy is greatest when the indecision about which outcome will occur
+is maximal, and the entropy decreases when such indecision decreases.
+
+If \(H(X)\) is a measure of entropy---that is, a measure of lack of
+information---why call it a measure of information? \(H(X)\) is also a
+measure of information in the following sense: it describes the
+\textit{expected amount of information} one would receive upon learning
+the actual value of \(X\). After all, the higher the entropy, the less
+informative a distribution, the more you expect to learn upon finding
+out the actual value of \(X\). Conversely, the lower the entropy of the
+distribution, the more informative the distribution, the less one
+expects to learn upon finding out the actual value of \(X\).\footnote{Since
   working with continuous distributions is not straightforward, we will
   be using \emph{grid approximations} of continuous distributions: we
   will split \(X\) into a 1000 bins and use the normalized densities for
@@ -1644,29 +1902,36 @@ distribution}\label{informativeness-of-a-distribution}}
 
 Since \(H(X)\) can be thought as the entropy of a distribution, we will
 switch to the notation \(H(P)\). This notation emphasizes the
-distribution \(P\) rather then the random variable \(X\). The entropy of
+distribution \(P\) rather than the random variable \(X\). The entropy of
 a distribution is to be contrasted with its informativeness, which we
-will denote by \(W(P)\), the weight of the distribution. To measure the
-weight (or informativeness) of a distribution, it is best to compare it
-to the least informative distribution, the uniform distribution. The
-idea is that the more informative a distribution, as compared to the
-uniform distribution, the more weight it has, on scale 0 to 1: if the
-drop from uncertainty is complete, the entropy drops to zero, and we
-would like the weight to be 1, if the drop is null we would like to be
-zero, and if the drop is half, we would like to be .5 (and so on for
-other proportions). This can be achieved by the following definition:
+will denote by \(W(P)\), the weight of the distribution. How should we
+measure the informativeness (or weight) of a distribution?
+
+Since informativeness is the opposite of entropy, it is tempting to take
+the short route and define \(W(P)\) as \(1-H(P)\). But, for reasons that
+will be become clear (\textbf{WHEN?}), the weight (or informativeness)
+of a distribution is more aptly modeled by comparing it to the least
+informative distribution, the uniform distribution which expresses
+complete uncertainty. The idea is this: the more informative a
+distribution, the more it departs from the uniform distribution, the
+more weight it has, on a scale from 0 to 1. If the drop from uncertainty
+is complete, the entropy drops to zero, and thus the weight should be 1;
+if the drop is null, the entropy remains the same, and thus the weight
+should be zero; if the drop is half, the weight should be .5; and so on
+for other intermediate cases. This pattern can be captured by the
+following definition of informativeness (or weight) of a distribution:
 \begin{align*}
 \mathsf{w(P_i)} & = 1 - \left( \frac{H(\mathsf{P})}{H(\mathsf{uniform})}\right)
-\end{align*} \noindent where \(\mathsf{P}\) is probability distribution
-of interest and baseline uniform distribution.\footnote{Since we are
-  using grip approximation, \(\mathsf{P}\) is the discrete probability
-  distribution for a given number of bins \(n\), and uniform is the
-  discrete uniform distribution for the same number of bins. In some
-  contexts it might make sense to measure improvement with respect to a
-  non-uniform prior. In such cases, \(H(\mathsf{uniform})\) is to be
-  replaced by \(H(\mathsf{prior})\). Note that the entropy of a uniform
-  distribution is pretty straightforward, so we can simplify:
-  \begin{align*}
+\end{align*} \noindent where \(\mathsf{P}\) is the probability
+distribution of interest and \(\mathsf{uniform}\) is the baseline
+uniform distribution.\footnote{Since we are using grip approximation,
+  \(\mathsf{P}\) is the discrete probability distribution for a given
+  number of bins \(n\), and uniform is the discrete uniform distribution
+  for the same number of bins. In some contexts it might make sense to
+  measure improvement with respect to a non-uniform prior. In such
+  cases, \(H(\mathsf{uniform})\) is to be replaced by
+  \(H(\mathsf{prior})\). Note that the entropy of a uniform distribution
+  is pretty straightforward, so we can simplify: \begin{align*}
   H(\mathsf{uniform}) & = \sum_{i=1}^n \nicefrac{1}{n} \log_2 \frac{1}{\nicefrac{1}{n}} \\
   & = \log_2(n) \\
   \mathsf{w(P_i)} & = 1 - \left( \frac{H(\mathsf{P})}{\log_2(n)}\right)
@@ -1684,7 +1949,8 @@ expected.
 
 \begin{figure}[H]
 
-\begin{center}\includegraphics[width=1\linewidth]{chapter-outline_files/figure-latex/fig:weightsWeird-1} \end{center}
+DISPLAY GRAPHS WITH DISTR OF VARIOUS SHAPES AND WEIGHT
+
 \caption{Examples of various distributions with their entropies and weights, ordered by weights. (1) beta(4,4), (2) uniform starting from .5 to 1, (3), uniform strating from .6 to 1, (4) two normal distributions centered around .4 and .6 with standard deviation .05, glued at .5. (5) normal centered around .5 with the same standard deviation, (6) one that assigns .5 to each of .4  and .6, (7) One that assigns .3 to .4 and .7 to .6., (8) one that assigns all weight to .5, and (9) one that assigns all weight to .7.}
 
 \label{fig:weightsWeird}
@@ -1693,30 +1959,43 @@ expected.
 \hypertarget{weight-of-evidence-1}{%
 \subsubsection{Weight of evidence}\label{weight-of-evidence-1}}
 
-So far we have discussed the weight of a distribution, meant to measure
-how informed an agent is about an issue. If the agent starts with a
-uniform prior, this is a good enough approximation of how informed the
-evidence made them. But in general, how much more information is
-obtained is context-dependent. We want a prior-relative notion of
-weight, following the intuition that weight considerations should guide
-our information gathering also in making us stop collecting further
-evidence in light of what we already know. But for weight of evidence to
-have this feature, it has to depend on what we already know.
+Suppose a distribution \(P\) depicts what an agent thinks, at some point
+in time, about the probability of the possible outcomes a random
+variable \(H\). In this sense, the informativeness (or weight) of a
+distribution \(W(P)\) measures how informed an agent is about \(H\). But
+it measures the information level of an agent only relative to the state
+of full uncertainty represented by the uniform distribution. There are
+two things missing from this account: first, not every agent starts with
+a uniform prior; second, how informed an agent is must depend on the
+evidence available to that agent. What we need, then, is an account of
+how informed agents are \textit{on the basis of the evidence} they have,
+or in other words, an account of the weight (or informativeness) of the
+evidence they have.
 
-So here is a general recipe. In a given context, consider your
-distribution for the target hypothesis \(H\) given what you already
-know. Then update on the evidence. This might increase the weight for
-\(H\), if the evidence confirms your conviction, or decrease it, if it
-goes against what the previous evidence tells you. Take the difference
-between the prior weight and the posterior weight (\(\Delta w\)) as your
-measure of the weight of evidence in that context. If you prefer to
-think that weight of evidence should be always positive, you might
-prefer the absolute value thereof. We, however, prefer to keep track of
-whether the evidence makes you more or less confused. The calculation
-goes along the following schema:
+If the agent starts with a uniform prior over the values of a random
+variable of interest, \(W(P)\) would be a good enough approximation of
+how informed the evidence made them. In general, however, how much more
+information is obtained is context-dependent. The weight of evidence,
+then, must depend on what the agent already knows. Here is a general
+recipe. In a given context, consider the prior distribution \(P_0\) for
+the target hypothesis \(H\) given what the agent already knows. Then,
+the agent updates by a body of evidence \(E\). Call this posterior
+distribution \(P_E\), where the updating is done by standard Bayesian
+conditionalization. Take the difference between the weight of the prior
+distribution, \(W(P_0)\), and the weight of the posterior distribution,
+\(W(P_E)\). The difference between the two--\(W(P_E)-W(P_0)\) or more
+succinctly \(\Delta W\)---masures the impact that evidence \(E\) has on
+the information level of the evidence. The difference \(\Delta W\),
+then, is our proposed measure of the weight of the evidence.\footnote{If
+  you prefer to think that weight of evidence should be always positive
+  as a result of adding evidence, you might prefer the absolute value of
+  the difference. We, however, prefer to keep track of whether the
+  evidence makes the agent more or less informed about an issue.}
+
+More precisely, the calculation follows the following schema:
 
 \begin{enumerate}
-\item Start with a prior distribution over the parameter space of interest, and with distributions expressing the agent's uncertainty about other probabilities involved in the calculation of the posterior.
+\item Start with a prior distribution over the parameter space of interest and with distributions expressing the agent's uncertainty about other probabilities involved in the calculation of the posterior, say the likelihood of the evidence under different possible outcomes.
 \item Sample from these distributions.
 \item For each sample, treat it as a selection of precise probabilities, apply Bayes' theorem to calculate the posterior.
 \item The set of the results is the sampling distribution expressing your posterior uncertainty.
@@ -1805,9 +2084,9 @@ does higher order probabilism help address the practical objection that
 we often we do not have the numbers we need to plug into the Bayesian
 network?
 
-\hypertarget{completeness-and-resilience}{%
+\hypertarget{completeness-and-resilience-1}{%
 \section{Completeness (and
-resilience?)}\label{completeness-and-resilience}}
+resilience?)}\label{completeness-and-resilience-1}}
 
 Next the chapter turns to notions related to the weight of evidence,
 such as completeness (and perhaps resilience as well). See current
