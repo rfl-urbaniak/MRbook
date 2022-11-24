@@ -1,5 +1,5 @@
 ---
-title: "Second-order probability, weight of evidence & accuracy"
+title: "Second-order Probability, Accuracy and Weight of Evidence"
 author: "Rafal Urbaniak and Marcello Di Bello"
 date: ""
 output:
@@ -118,7 +118,7 @@ goes something like this. To evaluate the strength of the two items of match evi
 \[\frac{\pr{\s{dog}\wedge \s{hair} \vert \s{source}}}{\pr{\s{dog}\wedge \s{hair} \vert \neg \s{source}}}\]
 For simplicity, the numerator can be equated to one. 
 To fill in the denominator, an expert provides the relevant random match probabilities. Suppose the expert testifies that the probability of a random person's hair matching the reference sample is about `r round(hairMean,4)`, and the probability of a random dog's hair matching the reference sample happens to be about the same, `r round(dogMean,4)`.^[Probabilities have been slightly but not unrealistically modified to be closer to each other in order 
-to make a conceptual point. The original probabilities were  1/100 for the dog fur, and 29/1148 for Wayne Williams' hair. We modified the actual reported probabilities slightly to emphasize the point that we will elaborate further on: the same first-order probabilities, even when they sound precise, may be affected by second-order uncertainty to different extents.] 
+to make a conceptual point. The original probabilities were  1/100 for the dog fur, and 29/1148 for Wayne Williams' hair. We modified the actual reported probabilities slightly to emphasize the point that we will elaborate further on: the same first-order probabilities, even when they sound precise, may be affected by second-order uncertainty to different degrees.] 
 <!---result from various items of evidence connected to various levels of second-order uncertainty.--->
 <!---You assume that the probabilities of matches if the suspect (respectively, the suspect's dog) is the source is one, and that --->
 Presumably, the two matches are independent lines of evidence. In other words, their random match probabilities <!---of a match---> must be independent of each other conditional on <!---either truth value of---> the source hypothesis. <!---, namely that the defendant (or the defendant's dog) is the source of the hair (or dog fur) found at the scene --->  <!----and $\neg \mathsf{source}$).---> Then, to evaluate the overall impact of the evidence on the source hypothesis, you calculate: 
@@ -126,13 +126,13 @@ Presumably, the two matches are independent lines of evidence. In other words, t
 \pr{\s{dog}\wedge \s{hair} \vert \neg \s{source}} & = \pr{\s{dog} \vert \neg \s{source}} \times \pr{\s{hair} \vert \neg \s{source}} \\
 & =  `r hairMean` \times  `r dogMean` = `r hairMean * dogMean`
 \end{align*}
-This is a very low number. Two such random matches would be quite a coincidence. Following our advice from Chapter 5, the expert  facilitates your understanding  of how this low number should be interpreted by showing you how
-the  items of match evidence change the probability of the source hypothesis given a range of possible priors    (Figure \ref{fig:impactOfPoint}).  The posterior of .99 is reached as soon as the prior is higher than  `r threshold`.^[These calculations assume that the probability of a match if the suspect and the suspect's dog are the sources is one.]
+This is a very low number. Two such random matches would be quite a coincidence. Following our advice from Chapter 5, the expert  facilitates your understanding  of how this low number should be interpreted. They show you how
+the  items of match evidence change the probability of the source hypothesis given a range of possible priors (Figure \ref{fig:impactOfPoint}).  The posterior of .99 is reached as soon as the prior is higher than  `r threshold`.^[These calculations assume that the probability of a match if the suspect and the suspect's dog are the sources is one.]
 While perhaps not sufficient for outright belief in the source hypothesis, the evidence seems extremely strong: a minor additional piece of evidence could make the case against the defendant overwhelming. 
 
 
 \begin{figure}[H]
-```{r impactOfPoint4,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "80%", warning = FALSE, message = FALSE}
+```{r impactOfPoint4,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "60%", warning = FALSE, message = FALSE}
 pointImpactPlot
 ```
 \caption{Impact of dog fur and human hair evidence on the prior, point estimates.}
@@ -174,21 +174,14 @@ charitableImpactPlot <- ggplot()+geom_line(aes(x = prior, y = posteriorL))+xlim(
 
 The expert's answer makes apparent that the precise random match probabilities do not tell the whole story. What to do, then?  <!---You might try to factor what you have been just informally told into your evaluation, but unless you have some training in probability, you might have hard time doing this correctly. --> <!---So instead, you push the expert further:--->
 You ask the expert for guidance: <!---With a 99\% margin of errors, what are the ranges for these estimates?--->
-what are reasonable ranges of the random match probabilities? What are the worst-case and best-case scenarios? The expert responds with 99% credible intervals---specifically, starting with uniform priors, the ranges of the random match probabilities are (.015,.037) for hair evidence and (.002, .103) for fur evidence.^[Roughly, the 99\% credible interval is the narrowest interval to which the expert thinks the true parameter belongs with probability .99. For a discussion of what credible intervals are, how they differ from confidence intervals, and why confidence intervals should not be used, see the discussion in Chapter XXX.] With this information, you redo your calculations using the upper bounds of the two intervals: $.037$ and $.103$. The rationale for choosing the upper bounds is that these numbers result in random match probabilities that are most favorable to the defendant. Your new calculation yields the following:
+what are reasonable ranges of the random match probabilities? What are the worst-case and best-case scenarios? The expert responds with 99% credible intervals---specifically, starting with uniform priors, the ranges of the random match probabilities are (.015,.037) for hair evidence and (.002, .103) for fur evidence.^[Roughly, the 99\% credible interval is the narrowest interval to which the expert thinks the true parameter belongs with probability .99. For a discussion of what credible intervals are; how they differ from confidence intervals; and why confidence intervals should not be used, see Chapter XXX.] With this information, you redo your calculations using the upper bounds of the two intervals: $.037$ and $.103$. The rationale for choosing the upper bounds is that these numbers result in random match probabilities that are most favorable to the defendant. Your new calculation yields the following:
 \begin{align*}
 \mathsf{P}(\s{dog}\wedge \s{hair} \vert \neg \s{source})   & =  .037 \times .103 =.003811.
 \end{align*}
 <!---calculate the estimate that is the most charitable to the suspect.--->  This number is around `r round(.003811/lik0,2)` times greater than the original estimate. Now the prior probability of the source hypothesis needs to be higher than `r thresholdL` for the posterior probability to be above .99 (Figure \ref{fig:impactOfCharitable}). So you are no longer convinced that the two items of match evidence are strongly incriminating.
 
-
-
-
-
-
-
-
 \begin{figure}[H]
-```{r fig:charitableImpact7,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "80%", warning = FALSE, message = FALSE}
+```{r fig:charitableImpact7,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "60%", warning = FALSE, message = FALSE}
 charitableImpactPlot
 ```
 \caption{Impact of dog fur and human hair evidence on the prior, charitable reading.}
@@ -196,7 +189,7 @@ charitableImpactPlot
 \end{figure}
 
 
-This outcome is puzzling.  Are the two items of match evidence strongly incriminating evidence (as you initially thought) or somewhat weaker (as the new calculation suggests)? For one thing,  using precise random match probabilities might be too unfavorable toward the defendant. On the other hand, your new assessment of the evidence based on the upper bounds might be too *favorable* toward him. Is there a middle way that avoids overestimating and underestimating the value of the evidence?
+This result is puzzling.  Are the two items of match evidence strongly incriminating evidence (as you initially thought) or somewhat weaker (as the new calculation suggests)? For one thing,  using precise random match probabilities might be too unfavorable toward the defendant. On the other hand, your new assessment of the evidence based on the upper bounds might be too *favorable* toward them. Is there a middle way that avoids overestimating and underestimating the strength of the evidence?
 
 To see what this middle path looks like, 
 we should reconsider the calculations you just did. 
@@ -210,8 +203,8 @@ So, in the case of the two items of match evidence, if you knew what distributio
 --->
 
 Still, the interval approach---even the corrected version just outlined---suffers from a more general problem. 
-Working with intervals might be useful if the underlying distributions are fairly symmetrical. But in our case, they might not be. For instance, Figure \ref{fig:densities} depicts beta densities for dog fur and human hair, together with sampling-approximated density for the joint evidence.  The distribution for the joint evidence is not symmetric. <!---, and so switching the margin of error moves the right edge of the interval much faster towards lower values.---> If you were only informed about the edges of the interval, you would be oblivious to the fact that the most likely value (and the bulk of the distribution, really) does not simply lie in the middle between the edges of the interval. Just because the parameter lies in an interval with some posterior probability, it does not mean that the ranges near the edges of the interval are equally likely---the bulk of the density might very well be closer to one of the edges. Therefore, relying on the edges only can lead one to either over-estimate or under-estimate the probabilities at play. 
-This also means that---following our advice to illustrate the impact of evidence on the prior--- a better representation of the uncertainty involving the dependence of the posterior on the prior involves multiple possible sampled  lines whose density mirrors the density around the probability of the evidence (Figure \ref{fig:lines}).
+Working with intervals might be useful if the underlying distributions are fairly symmetrical. But in our case, they might not be. For instance, Figure \ref{fig:densities} depicts beta densities for dog fur and human hair, together with sampling-approximated density for the joint evidence.  The distribution for the joint evidence is not symmetric. <!---, and so switching the margin of error moves the right edge of the interval much faster towards lower values.---> If you were only informed about the edges of the interval, you would be oblivious to the fact that the most likely value (and the bulk of the distribution, really) does not simply lie in the middle between the edges. Just because the parameter lies in an interval with some posterior probability, it does not mean that the ranges near the edges of the interval are equally likely---the bulk of the density might very well be closer to one of the edges. Therefore, only relying on the edges  can lead one to either overestimate or underestimate the probabilities at play. 
+This also means that---following our advice on how to illustrate the impact of evidence on prior probabilities---a better representation of the dependence of the posterior on the prior should comprise multiple possible sampled lines whose density mirrors the density around the probability of the evidence (Figure \ref{fig:lines}).
 
 
 
@@ -396,7 +389,7 @@ densitiesLinesPlot <- ggplot()+geom_line(aes(x = prior, y = jointPosteriorDF[,1]
 
 
 \begin{figure}[H]
-```{r fig:lines3,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "80%", warning = FALSE, message = FALSE}
+```{r fig:lines3,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "60%", warning = FALSE, message = FALSE}
 densitiesLinesPlot
 ```
 
@@ -445,7 +438,6 @@ illustration 3 (theory): modeling weight.}
 
 <!-- \textbf{Side comment:} I think for expository clarity, we should emphasize two contributions here. One is the contribution to higher order uncertainty. This is an improvement on imprecise probabilism. This I think is already an important contribution that fares better than imprecise probabilism. The second contribution is the theory of weight that is built out of the higher order uncertainty framework. The two issues seems separate to me. One could be interested in question of higher order uncertainty and imprecise probabilism without being interested in questions of weight.\todo{To some extent, but one of the motivations behind moving away from precise probabilism is that it doesn't allow for distinguishing cases in which the weight of evidence is different} -->
 
-\pagebreak 
 
 # Three Probabilisms
 
@@ -465,7 +457,7 @@ capture an important dimension of how
 our fallible beliefs reflect the evidence 
 we have (or have not) obtained. A couple of stylized 
 examples should make the point clear. (For the sake of simplicity, 
-we will use examples featuring coins, but coin biases can be thought of as  random match probabilities in the forensic context.)
+we will use examples featuring coins, but biases of coins can be thought of as  random match probabilities in the forensic context.)
 
 <!---but the points are general and hold for all sampling based frequency estimation methods, including those of random match probability for various pieces of forensic evidence):--->
 
@@ -509,7 +501,7 @@ Imprecise probabilism, at least \emph{prima facie}, offers a straightforward pic
 \noindent
 The hope is that, if we start with a range of probabilities that is not extremely wide, point-wise learning will behave appropriately.
 <!---^[The hope is also that \s{IP} offers a feasible aggregation method [@Elkin2018resolving;@Stewart2018pooling]: just put all representors together in one set, and voil\'a! However, this is a very conservative method which quickly leads to extremely few points of agreement, and we are not aware of any successful practical deployment of this method.]
---->For instance, if we start with a prior probability of \emph{heads} equal to .4 or .6, then those measure should be updated to something closer to $.5$ once we learn that a given coin has already been tossed  ten times with the observed number of heads equal 5 (call this evidence $E$). This would mean that if the initial range of values was $[.4,.6]$ the posterior range of values should be more narrow. But even this seemingly straightforward piece of reasoning is hard to model if we want to avoid using densities. For to calculate $\pr{\s{heads}\vert E}$ we need to calculate $\pr{E \vert \s{heads}}\pr{\s{heads}}$ and divide it by $\pr{E} = \pr{E \vert \s{heads}}\pr{\s{heads}} + \pr{E} = \pr{E \vert \neg \s{heads}}\pr{\neg \s{heads}}$. The tricky part is obtaining the conditional probabilities $\pr{E \vert  \s{heads}}$ and $\pr{E \vert \neg \s{heads}}$ in a principle manner without explicitly going second-order, estimating the parameter value and using beta distributions. 
+--->For instance, if we start with a prior probability of \emph{heads} equal to .4 or .6, then those measure should be updated to something closer to $.5$ once we learn that a given coin has already been tossed  ten times with the observed number of heads equal 5 (call this evidence $E$). This would mean that if the initial range of values was $[.4,.6]$ the posterior range of values should be more narrow. But even this seemingly straightforward piece of reasoning is hard to model without using densities. For to calculate $\pr{\s{heads}\vert E}$ we need to calculate $\pr{E \vert \s{heads}}\pr{\s{heads}}$ and divide it by $\pr{E} = \pr{E \vert \s{heads}}\pr{\s{heads}} + \pr{E} = \pr{E \vert \neg \s{heads}}\pr{\neg \s{heads}}$. The tricky part is obtaining the conditional probabilities $\pr{E \vert  \s{heads}}$ and $\pr{E \vert \neg \s{heads}}$ in a principled manner without explicitly going second-order, estimating the parameter value and using beta distributions. 
 
 
 The situation is even more difficult if we start with complete lack of knowledge, as imprecise probabilism runs into the problem of **belief inertia**  [@Levi1980enterprise]. Say  you start tossing a coin  knowing nothing about its bias. The range of possibilities is $[0,1]$. After a few tosses, if you observed at least one tail and one heads, you can exclude the measures assigning 0 or 1 to \emph{heads}. But what else have you learned? <!---Let's agree that each particular measure from your initial representor set is updated to a measure closer to .5, but also now each value in your original interval  can be obtained by updating   some *other* measure in your original representor on the evidence, and the picture does not change  no matter how many observations you have made.  For instance, some measure that initially assigned .4 to \s{heads} might now assign \s{.45} to \s{heads}, but now a measure that assigned .37 to heads has been updated to one that assigns $.4$ to \s{heads}.---> If you are to update your representor set point-wise, you will end up with the same representor set.  Consequently, the edges of your resulting interval will remain the same. In the end, it is not clear how you are supposed to learn anything if you start from complete ignorance.^[Here's another example from @Rinard2013against. Either all the marbles in the urn are green ($H_1$), or exactly one tenth of the marbles are green ($H_2$). Your initial credence $[0,1]$ in each. Then you learn that a marble drawn at random from the urn is green ($E$). After conditionalizing each function in your representor on this evidence, you end up with the  the same spread of values for $H_1$ that you had  before learning $E$, and  no matter  how many marbles are sampled from the urn and found to be green.]
@@ -549,7 +541,7 @@ Bradley suggests that "statistical evidence might inform [evidential] constraint
 
 ## Higher-order Probabilism
 
-There is, however, a view in the neighborhood that fares better: a second-order perspective. In fact, some of the comments by the proponents of imprecise probabilism tend to go in this direction. For instance,  Seamus Bradley   compares the measures in a representor to committee members, each voting on a particular issue, say the true chance or bias of a coin. As they acquire more evidence, the committee members will often converge on a specific chance hypothesis. He writes [@bradley2012scientific, p. 157]:
+There is, however, a view in the neighborhood that fares better: a second-order perspective. In fact, some of the comments by the proponents of imprecise probabilism tend to go in this direction. For instance,  Seamus Bradley   compares the measures in a representor to committee members, each voting on a particular issue, say the true bias of a coin. As they acquire more evidence, the committee members will often converge on a specific chance hypothesis. He writes [@bradley2012scientific, p. 157]:
 \begin{quote}
 \dots the committee members are ''bunching up''. Whatever measure you put over the set of probability functions---whatever ''second order probability'' you use---the ''mass'' of this measure gets more and more concentrated around the true chance hypothesis'.
 \end{quote}
@@ -563,7 +555,7 @@ The idea that one should use  higher-order probabilities  has also been suggeste
 
 The key idea of the higher-order approach we propose is that uncertainty is not a single-dimensional thing to be mapped on a single one-dimensional scale such as a real line. It is the whole shape of the whole distribution over parameter values that should be  taken under consideration.^[Bradley admits this much [@bradley2012scientific, 90], and so does  Konek  [@konek2013foundations, 59]. For instance, Konek disagrees with: (1)  $X$ is more probable than $Y$ just in case $p(X)>p(Y)$, (2)  $D$ positively supports $H$ if $p_D(H)> p(H)$, or (3)  $A$ is preferable to $B$ just in case the expected utility of $A$ w.r.t. $p$ is larger than that of $B$.] From this perspective, when an agent is asked about their credal stance towards $X$, they can refuse to summarize it in terms of a point value $\mathsf{P}(X)$. They can instead express their credal stance in terms of a probability (density) distribution $f_x$ treating  $\mathsf{P}(X)$ as a random variable.  To be sure, an agent's credal state toward $X$ could sometimes be usefully represented by the expectation  
 \[\int_{0}^{1} x f(x) \, dx\] 
-as the precise, object-level credence in $X$, where $f$ is the probability density over possible object-level probability values. But this need not always be the case. If the probability density $f$ is not sufficiently concentrated around a single value, a one-point summary might fail to do justice to the nuances of the agent's credal state.^[This approach lines up with common practice in Bayesian statistics, where the primary role of uncertainty representation is assigned to the whole distribution. Summaries such as the mean, mode standard deviation,  mean absolute deviation, or highest posterior density intervals are only succinct ways for representing the uncertainty of a given scenario. Whether the expectation should be used in betting behavior is a separate problem. Here we focus on epistemic issues.]   For example, consider again the scenario in which the agent knows that the bias of the coin is  either .4 or .6 but the former is three times more likely. The agent might refuse to summarize their credal state with the expectation $\mathsf{P}(X) = .75 \times .4 + .25 \times .6 = .45$.  
+as the precise, object-level credence in $X$, where $f$ is the probability density over possible object-level probability values. But this need not always be the case. If the probability density $f$ is not sufficiently concentrated around a single value, a one-point summary might fail to do justice to the nuances of the agent's credal state.^[This approach lines up with common practice in Bayesian statistics, where the primary role of uncertainty representation is assigned to the whole distribution. Summaries such as the mean, mode standard deviation,  mean absolute deviation, or highest posterior density intervals are only succinct ways for representing the uncertainty of a given scenario. Whether the expectation should be used in betting behavior is a separate problem. Here we focus on epistemic issues.]   For example, consider again the scenario in which the agent knows that the bias of the coin is  either .4 or .6 but the former is three times more likely. Representing the agent's credal state with the expectation $\mathsf{P}(X) = .75 \times .4 + .25 \times .6 = .45$ would be inadequate as it would fail to capture the agent's belief that the two biases are uneven. 
 
 The higher-order approach can easily model all the challenging scenarios we discussed so far in the manner illustrated in Figure \ref{fig:evidenceResponse}. In particular, the scenario in which the two biases of the coin are not equally likely---which imprecise probabilism cannot model---can be easily modeled within high-order probabilism by assigning different probabilities to the two biases.
   
@@ -605,7 +597,7 @@ TwoUnbalancedPlot <- ggplot(TwoUnbalancedDF, aes(x = p, y = TwoUnbalancedDensity
 
 
 \begin{figure}[t]
-```{r fig:evidenceResponse2,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%"}
+```{r fig:evidenceResponse2,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "80%"}
 grid.arrange(FairPlot,UniformPlot, TwoPlot, TwoUnbalancedPlot)
 ```
 \caption{Examples of higher-order distributions for scenarios brought up in the literature.}
@@ -684,7 +676,7 @@ InertiaTwoGoneBluePlot <- ggplot()+geom_line(aes(x = ps, y = posterior2g1b))+the
 
 
 \begin{figure}[t]
-```{r fig:inertia3, echo=FALSE, eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
+```{r fig:inertia3, echo=FALSE, eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "80%",   message = FALSE, warning = FALSE, results = FALSE}
 grid.arrange(InertiaPriorPlot, InertiaOneGPlot,  InertiaTwoGPlot, InertiaTwoGoneBluePlot, ncol = 2, nrow = 2)
 ```
 \caption{As observations of heads, heads and tails come in, extreme parameter values drop out of the picture and the posterior is shaped by the evidence.}
@@ -692,23 +684,25 @@ grid.arrange(InertiaPriorPlot, InertiaOneGPlot,  InertiaTwoGPlot, InertiaTwoGone
 \end{figure}
 
 
-A further advantage of high-order probabilism over imprecise probabilism is that the prospects for accuracy-based arguments are not foreclosed. This is a significant shortcoming of imprecise probabilism, especially because such arguments exist for precise probabilism. One can show that there exist proper scoring rules for higher-order probabilism. These rules can then be used to formulate accuracy-based arguments. Another interesting feature of the framework is that the point made by Schoenfield against imprecise probabilism does not apply: there are cases in which accuracy considerations recommend an imprecise stance (that is, a multi-modal distribution) over a precise one ((Urbaniak, 2022 manuscript).
+A further advantage of high-order probabilism over imprecise probabilism is that the prospects for accuracy-based arguments are not foreclosed. This is a significant shortcoming of imprecise probabilism, especially because such arguments exist for precise probabilism. One can show that there exist proper scoring rules for higher-order probabilism. These rules can then be used to formulate accuracy-based arguments. Another interesting feature of the framework is that the point made by Schoenfield against imprecise probabilism does not apply: there are cases in which accuracy considerations recommend an imprecise stance (that is, a multi-modal distribution) over a precise one (Urbaniak, 2022 manuscript).
 
-All in all, higher-order probabilism outperforms both precise and imprecise probabilism, at the descriptive as well as the normative level. From a descriptive standpoint, higher-order probabilism can easily modeled a variety of scenarios that cannot be adequately modeled by the other versions of probabilism. From a normative standpoint, accuracy maximization may sometimes recommend that a rational agent represent their credal state with a distribution over probability values rather than a precise probability measure. 
-
-
+All in all, higher-order probabilism outperforms both precise and imprecise probabilism, at the descriptive as well as the normative level. From a descriptive standpoint, higher-order probabilism can easily model a variety of scenarios that cannot be adequately modeled by the other versions of probabilism. From a normative standpoint, accuracy maximization may sometimes recommend that a rational agent represent their credal state with a distribution over probability values rather than a precise probability measure (more on this in the next section). 
 
 
 
 
-\pagebreak
 
-# Objections to the higher-order approach
+
+
+# Objections to the Higher-order Approach
 
 <!---You might have some concerns about the way we propose to use  higher-order probabilities and densities in evidence evaluation. Some prominent scholars in field certainly do. ---> 
 This section addresses a number of conceptual difficulties that may arise in using higher-order probabilities, with focus on  those brought up by prominent legal evidence scholars. In discussing these conceptual issues, we will formulate an accuracy-based argument that using higher-order probabilities is actually preferable to precise probabilities.
 
 <!-- To keep the discussion concrete, we will focus on how evidence should be assessed at trial. -->
+
+
+## The Taroni-Sjerps Debate
 
 Our main polemic target is a discussion initiated by 
 @Taroni2015Dismissal, who argue extensively that trial experts should only report point estimates. Their point of departure is a reflection on match evidence. <!---The prosecution hypothesis, $H_p$ is that the suspect is the source of the trace, and the defense hypothesis, $H_d$, is that another person, unrelated to the suspect is the origin of the trace. The evidence $E$ is that a match has been reported. Typically, if $H_p$ holds, it is assumed the laboratory will report a match, so that $\pr{E\vert H_p}=1$ and the likelihood ratio reduces to $\nicefrac{1}{\pr{E \vert H_d}}$. --->
@@ -754,12 +748,13 @@ In case of a DNA match, they recommend that the expert report the expected value
 
 <!---This criticism has been countered by  @Sjerps2015Uncertainty. One point they raise is that the distinction between states of nature which can be estimated and mental attitudes which are purely subjective and cannot be in any meaningful way estimated is a bit too hasty. Once the background information, the priors, the hypotheses and the evidence are specified, the higher-order uncertainty about $\theta$ follows from the probability calculus, and it is by no means arbitrary to what extent various potential values of $\theta$ are supported by the evidence. 
 --->
+
 @Sjerps2015Uncertainty disagree. In reporting a single value, the expert would refrain from providing the fact-finders with relevant information 
 <!--- which is reasonably supported by the data and can have impact on the result of evidence evaluation and incorporation.--->
 that can make a difference in the evaluation of the evidence. 
 <!---Crucially, the fact finders are interested in  what @Sjerps2015Uncertainty call the reliability of the evidence, and it depends on the distribution (as we already illustrated in the first section of this chapter).---> 
 There is a difference between (a) an expert who is certain $\theta$ is $.1$; (b) an expert whose best estimate of $\theta$ is $.1$ based on a thousand of observations; and (c) an expert whose best estimate of $\theta$ is again $.1$ but based on only ten observations. <!--- Complete information about the impact of the evidential basis of an estimate on expert's uncertainty about it allows the fact-finders to reasonably go about trying to be on the safe side working on the presumption of innocence. --->
-As our earlier discussion of precise probabilism makes clear, a simple point estimate (or precise probability) would fail to capture these differences.^[ @Taroni2015Dismissal at some point suggest that the expert, aside of providing a point estimate, should also informally explain how the estimate was arrived at, and that it would be helpful if the recipients of this information were instructed in "the nature of probability, the importance of an understanding of it and its proper use in dealing with uncertainty" [p. 16]. But this is unsatisfactory. Depriving  the fact-finders of quantifiable information about aleatory uncertainty related to the parameter of interest, replacing this information with an informal description of what the expert did, while telling them that the nature of probability is important and hoping for the best <!---when it comes to their proper assessment and use of the point estimates ---> is wildly optimistic, to say the least.]
+These three scenarios mirror scenarios we discussed earlier: (a) the bias of a coin is known for sure; (b) the bias is estimated on the basis of a large number of tosses; and (c) the bias is estimated using a small set of observations. As our critique of precise probabilism makes clear, a simple point estimate (or precise probability) would fail to capture the differences among the three scenarios.^[@Taroni2015Dismissal admits that the expert, besides providing a point estimate, should also informally explain how the estimate was arrived at. They grant that this additional information can be helpful so long as the recipients are instructed on "the nature of probability, the importance of an understanding of it and its proper use in dealing with uncertainty" [p. 16]. But why stop at an informal presentation? It is unclear why the fact-finders should be deprived of quantifiable information about the aleatory uncertainty of the parameter of interest and only be given an informal description of what the expert did, along with some remarks about the nature of probability. It is wildly optimistic to assume this way of proceeding is enough to secure a proper assessment of the evidence.]
 
 
 <!---
@@ -768,7 +763,14 @@ does not a priori decrease the first order probability and might as well increas
 Finally, their reply to the integration recommendation is somewhat case-specific, as on their approach to the weight of evidence they deal with multiple probability measures, and so their integration would be illegitimate.
 --->
 
-Before we get into the surprisingly philosophical intricacies of the debate between forensic scientists and legal evidence scholars, let us make a point that should convince you that the higher-order approach is preferable, no matter your philosophical convictions about the nature of probability, propositions or the relation between uncertainty and betting behavior. The point is simple. If you dump free information that you already have in the densities and run with point estimates, your predictions about the world will be less accurate in a very precise quantifiable sense.
+The debate between @Taroni2015Dismissal and @Sjerps2015Uncertainty mostly rests on diverging philosophical commitments about the nature of probability and the relation between uncertainty and betting behavior. @Taroni2015Dismissal argues that, if  probabilities express an agent's epistemic attitude towards a proposition, probabilities are not states of nature, but states of mind associated with individuals. For them, this commitment to subjective probability has two consequences. First, it makes no sense sense to talk about second-order uncertainty about subjective probabilities, as there is no underlying state of the nature to estimate. Second, if these subjective probabilities can be elicited by examining an agent's betting preferences, a proper elicitation will lead to a single number.^[They write: "Clearly, one can adjust the measure of belief of success in the reference gamble in such a way that one will be indifferent with respect to the truth of the event about which one needs to give one’s probability. This understanding is fundamental, as it implies that probability is given by a single number. It may be hard to define, but that does not mean that probability does not exist in an individual’s mind. One cannot logically have two different numbers because they would reflect different measures of belief." @Taroni2015Dismissal [p. 7]] On the other hand, @Sjerps2015Uncertainty reject the sharp distinction between states of nature (which can be estimated) and mental attitudes (which cannot be in any meaningful way estimated because they are subjective). <!---Once the background information, the priors, the hypotheses and the evidence are specified, the higher-order uncertainty about $\theta$ follows from the probability calculus, and it is by no means arbitrary to what extent various potential values of $\theta$ are supported by the evidence. --->
+More recently, @Dahlman2022Information have also emphasized that the distinction is not so clear-cut. They argue that, if a probability assessment is a subjective attitude that is elicited via a betting preference, a probability assessment is itself a state of nature: "the formation of a betting preference by a certain person at a certain time" [p. 15].
+
+## An Accuracy-based Argument
+
+We sidestep these conceptual issues for now. In what follows, we hope to break the stalemate in the debate by proving an argument to which both parties should be receptive. 
+<!---Before we get into the surprisingly philosophical intricacies of the debate between forensic scientists and legal evidence scholars, let us make a point that should convince you that the higher-order approach is preferable, no matter your philosophical convictions about the nature of probability, propositions or the relation between uncertainty and betting behavior. The point is simple.---> 
+This is a accuracy-based argument in favor of using higher-order probabilities---roughly, if you discard relevant information that you already have in the densities and rely on point estimates, your predictions about the world will be less accurate in a very precise quantifiable sense.
 
 ```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%"}
 priorA <- 1
@@ -822,16 +824,17 @@ posteriorPlot <- ggplot()+geom_bar(aes(x= posteriorPredictions,y = ..prop..))+
 
 ```
 
+First, let us go over a particular example. Suppose we randomly draw a true population frequency from the uniform distribution. In our particular case, we obtained `r round(trueH,3)`. Then, we randomly draw a sample size as a natural number between 10 and 20 (our points holds with larger samples, just the discrepancies get smaller). In our particular case, it is `r sampleSize`. Next, we simulate an experiment in which we draw that number of observations from the true distribution. We observe `r successes` successes and use this number to calculate the point estimate of the parameter, which is `r round(pointEstimate,3)`. 
 
-
-First, let us go over a particular example. We randomly draw a true population frequency from the uniform distribution. In our particular case, we obtained `r round(trueH,3)`. Then we randomly draw a sample size as a natural number between 10 and 20 (our points holds with larger samples, just the discrepancies get smaller). In our particular case, it is `r sampleSize`. Now we simulate an experiment in which we draw that number of observations from the true distribution. In our particular case this happened to lead to the observation of `r successes` successes. We use this number to calculate the point estimate of the parameter, which is `r round(pointEstimate,3)`. Now we ask about the probability mass function for all possible outcomes of an observation of the same size. On one hand, we have the true probability mass based on the true parameter. On the other, we have the probability mass function based on the point estimate which is basically binomial around the point estimate. On the third hand (yes, we need three hands to juggle the concepts here), we take the uncertainty involved in our estimate of the parameter seriously, and so we first take a sampling distribution of size 1e4 of possible parameter values from the posterior  $\s{beta}(1+\s{successes}, 1+\s{sample size} - \s{successes})$ distribution (we assume uniform prior for the sake of an example). Then we use this sample of parameter values to simulate observations, one simulation for each parameter value in the sample. This results in the so-called posterior predictive distribution, which instead of a point estimate, propagated our uncertainty about the parameter value into our predictions about the outcomes of possible observations. Then we take simulated frequencies as our estimates of probabilities. This distribution is more honest about uncertainty and wider than the one obtained using the point estimate. All these are illustrated in Figure \ref{fig:posteriorPrediction}.
-
-
+What is the probability mass function (PMF) for all 
+possible outcomes of an observation of the same size? 
+Two probabilities mass functions are initially relevant: first, the true probability mass based on the true parameter; second, the probability mass function based on the point estimate which is 
+binomial around the point estimate. This latter PMF, however, does not take into account the uncertainty about the point estimate. To take this uncertainty seriously, we take a sampling distribution of size 16 of possible parameter values from the posterior  $\s{beta}(1+\s{successes}, 1+\s{sample size} - \s{successes})$ distribution (we assume uniform prior for the sake of an example). Then, we use this sample of parameter values to simulate observations, one simulation for each parameter value in the sample. This simulation yields the so-called *posterior predictive distribution* (or posterior predictive PMF), which instead of a point estimate, propagates the uncertainty about the parameter value into the predictions about the outcomes of possible observations. Finally, we take simulated frequencies as our estimates of probabilities. This distribution is more honest about uncertainty and wider than the one obtained using the point estimate. The three PMFs are illustrated in Figure \ref{fig:posteriorPrediction}.
 
 
 
 \begin{figure}[H]
-```{r fig:posteriorPrediction2, echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "90%", warning=FALSE, message = FALSE, dpi = 800, warning = FALSE, message = FALSE, output = FALSE}
+```{r fig:posteriorPrediction2, echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "80%", warning=FALSE, message = FALSE, dpi = 800, warning = FALSE, message = FALSE, output = FALSE}
 grid.arrange(testPlot,pointPlot,samplesPlot,posteriorPlot, ncol = 1)
 ```
 
@@ -840,7 +843,7 @@ grid.arrange(testPlot,pointPlot,samplesPlot,posteriorPlot, ncol = 1)
 \label{fig:posteriorPrediction}
 \end{figure}
 
-Notably, the PMF based on a point estimate is further off from the real PMF than the posterior predictive distribution. For instance, if we ask about the probability of the outcome being at least 9 successes, the true answer is `r mean(testPredictions >= 9)`, the point estimate PMF tells us it is `r mean(pointPredictions >= 9 )`, while the posterior predictive distribution gives a somewhat better guess at `r mean(posteriorPredictions >= 9 )`. Interestingly, a similar thing happens when we ask about the probability of the outcome being at most 9 successes. The true answer is `r mean(testPredictions <= 9)`, the point-estimate-based answer is `r mean(pointPredictions <= 9 )`, while the posterior predictive distribution yields  `r mean(posteriorPredictions <= 9 )`. More generally, we can use Kullback-Leibler divergence to measure how far the point-estimate PMF and the posterior predictive PMF are from the true PMF. In our particular case, the former distance is `r kld(testProbs,pointProbs)` and the latter is `r kld(testProbs,posteriorProbs)`. That is, the posterior predictive distribution is information-theoretically closer to the true distribution.
+The PMF based on a point estimate is further off from the real PMF than the posterior predictive distribution. For instance, if we ask about the probability of the outcome being at least 9 successes, the true answer is `r mean(testPredictions >= 9)`, the point estimate PMF tells us it is `r mean(pointPredictions >= 9 )`, while the posterior predictive distribution gives a somewhat better guess at `r mean(posteriorPredictions >= 9 )`. A similar thing happens when we ask about the probability of the outcome being at most 9 successes. The true answer is `r mean(testPredictions <= 9)`, the point-estimate-based answer is `r mean(pointPredictions <= 9 )`, while the posterior predictive distribution yields  `r mean(posteriorPredictions <= 9 )`. More generally, we can use an information-theoretic measure, Kullback-Leibler divergence,  to quantify how far the point-estimate PMF and the posterior predictive PMF are from the true PMF.^[DEFINE Kullback-Leibler divergence.] In our particular case, the former distance is `r kld(testProbs,pointProbs)` and the latter is `r kld(testProbs,posteriorProbs)`. <!---That is, the posterior predictive distribution is information-theoretically closer to the true distribution.--->
 
 ```{r kldsCalculations,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%"}
 klds <- numeric(1000)
@@ -865,112 +868,88 @@ klds[i] <- kld(testProbs,pointProbs) - kld(testProbs,posteriorProbs)
 ```
 
 
-
-Now  let us see how this point holds generally. Let's repeat the whole simulation 1000 times, each time with a new true parameter, a new sample size, and a new sample. Every time we construct the  PMFs using the methods we described, and measure their KLD distances. Here is the empirical distribution of the results of such a simulation (Figure \ref{fig:kldsPlots})---we are looking at the differences in KLD divergencies, positive differences mean the point-estimate based distribution was further from the true PMF than the posterior predictive PMF. Notably, the mean difference is `r round(mean(klds),3)`, the median difference is `r round(median(klds),3)`, and the distribution is asymmetrical, as there are multiple cases of huge differences favoring posterior predictive distributions over point-based predictions.  That is, accuracy-wise, point-estimate-based PMFs are systematically worse than posterior predictive PMFs. 
+This result can be generalized.  We repeat the simulation 1000 times, each time with a new true parameter, a new sample size, and a new sample. Every time the three PMFs are constructed using the methods we described. <!---, and measure their KLD distances---> Figure \ref{fig:kldsPlots} displays the empirical distribution of the results of such a simulation, where the differences are measured by the Kullback-Leibler divergence. A positive difference indicates that the distribution based on the point-estimate was further from the true PMF than the posterior predictive distribution. Notably, the mean difference is `r round(mean(klds),3)`, the median difference is `r round(median(klds),3)`, and the distribution is asymmetrical, as there are multiple cases of huge differences favoring posterior predictive distributions over point-based predictions.  All in all, accuracy-wise, point-estimate-based PMFs are systematically worse than the posterior predictive distribution. 
 
 
 
 
 \begin{figure}[H]
-```{r fig:kldsPlots, echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "90%", warning=FALSE, message = FALSE, dpi = 800, warning = FALSE, message = FALSE, output = FALSE}
+```{r fig:kldsPlots, echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "70%", warning=FALSE, message = FALSE, dpi = 800, warning = FALSE, message = FALSE, output = FALSE}
 ggplot()+geom_density(aes(x = klds))+labs(
   title = "Point-estimates vs. posterior predictive distributions",
   subtitle = "Differences in Kullback-Leibler divergencies from true PMFs")+
   theme_tufte(base_size = 10)+theme(plot.title.position = "plot")+ylab("empirical density")+xlab("difference in klds")
 ```
-\caption{Differences in Kullback-Leibler divergencies from the true distributions, comparing the distributions obtained using point estimates and posterior predictive distributions. Positive values indicate the point-estimate-based PMF was further from the true distribution that its competitor.}
+\caption{Differences in Kullback-Leibler divergencies from the true distributions, comparing the distributions obtained using point estimates and posterior predictive distributions. Positive values indicate the point-estimate-based PMF was further from the true distribution than the posterior predictive distribution.}
 \label{fig:kldsPlots}
 \end{figure}
 
 
-Accuracy considerations aside, we can also engage with the more  philosophical arguments on the market.  First, @Taroni2015Dismissal seem to argue that since first-order probabilities capture your uncertainty about a proposition of interest, second-order probabilities are supposed to capture your uncertainty about how uncertain you are, and that "estimating" your first-order uncertainties would be a bit silly---after all, they seem to think, you can simply figure out your fair odds in a related bet on the proposition in question, and those would give you your unique first-order uncertainty without any uncertainty about it.
-
-As the betting behavior interpretation is actually not as obvious or uncontroversial as @Taroni2015Dismissal suggest,^[See philosophical textbooks on formal epistemology such as [@bradley2015critical] or [@Titelbaum2020Fundamentals-of].] we prefer to respond without assuming it, just working with the assumption that an agent's probabilities or densities are to represent or capture their uncertainty. So is estimation of one's uncertainty pointless?
-
-There are more controversial claims that philosophers have argued for than the infallibility of introspection. Those involved with epistemic logic often argue that it is not even the case that if an agent knows (or doesn't know) $p$, they also automatically know that they (don't) know $k$. Analogously, it would not be a completely implausible philosophical position to say that we sometimes are uncertain about what we think the fair bets are or what our first-order uncertainties are. This is one possible path of answering this.
-
-But we think there is a better way. Let us think again about our expert, who gathers information about the  allelic relative frequency $f$ of DNA matches in an available database, and starts with some defensible \s{beta} prior with parameters $\alpha, \beta$. Say they observe $s$ matches and the database size is $n$.  They reach a $\s{beta}(\alpha + s + 1 ,\beta + n - s)$ distribution over the possible RMP values. So far, nothing controversial happens---they are estimating the relevant population frequency. Assuming the conditions are pristine (the expert has no modeling uncertainty, does not have consider la ab errors and so on),^[Otherwise they need to think harder and dampen their convictions.] they want to use this distribution to shape their subjective uncertainty. But uncertainty about what? One obvious proposition is \emph{a match is observed  if another person, unrelated to the suspect is the origin of the trace}. And indeed, insofar as only this proposition is being considered, it is yet not clear what second-order uncertainties would be uncertainties about. But the expert also considers a continuum of propositions, each of the form \emph{the true population frequency is $\theta$} for each $\theta\in [0,1]$. A density over $\theta$ can be simply seen as capturing the comparative plausibility that the expert assigns to such propositions in light of the evidence, and normalization allows them to calculate their subjective probabilities for $\theta$ belonging to various sub-intervals of $[0,1]$. So if you were worried that there were no propositions that the expert could be "second-order" uncertain about, the good news is, there are plenty. In particular, if $\theta$ is supposed to be a population frequency, gauging which density captures the extent to which the evidence justifies various estimates of that frequency is pretty much the same as gauging comparative plausibility of the corresponding propositions about the population frequencies. Now, you might complain that this should no longer be called "estimation", but you might also think that the connection is strong enough to justify this terminology. This is a verbal discussion that we will not get into, language users' linguistic behavior will decide this for us anyway.
-
-
-More generally, evidence justifies various first-order probability assignments to varying extent. If we have no evidence about the bias of a coin, each first-order uncertainty about it is equally (un)-justified (if you like to think in terms of bets: the evidence gives us no reasons to prefer any particular odds as fair). If we know the coin is fair, the evidence clearly selects one preferred value, .5 (and, again, if you like the betting metaphor, one preferred betting odds). But often the evidence is stronger than the former and weaker than the latter case---one clear example of this phenomenon is if we consider propositions about population frequencies in light of the results of observations---in such circumstances, the evidence justifies different values of first-order uncertainty to varying degree, and densities simply capture the extent to which different first-order uncertainties are supported by the evidence. So what is it that you are estimating? The ideal evidential support you would get if you had all the evidence. Why is the estimate off? Because your evidence is limited and the best you can do is gauge your uncertainty going where this limited evidence leads you. 
-
-Another worry raised by @Taroni2015Dismissal is that first-order probabilities  are not "states of nature" and so cannot be estimated.  We are not sure about "nature" and why the requirement of being part of nature is important for estimation. We have seen cases of mathematicians using approximate methods to estimate answers to fairly abstract questions not obviously related to "states of nature", whatever these are, and so we  think estimation makes sense whenever there are some objective answers that we can get get closer to or further from.  But if there is some objectivity to what the ideal evidence would support, or to the extent to which the actual evidence supports various competing hypotheses, we can be more or less wrong about such things, and so it is not implausible to say that  there is a clear sense in which we can estimate them.
-
-
-@Taroni2015Dismissal insist that the situation is even worse for likelihood ratios, as there is no "meaningful state of nature equivalent for the likelihood ratio in its entirety, as it is given by a ratio of two conditional probabilities?" If you think it is meaningful to estimate two conditional probabilities (that is, frequencies in the population), or to  compare the relative plausibility of various propositions about them in terms of density, it is equally meaningful to estimate any function of the numbers involved.  Otherwise it would also be meaningless to try to estimate the BMI of an average 21 years old male student in the USA just because BMI is a ratio of other quantities. There are various good reasons not to care about BMI too much, but being a ratio of other numbers is not one of them. 
-
-
-
-@Taroni2015Dismissal argue also that once we allow second-order probability we run into the threat of infinite regress. But do we? Surely, @Taroni2015Dismissal would agree that one can be uncertain about a statistical model. But this can be the case even if this model spits out a point estimate rather than a density. This would suggest that if you think the possibility of putting uncertainty on top of propositions about possible values of a first-order parameter leaves us in an  epistemically hopeless situation, you might have hard time explaining why your point estimation is in a better situation. After all, if asking further questions about probabilities up the hierarchy is always justified, we can keep asking about the probability of a point-estimate-spitting model being adequate, the probability of that probability (and the way we have reached it) being adequate and so on.  Alternatively, we could concede that while our situation is often epistemically difficult, it is not hopeless. Of course, the mathematical and statistical models we use are exactly those: models, which can be more or less epistemically helpful. And when we decide which models to use, we always face a trade-off between various factors. In particular, second-order estimation is more complex than running with point estimates. But by now we hope to have convinced the reader this complexity is worth the effort. What about more complex models going even higher? Well, if a case is made that there is a workable approach that does that, which is worth the additional complexity, we are all for it! In fact, some of the model selection methods can be thought of this way. But to say that just because in principle more complex models are always possible, we are facing some sort of epistemic infinite regress is too hasty. 
+## Conceptual Issues
 
 
 
 
+Accuracy considerations aside, we will now engage with the more  conceptual points. 
+@Taroni2015Dismissal argue that since first-order probabilities capture your uncertainty about a proposition of interest, second-order probabilities are supposed to capture your uncertainty about how uncertain you are, and that "estimating" your first-order uncertainties is unnecessary.  They think that you can simply figure out your fair odds in a suitable bet on the proposition in question, and the fair odds track your unique, first-order uncertainty without any uncertainty about it. But this point can be questioned. For one thing, the betting interpretation of probability is not uncontroversial.^[See textbooks in formal epistemology [@bradley2015critical; @Titelbaum2020Fundamentals-of].] 
+<!---we prefer to respond without assuming it, just working with the assumption that an agent's probabilities or densities are to represent or capture their uncertainty. So is estimation of one's uncertainty pointless?
+-->
+In addition, even granting the betting interpretation, 
+<!---There are more controversial claims that philosophers have argued for than the infallibility of introspection. Those involved with epistemic logic often argue that it is not even the case that if an agent knows (or doesn't know) $p$, they also automatically know that they (don't) know $k$. Analogously, 
+--->
+it need not be implausible to say that we sometimes are uncertain about what we think the fair bets are or what our first-order uncertainties are.^[On a related score, the introspective axioms in epistemic logic---that is,  if an agent knows (or doesn't know) $p$, they also know that they (don't) know $p$---are by no means uncontroversial. See, for example, Williamson 2000 (chapter 5)'s argument against the KK principle of positive introspection.]
+<!---This is one possible path of answering this.--->
+
+Think again about an expert who gathers information about the allelic frequency $f$ of DNA matches in an available database, and starts with a defensible \s{beta} prior with parameters $\alpha, \beta$. Say the expert observes $s$ matches in a database of size $n$. So the population relative frequency the experts is estimating should follow the $\s{beta}(\alpha + s + 1 ,\beta + n - s)$ distribution. <!--- over the possible RMP values.---> So far, nothing controversial happens---the expert is estimating the relevant population frequency. Assuming the conditions are pristine (the expert has no modeling uncertainty, rules out laboratory errors, and so on), the beta distribution can be used to inform the expert's subjective uncertainty. But uncertainty about what? The (estimated) population frequency can serve to attach a probability to the proposition \emph{a match is observed  if another person, unrelated to the suspect, is the source of the trace}. Admittedly, if only this proposition is being considered, it is yet not clear what second-order uncertainties would be uncertainties about. But the expert also considers a continuum of propositions, each of the form \emph{the true population frequency is $\theta$} for each $\theta\in [0,1]$. A density over $\theta$ models the comparative plausibility that the expert assigns to such propositions in light of the evidence. <!--- and normalization allows them to calculate their subjective probabilities for $\theta$ belonging to various sub-intervals of $[0,1]$.---> So if one were worried that there were no propositions that the expert could be "second-order" uncertain about, there actually are plenty. In particular, if $\theta$ is a population frequency, gauging which density captures the extent to which the evidence justifies various estimates of that frequency is the same as gauging the comparative plausibility of the corresponding propositions about the population frequencies.^[Perhaps, this should no longer be called "estimation", but the the connection with estimation is strong enough to justify this terminology. In the end, this is a verbal discussion that we will not get into. <!---, language users' linguistic behavior will decide this for us anyway.--->]
+
+More generally, evidence justifies first-order probability assignments to various degrees. Suppose there is no evidence about the bias of a coin. Then, each first-order uncertainty about it would be equally (un)-justified. (If you like to think in terms of bets, the evidence would give no reason to prefer any particular odds as fair.) If, instead, we know the coin is fair, the evidence clearly selects one preferred value, .5. (Again, if you like the betting metaphor, 1:1 would be the preferred betting odds.) But often the evidence is stronger than the former case and weaker than the latter case. Consider, for example, propositions about population frequencies in light of the results of observations. In such circumstances, the evidence justifies different values of first-order uncertainty to various degrees, and densities simply capture the extent to which different first-order uncertainties are supported by the evidence. <!---So what is it that you are estimating? The ideal evidential support you would get if you had all the evidence. Why is the estimate off? Because your evidence is limited and the best you can do is gauge your uncertainty going where this limited evidence leads you.--->
+
+We conclude this section by examining two additional points raised by  @Taroni2015Dismissal. The first---which we already alluded to earlier---is that first-order probabilities  are not "states of nature" and so cannot be estimated.  <!---We are not sure about "nature" and why the requirement of being part of nature is important for estimation. ---> It is unclear why only states of nature can be estimated. Mathematicians use approximate methods to estimate answers to fairly abstract questions ,not obviously related to "states of nature", whatever these are.  So, estimation should make sense whenever there are some objective answers that we can approximate to a greater or lesser extent.<!---But if there is some objectivity to what the ideal evidence would support, or to the extent to which the actual evidence supports various competing hypotheses, we can be more or less wrong about such things, and so it is not implausible to say that  there is a clear sense in which we can estimate them.--->^[@Taroni2015Dismissal makes the same point for likelihood ratios. They argue that there is no "meaningful state of nature equivalent for the likelihood ratio in its entirety, as it is given by a ratio of two conditional probabilities?" But if it is meaningful to estimate two conditional probabilities (that is, frequencies in the population), or to  compare the relative plausibility of various propositions about them in terms of density, it is equally meaningful to estimate any function of the numbers involved.  Otherwise it would also be meaningless to try to estimate the body mass index (BMI) of an average 21 years old male student in the USA just because BMI is a ratio of other quantities.]
+
+Second, @Taroni2015Dismissal argue that once we allow second-order probability, we run into the threat of infinite regress. But do we? Surely, they would agree that one can be uncertain about a statistical model. But this can be the case even if this model spits out a point estimate rather than a density. If you think the possibility of putting uncertainty on top of propositions about possible values of a first-order parameter leaves us in an  epistemically hopeless situation, you might have hard time explaining why your point estimation is in a better situation. After all, if asking further questions about probabilities up the hierarchy is always justified, we can keep asking about the probability of a point-estimate-spitting model being adequate, the probability of that probability <!---(and the way we have reached it) being adequate--->, and so on.  <!---Alternatively, we could concede that while our situation is often epistemically difficult, it is not hopeless. Of course, the mathematical and statistical models we use are exactly those: models, which can be more or less epistemically helpful. And when we decide which models to use, we always face a trade-off between various factors.---> Perhaps the problem at issue is just one of complexity. Admittedly, second-order estimation is more complex than relying on point estimates. But we hope to have convinced the reader this complexity is worth the effort. What about more complex models going third-higher? If a workable approach can accomplish that---and the additional complexity pays off---we are all for going third-order. <!---In fact, some of the model selection methods can be thought of this way. ---> So, the fact that more complex models can always be built hardly lead us into a vicious infinite regress. Rather, it is an indication that our models of uncertainty can---in principle---always be improved. 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# Examples of applications
+# Legal Applications
 
 <!-- ## Adding carpet evidence in the Wayne Williams case -->
 
-## Impact of false positives in DNA identification
 
-Let us get back to the problem we already discussed in Chapter 5: the question of the extent to which the probability of a false positive impacts the value of DNA match evidence. We already argued that the probability of false positives is non-negligible. Here higher-order probability will assist us in  thinking through a comment in an important paper on the topic [@Thomason2003How-the-Probabi, 3]:
+Our discussion so far has been mostly theoretical. We made a case 
+that higher-order probabilism outperforms precise probabilism 
+on both descriptive and normative grounds. We also staved off a number 
+of conceptual difficulties with going higher-order. It is time to illustrate 
+how higher-order probabilism can be of service 
+in evaluating evidence at trial. We present 
+here two examples.   
+
+
+## False Positives in DNA Identification
+
+Let us return to a topic we discussed in Chapter 5: how the probability of a false positive impacts 
+the value of DNA match evidence. As @Thomason2003How-the-Probabi have shown, 
+the probability of false positives, even when it is seemingly low, 
+has a non-negligible impact:
  
 \begin{quote}
 If, as commentators have suggested, the rate of false positives is between 1 in 100 and 1 in 1000, or even less, then one might argue that the jury can safely rule out
-the prospect that the reported match in their case is due to error and can proceed to consider the probability of a coincidental match. For reasons we will explain more fully below, this argument is fallacious and profoundly misleading \dots As we will explain below, the probability that a reported match occurred due to error in a particular case can be much higher, or lower, than the false positive probability. 
+the prospect that the reported match in their case is due to error and can proceed to consider the probability of a coincidental match \dots this argument is fallacious and profoundly misleading \dots  the probability that a reported match occurred due to error in a particular case can be much higher, or lower, than the false positive probability. 
 \end{quote}
 
-One option would be to use these interval edges to investigate the consequences of the risk of a false positive in DNA identification. But, we hope to have already convinced the reader, the consequences of doing so might be too skeptical, and it would be much better if we had a sensible distribution  to reason with. 
+\noindent
+We are particularly interested in the passing remark that the rate of false positives is between 1 in 100 and 1 in 1000. This difference is not negligible. The simplest option would be to use the upper bound of the [0.001, 0.01] interval. This choice would be the most favorable toward the defendant. But, as already noted in the introduction, doing so will lead to an evaluation of the match evidence that is too conservative. It is much preferable to have a sensible distribution to work with. 
 
-Let us use Bayes' theorem again to think about false positives. This time, instead of on likelihood ratios, we focus on posterior probability. The posterior probability of the source hypothesis ($S$) conditional on the match evidence ($E$) is:
+<!---Let us use Bayes' theorem again to think about false positives. This time, instead of on likelihood ratios, we focus on posterior probability.--->
+To fix ideas, let the posterior probability of the 
+source hypothesis ($S$) conditional 
+on the match evidence ($E$) be defined, as follows:
 
 \begin{align*}
 \pr{S \vert E} &   =  \frac{\pr{E\vert S} \pr{S} } {\pr{E}}\\
 & = \frac{\overbrace{\pr{E\vert S}}^1 \pr{S}}{\underbrace{\pr{E\vert S}}_1 \pr{S} + \underbrace{\pr{E \vert RM}}_1 \pr{RM} + \underbrace{\pr{E \vert FP}}_1 \pr{FP}} \\ & = \frac{\pr{S}}{\pr{S} + \pr{RM} + \pr{FP}} 
 \end{align*}
 
-For simplicity we take the false negative rate to be zero, that is we assume $\pr{E\vert S} =1$. We also assume there are three ways the evidence could arise: the source hypothesis is true, a random match ($RM$) occurred, or we are dealing with a false positive ($FP$).
+\noindent
+For simplicity, the false negative rate is assumed to be zero, or in other words, $\pr{E\vert S} =1$. The other assumption is that the evidence could come about if: (1) the source hypothesis is true; (2) a random match ($RM$) occurred; or (3) a false positive match occurred ($FP$).
 
 
 ```{r fpPointCalculations,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%"}
@@ -983,16 +962,20 @@ pristinePosterior <- posterior(prior, rmp = 1e-9, fpp = 0)
 charitablePosterior <-  posterior(prior, rmp = 1e-9, fpp = 0.01)
 ```
 
+Suppose the random match probability for the DNA match evidence  is rather low, say $10^{-9}$ (as in some of the examples we discussed in Chapter 5), and there is no uncertainty associated 
+with this number. Consider now two ways of assessing the DNA match.
+First, disregarding the possibility of a false positive---so $FP=0$---makes 
+the match evidence appear extremely strong. In this case, the minimal prior sufficient for the posterior to be above .99 is only `r min(prior[pristinePosterior >= .99])`, where the relation between the prior probabilities and the posterior probabilities of the source hypthesis 
+is given by the dashed orange line in Figure \ref{fig:fplinesPlot}. What happens after 
+taking into account the possibility of a false positive match? This depends on how this possibility of error is quantified. Assume the false positive rate corresponds to the upper bound of the [0.001, 0.01] interval. This assumption completely changes the assessment of the match evidence. For the posterior of $.99$ is reached only once the prior is above .99. The match evidence now appears to be extremely weak. <!---So which is it?  Neither. ---> As already seen in the introduction, the point estimate exaggerates the value of the match evidence, while using the upper bound of the false positive rate has the opposite effect.  What matters within these edges of the [0.001, 0.01] interval cannot be ignored.
 
-Now, let us start with calculations which ignore false positive risk and take $FP=0$. Suppose RMP is $10e-9$ (as in some of the examples we discussed in Chapter 5). The relation between priors and the posteriors is illustrated with dashed orange line in Figure \ref{fig:fplinesPlot} (to be explained fully later on), and the evidence seems quite strong: the minimal prior sufficient for the posterior to be above .99 is  `r min(prior[pristinePosterior >= .99])`. 
+To take into consideration the values within the edges, two approaches 
+can be pursued. On one approach, any value between <!---these values (with a slight leeway on top) is equally likely--->
+the edges is regarded as equally likely. On another approach, not all values are equally likely. For example, suppose you think it is 50\% likely that the false positive rate is below .0033. In addition, suppose the  distribution, while being centered closer to zero, is long-tailed (known as the truncated normal distribution). <!--- so at the same time you do not think that $FP$s above .01 are impossible---you allow for the rare possibility of a false positive being much higher (say, if some specific conditions or circumstances arise, but you have no knowledge of how to identify them, because extensive studies on false positives are only forthcoming), in line with the passage quoted above.---> Thee two distributions are illustrated in Figure \ref{fig:fppdistros}.^[On both approaches, we assume that the false positive rate is between 0.001 and 0.01 with  99\% certainty.] The uniform distribution---which regards all false positive rates in the interval as equally likely---leads to a rather conservative evaluation of the match evidence, much more so than the truncated normal distribution. This is apparent from Figure \ref{fig:fppMinima}) and Figure \ref{fig:fplinesPlot} which show the prior probabilities of the source of hypothesis needed to secure a posterior probability above. Working with a distribution---better if it is not a uniform distribution---affords a more balanced assessment of the evidence than simply relying on the edges of an interval. 
 
-Next, let us run charitable calculations with the upper edge of the interval offered for $FP$, 0.01. Then, the posterior of $.99$ is reached only once the prior is above .99, and the evidence seems rather weak. So which is it?  None. Running with the extreme scenario over-appreciates and running with the point estimate under-appreciates the uncertainty involved.  What matters is what happens between these  edges.
-
-
-Consider two scenarios. In both you think that with 99\% certainty the false positive rate is between 0.001 and 0.01. On one approach you think that any value between these values (with a slight leeway on top) is equally likely, while on the other you think that it is 50\% likely that $FP$ is below .0033. The latter distribution, while being centered closer to zero has another features: it is long-tailed, so at the same time you do not think that $FP$s above .01 are impossible---you allow for the rare possibility of a false positive being much higher (say, if some specific conditions or circumstances arise, but you have no knowledge of how to identify them, because extensive studies on false positives are only forthcoming), in line with the passage quoted above. These distributions are illustrated in Figure \ref{fig:fppdistros}.
-
-
-
+We have suggested that the choice of a distribution over possible values of false positive rates can make a difference for the assessment of DNA evidence. The lingering question, however, is how these distributions can be obtained. 
+<!--But where do we take these distributions from, you might ask. 
+--->Admittedly, studies on false positives are limited and only give a rough and foggy picture. More experiments and studies <!---which would allow for a better justification of the choice of a distribution,---> are needed. This does not mean, however, that until then using point estimates and interval edges is preferable. After deciding on the functional form of a distribution---such as truncated normal or beta---only a few numbers need to be elicited from experts for constructing a density.<!---which are known to be pretty standard and reliable in such contexts, are chosen, --->^[For instance, assuming the distribution is a truncated normal, it is enough for the expert to assert that <!---the 99\% interval is as the one we used, and that she---> they believes with more than 50\% confidence the false positive rates to be below $.033$ for the curve to be determined.] Having to rely on such elicitation is not without problems, but it is better than asking experts for single point estimates and relying on these [@o2006uncertain].
 
 
 ```{r fpSampling,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%"}
@@ -1026,14 +1009,14 @@ grid.arrange(fpnPlot, fpwPlot,ncol=2,top=textGrob("Examples of FP densities with
 ```
 
 
-\caption{Two examples of assumptions about the false positive rates, both having pretty much the same 99\% highest density intervals. (Top) all error rates are equally likely, (Bottom) the most likely values are closer to 0, but also some high values while unlikely are possible.}
+\caption{Two examples of assumptions about the false positive rates, both having pretty much the same 99\% highest density intervals. Left: all error rates are equally likely. Right: the most likely values are closer to 0, but also some high values while unlikely are possible.}
 
 \label{fig:fppdistros}
 
 \end{figure}
 
-
-Let us use sampling from the distributions to investigate what differences arise depending on what one's second-order convictions about error rates are.  First, we  ask what  the distributions of minimal priors sufficient for the posteriors being above .99 for these two options are (if the minimum is 1 this means that no prior results in such a posterior). The answer is illustrated in Figure \ref{fig:fppMinima}.
+<!---Let us use sampling from the distributions to investigate what differences arise depending on what one's second-order convictions about error rates are.  First, we  ask what  the distributions of minimal priors sufficient for the posteriors being above .99 for these two options are (if the minimum is 1 this means that no prior results in such a posterior). The answer is illustrated in Figure \ref{fig:fppMinima}.
+--->
 
 
 ```{r fpMinima,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%"}
@@ -1095,16 +1078,18 @@ minimaPlot
 ```
 
 
-\caption{The distribution of minimal priors sufficient for the posterior being above .99 on the two distributions of false positive rates. Note that the truncated normal distribution has its bulk towards the left, but at the same time has higher ratio of evens in which this posterior is never reached. }
+\caption{The distribution of minimal priors sufficient for obtaining a posterior above .99 on the two distributions of false positive rates. The truncated normal distribution has its bulk towards the left, but at the same time has higher ratio of evens in which this posterior is never reached. }
 
 \label{fig:fppMinima}
 
 \end{figure}
 
+<!---
 Notice how the uniform distribution which seriously "thinks" that all false positive rates in the interval are equally likely leads to highly skeptical evaluation of the evidence. On both approaches the evidence is insufficient for conviction, but 95\% of the minima on  the truncated normal distribution  are below .8, whereas the 95th quantile for the minima for the uniform distribution is rather unsurprisingly at .95. That is, the truncated normal gives a more balanced and honest picture that the charitable reading which runs only with one extreme value.
+--->
 
-Another perspective on the impact of such differences can be taken by inspecting a large number of lines (in our case, 300) of how the posterior depends on the posterior: their density corresponds to the density of the false positive rates. We illustrate these in Figure \ref{fig:fplinesPlot}.
-
+<!---Another perspective on the impact of such differences can be taken by inspecting a large number of lines (in our case, 300) of how the posterior depends on the posterior: their density corresponds to the density of the false positive rates. We illustrate these in Figure \ref{fig:fplinesPlot}.
+--->
 
 
 ```{r fpLines,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%"}
@@ -1164,12 +1149,9 @@ grid.arrange(posteriorNplot, posteriorWplot,  ncol = 1,
 
 
 
-
-
-Suppose now you indeed are convinced that the distribution over possible false probability values indeed matters for the evaluation of DNA evidence. But where do we take these distributions from, you might ask. The problem is, studies on false positives are very limited and so only give a rough and foggy picture. Ideally, better experiments and studies which would allow for a better justification of the choice of a distribution, should be conducted. However, this does not mean that until then we should stick to using point estimates and interval edges. Once the functional form of the distribution, such as truncated normal or beta, which are known to be pretty standard and reliable in such contexts, are chosen, only a few numbers need to be elicited from experts to be able to construct a density. For instance, once we agree on the truncated normal form, it is enough that the expert says that the 99\% interval is as the one we used, and that she believes with more than 50\% confidence the false positive rates to be below $.033$ for the curve to be determined. There is, of course, some idealization involved, and having to rely on such elicitation is not perfect. But it is still better than asking the experts for single point estimates and relying on these.
-
-
-
+<!---
+Suppose now you indeed are convinced that the distribution over possible false probability values indeed matters for the evaluation of DNA evidence. 
+--->
 
 
 
@@ -1179,11 +1161,38 @@ Suppose now you indeed are convinced that the distribution over possible false p
 
 
 
-## Higher-order probabilities and Bayesian networks
 
 
-The reader might be worried: how can we handle the computational complexity that comes with moving to higher-order probabilities? The  answer is, as long as we have decent ways of either basing densities on sensible priors and data, or eliciting densities from experts [@o2006uncertain],  implementation is not computationally unfeasible, as we can approximate densities using sampling. To illustrate, let us start with a  simplified BN developed by @Fenton2018Risk to illustrate how conviction was unjustified in the Clark case (Figure \ref{fig:scBNplot}).
- to illustrate a point about the notorious Sally Clark case (Figure \ref{fig:scBNplot}).^[R. v. Clark (EWCA Crim 54, 2000) is a classic  example of how the lack of probabilistic independence between events can be easily overlooked. Sally Clark's first son died in 1996 soon after birth, and her second son died in similar circumstances a few years later in 1998.  At trial, the paediatrician Roy Meadow testified that the probability that a child from such a  family would die of Sudden Infant Death Syndrome (SIDS) was 1 in 8,543.  Meadow calculated that therefore the probability of both children dying of SIDS was approximately  1 in 73 million. Sally Clark was convicted of murdering her  infant sons (the conviction was ultimately reversed on appeal). The calculation illegitimately assumes independence,  as the  environmental or genetic factors may predispose a family to SIDS. The winning appeal was based on new evidence: signs of a potentially lethal disease---contrary to what was assumed in the original case---were found in one of the bodies.]  The  arrows  depict  relationships  of  influence  between  variables. \textsf{Amurder} and \textsf{Bmurder} are binary nodes corresponding to whether Sally  Clark’s  sons,   call  them A and B, were murdered. These  influence  whether  signs of disease (\textsf{Adisease} and \textsf{Bdisease}) and bruising (\textsf{Abruising} and \textsf{Bbruising}) were present. Also, since  son A died first, whether A was murdered casts some light on the probability of son B being murdered.
+
+
+
+## Higher-order Bayesian Networks
+
+<!---The reader might be worried: how can we handle the computational complexity that comes with moving to higher-order probabilities? The  answer is, as long as we have decent ways of either basing densities on sensible priors and data, or eliciting densities from experts [@o2006uncertain],  implementation is not computationally unfeasible, as we can approximate densities using sampling. 
+--->
+
+The higher-order framework we are advocating is 
+not only applicable to the evaluation of 
+individual pieces of evidence. Complex bodies of 
+evidence---for example, those represented by 
+Bayesian networks---can also be assessed using 
+higher-order probabilities. We use here as an illustration a 
+simplified Bayesian network developed by @Fenton2018Risk.
+The network is reproduced in Figure \ref{fig:scBNplot} and 
+represents the evidence in the infamous British case R. v. Clark (EWCA Crim 54, 2000).^[<!---R. v. Clark (EWCA Crim 54, 2000) is a classic  example of how the lack of probabilistic independence between events can be easily overlooked.---> Sally Clark's first son died in 1996 soon after birth, and her second son died in similar circumstances a few years later in 1998.  At trial, the paediatrician Roy Meadow testified that the probability that a child from such a  family would die of Sudden Infant Death Syndrome (SIDS) was 1 in 8,543.  Meadow calculated that therefore the probability of both children dying of SIDS was approximately  1 in 73 million. Sally Clark was convicted of murdering her  infant sons. The conviction was reversed on appeal. <!---The calculation illegitimately assumes independence,  as the  environmental or genetic factors may predispose a family to SIDS. ---> The case of appeal was based on new evidence: signs of a potentially lethal disease were found in one of the bodies.] 
+We refer to the reader to Chapter \textbf{XYZ} for a more 
+general discussion of Bayesian networks. Here it suffices to note that the  arrows  depict  relationships  of  influence  between  variables. \textsf{Amurder} and \textsf{Bmurder} are binary nodes corresponding to whether Sally  Clark’s  sons,   call  them A and B, were murdered. These  nodes influence  whether  signs of disease (\textsf{Adisease} and \textsf{Bdisease}) and bruising (\textsf{Abruising} and \textsf{Bbruising}) were present. Also, since A's death preceded in time B's death, whether A was murdered casts some light on the probability that B was also murdered.
+
+<!---@Fenton2018Risk argued that, given a sensible  choice of the values for the probability tables in the Bayesian network, the probability of Sally Clark's guilt falls below any reasonable threshold for conviction (Figure \ref{fig:SCfentonTable}). 
+--->
+
+The choice of the probabilities in the network is quite specific, and 
+it is not clear where such precise values come from. <!---We have already discussed how frequency and probability estimates usually come at least with some aleatory uncertainty around them that cannot be represented by first-order probabilities.--->  The standard response invokes 
+*sensitivity analysis*: a range of plausible values is tested. As already discussed, this approach ignores the shape of the underlying distributions. Sensitivity analysis  does not make any different between probability measures (or point estimates) in terms of their plausibility, but some will be more plausible than others. Moreover, if the sensitivity analysis is guided by extreme values, these might play an undeservedly strong role. <!---The best case scenario for my way home from the office is that I find a suitcase with a lot of money inside. The worst case scenario is that I get run over by a bus. What is the quality of the guidance that the consideration of the worst case and the best case scenario provide me with? Limited.--->
+These concerns can be addressed, at least in part, by adding higher order probabilities. <!---The general method is as follows.---> In a precise Bayesian network, each  node is associated with a probability table determined by a finite list of numbers (precise probabilities). <!---If it's a root node, its probability table is determined by one number, if it's a node with one parent, its table is determined by two numbers etc. ---> But suppose that, instead of precise numbers, we have densities over parameter values for the numbers in the probability tables.^[The densities of interests can then be approximated by (1) sampling parameter values from the specified distributions, (2) plugging them into the construction of the BN, and (3) evaluating the probability of interest in that precise BN. The list of the probabilities thus obtained will approximate the density of interest. In what follows we will work with sample sizes of 10k.]  <!---For instance, the conditional probabilities might look as illustrated in Figure  \ref{fig:SCwithHOPa}. ---> <!---One of them is based on a truncated normal distribution to emphasize that the framework give us much freedom in the specification of distributions. --->
+An example of a higher-order Bayesian network for the Sally 
+Clark case is given in Figure \ref{fig:SCwithHOP}. 
+
 
 ```{r scBN,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "60%", warning=FALSE, message = FALSE, dpi = 800}
 #create SC DAG
@@ -1221,19 +1230,16 @@ SCfenton <- custom.fit(SallyClarkDAG,SallyClarkCPTfenton)
 
 
 \begin{figure}[H]
-```{r scBNplot2,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "80%", warning=FALSE, message = FALSE, dpi = 800}
+```{r scBNplot2,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "50%", warning=FALSE, message = FALSE, dpi = 800}
 graphviz.chart(SCfenton, type = "barprob", layout = "dot", #draw.labels = TRUE,
   grid = FALSE, scale = c(0.75, 1.1), col = "black", 
   text.col = "black", bar.col = "black", main = NULL,
   sub = NULL)
 ```
-\caption{The BN developed by FENTON ET AL., with marginal prior probabilities.}
+\caption{Bayesian network for the Sally Clark case, with marginal prior probabilities.}
 \label{fig:scBNplot}
 \end{figure}
 
-
-
-The point to be illustrated was that with a sensible choice of probabilities for the conditional probability tables in the BN, conviction was not justified at any of the major stages (Figure \ref{fig:SCfentonTable}). 
 
 
 ```{r scStages,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "80%", warning=FALSE, message = FALSE, dpi = 800}
@@ -1268,6 +1274,7 @@ SCfentonTable <- data.frame(stage = factor(c("prior", "bruising in A", "bruising
 ```
 
 
+<!---
 \begin{figure}[H]
 ```{r SCfentonTable2,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "90%", warning=FALSE, message = FALSE, dpi = 800}
 ggplot(SCfentonTable) + geom_point(aes(x = stage, y = probability, size = probability * .9))+
@@ -1283,16 +1290,9 @@ ggplot(SCfentonTable) + geom_point(aes(x = stage, y = probability, size = probab
 \label{fig:SCfentonTable}
 
 \end{figure}
+--->
 
-
-
-One reason the reader might worry is that the choice of the probabilities is fairly specific, and it is not obvious where such precise values should come from. We have already discussed how frequency and probability estimates usually come at least with some aleatory uncertainty around them that cannot be represented by first-order probabilities.  The usual response REFS FOR SENSITIVITY ANALYSIS is that a range of such selections should be tested, perhaps with special focus on extreme but still plausible values. We have already discussed how much care is needed on such approach as it to some extent ignores the shape of the underlying distributions. Crucially, on the sensitivity approach different probability measures (or point estimates) are not distinguished in terms of their plausibility, and so this plausibility is not accounted for in the analysis. Moreover, if in the sensitivity analysis the further decision is guided by the results for the extreme measures, they might  play an undeservedly strong role. The best case scenario for my way home from the office is that I find a suitcase with a lot of money inside. The worst case scenario is that I get run over by a bus. What is the quality of the guidance that the consideration of the worst case and the best case scenario provide me with? Limited.
-
-
-
-
-Some of these concerns are at least dampened when we deploy the higher order probabilities in the BN. The general method is as follows. Each particular node in a precise BN has a probability table determined by a finite list of numbers. If it's a root node, its probability table is determined by one number, if it's a node with one parent, its table is determined by two numbers etc. Now, suppose that instead of precise numbers we have densities over parameter values for those determining numbers. Densities of interests can then be approximated by (1) sampling parameter values from the specified distributions, (2) plugging them into the construction of the BN, and (3) evaluating the probability of interest in that precise BN. The list of the probabilities thus obtained will approximate the density fo interest. In what follows we will work with sample sizes of 10k.  For instance, your conditional probabilities might look as illustrated in Figure  \ref{fig:SCwithHOPa}.  One of them is based on a truncated normal distribution to emphasize that the framework give us much freedom in the specification of distributions. 
-
+<!---
 \begin{figure}[H]
 ```{r fig:SCwithHOPa, echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "90%", warning=FALSE, message = FALSE, dpi = 800}
 
@@ -1301,10 +1301,10 @@ grid.arrange(AbruisingIfSidsPlot+xlim(0,.4),AbruisingIfMurderPlot+xlim(0,.4))
 \caption{Example of approximated uncertainties about conditional probabilities in the Sally Clark case.}
 \label{fig:SCwithHOPa}
 \end{figure}
-
+--->
 
 \begin{figure}[H]
-```{r SCwithHOP, out.extra='angle=90', echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "160%", out.height= "200%", warning=FALSE, message = FALSE, dpi = 800}
+```{r SCwithHOP, out.extra='angle=90', echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "110%", out.height= "200%", warning=FALSE, message = FALSE, dpi = 800}
 #SCprobsFinal <- readRDS("../datasets/SCprobsFinal.rds")
 #attach(SCprobsFinal)
 #source("../scripts/SCfunctions.R")
@@ -1369,12 +1369,24 @@ ggplot(data.frame(a=1)) + xlim(1, 40) + ylim(1, 60)+theme_void()+
 
 ```
 
-\caption{Example of a HOP approach tor the Sally Clark Case  approximated by sampling probabilities  and constructing 10k BNs.}
+\caption{Example of a higher-order Bayesian network for the Sally Clark Case.}
 \label{fig:SCwithHOP}
 \end{figure}
 
+<!---  approximated by sampling probabilities  and constructing 10k BNs. --->
 
-Using these we can investigate the impact of incoming evidence as it arrives (Figure \ref{fig:SCwithHOP2}). We start with the prior density for the \s{Guilt} node. Then, we update with the evidence of signs of bruising in both children. Next, we consider what would have happened if also both children showed no sign of potentially lethal disease. Finally, we look at the (simplified) evidential situation at the time of the appeal: signs of bruising in both children, and signs of lethal disease discovered in only the first child. One thing to notice that even in the strongest scenario against Sally Clark (third visualization), while the median of the posterior distribution was above .95, the uncertainty around that median is still too wide to legitimize conviction as the lower limit of the 89\% HPDI  is at .83. This illustrates the idea that taking the point estimates and running with them might lead to overconfidence, and that paying attention to uncertainties about the estimates can make an important difference to our decisions and their accuracy.
+
+
+With the help of the higher-order Bayesian network, 
+we can investigate the impact of different 
+items of evidence on the Sally Clark's probability of guilt 
+(Figure \ref{fig:SCwithHOP2}). The starting point is 
+the prior density for the \s{Guilt} node (first graph). Next, the network 
+is updated with evidence showing signs of bruising on both children (second graph). 
+Next, the assumption that both children lacked signs of 
+potentially lethal disease is added (third graph). Finally, we consider the state of the evidence 
+at the time of the appellate case: signs of bruising existed on both children, but signs of lethal disease were discovered only on the first child. Interestingly, in the strongest scenario against Sally Clark (third visualization), the median of the posterior distribution is above .95, 
+but the uncertainty around that median is still too wide to warrant a conviction.^[The lower limit of the 89\% Highest Posterior Density Intervals (HPDI) is at .83.] This underscores the fact that relying on point estimates can lead to overconfidence. Paying attention to the higher-order uncertainty about the first-order probability can make a difference to trial decisions.
 
 
 
@@ -1389,9 +1401,11 @@ grid.arrange(GuiltPriorPlot, GuiltABbruisingPlot, GuiltABbruisingNoDiseasePlot, 
 \label{fig:SCwithHOP2}
 \end{figure}
 
-
+<!---
 Moreover, if we are interested in likelihood ratios, the same approach can be used: sample from the selected distribution appropriate for the conditional probabilities at hand, then divide the corresponding samples, obtaining a sample of likelihood ratios, approximating the density capturing the recommended uncertainty about the likelihood ratio. For instance, we can use this tool to gauge our uncertainty about the likelihood ratios corresponding to the signs of bruising in son A and the presence of the symptomps of a potentially lethal disease in son A (Figure \ref{fig:SClrs}).
+--->
 
+<!---
 
 \begin{figure}[H]
 
@@ -1416,7 +1430,7 @@ AdiseaseLRPlot <- plotSample(AdiseaseLR,title = "LR: Adisease",  paste("median =
 \label{fig:SClrs}
 
 \end{figure}
-
+--->
 
 
 <!-- \todo{Discuss the negation problem? R: Meh, I never though it was very interesting; but let's talk about this. } -->
