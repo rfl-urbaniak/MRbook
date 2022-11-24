@@ -57,7 +57,7 @@ source("../scripts/SCplotDistros.R")
 
 \vspace{2cm}
 
-\noindent \textbf{DISCLAIMER:} This is a draft of work in progress, please do not cite or distribute without permission.
+\noindent \textbf{DISCLAIMER:} \textbf{This is a draft of work in progress, please do not cite or distribute without permission.}
 
 \thispagestyle{empty}
 
@@ -174,7 +174,7 @@ charitableImpactPlot <- ggplot()+geom_line(aes(x = prior, y = posteriorL))+xlim(
 
 The expert's answer makes apparent that the precise random match probabilities do not tell the whole story. What to do, then?  <!---You might try to factor what you have been just informally told into your evaluation, but unless you have some training in probability, you might have hard time doing this correctly. --> <!---So instead, you push the expert further:--->
 You ask the expert for guidance: <!---With a 99\% margin of errors, what are the ranges for these estimates?--->
-what are reasonable ranges of the random match probabilities? What are the worst-case and best-case scenarios? The expert responds with 99% credible intervals---specifically, starting with uniform priors, the ranges of the random match probabilities are (.015,.037) for hair evidence and (.002, .103) for fur evidence.^[Roughly, the 99\% credible interval is the narrowest interval to which the expert thinks the true parameter belongs with probability .99. For a discussion of what credible intervals are; how they differ from confidence intervals; and why confidence intervals should not be used, see Chapter XXX.] With this information, you redo your calculations using the upper bounds of the two intervals: $.037$ and $.103$. The rationale for choosing the upper bounds is that these numbers result in random match probabilities that are most favorable to the defendant. Your new calculation yields the following:
+what are reasonable ranges of the random match probabilities? What are the worst-case and best-case scenarios? The expert responds with 99% credible intervals---specifically, starting with uniform priors, the ranges of the random match probabilities are (.015,.037) for hair evidence and (.002, .103) for fur evidence.^[Roughly, the 99\% credible interval is the narrowest interval to which the expert thinks the true parameter belongs with probability .99. For a discussion of what credible intervals are; how they differ from confidence intervals; and why confidence intervals should not be used, see Chapter 3.] With this information, you redo your calculations using the upper bounds of the two intervals: $.037$ and $.103$. The rationale for choosing the upper bounds is that these numbers result in random match probabilities that are most favorable to the defendant. Your new calculation yields the following:
 \begin{align*}
 \mathsf{P}(\s{dog}\wedge \s{hair} \vert \neg \s{source})   & =  .037 \times .103 =.003811.
 \end{align*}
@@ -400,7 +400,7 @@ densitiesLinesPlot
 \end{figure}
 
 
-This, then, is the working hypothesis of this chapter: whenever density estimates for the probabilities of interest are available (and they should be available for match evidence whose reliability has been properly studied), those densities should be reported for assessing the strength of the evidence. This approach avoids hiding actual aleatory uncertainties under the carpet. It also 
+This, then, is the working hypothesis of this chapter: whenever density estimates for the probabilities of interest are available (and they should be available for match evidence if its reliability has been properly studied), those densities should be reported for assessing the strength of the evidence. This approach avoids hiding actual aleatory uncertainties under the carpet. It also 
 allows for a balanced assessment of the evidence, whereas using point estimates  or intervals may exaggerate or underestimate the value of the evidence. 
 
 <!---, and allows for more correct reasoning where interval-based representation might either lead one astray or leave one oblivious to important probabilistic considerations.  
@@ -408,7 +408,10 @@ allows for a balanced assessment of the evidence, whereas using point estimates 
 
 
 
-The rest of this chapter expands on this idea in a few dimensions. First, it places it in the context of philosophical discussions surrounding a proper probabilistic representation of uncertainty. The main alternatives on the market are precise probabilism and imprecise probabilism. We argue that both options are problematic and should be superseded by a higher-order approach whenever possible. Second, having gained this perspective, we revisit a recent discussion in the forensic science literature, where a prominent proposal is that the experts, even if they use densities, should integrate and present only point estimates to the fact-finders. We disagree. Third, we explain how the approach can be used in more complex situations in which multiple items of evidence and multiple propositions interact---and the idea is that such complexities can be handled by sampling from distributions and approximating densities using  multiple Bayesian Networks in the calculations. Last but not least, we turn to the notion of weight of evidence. Having distinguished quite a few notions in the vicinity, we explain how the framework we propose allows for a more successful explication and implementation of the notion of weight of evidence than the ones currently available on the market.
+The rest of this chapter expands on this idea in different directions. Section \ref{sec:three-probabilism} engages with the philosophical debate about precise and imprecise probabilism. We argue that both options are problematic and should be superseded by a higher-order approach to probability whenever possible. Section \ref{sec:objections}
+revisits a recent discussion in the forensic science literature. A prominent view has it  that trial experts, even when they use densities, should present only first-order probabilities. We disagree and show that reasons of accuracy maximization sometimes recommend relying on higher-order probabilities. Section \ref{sec:legal-applications} turns to some legal applications of higher-order probabilism. We focus on two topics: first, the role of higher-order probabilities and false positive rates in the evaluation of DNA evidence; second, how complex bodies of evidence can be represented by what we call higher-order Bayesian networks. 
+<!---. Third, we explain how the approach can be used in more complex situations in which multiple items of evidence and multiple propositions interact---and the idea is that such complexities can be handled by sampling from distributions and approximating densities using  multiple Bayesian Networks in the calculations. --->
+Finally, Section \ref{sec:weight} turns to the notion of weight of evidence. We show how the higher-order framework helps to articulate an account of weight of evidence that outperforms the ones in the literature.
 
 
 <!----
@@ -440,6 +443,7 @@ illustration 3 (theory): modeling weight.}
 
 
 # Three Probabilisms
+\label{sec:three-probabilism}
 
  The introduction outlined three probabilistic approaches that one might take for assessing the value of the evidence presented at trial. The first approach uses precise probabilities; the second uses intervals; the third uses distributions over probabilities. By relying on an example featuring two items of match evidence, we suggested that the third approach is preferable. This section buttresses this claim by providing principled, philosophical reasons in favor of the third approach.  
 
@@ -483,14 +487,14 @@ presumably assign a probability of .5 to both outcomes.
 After the 10 tosses, you end up again with an estimate of .5.
 You must have learned something, but whatever that is, it is not modeled by precise probabilities. When you toss the coin 100 times and observe 50 heads, you learn something. But your precise probability assessment will again be .5.
 
-<!---Clearly,  precise probabilism has difficulties modeling such  situations. ---> These  examples suggest that precise probabilism is not appropriately responsive to evidence. It ends up assigning the same probability in  situations in which one's evidence is quite different. For instance,  when no evidence is available about the coin's bias, when there is little evidence that the coin is fair (say, after only 10 tosses), and  when there is strong evidence that the coin is fair (say, after 100 tosses). The general problem is, precise probability captures the value around which your uncertainty should be centered, but fails to capture how centered it should be given the evidence.^[Precise probabilism suffers from other difficulties. For example,  it has problems  with formulating a sensible method of probabilistic opinion  aggregation [@Elkin2018resolving,@Stewart2018pooling].  A seemingly intuitive constraint is that if every member agrees that $X$ and $Y$ are probabilistically independent, the aggregated credence should respect this. But this is hard to achieve if we stick to \s{PP} [@Dietrich2016pooling]. For instance, a \emph{prima facie} obvious method of linear pooling does not respect this. Consider probabilistic measures $p$ and $q$ such that $p(X)  = p(Y)  = p(X\vert Y) = 1/3$ and  $q(X)  =  q(Y) = q(X\vert Y) = 2/3$. On both measures, taken separately, $X$ and $Y$ are independent. Now take the average, $r=p/2+q/2$. Then $r(X\cap Y) = 5/18 \neq r(X)r(Y)=1/4$. ]
+<!---Clearly,  precise probabilism has difficulties modeling such  situations. ---> These  examples suggest that precise probabilism is not appropriately responsive to evidence. It ends up assigning the same probability in  situations in which one's evidence is quite different:  when no evidence is available about the coin's bias; when there is little evidence that the coin is fair (say, after only 10 tosses); and  when there is strong evidence that the coin is fair (say, after 100 tosses). The general problem is, precise probability captures the value around which your uncertainty should be centered, but fails to capture how centered it should be given the evidence.^[Precise probabilism suffers from other difficulties. For example,  it has problems  with formulating a sensible method of probabilistic opinion  aggregation [@Elkin2018resolving,@Stewart2018pooling].  A seemingly intuitive constraint is that if every member agrees that $X$ and $Y$ are probabilistically independent, the aggregated credence should respect this. But this is hard to achieve if we stick to \s{PP} [@Dietrich2016pooling]. For instance, a \emph{prima facie} obvious method of linear pooling does not respect this. Consider probabilistic measures $p$ and $q$ such that $p(X)  = p(Y)  = p(X\vert Y) = 1/3$ and  $q(X)  =  q(Y) = q(X\vert Y) = 2/3$. On both measures, taken separately, $X$ and $Y$ are independent. Now take the average, $r=p/2+q/2$. Then $r(X\cap Y) = 5/18 \neq r(X)r(Y)=1/4$. ]
 
 
 ## Imprecise Probabilism
 
 What if we give up the assumption that probability assignments should be precise? Imprecise probabilism (\textsf{IP}) holds that  an agent's credal stance towards a hypothesis is to be represented by means of a *set of probability measures*, typically called a  representor $\mathbb{P}$, rather than a single measure $\mathsf{P}$. The representor should include all and only those probability measures which are compatible
 <!-- (in a sense to be specified)  -->
-with the evidence.  For instance, if an agent knows that the coin is fair, their credal state  would  be captured by the singleton set $\{\mathsf{P}\}$, where $\mathsf{P}$ is a probability measure which assigns $.5$ to \emph{heads}. If, on the other hand, the agent knows nothing about the coin's bias, their credal state would rather be represented as  the set of all probabilistic measures, as none of them is excluded by the available evidence. Note that the set of probability measures does not represent admissible options that the agent could legitimately pick from. Rather, the agent's credal state is essentially imprecise and should be represented by means of the entire set of probability measures.^[For  the development of imprecise probabilism, see @keynes1921treatise; @Levi1974ideterminate; @Gardenfors1982unreliable; @Kaplan1968decision;  @joyce2005probabilities; @VanFraassen2006vague; @Sturgeon2008grain; @walley1991statistical. @bradley2019imprecise is a good source of further references. Imprecise probabilism shares some similarities with what we might call **interval probabilism** [@Kyburg1961; @kyburg2001uncertain]. On interval probabilism, precise probabilities are replaced  by intervals of probabilities. On imprecise probabilism, instead, precise probabilities are replaced by sets of probabilities.  This makes imprecise probabilism more general, since the probabilities of a proposition in the representor set do not have to form a closed interval. <!---Moreover, learning on Kyburg's approach is somewhat  idiosyncratic and is strongly connected to reference classes and selection and reshaping rules for intervals. See [PEDDEN] for a introduction.---> As we have already noted, intervals do not contain probabilistic information sufficient to guide reasoning with multiple items of evidence. So we focus on \s{IP}, which is the more promising approach.] 
+with the evidence.  For instance, if an agent knows that the coin is fair, their credal state  would  be represented by the singleton set $\{\mathsf{P}\}$, where $\mathsf{P}$ is a probability measure which assigns $.5$ to \emph{heads}. If, on the other hand, the agent knows nothing about the coin's bias, their credal state would be represented by the set of all probabilistic measures, since none of them is excluded by the available evidence. Note that the set of probability measures does not represent admissible options that the agent could legitimately pick from. Rather, the agent's credal state is essentially imprecise and should be represented by means of the entire set of probability measures.^[For  the development of imprecise probabilism, see @keynes1921treatise; @Levi1974ideterminate; @Gardenfors1982unreliable; @Kaplan1968decision;  @joyce2005probabilities; @VanFraassen2006vague; @Sturgeon2008grain; @walley1991statistical. @bradley2019imprecise is a good source of further references. Imprecise probabilism shares some similarities with what we might call **interval probabilism** [@Kyburg1961; @kyburg2001uncertain]. On interval probabilism, precise probabilities are replaced  by intervals of probabilities. On imprecise probabilism, instead, precise probabilities are replaced by sets of probabilities.  This makes imprecise probabilism more general, since the probabilities of a proposition in the representor set do not have to form a closed interval. <!---Moreover, learning on Kyburg's approach is somewhat  idiosyncratic and is strongly connected to reference classes and selection and reshaping rules for intervals. See [PEDDEN] for a introduction.---> As we have already noted, intervals do not contain probabilistic information sufficient to guide reasoning with multiple items of evidence. So we focus on \s{IP}, which is the more promising approach.] 
 
 
 Imprecise probabilism, at least \emph{prima facie}, offers a straightforward picture of learning from evidence, that is a natural extension of the classical Bayesian approach. When faced with new evidence $E$ between time $t_0$ and $t_1$, the representor set  should be updated point-wise,  running the  standard Bayesian updating on each probability measure in the representor:
@@ -694,7 +698,8 @@ All in all, higher-order probabilism outperforms both precise and imprecise prob
 
 
 
-# Objections to the Higher-order Approach
+# Objections 
+\label{sec:objections}
 
 <!---You might have some concerns about the way we propose to use  higher-order probabilities and densities in evidence evaluation. Some prominent scholars in field certainly do. ---> 
 This section addresses a number of conceptual difficulties that may arise in using higher-order probabilities, with focus on  those brought up by prominent legal evidence scholars. In discussing these conceptual issues, we will formulate an accuracy-based argument that using higher-order probabilities is actually preferable to precise probabilities.
@@ -710,7 +715,7 @@ Say an expert reports at trial that the sample from the crime scene matches the 
 This frequency, however, cannot be known 
 for sure and must instead be estimated. 
 <!---This probability can be estimated on the frequentist approach, on which probability is interpreted as the limiting or population frequency $\theta$, and an agent in fact does estimate the true parameter in terms of a probabilistic distribution $p(\theta)$ over its possible values.---> <!---In DNA evidence evaluation the allelic relative frequency $f$ of DNA matches found in an available database is an estimate of the true frequency in a given population of interest. --->
-The expert will estimate the true parameter $\theta$ by means of a probabilistic distribution $p(\theta)$ over its possible values. For example, if the observations are realizations of independent and identically distributed Bernoulli trails given $\theta$, the expert's uncertainty about $\theta$ can be captured as $\s{beta}(\alpha + s + 1 ,\beta + n - s)$, where $s$ is the number of observed successes, $n$ the number of observations in the database (1 is added to the first shape parameter to include the match with the suspect), and $\alpha$ and $\beta$ capture the expert's priors.
+The expert will estimate the true parameter $\theta$ by means of a probability distribution $p(\theta)$ over its possible values. For example, if the observations are realizations of independent and identically distributed Bernoulli trails given $\theta$, the expert's uncertainty about $\theta$ can be modeled as $\s{beta}(\alpha + s + 1 ,\beta + n - s)$, where $s$ is the number of observed successes, $n$ the number of observations in the database (1 is added to the first shape parameter to include the match with the suspect), and $\alpha$ and $\beta$ reflect the expert's priors.
 
 <!---However, they insist, in front of the fact-finders, the expert is supposed to report their epistemic uncertainty, which is to be understood according to the subjective interpretation.  On this interpretation, probabilities express an agent's epistemic attitude towards a proposition, their uncertainty about its truth value. Such probabilities, @Taroni2015Dismissal insist, unlike frequencies, are not states of nature, but states of mind associated with individuals. For this reason, they claim, it makes no sense to talk about second-order uncertainty about subjective probabilities, as there is no underlying state of the nature to estimate. Further, they insist this also applies to likelihood ratios:
 \begin{quote}
@@ -753,7 +758,7 @@ In case of a DNA match, they recommend that the expert report the expected value
 <!--- which is reasonably supported by the data and can have impact on the result of evidence evaluation and incorporation.--->
 that can make a difference in the evaluation of the evidence. 
 <!---Crucially, the fact finders are interested in  what @Sjerps2015Uncertainty call the reliability of the evidence, and it depends on the distribution (as we already illustrated in the first section of this chapter).---> 
-There is a difference between (a) an expert who is certain $\theta$ is $.1$; (b) an expert whose best estimate of $\theta$ is $.1$ based on a thousand of observations; and (c) an expert whose best estimate of $\theta$ is again $.1$ but based on only ten observations. <!--- Complete information about the impact of the evidential basis of an estimate on expert's uncertainty about it allows the fact-finders to reasonably go about trying to be on the safe side working on the presumption of innocence. --->
+There is a difference between (a) an expert who is certain $\theta$ is $.1$; (b) an expert whose best estimate of $\theta$ is $.1$ based on thousands of observations; and (c) an expert whose best estimate of $\theta$ is again $.1$ but based on only ten observations. <!--- Complete information about the impact of the evidential basis of an estimate on expert's uncertainty about it allows the fact-finders to reasonably go about trying to be on the safe side working on the presumption of innocence. --->
 These three scenarios mirror scenarios we discussed earlier: (a) the bias of a coin is known for sure; (b) the bias is estimated on the basis of a large number of tosses; and (c) the bias is estimated using a small set of observations. As our critique of precise probabilism makes clear, a simple point estimate (or precise probability) would fail to capture the differences among the three scenarios.^[@Taroni2015Dismissal admits that the expert, besides providing a point estimate, should also informally explain how the estimate was arrived at. They grant that this additional information can be helpful so long as the recipients are instructed on "the nature of probability, the importance of an understanding of it and its proper use in dealing with uncertainty" [p. 16]. But why stop at an informal presentation? It is unclear why the fact-finders should be deprived of quantifiable information about the aleatory uncertainty of the parameter of interest and only be given an informal description of what the expert did, along with some remarks about the nature of probability. It is wildly optimistic to assume this way of proceeding is enough to secure a proper assessment of the evidence.]
 
 
@@ -764,13 +769,13 @@ Finally, their reply to the integration recommendation is somewhat case-specific
 --->
 
 The debate between @Taroni2015Dismissal and @Sjerps2015Uncertainty mostly rests on diverging philosophical commitments about the nature of probability and the relation between uncertainty and betting behavior. @Taroni2015Dismissal argues that, if  probabilities express an agent's epistemic attitude towards a proposition, probabilities are not states of nature, but states of mind associated with individuals. For them, this commitment to subjective probability has two consequences. First, it makes no sense sense to talk about second-order uncertainty about subjective probabilities, as there is no underlying state of the nature to estimate. Second, if these subjective probabilities can be elicited by examining an agent's betting preferences, a proper elicitation will lead to a single number.^[They write: "Clearly, one can adjust the measure of belief of success in the reference gamble in such a way that one will be indifferent with respect to the truth of the event about which one needs to give one’s probability. This understanding is fundamental, as it implies that probability is given by a single number. It may be hard to define, but that does not mean that probability does not exist in an individual’s mind. One cannot logically have two different numbers because they would reflect different measures of belief." @Taroni2015Dismissal [p. 7]] On the other hand, @Sjerps2015Uncertainty reject the sharp distinction between states of nature (which can be estimated) and mental attitudes (which cannot be in any meaningful way estimated because they are subjective). <!---Once the background information, the priors, the hypotheses and the evidence are specified, the higher-order uncertainty about $\theta$ follows from the probability calculus, and it is by no means arbitrary to what extent various potential values of $\theta$ are supported by the evidence. --->
-More recently, @Dahlman2022Information have also emphasized that the distinction is not so clear-cut. They argue that, if a probability assessment is a subjective attitude that is elicited via a betting preference, a probability assessment is itself a state of nature: "the formation of a betting preference by a certain person at a certain time" [p. 15].
+More recently, @Dahlman2022Information have also emphasized that the distinction is not so clear-cut. They argue that, if a probability assessment is a subjective attitude that is elicited via a betting preference, a probability assessment is itself a state of nature, "the formation of a betting preference by a certain person at a certain time" [p. 15].
 
 ## An Accuracy-based Argument
 
 We sidestep these conceptual issues for now. In what follows, we hope to break the stalemate in the debate by proving an argument to which both parties should be receptive. 
 <!---Before we get into the surprisingly philosophical intricacies of the debate between forensic scientists and legal evidence scholars, let us make a point that should convince you that the higher-order approach is preferable, no matter your philosophical convictions about the nature of probability, propositions or the relation between uncertainty and betting behavior. The point is simple.---> 
-This is a accuracy-based argument in favor of using higher-order probabilities---roughly, if you discard relevant information that you already have in the densities and rely on point estimates, your predictions about the world will be less accurate in a very precise quantifiable sense.
+It is an accuracy-based argument in favor of using higher-order probabilities---roughly, if you discard relevant information that you already have in the densities and rely on point estimates, your predictions about the world will be less accurate in a very precise quantifiable sense.
 
 ```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%"}
 priorA <- 1
@@ -824,12 +829,12 @@ posteriorPlot <- ggplot()+geom_bar(aes(x= posteriorPredictions,y = ..prop..))+
 
 ```
 
-First, let us go over a particular example. Suppose we randomly draw a true population frequency from the uniform distribution. In our particular case, we obtained `r round(trueH,3)`. Then, we randomly draw a sample size as a natural number between 10 and 20 (our points holds with larger samples, just the discrepancies get smaller). In our particular case, it is `r sampleSize`. Next, we simulate an experiment in which we draw that number of observations from the true distribution. We observe `r successes` successes and use this number to calculate the point estimate of the parameter, which is `r round(pointEstimate,3)`. 
+First, let us go over a particular example. Suppose we randomly draw a true population frequency from the uniform distribution. In our particular case, we obtained `r round(trueH,3)`. Then, we randomly draw a sample size as a natural number between 10 and 20. <!--- (our points holds with larger samples, just the discrepancies get smaller)---> In our particular case, it is `r sampleSize`. Next, we simulate an experiment in which we draw that number of observations from the true distribution. We observe `r successes` successes and use this number to calculate the point estimate of the parameter, which is `r round(pointEstimate,3)`. 
 
 What is the probability mass function (PMF) for all 
 possible outcomes of an observation of the same size? 
 Two probabilities mass functions are initially relevant: first, the true probability mass based on the true parameter; second, the probability mass function based on the point estimate which is 
-binomial around the point estimate. This latter PMF, however, does not take into account the uncertainty about the point estimate. To take this uncertainty seriously, we take a sampling distribution of size 16 of possible parameter values from the posterior  $\s{beta}(1+\s{successes}, 1+\s{sample size} - \s{successes})$ distribution (we assume uniform prior for the sake of an example). Then, we use this sample of parameter values to simulate observations, one simulation for each parameter value in the sample. This simulation yields the so-called *posterior predictive distribution* (or posterior predictive PMF), which instead of a point estimate, propagates the uncertainty about the parameter value into the predictions about the outcomes of possible observations. Finally, we take simulated frequencies as our estimates of probabilities. This distribution is more honest about uncertainty and wider than the one obtained using the point estimate. The three PMFs are illustrated in Figure \ref{fig:posteriorPrediction}.
+binomial around the point estimate. This latter PMF, however, does not take into account the uncertainty about the point estimate. To take this uncertainty seriously, we take a sampling distribution of size 16 of possible parameter values from the posterior  $\s{beta}(1+\s{successes}, 1+\s{sample size} - \s{successes})$ distribution (we assume uniform prior for the sake of an example). Then, we use this sample of parameter values to simulate observations, one simulation for each parameter value in the sample. This simulation yields the so-called *posterior predictive distribution* (or posterior predictive PMF), which instead of a point estimate, propagates the uncertainty about the parameter value into the predictions about the outcomes of possible observations. Finally, we take simulated frequencies as our estimates of probabilities. This distribution is more honest about uncertainty and wider than the one obtained using the point estimate. The three PMFs are displayed in Figure \ref{fig:posteriorPrediction}.
 
 
 
@@ -906,10 +911,13 @@ More generally, evidence justifies first-order probability assignments to variou
 
 We conclude this section by examining two additional points raised by  @Taroni2015Dismissal. The first---which we already alluded to earlier---is that first-order probabilities  are not "states of nature" and so cannot be estimated.  <!---We are not sure about "nature" and why the requirement of being part of nature is important for estimation. ---> It is unclear why only states of nature can be estimated. Mathematicians use approximate methods to estimate answers to fairly abstract questions ,not obviously related to "states of nature", whatever these are.  So, estimation should make sense whenever there are some objective answers that we can approximate to a greater or lesser extent.<!---But if there is some objectivity to what the ideal evidence would support, or to the extent to which the actual evidence supports various competing hypotheses, we can be more or less wrong about such things, and so it is not implausible to say that  there is a clear sense in which we can estimate them.--->^[@Taroni2015Dismissal makes the same point for likelihood ratios. They argue that there is no "meaningful state of nature equivalent for the likelihood ratio in its entirety, as it is given by a ratio of two conditional probabilities?" But if it is meaningful to estimate two conditional probabilities (that is, frequencies in the population), or to  compare the relative plausibility of various propositions about them in terms of density, it is equally meaningful to estimate any function of the numbers involved.  Otherwise it would also be meaningless to try to estimate the body mass index (BMI) of an average 21 years old male student in the USA just because BMI is a ratio of other quantities.]
 
-Second, @Taroni2015Dismissal argue that once we allow second-order probability, we run into the threat of infinite regress. But do we? Surely, they would agree that one can be uncertain about a statistical model. But this can be the case even if this model spits out a point estimate rather than a density. If you think the possibility of putting uncertainty on top of propositions about possible values of a first-order parameter leaves us in an  epistemically hopeless situation, you might have hard time explaining why your point estimation is in a better situation. After all, if asking further questions about probabilities up the hierarchy is always justified, we can keep asking about the probability of a point-estimate-spitting model being adequate, the probability of that probability <!---(and the way we have reached it) being adequate--->, and so on.  <!---Alternatively, we could concede that while our situation is often epistemically difficult, it is not hopeless. Of course, the mathematical and statistical models we use are exactly those: models, which can be more or less epistemically helpful. And when we decide which models to use, we always face a trade-off between various factors.---> Perhaps the problem at issue is just one of complexity. Admittedly, second-order estimation is more complex than relying on point estimates. But we hope to have convinced the reader this complexity is worth the effort. What about more complex models going third-higher? If a workable approach can accomplish that---and the additional complexity pays off---we are all for going third-order. <!---In fact, some of the model selection methods can be thought of this way. ---> So, the fact that more complex models can always be built hardly lead us into a vicious infinite regress. Rather, it is an indication that our models of uncertainty can---in principle---always be improved. 
+Second, @Taroni2015Dismissal argue that once we allow second-order probability, we run into the threat of infinite regress. But do we? Surely, they would agree that one can be uncertain about a statistical model. But this can be the case even if this model spits out a point estimate rather than a density. If you think the possibility of putting uncertainty on top of propositions about possible values of a first-order parameter leaves us in an  epistemically hopeless situation, you might have hard time explaining why your point estimation is in a better situation. After all, if asking further questions about probabilities up the hierarchy is always justified, we can keep asking about the probability of a point-estimate-spitting model, the probability of that probability, <!---(and the way we have reached it) being adequate---> and so on.  <!---Alternatively, we could concede that while our situation is often epistemically difficult, it is not hopeless. Of course, the mathematical and statistical models we use are exactly those: models, which can be more or less epistemically helpful. And when we decide which models to use, we always face a trade-off between various factors.---> 
+
+Perhaps the problem at issue is just one of complexity. Admittedly, second-order estimation is more complex than relying on point estimates. But we hope to have convinced the reader this complexity is worth the effort. What about more complex models going third-order? If a workable approach can accomplish that---and the additional complexity pays off---we are all for going third-order. <!---In fact, some of the model selection methods can be thought of this way. ---> The fact that more complex models can always be built hardly lead us into a vicious infinite regress. Rather, it is an indication that our models of uncertainty can---in principle---always be improved. 
 
 
 # Legal Applications
+\label{sec:legal-applications}
 
 <!-- ## Adding carpet evidence in the Wayne Williams case -->
 
@@ -967,15 +975,17 @@ with this number. Consider now two ways of assessing the DNA match.
 First, disregarding the possibility of a false positive---so $FP=0$---makes 
 the match evidence appear extremely strong. In this case, the minimal prior sufficient for the posterior to be above .99 is only `r min(prior[pristinePosterior >= .99])`, where the relation between the prior probabilities and the posterior probabilities of the source hypthesis 
 is given by the dashed orange line in Figure \ref{fig:fplinesPlot}. What happens after 
-taking into account the possibility of a false positive match? This depends on how this possibility of error is quantified. Assume the false positive rate corresponds to the upper bound of the [0.001, 0.01] interval. This assumption completely changes the assessment of the match evidence. For the posterior of $.99$ is reached only once the prior is above .99. The match evidence now appears to be extremely weak. <!---So which is it?  Neither. ---> As already seen in the introduction, the point estimate exaggerates the value of the match evidence, while using the upper bound of the false positive rate has the opposite effect.  What matters within these edges of the [0.001, 0.01] interval cannot be ignored.
+taking into account the possibility of a false positive match? This depends on how this possibility of error is quantified. Assume the false positive rate corresponds to the upper bound of the [0.001, 0.01] interval. This assumption completely changes the assessment of the match evidence. Now the posterior of $.99$ is reached only if the prior is above .99. The match evidence  appears to be extremely weak. So which is it?  As already seen in the introduction, the point estimate exaggerates the value of the match evidence, while using the upper bound of the false positive rate has the opposite effect.  What matters within these edges of the [0.001, 0.01] interval cannot be ignored.
 
 To take into consideration the values within the edges, two approaches 
 can be pursued. On one approach, any value between <!---these values (with a slight leeway on top) is equally likely--->
-the edges is regarded as equally likely. On another approach, not all values are equally likely. For example, suppose you think it is 50\% likely that the false positive rate is below .0033. In addition, suppose the  distribution, while being centered closer to zero, is long-tailed (known as the truncated normal distribution). <!--- so at the same time you do not think that $FP$s above .01 are impossible---you allow for the rare possibility of a false positive being much higher (say, if some specific conditions or circumstances arise, but you have no knowledge of how to identify them, because extensive studies on false positives are only forthcoming), in line with the passage quoted above.---> Thee two distributions are illustrated in Figure \ref{fig:fppdistros}.^[On both approaches, we assume that the false positive rate is between 0.001 and 0.01 with  99\% certainty.] The uniform distribution---which regards all false positive rates in the interval as equally likely---leads to a rather conservative evaluation of the match evidence, much more so than the truncated normal distribution. This is apparent from Figure \ref{fig:fppMinima}) and Figure \ref{fig:fplinesPlot} which show the prior probabilities of the source of hypothesis needed to secure a posterior probability above. Working with a distribution---better if it is not a uniform distribution---affords a more balanced assessment of the evidence than simply relying on the edges of an interval. 
+the edges is regarded as equally likely. On another approach, not all values are equally likely. For example, suppose you think it is 50\% likely that the false positive rate is below .0033. In addition, suppose the  distribution, while being centered closer to zero, is long-tailed (known as the truncated normal distribution). <!--- so at the same time you do not think that $FP$s above .01 are impossible---you allow for the rare possibility of a false positive being much higher (say, if some specific conditions or circumstances arise, but you have no knowledge of how to identify them, because extensive studies on false positives are only forthcoming), in line with the passage quoted above.---> These two distributions are displayed in Figure \ref{fig:fppdistros}.^[On both approaches, we assume that the false positive rate is between 0.001 and 0.01 with  99\% certainty.] The uniform distribution---which regards all false positive rates in the interval as equally likely---leads to a rather conservative evaluation of the match evidence, much more so than the truncated normal distribution. This is apparent from Figure \ref{fig:fppMinima} and \ref{fig:fplinesPlot} which show the prior probabilities of the source  hypothesis needed to secure a posterior probability above .99. 
 
-We have suggested that the choice of a distribution over possible values of false positive rates can make a difference for the assessment of DNA evidence. The lingering question, however, is how these distributions can be obtained. 
+Working with a distribution---better if it is not a uniform distribution---affords a more balanced assessment of the evidence than simply relying on the edges of an interval. 
+<!---We have suggested that the choice of a distribution over possible values of false positive rates can make a difference for the assessment of DNA evidence.---> 
+The lingering question, however, is how these distributions can be obtained. 
 <!--But where do we take these distributions from, you might ask. 
---->Admittedly, studies on false positives are limited and only give a rough and foggy picture. More experiments and studies <!---which would allow for a better justification of the choice of a distribution,---> are needed. This does not mean, however, that until then using point estimates and interval edges is preferable. After deciding on the functional form of a distribution---such as truncated normal or beta---only a few numbers need to be elicited from experts for constructing a density.<!---which are known to be pretty standard and reliable in such contexts, are chosen, --->^[For instance, assuming the distribution is a truncated normal, it is enough for the expert to assert that <!---the 99\% interval is as the one we used, and that she---> they believes with more than 50\% confidence the false positive rates to be below $.033$ for the curve to be determined.] Having to rely on such elicitation is not without problems, but it is better than asking experts for single point estimates and relying on these [@o2006uncertain].
+--->Admittedly, studies on false positives are limited and only give an incomplete picture. More studies <!---which would allow for a better justification of the choice of a distribution,---> are needed. This does not mean, however, that until then using point estimates and interval edges is preferable. After deciding on the functional form of a distribution---such as truncated normal or beta---only a few numbers need to be elicited from experts for constructing a density.<!---which are known to be pretty standard and reliable in such contexts, are chosen, --->^[For instance, assuming the distribution is a truncated normal, it is enough for the expert to assert that <!---the 99\% interval is as the one we used, and that she---> they believes with more than 50\% confidence the false positive rates to be below $.033$ for the curve to be determined.] Having to rely on such elicitation is not without problems, but it is better than asking experts for single point estimates and relying on these [@o2006uncertain].
 
 
 ```{r fpSampling,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%"}
@@ -1188,8 +1198,8 @@ general discussion of Bayesian networks. Here it suffices to note that the  arro
 
 The choice of the probabilities in the network is quite specific, and 
 it is not clear where such precise values come from. <!---We have already discussed how frequency and probability estimates usually come at least with some aleatory uncertainty around them that cannot be represented by first-order probabilities.--->  The standard response invokes 
-*sensitivity analysis*: a range of plausible values is tested. As already discussed, this approach ignores the shape of the underlying distributions. Sensitivity analysis  does not make any different between probability measures (or point estimates) in terms of their plausibility, but some will be more plausible than others. Moreover, if the sensitivity analysis is guided by extreme values, these might play an undeservedly strong role. <!---The best case scenario for my way home from the office is that I find a suitcase with a lot of money inside. The worst case scenario is that I get run over by a bus. What is the quality of the guidance that the consideration of the worst case and the best case scenario provide me with? Limited.--->
-These concerns can be addressed, at least in part, by adding higher order probabilities. <!---The general method is as follows.---> In a precise Bayesian network, each  node is associated with a probability table determined by a finite list of numbers (precise probabilities). <!---If it's a root node, its probability table is determined by one number, if it's a node with one parent, its table is determined by two numbers etc. ---> But suppose that, instead of precise numbers, we have densities over parameter values for the numbers in the probability tables.^[The densities of interests can then be approximated by (1) sampling parameter values from the specified distributions, (2) plugging them into the construction of the BN, and (3) evaluating the probability of interest in that precise BN. The list of the probabilities thus obtained will approximate the density of interest. In what follows we will work with sample sizes of 10k.]  <!---For instance, the conditional probabilities might look as illustrated in Figure  \ref{fig:SCwithHOPa}. ---> <!---One of them is based on a truncated normal distribution to emphasize that the framework give us much freedom in the specification of distributions. --->
+*sensitivity analysis*: a range of plausible values is tested. As already discussed, this approach ignores the shape of the underlying distributions. Sensitivity analysis  does not make any difference between probability measures (or point estimates) in terms of their plausibility, but some will be more plausible than others. Moreover, if the sensitivity analysis is guided by extreme values, these might play an undeservedly strong role. <!---The best case scenario for my way home from the office is that I find a suitcase with a lot of money inside. The worst case scenario is that I get run over by a bus. What is the quality of the guidance that the consideration of the worst case and the best case scenario provide me with? Limited.--->
+These concerns can be addressed, at least in part, by recourse to higher-order probabilities. <!---The general method is as follows.---> In a precise Bayesian network, each  node is associated with a probability table determined by a finite list of numbers (precise probabilities). <!---If it's a root node, its probability table is determined by one number, if it's a node with one parent, its table is determined by two numbers etc. ---> But suppose that, instead of precise numbers, we have densities over parameter values for the numbers in the probability tables.^[The densities of interests can then be approximated by (1) sampling parameter values from the specified distributions, (2) plugging them into the construction of the BN, and (3) evaluating the probability of interest in that precise BN. The list of the probabilities thus obtained will approximate the density of interest. In what follows we will work with sample sizes of 10k.]  <!---For instance, the conditional probabilities might look as illustrated in Figure  \ref{fig:SCwithHOPa}. ---> <!---One of them is based on a truncated normal distribution to emphasize that the framework give us much freedom in the specification of distributions. --->
 An example of a higher-order Bayesian network for the Sally 
 Clark case is given in Figure \ref{fig:SCwithHOP}. 
 
@@ -1379,13 +1389,12 @@ ggplot(data.frame(a=1)) + xlim(1, 40) + ylim(1, 60)+theme_void()+
 
 With the help of the higher-order Bayesian network, 
 we can investigate the impact of different 
-items of evidence on the Sally Clark's probability of guilt 
+items of evidence on Sally Clark's probability of guilt 
 (Figure \ref{fig:SCwithHOP2}). The starting point is 
 the prior density for the \s{Guilt} node (first graph). Next, the network 
 is updated with evidence showing signs of bruising on both children (second graph). 
-Next, the assumption that both children lacked signs of 
-potentially lethal disease is added (third graph). Finally, we consider the state of the evidence 
-at the time of the appellate case: signs of bruising existed on both children, but signs of lethal disease were discovered only on the first child. Interestingly, in the strongest scenario against Sally Clark (third visualization), the median of the posterior distribution is above .95, 
+Next, the assumption that both children lack signs of 
+potentially lethal disease is added (third graph). Finally, we consider the state of the evidence at the time of the appellate case: signs of bruising existed on both children, but signs of lethal disease were discovered only on the first child. Interestingly, in the strongest scenario against Sally Clark (third graph), the median of the posterior distribution is above .95, 
 but the uncertainty around that median is still too wide to warrant a conviction.^[The lower limit of the 89\% Highest Posterior Density Intervals (HPDI) is at .83.] This underscores the fact that relying on point estimates can lead to overconfidence. Paying attention to the higher-order uncertainty about the first-order probability can make a difference to trial decisions.
 
 
@@ -1468,10 +1477,12 @@ AdiseaseLRPlot <- plotSample(AdiseaseLR,title = "LR: Adisease",  paste("median =
 
 
 
-# Weight of evidence
+# Weight of Evidence
+\label{sec:weight}
 
 
-We now illustrate one of the theoretical payoffs of higher-order probabilism. It allows to develop an elegant theory of the weight of evidence that outperforms the  existing proposals. We will start with an informal sketch of the idea of the weight of evidence, as opposed to the balance of the evidence. We will then explore a few attempts at modeling this idea, first based on precise probabilism and then based on imprecise probabilism. Finally, we will show how higher-order probabilism can offer a better theory. 
+After its legal applications, we turn to one of 
+the theoretical payoffs of higher-order probabilism: it allows to develop a theory of the weight of evidence that outperforms existing proposals. We will start with an informal sketch of the idea of weight of evidence, as opposed to balance of the evidence. We will then explore a few attempts at modeling this idea, first based on precise probabilism and then based on imprecise probabilism. Finally, we will show that higher-order probabilism can offer a better theory. 
 
 <!---\textbf{Comment:} It is conceptually important to separate the discussion about precise, imprecise, and higher order probabilism (previous sections) from weight (this section). Weight of evidence is one way in which higher order probabilism can be put to use. It can be confusing to run the discussion of higher order probabilism together with weight of evidence. Higher order probabilism can still make perfect sense even if no theory of weight cen be worked out. 
 --->
@@ -1527,7 +1538,7 @@ Monotonicity is consistent with Peirce's example about drawing from a bag of bea
 
 \vspace{1mm}
 \begin{tabular}{lp{10cm}}
-(Weak increase) & In urn-like cases, the evidential weight obtained by a larger sample is greater, if the relative frequencies in the samples remain the same.
+(Weak Increase) & In urn-like cases, the evidential weight obtained by a larger sample is greater, if the relative frequencies in the samples remain the same.
 \end{tabular}
 \vspace{1mm}
 
@@ -1538,7 +1549,7 @@ the assumption of equal relative frequencies:
 
 \vspace{1mm}
 \begin{tabular}{lp{11cm}}
-(Strong increase) & In urn-like cases, the evidential weight obtained by a larger sample is higher.
+(Strong Increase) & In urn-like cases, the evidential weight obtained by a larger sample is higher.
 \end{tabular}
 
 
@@ -1555,14 +1566,36 @@ Arguably, this is a scenario in which the quantity of evidence has increased, bu
 So, we seek a theory of evidential weight that can model two intuitions. The first is that, as the sample size increases, the weight of the evidence must also increase (under  certain conditions, along the lines of Weak Increase). The second intuition is that that, even when the quantity of evidence increases, the weight of evidence might not (as illustrated by the example of the rigged lottery).
 
 
-## Weight and precise probabilism
+## Weight and Precise Probabilism
 
 
-An obvious place to look for a theory of the weight of evidence is within  precise probabilism. But, we will argue, our best bet is to look beyond it.
+An obvious place to look for a theory of the weight of evidence is within  precise probabilism. 
+<!---\todo{CITE PROBABILITY AND THE
+WEIGHING OF EVIDENCE 1950.}--->
+The earliest account of the weight of 
+evidence is given by @good1950probability, as follows:
+\begin{align*}
+W(H:E) & = \log \frac{\pr{E \vert H}}{\pr{E\vert \neg H}},
+\end{align*}
 
-### Absolute value of the likelihood ratio
+\noindent
+where $E$ is the evidence and $H$ a hypothesis of interest. 
+This account follows naturally from the assumption that
+that $W(H:E)$ must be a function of
+$\pr{E\vert H}$ and of $\pr{E\vert \neg H}$.
+As @good1985 put it, ''I cannot see how anything can be relevant to the weight of evidence other than the probability of the evidence given guilt and the 
+probability given innocence'' [p 250].
+The question is whether Good's weight 
+satisfies the desiderata of Keynes' weight. 
 
-Weight of evidence can be modeled by generalizing the likelihood ratio as a measure of the value of evidence. The likelihood ratio is a *directional* measure: the evidence may be favorable or unfavorable to a hypothesis (compared to another). By contrast, Keynes' remarks suggests that weight is a non-directional measure. It appears to always increase no matter the balance (though we will ultimately reject this claim). To strip the likelihood ratio of its directionality, it is enough to take the absolute value of the natural log [@nance2016, section 3.5].   The weight of evidence $E$ relative to the pair of hypotheses $H, H'$ would be 
+<!---First, let us think about weight increase with sample size.---> 
+
+If, in an experiment, the observations $E_1, \dots, E_K$ are independent given $H$ and  given $\neg H$, the resulting joint likelihood is  the result of  multiplying the individual likelihoods. Thus, the joint weight is the result of adding the individual weights. Now, suppose a die is selected at random from a hat containing nine fair dice and one loaded die with bias $\nicefrac{1}{3}$ of obtaining a six. <!---The initial uniform distribution gives you weight of evidence for the die being loaded of $log_{10}(.1)$, that is `r log10(.1)` ---><!---(Good and Turing would say, it is -10 db).---> Every time you throw the die and obtain a six, the weight for the hypothesis that the die is biased increases by $log_{10}(\frac{\nicefrac{1}{3}}{\nicefrac{1}{6}})= log_{10}(2)$, that is `r log10(2)`, and every time you throw it and obtain something else, the weight changes by $log_{10}(\frac{\nicefrac{2}{3}}{\nicefrac{5}{6}})= log_{10}(.8)$, that is `r log10(.8)`. The weights in db (that is, multiplied by 10) for all possible outcomes of up to 20 tosses are displayed in Figure \ref{fig:goodWeight}. 
+\todo{Add Figure}
+
+Two facts are notable. First, Good's weight can drop with sample size. For instance, the weight for 5 sixes and 4 other numbers is 1.2db, and it is .2db for 5 sixes and 5 other numbers. In addition, weight can drop while the sample size increases even if the proportion of sixes remains the same. For instance, if none of the observations are sixes, the weights go from -10 to -19.7 as the sample size goes from 0 to 10. Less trivially, the observation of one six in five leads to weight of -10.9, while the observation of two sixes in ten tosses leads to weight -11.7. That is, (Monotonicity) <!---, (Completeness),---> (Weak Increase) and (Strong Increase) all fail on Good's measure. This measure cannot even capture the generic notion of quantity of evidence.
+
+Perhaps the trouble with Good's weight is that the (log of the) likelihood ratio is a *directional* measure: the evidence may be favorable or unfavorable to a hypothesis (compared to another). By contrast, Keynes' remarks suggests that weight is a non-directional measure. It appears to always increase no matter the balance (though we will ultimately reject this claim). To strip the likelihood ratio of its directionality, it is enough to take the absolute value of the natural log [@nance2016, section 3.5].   The weight of evidence $E$ relative to the pair of hypotheses $H, H'$ would be 
 \[\vert \ln (LR_{H, H'}(E)) \vert, \] 
 where $LR_{H, H'}(E)=\frac{P(E \vert H)}{P(E \vert H')}$. 
 By the properties of logarithms, $ln(1/x) = -ln(x)$, 
@@ -1571,9 +1604,10 @@ opposite directionality---would have the same weight. So, for example, $|ln(1/3)
 
 This account is simple and elegant, but faces two difficulties. The first is technical in nature. As many have pointed out, there is a problem with decomposition. Consider two items of evidence that, taken together, have a likelihood ratio of one, say one has a likelihood ratio of 1/3 and the other of 3. Assuming they are probabilistically independent given a hypothesis of interest, their combined likelihood ratio results from multiplying the individual likelihood ratios. Thus, their combined weight would be zero since $\ln (LR_H(E1 \wedge E_2))=\ln (1) = 0$. However, by adding the weights one by one, the combined weight would be different from zero, since $|ln(1/3)| + |ln(3)| = 3.22$. So, do the two items of evidence have zero weight or not?  Depending on how evidence is decomposed, it appears to have different weights. 
 
-There might be a technical fix to the problem of decomposition. But another, conceptually deeper problem exists. Whether the log of the likelihood has a positive or negative sign, its absolute value is always positive. Therefore, as more evidence is added, the weight of evidence would always increase. 
-This shows that this account agrees with Monotonicity and Strong Increase, and in this sense, it only captures the notion of quantity of evidence.  The problem, then, is that it cannot capture the intuition underlying the scenario of the rigged lottery in which, even when quantity increases, weight does not.
+There might be a technical fix to the problem of decomposition. But another, conceptually deeper problem exists. Whether the log of the likelihood has a positive or negative sign, its absolute value is always positive. Therefore, as more evidence is added, the weight of evidence would always increase. This account agrees with Monotonicity and Strong Increase, and in this sense, captures the generic notion of quantity of evidence.  The problem, then, is that it cannot capture the intuition underlying the scenario of the rigged lottery in which, even when quantity increases, weight does not.
 
+
+<!---
 ### Completeness and resilience 
 
 Another strategy, within precise probabilism, is to model notions that are  related, albeit not  identical, to weight. The literature has suggested that precise probabilism contains the conceptual resources to model two related ideas: resilience (or stability) and completeness. Roughly speaking, resilience tracks how additional evidence may change the current probability assessment, while completeness tracks how the fact that some evidence is missing may change the current probability assessment.
@@ -1587,30 +1621,40 @@ A good account of resilience and completeness should address a number of questio
 So, a good theory of how evidence is assessed at trial should include an account of completeness and resilience. A question remains, however. Are resilience and completeness the theory of weight we are looking for? 
 This is far from clear. We think that weight, completeness and resilience are conceptually distinct notions. And, they are likely to play distinct roles in legal fact-finding. Or perhaps completeness and resilience, together with precise first-order probabilities, are all we need to assess evidence at trial, and the notion of weight is redundant. These are difficult questions that require a close examination of each notion. We focus here on weight and leave the discussion of how weight compares to completeness and resilience to another time. 
 
-## Weight and imprecise probabilism
+--->
 
-A theory of weight can also be formulated using the conceptual 
-resources of imprecise probabilism. \todo{CITE WEATHERSON ON WEIGHT AND IMPRECISE PROBABILISM} The idea is this: a body of evidence is weightier whenever the representor set of probability measures compatible with the evidence is in some sensible sense smaller. Consider a case of complete ignorance about the bias of a coin. The representor set will contain *any* probability measure. This corresponds to complete lack of evidence and null weight, as expected. At the other extreme, consider a case in which the fairness of the coin is known for sure. The supporting evidence here would have maximal weight and the representor set would only contain the precise probability measure that assigns .5 to the two outcomes. All other intermediate cases would fall somewhere in between.^[More formally, let $x_1$ and $x_2$ the two extreme probability assignments in the representator set compatible with the available evidence $E$. Then, the weight of $E$ would be 1-$x_1-x_2$. As expected, if there is only one probability measure, the weight would be one.]
+## Weight and Imprecise Probabilism
 
-This account accommodates the intuition underlying the rigged lottery example. As more evidenced is accumulated, the representor set can become larger and include more probability measures than before. Thus, weight of evidence can decrease  even when the quantity of evidence increases. For this reason, a theory  of weight based on imprecise probabilism is promising. The problem, however, is that this theory inherits the difficulties of imprecise probabilism, which we have already mentioned. For example, recall that imprecise probabilism cannot model a situation in which an epistemic agent believes that the coin could have bias .8 or .4, but thinks that one bias is more likely than the other. Arguably, evidence compatible with the coin having two equally likely biases should possess different weight than evidence compatible with the coin having two biases one more likely than the other. The latter situation is closer to full weight---the situation in which the exact bias of the coin is known for sure. But a theory of weight based on imprecise probabilism is ill-equipped to accommodate these nuances. 
+Precise probabilism was not very successful at delivering an account 
+of weight. Does imprecise probabilism fare any better? <!---\todo{CITE B. Weatherson. Keynes, uncertainty and interest rates. Cambridge Journal of Eco-
+nomics, 26 (1): 47-62, 2002.]}---> @Weatherson2002
+proposes the following: a body of evidence is weightier whenever the representor set of probability measures compatible with the evidence is, in some sensible sense, smaller. Consider a case of complete ignorance about the bias of a coin. The representor set will contain *any* probability measure. This corresponds to complete lack of evidence and null weight, as expected. At the other extreme, consider a case in which the fairness of the coin is known for sure. The supporting evidence here would have maximal weight and the representor set would only contain the precise probability measure that assigns .5 to the two outcomes. All other intermediate cases would fall somewhere in between.^[Let $x_1$ and $x_2$ the two extreme probability assignments in the representator set compatible with the available evidence $E$. Then, the weight of $E$ would be 1-$x_1-x_2$. As expected, if there is only one probability measure, the weight would be one.]
+
+This account accommodates the intuition underlying the rigged lottery example. As more evidenced is accumulated, the representor set can become larger and include more probability measures than before. Thus, weight of evidence can decrease  even when the quantity of evidence increases. This is promising. The problem, however, is that this theory of weight inherits the difficulties of imprecise probabilism, which we have already mentioned. For example, recall that imprecise probabilism cannot model a situation in which an epistemic agent believes that the coin could have bias .8 or .4, but thinks that one bias is more likely than the other. Arguably, evidence compatible with the coin having two equally likely biases should possess different weight than evidence compatible with the coin having two biases one more likely than the other. The latter situation is closer to full weight---the situation in which the exact bias of the coin is known for sure. But a theory of weight based on imprecise probabilism is ill-equipped to accommodate these nuances. 
 
 
 
-## Weight and higher order probabilism
+## Weight and Higher-order Probabilism
 
-We are finally ready to present our own account 
+We now present our own account 
 of the weight of evidence. This accout has two 
 distinctive features. First, it is based on higher-order 
 probabilism. Second, it is information-theoretic. 
-To develop this account, we will begin with a very short introduction to  Shannon's theory of information.  
+To develop this account, we will begin with 
+a short introduction to  Shannon's theory of information.  
 
-### Entropy of a distribution
+### Entropy of a Distribution
 
-\todo{I think you crippled the explanation too much, as now there is no connection to expected surprise, more needs to be said here. If not today, at some later point.}
+<!---\todo{I think you crippled the explanation too much, as now there is no connection to expected surprise, more needs to be said here. If not today, at some later point.}
+--->
 
 Let $X$ be a random variable and $P$ 
-a probability distribution over its values.
-Shannon's measure of information, $H(X)$, reads:
+a probability distribution over its values.^[Since working with continuous distributions is not straightforward, we will be using \emph{grid approximations} of continuous distributions: we will split \(X\) into a 1000 bins and use the normalized densities for their centers to obtain their corresponding
+probabilities. As long as we do not change our level of precision (which
+would inevitably lead to changes in entropy) in our comparisons, this is
+not a problem. <!--An additional advantage is that now we do not have to deal
+with the intricacies of explicit analytic calculations for continuous
+variables.--->] Shannon's measure of information, $H(X)$, reads:
  <!---If the outcomes are equally likely, \(h(x)\) doesn't depend
 on the choice of \(x\). However, if the distribution is not uniform,
 this will not be the case.--->
@@ -1627,9 +1671,7 @@ H(X)  & =
 - \sum \mathsf{P}(x_i) \log_2 \mathsf{P}(x_i)
 \end{align*} \noindent 
 Consider the simple case in which 
-$X$ can take two values---outcome 1 and outcome 0---whose probabilities are $p$ and $1-p$. Figure (\textbf{REFER TO PLOT of H(X)})\todo{WHAT PLOT?} shows $H(X)$ as a function of $p$. As is apparent from the graph, $H(X)$ is greatest when the two outcomes have an equal probability of .5. The more the probabilities deviate from .5, the more $H(X)$ approaches zero.  
-
-To make sense of this, $H(X)$ can be thought as the \textit{entropy} (i.e. the lack of information) contained in the distribution associated with random variable $X$. When the two outcomes have equal probability, entropy is greatest. When they have different probabilities, one outcome will be more probable than the other. The more probable one of the outcomes (and thus the less likely the other), the lower the entropy. Intuitively, $H(X)$ captures the idea that entropy is greatest when the indecision about which outcome will occur is maximal, and the entropy decreases when such indecision decreases. 
+$X$ can take two values---outcome 1 and outcome 0---whose probabilities are $p$ and $1-p$. Figure \ref{} \todo{Add plot of H(X)} <!---\todo{WHAT PLOT?}--> shows $H(X)$ as a function of $p$. Entropy $H(X)$ is greatest when the two outcomes have an equal probability of .5. The more the probabilities deviate from .5, the more $H(X)$ approaches zero. To make sense of this, $H(X)$ can be thought as the \textit{entropy} (i.e. the lack of information) contained in the distribution associated with random variable $X$. When the two outcomes have equal probability, entropy is greatest. When they have different probabilities, one outcome will be more probable than the other. The more probable one of the outcomes (and thus the less likely the other), the lower the entropy. Intuitively, $H(X)$ captures the idea that entropy is greatest when the indecision about which outcome will occur is maximal, and the entropy decreases when such indecision decreases. 
 
 <!---Note that entropy is not the measure of
 information contained in a distribution. It is rather the opposite:--->
@@ -1637,38 +1679,251 @@ information contained in a distribution. It is rather the opposite:--->
 as equally probable (maximum entropy), and smallest when one outcome 
 is regarded as certain (lowest entropy).--->
 
-If $H(X)$ is a measure of entropy---that is, a measure of lack of information---why call it a measure of information? $H(X)$ is also a measure of information in the following sense: it describes the \textit{expected amount of information} one would receive upon learning the actual value of $X$. After all, the higher the entropy, the less informative a distribution, the more you expect to learn upon finding out the actual value of $X$. Conversely, the lower the entropy of the distribution, the more informative the distribution, the less one expects to learn upon finding out the actual value of $X$.^[Since working with continuous distributions is not straightforward, we will be using \emph{grid approximations} of continuous distributions: we will split \(X\) into a 1000 bins and use the normalized densities for their centers to obtain their corresponding
-probabilities. As long as we do not change our level of precision (which
-would inevitably lead to changes in entropy) in our comparisons, this is
-not a problem. An additional advantage is that now we do not have to deal
-with the intricacies of explicit analytic calculations for continuous
-variables.]  
+If $H(X)$ is a measure of entropy---that is, a measure of lack of information---why call it a measure of information? $H(X)$ is also a measure of information in the following sense: it describes the \textit{expected amount of information} one would receive upon learning the actual value of $X$. After all, the higher the entropy, the less informative a distribution, the more you expect to learn upon finding out the actual value of $X$. Conversely, the lower the entropy of the distribution, the more informative the distribution, the less one expects to learn upon finding out the actual value of $X$.
 
 
-### Informativeness of a distribution
+### Weight of a Distribution
 
 
 Since $H(X)$ can be thought as the entropy of a distribution, we will switch to the notation $H(P)$. This notation emphasizes the distribution $P$ rather than the random variable $X$.  The entropy of a distribution is to be contrasted with its informativeness, which we will denote by $W(P)$, the weight of the distribution.
-How should we measure the informativeness (or weight) of a distribution?
+How should we measure the weight (or informativeness) of a distribution?
 
-Since informativeness is the opposite of entropy, it is tempting to take the short route and define $W(P)$ as $1-H(P)$. But, for reasons that will be become clear (\textbf{WHEN?}),  the weight (or informativeness) of a distribution is more aptly modeled by comparing it to the least informative distribution, the uniform distribution which expresses complete uncertainty. The idea is this: the more informative a distribution, the more it departs from the uniform distribution, the more weight it has, on a scale from 0 to 1. If the drop from uncertainty is complete, the entropy drops to zero, and thus the weight should be 1; if the drop is null, the entropy remains the same, and thus the weight should be zero; if the drop is half, the weight should be .5; and so on for other intermediate cases. This pattern can be captured by the following definition of informativeness (or weight) of a distribution:
+If informativeness is the opposite of entropy, it is tempting to take the short route and define $W(P)$ as $1-H(P)$. But, the weight (or informativeness) of a distribution is more aptly modeled by comparing it to the least informative distribution, the uniform distribution which expresses complete uncertainty. The more informative a distribution, the more it departs from the uniform distribution, the more weight it has, on a scale from 0 to 1. If the drop from uncertainty is complete, the entropy drops to zero, and thus the weight should be 1; if the drop is null, the entropy remains the same, and thus the weight should be zero; if the drop is half, the weight should be .5; and so on for other intermediate cases. This pattern can be captured by the following definition of weight (or informativeness) of a distribution:
 \begin{align*}
 \mathsf{w(P_i)} & = 1 - \left( \frac{H(\mathsf{P})}{H(\mathsf{uniform})}\right)
 \end{align*}
-\noindent where $\mathsf{P}$ is the probability distribution of interest and $\mathsf{uniform}$ is the baseline uniform distribution.^[Since we are using grip approximation, $\mathsf{P}$ is the discrete probability distribution for a given number of bins $n$, and uniform is the discrete uniform distribution for the same number of bins. In some contexts it might make sense to measure improvement with respect to a non-uniform prior. In such cases,  $H(\mathsf{uniform})$ is to be replaced by $H(\mathsf{prior})$.  Note that the entropy of a uniform distribution is pretty straightforward, so we can simplify:
+\noindent where $\mathsf{P}$ is the probability distribution of interest and $\mathsf{uniform}$ is the baseline uniform distribution.^[Since we are using grid approximation, $\mathsf{P}$ is the discrete probability distribution for a given number of bins $n$, and uniform is the discrete uniform distribution for the same number of bins. In some contexts it might make sense to measure improvement with respect to a non-uniform prior. In such cases,  $H(\mathsf{uniform})$ is to be replaced by $H(\mathsf{prior})$.  <!---Note that the entropy of a uniform distribution is pretty straightforward, so we can simplify:
 \begin{align*}
 H(\mathsf{uniform}) & = \sum_{i=1}^n \nicefrac{1}{n} \log_2 \frac{1}{\nicefrac{1}{n}} \\
 & = \log_2(n) \\
 \mathsf{w(P_i)} & = 1 - \left( \frac{H(\mathsf{P})}{\log_2(n)}\right)
 \end{align*}
+--->
 ]
 
-The behavior of the proposed measure of weight can be illustrated using distributions of various of shapes, displayed in Figure \ref{fig:weightsWeird}). <!---Note that the ordering of weights is as expected. Partial uniform likelihoods which exclude at least half of parameter values have more weight than a weak beta, and the weight increases as the non-zero interval of the partial uniform distribution decreases.---> A bimodal normal distribution "glued" from two normal distributions carries less weight than a unimodal normal distribution with the same standard deviation centered around the mean of the two modes. <!---, all these are way below point estimates.---> 
-If multiple points have non-zero probability, the weight depends on how uneven the distribution is. If the distribution falls entirely on a single point, <!--- the value of the parameter is known,---> 
-the weight is maximal (=1), as expected. <!--- and does not depend on what the parameter is.---> 
+This measure captures the two key intuitions we identified earlier. 
+First, the weight of a distribution 
+increases as the number of observations 
+increases provided the relative frequency is fixed (Weak Increase; see Figure \ref{fig:entropyJoyceExampleSampleSize}).  As usual, we can think 
+of a coin that is tossed a number of times and that lands heads or tails with a certain observed frequency. At the same time---and this is the second intuition---weight may diminish when the quantity of evidence increases, as the Rigged Lottery example suggest. Figure \ref{fig:entropyJoyceExampleSampleSize} shows that weight can drop---despite a larger number of observations---so long as the observed relative frequency changes from more extreme (say .1) to less extreme (say .5). That weight is not strictly tied to the quantity of evidence (number of observations) is also apparent from Figure \ref{fig:entropyJoyceExamplePlot}. This shows that weight can vary dramatically 
+depending on the observed relative frequency, all else being equal. The behavior of the proposed measure of weight can be illustrated more generally using 
+distributions of various of shapes, displayed 
+in Figure \ref{fig:weightsWeird}.
 
 
 
+
+```{r entropyJoyceExample,echo=FALSE,eval=TRUE,fig.align = "center", cache=FALSE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
+weightEntropyCustomChances <- function(
+      hypotheses = c(.4, .5, .6),
+      prior = c(1/3, 1/3, 1/3),
+      successes  = 7,
+      trials = 10){
+      uniform <- rep(1,length(hypotheses))/ sum(rep(1,length(hypotheses)))
+      #chance of evidence given data
+      likelihood <- dbinom(x = successes, size = trials, prob = hypotheses)
+      #overall chance of evidence (denumerator)
+      evidence <-  sum(likelihood * prior)
+      #chance of x given evidence
+      posterior <- (likelihood * prior ) / evidence
+
+      weightOfPrior <- 1 - (H(prior)/H(uniform, unit  = "log2"))
+      weightOfPosterior <- 1 - (H(posterior)/H(uniform, unit  = "log2"))
+
+      weightDelta <- weightOfPosterior - weightOfPrior
+      return(list(prior = prior, weightOfPrior = weightOfPrior,
+              posterior = posterior,
+            weightOfPosterior = weightOfPosterior,
+            weightDelta = weightOfPosterior - weightOfPrior)
+      )
+}
+
+
+
+outOfTenEntropyEqualPriors <- numeric(10)
+
+for(i in seq(1,11, by  = 1)){
+  outOfTenEntropyEqualPriors[i] <- 
+    weightEntropyCustomChances(successes = i-1)$weightDelta
+}
+
+
+outOfTenEntropyLeftPriors <- numeric(10)
+
+for(i in seq(1,11, by  = 1)){
+  outOfTenEntropyLeftPriors[i] <- 
+    weightEntropyCustomChances(prior = c(.5, .3, .2), successes = i-1)$weightDelta
+}
+
+
+
+outOf10entropyDf <- data.frame( successes = seq(0,10,1),
+                         equal = outOfTenEntropyEqualPriors, ".5, .3, .2" =
+                           outOfTenEntropyLeftPriors)
+
+
+names(outOf10entropyDf) <- c("successes", "equal", ".5, .3, .2")
+
+outOf10entropyDfLong  <- gather(data = outOf10entropyDf,
+                         key = priors, value = w,
+                         "equal", ".5, .3, .2", 
+                         factor_key=TRUE)
+
+
+
+outOf10EntropyPlot  <- ggplot(outOf10entropyDfLong)+geom_point(aes(x = successes,
+                                                 y = w, color = priors) )+
+  scale_x_continuous(breaks = seq(0,10))+theme_tufte(base_size = 14)+ylab("W")+
+  xlab("successes in ten trials")+
+#  scale_y_continuous(breaks = seq(0,0.007, by = .001))+
+  labs(title = "Information-theoretic weights",
+       subtitle = "(sample size =10)")+theme(plot.title.position = "plot")
+
+
+
+
+
+outOf100EntropyEqualPriors <- numeric(101)
+
+for(i in seq(1,101, by  = 1)){
+  outOf100EntropyEqualPriors[i] <- 
+    weightEntropyCustomChances(successes = i-1,
+                               trials = 100)$weightDelta
+}
+
+
+
+outOf100EntropyLeftPriors <- numeric(101)
+
+for(i in seq(1,101, by  = 1)){
+  outOf100EntropyLeftPriors[i] <- 
+    weightEntropyCustomChances(prior = 
+      c(.5, .3, .2), successes = i-1,
+      trials = 100)$weightDelta
+}
+
+
+
+outOf100entropyDf <- data.frame( successes = seq(0,100,1),
+                                equal = outOf100EntropyEqualPriors, ".5, .3, .2" =
+                                  outOf100EntropyLeftPriors)
+
+names(outOf100entropyDf) <- c("successes", "equal", ".5, .3, .2")
+
+outOf100entropyDfLong  <- gather(data = outOf100entropyDf,
+                                key = priors, value = w,
+                                "equal", ".5, .3, .2", 
+                                factor_key=TRUE)
+
+
+
+outOf100EntropyPlot  <- ggplot(outOf100entropyDfLong)+
+  geom_point(aes(x = successes,
+ y = w, color = priors), size = .5 )+
+  scale_x_continuous(breaks = seq(0,100, by = 5))+theme_tufte(base_size = 14)+ylab("W")+
+  xlab("successes in ten trials")+
+#    scale_y_continuous(breaks = seq(0,100, by = .001))+
+  labs(title = "Information-theoretic weights",
+       subtitle = "(sample size =100)")+theme(plot.title.position = "plot")
+
+s <- seq(1,100)
+obs <- seq(10, 1000, by = 10)
+
+
+EweightsBySampleSize <- numeric(length(s))
+EweightsBySampleSizeLeft <- numeric(length(s))
+
+
+for (i in  1:100){
+  EweightsBySampleSize[i] <- weightEntropyCustomChances(successes = s[i],
+                                        trials = obs[i])$weightDelta
+}
+
+
+for (i in  1:100){
+  EweightsBySampleSizeLeft[i] <- weightEntropyCustomChances(successes = s[i],
+                                            trials = obs[i],
+                                            prior = c(.5, .3, .2))$weightDelta
+}
+
+
+Ewbss <- data.frame( "sample size" = obs,
+                    equal = EweightsBySampleSize, 
+                    ".5, .3, .2" = EweightsBySampleSizeLeft)
+
+Ewbss$frequency <- rep(.1, nrow(Ewbss))
+
+
+s2 <- seq(1,500)
+obs2 <-2 *s2   
+
+
+EweightsBySampleSize2 <- numeric(length(s))
+EweightsBySampleSizeLeft2 <- numeric(length(s))
+
+
+for (i in  1:500){
+  EweightsBySampleSize2[i] <- weightEntropyCustomChances(successes = s2[i],
+                                         trials = obs2[i])$weightDelta
+}
+
+for (i in  1:500){
+  EweightsBySampleSizeLeft2[i] <- weightEntropyCustomChances(successes = s2[i],
+                                             trials = obs2[i],
+                                             prior = c(.5, .3, .2))$weightDelta
+}
+
+
+EwbssHalf <- data.frame( "sample size" = obs2,
+                        equal = EweightsBySampleSize2, 
+                        ".5, .3, .2" = EweightsBySampleSizeLeft2)
+
+EwbssHalf$frequency <- rep(.5, nrow(EwbssHalf))
+
+
+names(Ewbss) <- c("sampleSize", "equal", ".5, .3, .2", "frequency")
+names(EwbssHalf) <- c("sampleSize", "equal", ".5, .3, .2", "frequency")
+
+
+EwbssLong <- gather(data = rbind(Ewbss, EwbssHalf),
+                   key = priors, value = w,
+                   "equal", ".5, .3, .2", 
+                   factor_key=TRUE)
+
+
+
+eWBSSplot  <- ggplot(EwbssLong)+geom_line(aes(x = sampleSize,
+                                              y = w, color = priors,
+lty = as.factor(frequency)) )+
+  scale_x_continuous(breaks = seq(0,1000, by = 100))+theme_tufte(base_size = 14)+
+  ylab("w")+
+  xlab("sample size")+
+  #  scale_y_continuous(breaks = seq(0,0.01, by = .001))+
+  labs(title = "Information-theoretic weights by  sample size",
+       subtitle = "")+
+  theme(plot.title.position = "plot")
+
+
+```
+
+
+\begin{figure}
+```{r entropyJoyceExampleSampleSize,echo=FALSE,eval=TRUE,fig.align = "center", cache=FALSE, fig.show = "hold", out.width = "70%",   message = FALSE, warning = FALSE, results = FALSE}
+eWBSSplot
+```
+
+\caption{Entropy-based weight for two observed frequencies for various sample sizes (lines used instead of points for smoothing). Three chance chypotheses: $.4, .5, .6$, and two sets of priors: equal and $.5, .3, .2$ respectively.}
+\label{fig:entropyJoyceExampleSampleSize}
+\end{figure}
+
+\begin{figure}
+```{r entropyJoyceExamplePlot10,echo=FALSE,eval=TRUE,fig.align = "center", cache=FALSE, fig.show = "hold", out.width = "70%",   message = FALSE, warning = FALSE, results = FALSE}
+outOf10EntropyPlot
+```
+
+\caption{Entropy-based weight for for various observed successes in 10 Bernoulli trials. Three chance chypotheses: $.4, .5, .6$, and two sets of priors: equal and $.5, .3, .2$ respectively.}
+\label{fig:entropyJoyceExamplePlot}
+\end{figure}
 
 
 ```{r weightsWeird,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
@@ -1738,36 +1993,49 @@ plotDistro(single5,8),plotDistro(single7,9), ncol = 3, nrow = 3)
 \end{figure}
 
 
-### Weight of evidence
+
+### Weight of Evidence
+
+
+So far we talked about the weight of a distribution, 
+and indirectly the weight of the evidence so long 
+as a distribution reflects the evidence. The notion of weight of 
+evidence, however, be made more precise. 
 
 Suppose a distribution $P$ depicts what 
 an agent thinks, at some point in time, 
-about the probability of the possible outcomes a random variable $H$. In this sense, the informativeness (or weight) of a distribution $W(P)$ measures how informed an agent is about $H$. But it measures the information level of an agent only relative to the state of full uncertainty represented by the uniform distribution. There are two things missing from this account:
-first, not every agent starts with a uniform prior; second, how informed an agent is  must depend on the evidence available to that agent. What we need, then, is an account of how informed agents are \textit{on the basis of the evidence} they have, or in other words, an account of the weight (or informativeness) of the evidence they have.
+about the probability of the possible 
+values of a random variable $X$, say the possible biases 
+of a coin or first-order probabilities. In this sense, the weight $W(P)$ (or informativeness) of a distribution measures how informed an agent is about $X$. But it measures the information level of an agent only relative to the state of full uncertainty represented by the uniform distribution. There are two things missing from this account:
+one, not every agent starts with a uniform prior; two, how informed an agent is  must depend on the evidence available to that agent. What we need, then, is an account of how informed agents are \textit{on the basis of the evidence} they have, or in other words, an account of the weight (or informativeness) of the evidence they have.
 
-If the agent starts with a uniform prior over the values of a random variable of interest, $W(P)$ would be a good enough approximation of how informed the evidence made them. In general, however, how much more information is obtained is context-dependent. The weight of evidence, then, must depend on what the agent already knows.
+If the agent starts with a uniform prior over the 
+values of a random variable of interest, $W(P)$ would be a 
+good enough approximation of how informed the evidence 
+made them. In general, however, how much more information is obtained is context-dependent. The weight of evidence, then, must 
+depend on what the agent already knows.
 <!---We want a prior-relative notion of weight, following the intuition that weight considerations should guide our information gathering also in making us stop collecting further evidence in light of what we already know. But for weight of evidence to have this feature, it has to depend on what we already know. 
 --->
-Here is a general recipe. In a given context, consider the prior distribution $P_0$ for the target hypothesis $H$ given what the agent already knows. Then, the agent updates by a body of evidence $E$. Call this posterior distribution $P_E$, where the updating is done by standard Bayesian conditionalization. Take the difference between the weight of the prior distribution, $W(P_0)$, and the weight of the posterior distribution, $W(P_E)$. The difference between the two--$W(P_E)-W(P_0)$ or more succinctly $\Delta W$---masures the impact that evidence $E$ has on the information level of the evidence. The difference $\Delta W$, then, is our proposed measure of the weight of the evidence.^[If you prefer to think that weight of evidence should be always positive as a result of adding evidence, you might prefer the absolute value of the difference. We, however, prefer to keep track of whether the evidence makes the agent more or 
-less informed about an issue.]
-
-<!---This might increase the weight for $H$, if the evidence confirms your conviction, or decrease it, if it goes against what the previous evidence tells you. Take the difference between the prior weight and the posterior weight ($\Delta w$) as your measure of the weight of evidence in that context. --->
-
-More precisely, the calculation follows the following schema:
+Here is a general recipe. In a given context, consider the prior distribution $P_0$ for the target random variables $X$ given what the agent already knows. Then, the agent updates by a body of evidence $E$. Call this posterior distribution $P_E$, where the updating is done by standard Bayesian conditionalization. Take the difference between the weight of the prior distribution, $W(P_0)$, and the weight of the posterior distribution, $W(P_E)$. The difference between the two--$W(P_E)-W(P_0)$ or more succinctly $\Delta W$---measures the impact that evidence $E$ has on the information level of the evidence.^[More precisely, the calculation follows the following schema:
 \begin{enumerate}
 \item Start with a prior distribution over the parameter space of interest and with distributions expressing the agent's uncertainty about other probabilities involved in the calculation of the posterior, say the likelihood of the evidence under different possible outcomes.
 \item Sample from these distributions.
 \item For each sample, treat it as a selection of precise probabilities, apply Bayes' theorem to calculate the posterior.
 \item The set of the results is the sampling distribution expressing your posterior uncertainty.
-\end{enumerate}
+\end{enumerate}] 
+The difference $\Delta W$, then, is our proposed measure of the weight of the evidence.^[If you prefer to think that weight of evidence should always be positive as a result of adding evidence, you might prefer the absolute value of the difference. We, however, prefer to keep track of whether the evidence makes the agent more or 
+less informed about an issue.]
+
+<!---This might increase the weight for $H$, if the evidence confirms your conviction, or decrease it, if it goes against what the previous evidence tells you. Take the difference between the prior weight and the posterior weight ($\Delta w$) as your measure of the weight of evidence in that context. --->
 
 
 
-
+<!---
 Higher order probabilism is then put to use to deliver a theory of weight. What is now in **section 11** ("Weight of a distribution") and **sections 13** and **14** (" Weight of evidence" and "Weights in Bayesian Networks") forms the bulk of the theory. 
+--->
 
-We should also demonstrate that the proposed theory of weight does meet the intuitive desiderata and can handle the motivating examples. To better appreciset the novelty of the proposal, It 
-might be interesting to raise the following questions:
+<!---
+We should also demonstrate that the proposed theory of weight does meet the intuitive desiderata and can handle the motivating examples. To better appreciset the novelty of the proposal, It might be interesting to raise the following questions:
 
 \begin{itemize}
 
@@ -1780,28 +2048,34 @@ might be interesting to raise the following questions:
 \end{itemize}
 
 Here we are defending a theory fo weight based on higher order probabilism, but it is interesting to contrast it with a theory of weight based on the other version of legal probabilism. Here we can also show why Joyce's theory of weight does not work (either in the main text or a footnote). 
+--->
 
-
+<!---
 \textbf{Comment:} The current exposition in chapter 11, 13 and 14, however, is complicated---perhaps overly so. The move from "weight of a distribution" to "weight of evidence" is not intuitive and can confuse the reader. Is there a simpler story to be told here? I think so. See below. \todo{Brilliant, I think I can start talking about conditional probabilities to begin with}
+--->
 
-
+<!---
 \textbf{Suggestion:} There seems to be a nice symmetry. Start with precise probabilism.
 We can use sharp probability theory to offer a theory of the value of the evidence (i.e. likelihood ratio).
 Actually, I think that the likelihood ratio model the idea of balance of the evidence. What Keynes distinction weight/balance shows is that likelihood ratio are not, by themselves, enough to model the value of the evidence. 
 The straightforward move here seems to just have **higher order likelihood ratios**. Wouldn't higher order likelihood ratio be essentially your formal model of the weight of the evidence? Your measure of weight tracks the difference between (the weight of the) prior distribution (and the weight of the) posterior distribution. But higher order likelihood ratios essentially do the same thing, just like precise likelihood ratios track the difference between prior and posterior. Is this right? \todo{Yup, more or less}
+--->
 
-\textbf{Comment:} If weight if measured by higher order likelihood ratios, then this can be seen as a generalization of thoughts that many other had -- say that the absolute value of the likelihood ratio is a measure of weight (Nance, Glenn Shafer) or that likelihood ratio must be a measure of weight (Good; see current **section 4**).  So I think using ""higher order likelihood ratio"
-could be a more appealing way to sell the idea of weight of evidence since most people are already familiar with likelihood ratios.
+<!----
+\textbf{Comment:} If weight if measured by higher order likelihood ratios, then this can be seen as a generalization of thoughts that many other had -- say that the absolute value of the likelihood ratio is a measure of weight (Nance, Glenn Shafer) or that likelihood ratio must be a measure of weight (Good; see current **section 4**).  So I think using ""higher order likelihood ratio" could be a more appealing way to sell the idea of weight of evidence since most people are already familiar with likelihood ratios.
+--->
 
-
+<!---
 \todo{For some reason you dropped Good, so my comment won't make much sense}
-
 \todo{Here comes an explanation about first-order}
+--->
 
-Notice that the notion of weight, in principle, is a separate package from our proposal to go second-order. In principle, even if you just consider two hypotheses and plain old likelihoods and likelihood ratios, you could deploy the notion of weight. But this would bring us back to Good's notion of weight, which does not capture the intuitions about weight of evidence that  we wanted to capture. 
-
+<!---
 \todo{I think going through a BN example with Sally Clark with weights is important here, perhaps also with expected values and so on, if you have the time to copy and clean up those bits!}
+--->
 
+Notice that our account of weight of evidence, in principle, is independent of the proposal to adopt second-order probabilities. The notions of $W(P)$ and $\Delta W$ 
+could be applied to first-order probability distributions. Even if you just considered two competing hypotheses and the likelihood ratio, you could deploy our account of weight. But this would bring us back to Good's notion of weight, which does not capture the intuitions about weight of evidence that we wanted to capture. So it is crucial for our account of weight that it comprises two components: the information-theoretic and the higher-order component. 
 
 
 <!---
@@ -1863,5 +2137,19 @@ This section addresses the question, why care about weight?
 --->
 
 
-# Conclusion
+# A Final Challenge
 
+It is time to summarize. Section \ref{sec:three-probabilism} argues that
+higher-order probabilism is a better theory of uncertainty than 
+precise and imprecise probabilism. Higher-order probabilism can easily model a variety of scenarios that cannot be modeled by the other versions of probabilism. Section \ref{sec:objections} demonstrates that accuracy may sometimes recommend that a rational agent represent their credal state with a distribution over probability values rather than a precise probability. Section \ref{sec:legal-applications} shows that higher-order probablism can be put to use in the legal domain, both in the evaluation 
+of individual items of evidence as well complex bodies of evidence. 
+Finally, Section \ref{sec:weight} argues that neither precise nor imprecise probabilism cannot provide a satisfactory account of weight of evidence, and that the higher-order approach is needed.
+
+We conclude with a final challenge for higher-order probabilism. Defenders of precise probabilism might concede that, in principle, higher-order probabilism is a richer theory of uncertainity. At the same time, they might argue that, when it comes to the evaluation of trial evidence, first-order probabilities will do just fine. 
+In particular, the literature has suggested that precise probabilism contains the conceptual resources to model two ideas: resilience (or stability) and completeness. Roughly speaking, resilience tracks how additional evidence may change the current probability assessment, while completeness tracks how the fact that some evidence is missing may change the current probability assessment.^[
+@Skyrms1977Resiliency-Prop offers the following account of resilience: a precise probability assessment of $H$ based on some evidence $E$, say $P(H \vert E)$, is resilient (or stable) whenever it does not wiggle too much relative to a reasonable set of additional items of evidence $E'$ that can be conditioned on. In other words, $P(H \vert E)$ is resilient enough if and only if the absolute difference $| P(H | E) - P(H \vert E \wedge E')|$ (for any element $E'$ in a reasonable set of additional evidence) is within a certain acceptable limit.  For an account of completeness, @Kaye1986Do sketches the following proposal: instead of merely assessing $P(H \vert E)$, one should assess $P(H \vert E \wedge M)$, where $M$ is the known fact that some evidence is missing. Whenever the evidence available is missing information that one would reasonably expect to see in a case (in a sense to be specified), this fact must be taken into account in assessing the probability of the hypothesis of interest. The missing evidence is not a higher-order fact about the currently available evidence, but itself a fact that counts as evidence together with other facts. This, we think is a weakness in the theory, because much of the heavy lifting has to be done by assessing the conditional probabilities involving missing evidence conditions and these do not fall out of the theory, but have to be plugged in by hand on a case-by-case basis.] 
+<!--A good account of resilience and completeness should address a number of questions. For example, in assessing resilience, which items of additional evidence should be included in the reasonable set?^[The set must be restricted somehow, or else no probability assessment would ever be resilient. Another problem is that resilience consists in evaluating a probability based on evidence not yet available. The evidence could take different values---for example, in a criminal case, the additional evidence could be exculpatory or incriminating. How can additional evidence whose value is unknown affect one's assessment of the probability of a hypothesis? Another question is, which items of evidence should be included is the reasonable set?]   Or, in assessing completeness, when should an item of evidence count as missing?^[Admittedly, there are cases in which it is clear that evidence is missing, say because it was destroyed, lost or could not be retrieved or collected for one reason or another. But evidence could be missing in a more speculative sense. For example, if it is routine to see breathalyzer evidence in drunk driving cases, what should one make of the fact that such evidence is missing in a given case? The more general worry here is that evidence is always incomplete. Peirce's example of drawing from a bag of beans makes this clear. In principle, more draws could be made and more evidence could be gathered. Another difficulty concerns the impact that  the missing evidence should have on the other evidence. For example, in a case of tax fraud, suppose the recording of phone conversation was deleted  by accident. There is no dispute about that. Now, should this fact increase or decrease the probability that the defendant committed fraud?] --->
+It is clear that resilience and completeness both play a role in trial proceedings. On appeal, a defendant might argue that, had additional evidence be taken into account, the verdict should have been different. Questions of missing evidence are also routinely brought up in litigation. And the rules of evidence often deal with questions of missing evidence and offer a variety of remedies, from jury instructions to sanctions. 
+So, a good theory of how evidence is assessed at trial should include an account of completeness and resilience. Some might even argue that completeness and resilience, together with precise first-order probabilities, are *all* we need to adequately assess evidence at trial. If so, the notion of weight and higher-order probabilities would be redundant. We take up this challenge in the next chapter. Our contention is that weight, completeness and resilience are conceptually distinct notions, and thus, they should play distinct roles in legal fact-finding.  
+
+# References 
