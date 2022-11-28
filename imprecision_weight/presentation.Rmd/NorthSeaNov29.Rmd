@@ -1,0 +1,1057 @@
+---
+title:  "Higher-order Probabilities, Accuracy and Weight of Evidence"
+author: "Rafal Urbaniak (Gdansk University) & Marcello Di Bello (Arizona State University)"
+date: "November 29, 2022 - North Sea Group"
+output:
+  ioslides_presentation:
+        widescreen: true
+        transition: 2.5
+        smaller: true
+bibliography: [referencesMRbook.bib]
+csl: ../../references/apa-6th-edition.csl      
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_knit$set(root.dir = '../../')
+library(plot3D)
+library(bnlearn)
+library(dagitty)
+library(Rgraphviz)
+library(gRain)
+library(ggplot2)
+library(ggthemes)
+library(gridExtra)
+library(reshape2)
+library(rethinking)
+library(ggforce)
+library(tidyr)
+library(dplyr)
+library(truncnorm)
+library(philentropy)
+library(latex2exp)
+source("../scripts/CptCreate.R")
+
+ps <- seq(0,1, length.out = 1001)
+getwd()
+source("../scripts/CptCreate.R")
+source("../scripts/SCfunctions.R")
+
+SCprobsFinal <- readRDS("../datasets/SCprobsFinal.rds")
+attach(SCprobsFinal)      
+source("../scripts/SCplotCPTs.R")
+source("../scripts/SCplotDistros.R")
+
+
+```
+
+
+
+
+
+<!----
+
+## Outline
+
+1. Background: book project on legal probabilism
+
+2. Precise, imprecise and higher-order probabilism
+
+3. Accuracy and higher-order probabilism
+
+4. Higher-order Bayesian Networks
+
+5. Weight of Evidence
+
+6. Resiliennce and Completeness
+
+
+--->
+
+
+
+## (1) Background: Book on Legal Probabilism
+ 
+### Working Title 
+
+Probability on Trial: Making Sense of Arguments an Stories
+
+*Suggestions for a better title are welcome!*
+
+### Motivation
+
+Examining to what extent legal probabilism, when it is augmented, can 
+fare better than competing approaches, such as the story model, 
+argumentation theory, and relative plausibility
+
+### Methodology
+
+Conceptual analysis, analytic proofs, computer simulations
+ 
+### Three parts
+
+1. Evidence evaluation 2. Trial decisions 3. Accuracy and Fairness 
+
+
+
+## (2) Three Probabilisms
+
+A rational agent's credal state can be modeled by:
+
+- a **single** probability measure (**Precise Probabilism**)
+
+- a **set** of probability measures  (**Imprecise probabilism**)
+
+- a **distribution** over probability measures (**Higher-order probabilism**)
+
+
+## Troubles for Precise and Imprecise Probabilism
+
+### Fair Coin v. Unknown Bias
+
+Coin is known to be fair v. The bias of the coin is unknown 
+
+ - Precise probabilism cannot distinguish between Fair coin and Unknown bias 
+ 
+ - Imprecise probabilism can, but...
+
+### Two Biases v. Unbalanced Biases
+
+The bias of the coin is either 4. or .6 v.  Bias  .4 is three timesmore likely than bias .6
+
+- Imprecise Probabilism cannot distinguish between Two Biases and Unbalanced Biases
+
+
+## Higher-order Probabilism Fares Better
+
+
+```{r evidenceResponse1,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "50%",   message = FALSE, warning = FALSE, results = FALSE}
+p <- seq(from=0 , to=1 , by = 0.001)
+FairDensity <- ifelse(p == .5, 1, 0)
+FairDF <- data.frame(p,FairDensity)
+FairPlot <- ggplot(FairDF, aes(x = p, y = FairDensity))+geom_line()+theme_tufte()+
+  xlab("parameter value")+ylim(c(0,1))+ylab("probability")+ggtitle("Fair coin")+
+  theme(plot.title.position = "plot")
+
+UniformPlot <- ggplot()+xlim(c(0,1))+stat_function(fun = dunif, args = list(min = 0, max = 1))+
+  ylim(0,1)+
+  theme_tufte()+
+  xlab("parameter value")+
+  ylab("probability density")+theme(plot.title.position = "plot")+ggtitle("Unknown bias")
+
+
+p <- seq(from=0 , to=1 , by = 0.001)
+TwoDensity <- ifelse(p == .4 | p == .6, .5, 0)
+TwoDF <- data.frame(p,TwoDensity)
+TwoPlot <- ggplot(TwoDF, aes(x = p, y = TwoDensity))+geom_line()+theme_tufte()+
+  xlab("parameter value")+ylim(c(0,1))+ylab("probability")+ggtitle("Two biases (insufficient reason)")+
+  theme(plot.title.position = "plot")+scale_x_continuous(breaks = c(.4,.6), labels = c(.4, .6))
+
+
+
+
+p <- seq(from=0 , to=1 , by = 0.001)
+TwoUnbalancedDensity <- ifelse(p == .4, .75, ifelse(p ==  .6, .25, 0))
+TwoUnbalancedDF <- data.frame(p,TwoUnbalancedDensity)
+
+TwoUnbalancedPlot <- ggplot(TwoUnbalancedDF, aes(x = p, y = TwoUnbalancedDensity))+geom_line()+theme_tufte()+
+  xlab("parameter value")+ylim(c(0,1))+ylab("probability")+ggtitle("Two unbalanced biases")+
+  theme(plot.title.position = "plot")+scale_x_continuous(breaks = c(.4,.6), labels = c(.4, .6))
+
+```
+
+
+```{r fig:evidenceResponse,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "90%"}
+grid.arrange(FairPlot,UniformPlot, TwoPlot, TwoUnbalancedPlot)
+```
+
+
+
+## (3) Accuracy and Higher-order Probabilism
+
+- Besides its ability to model scenarios, is there a normative reason to prefer higher-order probabilism? 
+
+- Stalemate in the Sjerps-Taroni debate
+
+### Claim 
+
+Probability Mass Functions (PMFs) based on point-estimaes are systematically less accurate than Posterior Predictive Distributions based on distribution-estimates 
+
+Accuracy is quantified by Kullback-Leibler divergence which measures the closeness of a distribution (say, the distribution whose accuracy we want to quantify) to another (say, the true distribution) 
+
+
+## Actual PMF v. PMF Based on Point Estimate v. Posterior Predictive Distribution
+
+
+```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%"}
+priorA <- 1
+priorB <- 1
+set.seed(215)
+trueH <- runif(1,0,1) 
+
+sampleSize <- sample(10:20,size = 1)
+testSize <- sampleSize
+
+set.seed(319)
+successes <- rbinom(1, sampleSize, trueH)
+pointEstimate <- successes/sampleSize
+
+pointPredictions <-  rbinom( 1e4 , size = testSize , prob = pointEstimate )
+
+ps <- seq(0,1,length.out = 1001)
+
+testPredictions <- rbinom( 1e4 , size = testSize , prob = trueH )
+
+posterior <- function(x) dbeta(x, priorA + successes,
+                               priorB + sampleSize - successes)
+
+posteriorSample <- sample( ps , size=1e4 ,
+                           replace=TRUE , posterior(ps)/sum(posterior(ps)))
+
+posteriorPredictions <- rbinom( 1e4 , size=testSize , prob=posteriorSample )
+
+
+testProbs <- table(factor(testPredictions, levels = seq(0,sampleSize)))/1e4
+pointProbs <- table(factor(pointPredictions, levels = seq(0,sampleSize)))/1e4
+posteriorProbs <- table(factor(posteriorPredictions, levels = seq(0,sampleSize)))/1e4 
+
+testPlot <- ggplot()+geom_bar(aes(x= testPredictions, y = ..prop..))+
+  ggtitle(paste("Predictions based on the true parameter = ", round(trueH,2), sep = ""))+xlim(0,testSize)+ylab("probability")+xlab("successes")+theme_tufte(base_size = 8)+theme(plot.title.position = "plot")
+
+
+pointPlot <- ggplot()+geom_bar(aes(x= pointPredictions,y = ..prop..))+
+  labs(title = paste("Predictions based on the point estimate = ", round(pointEstimate,2)), subtitle = paste(successes, " successes in ", sampleSize, " observations", sep = ""))+xlim(0,testSize)+ylab("probability")+xlab("successes")+theme_tufte(base_size = 8)+theme(plot.title.position = "plot")
+
+
+samplesPlot <- ggplot()+geom_density(aes(x= posteriorSample))+
+  ggtitle(paste("Posterior sample from beta(", 1+successes, ",", 1+testSize - successes,
+                ")", sep = ""))+xlab(
+                  "parameter value"
+                )+theme_tufte(base_size = 8)+theme(plot.title.position = "plot")
+
+posteriorPlot <- ggplot()+geom_bar(aes(x= posteriorPredictions,y = ..prop..))+
+  ggtitle("Predictions based on the posterior sample")+xlim(0, testSize)+ylab("probability")+xlab("successes")+theme_tufte(base_size = 8)+theme(plot.title.position = "plot")
+
+
+```
+
+
+```{r fig:posteriorPrediction2, echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "80%", warning=FALSE, message = FALSE, dpi = 800, warning = FALSE, message = FALSE, output = FALSE}
+grid.arrange(testPlot,pointPlot,posteriorPlot, ncol = 1)
+```
+
+##  Distance from Actual Probability Mass Function  
+
+```{r kldsCalculations,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%"}
+klds <- numeric(1000)
+for(i in 1:1000){
+trueH <- runif(1,0,1) 
+sampleSize <- sample(10:25,size = 1)
+testSize <- sampleSize
+successes <- rbinom(1, sampleSize, trueH)
+pointEstimate <- successes/sampleSize
+pointPredictions <-  rbinom( 1e4 , size = testSize , prob = pointEstimate )
+ps <- seq(0,1,length.out = 1001)
+testPredictions <- rbinom( 1e4 , size = testSize , prob = trueH )
+posteriorSample <- sample( ps , size=1e4 ,
+                           replace=TRUE , posterior(ps)/sum(posterior(ps)))
+posteriorPredictions <- rbinom( 1e4 , size=testSize , prob=posteriorSample )
+testProbs <- table(factor(testPredictions, levels = seq(0,sampleSize)))/1e4
+pointProbs <- table(factor(pointPredictions, levels = seq(0,sampleSize)))/1e4
+posteriorProbs <- table(factor(posteriorPredictions, levels = seq(0,sampleSize)))/1e4 
+klds[i] <- kld(testProbs,pointProbs) - kld(testProbs,posteriorProbs)
+}
+
+```
+
+```{r fig:kldsPlots, echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "70%", warning=FALSE, message = FALSE, dpi = 800, warning = FALSE, message = FALSE, output = FALSE}
+ggplot()+geom_density(aes(x = klds))+labs(
+  title = "Point-estimates vs. posterior predictive distributions",
+  subtitle = "Differences in Kullback-Leibler divergencies from true PMFs")+
+  theme_tufte(base_size = 10)+theme(plot.title.position = "plot")+ylab("empirical density")+xlab("difference in klds")
+```
+
+
+
+## (4) Higher-order Bayesian Networks
+
+
+
+```{r scBN,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.height = "60%", warning=FALSE, message = FALSE, dpi = 800}
+#create SC DAG
+#define the structure of the Sally Clark BN
+SallyClarkDAG <- model2network("[Abruising|Acause][Adisease|Acause][Bbruising|Bcause][Bdisease|Bcause][Acause][Bcause|Acause][NoMurdered|Acause:Bcause][Guilty|NoMurdered]")
+SCdag <- model2network("[Abruising|Acause][Adisease|Acause][Bbruising|Bcause][Bdisease|Bcause][Acause][Bcause|Acause][NoMurdered|Acause:Bcause][Guilty|NoMurdered]")
+#plot
+#graphviz.plot(SallyClarkDAG)
+
+
+#CPTs as used in Fenton & al.
+AcauseProb <-prior.CPT("Acause","SIDS","Murder",0.921659)
+AbruisingProb <- single.CPT("Abruising","Acause","Yes","No","SIDS","Murder",0.01,0.05)
+AdiseaseProb <- single.CPT("Adisease","Acause","Yes","No","SIDS","Murder",0.05,0.001)
+BbruisingProb <- single.CPT("Bbruising","Bcause","Yes","No","SIDS","Murder",0.01,0.05)
+BdiseaseProb <- single.CPT("Bdisease","Bcause","Yes","No","SIDS","Murder",0.05,0.001)
+BcauseProb <- single.CPT("Bcause","Acause","SIDS","Murder","SIDS","Murder",0.9993604,1-0.9998538)
+
+#E goes first; order: last variable through levels, second last, then first
+NoMurderedProb <- array(c(0, 0, 1, 0, 1, 0, 0,1,0,1,0,0), dim = c(3, 2, 2),dimnames = list(NoMurdered = c("both","one","none"),Bcause = c("SIDS","Murder"), Acause = c("SIDS","Murder")))
+
+#this one is definitional
+GuiltyProb <-  array(c( 1,0, 1,0, 0,1), dim = c(2,3),dimnames = list(Guilty = c("Yes","No"), NoMurdered = c("both","one","none")))
+
+# Put CPTs together
+SallyClarkCPTfenton <- list(Acause=AcauseProb,Adisease = AdiseaseProb,
+                      Bcause = BcauseProb,Bdisease=BdiseaseProb,
+                      Abruising = AbruisingProb,Bbruising = BbruisingProb,
+                      NoMurdered = NoMurderedProb,Guilty=GuiltyProb)
+
+# join with the DAG to get a BN
+SCfenton <- custom.fit(SallyClarkDAG,SallyClarkCPTfenton)
+```
+
+```{r scBNplot,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "90%", warning=FALSE, message = FALSE, dpi = 800}
+graphviz.chart(SCfenton, type = "barprob", layout = "dot", draw.labels = TRUE,
+  grid = FALSE, scale = c(0.75, 1.1), col = "black",
+  text.col = "black", bar.col = "black", main = NULL,
+  sub = NULL)
+```
+
+
+## (4) Higher-order Bayesian Networks (continued)
+
+
+```{r scStages,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "80%", warning=FALSE, message = FALSE, dpi = 800}
+
+SCfJN <- compile(as.grain(SCfenton))
+
+priorFenton <- querygrain(SCfJN, node = "Guilty")[[1]][1]
+
+SCfJNAbruising <- setEvidence(SCfJN, nodes = c("Abruising"), states = c("Yes"))
+AbruisingFenton <- querygrain(SCfJNAbruising, node = "Guilty")[[1]][1]
+
+SCfJNAbruisingBbruising <- setEvidence(SCfJN, nodes = c("Abruising","Bbruising"),
+                                states = c("Yes","Yes"))
+AbruisingBbruisingFenton <- querygrain(SCfJNAbruisingBbruising, node = "Guilty")[[1]][1]
+
+SCfJNAbruisingBbruisingNoDisease <- setEvidence(SCfJN, nodes = c("Abruising","Bbruising","Adisease","Bdisease"),
+                                         states = c("Yes","Yes", "No", "No"))
+AbruisingBbruisingFentonNoDiseaseFenton <-   querygrain(SCfJNAbruisingBbruisingNoDisease, node = "Guilty")[[1]][1]
+
+
+SCfJNAbruisingBbruisingDiseaseA <- setEvidence(SCfJN, nodes = c("Abruising","Bbruising","Adisease","Bdisease"), 
+                                               states = c("Yes","Yes", "Yes", "No"))
+AbruisingBbruisingFentonDiseaseAFenton <- querygrain(SCfJNAbruisingBbruisingDiseaseA, node = "Guilty")[[1]][1]
+
+
+SCfentonTable <- data.frame(stage = factor(c("prior", "bruising in A", "bruising in both",
+                                      "bruising in both, no disease", "bruising in both, disease on A only"),
+                                      levels = c("prior", "bruising in A", "bruising in both",
+                                                 "bruising in both, no disease", "bruising in both, disease on A only")),
+                            probability = c(priorFenton,AbruisingFenton,AbruisingBbruisingFenton,
+                                            AbruisingBbruisingFentonNoDiseaseFenton,AbruisingBbruisingFentonDiseaseAFenton))
+```
+
+
+
+
+
+```{r SCwithHOP, out.extra='angle=90', echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "110%", out.height= "200%", warning=FALSE, message = FALSE, dpi = 800}
+#SCprobsFinal <- readRDS("../datasets/SCprobsFinal.rds")
+#attach(SCprobsFinal)
+#source("../scripts/SCfunctions.R")
+#source("../scripts/SCplotCPTs.R")
+#source("../scripts/SCplotDistros.R")
+
+
+AsidsPriorPlotGrob <- ggplotGrob(AsidsPriorPlot+theme_tufte(base_size = 5))
+BcauseSidsIfAsidsPlotGrob <- ggplotGrob(BcauseSidsIfAsidsPlot+theme_tufte(base_size = 5))
+BcauseSidsIfAmurderPlotGrob<- ggplotGrob(BcauseSidsIfAmurderPlot+theme_tufte(base_size = 5)) 
+
+AbruisingIfSidsPlotGrob <- ggplotGrob(AbruisingIfSidsPlot+theme_tufte(base_size = 5)) 
+AbruisingIfMurderPlotGrob <- ggplotGrob(AbruisingIfMurderPlot+theme_tufte(base_size = 5)) 
+
+
+AdiseaseIfSidsPlotGrob <- ggplotGrob(AdiseaseIfSidsPlot+theme_tufte(base_size = 5)) 
+AdiseaseIfMurderPlotGrob <- ggplotGrob(AdiseaseIfMurderPlot+theme_tufte(base_size = 5)) 
+
+
+BbruisingIfSidsPlotGrob <- ggplotGrob(BbruisingIfSidsPlot+theme_tufte(base_size = 5)) 
+BbruisingIfMurderPlotGrob <- ggplotGrob(BbruisingIfMurderPlot+theme_tufte(base_size = 5)) 
+
+
+BdiseaseIfSidsPlotGrob <- ggplotGrob(BdiseaseIfSidsPlot+theme_tufte(base_size = 5)) 
+BdiseaseIfAmurderPlotGrob <- ggplotGrob(BdiseaseIfAmurderPlot+theme_tufte(base_size = 5)) 
+
+
+ggplot(data.frame(a=1)) + xlim(1, 40) + ylim(1, 60)+theme_void()+
+  annotation_custom(AsidsPriorPlotGrob, xmin = 9, xmax = 15, ymin = 49, ymax = 59)+
+  geom_label(aes(label = "Bcause", x = 25, y = 41),
+              size = 3 )+
+  geom_label(aes(label = "Acause", x = 12, y = 48),
+            size = 3 )+
+  geom_curve(aes(x = 13.5, y = 48.2, xend = 25, yend = 42.5), curvature = -.18,size = .3,
+             arrow = arrow(length = unit(.015, "npc")))+
+  annotation_custom(BcauseSidsIfAsidsPlotGrob, xmin = 17, xmax = 23, ymin = 47, ymax = 57)+
+  annotation_custom(BcauseSidsIfAmurderPlotGrob, xmin = 15, xmax = 21, ymin = 37, ymax = 47)+
+  geom_label(aes(label = "Abruising", x = 2, y = 41),
+             size = 3 )+
+  geom_curve(aes(x = 10.5, y = 48.2, xend = 2, yend = 42.5), curvature = .2,size = .3,
+             arrow = arrow(length = unit(.015, "npc")))+
+  annotation_custom(AbruisingIfSidsPlotGrob, xmin = 2, xmax = 8, ymin = 47, ymax = 57)+
+  annotation_custom(AbruisingIfMurderPlotGrob, xmin = 5, xmax = 11, ymin = 37, ymax = 47)+
+  geom_label(aes(label = "Adisease", x = 6, y = 21),
+             size = 3 )+
+  geom_curve(aes(x = 13, y = 46.2, xend = 6, yend = 23), curvature = -.45,size = .3,
+             arrow = arrow(length = unit(.015, "npc")))+
+  annotation_custom(AdiseaseIfSidsPlotGrob, xmin = 4.5, xmax = 10.5, ymin = 27, ymax = 37)+
+  annotation_custom(AdiseaseIfMurderPlotGrob, xmin = 9, xmax = 15, ymin = 17.5, ymax = 27.5)+
+  geom_label(aes(label = "Bbruising", x = 14, y = 12),
+             size = 3 ) +
+  geom_curve(aes(x = 24, y = 39.5, xend = 15.5, yend = 13.5), curvature = -.2,size = .3,
+                                    arrow = arrow(length = unit(.015, "npc")))+
+  annotation_custom(BbruisingIfSidsPlotGrob, xmin = 15.5, xmax = 21.5, ymin = 25, ymax = 35)+
+  annotation_custom(BbruisingIfMurderPlotGrob, xmin = 18.5, xmax = 24.5, ymin = 10, ymax = 20)+
+  geom_label(aes(label = "Bdisease", x = 33, y = 18),
+             size = 3 )  +
+  geom_curve(aes(x = 26, y = 39.5, xend = 33, yend = 19.5), curvature = -.2,size = .3,
+             arrow = arrow(length = unit(.015, "npc")))+
+  annotation_custom(BdiseaseIfSidsPlotGrob, xmin = 31, xmax = 37, ymin = 27, ymax = 37)+
+  annotation_custom(BdiseaseIfAmurderPlotGrob, xmin = 24.5, xmax = 30.5, ymin = 20, ymax = 30)
+
+```
+
+
+## (5) Weight of Evidence
+
+### Precursors
+
+- Beans from a bag, two colors, same observed proportion, different sample sizes (Peirce 1872)
+
+- Balance v. weight of evidence (Keynes 1921)
+
+### Desiderata 
+
+- **Weak Increase**: In Bernoulli trials, weight increases with sample size keeping frequency fixed
+
+
+-  **No Monotonicity**: Weight need not always increase as more evidence is accumulated
+
+### Existing accounts
+
+Precise and imprecise probabilism do not offer a satisfactory account of weight of evidence
+
+
+## Information-theoretic Weight
+
+
+### Key notions:
+
+- Surprise: $1/\mathsf{P}(x)$
+
+- Shannon information:
+$log_2(\mathsf{surprise}) =  - log_2(\mathsf{P}(x))$
+
+- Entropy is average Shannon information: 
+
+\[H(X)   =
+- \sum \mathsf{P}(x_i) \log_2 \mathsf{P}(x_i)\]
+
+(the expected amount of information you receive once you learn what the value
+of \(X\) is).
+
+- Weight of a distribution:
+
+\[\mathsf{w(P)}  = 1 - \left( \frac{H(\mathsf{P})}{H(\mathsf{uniform})}\right)\]
+
+(the more informative a distribution, compared to the uniform, the more weight it has, on scale 0 to 1)
+
+
+## Weight of a Distribution: Examples
+
+```{r weightsWeird,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
+beta44 <-  densitiesBeta[[304]]
+unif5 <- c(rep(0, n/2),rep(1 , n/2)) #uniform from .5 
+unif5 <- unif5/sum(unif5)
+unif6 <- c(rep(0, .6 * n),rep(1 , n * .4)) #uniform from .6 
+unif6 <- unif6/sum(unif6)
+A <- dnorm(ps, .4, .05)
+B <- dnorm(ps, .6, .05)
+C <- ifelse(ps <= .5, A, B) 
+bimodal <- C / sum(C)
+centered <-   dnorm(ps, .5, .05)
+centered <- centered/sum(centered)
+twoEven <- rep(0,1000)
+twoEven[abs(ps -.4)  == min(abs(ps -.4))] <- .5
+twoEven[abs(ps -.6)  == min(abs(ps -.6))] <- .5
+twoUneven <- rep(0,1000)
+twoUneven[abs(ps -.4)  == min(abs(ps -.4))] <- .3
+twoUneven[abs(ps -.6)  == min(abs(ps -.6))] <- .7
+single5 <- rep(0,1000)
+single5[abs(ps -.5)  == min(abs(ps -.5))] <- 1
+single7 <- rep(0,1000)
+single7[abs(ps -.7)  == min(abs(ps -.7))] <- 1
+
+
+distributions <- c("beta(4,4)","unif(.5,1)", "unif(.6,1)", "bimodal(.4,.6,s=.05)", "norm(.5,.05)",
+                   "evenPoints(.4,.6)","unevenPoints(.4(.3),.6(.7)","single(.5)", "single(.7)")
+
+entPropSeq <- c(entProp(beta44),entProp(unif5),entProp(unif6),
+             entProp(bimodal),entProp(centered),entProp(twoEven),
+             entProp(twoUneven),entProp(single5),entProp(single7))
+
+
+hSeq <- c(H(beta44),H(unif5),H(unif6),
+          H(bimodal),H(centered),H(twoEven),
+          H(twoUneven),H(single5),H(single7))
+  
+  
+entPropTable <- data.frame(distributions, hSeq, entPropSeq)
+
+plotDistro <- function(distro, distroList) {
+plot <-  ggplot()+theme_tufte(base_size =  7 )+xlab("parameter values")+
+  ylab("probability")+theme(plot.title.position = "plot")+ylim(0,1)+
+  ggtitle(paste(entPropTable$distributions[distroList]))+
+  geom_line(aes(x = ps,y = distro))+annotate("text",
+    x = ps[which(distro == max(distro))][1],
+    y = max(distro) * 1.14,
+    label = paste("h =",round(entPropTable$hSeq[distroList],3), ", w = ",
+            round(entPropTable$entPropSeq[distroList],3)), size = 2)+
+  ylim(c(0,1.2 * max(distro)))
+return(plot)
+}
+
+```
+
+
+```{r fig:weightsWeird,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "90%",   message = FALSE, warning = FALSE, results = FALSE}
+grid.arrange(plotDistro(beta44,1),plotDistro(unif5,2), plotDistro(unif6,3),plotDistro(bimodal,4),plotDistro(centered,5),
+plotDistro(twoEven,6),plotDistro(twoUneven,7),
+plotDistro(single5,8),plotDistro(single7,9), ncol = 3, nrow = 3)
+```
+
+
+
+## Weak Increase Holds but Monotonicity Fails
+
+```{r entropyJoyceExample,echo=FALSE,eval=TRUE,fig.align = "center", cache=FALSE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
+weightEntropyCustomChances <- function(
+      hypotheses = c(.4, .5, .6),
+      prior = c(1/3, 1/3, 1/3),
+      successes  = 7,
+      trials = 10){
+      uniform <- rep(1,length(hypotheses))/ sum(rep(1,length(hypotheses)))
+      #chance of evidence given data
+      likelihood <- dbinom(x = successes, size = trials, prob = hypotheses)
+      #overall chance of evidence (denumerator)
+      evidence <-  sum(likelihood * prior)
+      #chance of x given evidence
+      posterior <- (likelihood * prior ) / evidence
+
+      weightOfPrior <- 1 - (H(prior)/H(uniform, unit  = "log2"))
+      weightOfPosterior <- 1 - (H(posterior)/H(uniform, unit  = "log2"))
+
+      weightDelta <- weightOfPosterior - weightOfPrior
+      return(list(prior = prior, weightOfPrior = weightOfPrior,
+              posterior = posterior,
+            weightOfPosterior = weightOfPosterior,
+            weightDelta = weightOfPosterior - weightOfPrior)
+      )
+}
+
+
+
+outOfTenEntropyEqualPriors <- numeric(10)
+
+for(i in seq(1,11, by  = 1)){
+  outOfTenEntropyEqualPriors[i] <- 
+    weightEntropyCustomChances(successes = i-1)$weightDelta
+}
+
+
+outOfTenEntropyLeftPriors <- numeric(10)
+
+for(i in seq(1,11, by  = 1)){
+  outOfTenEntropyLeftPriors[i] <- 
+    weightEntropyCustomChances(prior = c(.5, .3, .2), successes = i-1)$weightDelta
+}
+
+
+
+outOf10entropyDf <- data.frame( successes = seq(0,10,1),
+                         equal = outOfTenEntropyEqualPriors, ".5, .3, .2" =
+                           outOfTenEntropyLeftPriors)
+
+
+names(outOf10entropyDf) <- c("successes", "equal", ".5, .3, .2")
+
+outOf10entropyDfLong  <- gather(data = outOf10entropyDf,
+                         key = priors, value = w,
+                         "equal", ".5, .3, .2", 
+                         factor_key=TRUE)
+
+
+
+outOf10EntropyPlot  <- ggplot(outOf10entropyDfLong)+geom_point(aes(x = successes,
+                                                 y = w, color = priors) )+
+  scale_x_continuous(breaks = seq(0,10))+theme_tufte(base_size = 14)+ylab("W")+
+  xlab("successes in ten trials")+
+#  scale_y_continuous(breaks = seq(0,0.007, by = .001))+
+  labs(title = "Information-theoretic weights",
+       subtitle = "(sample size =10)")+theme(plot.title.position = "plot")
+
+
+
+
+
+outOf100EntropyEqualPriors <- numeric(101)
+
+for(i in seq(1,101, by  = 1)){
+  outOf100EntropyEqualPriors[i] <- 
+    weightEntropyCustomChances(successes = i-1,
+                               trials = 100)$weightDelta
+}
+
+
+outOf100EntropyEqualPriors
+
+outOf100EntropyLeftPriors <- numeric(101)
+
+for(i in seq(1,101, by  = 1)){
+  outOf100EntropyLeftPriors[i] <- 
+    weightEntropyCustomChances(prior = 
+      c(.5, .3, .2), successes = i-1,
+      trials = 100)$weightDelta
+}
+
+
+
+outOf100entropyDf <- data.frame( successes = seq(0,100,1),
+                                equal = outOf100EntropyEqualPriors, ".5, .3, .2" =
+                                  outOf100EntropyLeftPriors)
+
+outOf100entropyDf
+
+names(outOf100entropyDf) <- c("successes", "equal", ".5, .3, .2")
+
+outOf100entropyDfLong  <- gather(data = outOf100entropyDf,
+                                key = priors, value = w,
+                                "equal", ".5, .3, .2", 
+                                factor_key=TRUE)
+
+
+
+outOf100EntropyPlot  <- ggplot(outOf100entropyDfLong)+
+  geom_point(aes(x = successes,
+ y = w, color = priors), size = .5 )+
+  scale_x_continuous(breaks = seq(0,100, by = 5))+theme_tufte(base_size = 14)+ylab("W")+
+  xlab("successes in ten trials")+
+#    scale_y_continuous(breaks = seq(0,100, by = .001))+
+  labs(title = "Information-theoretic weights",
+       subtitle = "(sample size =100)")+theme(plot.title.position = "plot")
+
+s <- seq(1,100)
+obs <- seq(10, 1000, by = 10)
+
+
+EweightsBySampleSize <- numeric(length(s))
+EweightsBySampleSizeLeft <- numeric(length(s))
+
+
+for (i in  1:100){
+  EweightsBySampleSize[i] <- weightEntropyCustomChances(successes = s[i],
+                                        trials = obs[i])$weightDelta
+}
+
+
+for (i in  1:100){
+  EweightsBySampleSizeLeft[i] <- weightEntropyCustomChances(successes = s[i],
+                                            trials = obs[i],
+                                            prior = c(.5, .3, .2))$weightDelta
+}
+
+
+Ewbss <- data.frame( "sample size" = obs,
+                    equal = EweightsBySampleSize, 
+                    ".5, .3, .2" = EweightsBySampleSizeLeft)
+
+Ewbss$frequency <- rep(.1, nrow(Ewbss))
+
+
+s2 <- seq(1,500)
+obs2 <-2 *s2   
+
+
+EweightsBySampleSize2 <- numeric(length(s))
+EweightsBySampleSizeLeft2 <- numeric(length(s))
+
+
+for (i in  1:500){
+  EweightsBySampleSize2[i] <- weightEntropyCustomChances(successes = s2[i],
+                                         trials = obs2[i])$weightDelta
+}
+
+for (i in  1:500){
+  EweightsBySampleSizeLeft2[i] <- weightEntropyCustomChances(successes = s2[i],
+                                             trials = obs2[i],
+                                             prior = c(.5, .3, .2))$weightDelta
+}
+
+
+EwbssHalf <- data.frame( "sample size" = obs2,
+                        equal = EweightsBySampleSize2, 
+                        ".5, .3, .2" = EweightsBySampleSizeLeft2)
+
+EwbssHalf$frequency <- rep(.5, nrow(EwbssHalf))
+
+
+names(Ewbss) <- c("sampleSize", "equal", ".5, .3, .2", "frequency")
+names(EwbssHalf) <- c("sampleSize", "equal", ".5, .3, .2", "frequency")
+
+
+EwbssLong <- gather(data = rbind(Ewbss, EwbssHalf),
+                   key = priors, value = w,
+                   "equal", ".5, .3, .2", 
+                   factor_key=TRUE)
+
+# ggplot(EwbssLong)+geom_line(aes(x = sampleSize,
+#                                y = w, color = priors,
+#                                lty = as.factor(frequency)) )+
+#   scale_x_continuous(breaks = seq(0,1000, by = 100))+theme_tufte(base_size = 14)+
+#   ylab("w")+
+#   xlab("sample size")+
+#   #  scale_y_continuous(breaks = seq(0,0.01, by = .001))+
+#   labs(title = "Information-theoretic weights by  sample size",
+# #       subtitle = "",
+#        lty = "observed frequency")+
+#   theme(plot.title.position = "plot")
+
+
+
+
+eWBSSplot  <- ggplot(EwbssLong)+geom_line(aes(x = sampleSize,
+                                              y = w, color = priors,
+lty = as.factor(frequency)) )+
+  scale_x_continuous(breaks = seq(0,1000, by = 100))+theme_tufte(base_size = 14)+
+  ylab("w")+
+  xlab("sample size")+
+  #  scale_y_continuous(breaks = seq(0,0.01, by = .001))+
+  labs(title = "Information-theoretic weights by  sample size",
+       subtitle = "")+
+  theme(plot.title.position = "plot")
+```
+
+
+```{r entropyJoyceExampleSampleSize,echo=FALSE,eval=TRUE,fig.align = "center", cache=FALSE, fig.show = "hold", out.width = "90%",   message = FALSE, warning = FALSE, results = FALSE}
+eWBSSplot
+```
+
+## (5) Resilience and Completeness
+
+- Defendants may argue on appeal that, had other evidence be considered, the verdict would have changed (violation of resilience)
+
+- Litigation routinely considers questions of missing evidence and what remedies should be granted to the litigants when evidence is missing (violation of completeness)
+
+### Open questions
+
+- How does the information-theoretic account of weight compares to notions such as resilience and completeness which---arguably---can be modeled by precise probabilism?
+
+- Does an adequate evaluation of the evidence in the trial context only require three notions---probability, resilience and completeness---making weight of evidence redundant?
+
+##
+
+
+Thank you!
+
+
+## EXTRA: Good on Weight of Evidence
+
+- $W(H:E)$ is some function of $\mathsf{P}(E\vert H), \mathsf{P}(E\vert \neg H)$
+
+- $\mathsf{P}(H \vert E) = g[W(H:e), \mathsf{P}(H)]$
+
+- $W(H: E_1 \wedge E_2)  = W(H:E_1) + W(H:E_2 \vert E_1)$
+
+
+\[W(H:E)  = \log \frac{\mathsf{P}(E \vert H)}{\mathsf{P}(E\vert \neg H)}\]
+
+
+## Good's weight is not what we're after
+
+### Good's own example (expanded)
+
+- a die is selected at random from nine fair dice and one with bias  $\frac{1}{3}$. 
+
+-  Uniform prior gives you weight of evidence for the loaded die $log_{10}(.1)$, that is `r log10(.1)` (-10 db). 
+
+- Every time you toss it and obtain a six, you gain $log_{10}(\frac{\frac{1}{3}}{\frac{1}{6}})= log_{10}(2)$
+
+- Every time you toss it and obtain something else, the weight changes by $log_{10}(\frac{\frac{2}{3}}{\frac{5}{6}})= log_{10}(.8)$.
+
+
+## Good's Weight Fails at Weak Increase
+
+
+```{r goodWEights,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "90%"}
+six <- seq(0,10, by = 1)
+others <- seq(0, 10, by  = 1)
+options <- expand.grid(six = six, others = others)
+options$weight  <- round(10 *( log10(.1) + options$six * log10(2) +
+                                 options$others * log10(.8)),1)
+
+ggplot(options, aes(x = six, y = others, fill = weight)) +
+  geom_tile(color = "white", lwd = .1,
+            linetype = 1)+
+  geom_text(aes(label = round(weight,2)), color = "white", size = 3)+
+  scale_fill_gradient(low = "black", high = "orangered")+
+  theme_tufte()+
+  ggtitle("Good's weights for up to 20 die tosses (db)")+
+  scale_x_continuous(breaks = seq(0,10, by = 1))+
+  scale_y_continuous(breaks = seq(0,10, by = 1))+
+  geom_circle(aes(x0 = 1, y0 = 4, r = .6),
+              inherit.aes = FALSE, color = "white", alpha = .8)+
+  geom_circle(aes(x0 = 2, y0 = 8, r = .6),
+              inherit.aes = FALSE, color = "white", alpha = .8)
+```
+
+
+
+
+
+
+## EXTRA: Joyce on Weight of Evidence
+
+
+**Joyce:** $w(X,E)  = \sum_x \vert c(ch(X) = x  \vert E) \times (x - c(X\vert E))^2 - c(ch(X) = x) \times (x - c(X))^2\vert$
+
+
+| hypotheses |  .4 | .5 | .6|
+|------------|-----|----|---|
+|credences   |  1/3|1/3 |1/3|
+|$c(X) = \sum_x c(Ch(X)=x)x$ |    .5 | .5| .5|
+|$c(E \vert ch(X) =x)$ |  .042 | .117 | .214 |
+|$c(E) = \sum_x c(E \vert ch(X) =x) c(ch(X)=x)$ | .124 | .124| .124|
+|$c(ch(X)=x \vert E)$ | .113 | .312| .573 |
+|$c(X|E) = \sum_x c(Ch(X)=x\vert E)x$ |    .54 | .54| .54|
+|prior weights | 0.01 | 0 | .01|
+|posterior weights | .021| .002| .002|
+|w |  .0066 | .0066 | .0066| 
+
+
+##
+
+
+```{r joyceMeasure,echo=FALSE,eval=TRUE,fig.align = "center", cache=FALSE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
+weightJoyce <- function (chanceHypotheses = c(.4, .5, .6),
+                         credenceInHypotheses =  c(1/3, 1/3, 1/3),
+                         successes = 7,
+                         trials = 10){
+  
+        #chance of evidence given data
+        chex <- dbinom(successes, trials,  chanceHypotheses)
+        #overall chance of evidence (denumerator)
+        che <-  sum(chex * credenceInHypotheses)
+        #chance of x given evidence (by Bayes)
+        chxe <- (chex * credenceInHypotheses ) / che
+        
+        #credence in X before and after
+        cX <- sum (credenceInHypotheses * chanceHypotheses)
+        cXe <- sum (chxe * chanceHypotheses)
+        
+        multiplier <- (chanceHypotheses - cX)^2
+        multiplierE <- (chanceHypotheses - cXe)^2
+        
+        top <-  chxe   * multiplierE
+        bottom <- credenceInHypotheses * multiplier 
+        
+        weight <- sum ( abs( top - bottom) )
+        
+        return(list(hypotheses = chanceHypotheses, prior = credenceInHypotheses, posterior =  chxe, 
+                    cX = cX, cXe = cXe, weight = weight))  
+}
+
+outOfTenWeightsEqualPriors <- numeric(10)
+
+for(i in seq(1,11, by  = 1)){
+  outOfTenWeightsEqualPriors[i] <- 
+  weightJoyce(successes = i-1)$weight
+}
+
+
+outOfTenWeightsLeftPriors <- numeric(10)
+for(i in seq(1,11, by  = 1)){
+  outOfTenWeightsLeftPriors[i] <-   
+  weightJoyce(credenceInHypotheses = c(.5, .3, .2), 
+              successes = i-1)$weight
+}
+
+outOf10df <- data.frame( successes = seq(0,10,1),
+  equal = outOfTenWeightsEqualPriors, ".5, .3, .2" = outOfTenWeightsLeftPriors)
+
+names(outOf10df) <- c("successes", "equal", ".5, .3, .2")
+
+
+outOf10dfLong  <- gather(data = outOf10df,
+                    key = priors, value = w,
+                    "equal", ".5, .3, .2", 
+                    factor_key=TRUE)
+
+
+
+joyce10  <- ggplot(outOf10dfLong)+geom_point(aes(x = successes,
+                                    y = w, color = priors) )+
+  scale_x_continuous(breaks = seq(0,10))+theme_tufte(base_size = 14)+ylab("w")+
+  xlab("successes in ten trials")+
+  scale_y_continuous(breaks = seq(0,0.007, by = .001))+
+  labs(title = "Joyce's weights change  by frequency",
+       subtitle = "(sample size 10)")+theme(plot.title.position = "plot")
+```
+
+
+
+```{r joyce1,echo=FALSE,eval=TRUE,fig.align = "center", cache=FALSE, fig.show = "hold", out.width = "80%",   message = FALSE, warning = FALSE, results = FALSE}
+
+joyce10
+
+```
+
+
+
+##
+
+
+```{r joyce2calculations,echo=FALSE,eval=TRUE,fig.align = "center", cache=FALSE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
+
+outOf100WeightsEqualPriors <- numeric(101)
+
+for(i in seq(1,101, by  = 1)){
+  outOf100WeightsEqualPriors[i] <- 
+    weightJoyce(successes = i-1, trials = 100)$weight
+}
+
+
+outOf100WeightsLeftPriors <- numeric(101)
+
+for(i in seq(1,101, by  = 1)){
+  outOf100WeightsLeftPriors[i] <- weightJoyce(credenceInHypotheses = c(.5, .3, .2),
+                                              successes = i-1, trials  = 100)$weight
+}
+
+outOf100df <- data.frame( successes = seq(0,100,1),
+              equal = outOf100WeightsEqualPriors, 
+              ".5, .3, .2" = outOf100WeightsLeftPriors)
+
+names(outOf100df) <- c("successes", "equal", ".5, .3, .2")
+
+outOf100dfLong  <- gather(data = outOf100df,
+                         key = priors, value = w,
+                         "equal", ".5, .3, .2", 
+                         factor_key=TRUE)
+
+
+
+joyce100  <- ggplot(outOf100dfLong)+geom_point(aes(x = successes,
+                                                 y = w, color = priors), size = .8 )+
+  scale_x_continuous(breaks = seq(0,100, by = 5))+theme_tufte(base_size = 14)+ylab("w")+
+  xlab("successes in ten trials")+
+  scale_y_continuous(breaks = seq(0,0.01, by = .001))+
+  labs(title = "Joyce's weight displays strange patters",
+       subtitle = "(sample size 100)")+
+  theme(plot.title.position = "plot")
+```
+
+
+
+
+
+```{r joyce2,echo=FALSE,eval=TRUE,fig.align = "center", cache=FALSE, fig.show = "hold", out.width = "80%",   message = FALSE, warning = FALSE, results = FALSE}
+
+joyce100
+
+```
+
+
+
+
+##
+
+```{r joyce3calculations,echo=FALSE,eval=TRUE,fig.align = "center", cache=FALSE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
+
+s <- seq(1,100)
+obs <- seq(10, 1000, by = 10)
+
+
+weightsBySampleSize <- numeric(length(s))
+weightsBySampleSizeLeft <- numeric(length(s))
+
+
+for (i in  1:100){
+weightsBySampleSize[i] <- weightJoyce(successes = s[i],
+                                      trials = obs[i])$weight
+}
+
+for (i in  1:100){
+  weightsBySampleSizeLeft[i] <- weightJoyce(successes = s[i],
+                                    trials = obs[i],
+                                    credenceInHypotheses = c(.5, .3, .2))$weight
+}
+
+
+wbss <- data.frame( "sample size" = obs,
+                          equal = weightsBySampleSize, 
+                          ".5, .3, .2" = weightsBySampleSizeLeft)
+
+wbss$frequency <- rep(.1, nrow(wbss))
+
+s2 <- seq(1,500)
+obs2 <-2 *s2   
+
+weightsBySampleSize2 <- numeric(length(s))
+weightsBySampleSizeLeft2 <- numeric(length(s))
+
+
+for (i in  1:500){
+  weightsBySampleSize2[i] <- weightJoyce(successes = s2[i],
+                                        trials = obs2[i])$weight
+}
+
+for (i in  1:500){
+  weightsBySampleSizeLeft2[i] <- weightJoyce(successes = s2[i],
+                                            trials = obs2[i],
+                                            credenceInHypotheses = c(.5, .3, .2))$weight
+}
+
+
+wbssHalf <- data.frame( "sample size" = obs2,
+                    equal = weightsBySampleSize2, 
+                    ".5, .3, .2" = weightsBySampleSizeLeft2)
+
+wbssHalf$frequency <- rep(.5, nrow(wbssHalf))
+
+
+names(wbss) <- c("sampleSize", "equal", ".5, .3, .2", "frequency")
+names(wbssHalf) <- c("sampleSize", "equal", ".5, .3, .2", "frequency")
+
+
+
+wbssLong <- gather(data = rbind(wbss, wbssHalf),
+                          key = priors, value = w,
+                          "equal", ".5, .3, .2", 
+                          factor_key=TRUE)
+
+
+joyceWBSS  <- ggplot(wbssLong)+geom_line(aes(x = sampleSize,
+                                y = w, color = priors,
+                                lty = as.factor(frequency)) )+
+  scale_x_continuous(breaks = seq(0,1000, by = 100))+theme_tufte(base_size = 14)+
+  ylab("w")+
+  xlab("sample size")+
+  #  scale_y_continuous(breaks = seq(0,0.01, by = .001))+
+  labs(title = "Joyce's weights  can drop with sample size",
+       subtitle = "(eventually they stop growing)",
+       lty = "observed frequency")+
+  theme(plot.title.position = "plot")
+
+```
+
