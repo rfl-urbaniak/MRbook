@@ -267,6 +267,367 @@ grid.arrange(densities1Plot,densities2Plot, ncol = 1 )
 
 
 
+```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%", warning = FALSE, message = FALSE}
+prior <- seq(0,1, by = 0.001)
+priorH0 <- 1-prior
+
+#-----
+
+jointPosterior <- list()
+minima <- numeric(1e4)
+
+
+#for each likelihood from sample, 
+#calculate the posterior based on what the prior is
+#and find the minimum above threshold
+for (s in 1:1e4){
+  lik <- jointEvidence[s] 
+  denomin <- lik * priorH0 + prior
+  num <-  lik * priorH0
+  posterior <- 1- num/denomin
+  jointPosterior[[s]] <- posterior
+  minima[s] <- min(prior[posterior > .99])
+  }
+
+
+
+minimaPlot <- ggplot()+geom_density(aes(x = minima))+
+  theme_tufte(base_size = 10)+ggtitle("Minimal priors sufficient for posterior >.99")+xlab("minimal prior")+
+  theme(plot.title.position = "plot")
+
+minimaGrob <- ggplotGrob(minimaPlot)
+
+
+
+jointPosteriorDF <-   as.data.frame(do.call(cbind, jointPosterior))
+
+
+
+jointPosteriorSubsample <- jointPosteriorDF[,1:300]
+
+jointPosteriorDF$ps <- ps
+jointPosteriorSubsample$ps <- ps
+
+jointPosteriorLong <- melt(jointPosteriorSubsample,
+                           id.vars = c("ps"))
+colnames(jointPosteriorLong) <- c("prior", "sample","probability")
+
+alpha = .25
+size = .2
+
+densitiesLinesPlot <- ggplot(jointPosteriorLong)+
+  geom_line(aes(x = prior, y = probability,group = sample),
+            alpha = alpha, linewidth = size)+
+  theme_tufte()+xlim(0,.2) + 
+  annotation_custom(minimaGrob, xmin = .085, xmax = .185, 
+                  ymin = 0.01, ymax = 0.8) +
+  ggtitle("Posterior vs prior (300 sampled lines)") + 
+  theme(plot.title.position = "plot")
+
+```
+
+
+
+
+\begin{figure}[H]
+```{r fig:lines5,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "60%", warning = FALSE, message = FALSE}
+densitiesLinesPlot
+```
+
+\caption{300 lines illustrating the uncertainty about the dependence of the posterior on the prior given aleatory uncertainty about the evidence, with the distribution of the minimal priors required for the posterior to be above .99.}
+
+\label{fig:lines}
+
+\end{figure}
+
+
+This, then, is the main claim of this chapter: whenever density estimates for the probabilities of interest are available (and they should be available for match evidence and many other items of scientific evidence if the reliability of a given type of evidence has been properly studied), those densities should be reported for assessing the strength of the evidence. This approach avoids hiding actual aleatory uncertainties under the carpet. It also 
+allows for a balanced assessment of the evidence, whereas using point estimates  or intervals may exaggerate or underestimate the value of the evidence. 
+
+
+In what follows, we  expand on this idea in different directions. Section \ref{sec:three-probabilism} engages with the philosophical debate about precise and imprecise probabilism. We argue that both options are problematic and should be superseded by a higher-order approach to probability whenever possible. Section \ref{sec:objections}
+revisits a recent discussion in the forensic science literature. A prominent view has it  that trial experts, even when they use densities, should present only first-order probabilities. We disagree and show that reasons of accuracy maximization sometimes recommend relying on higher-order probabilities. Section \ref{sec:legal-applications} turns to some legal applications of higher-order probabilism. We focus on two topics: first, the role of higher-order probabilities and false positive rates in the evaluation of DNA evidence; second, how complex bodies of evidence can be represented by what we call higher-order Bayesian networks. 
+
+Before we dive in, one more remark: ost of the time, mathematically, we do not propose anything radically new---we just put together some of the items from the standard Bayesian toolkit. The novelty is rather in our arguing that that these tools are under-appreciated in the legal scholarship and should be properly used to incorporate second-order uncertainties in evidence evaluation and incorporation. Perhaps a minor exception is our explication of the notion of weight, but even here many related notions are available in information theory, and the novelty here is not technical, but rather in the argument that they also are under-appreciated in legal scholarship.
+\todo{added this par to preemt Kadane's style pickiness}
+
+
+
+
+
+
+
+
+
+# Three Probabilisms
+\label{sec:three-probabilism}
+
+ The introduction outlined three probabilistic approaches that one might take for assessing the value of the evidence presented at trial. The first approach uses precise probabilities; the second uses intervals; the third uses distributions over probabilities. By relying on an example featuring two items of match evidence, we suggested that the third approach is preferable. This section buttresses this claim by providing principled, philosophical reasons in favor of the third approach.  
+
+The three approaches we considered correspond (roughly) to three ways in which probabilities can be deployed to model a rational agent's fallible and evidence-based beliefs about the world.  The first approach, known in the philosophical literature as precise probabilism, posits that an agent's credal state is modeled by a single, precise probability measure. The second approach, known as imprecise probabilism, replaces precise probabilities by sets of probability measures. The third approach, what we call higher-order probabilism, relies on distributions over parameter values.  There are good reasons to abandon precise probabilism and endorse higher-order probabilism. Imprecise probabilism is a step in the right direction, but also suffers from too many difficulties of its own.
+
+
+## Precise Probabilism
+
+Precise probabilism (\textsf{PP}) holds that a rational 
+agent's  uncertainty about a hypothesis is to be 
+represented as a single, precise probability measure. 
+This is an elegant and simple theory. But representing our uncertainty about 
+a proposition in terms of a single, precise probability runs into a number of difficulties. Precise probabilism fails to 
+capture an important dimension of how 
+our fallible beliefs reflect the evidence 
+we have (or have not) obtained. A couple of stylized 
+examples should make the point clear. (For the sake of simplicity, 
+we will use examples featuring coins, but biases of coins can be thought of as  random match probabilities in the forensic context.)
+
+<!---but the points are general and hold for all sampling based frequency estimation methods, including those of random match probability for various pieces of forensic evidence):--->
+
+\begin{quote}
+\textbf{No evidence v. fair coin}
+You are about to toss a coin, but have no evidence 
+whatsoever about its bias. You are completely ignorant. 
+Compare this to the situation in which you know, 
+based on overwhelming evidence, that the coin is fair. 
+\end{quote}
+
+\noindent On precise probabilism, both scenarios are represented by assigning a probability of .5 to the outcome \emph{heads}. If you are completely 
+ignorant, the principle of insufficient evidence suggests that you assign .5 to both outcomes.  Similarly, if you know for sure the coin is fair, assigning .5 seems the best way to quantify the uncertainty about the outcome. The agent's evidence in the two scenario is quite different, but precise probabilities cannot capture this difference. 
+
+\begin{quote}
+\textbf{Learning from ignorance}
+You toss a coin with unknown bias. You toss it 10 times and observe \emph{heads} 5 times. Suppose you toss it further and observe 50 \emph{heads} in 100 tosses. 
+\end{quote}
+
+\noindent
+Since the coin initially had unknown bias, you should 
+presumably assign a probability of .5 to both outcomes. 
+After the 10 tosses, you end up again with an estimate of .5.
+You must have learned something, but whatever that is, it is not modeled by precise probabilities. When you toss the coin 100 times and observe 50 heads, you learn something. But your precise probability assessment will again be .5.
+
+<!---Clearly,  precise probabilism has difficulties modeling such  situations. ---> These  examples suggest that precise probabilism is not appropriately responsive to evidence. It ends up assigning the same probability in  situations in which one's evidence is quite different:  when no evidence is available about the coin's bias; when there is little evidence that the coin is fair (say, after only 10 tosses); and  when there is strong evidence that the coin is fair (say, after 100 tosses). The general problem is, precise probability captures the value around which your uncertainty should be centered, but fails to capture how centered it should be given the evidence.^[Precise probabilism suffers from other difficulties. For example,  it has problems  with formulating a sensible method of probabilistic opinion  aggregation [@Elkin2018resolving,@Stewart2018pooling].  A seemingly intuitive constraint is that if every member agrees that $X$ and $Y$ are probabilistically independent, the aggregated credence should respect this. But this is hard to achieve if we stick to \s{PP} [@Dietrich2016pooling]. For instance, a \emph{prima facie} obvious method of linear pooling does not respect this. Consider probabilistic measures $p$ and $q$ such that $p(X)  = p(Y)  = p(X\vert Y) = 1/3$ and  $q(X)  =  q(Y) = q(X\vert Y) = 2/3$. On both measures, taken separately, $X$ and $Y$ are independent. Now take the average, $r=p/2+q/2$. Then $r(X\cap Y) = 5/18 \neq r(X)r(Y)=1/4$. ]
+
+
+## Imprecise Probabilism
+
+What if we give up the assumption that probability assignments should be precise? Imprecise probabilism (\textsf{IP}) holds that  an agent's credal stance towards a hypothesis is to be represented by means of a *set of probability measures*, typically called a  representor $\mathbb{P}$, rather than a single measure $\mathsf{P}$. The representor should include all and only those probability measures which are compatible
+<!-- (in a sense to be specified)  -->
+with the evidence.  For instance, if an agent knows that the coin is fair, their credal state  would  be represented by the singleton set $\{\mathsf{P}\}$, where $\mathsf{P}$ is a probability measure which assigns $.5$ to \emph{heads}. If, on the other hand, the agent knows nothing about the coin's bias, their credal state would be represented by the set of all probabilistic measures, since none of them is excluded by the available evidence. Note that the set of probability measures does not represent admissible options that the agent could legitimately pick from. Rather, the agent's credal state is essentially imprecise and should be represented by means of the entire set of probability measures.^[For  the development of imprecise probabilism, see @keynes1921treatise; @Levi1974ideterminate; @Gardenfors1982unreliable; @Kaplan1968decision;  @joyce2005probabilities; @VanFraassen2006vague; @Sturgeon2008grain; @walley1991statistical. @bradley2019imprecise is a good source of further references. Imprecise probabilism shares some similarities with what we might call **interval probabilism** [@Kyburg1961; @kyburg2001uncertain]. On interval probabilism, precise probabilities are replaced  by intervals of probabilities. On imprecise probabilism, instead, precise probabilities are replaced by sets of probabilities.  This makes imprecise probabilism more general, since the probabilities of a proposition in the representor set do not have to form a closed interval. <!---Moreover, learning on Kyburg's approach is somewhat  idiosyncratic and is strongly connected to reference classes and selection and reshaping rules for intervals. See [PEDDEN] for a introduction.---> As we have already noted, intervals do not contain probabilistic information sufficient to guide reasoning with multiple items of evidence. So we focus on \s{IP}, which is the more promising approach.] 
+
+
+Imprecise probabilism, at least \emph{prima facie}, offers a straightforward picture of learning from evidence, that is a natural extension of the classical Bayesian approach. When faced with new evidence $E$ between time $t_0$ and $t_1$, the representor set  should be updated point-wise,  running the  standard Bayesian updating on each probability measure in the representor:
+\begin{align*} \label{eq:updateRepresentor}
+\mathbb{P}_{t_1} = \{\mathsf{P}_{t_1}\vert \exists\, {\mathsf{P}_{t_0} \!\in  \mathbb{P}_{t_0}}\,\, \forall\, {H}\,\, \left[\mathsf{P}_{t_1}(H)=\mathsf{P}_{t_0}(H \vert E)\right] \}.
+\end{align*}
+
+\noindent
+The hope is that, if we start with a range of probabilities that is not extremely wide, point-wise learning will behave appropriately.
+<!---^[The hope is also that \s{IP} offers a feasible aggregation method [@Elkin2018resolving;@Stewart2018pooling]: just put all representors together in one set, and voil\'a! However, this is a very conservative method which quickly leads to extremely few points of agreement, and we are not aware of any successful practical deployment of this method.]
+--->For instance, if we start with a prior probability of \emph{heads} equal to .4 or .6, then those measure should be updated to something closer to $.5$ once we learn that a given coin has already been tossed  ten times with the observed number of heads equal 5 (call this evidence $E$). This would mean that if the initial range of values was $[.4,.6]$ the posterior range of values should be more narrow. But even this seemingly straightforward piece of reasoning is hard to model without using densities. For to calculate $\pr{\s{heads}\vert E}$ we need to calculate $\pr{E \vert \s{heads}}\pr{\s{heads}}$ and divide it by $\pr{E} = \pr{E \vert \s{heads}}\pr{\s{heads}} + \pr{E} = \pr{E \vert \neg \s{heads}}\pr{\neg \s{heads}}$. The tricky part is obtaining the conditional probabilities $\pr{E \vert  \s{heads}}$ and $\pr{E \vert \neg \s{heads}}$ in a principled manner without explicitly going second-order, estimating the parameter value and using beta distributions. 
+
+
+The situation is even more difficult if we start with complete lack of knowledge, as imprecise probabilism runs into the problem of **belief inertia**  [@Levi1980enterprise]. Say  you start tossing a coin  knowing nothing about its bias. The range of possibilities is $[0,1]$. After a few tosses, if you observed at least one tail and one heads, you can exclude the measures assigning 0 or 1 to \emph{heads}. But what else have you learned? <!---Let's agree that each particular measure from your initial representor set is updated to a measure closer to .5, but also now each value in your original interval  can be obtained by updating   some *other* measure in your original representor on the evidence, and the picture does not change  no matter how many observations you have made.  For instance, some measure that initially assigned .4 to \s{heads} might now assign \s{.45} to \s{heads}, but now a measure that assigned .37 to heads has been updated to one that assigns $.4$ to \s{heads}.---> If you are to update your representor set point-wise, you will end up with the same representor set.  Consequently, the edges of your resulting interval will remain the same. In the end, it is not clear how you are supposed to learn anything if you start from complete ignorance.^[Here's another example from @Rinard2013against. Either all the marbles in the urn are green ($H_1$), or exactly one tenth of the marbles are green ($H_2$). Your initial credence $[0,1]$ in each. Then you learn that a marble drawn at random from the urn is green ($E$). After conditionalizing each function in your representor on this evidence, you end up with the  the same spread of values for $H_1$ that you had  before learning $E$, and  no matter  how many marbles are sampled from the urn and found to be green.]
+
+<!---Some replies in defense of imprecise probabilism are available.--->
+Some downplay the problem of belief inertia. They insist that vacuous priors should not be used and that imprecise probabilism gives the right results when the priors are non-vacuous. After all, if you started with knowing truly nothing, then perhaps it is right to conclude that you will never learn anything. Another strategy is to say that, in a state of complete ignorance, a special updating rule should be deployed.^[@Lee2017impreciseEpistemology suggests the rule of  \emph{credal set replacement} that recommends that upon receiving evidence the agent should  drop measures rendered implausible, and add all non-extreme plausible probability measures. This, however, is tricky. One  needs a separate account of what makes a distribution plausible or not, as well as a principled account of why one should use a separate special update rule when starting with complete ignorance.] But no matter what we think about belief inertia, other problems plague imprecise probabilism.  Two  more problems are particularly pressing. 
+
+
+<!---Elkin admits that he has no solution to this: "But how do we determine what the set of plausible probability measures is relative to $E$? There is no precise rule that I am aware of for determining such set at this moment, but I might say that the set can sometimes be determined fairly easily" [p. 83] He goes on to a trivial example of learning that the coin is fair and dropping extreme probabilities. This is far from a general account.--->
+
+
+<!-- \textbf{Marcello's comment: I did not add the bit about how we learn about constraints in imprecise probabilism. Might need to go here as a further difficulty about imprecise probabilism. I could not understand the argment. To be discussed.} -->
+
+One problem is that imprecise probabilism fails to capture intuitions 
+we have about evidence and uncertainty in a number of scenarios. Consider this example:
+
+\begin{quote}
+\textbf{Even v. uneven bias:}
+ You have two coins and you know, for sure, that the probability of getting heads is .4, if you toss one coin, and .6, if you toss the other coin. But you do not know which is which. You pick one of the two at random and toss it.  Contrast this with an uneven case. You have four coins and you know that three of them have bias $.4$ and one of them has bias $.6$. You pick a coin at random and plan to toss it. You should be three times more confident that the probability of getting heads is .4. rather than .6.
+\end{quote}
+
+\noindent
+The first situation can be easily represented by imprecise probabilism. The representor would contain two probability measures, one that assigns .4. and the other that assigns .6 to the hypothesis 'this coin lands heads'.  But imprecise probabilism cannot represent the second situation, at least not without moving to higher-order probabilities or assigning probabilities to chance hypotheses, in which case it is no longer clear whether the object-level imprecision performs any valuable task.^[Other scenarios can be constructed in which imprecise probabilism fails to capture distinctive intuitions about evidence and uncertainty; see, for example, [@Rinard2013against].  Suppose you know of two urns, \textsf{GREEN} and \textsf{MYSTERY}. You  are  certain \textsf{GREEN} contains only green marbles, but have no information about \textsf{MYSTERY}. A marble will be drawn at random from each. You should be certain that the marble drawn from \textsf{GREEN}  will be green ($G$), and you should be more confident about this than about the proposition that the marble from \textsf{MYSTERY} will be green ($M$). In line with how lack of information is to be represented on \textsf{IP}, for each $r\in [0,1]$  your representor contains a $\mathsf{P}$ with $\pr{M}=r$. But then,  it also contains one with $\pr{M}=1$. This means that it is not the case that for any probability measure  $\mathsf{P}$ in your representor, $\mathsf{P}(G) > \mathsf{P}(M)$, that is, it is not the case that RA is more confident of $G$ than of $M$. This is highly counter-intuitive.] 
+
+Second, besides descriptive inadequacy, an even deeper, foundational problem exists for imprecise probabilism. This problem arises when we attempt to measure the accuracy of a representor set of probability measures. Workable *scoring rules* exists for measuring the accuracy of a single, precise credence function, such as the Brier score. These rules measure the distance between one's credence function (or probability measure) and the actual value. A  requirement of scoring rules is that they  be \emph{proper}: any agent will score their own credence function to be more accurate than every other credence function. After all, if an agent thought a different credence was more accurate, they should switch to it.  Proper scoring rules are then used to formulate accuracy-based arguments for precise probabilism. These arguments show (roughly) that, if your precise credence follows the axioms of probability theory, no other credence is going to be more accurate than yours whatever the facts are.  Can the same be done for imprecise probabilism? It seems not. Impossibility theorems demonstrate that no proper scoring rules are available for representor sets. So, as many have noted, the prospects for an accuracy-based argument for imprecise probabilism look dim  [@seidenfeld2012forecasting; @Mayo-Wilson2016scoring; @Schoenfield2017accuracy; @CampbellMoore2020accuracy]. Moreover, as shown by  @Schoenfield2017accuracy, if an accuracy measure satisfies certain plausible formal constraints, it will never strictly recommend an imprecise stance, as for any imprecise stance there will be a precise one with at least the same accuracy. 
+
+
+<!---
+The third problem with imprecise probabilism has 
+to do with spelling how when a probability measures is incompatible with the evidence. For recall that the probability measures allowed in a representor set are only those compatible with the agent's evidence. The idea is that thanks to this feature, imprecise credal stances are evidence-responsive in a way precise probabilistic stances are not. But how, exactly, does the evidence exclude probability measures?  This is not a  mathematical question: mathematically [@bradley2012scientific], evidential constraints are easy to model. They can take the form, for example, of the \emph{evidence of chances} $\{ \mathsf{P}(X) = x\}$ or $\mathsf{P}(X) \in [x,y]$, or \emph{structural constraints} such as  "$X$ and $Y$ are independent" or "$X$ is more likely than $Y$." While it is clear that these constraints are something that an agent can come to accept if offered such information by an expert to which the agent completely defers, it  is not trivial to explain how  non-testimonial evidence can result in such constraints.  Most of the  examples  in the literature start with the assumption that the agent is told by a believable source that the chances are such-and-such, or that the experimental set-up is such that the agent  knows that such and such structural constraint is satisfied. But, besides ideal circumstances, it is unclear how an agent could come to accept such structural constraints upon observation.^[Even if you were lucky enough to run into an expert that you completely trust that provides you with a constraint like this, how exactly did the expert come to learn the constraint? The chain of testimonial evidence has to end somewhere. Admittedly, there are straightforward degenerate cases: if you see the outcome of a coin toss to be heads, you reject the measure with $\mathsf{P}(H)=0$, and similarly for tails. Another class of cases might arise if you are randomly drawing objects from a finite set where the real frequencies are already known, because this finite set has been inspected. But such extreme cases aside, what else?  Mere consistency constraint wouldn't get the agent very far in the game of excluding probability measures, as way too many probability measures are strictly speaking still consistent with the observations for evidence to result in epistemic progress.] 
+--->
+
+<!---
+Bradley suggests that "statistical evidence might inform [evidential] constraints [\dots and that evidence] of causes might inform structural constraints" [125-126]. This, however, is far cry from a clear account of how exactly this should proceed. Now, one suggestion might be that once a statistical significance threshold is selected, a given set of observations with a selection of background modeling assumptions yields a credible interval. But this is to admit that to reach such constraints we already have to start with a second-order approach, and drop information about the densities, focusing only on the intervals obtained with fixed margins of errors. But as we already illustrated, if you have the information about densities to start with, there is no clear advantage to going imprecise instead, and there are multiple problems associated with this move. Moreover, such moves require a choice of an error margin, which is extra-epistemic,^[In forensic evidence evaluation even scholars who disagree about the value of going higher-order agree that interval reporting is problematic, as the choice of a limit or uncertaintly level is rather arbitrary [@Taroni2015Dismissal;Sjerps2015Uncertainty].] and it is not clear what advantage there is to dropping information contained in second-order probabilities based on extra-epistemic considerations of this sort. 
+--->
+
+
+## Higher-order Probabilism
+
+There is, however, a view in the neighborhood that fares better: a second-order perspective. In fact, some of the comments by the proponents of imprecise probabilism tend to go in this direction. For instance,  Seamus Bradley   compares the measures in a representor to committee members, each voting on a particular issue, say the true bias of a coin. As they acquire more evidence, the committee members will often converge on a specific chance hypothesis. He writes [@bradley2012scientific, p. 157]:
+\begin{quote}
+\dots the committee members are ''bunching up''. Whatever measure you put over the set of probability functions---whatever ''second order probability'' you use---the ''mass'' of this measure gets more and more concentrated around the true chance hypothesis'.
+\end{quote}
+
+\noindent
+Note, however, that such bunching up cannot be modeled by imprecise probabilism. <!---^[Bradley seems to be aware of that, which would explain the use of scare quotes: when he talks about the option of using second-order probabilities in decision theory, he  insists that  'there is no justification for saying that there is more of your representor here or there.' ~[p.~195]]--->   @joyce2005probabilities, in a paper defending imprecise probabilism, in fact uses a density over chance hypotheses to account for the notion of evidential weight.
+<!-- (on this, more later).  TODO -->
+<!---and conceptualizes the  weight of evidence  as an increase of concentration of smaller subsets of chance hypotheses, without any reference to representors in his explication of the notion of weight (we will get back to his explication when we discuss weight of evidence). ---> 
+The idea that one should use  higher-order probabilities  has also been suggested by critics of imprecise probabilism. For example, @Carr2020impreciseEvidence argues that sometimes   evidence requires uncertainty about what credences to have.  <!---On Carr's approach, one should use vague credences, assigning various weights to probabilities---agent's credence in propositions about either what credences the evidence supports, or about objective chances. ---> Carr, however, does not articulate this suggestion more fully, does not develop it formally, and does not explain how her approach would fare against the difficulties affecting precise ad imprecise probabilism.
+
+
+The key idea of the higher-order approach we propose is that uncertainty is not a single-dimensional thing to be mapped on a single one-dimensional scale such as a real line. It is the whole shape of the whole distribution over parameter values that should be  taken under consideration.^[Bradley admits this much [@bradley2012scientific, 90], and so does  Konek  [@konek2013foundations, 59]. For instance, Konek disagrees with: (1)  $X$ is more probable than $Y$ just in case $p(X)>p(Y)$, (2)  $D$ positively supports $H$ if $p_D(H)> p(H)$, or (3)  $A$ is preferable to $B$ just in case the expected utility of $A$ w.r.t. $p$ is larger than that of $B$.] From this perspective, when an agent is asked about their credal stance towards $X$, they can refuse to summarize it in terms of a point value $\mathsf{P}(X)$. They can instead express their credal stance in terms of a probability (density) distribution $f_x$ treating  $\mathsf{P}(X)$ as a random variable.  To be sure, an agent's credal state toward $X$ could sometimes be usefully represented by the expectation  
+\[\int_{0}^{1} x f(x) \, dx\] 
+as the precise, object-level credence in $X$, where $f$ is the probability density over possible object-level probability values. But this need not always be the case. If the probability density $f$ is not sufficiently concentrated around a single value, a one-point summary might fail to do justice to the nuances of the agent's credal state.^[This approach lines up with common practice in Bayesian statistics, where the primary role of uncertainty representation is assigned to the whole distribution. Summaries such as the mean, mode standard deviation,  mean absolute deviation, or highest posterior density intervals are only succinct ways for representing the uncertainty of a given scenario. Whether the expectation should be used in betting behavior is a separate problem. Here we focus on epistemic issues.]   For example, consider again the scenario in which the agent knows that the bias of the coin is  either .4 or .6 but the former is three times more likely. Representing the agent's credal state with the expectation $\mathsf{P}(X) = .75 \times .4 + .25 \times .6 = .45$ would be inadequate as it would fail to capture the agent's belief that the two biases are uneven. 
+
+The higher-order approach can easily model all the challenging scenarios we discussed so far in the manner illustrated in Figure \ref{fig:evidenceResponse}. In particular, the scenario in which the two biases of the coin are not equally likely---which imprecise probabilism cannot model---can be easily modeled within high-order probabilism by assigning different probabilities to the two biases.
+  
+
+```{r evidenceResponse1,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
+p <- seq(from=0 , to=1 , by = 0.001)
+FairDensity <- ifelse(p == .5, 1, 0)
+FairDF <- data.frame(p,FairDensity)
+FairPlot <- ggplot(FairDF, aes(x = p, y = FairDensity))+geom_line()+theme_tufte()+
+  xlab("parameter value")+ylim(c(0,1))+ylab("probability")+ggtitle("Fair coin")+
+  theme(plot.title.position = "plot")
+
+UniformPlot <- ggplot()+xlim(c(0,1))+stat_function(fun = dunif, args = list(min = 0, max = 1))+
+  ylim(0,1)+
+  theme_tufte()+
+  xlab("parameter value")+
+  ylab("probability density")+theme(plot.title.position = "plot")+ggtitle("Unknown bias")
+
+
+p <- seq(from=0 , to=1 , by = 0.001)
+TwoDensity <- ifelse(p == .4 | p == .6, .5, 0)
+TwoDF <- data.frame(p,TwoDensity)
+TwoPlot <- ggplot(TwoDF, aes(x = p, y = TwoDensity))+geom_line()+theme_tufte()+
+  xlab("parameter value")+ylim(c(0,1))+ylab("probability")+ggtitle("Two biases (insufficient reason)")+
+  theme(plot.title.position = "plot")+scale_x_continuous(breaks = c(.4,.6), labels = c(.4, .6))
+
+
+
+
+p <- seq(from=0 , to=1 , by = 0.001)
+TwoUnbalancedDensity <- ifelse(p == .4, .75, ifelse(p ==  .6, .25, 0))
+TwoUnbalancedDF <- data.frame(p,TwoUnbalancedDensity)
+
+TwoUnbalancedPlot <- ggplot(TwoUnbalancedDF, aes(x = p, y = TwoUnbalancedDensity))+geom_line()+theme_tufte()+
+  xlab("parameter value")+ylim(c(0,1))+ylab("probability")+ggtitle("Two unbalanced biases")+
+  theme(plot.title.position = "plot")+scale_x_continuous(breaks = c(.4,.6), labels = c(.4, .6))
+
+```
+
+
+\begin{figure}[t]
+```{r fig:evidenceResponse2,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "80%"}
+grid.arrange(FairPlot,UniformPlot, TwoPlot, TwoUnbalancedPlot)
+```
+\caption{Examples of higher-order distributions for scenarios brought up in the literature.}
+\label{fig:evidenceResponse}
+\end{figure}
+
+
+Besides its flexibility in modelling uncertainty, higher-order probabilism does not fall prey to belief inertia. Consider a  situation in which you have no idea about the bias of a coin. So you start with a uniform density over $[0,1]$ as your prior. By using binomial probabilities as likelihoods, observing  any non-zero number of heads will exclude 0 and observing any non-zero number of  tails will exclude 1 from the basis of the posterior. The posterior distribution will become more centered around the parameter estimate as the observations come in. <!---Let's see an example with a grid approximation ($n=1k$) and coin tossing (grid approximation allows us also to talk about probabilities rather than densities).  Our prior is uniform, and then, in subsequent steps, we observe heads,  another heads, and then tails. This is what  happens with the posterior as we go (Figure \ref{fig:intertia2}).
+--->
+Figure \ref{fig:intertia2} shows---starting with a uniform prior distribution--- how the posterior distribution changes after successive observations of heads,  heads again, and then tails.^[More generally, learning about frequencies, assuming independence and constant probability for all the observations, is modeled the Bayes way. You start with some prior density $p$ over the parameter values. If you start with complete lack of information, $p$ should be uniform. Then, you observe the data $D$ which is the number of successes $s$ in a certain number of observations $n$. For each particular possible value $\theta$ of the parameter, the probability of $D$ conditional on $\theta$ follows the binomial distribution. The probability of $D$ is obtained by integration. That is:
+\begin{align*}
+p(\theta \vert D) & = \frac{p(D\vert \theta)p(\theta)}{p(D)}\\
+& = \frac{\theta^s (1-\theta)^{(n - s)}p(\theta)}{\int (\theta')^s (1-\theta')^{(n - s)}p(\theta')\,\, d\theta'}.
+\end{align*}
+]
+
+
+
+
+
+```{r fig:inertia2, eval = TRUE, echo=FALSE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%", message= FALSE, warning=FALSE}
+
+n <- 1000 #parameters 
+s <- 1e5  #sample size
+
+ps <- seq(from=0 , to=1 , length.out=n)
+
+prior <- rep(1/n , n) #uniform prior
+
+likelihood1g <- dbinom( 1 , size=1 , prob=ps)
+likelihood2g <- dbinom( 2 , size=2 , prob=ps)
+likelihood2g1b <- dbinom( 2 , size=3 , prob=ps)
+
+posterior1g <- likelihood1g * prior
+posterior2g <- likelihood2g * prior
+posterior2g1b <- likelihood2g1b * prior
+
+
+posterior1g <- posterior1g / sum(posterior1g)
+posterior2g <- posterior2g / sum(posterior2g)
+posterior2g1b <- posterior2g1b / sum(posterior2g1b)
+
+upperLimit <- .003
+
+InertiaPriorPlot <- ggplot()+geom_line(aes(x = ps, y = prior))+theme_tufte(base_size = 7)+xlab("parameter")+
+  ylab("probability")+theme(plot.title.position = "plot")+ggtitle("Prior")+
+  scale_x_continuous()+scale_y_continuous(limits = c(0,upperLimit))
+
+
+InertiaOneGPlot <- ggplot()+geom_line(aes(x = ps, y = posterior1g))+theme_tufte(base_size = 7)+xlab("parameter")+
+  ylab("probability")+theme(plot.title.position = "plot",
+                            axis.text.y = element_blank(),
+                            axis.title.y = element_blank(),
+                          axis.ticks.y =element_blank()
+)+ggtitle("Evidence: h")+
+  scale_y_continuous(limits = c(0,upperLimit))
+
+
+
+InertiaTwoGPlot <- ggplot()+geom_line(aes(x = ps, y = posterior2g))+theme_tufte(base_size = 7)+xlab("p")+
+  ylab("probability")+theme(plot.title.position = "plot"#, 
+#                        axis.text.y = element_blank(),
+#                            axis.title.y = element_blank(),
+#                            axis.ticks.y = element_blank()
+                  )+ggtitle("Evidence: h, h")+
+scale_y_continuous(limits = c(0,upperLimit))
+
+InertiaTwoGoneBluePlot <- ggplot()+geom_line(aes(x = ps, y = posterior2g1b))+theme_tufte(base_size = 7)+xlab("parameter")+
+  ylab("probability")+theme(plot.title.position = "plot",     axis.text.y = element_blank(),
+  axis.title.y = element_blank(),
+      axis.ticks.y = element_blank()
+           )+ggtitle("Evidence: h, h, t")+
+  scale_y_continuous(limits = c(0,upperLimit))
+```
+
+
+
+\begin{figure}[t]
+```{r fig:inertia3, echo=FALSE, eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "80%",   message = FALSE, warning = FALSE, results = FALSE}
+grid.arrange(InertiaPriorPlot, InertiaOneGPlot,  InertiaTwoGPlot, InertiaTwoGoneBluePlot, ncol = 2, nrow = 2)
+```
+\caption{As observations of heads, heads and tails come in, extreme parameter values drop out of the picture and the posterior is shaped by the evidence.}
+\label{fig:intertia2}
+\end{figure}
+
+
+A further advantage of high-order probabilism over imprecise probabilism is that the prospects for accuracy-based arguments are not foreclosed. This is a significant shortcoming of imprecise probabilism, especially because such arguments exist for precise probabilism. One can show that there exist proper scoring rules for higher-order probabilism. These rules can then be used to formulate accuracy-based arguments. Another interesting feature of the framework is that the point made by Schoenfield against imprecise probabilism does not apply: there are cases in which accuracy considerations recommend an imprecise stance (that is, a multi-modal distribution) over a precise one (Urbaniak, 2022 manuscript).
+
+All in all, higher-order probabilism outperforms both precise and imprecise probabilism, at the descriptive as well as the normative level. From a descriptive standpoint, higher-order probabilism can easily model a variety of scenarios that cannot be adequately modeled by the other versions of probabilism. From a normative standpoint, accuracy maximization may sometimes recommend that a rational agent represent their credal state with a distribution over probability values rather than a precise probability measure (more on this in the next section). 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

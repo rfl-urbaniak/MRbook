@@ -1,5 +1,6 @@
 library(ggplot2)
 library(ggthemes)
+library(reshape2)
 
 #already defined
 ps <- seq(0,1,length.out = 1001)
@@ -22,30 +23,68 @@ priorH0 <- 1-prior
 
 jointPosterior <- list()
 minima <- numeric(1e4)
+
+
+#for each likelihood from sample, 
+#calculate the posterior based on what the prior is
+#and find the minimum above threshold
 for (s in 1:1e4){
   lik <- jointEvidence[s] 
   denomin <- lik * priorH0 + prior
   num <-  lik * priorH0
   posterior <- 1- num/denomin
-  jointPosterior[[s]] <- posterior      
+  jointPosterior[[s]] <- posterior
   minima[s] <- min(prior[posterior > .99])
-}
-jointPosteriorDF <-   do.call(cbind, jointPosterior)
+  }
 
-str(jointPosterior[[1]])
+jointPosteriorDF <-   as.data.frame(do.call(cbind, jointPosterior))
+
 
 str(jointPosteriorDF)
 
+
+
+#each row corresponds to a prior,
+#each column to a sample from the posterior
 
 
 minimaPlot <- ggplot()+geom_density(aes(x = minima))+
   theme_tufte(base_size = 10)+ggtitle("Minimal priors sufficient for posterior >.99")+xlab("minimal prior")+
   theme(plot.title.position = "plot")
 
+minimaPlot
+
 minimaGrob <- ggplotGrob(minimaPlot)
 
-alpha = .3
-size = .08
+
+
+
+jointPosteriorSubsample <- jointPosteriorDF[,1:300]
+
+jointPosteriorDF$ps <- ps
+jointPosteriorSubsample$ps <- ps
+
+jointPosteriorLong <- melt(jointPosteriorSubsample,
+                           id.vars = c("ps"))
+colnames(jointPosteriorLong) <- c("prior", "sample","probability")
+
+alpha = .4
+size = .3
+
+head(jointPosteriorLong)
+
+densitiesLinesPlot <- ggplot(jointPosteriorLong)+
+  geom_line(aes(x = prior, y = probability,group = sample),
+            alpha = alpha, linewidth = size)+
+  theme_tufte()+xlim(0,.2)
+
+
+densitiesLinesPlot
+
+
+
+
+
 densitiesLinesPlot <- ggplot()+geom_line(aes(x = prior, y = jointPosteriorDF[,1]), alpha = alpha, size = size)+
   geom_line(aes(x = prior, y = jointPosteriorDF[,2]), alpha = alpha, size = size)+
   geom_line(aes(x = prior, y = jointPosteriorDF[,3]), alpha = alpha, size = size)+
