@@ -1,0 +1,306 @@
+---
+title: "Second-order Probability, Accuracy and Weight of Evidence"
+author: "Rafal Urbaniak and Marcello Di Bello"
+date: "November 24, 2022"
+output:
+  pdf_document:
+    number_sections: true
+    df_print: kable 
+    keep_tex: true
+    toc: yes
+    includes:
+      in_header:
+        - Rafal_latex7.sty
+classoption: dvipsnames,enabledeprecatedfontcommands
+fontsize: 10pt
+documentclass: scrartcl
+urlcolor: blue
+bibliography: [../../references/referencesMRbook.bib]
+csl: [../../references/apa-6th-edition.csl]
+indent: true
+---
+
+
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(dagitty)
+library(rethinking)
+library(ggplot2)
+library(ggthemes)
+library(gridExtra)
+library(tidyr)
+library(philentropy)
+library(latex2exp)
+library(gridExtra)
+library(rethinking)
+library(bnlearn)
+library(gRain)
+library(reshape2)
+library(truncnorm)
+library(ggforce)
+
+ps <- seq(0,1, length.out = 1001)
+getwd()
+source("../scripts/CptCreate.R")
+source("../scripts/SCfunctions.R")
+
+SCprobsFinal <- readRDS("../datasets/SCprobsFinal.rds")
+attach(SCprobsFinal)      
+source("../scripts/SCplotCPTs.R")
+source("../scripts/SCplotDistros.R")
+```
+
+
+
+\vspace{2cm}
+
+\noindent \textbf{DISCLAIMER:} \textbf{This is a draft of work in progress, please do not cite or distribute without permission.}
+
+\thispagestyle{empty}
+
+\newpage
+
+\begin{quote} \textbf{Abstract.}  \todo{need to write one when done}
+
+\end{quote}
+
+\inbook{this is what a comment about what will go into book looks like; will be globally supressed when generating latex for the journal paper, don't worry about deleting them.}
+
+# Introduction
+
+<!---
+\textbf{M's comment: Nice exmaple and discussion. The only thing I would change (besides being clearer on certain stuff, see comments below) is make clear that we are after three strategies: precise probabilism (use precise probabilities for rando match probabilities), interval approach (senstivity analysys), and then higher-order approach. I think that sequence of moves should emerge from the discussion as it foreshadoes what is to come.)}
+--->
+
+
+```{r introStarts,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%", warning = FALSE}
+ps <- seq(0,1,length.out = 1001)
+
+hairMean <-  29/1148
+hairA <- 30
+hairB <- 1149
+
+dogMean <- 2/78
+dogA <- 3
+dogB <- 79
+
+lik0 <- hairMean * dogMean
+prior <- seq(0,.3, by = 0.001)
+priorH0 <- 1-prior
+denomin <- lik0 * priorH0 + prior
+num <-  lik0 * priorH0
+posterior <- 1- num/denomin
+threshold <- min(prior[posterior > .99])
+
+pointImpactPlot <- ggplot()+geom_line(aes(x = prior, y = posterior))+xlim(0,.07)+
+  theme_tufte(base_size = 10)+labs(title = "Prior vs. posterior, based on point estimates",
+                                   subtitle = "Joint evidence: dog & hair")+
+  geom_vline(xintercept = threshold, lty = 2, size =.5, alpha = .7)+
+  annotate(geom = "label", label = "posterior > .99", x = .067, y =.95, size = 2.5)+
+  theme(plot.title.position = "plot")
+```
+
+
+A defendant in a criminal case may face multiple 
+items of incriminating evidence whose strength 
+can at least  sometimes be assessed using probabilities. 
+For example, consider a murder case 
+in which the police recover trace 
+evidence that matches the defendant. Hair found at the crime 
+scene matches the defendant's hair (call this evidence \textsf{hair}).
+In addition, the defendant owns a dog whose 
+fur matches the dog fur found in a carpet wrapped around 
+one of the bodies (call this evidence \textsf{dog}).^[The hair evidence and the dog fur evidence are stylized after two items of  evidence in the notorious 1981 Wayne Williams case [@deadman1984fiber1; @deadman1984fiber2].] 
+The two matches suggest that the defendant (and the defendant's dog) 
+must be the source of the crime traces (call this hypothesis $\mathsf{source}$). But how strong is this evidence, really?  What are the fact-finders to make of it? 
+<!---Consider two different  items of match evidence:^[These are stylized after two items of  evidence in the notorious Wayne Williams case. Probabilities have been slightly but not unrealistically shifted to be closer to each other to make a conceptual point. The original probabilities were  1/100 for the dog fur, and 29/1148 for Wayne Williams' hair.]  The suspects dog's fur matches the dog fur found in a carpet wrapped around one of the bodies (\textsf{dog}). A hair found on one of the victims matches that of the suspect (\textsf{hair}). What are the fact-finders to make of this evidence? To start with, some probabilistic evaluation thereof should be useful. 
+--->
+
+The standard story among legal probabilists 
+goes something like this. To evaluate the strength of the two items of match evidence, we must find the value of the likelihood ratio:
+\[\frac{\pr{\s{dog}\wedge \s{hair} \vert \s{source}}}{\pr{\s{dog}\wedge \s{hair} \vert \neg \s{source}}}\]
+For simplicity, the numerator can be equated to one. 
+To fill in the denominator, an expert provides the relevant random match probabilities. Suppose the expert testifies that the probability of a random person's hair matching the reference sample is about `r round(hairMean,4)`, and the probability of a random dog's hair matching the reference sample happens to be about the same, `r round(dogMean,4)`.^[Probabilities have been slightly but not unrealistically modified to be closer to each other in order 
+to make a conceptual point. The original probabilities were  1/100 for the dog fur, and 29/1148 for Wayne Williams' hair. We modified the actual reported probabilities slightly to emphasize the point that we will elaborate further on: the same first-order probabilities, even when they sound precise, may come with different degrees of  second-order uncertainty.] 
+<!---result from various items of evidence connected to various levels of second-order uncertainty.--->
+<!---You assume that the probabilities of matches if the suspect (respectively, the suspect's dog) is the source is one, and that --->
+Presumably, the two matches are independent lines of evidence. In other words, their random match probabilities <!---of a match---> must be independent of each other conditional on <!---either truth value of---> the source hypothesis. <!---, namely that the defendant (or the defendant's dog) is the source of the hair (or dog fur) found at the scene --->  <!----and $\neg \mathsf{source}$).---> Then, to evaluate the overall impact of the evidence on the source hypothesis, you calculate: 
+\begin{align*}
+\pr{\s{dog}\wedge \s{hair} \vert \neg \s{source}} & = \pr{\s{dog} \vert \neg \s{source}} \times \pr{\s{hair} \vert \neg \s{source}} \\
+& =  `r hairMean` \times  `r dogMean` = `r hairMean * dogMean`
+\end{align*}
+This is a very low number. Two such random matches would be quite a coincidence. Following our advice from Chapter 5, the expert  facilitates your understanding  of how this low number should be interpreted. They show you how
+the  items of match evidence change the probability of the source hypothesis given a range of possible priors (Figure \ref{fig:impactOfPoint}).  The posterior of .99 is reached as soon as the prior is higher than  `r threshold`.^[These calculations assume that the probability of a match if the suspect and the suspect's dog are the sources is one.]
+While perhaps not sufficient for outright belief in the source hypothesis, the evidence seems extremely strong: a minor additional piece of evidence could make the case against the defendant overwhelming. 
+
+
+\begin{figure}[H]
+```{r impactOfPoint4,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "60%", warning = FALSE, message = FALSE}
+pointImpactPlot
+```
+\caption{Impact of dog fur and human hair evidence on the prior, point estimates.}
+\label{fig:impactOfPoint}
+\end{figure}
+
+Unfortunately, this  analysis 
+leaves out something crucial. You reflect on what you have been told and ask the expert: how can you know the random match probabilities with such precision? Shouldn't we also be mindful of the uncertainty that may affect these numbers? The expert agrees, and tells you that in fact the random match probability for the hair evidence  is based on 29 matches found in a database of size 1148, while the random match probability for the dog evidence is based on finding two matches in a reference database of size 78. 
+
+
+```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%"}
+#carpetSamples <- sample(ps, 1e4, replace = TRUE, prob = dbeta(ps, carpetA, carpetB))
+set.seed(231)
+hairSamples <- sample(ps, 1e4, replace = TRUE, prob = dbeta(ps, hairA, hairB))
+dogSamples <- sample(ps, 1e4, replace = TRUE, prob = dbeta(ps, dogA, dogB))
+
+#carpetHPDI <- HPDI(carpetSamples, prob  =.9)
+hairHPDI <- HPDI(hairSamples, prob  =.99)
+dogHPDI <- HPDI(dogSamples, prob  =.99)
+```
+
+```{r charitableImpact,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%"}
+lik0l <- .037 * .103
+denominL <- lik0l * priorH0 + prior
+numL <-  lik0l * priorH0
+posteriorL <- 1- numL/denominL
+thresholdL <- min(prior[posteriorL > .99])
+
+charitableImpactPlot <- ggplot()+geom_line(aes(x = prior, y = posteriorL))+xlim(0,.32)+
+  theme_tufte(base_size = 10)+labs(title = "Prior vs. posterior, charitable reading",
+                                   subtitle = "Joint evidence: dog & hair")+
+  geom_vline(xintercept = thresholdL, lty = 2, size =.5, alpha = .7)+
+  annotate(geom = "label", label = "posterior > .99", x = .305, y =.95, size = 2.5)+ylab(
+    "posterior"
+  )+
+  theme(plot.title.position = "plot")
+```
+
+
+The expert's answer makes apparent that the precise random match probabilities do not tell the whole story. Perhaps, the information about sample sizes is good enough  and now you know how to use the evidence properly.^[This is what, effectively, CITE TARONI seem to suggest when they insist the fact-finders should be simply given point estimates and information about the study set-up, such as sample size. As will transpire, we disagree.] But if you are like most human beings, you can't. What to do, then?  
+\todo{added this bit to draw attention to this aspect of the Taroni debate, to come back to this}
+
+You ask the expert for guidance:  what are reasonable ranges of the random match probabilities? What are the worst-case and best-case scenarios? The expert responds with 99% credible intervals---specifically, starting with uniform priors, the ranges of the random match probabilities are (.015,.037) for hair evidence and (.002, .103) for fur evidence.^[Roughly, the 99\% credible interval is the narrowest interval to which the expert thinks the true parameter belongs with probability .99. For a discussion of what credible intervals are, how they differ from confidence intervals, and why confidence intervals should not be used, see Chapter 3.] With this information, you redo your calculations using the upper bounds of the two intervals: $.037$ and $.103$. The rationale for choosing the upper bounds is that these numbers result in random match probabilities that are most favorable to the defendant. Your new calculation yields the following:
+\begin{align*}
+\mathsf{P}(\s{dog}\wedge \s{hair} \vert \neg \s{source})   & =  .037 \times .103 =.003811.
+\end{align*}
+ This number is around `r round(.003811/lik0,2)` times greater than the original estimate. Now the prior probability of the source hypothesis needs to be higher than `r thresholdL` for the posterior probability to be above .99 (Figure \ref{fig:impactOfCharitable}). So you are no longer convinced that the two items of match evidence are strongly incriminating.
+
+\begin{figure}[H]
+```{r fig:charitableImpact7,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "60%", warning = FALSE, message = FALSE}
+charitableImpactPlot
+```
+\caption{Impact of dog fur and human hair evidence on the prior, charitable reading.}
+\label{fig:impactOfCharitable}
+\end{figure}
+
+
+This result is puzzling.  Are the two items of match evidence strongly incriminating evidence (as you initially thought) or somewhat weaker (as the new calculation suggests)? For one thing,  using precise random match probabilities might be too unfavorable toward the defendant. On the other hand, your new assessment of the evidence based on the upper bounds might be too *favorable* toward them. Is there a middle way that avoids overestimating and underestimating the strength of the evidence?
+
+
+
+To see what this middle path looks like, 
+we should reconsider the calculations you just did. 
+You made an important blunder: you assumed that because the worst-case probability for one event is $x$ and the worst-case probability for another independent event is $y$, the worst-case probability  for their conjunction is  $xy$. But this conclusion does not follow if the margin of error (credible interval) is fixed. The intuitive reason is  simple: just because the probability of an extreme (or larger absolute) value $x$ for one variable $X$ is .01, and so it is for the value  $y$ of another independent variable $Y$, it does not follow that the probability that those two independent variables take values $x$ and $y$ simultaneously is the same. This probability is actually much smaller.  The interval presentation instead of doing us good led us into error. 
+
+
+In general, it is impossible to calculate the credible interval for the joint distribution based solely on the individual credible intervals corresponding to the individual events.  We need additional information: the distributions that were used to calculate the intervals for the probabilities of the individual events. In our example, if you additionally knew, for instance, that the expert used  beta distributions (as, arguably, they should in this context), you could in principle calculate the  99\% credible interval for the joint distribution. It usually will not be the same as whatever the results of multiplication of individual interval edges, and it is unlikely that a human fact-finder would be able to correctly run such calculations in their head even if they knew the functional form of the distributions used. ^[Also, in principle, in more complex contexts, we need  further information about how the items of evidence are related if we cannot take them to be independent.] So providing the fact-finder with individual intervals, even if further information about the distributions is provided, might easily mislead.^[Investigation of the  extent to which the individual interval presentation is misleading  would be an interesting psychological study.]
+\todo{Can you google to see if there is any such study?}
+
+
+As it turns out, given the reported sample sizes, the 99\% credible interval for the probability $\mathsf{P}(\s{dog}\wedge \s{hair} \vert \neg \s{source})$ is $(0.000023,  0.002760)$.
+<!-- ^[The 99\% credible interval (or a 99\% margin of error) is not the 99\% confidence interval known from classical statistics. There are various reasons not to use these, already discussed in Chapter 3. Another sense, in which we mean it here, is the range to which the true value belongs with posterior probability of 99\% given the evidence.  Normally we mean highest posterior density intervals, that is the narrowest intervals with this property.] -->
+\todo{the fn was repetitive, compare to fn 5}
+
+The upper bound of this interval would then require the prior probability of the source hypothesis to be above .215 for the posterior to be above .99. On this interpretation, the two items of match evidence are still not quite as strong as you initially thought, but stronger than what your second calculation indicated. 
+
+
+
+
+Still, the interval approach---even the corrected version just outlined---suffers from a more general problem. 
+Working with intervals might be useful if the underlying distributions are fairly symmetrical. But in our case, they might not be. For instance, Figure \ref{fig:densities} depicts beta densities for dog fur and human hair, together with sampling-approximated density for the joint evidence.  The distribution for the joint evidence is not symmetric. <!---, and so switching the margin of error moves the right edge of the interval much faster towards lower values.---> If you were only informed about the edges of the interval, you would be oblivious to the fact that the most likely value (and the bulk of the distribution, really) does not simply lie in the middle between the edges. Just because the parameter lies in an interval with some posterior probability, it does not mean that the ranges near the edges of the interval are equally likely---the bulk of the density might very well be closer to one of the edges. Therefore, only relying on the edges  can lead one to either overestimate or underestimate the probabilities at play. 
+This also means that---following our advice on how to illustrate the impact of evidence on prior probabilities---a better representation of the dependence of the posterior on the prior should comprise multiple possible sampled lines whose density mirrors the density around the probability of the evidence (Figure \ref{fig:lines}).
+
+
+```{r densitiesEvidence,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%"}
+
+jointEvidence <- dogSamples * hairSamples
+
+
+densities1Plot <- ggplot()+  
+  geom_line(aes(x = ps, y = dbeta(ps, hairA, hairB)), lty  = 2)+
+  geom_line(aes(x = ps, y = dbeta(ps, dogA, dogB)), lty = 3)+xlim(0,.15)+
+  xlab("probability")+
+  ylab("density")+
+  theme_tufte(base_size = 10)+
+  #  annotate(geom  = "label", label = "carpet", x =  0.045, y = 140)+
+  annotate(geom  = "label", label = "hair", x =  0.035, y = 80)+
+  annotate(geom  = "label", label = "dog", x =  0.06, y = 15)+
+  labs(title = "Conditional densities for  individual items of evidence if the source hypothesis is false")+
+  theme(plot.title.position = "plot")
+
+densities2Plot <- ggplot()+  
+  xlab("probability")+
+  ylab("density")+
+  theme_tufte(base_size = 10)+
+  geom_density(aes(x= jointEvidence))+
+  geom_vline(xintercept = 0.002760, lty = 2, linewidth = .5)+
+  geom_vline(xintercept = 0.000023, lty = 2, linewidth  = .5)+
+  geom_vline(xintercept = 0.000144, lty = 3, linewidth = .8)+
+  geom_vline(xintercept = 0.001742, lty = 3, linewidth  = .8)+
+  labs(title = "Conditional density for joint evidence", 
+       subtitle = "(with .99 and .9 HPDIs)")+
+  theme(plot.title.position = "plot")
+```
+
+
+
+\begin{figure}[H]
+```{r fig:densities,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "80%", warning = FALSE, message = FALSE}
+grid.arrange(densities1Plot,densities2Plot, ncol = 1 )
+```
+\caption{Beta densities for individual items of evidence and the resulting joint density with .99 and .9 highest posterior density intervals, assuming the sample sizes as discussed and independence, with uniform priors.}
+\label{fig:densities}
+\end{figure}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#  References {-}
