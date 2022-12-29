@@ -950,12 +950,12 @@ simplicity, assume that if \(H_p\) holds, the laboratory will surely
 report a match \(M\), so that \(\pr{M\vert H_p}=1\). The likelihood
 ratio, then, reduces to \(\nicefrac{1}{\pr{M \vert H_d}}\)---but given
 that \(\theta\) was estimated using density over its possible values, it
-is not clear how a single value \(\pr{M \vert H_d}\) is to be obtained
+is not obvious how a single value \(\pr{M \vert H_d}\) is to be obtained
 and whether its use in the reporting does not hide the uncertainty
 involved in the estimation of \(\theta\) under the carpet.
 
-Taroni et al. (2015) claim that the probability of the match evidence
-given the defense hypothesis should be calculated as follows:
+Taroni et al. (2015) claim that the point estimate for the match
+evidence given the defense hypothesis should be calculated as follows:
 \begin{align*}\pr{M \vert H_d} & = \int_{\theta} \pr{M\vert \theta} \pr{\theta}\,\, d\theta \\
 & =  \int_\theta  \theta \pr{\theta}\,\, d\theta
 \end{align*} In case of a DNA match, they recommend that the expert
@@ -1049,12 +1049,12 @@ this number to calculate the point estimate of the parameter, which is
 0.5.
 
 What is the probability mass function (PMF) for all possible outcomes of
-an observation of the same size? Two probabilities mass functions are
-initially relevant: first, the true probability mass based on the true
-parameter; second, the probability mass function based on the point
-estimate which is binomial around the point estimate. This latter PMF,
-however, does not take into account the uncertainty about the point
-estimate. To take this uncertainty seriously, we take a sampling
+an observation of the same size? Two PMF are initially relevant: first,
+the true probability mass based on the true parameter; second, the
+probability mass function based on the point estimate which is binomial
+around the point estimate. This latter PMF, however, does not take into
+account the uncertainty about the point estimate. To take this
+uncertainty seriously, continuing our example, we take a sample
 distribution of size 16 of possible parameter values from the posterior
 \(\s{beta}(1+\s{successes}, 1+\s{sample size} - \s{successes})\)
 distribution (we assume uniform prior for the sake of an example). Then,
@@ -1089,9 +1089,37 @@ point-estimate-based answer is 0.778, while the posterior predictive
 distribution yields 0.7051. More generally, we can use an
 information-theoretic measure, Kullback-Leibler divergence, to quantify
 how far the point-estimate PMF and the posterior predictive PMF are from
-the true PMF.\footnote{DEFINE Kullback-Leibler divergence.} In our
-particular case, the former distance is 0.7905638 and the latter is
-0.5681121.
+the true PMF.\^{}{[}A bit of explanation of this divergence measure.
+Suppose we are dealing with a variable \(X\) with \(n\) distinct
+possible discrete states \(x_1, \dots, x_n\) and consider two
+probability mass functions \(p\) and \(q\) which express uncertainty
+about the true value of \(X\) so that, say, on \(p\),
+\(\pr(X=x_i)=p_i\). First, the uncertainty of a given distribution
+\(p\), its \textbf{entropy}, is given by the sum of the logarithms of
+surprise \(\nicefrac{1}{p_i}\) for all the possible values,
+\(H(p) = \sum x_i \log \frac{1}{p_i} = - \sum p_i \log p_i\). Next,
+suppose events arise according to \(p\), but we predict them using
+\(q\). The \textbf{cross-entropy} is then\\
+\$ \mathsf{H}(p, q) \& = \sum p\_i \log\_(q\_i)\$. This value is going
+to be higher than the entropy of \(p\) if \(q\) is different from it.
+Think of it as the uncertainty involved in using \(q\) to predict events
+that arise according to \(p\).
+
+Third, \textbf{Kullback-Leibler} divergence is the additional entropy
+introduced by using \(q\) instead of \(p\) itself, that is, the
+difference between cross-entropy and entropy: \begin{align*}
+\mathsf{DKL}(p, q) & = H(p, q) - H(p)\\
+&= - \sum p_i \log q_i   - \left(   - \sum p_i \log p_i \right) \\
+& = - \sum p_i\left( \log q_i - \log p_i\right)\\
+& =  \sum p_i\left( \log p_i - \log q_i\right)\\
+& = \sum p_i \log \left( \frac{p_i}{q_i}\right)
+\end{align*} \noindent  As it turns out, KL divergence is also the
+expected difference in log probabilities. In particular, if \(p=q\) we
+get \(DKL(p,p) = \sum p_i (\log_2 p_i - \log_2 p_i) = 0\), which works
+out as it intuitively should be.{]}
+
+In our particular case, the former distance is 0.7905638 and the latter
+is 0.5681121.
 
 This result can be generalized. We repeat the simulation 1000 times,
 each time with a new true parameter, a new sample size, and a new
@@ -1115,7 +1143,7 @@ systematically worse than the posterior predictive distribution.
 \end{figure}
 
 \hypertarget{conceptual-issues}{%
-\subsection{Conceptual Issues}\label{conceptual-issues}}
+\subsection{Conceptual issues}\label{conceptual-issues}}
 
 Accuracy considerations aside, we will now engage with the more
 conceptual points. Taroni et al. (2015) argue that since first-order

@@ -660,19 +660,15 @@ One can, in fact, have probabilities for events, or probabilities for propositio
 Nothing so far should be controversial. However, the question arises of how the expert should report their own uncertainty about $\theta$, especially in the light of the usual practice of reporting likelihood ratios.
 
 To fix the notation, let the prosecution hypothesis $H_p$ be that the suspect is the source of the trace, and the defense hypothesis $H_d$ that another person, unrelated to the suspect, is the source. For simplicity, assume that if $H_p$ holds, the laboratory will surely report a match $M$, so that $\pr{M\vert H_p}=1$. 
-The likelihood ratio, then,  reduces to $\nicefrac{1}{\pr{M \vert H_d}}$---but given that $\theta$ was estimated using density over its possible values, it is not clear how a single value $\pr{M \vert H_d}$ is to be obtained and whether its use in the reporting does not hide the uncertainty involved in the estimation of $\theta$ under the carpet. 
+The likelihood ratio, then,  reduces to $\nicefrac{1}{\pr{M \vert H_d}}$---but given that $\theta$ was estimated using density over its possible values, it is not obvious how a single value $\pr{M \vert H_d}$ is to be obtained and whether its use in the reporting does not hide the uncertainty involved in the estimation of $\theta$ under the carpet. 
 
 
-@Taroni2015Dismissal claim  that the probability of the match evidence given the defense hypothesis should be calculated as follows:
+@Taroni2015Dismissal claim  that the point estimate for the match evidence given the defense hypothesis should be calculated as follows:
 \begin{align*}\pr{M \vert H_d} & = \int_{\theta} \pr{M\vert \theta} \pr{\theta}\,\, d\theta \\
 & =  \int_\theta  \theta \pr{\theta}\,\, d\theta
 \end{align*}
 In case of a DNA match, they recommend that the expert report the expected value of the $\s{beta}$ distribution, which reduces to $\nicefrac{\alpha + s + 1}{\alpha + \beta +n + 1}$. They claim that this number satisfactorily expresses the posterior uncertainty about $\theta$. For them, it is this probability alone that should be used in the denominator in the calculation and reporting of the likelihood ratio. 
 
-
-
-<!---This criticism has been countered by  @Sjerps2015Uncertainty. One point they raise is that the distinction between states of nature which can be estimated and mental attitudes which are purely subjective and cannot be in any meaningful way estimated is a bit too hasty. Once the background information, the priors, the hypotheses and the evidence are specified, the higher-order uncertainty about $\theta$ follows from the probability calculus, and it is by no means arbitrary to what extent various potential values of $\theta$ are supported by the evidence. 
---->
 
 @Sjerps2015Uncertainty disagree. In reporting a single value, the expert would refrain from providing the fact-finders with relevant information  that can make a difference in the proper evaluation of the evidence.  There is a difference between (a) an expert who is certain $\theta$ is $.1$; (b) an expert whose best estimate of $\theta$ is $.1$ based on thousands of observations; and (c) an expert whose best estimate of $\theta$ is again $.1$ but based on only ten observations. 
 
@@ -764,7 +760,26 @@ grid.arrange(testPlot,pointPlot,samplesPlot,posteriorPlot, ncol = 1)
 \label{fig:posteriorPrediction}
 \end{figure}
 
-The PMF based on a point estimate is further off from the real PMF than the posterior predictive distribution. For instance, if we ask about the probability of the outcome being at least 9 successes, the true answer is `r mean(testPredictions >= 9)`, the point estimate PMF tells us it is `r mean(pointPredictions >= 9 )`, while the posterior predictive distribution gives a somewhat better guess at `r mean(posteriorPredictions >= 9 )`. A similar thing happens when we ask about the probability of the outcome being at most 9 successes. The true answer is `r mean(testPredictions <= 9)`, the point-estimate-based answer is `r mean(pointPredictions <= 9 )`, while the posterior predictive distribution yields  `r mean(posteriorPredictions <= 9 )`. More generally, we can use an information-theoretic measure, Kullback-Leibler divergence,  to quantify how far the point-estimate PMF and the posterior predictive PMF are from the true PMF.^[DEFINE Kullback-Leibler divergence.] In our particular case, the former distance is `r kld(testProbs,pointProbs)` and the latter is `r kld(testProbs,posteriorProbs)`. <!---That is, the posterior predictive distribution is information-theoretically closer to the true distribution.--->
+The PMF based on a point estimate is further off from the real PMF than the posterior predictive distribution. For instance, if we ask about the probability of the outcome being at least 9 successes, the true answer is `r mean(testPredictions >= 9)`, the point estimate PMF tells us it is `r mean(pointPredictions >= 9 )`, while the posterior predictive distribution gives a somewhat better guess at `r mean(posteriorPredictions >= 9 )`. A similar thing happens when we ask about the probability of the outcome being at most 9 successes. The true answer is `r mean(testPredictions <= 9)`, the point-estimate-based answer is `r mean(pointPredictions <= 9 )`, while the posterior predictive distribution yields  `r mean(posteriorPredictions <= 9 )`. More generally, we can use an information-theoretic measure, Kullback-Leibler divergence,  to quantify how far the point-estimate PMF and the posterior predictive PMF are from the true PMF.^[A bit of explanation of this divergence measure. Suppose we are dealing with a variable $X$ with $n$ distinct possible discrete states $x_1, \dots, x_n$ and consider two probability mass functions $p$ and $q$ which express uncertainty about the true value of $X$ so that, say, on $p$, $\pr(X=x_i)=p_i$. First, the uncertainty of a given distribution $p$, its **entropy**, is given by the sum of the logarithms of surprise $\nicefrac{1}{p_i}$ for all the possible values,  $H(p) = \sum x_i \log \frac{1}{p_i} = - \sum p_i \log p_i$.  Next, suppose events arise according to $p$, but we predict them
+using $q$. The **cross-entropy**  is then  
+$ \mathsf{H}(p, q) & = \sum p_i \log_(q_i)$. This value is going to be higher than the entropy of $p$ if $q$ is different from it. Think of it as the uncertainty involved in using $q$ to predict events that arise according to $p$. 
+
+Third, **Kullback-Leibler**  divergence is the additional entropy introduced by
+using $q$ instead of $p$ itself, that is, the difference between cross-entropy and entropy:
+\begin{align*}
+\mathsf{DKL}(p, q) & = H(p, q) - H(p)\\
+&= - \sum p_i \log q_i   - \left(   - \sum p_i \log p_i \right) \\
+& = - \sum p_i\left( \log q_i - \log p_i\right)\\
+& =  \sum p_i\left( \log p_i - \log q_i\right)\\
+& = \sum p_i \log \left( \frac{p_i}{q_i}\right)
+\end{align*} \noindent  As it turns out, KL divergence is also the expected
+difference in log probabilities. In particular, if
+\(p=q\) we get
+\(DKL(p,p) = \sum p_i (\log_2 p_i - \log_2 p_i) = 0\),
+which works out as it intuitively should be.]
+
+
+ In our particular case, the former distance is `r kld(testProbs,pointProbs)` and the latter is `r kld(testProbs,posteriorProbs)`. <!---That is, the posterior predictive distribution is information-theoretically closer to the true distribution.--->
 
 ```{r kldsCalculations,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%"}
 klds <- numeric(1000)
