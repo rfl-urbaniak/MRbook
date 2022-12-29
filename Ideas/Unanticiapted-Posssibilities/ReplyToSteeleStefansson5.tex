@@ -374,13 +374,33 @@ provides a simple recipe to do that. It also coheres with the
 conservative spirit of Bayesian conditionalization which preserves the
 old probability distribution conditional on what is learned.
 
-Unfortunately, Reverse Bayesianism is not without complications. Steele
-\& Stefánsson (2021) argue that it faces insurmountable difficulties.
-Their argument rests on a number of ingenious counterexamples. We share
-Steele and Stefánsson's skepticism toward Reverse Bayesianism, but also
-believe that their counterexamples have limited applicability
+Unfortunately, the conservative spirit of Reverse Bayesianism does not
+deliver the intuitive results in all cases. There is no shortage of
+counterexamples against it in the recent philosophical literature
+(Mathani, 2020; Steele \& Stefánsson, 2021). In addition, attempts to
+extent traditional arguments in defense of Bayesian conditionalization
+to the case of awareness growth seem to hold little promise (Pettigrew,
+forthcoming). If the consensus in the literature is that Reverse
+Bayesianism is not the right theory of awareness growth, the open
+question is, what theory (if any) should replace it?
+
+Here we offer a diagnosis of what is wrong with Reverse Bayesianism and
+outline an alternative proposal. The problem of awareness growth---we
+hold---cannot be tackled in an algorithmic manner because subject-matter
+assumptions, both probabilistic and structural, need to be made
+explicit. So any theory of awareness growth cannot be a purely formal
+theory. This does not mean, however, we should give up on probability
+theory altogether in this context. Thanks to its ability to express
+probabilistic dependencies, we think that the theory of Bayesian
+networks can help to model awareness growth in the Bayesian framework.
+We offer a number of illustrations of this claim
+(\S~\ref{sec:structural-both}).
+
+We share Steele and Stefánsson's skepticism toward Reverse Bayesianism,
+but also believe that their counterexamples have limited applicability
 (\S ~\ref{sec:counterexamples}). To remedy that, we provide a simpler
 counterexample that is less prone to objections (\S ~\ref{sec:better}).
+
 At the same time, we conjecture that the problem of awareness growth
 cannot be tackled in an algorithmic manner because subject-matter
 assumptions, both probabilistic and structural, need to be made
@@ -388,6 +408,170 @@ explicit. Thanks to its ability to express probabilistic dependencies,
 we think that the theory of Bayesian networks can help to model
 awareness growth in the Bayesian framework. We offer two illustrations
 of this claim (\S~\ref{sec:structural-both}).
+
+\hypertarget{lighting}{%
+\subsection{Lighting}\label{lighting}}
+
+\label{sec:better}
+
+Although there is no shortage of counterexamples to Reverser
+Bayesianism, we begin with our own. This will allow to underscore the
+role of structural assumption in theorizing about awareness growth.
+Consider the following scenario:
+
+\begin{quote}
+\textsc{Lighting:} You have evidence that favors a certain hypothesis, say a witness 
+saw the defendant around the crime scene. You give some weight to this evidence. 
+In your assessment, that the defendant was seen around the crime scene raises 
+the probability that the defendant was actually there. But now you wonder, what if it was dark when the witness saw the defendant? The question then arises whether (and if so how) you should change the probability that you assigned to the hypothesis that the defendant was around the crime scene in light of your realization that it could have been dark.
+\end{quote}
+
+In this scenario, you do not learn anything specific. You do not learn
+that the lighting condition were bad or that they were good. You simply
+wonder about them. So there is no Bayesian updating in the strict sense,
+although clearly some new information has been added, namely that
+lighting conditions could affect one's sensory experience.\footnote{HERE
+  EXPLAIN DIFFERENCE WITH STEELE AND STEFANSSON. The process of
+  awareness growth in \textsc{Lighting} adds only one extra variable,
+  lighting conditions, while \textsc{Movies} adds two extra variables,
+  language difficulty and whether the owner is simple-minded or not.
+  Further, \textsc{Movies} contains a clear-cut case of learning, that
+  the owner \emph{is} simple-minded. This is not so in
+  \textsc{Lighting}. Strictly speaking, you are learning that it is
+  \emph{possible} that the lighting conditions were bad. However, you
+  are not conditioning on the proposition `the lighting conditions were
+  bad' or `the lighting conditions were good'. So you are not learning
+  about the lighting conditions in the sense in which learning is
+  understood in this paper.}
+
+It is not clear what one should do in this scenario, so we are looking
+for a theory that could give us appropriate guidance. We rely on the
+theory of Bayesian networks and shows that this scenario challenges
+Reverse Bayesianism.
+
+A Bayesian network is compact formalism to represent probabilistic
+dependencies. A Bayesian network consists of a direct acyclic graph
+(DAG) accompanied by a probability distribution. The nodes in the graph
+represent random variables that can take different values. We will use
+`nodes' and `variables' interchangeably. The nodes are connected by
+arrows, but no loops are allowed, hence the name direct acyclic graph.
+Bayesian networks are relied upon in many fields, but have been rarely
+deployed to model awareness growth (the exception is Williamson (2003)).
+We think instead they are a good framework for this purpose. Awareness
+growth can be modeled as a change in the graphical network---nodes and
+arrows are added or erased---as well as a change in the probability
+distribution from the old to the new network.
+
+To model \textsc{Lighting} with Bayesian networks, we start with this
+graph, which is the usual hypothesis-evidence idiom:
+
+\begin{center}\includegraphics[width=0.5\linewidth,height=0.5\textheight]{ReplyToSteeleStefansson5_files/figure-latex/heDAG-1} \end{center}
+
+\noindent where \(H\) is the hypothesis node and \(E\) the evidence
+node. If an arrow goes from \(H\) to \(E\), the probability distribution
+associated with the Bayesian network should be defined by the prior
+probabilities for all the states of \(H\), and conditional probabilities
+of the form \(\pr{E=e \vert H=h}\), where uppercase letters represent
+the variables (nodes) and lower case letters represent the values of
+these variables.\footnote{A major point of contention in the
+  interpretation of Bayesian networks is is the meaning of the directed
+  arrows. They could be interpreted causally---as though the direction
+  of causality proceeds from the events described by the hypothesis to
+  event described by the evidence---but they need not be; see footnote
+  \ref{footnote:causation}.} Since you trust the evidence, you think
+that the evidence is more likely under the hypothesis that the defendant
+was present at the crime scene than under the alternative hypothesis:
+\[\pr{\textit{E=seen} \vert \textit{H=present}} > \pr{\textit{E=seen} \vert \textit{H=absent}}\]
+The inequality is a qualitative ordering of how plausible the evidence
+is in light of competing hypotheses. No matter the numbers, by the
+probability calculus, it follows that the evidence raises the
+probability of the hypothesis \textit{H=present}.
+
+Now, as you wonder about the lighting conditions, the graph should be
+amended:
+
+\begin{center}\includegraphics[width=0.5\linewidth,height=0.3\textheight]{ReplyToSteeleStefansson5_files/figure-latex/lighting2DAG-1} \end{center}
+
+\noindent where the node \(L\) can have two values, \textit{L=good} and
+\textit{L=bad}. A plausible way to update your assessment of the
+evidence is as follows:
+\[\ppr{+}{\textit{E=seen} \vert \textit{H=present} \wedge \textit{L=good}} > \ppr{+}{\textit{E=seen} \vert \textit{H=absent} \wedge \textit{L=good}}\]
+\[\ppr{+}{\textit{E=seen} \vert \textit{H=present} \wedge \textit{bad}} = \ppr{+}{\textit{E=seen} \vert \textit{H=absent} \wedge \textit{L=bad}}\]
+
+\noindent Here is what you are thinking: if the lighting conditions were
+good, you should still trust the evidence like you did before (first
+line). But if the lighting conditions were bad, you should regard the
+evidence as no better than chance (second line).
+
+Should you now assess the evidence at your disposal---that the witness
+saw the defendant at the crime scene---any differently than you did
+before? The evidence would have the same value if the likelihood ratios
+associated with it relative to the competing hypotheses were the same
+before and after awareness growth:
+\[\frac{\pr{E=e \vert H=h}}{\pr{E=e \vert H=h'}}= \frac{\ppr{+}{E=e \vert H=h}}{\ppr{+}{E=e \vert H=h'}} \tag{C}.\]
+In changing the probability function from \(\pr{}\) to \(\ppr{+}{}\), it
+would be quite a coincidence if (C) were true. In our example, many
+possible probability assignments violate this equality. If before
+awareness growth you thought the evidence favored the hypothesis
+\textit{H=present} to some extent, after the growth in awareness, the
+evidence is likely to appear less strong.\footnote{By the law of total
+  probability, the right hand side of the equality in (C) should be
+  expanded, as follows:
+  \[\frac{\ppr{+}{E=e \vert H=h}}{\ppr{+}{E=e \vert H=h'}}=\frac{\ppr{+}{\textit{E=seen} \wedge \textit{L=good} \vert \textit{H=present}}+\ppr{+}{\textit{E=seen} \wedge \textit{L=bad} \vert \textit{H=present}}}{\ppr{+}{\textit{E=seen} \wedge \textit{L=good} \vert \textit{H=absent}}+\ppr{+}{\textit{E=seen} \wedge \textit{L=bad} \vert \textit{H=absent}}}.\]
+  For concreteness, let's use some numbers:
+  \[\pr{\textit{E=seen} \vert \textit{H=present}}=\ppr{+}{\textit{E=seen} \vert \textit{H=present} \wedge \textit{L=good}}=.8\]
+  \[\pr{\textit{E=seen} \vert \textit{H=absent}}=\ppr{+}{\textit{E=seen} \vert \textit{H=absent} \wedge \textit{L=good}}=.4\]
+  \[\ppr{+}{\textit{E=seen} \vert \textit{H=present} \wedge \textit{L=bad}} = \ppr{+}{\textit{E=seen} \vert \textit{H=absent} \wedge \textit{L=bad}}=.5.\]
+  \[\ppr{+}{\textit{L=bad}} = \ppr{+}{\textit{L=good}}=.5.\] So the
+  ratio
+  \(\frac{\pr{\textit{E=seen} \vert \textit{H=present}}}{\pr{\textit{E=seen} \vert \textit{H=absent}}}\)
+  equals \(2\). After the growth in awareness, the ratio
+  \(\frac{\ppr{+}{\textit{E=seen} \vert \textit{H=present}}}{\ppr{+}{\textit{E=seen} \vert \textit{H=absent}}}\)
+  will drop to \(\frac{.65}{.45}\approx 1.44\). The calculations here
+  rely on the dependency structure encoded in the Bayesian network (see
+  starred step below). \begin{align*}
+  \ppr{+}{\textit{E=seen} \vert \textit{H=present}} &= \ppr{+}{\textit{E=seen} \wedge \textit{L=good} \vert \textit{H=present}}+\ppr{+}{\textit{E=seen} \wedge \textit{L=bad} \vert \textit{H=present}}\\
+  &= \ppr{+}{\textit{E=seen} \vert \textit{H=present} \wedge \textit{L=good}}  \times \ppr{+}{\textit{L=good} \vert  \textit{H=present} }\\ & +\ppr{+}{\textit{E=seen}  \vert \textit{H=present} \wedge \textit{L=bad}} \times \ppr{+}{\textit{L=bad} \vert  \textit{H=present}}\\
+  &=^* \ppr{+}{\textit{E=seen} \vert \textit{H=present} \wedge \textit{L=good}}  \times \ppr{+}{\textit{L=good}}\\ & +\ppr{+}{\textit{E=seen}  \vert \textit{H=present} \wedge \textit{L=bad}} \times \ppr{+}{\textit{L=bad}}\\
+  &= .8 \times .5 +.5 *.5 = .65 
+  \end{align*} \begin{align*}
+  \ppr{+}{\textit{E=seen} \vert \textit{H=absent}} &= \ppr{+}{\textit{E=seen} \wedge \textit{L=good} \vert \textit{H=absent}}+\ppr{+}{\textit{E=seen} \wedge \textit{L=bad} \vert \textit{H=absent}}\\
+  &= \ppr{+}{\textit{E=seen} \vert \textit{H=absent} \wedge \textit{L=good}}  \times \ppr{+}{\textit{L=good} \vert  \textit{H=absent} }\\ & +\ppr{+}{\textit{E=seen}  \vert \textit{H=absent} \wedge \textit{L=bad}} \times \ppr{+}{\textit{L=bad} \vert  \textit{H=absent}}\\
+  &=^* \ppr{+}{\textit{E=seen} \vert \textit{H=absent} \wedge \textit{L=good}}  \times \ppr{+}{\textit{L=good}}\\ & +\ppr{+}{\textit{E=seen}  \vert \textit{H=absent} \wedge \textit{L=bad}} \times \ppr{+}{\textit{L=bad}}\\
+  &= .4 \times .5 +.5 *.5 = .45 
+  \end{align*} This argument can be repeated with many other numerical
+  assignments.}
+
+Why does this matter? We have seen that, after awareness growth, you
+should typically regard the evidence \textit{E=seen} as one that favors
+\textit{H=present} less strongly. Since the prior probability of the
+hypothesis should be the same before and after awareness growth, it
+follows that
+\[\ppr{+}{\textit{H=present} \vert \textit{E=seen}} \neq \pr{\textit{H=present} \vert \textit{E=seen}}.\]
+This outcome violates Awareness Rigidity which, in cases of refinement,
+requires that the probability of basic propositions stay
+fixed.\footnote{Awareness Rigidity requires that
+  \(\ppr{+}{A \vert T^*}=\pr{A}\), where \(T^*\) corresponds to a
+  proposition that picks out, from the vantage point of the new
+  awareness state, the entire possibility space before the episode of
+  awareness growth. But, in cases of refinement, \(T^*\) does not
+  change, so in such cases, Awareness Rigidity requires
+  \(\ppr{+}{A}=\pr{A}\).}
+
+Reverse Bayesianism is also violated. For example, the ratio of the
+probabilities of \textit{H=present} to \textit{E=seen}, before and after
+awareness growth, has changed:
+\[\frac{\ppr{\textit{E=seen}}{\textit{H=present}}}{\ppr{ \textit{E=seen}}{\textit{E=seen}}} \neq \frac{\ppr{+, \textit{E=seen}}{\textit{H=present}}}{\ppr{+, \textit{E=seen}}{\textit{E=seen}}},\]
+where \(\ppr{\textit{E=seen}}{}\) and \(\ppr{+, \textit{E=seen}}{}\)
+represent the agent's degrees of belief, before and after awareness
+growth, updated by the evidence \(\textit{E=seen}\).
+
+Unlike \textsc{Movies}, the counterexample \textsc{Lighting} works even
+though it only depicts a case of awareness growth that consists in
+refinement without learning. Defenders of Reverse Bayesianism and
+Awareness Rigidity can no longer claim that their theories work when
+awareness growth is not intertwined with learning. So, Steele and
+Stefánsson's critique of these theories sits now on a firmer ground.
 
 \hypertarget{counterexamples}{%
 \section{Counterexamples}\label{counterexamples}}
@@ -553,171 +737,6 @@ expansion---\textsc{Friends}---did not challenge Reverse Bayesianism
 insofar as the latter is formulated in terms of its close cousin,
 Awareness Rigidity. So the force of Steele and Stefánsson's
 counterexamples would be rather limited.
-
-\hypertarget{lighting}{%
-\subsection{Lighting}\label{lighting}}
-
-\label{sec:better}
-
-We claim there is a more straightforward counterexample that only
-depicts mere refinement without an episode of learning and that still
-challenges Reverse Bayesianism and Awareness Rigidity. To see that this
-is indeed the case, we propose to consider the following scenario:
-
-\begin{quote}
-\textsc{Lighting:} You have evidence that favors a certain hypothesis,
-say a witness saw the defendant around the crime scene. You give some
-weight to this evidence. In your assessment, that the defendant was seen
-around the crime scene raises the probability that the defendant was
-actually there. But now you wonder, what if it was dark when the witness
-saw the defendant? You cannot learn about the actual lighting
-conditions, but the mere realization that it \textit{could} have been
-dark makes you lower the probability that the defendant was actually
-there.
-\end{quote}
-
-\doublespace
-
-\noindent This scenario is simpler because it consists of mere
-refinement. You wonder about the lighting conditions but you do not
-learn what they were.\footnote{The process of awareness growth in
-  \textsc{Lighting} adds only one extra variable, lighting conditions,
-  while \textsc{Movies} adds two extra variables, language difficulty
-  and whether the owner is simple-minded or not. Further,
-  \textsc{Movies} contains a clear-cut case of learning, that the owner
-  \emph{is} simple-minded. This is not so in \textsc{Lighting}. Strictly
-  speaking, you are learning that it is \emph{possible} that the
-  lighting conditions were bad. However, you are not conditioning on the
-  proposition `the lighting conditions were bad' or `the lighting
-  conditions were good'. So you are not learning about the lighting
-  conditions in the sense in which learning is understood in this paper.}
-Still, mere refinement in this scenario challenges Reverse Bayesianism
-and Awareness Rigidity. That this should be so is not easy to see. We
-rely on the theory of Bayesian networks to see why.
-
-A Bayesian network is compact formalism to represent probabilistic
-dependencies. A Bayesian network consists of a direct acyclic graph
-(DAG) accompanied by a probability distribution. The nodes in the graph
-represent random variables that can take different values. We will use
-`nodes' and `variables' interchangeably. The nodes are connected by
-arrows, but no loops are allowed, hence the name direct acyclic graph.
-Bayesian networks are relied upon in many fields, but have been rarely
-deployed to model awareness growth (the exception is Williamson (2003)).
-We think instead they are a good framework for this purpose. Awareness
-growth can be modeled as a change in the graphical network---nodes and
-arrows are added or erased---as well as a change in the probability
-distribution from the old to the new network.
-
-To model \textsc{Lighting} with Bayesian networks, we start with this
-graph, which is the usual hypothesis-evidence idiom:
-
-\begin{center}\includegraphics[width=0.5\linewidth,height=0.5\textheight]{ReplyToSteeleStefansson5_files/figure-latex/heDAG-1} \end{center}
-
-\noindent where \(H\) is the hypothesis node and \(E\) the evidence
-node. If an arrow goes from \(H\) to \(E\), the probability distribution
-associated with the Bayesian network should be defined by the prior
-probabilities for all the states of \(H\), and conditional probabilities
-of the form \(\pr{E=e \vert H=h}\), where uppercase letters represent
-the variables (nodes) and lower case letters represent the values of
-these variables.\footnote{A major point of contention in the
-  interpretation of Bayesian networks is is the meaning of the directed
-  arrows. They could be interpreted causally---as though the direction
-  of causality proceeds from the events described by the hypothesis to
-  event described by the evidence---but they need not be; see footnote
-  \ref{footnote:causation}.} Since you trust the evidence, you think
-that the evidence is more likely under the hypothesis that the defendant
-was present at the crime scene than under the alternative hypothesis:
-\[\pr{\textit{E=seen} \vert \textit{H=present}} > \pr{\textit{E=seen} \vert \textit{H=absent}}\]
-The inequality is a qualitative ordering of how plausible the evidence
-is in light of competing hypotheses. No matter the numbers, by the
-probability calculus, it follows that the evidence raises the
-probability of the hypothesis \textit{H=present}.
-
-Now, as you wonder about the lighting conditions, the graph should be
-amended:
-
-\begin{center}\includegraphics[width=0.5\linewidth,height=0.3\textheight]{ReplyToSteeleStefansson5_files/figure-latex/lighting2DAG-1} \end{center}
-
-\noindent where the node \(L\) can have two values, \textit{L=good} and
-\textit{L=bad}. A plausible way to update your assessment of the
-evidence is as follows:
-\[\ppr{+}{\textit{E=seen} \vert \textit{H=present} \wedge \textit{L=good}} > \ppr{+}{\textit{E=seen} \vert \textit{H=absent} \wedge \textit{L=good}}\]
-\[\ppr{+}{\textit{E=seen} \vert \textit{H=present} \wedge \textit{bad}} = \ppr{+}{\textit{E=seen} \vert \textit{H=absent} \wedge \textit{L=bad}}\]
-
-\noindent Here is what you are thinking: if the lighting conditions were
-good, you should still trust the evidence like you did before (first
-line). But if the lighting conditions were bad, you should regard the
-evidence as no better than chance (second line).
-
-Should you now assess the evidence at your disposal---that the witness
-saw the defendant at the crime scene---any differently than you did
-before? The evidence would have the same value if the likelihood ratios
-associated with it relative to the competing hypotheses were the same
-before and after awareness growth:
-\[\frac{\pr{E=e \vert H=h}}{\pr{E=e \vert H=h'}}= \frac{\ppr{+}{E=e \vert H=h}}{\ppr{+}{E=e \vert H=h'}} \tag{C}.\]
-In changing the probability function from \(\pr{}\) to \(\ppr{+}{}\), it
-would be quite a coincidence if (C) were true. In our example, many
-possible probability assignments violate this equality. If before
-awareness growth you thought the evidence favored the hypothesis
-\textit{H=present} to some extent, after the growth in awareness, the
-evidence is likely to appear less strong.\footnote{By the law of total
-  probability, the right hand side of the equality in (C) should be
-  expanded, as follows:
-  \[\frac{\ppr{+}{E=e \vert H=h}}{\ppr{+}{E=e \vert H=h'}}=\frac{\ppr{+}{\textit{E=seen} \wedge \textit{L=good} \vert \textit{H=present}}+\ppr{+}{\textit{E=seen} \wedge \textit{L=bad} \vert \textit{H=present}}}{\ppr{+}{\textit{E=seen} \wedge \textit{L=good} \vert \textit{H=absent}}+\ppr{+}{\textit{E=seen} \wedge \textit{L=bad} \vert \textit{H=absent}}}.\]
-  For concreteness, let's use some numbers:
-  \[\pr{\textit{E=seen} \vert \textit{H=present}}=\ppr{+}{\textit{E=seen} \vert \textit{H=present} \wedge \textit{L=good}}=.8\]
-  \[\pr{\textit{E=seen} \vert \textit{H=absent}}=\ppr{+}{\textit{E=seen} \vert \textit{H=absent} \wedge \textit{L=good}}=.4\]
-  \[\ppr{+}{\textit{E=seen} \vert \textit{H=present} \wedge \textit{L=bad}} = \ppr{+}{\textit{E=seen} \vert \textit{H=absent} \wedge \textit{L=bad}}=.5.\]
-  \[\ppr{+}{\textit{L=bad}} = \ppr{+}{\textit{L=good}}=.5.\] So the
-  ratio
-  \(\frac{\pr{\textit{E=seen} \vert \textit{H=present}}}{\pr{\textit{E=seen} \vert \textit{H=absent}}}\)
-  equals \(2\). After the growth in awareness, the ratio
-  \(\frac{\ppr{+}{\textit{E=seen} \vert \textit{H=present}}}{\ppr{+}{\textit{E=seen} \vert \textit{H=absent}}}\)
-  will drop to \(\frac{.65}{.45}\approx 1.44\). The calculations here
-  rely on the dependency structure encoded in the Bayesian network (see
-  starred step below). \begin{align*}
-  \ppr{+}{\textit{E=seen} \vert \textit{H=present}} &= \ppr{+}{\textit{E=seen} \wedge \textit{L=good} \vert \textit{H=present}}+\ppr{+}{\textit{E=seen} \wedge \textit{L=bad} \vert \textit{H=present}}\\
-  &= \ppr{+}{\textit{E=seen} \vert \textit{H=present} \wedge \textit{L=good}}  \times \ppr{+}{\textit{L=good} \vert  \textit{H=present} }\\ & +\ppr{+}{\textit{E=seen}  \vert \textit{H=present} \wedge \textit{L=bad}} \times \ppr{+}{\textit{L=bad} \vert  \textit{H=present}}\\
-  &=^* \ppr{+}{\textit{E=seen} \vert \textit{H=present} \wedge \textit{L=good}}  \times \ppr{+}{\textit{L=good}}\\ & +\ppr{+}{\textit{E=seen}  \vert \textit{H=present} \wedge \textit{L=bad}} \times \ppr{+}{\textit{L=bad}}\\
-  &= .8 \times .5 +.5 *.5 = .65 
-  \end{align*} \begin{align*}
-  \ppr{+}{\textit{E=seen} \vert \textit{H=absent}} &= \ppr{+}{\textit{E=seen} \wedge \textit{L=good} \vert \textit{H=absent}}+\ppr{+}{\textit{E=seen} \wedge \textit{L=bad} \vert \textit{H=absent}}\\
-  &= \ppr{+}{\textit{E=seen} \vert \textit{H=absent} \wedge \textit{L=good}}  \times \ppr{+}{\textit{L=good} \vert  \textit{H=absent} }\\ & +\ppr{+}{\textit{E=seen}  \vert \textit{H=absent} \wedge \textit{L=bad}} \times \ppr{+}{\textit{L=bad} \vert  \textit{H=absent}}\\
-  &=^* \ppr{+}{\textit{E=seen} \vert \textit{H=absent} \wedge \textit{L=good}}  \times \ppr{+}{\textit{L=good}}\\ & +\ppr{+}{\textit{E=seen}  \vert \textit{H=absent} \wedge \textit{L=bad}} \times \ppr{+}{\textit{L=bad}}\\
-  &= .4 \times .5 +.5 *.5 = .45 
-  \end{align*} This argument can be repeated with many other numerical
-  assignments.}
-
-Why does this matter? We have seen that, after awareness growth, you
-should typically regard the evidence \textit{E=seen} as one that favors
-\textit{H=present} less strongly. Since the prior probability of the
-hypothesis should be the same before and after awareness growth, it
-follows that
-\[\ppr{+}{\textit{H=present} \vert \textit{E=seen}} \neq \pr{\textit{H=present} \vert \textit{E=seen}}.\]
-This outcome violates Awareness Rigidity which, in cases of refinement,
-requires that the probability of basic propositions stay
-fixed.\footnote{Awareness Rigidity requires that
-  \(\ppr{+}{A \vert T^*}=\pr{A}\), where \(T^*\) corresponds to a
-  proposition that picks out, from the vantage point of the new
-  awareness state, the entire possibility space before the episode of
-  awareness growth. But, in cases of refinement, \(T^*\) does not
-  change, so in such cases, Awareness Rigidity requires
-  \(\ppr{+}{A}=\pr{A}\).}
-
-Reverse Bayesianism is also violated. For example, the ratio of the
-probabilities of \textit{H=present} to \textit{E=seen}, before and after
-awareness growth, has changed:
-\[\frac{\ppr{\textit{E=seen}}{\textit{H=present}}}{\ppr{ \textit{E=seen}}{\textit{E=seen}}} \neq \frac{\ppr{+, \textit{E=seen}}{\textit{H=present}}}{\ppr{+, \textit{E=seen}}{\textit{E=seen}}},\]
-where \(\ppr{\textit{E=seen}}{}\) and \(\ppr{+, \textit{E=seen}}{}\)
-represent the agent's degrees of belief, before and after awareness
-growth, updated by the evidence \(\textit{E=seen}\).
-
-Unlike \textsc{Movies}, the counterexample \textsc{Lighting} works even
-though it only depicts a case of awareness growth that consists in
-refinement without learning. Defenders of Reverse Bayesianism and
-Awareness Rigidity can no longer claim that their theories work when
-awareness growth is not intertwined with learning. So, Steele and
-Stefánsson's critique of these theories sits now on a firmer ground.
 
 \hypertarget{structural-assumptions}{%
 \section{Structural assumptions}\label{structural-assumptions}}
@@ -1069,6 +1088,11 @@ Lakatos, I. (1968). Changes in the problem of inductive logic.
 \leavevmode\vadjust pre{\hypertarget{ref-mathani2020}{}}%
 Mathani, A. (2020). Awareness growth and dispositional attitudes.
 \emph{Synthese}, \emph{198}(9), 8981--8997.
+
+\leavevmode\vadjust pre{\hypertarget{ref-Pettigrew2022}{}}%
+Pettigrew, R. (forthcoming). How should your beliefs change when your
+awareness grows? \emph{Episteme}, 1--25.
+\url{https://doi.org/10.1017/epi.2022.33}
 
 \leavevmode\vadjust pre{\hypertarget{ref-roussos2021}{}}%
 Roussos, J. (2021). Awareness growth and belief revision.
