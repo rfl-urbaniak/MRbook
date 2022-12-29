@@ -1089,51 +1089,40 @@ point-estimate-based answer is 0.778, while the posterior predictive
 distribution yields 0.7051. More generally, we can use an
 information-theoretic measure, Kullback-Leibler divergence, to quantify
 how far the point-estimate PMF and the posterior predictive PMF are from
-the true PMF.\^{}{[}A bit of explanation of this divergence measure.
-Suppose we are dealing with a variable \(X\) with \(n\) distinct
-possible discrete states \(x_1, \dots, x_n\) and consider two
-probability mass functions \(p\) and \(q\) which express uncertainty
-about the true value of \(X\) so that, say, on \(p\),
-\(\pr(X=x_i)=p_i\). First, the uncertainty of a given distribution
-\(p\), its \textbf{entropy}, is given by the sum of the logarithms of
-surprise \(\nicefrac{1}{p_i}\) for all the possible values,
-\(H(p) = \sum x_i \log \frac{1}{p_i} = - \sum p_i \log p_i\). Next,
-suppose events arise according to \(p\), but we predict them using
-\(q\). The \textbf{cross-entropy} is then\\
-\$ \mathsf{H}(p, q) \& = \sum p\_i \log\_(q\_i)\$. This value is going
-to be higher than the entropy of \(p\) if \(q\) is different from it.
-Think of it as the uncertainty involved in using \(q\) to predict events
-that arise according to \(p\).
-
-Third, \textbf{Kullback-Leibler} divergence is the additional entropy
-introduced by using \(q\) instead of \(p\) itself, that is, the
-difference between cross-entropy and entropy: \begin{align*}
+the true
+PMF.\footnote{A bit of explanation of this divergence measure. Suppose we are dealing with a variable $X$ with $n$ distinct possible discrete states $x_1, \dots, x_n$ and consider two probability mass functions $p$ and $q$ which express uncertainty about the true value of $X$ so that, say, on $p$, $\pr{X=x_i}=p_i$. First, the uncertainty of a given distribution $p$, its \emph{entropy}, is given by the sum of the logarithms of surprise $\nicefrac{1}{p_i}$ for all the possible values,  $H(p) = \sum x_i \log \frac{1}{p_i} = - \sum p_i \log p_i$.  Next, suppose events arise according to $p$, but we predict them
+using $q$. The \emph{cross-entropy}  is then  $\mathsf{H}(p, q)  = \sum p_i \log(q_i)$. This value is going to be higher than the entropy of $p$ if $q$ is different from it. Think of it as the uncertainty involved in using $q$ to predict events that arise according to $p$.  Third, \emph{Kullback-Leibler}  divergence is the additional entropy introduced by
+using $q$ instead of $p$ itself, that is, the difference between cross-entropy and entropy:
+\begin{align*}
 \mathsf{DKL}(p, q) & = H(p, q) - H(p)\\
 &= - \sum p_i \log q_i   - \left(   - \sum p_i \log p_i \right) \\
 & = - \sum p_i\left( \log q_i - \log p_i\right)\\
 & =  \sum p_i\left( \log p_i - \log q_i\right)\\
 & = \sum p_i \log \left( \frac{p_i}{q_i}\right)
-\end{align*} \noindent  As it turns out, KL divergence is also the
-expected difference in log probabilities. In particular, if \(p=q\) we
-get \(DKL(p,p) = \sum p_i (\log_2 p_i - \log_2 p_i) = 0\), which works
-out as it intuitively should be.{]}
+\end{align*} \noindent  As it turns out, KL divergence is also the expected
+difference in log probabilities. In particular, if
+\(p=q\) we get
+\(DKL(p,p) = \sum p_i (\log p_i - \log p_i) = 0\),
+which works out as it intuitively should be.}
 
 In our particular case, the former distance is 0.7905638 and the latter
-is 0.5681121.
+is 0.5681121. The posterior predictive distribution is
+information-theoretically closer to the true distribution.
 
-This result can be generalized. We repeat the simulation 1000 times,
-each time with a new true parameter, a new sample size, and a new
-sample. Every time the three PMFs are constructed using the methods we
-described. Figure \ref{fig:kldsPlots} displays the empirical
-distribution of the results of such a simulation, where the differences
-are measured by the Kullback-Leibler divergence. A positive difference
-indicates that the distribution based on the point-estimate was further
-from the true PMF than the posterior predictive distribution. Notably,
-the mean difference is 0.865, the median difference is 0.044, and the
-distribution is asymmetrical, as there are multiple cases of huge
-differences favoring posterior predictive distributions over point-based
-predictions. All in all, accuracy-wise, point-estimate-based PMFs are
-systematically worse than the posterior predictive distribution.
+This was just one example, but the phenomenon generalizes. We repeat the
+simulation 1000 times, each time with a new true parameter, a new sample
+size, and a new sample. Every time the three PMFs are constructed using
+the methods we described and their KL divergence from the true
+distribution is calculated. Figure \ref{fig:kldsPlots} displays the
+empirical distribution of the results of such a simulation. A positive
+value indicates that the distribution based on the point-estimate was
+further from the true PMF than the posterior predictive distribution
+based on the same observed sample. Notably, the mean difference is
+0.865, the median difference is 0.044, and the distribution is
+asymmetrical, as there are multiple cases of large differences favoring
+posterior predictive distributions over point-based predictions. All in
+all, accuracy-wise, point-estimate-based PMFs are systematically worse
+than the posterior predictive distribution.
 
 \begin{figure}[H]
 
@@ -1156,15 +1145,18 @@ fair odds track your unique, first-order uncertainty without any
 uncertainty about it. But this point can be questioned. For one thing,
 the betting interpretation of probability is not
 uncontroversial.\footnote{See textbooks in formal epistemology (D.
-  Bradley, 2015; Titelbaum, 2020).} In addition, even granting the
-betting interpretation, it need not be implausible to say that we
-sometimes are uncertain about what we think the fair bets are or what
-our first-order uncertainties are.\footnote{On a related score, the
-  introspective axioms in epistemic logic---that is, if an agent knows
-  (or doesn't know) \(p\), they also know that they (don't) know
-  \(p\)---are by no means uncontroversial. See, for example, Williamson
-  2000 (chapter 5)'s argument against the KK principle of positive
-  introspection.}
+  Bradley, 2015; Titelbaum, 2020).} Even assuming the betting
+interpretation, there seems to be nothing wrong in saying that sometimes
+we are\todo{add ref to Williamson} uncertain about what we think the
+fair bets are.\footnote{On a related note, the introspective axioms in
+  epistemic logic---that is, if an agent knows (or doesn't know) \(p\),
+  they also know that they (don't) know \(p\)---are by no means
+  uncontroversial. See, for example, Williamson 2000 (chapter 5)'s
+  argument against the KK principle of positive introspection.} But
+admittedly, this answer while undermines the betting argument for the
+sufficiency of point estimates, does not cast much light on what the
+appropriate relatively uncontroversial interpretation of higher-order
+uncertainty should be.
 
 Think again about an expert who gathers information about the allelic
 frequency \(f\) of DNA matches in an available database, and starts with
@@ -1173,11 +1165,20 @@ expert observes \(s\) matches in a database of size \(n\). So the
 population relative frequency the experts is estimating should follow
 the \(\s{beta}(\alpha + s + 1 ,\beta + n - s)\) distribution. So far,
 nothing controversial happens---the expert is estimating the relevant
-population frequency. Assuming the conditions are pristine (the expert
-has no modeling uncertainty, rules out laboratory errors, and so on),
-the beta distribution can be used to inform the expert's subjective
-uncertainty. But uncertainty about what? The (estimated) population
-frequency can serve to attach a probability to the proposition
+population frequency.
+
+But subjective uncertainty that is to be reported by the expert, Taroni
+et al. (2015) complain, is not about the frequency about their attitude
+towards a proposition (supposedly expressing a ``state of nature''),
+and, they insist, it makes no sense for an agent to attach uncertainty
+to their own uncertainty about a proposition.
+
+Assuming the conditions are pristine (the expert has no modeling
+uncertainty, rules out laboratory errors, and so on), the beta
+distribution can be used to pretty directly inform the expert's
+subjective uncertainty. But uncertainty about what? The (estimated)
+population frequency, for instance, can underlie a probability
+assignment to the proposition
 \emph{a match is observed  if another person, unrelated to the suspect, is the source of the trace}.
 Admittedly, if only this proposition is being considered, it is yet not
 clear what second-order uncertainties would be uncertainties about. But
@@ -1185,26 +1186,29 @@ the expert also considers a continuum of propositions, each of the form
 \emph{the true population frequency is $\theta$} for each
 \(\theta\in [0,1]\). A density over \(\theta\) models the comparative
 plausibility that the expert assigns to such propositions in light of
-the evidence. So if one were worried that there were no propositions
-that the expert could be ``second-order'' uncertain about, there
-actually are plenty. In particular, if \(\theta\) is a population
-frequency, gauging which density captures the extent to which the
-evidence justifies various estimates of that frequency is the same as
-gauging the comparative plausibility of the corresponding propositions
-about the population frequencies.\footnote{Perhaps, this should no
-  longer be called ``estimation'', but the the connection with
-  estimation is strong enough to justify this terminology. In the end,
-  this is a verbal discussion that we will not get into.}
+the
+evidence.\footnote{Moreover, and normalization allows them to calculate their subjective probabilities for $\theta$ belonging to various sub-intervals of $[0,1]$.}
+So if one were worried that there were no propositions that the expert
+could be ``second-order'' uncertain about, there actually are plenty. In
+particular, if \(\theta\) is a population frequency, gauging which
+density captures the extent to which the evidence justifies various
+estimates of that frequency is the same as gauging the comparative
+plausibility of the corresponding propositions about possible population
+frequencies.\footnote{Perhaps, this should no longer be called
+  ``estimation'', but the the connection with estimation is strong
+  enough to justify this terminology. In the end, this is a verbal
+  discussion that we will not get into.}
 
-More generally, evidence justifies first-order probability assignments
-to various degrees. Suppose there is no evidence about the bias of a
-coin. Then, each first-order uncertainty about it would be equally
-(un)-justified. (If you like to think in terms of bets, the evidence
-would give no reason to prefer any particular odds as fair.) If,
-instead, we know the coin is fair, the evidence clearly selects one
-preferred value, .5. (Again, if you like the betting metaphor, 1:1 would
-be the preferred betting odds.) But often the evidence is stronger than
-the former case and weaker than the latter case. Consider, for example,
+More generally, in many contexts, evidence justifies first-order
+probability assignments (population frequency estimates) to various
+degrees. Suppose there is no evidence about the bias of a coin. Then,
+each first-order uncertainty about it would be equally (un)-justified.
+(If you like to think in terms of bets, the evidence would give no
+reason to prefer any particular odds as fair.) If, instead, we know the
+coin is fair, the evidence clearly selects one preferred value, .5.
+(Again, if you like the betting metaphor, 1:1 would be the unique
+recommended betting odds.) But often the evidence is stronger than the
+former case and weaker than the latter case. Consider, for example,
 propositions about population frequencies in light of the results of
 observations. In such circumstances, the evidence justifies different
 values of first-order uncertainty to various degrees, and densities
@@ -1214,22 +1218,30 @@ are supported by the evidence.
 We conclude this section by examining two additional points raised by
 Taroni et al. (2015). The first---which we already alluded to
 earlier---is that first-order probabilities are not ``states of nature''
-and so cannot be estimated. It is unclear why only states of nature can
-be estimated. Mathematicians use approximate methods to estimate answers
-to fairly abstract questions ,not obviously related to ``states of
-nature'', whatever these are. So, estimation should make sense whenever
-there are some objective answers that we can approximate to a greater or
-lesser extent.\footnote{Taroni et al. (2015) makes the same point for
-  likelihood ratios. They argue that there is no ``meaningful state of
-  nature equivalent for the likelihood ratio in its entirety, as it is
-  given by a ratio of two conditional probabilities?'' But if it is
-  meaningful to estimate two conditional probabilities (that is,
-  frequencies in the population), or to compare the relative
-  plausibility of various propositions about them in terms of density,
-  it is equally meaningful to estimate any function of the numbers
-  involved. Otherwise it would also be meaningless to try to estimate
-  the body mass index (BMI) of an average 21 years old male student in
-  the USA just because BMI is a ratio of other quantities.}
+and so cannot be estimated. It is unclear why the authors insist that
+only states of nature can be estimated. Mathematicians use approximate
+methods to estimate answers to fairly abstract questions, not obviously
+related to ``states of nature'', whatever these are. So, estimation
+should make sense whenever there are some objective answers that we can
+approximate to a greater or lesser extent. If there is some objectivity
+to what the ideal evidence would support, or to the extent to which the
+actual evidence supports various competing hypotheses, we can be more or
+less wrong about such things, and so it is not implausible to say that
+there is a clear sense in which we can estimate them.\footnote{Taroni et
+  al. (2015) make the same point for likelihood ratios. They argue that
+  there is no ``meaningful state of nature equivalent for the likelihood
+  ratio in its entirety, as it is given by a ratio of two conditional
+  probabilities?'' But if it is meaningful to estimate two conditional
+  probabilities (that is, frequencies in the population), or to compare
+  the relative plausibility of various propositions about them in terms
+  of density, it is equally meaningful to estimate any function of the
+  numbers involved. Otherwise it would also be meaningless to try to
+  estimate the body mass index (BMI) of an average 21 years old male
+  student in the USA just because BMI is a ratio of other quantities.
+  There are reasons not to care about BMI, but it not being a state of
+  nature because it is a function is not one of them.}
+
+\todo{added back the claim about not worrying about BMI, as some readers might be sensitive to anyone bringing BMI up}
 
 Second, Taroni et al. (2015) argue that once we allow second-order
 probability, we run into the threat of infinite regress. But do we?
