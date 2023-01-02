@@ -1277,8 +1277,8 @@ Our discussion so far has been mostly theoretical. We made a case that
 higher-order probabilism outperforms precise probabilism on both
 descriptive and normative grounds. We also staved off a number of
 conceptual difficulties with going higher-order. It is time to extend
-our discussion from the introduction to a further illustration of\\
-how higher-order probabilism can be of service in evaluating evidence at
+our discussion from the introduction to a further illustration of how
+higher-order probabilism can be of service in evaluating evidence at
 trial. We present here two examples.
 
 \hypertarget{false-positives-in-dna-identification}{%
@@ -1359,11 +1359,9 @@ rather conservative evaluation of the match evidence, much more so than
 the truncated normal distribution. This is apparent from Figure
 \ref{fig:fppMinima} and \ref{fig:fplinesPlot}, which show the prior
 probabilities of the source hypothesis needed to secure a posterior
-probability above .99.
-
-Working with a distribution---better if it is not a uniform
-distribution---affords a more balanced assessment of the evidence than
-simply relying on the edges of an interval.
+probability above .99. Working with a distribution---more so if it is
+not a uniform distribution---affords a more balanced assessment of the
+evidence than simply relying on the edges of an interval.
 
 The lingering question, however, is how these distributions can be
 obtained. Admittedly, studies on false positives are limited and only
@@ -1420,29 +1418,36 @@ Networks}\label{higher-order-bayesian-networks}}
 The higher-order framework we are advocating is not only applicable to
 the evaluation of individual pieces of evidence. Complex bodies of
 evidence---for example, those represented by Bayesian networks---can
-also be assessed using higher-order probabilities. We use here as an
-illustration a simplified Bayesian network developed by Fenton \& Neil
-(2018). The network is reproduced in Figure \ref{fig:scBNplot} and
-represents the evidence in the infamous British case R. v. Clark (EWCA
-Crim 54, 2000).\footnote{ Sally Clark's first son died in 1996 soon
-  after birth, and her second son died in similar circumstances a few
-  years later in 1998. At trial, the paediatrician Roy Meadow testified
-  that the probability that a child from such a family would die of
-  Sudden Infant Death Syndrome (SIDS) was 1 in 8,543. Meadow calculated
-  that therefore the probability of both children dying of SIDS was
-  approximately 1 in 73 million. Sally Clark was convicted of murdering
-  her infant sons. The conviction was reversed on appeal. The case of
-  appeal was based on new evidence: signs of a potentially lethal
-  disease were found in one of the bodies.} We refer to the reader to
-Chapter \textbf{XYZ} for a more general discussion of Bayesian networks.
-Here it suffices to note that the arrows depict relationships of
-influence between variables. \textsf{Amurder} and \textsf{Bmurder} are
-binary nodes corresponding to whether Sally Clark's sons, call them A
-and B, were murdered. These nodes influence whether signs of disease
-(\textsf{Adisease} and \textsf{Bdisease}) and bruising
-(\textsf{Abruising} and \textsf{Bbruising}) were present. Also, since
-A's death preceded in time B's death, whether A was murdered casts some
-light on the probability that B was also murdered.
+also be assessed using higher-order probabilities. One fairly
+straightforward way to go about this is to stochastically generate
+Bayesian networks using our uncertainty about the parameter values,
+update with the evidence, and propagate uncertainty to approximate the
+marginal posterior for nodes of interest.
+
+As an illustration, let us start with a simplified Bayesian network
+developed by Fenton \& Neil (2018). The network is reproduced in Figure
+\ref{fig:scBNplot} and represents the key items of evidence in the
+infamous British case R. v. Clark (EWCA Crim 54, 2000).\footnote{Sally
+  Clark's first son died in 1996 soon after birth, and her second son
+  died in similar circumstances a few years later in 1998. At trial, the
+  pediatrician Roy Meadow testified that the probability that a child
+  from such a family would die of Sudden Infant Death Syndrome (SIDS)
+  was 1 in 8,543. Meadow calculated that therefore the probability of
+  both children dying of SIDS was approximately 1 in 73 million. Sally
+  Clark was convicted of murdering her infant sons. The conviction was
+  reversed on appeal. The case of appeal was based on new evidence:
+  signs of a potentially lethal disease were found in one of the bodies.}
+
+In a Bayesian network the arrows depict direct relationships of
+influence between variables, and nodes---conditional on their
+parents---are taken to be independent of their non-descendants.
+\textsf{Amurder} and \textsf{Bmurder} are binary nodes corresponding to
+whether Sally Clark's sons, call them A and B, were murdered. These
+nodes influence whether signs of disease (\textsf{Adisease} and
+\textsf{Bdisease}) and bruising (\textsf{Abruising} and
+\textsf{Bbruising}) were present. Also, since A's death preceded in time
+B's death, whether A was murdered casts some light on the probability
+that B was also murdered.
 
 The choice of the probabilities in the network is quite specific, and it
 is not clear where such precise values come from. The standard response
@@ -1463,9 +1468,9 @@ parameter values for the numbers in the probability tables.\footnote{The
   into the construction of the BN, and (3) evaluating the probability of
   interest in that precise BN. The list of the probabilities thus
   obtained will approximate the density of interest. In what follows we
-  will work with sample sizes of 10k.} An example of a higher-order
-Bayesian network for the Sally Clark case is given in Figure
-\ref{fig:SCwithHOP}.
+  will work with sample sizes of 10k.}\\
+An example of a higher-order Bayesian network for the Sally Clark case
+is given in Figure \ref{fig:SCwithHOP}.
 
 \begin{figure}[H]
 
@@ -1508,6 +1513,240 @@ the first-order probability can make a difference to trial decisions.
 \caption{Impact of incoming evidence in the Sally Clark case.}
 \label{fig:SCwithHOP2}
 \end{figure}
+
+One question that arises is how this approach relates to the standard
+method of using likelihood ratios to report the value of the evidence.
+On this approach, the conditional probabilities that are used in the
+likelihood ratio calculations are estimated and come package with an
+uncertainty about them. Accordingly, these uncertainties propagate: to
+estimate the likelihood ratio while keeping track of the uncertainty
+involved, we can sample probabilities from the selected distribution
+appropriate for the conditional probabilities needed for the
+calculations, then divide the corresponding samples, obtaining a sample
+of likelihood ratios, thus approximating the density capturing the
+recommended uncertainty about the likelihood ratio. For instance, we can
+use this tool to gauge our uncertainty about the likelihood ratios
+corresponding to the signs of bruising in son A and the presence of the
+symptomps of a potentially lethal disease in son A (Figure
+\ref{fig:SClrs}).
+
+\begin{figure}[H]
+
+
+\begin{center}\includegraphics[width=0.9\linewidth]{paper-outline_files/figure-latex/SClrs-1} \end{center}
+
+\caption{Likelihood ratios forbruising and signs of disease in child A in the Sally Clark case.}
+\label{fig:SClrs}
+
+\end{figure}
+
+\hypertarget{weight-of-evidence}{%
+\section{Weight of Evidence}\label{weight-of-evidence}}
+
+\label{sec:weight}
+
+After sketching how the legal applications of the higher-order approach
+should go, we turn to another payoff of higher-order probabilism: it
+allows to develop a theory of the weight of evidence that outperforms
+the existing proposals. We will start with an informal sketch of the
+concept of the weight of evidence, as opposed to the balance of the
+evidence. We will then explore a few attempts at modeling this idea,
+first from the preciser's and then from the impreciser's perspective.
+Finally, we will show that higher-order probabilism can offer a better
+theory.
+
+\hypertarget{examples-and-desiderata}{%
+\subsection{Examples and Desiderata}\label{examples-and-desiderata}}
+
+In the 1872 manuscript \emph{The Fixation of Belief} (W3 295), C. S.
+Peirce makes the following observation about sampling from a bag of
+beans that are either black or white:
+
+\begin{quote} When we have drawn a thousand times, if about half have been white, we have great confidence in this result ... a confidence which would be entirely wanting if, instead of sampling the bag by 1000 drawings, we had done so by only two.
+\end{quote}
+
+\noindent In both cases, our best assessment of the probability that the
+next draw will be a black bean is .5, but how sure we should be of that
+assessment is quite different depending on whether it is based on two or
+one thousands draws. In other words, the \emph{weight} of the evidence
+seems much greater after drawing a thousand beans and finding out that
+half are black, compared to drawing just two beans and again finding out
+that half are black. The weight of the evidence is different in the two
+cases, but its \emph{balance}---understood here as the empirical
+proportion of black-to-white beans---is the same.\footnote{Similar
+  remarks can be found in Peirce's 1878 \emph{Probability of Induction}.
+  There, he also proposes to represent uncertainty by at least two
+  numbers, the first depending on the inferred probability, and the
+  second measuring the amount of knowledge obtained. For the latter,
+  Peirce proposes to use some dispersion-related measure of error (but
+  then suggests that an error of that estimate should also be estimated
+  and so on, so that ideally more numbers representing errors would be
+  needed).}
+
+Peirce did not use the expression the weight of evidence (and, in fact,
+he used the phrase to refer to the balance of evidence, W3 294) (Kasser,
+2016). However, his remarks anticipated what came to be called weight of
+evidence by Keynes in his 1921 \emph{A Treatise on Probability}:
+
+\begin{quote}
+As the relevant evidence at our disposal increases, the magnitude of the
+probability of the argument may either increase or decrease, according as the new knowledge strengthens the unfavourable or the favourable evidence; but something seems to have increased in either case---we have a more substantial basis upon which to rest our conclusion. I express this by saying that an accession of new evidence increases the weight of an argument. (p. 71)
+\end{quote}
+
+\noindent The key point is the same (Levi, 2011): since the balance of
+probability alone cannot characterize all important aspects of
+evidential appraisal, another dimension---the weight of an
+argument---must be deployed to quantify uncertainty.\footnote{Keynes
+  entertained the possibility of measuring weight of evidence in terms
+  of the variance of the posterior distribution of a certain parameter,
+  but was quite attached to the idea that weight should increase with
+  new information, even if the dispersion may increase with new evidence
+  {[}TP 80-82{]}. So he proposed only a very rough sketch of a positive
+  proposal. Moreover, he was unclear how a measure of weight could be
+  part of decision-making. He was ultimately skeptical about the
+  practical significance of the notion {[}TP 83{]}.}
+
+It is instructive to examine more closely Keynes' claim that the weight
+of evidence, unlike its balance, always increases as more evidence is
+taken into account. While balance can oscillate one direction or the
+other, weight would seem to always increase. We can state this
+requirement as follows:
+
+\vspace{1mm}
+\begin{tabular}{lp{9cm}}
+(Monotonicity) & If $E$ is relevant to $X$ given $K$, where $K$ is background knowledge, $V(X\vert K \wedge E) > V(X\vert K)$, where $V$ is the weight of evidence.
+\end{tabular}
+\vspace{1mm}
+
+\noindent Monotonicity is consistent with Peirce's example involving
+drawing from a bag of beans. As the sample size increases and the
+relative proportion of black-to-white beans remains constant, the weight
+of the evidence increases. That is:
+
+\vspace{1mm}
+\begin{tabular}{p{3cm}p{10cm}}
+(Weak Increase) & In urn-like cases, the evidential weight obtained by a larger sample is greater, if the relative frequencies in the samples remain the same.
+\end{tabular}
+\vspace{1mm}
+
+\noindent This formulation can be strengthened by dropping the
+assumption of equal relative frequencies:
+
+\vspace{1mm}
+\begin{tabular}{p{3cm}p{10cm}}
+(Strong Increase) & In urn-like cases, the evidential weight obtained by a larger sample is higher.
+\end{tabular}
+
+\vspace{1mm}
+
+\noindent We think there are good reasons to reject Monotonicity and
+Strong Increase, but we agree with Weak Increase. Monotonicity and
+Strong Increase are consistent with a certain conception of the weight
+of evidence, what we might call \emph{quantity} of evidence. There is no
+doubt that, as more evidence is taken into account, the quantity of the
+evidence must increase. But the weight of evidence need not be
+identified with its quantity alone. As more evidence is taken into
+account, the new evidence may speak less clearly in favor or against a
+hypothesis. For consider this example:
+
+\begin{quote}
+\textbf{A (possibly) rigged lottery:} Initially, you think the lottery  is  fair. You have no reason to doubt that. So, you calculate precisely the probability that a certain ticket number will be drawn. Then, rumors begin to surface that the lottery is rigged and that only numbers that satisfy a complicated equation will be drawn. You now have more relevant evidence at your disposal, but that evidence is more confusing and muddled than before. 
+\end{quote}
+
+\noindent Arguably, this is a scenario in which the quantity of evidence
+has increased, but the weight of evidence has not. If this is right,
+weight and quantity can come apart.
+
+So, we seek a theory of evidential weight that can model two intuitions.
+The first is that, as the sample size increases, the weight of the
+evidence must also increase (under certain conditions, along the lines
+of Weak Increase). The second intuition is that that, even when the
+quantity of evidence increases, the weight of evidence might not (as
+illustrated by the example of the rigged lottery).
+
+\hypertarget{weight-and-precise-probabilism}{%
+\subsection{Weight and Precise
+Probabilism}\label{weight-and-precise-probabilism}}
+
+An obvious place to look for a theory of the weight of evidence is
+within precise probabilism. The earliest account of the weight of
+evidence is given by Good (1950), as follows: \begin{align*}
+W(H:E) & = \log \frac{\pr{E \vert H}}{\pr{E\vert \neg H}},
+\end{align*}
+
+\noindent where \(E\) is the evidence and \(H\) a hypothesis of
+interest. This account follows naturally from the assumption that that
+\(W(H:E)\) must be a function of \(\pr{E\vert H}\) and of
+\(\pr{E\vert \neg H}\). As Good (1985) put it, ``I cannot see how
+anything can be relevant to the weight of evidence other than the
+probability of the evidence given guilt and the probability given
+innocence'' {[}p 250{]}. The question is whether Good's weight satisfies
+the desiderata of Keynes' weight.
+
+If, in an experiment, the observations \(E_1, \dots, E_K\) are
+independent given \(H\) and given \(\neg H\), the resulting joint
+likelihood is the result of multiplying the individual likelihoods.
+Thus, the joint weight is the result of adding the individual weights.
+Now, suppose a die is selected at random from a hat containing nine fair
+dice and one loaded die with bias \(\nicefrac{1}{3}\) of obtaining a
+six. Every time you throw the die and obtain a six, the weight for the
+hypothesis that the die is biased increases by
+\(log_{10}(\frac{\nicefrac{1}{3}}{\nicefrac{1}{6}})= log_{10}(2)\), that
+is 0.30103, and every time you throw it and obtain something else, the
+weight changes by
+\(log_{10}(\frac{\nicefrac{2}{3}}{\nicefrac{5}{6}})= log_{10}(.8)\),
+that is -0.09691. The weights in db (that is, multiplied by 10) for all
+possible outcomes of up to 20 tosses are displayed in Figure
+\ref{fig:goodWeight}.
+\todo{Add Figure R; Why wasn't it here in the first place?}
+
+Two facts are notable. First, Good's weight can drop with sample size.
+For instance, the weight for 5 sixes and 4 other numbers is 1.2db, and
+it is .2db for 5 sixes and 5 other numbers. In addition, weight can drop
+while the sample size increases even if the proportion of sixes remains
+the same. For instance, if none of the observations are sixes, the
+weights go from -10 to -19.7 as the sample size goes from 0 to 10. Less
+trivially, the observation of one six in five leads to weight of -10.9,
+while the observation of two sixes in ten tosses leads to weight -11.7.
+That is, (Monotonicity) (Weak Increase) and (Strong Increase) all fail
+on Good's measure. This measure is too closely connected to likelihood
+ratio and as such does not capture the notion of quantity of evidence.
+
+One way to think about this feature of Good's weight is that the (log of
+the) likelihood ratio is a \emph{directional} measure: the evidence may
+be favorable or unfavorable to a hypothesis (compared to another). By
+contrast, Keynes' remarks suggests that weight is a non-directional
+measure. It appears to always increase no matter the balance (though we
+will ultimately reject this claim trying to find a middle ground between
+these approaches).
+
+So one might think that all there is to be done is stripping the
+likelihood ratio of its directionality, say by taking the absolute value
+of the natural log (Nance, 2016, sec. 3.5). The weight of evidence \(E\)
+relative to the pair of hypotheses \(H, H'\) would be
+\[\vert \ln (LR_{H, H'}(E)) \vert, \] where
+\(LR_{H, H'}(E)=\frac{P(E \vert H)}{P(E \vert H')}\). By the properties
+of logarithms, \(ln(1/x) = -ln(x)\), so two items of evidence of
+equivalent strength---but opposite directionality---would have the same
+weight. So, for example, \(|ln(1/3)|= |ln(3)| = 1.61\).
+
+This account, while simple and elegant, faces difficulties. As it is
+ordinally equivalent to the standard ordering of the absolute values of
+Good's weights, our objections, mutatis mutandis, apply. Moreover, as it
+has pointed out,\todo{by whom?} there is a decomposition problem.
+Consider two items of evidence that, taken together, have a likelihood
+ratio of one, say one has a likelihood ratio of 1/3 and the other of 3.
+Assuming they are probabilistically independent given a hypothesis of
+interest, their combined likelihood ratio results from multiplying the
+individual likelihood ratios. Thus, their combined weight would be zero
+since \(\ln (LR_H(E1 \wedge E_2))=\ln (1) = 0\). However, by adding the
+weights one by one, the combined weight would be different from zero,
+since \(|ln(1/3)| + |ln(3)| = 3.22\). So, do the two items of evidence
+have zero weight or not? Depending on how evidence is decomposed, it
+appears to have different weights.
+\todo{To think about: does the decomposition problem apply to Good's weight?}
+
+\todo{R: the bit I commended out was false, I think. See the revised verson of the above passage, and think hard about the argument}
 
 \hypertarget{references}{%
 \section*{References}\label{references}}
@@ -1579,6 +1818,15 @@ Gärdenfors, P., \& Sahlin, N.-E. (1982). Unreliable probabilities, risk
 taking, and decision making. \emph{Synthese}, \emph{53}(3), 361--386.
 \url{https://doi.org/10.1007/bf00486156}
 
+\leavevmode\vadjust pre{\hypertarget{ref-good1950probability}{}}%
+Good, I. J. (1950). \emph{Probability and the weighing of evidence}. C.
+Griffin London.
+
+\leavevmode\vadjust pre{\hypertarget{ref-good1985}{}}%
+Good, I. J. (1985). Weight of evidence: A brief survey. In J. M.
+Bernardo, M. H. DeGroot, D. V. Lindley, \& A. F. M. Smith (Eds.),
+\emph{Bayesian statistics}. Elsevier Science.
+
 \leavevmode\vadjust pre{\hypertarget{ref-joyce2005probabilities}{}}%
 Joyce, J. M. (2005). How probabilities reflect evidence.
 \emph{Philosophical Perspectives}, \emph{19}(1), 153--178.
@@ -1586,6 +1834,11 @@ Joyce, J. M. (2005). How probabilities reflect evidence.
 \leavevmode\vadjust pre{\hypertarget{ref-Kaplan1968decision}{}}%
 Kaplan, J. (1968). Decision theory and the fact-finding process.
 \emph{Stanford Law Review}, \emph{20}(6), 1065--1092.
+
+\leavevmode\vadjust pre{\hypertarget{ref-kasser2016two}{}}%
+Kasser, J. (2016). Two conceptions of weight of evidence in peirce's
+illustrations of the logic of science. \emph{Erkenntnis}, \emph{81}(3),
+629--648.
 
 \leavevmode\vadjust pre{\hypertarget{ref-keynes1921treatise}{}}%
 Keynes, J. M. (1921). \emph{A treatise on probability, 1921}. London:
@@ -1611,11 +1864,19 @@ Philosophy}, \emph{71}(13), 391. \url{https://doi.org/10.2307/2025161}
 Levi, I. (1980). \emph{The enterprise of knowledge: An essay on
 knowledge, credal probability, and chance}. MIT Press.
 
+\leavevmode\vadjust pre{\hypertarget{ref-levi2011weight}{}}%
+Levi, I. (2011). The weight of argument. In \emph{Fundamental
+uncertainty} (pp. 39--58). Springer.
+
 \leavevmode\vadjust pre{\hypertarget{ref-Mayo-Wilson2016scoring}{}}%
 Mayo-Wilson, C., \& Wheeler, G. (2016). Scoring imprecise credences: A
 mildly immodest proposal. \emph{Philosophy and Phenomenological
 Research}, \emph{92}(1), 55--78.
 \url{https://doi.org/10.1111/phpr.12256}
+
+\leavevmode\vadjust pre{\hypertarget{ref-nance2016}{}}%
+Nance, D. A. (2016). \emph{The burdens of proof: Discriminatory power,
+weight of evidence, and tenacity of belief}. Cambridge University Press.
 
 \leavevmode\vadjust pre{\hypertarget{ref-o2006uncertain}{}}%
 O'Hagan, A., Buck, C. E., Daneshkhah, A., Eiser, J. R., Garthwaite, P.
