@@ -254,7 +254,7 @@
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
 \urlstyle{same} % disable monospaced font for URLs
 \hypersetup{
-  pdftitle={Beyond Reverse Bayesianism:},
+  pdftitle={Awareness Growth in Bayesian Networks:},
   colorlinks=true,
   linkcolor={Maroon},
   filecolor={Maroon},
@@ -262,14 +262,14 @@
   urlcolor={blue},
   pdfcreator={LaTeX via pandoc}}
 
-\title{Beyond Reverse Bayesianism:}
+\title{Awareness Growth in Bayesian Networks:}
 \usepackage{etoolbox}
 \makeatletter
 \providecommand{\subtitle}[1]{% add subtitle to \maketitle
   \apptocmd{\@title}{\par {\large #1 \par}}{}{}
 }
 \makeatother
-\subtitle{Awareness Growth in Bayesian Networks}
+\subtitle{The Role of Structural Assumptions}
 \author{}
 \date{\vspace{-2.5em}July 28, 2022}
 
@@ -281,8 +281,8 @@
 \emph{Wordcount (including footnotes)}: 5,392
 
 \begin{abstract}
-We examine Steele and Stefánsson's case against Reverse Bayesianism, a popular theory 
-that addresses the problem of awareness growth. We show that Steele and Stefánsson's counterexamples have limited applicability but agree with their skepticism toward Reverse Bayesianism. We strengthen their argument by providing a simpler counterexample that is less prone to objections. In addition, we submit that the problem of awareness growth cannot be tackled in an algorithmic manner, because subject-matter assumptions need to be made explicit. Thanks to their ability to express probabilistic dependencies, we sketch how Bayesian networks can help to model awareness growth in the Bayesian framework. 
+We examine existing counterexamples to Reverse Bayesianism, a popular theory 
+that addresses the problem of awareness growth, and propose our own counterexample. We agree with the general skepticism toward Reverse Bayesianism, but submit that the problem of awareness growth cannot be tackled in an algorithmic manner, because subject-matter, structural assumptions need to be made explicit. Thanks to their ability to express probabilistic dependencies, we illustrate how Bayesian networks can help to model awareness growth in the Bayesian framework. 
 \end{abstract}
 
 \doublespace
@@ -381,8 +381,8 @@ counterexamples against it in the recent philosophical literature
 extent traditional arguments in defense of Bayesian conditionalization
 to the case of awareness growth seem to hold little promise (Pettigrew,
 forthcoming). If the consensus in the literature is that Reverse
-Bayesianism is not the right theory of awareness growth, the open
-question is, what theory (if any) should replace it?
+Bayesianism is not the right theory of awareness growth, what theory (if
+any) should replace it?
 
 Here we offer a diagnosis of what is wrong with Reverse Bayesianism and
 outline an alternative proposal. The problem of awareness growth---we
@@ -393,21 +393,120 @@ theory. This does not mean, however, we should give up on probability
 theory altogether in this context. Thanks to its ability to express
 probabilistic dependencies, we think that the theory of Bayesian
 networks can help to model awareness growth in the Bayesian framework.
-We offer a number of illustrations of this claim
-(\S~\ref{sec:structural-both}).
+We illustrate this claim as we examine different counterexamples to
+Reverse Bayesianism.
 
-We share Steele and Stefánsson's skepticism toward Reverse Bayesianism,
-but also believe that their counterexamples have limited applicability
-(\S ~\ref{sec:counterexamples}). To remedy that, we provide a simpler
-counterexample that is less prone to objections (\S ~\ref{sec:better}).
+\hypertarget{new-explanations}{%
+\section{New explanations}\label{new-explanations}}
 
-At the same time, we conjecture that the problem of awareness growth
-cannot be tackled in an algorithmic manner because subject-matter
-assumptions, both probabilistic and structural, need to be made
-explicit. Thanks to its ability to express probabilistic dependencies,
-we think that the theory of Bayesian networks can help to model
-awareness growth in the Bayesian framework. We offer two illustrations
-of this claim (\S~\ref{sec:structural-both}).
+Perhaps the most common example of awareness growth occurs when you
+become aware of a new explanation for the evidence at your disposal
+which you had not considered before. This can happen in many fields of
+inquiry: medicine, law, science, even in everyday affairs Here is a
+scenario by Steele \& Stefánsson (2021):
+
+\begin{quote}
+\textsc{Friends}: Suppose you happen to see your partner enter your best
+friend's house on an evening when your partner had told you she would
+have to work late. At that point, you become convinced that your partner
+and best friend are having an affair, as opposed to their being warm
+friends or mere acquaintances. You discuss your suspicion with another
+friend of yours, who points out that perhaps they were meeting to plan a
+surprise party to celebrate your upcoming birthday---a possibility that
+you had not even entertained. Becoming aware of this possible
+explanation for your partner's behaviour makes you doubt that she is
+having an affair with your friend, relative, for instance, to their
+being warm friends. (Steele \& Stefánsson, 2021, sec. 5, Example 2)
+\end{quote}
+
+\doublespace
+
+\noindent Initially, the algebra only contained the hypotheses `my
+partner and my best friend met to have an affair' (\textit{Affair}) and
+`my partner and my best friend met as friends or acquaintances'
+(\textit{Friends/acquaintances}). These were the only explanations you
+considered for the fact that your partner and your best friend met one
+night without telling you (\textit{Secretive}). Given this evidence,
+\textit{Affair} is more probable than \textit{Friends/acquaintances}:
+\[\pr{\textit{Affair} \vert  \textit{Secretive} }> \pr{\textit{Friends/acquaintances} \vert \textit{Secretive}} \tag{>}.\]
+When the algebra changes, a new hypothesis is added which you had not
+considered before: your partner and your best friends met to plan a
+surprise party for your upcoming birthday (\textit{Surprise}). This
+hypothesis seems to be a much better explanation. So, given the same
+evidence, the hypothesis \textit{Surprise} is more likely than the
+hypothesis \textit{Affair}:
+\[\ppr{+}{ \textit{Surprise} \vert \textit{Secretive}}> \ppr{+}{ \textit{Affair} \vert \textit{Secretive}}.\]
+And since \textit{Surprise} implies
+\textit{Friends/acquaintances}---after all, in order to prepare a
+surprise party, your partner and best friend have to be at least
+acquaintances--- \textit{Friends/acquaintances} is now more likely than
+\textit{Affair}:
+\[\ppr{+}{\textit{Affair} \vert  \textit{Secretive} } < \ppr{+}{\textit{Friends/acquaintances} \vert \textit{Secretive}}. \tag{<}\]
+
+As Steele \& Stefánsson (2021) note, the conjunction of (\(>\)) and
+(\(<\)) violates Reverse Bayesianism since
+\textit{Friends/acquaintances} and \textit{Affair} are basic
+propositions that do not contain any connectives. But, they also note, a
+quick fix is available. For consider the following condition, called
+\textbf{Awareness Rigidity}: \[\ppr{+}{A \vert T^*}=\pr{A},\] where
+\(T^*\) corresponds to a proposition that picks out, from the vantage
+point of the new awareness state, the entire possibility space before
+the episode of awareness growth. Awareness rigidity establishes that,
+once a suitable proposition \(T^*\) is identified, the old probability
+assignments can be kept conditional on \(T^*\). In our running example,
+the proposition \(\neg\textit{Surprise}\) is the suitable proposition
+\(T^*\). After all, before awareness growth, the eventuality that your
+partner and best friend could be organizing a surprise for had been
+tacitly ruled out. Conditional on \(\neg\textit{Surprise}\), no
+probability assignment should change, including the probability of
+\textit{Affair}. Thus,
+\[\ppr{+}{\textit{Affair} \vert  \textit{Secretive} \& \neg\textit{Surprise} } > \ppr{+}{\textit{Friends/acquaintances} \vert \textit{Secretive} \& \neg\textit{Surprise}}. \]
+
+Steele and Stefansson, however, go on to show that Awareness Rigidity
+does not hold in all cases. We will soon see examples of its failure.
+Before that, it is important to understand why Awareness Rigidity is an
+adequate principle to govern awareness growth in some cases, commonly
+known in the literature as cases of \emph{expansion}. A precise
+definition can be tricky to provide, but a rough characterization will
+suffice here. Suppose, as is customary, propositions are interpreted as
+sets of possible worlds, where the set of all possible worlds is the
+possibility space. An algebra of propositions thus interpreted induces a
+partition of the possibility space. Expansion occurs when the new
+proposition is inconsistent with the disjunction of all the existing
+ones, thus making the old partition no longer exhaustive.
+
+To model \textsc{Friends} with Bayesian networks, we start with this
+graph, which is the usual hypothesis-evidence idiom (Fenton, Neil, \&
+Lagnado, 2013):
+
+\begin{center}\includegraphics[width=0.5\linewidth,height=0.5\textheight]{ReplyToSteeleStefansson5_files/figure-latex/heDAG-prel-1} \end{center}
+
+\noindent where \(H\) is the hypothesis node and \(E\) the evidence
+node. If an arrow goes from \(H\) to \(E\), the probability distribution
+associated with the Bayesian network should be defined by the prior
+probabilities for all the states of \(H\), and conditional probabilities
+of the form \(\pr{E=e \vert H=h}\), where uppercase letters represent
+the variables (nodes) and lower case letters represent the values of
+these variables.
+
+Initially, before awareness growth, the hypothesis \(H\) takes only two
+values, \textit{Friends/acquaintances} and \textit{Affair}. These two
+values are meant to be exhaustive. This means that \textit{Affair}
+functions as the negation of \textit{Friends/acquaintances}, or vice
+versa. After awareness growth---specifically, awareness expansion---the
+two values are not longer considered exhaustive, but a hird value is
+added, \textit{Surprise}. Now the disjunction of
+\textit{Friends/acquaintances} and \textit{Affair} functions as the
+negation of \textit{Surprise}.
+
+Since you trust the evidence, you think that the evidence is more likely
+under the hypothesis that the defendant was present at the crime scene
+than under the alternative hypothesis:
+\[\pr{\textit{E=seen} \vert \textit{H=present}} > \pr{\textit{E=seen} \vert \textit{H=absent}}\]
+The inequality is a qualitative ordering of how plausible the evidence
+is in light of competing hypotheses. No matter the numbers, by the
+probability calculus, it follows that the evidence raises the
+probability of the hypothesis \textit{H=present}.
 
 \hypertarget{structural-assumptions}{%
 \section{Structural assumptions}\label{structural-assumptions}}
@@ -416,19 +515,20 @@ of this claim (\S~\ref{sec:structural-both}).
 
 Although there is no shortage of counterexamples to Reverser
 Bayesianism, we begin with our own. This will allow us to underscore the
-role of structural assumptions in theorizing about awareness growth.
+role of subject-matter assumptions in theorizing about awareness growth.
 Consider the following scenario:
 
 \begin{quote}
 \textsc{Lighting:} You have evidence that favors a certain hypothesis, say a witness 
 saw the defendant around the crime scene. You give some weight to this evidence. 
-In your assessment, that the defendant was seen around the crime scene (your evidence) raises the probability that the defendant was actually there (your hypothesis). But now you wonder, what if it was dark when the witness saw the defendant? Further, in light of your realization that it could have been dark, you wonder whether (and if so how) you should change the probability that you assigned to the hypothesis that the defendant was around the crime scene.
+In your assessment, that the defendant was seen around the crime scene (your evidence) raises the probability that the defendant was actually there (your hypothesis). But now you ask, what if it was dark when the witness saw the defendant? In light of your realization that it could have been dark, you wonder whether (and if so how) you should change the probability that you assigned to the hypothesis that the defendant was around the crime scene.
 \end{quote}
 
-In this scenario, you do not learn anything specific, neither that the
-lighting conditions were bad nor that they were good. You simply wonder
-about what they were. So no Bayesian updating takes place in the strict
-sense, although broadly speaking some new information has been
+As your awareness grows, you do not learn anything specific about the
+lighting conditions, neither that they were bad nor that they were good.
+You simply wonder what they were, a variable you had previously not
+considered. So no Bayesian updating takes place in the strict sense,
+although broadly speaking some new information has been
 introduced.\footnote{HERE EXPLAIN DIFFERENCE WITH STEELE AND STEFANSSON.
   The process of awareness growth in \textsc{Lighting} adds only one
   extra variable, lighting conditions, while \textsc{Movies} adds two
@@ -444,14 +544,15 @@ introduced.\footnote{HERE EXPLAIN DIFFERENCE WITH STEELE AND STEFANSSON.
 state---you have a more fine-grained assessment of what could have
 happened---but it is not clear what you should do in this scenario.
 Since the lighting conditions could have been bad but could also have
-been good, perhaps you should just stay put until you learn anything
-specific. In what follows, we illustrate how Bayesian networks helps to
-model what is going on in \textsc{Lighting} and then show that you
-should not stay put in this scenario and should probably revise downward
-your confidence in the hypothesis that the defendant was around the
-crime scene.
+been good, perhaps you should just stay put until you learn soemthing
+more specific.
 
-A Bayesian network is compact formalism to represent probabilistic
+In what follows, we illustrate how Bayesian networks helps to model what
+is going on in \textsc{Lighting} and conclude that you should not stay
+put. You should probably revise downward your confidence in the
+hypothesis that the defendant was around the crime scene.
+
+A Bayesian network is a compact formalism to represent probabilistic
 dependencies. A Bayesian network consists of a direct acyclic graph
 (DAG) accompanied by a probability distribution. The nodes in the graph
 represent random variables that can take different values. We will use
@@ -465,7 +566,8 @@ arrows are added or erased---as well as a change in the probability
 distribution from the old to the new network.
 
 To model \textsc{Lighting} with Bayesian networks, we start with this
-graph, which is the usual hypothesis-evidence idiom:
+graph, which is the usual hypothesis-evidence idiom (Fenton et al.,
+2013):
 
 \begin{center}\includegraphics[width=0.5\linewidth,height=0.5\textheight]{ReplyToSteeleStefansson5_files/figure-latex/heDAG-1} \end{center}
 
@@ -496,47 +598,56 @@ amended:
 
 \noindent where the node \(L\) can have two values, \textit{L=good} and
 \textit{L=bad}. Commonsense as well as psychological findings suggest
-that as visibility deteriorates, people's ability to identify faces
-worsen. So a plausible way to modify your assessment of the evidence is
-as follows:
+that when the visibility deteriorates, people's ability to identify
+faces worsen. So a plausible way to modify your assessment of the
+evidence is as follows:
 \[\ppr{+}{\textit{E=seen} \vert \textit{H=present} \wedge \textit{L=good}} > \ppr{+}{\textit{E=seen} \vert \textit{H=absent} \wedge \textit{L=good}}\]
 \[\ppr{+}{\textit{E=seen} \vert \textit{H=present} \wedge \textit{bad}} = \ppr{+}{\textit{E=seen} \vert \textit{H=absent} \wedge \textit{L=bad}}\]
 
-\noindent Here is what you are thinking: if the lighting conditions were
-good, you should still trust the evidence like you did before (first
-line). But if the lighting conditions were bad, you should regard the
-evidence as no better than chance (second line). These probabilistic
-constraints are plausible, but should ultimately be grounded an
-verifiable empirical regularities.
+\noindent In words, if the lighting conditions were good, you still
+trust the evidence like you did before (first line), but if the lighting
+conditions were bad, you regard the evidence as no better than chance
+(second line). These probabilistic constraints are plausible, but should
+ultimately be grounded on verifiable empirical regularities.
 
-Despite the change in awareness, you have not learned anything
-definitive in the strict sense. Your new stock of evidence does not
-contain neither the information that the lighting conditions were bad
-nor that they were good. But the Bayesian network structure that
-represents your epistemic state is now more fine-grained. It contains
-the new variable \(L\) which it did not contain prior to the episode of
-awareness growth. In addition---and this is the crucial point---the new
-variable bears certain \emph{structural relationships} with the
-variables \(H\) and \(E\). The graphical network allows for a direct
-probabilistic dependency between the lighting conditions \(l\) and the
-witness sensory experience \(E\), but does not allow for any direct
-dependency between the lighting conditions and the fact that the
-defendant was (or was not) at the crime scene. This structure of
-dependencies capture our causal intuitions about the scenario: the
-lighting conditions do affect what the witness could see, but do not
-directly affect what the defendant might have have done.
+Despite the change in awareness, you have not learned anything in the
+strict sense. Your new stock of evidence does not contain neither the
+information that the lighting conditions were bad nor that they were
+good. But the Bayesian network structure that represents your epistemic
+state is now more fine-grained. The network contains the new variable
+\(L\) which it did not contain prior to the episode of awareness growth.
+In addition---and this is the crucial point---the new variable bears
+certain \emph{structural relationships} with the variables \(H\) and
+\(E\). The graphical network represents a direct probabilistic
+dependency between the lighting conditions \(L\) and the witness sensory
+experience \(E\), but does not allow for any direct dependency between
+the lighting conditions and the fact that the defendant was (or was not)
+at the crime scene. There is no direct arrow between the nodes \(L\) and
+\(H\). This structure of dependencies captures our causal intuitions
+about the scenario: the lighting conditions do affect what the witness
+could see, but do not directly affect what the defendant might have have
+done.
 
-The general moral here is this: episodes of awareness growth should not
-simply be modeled by the addition of new propositions that were not
-previously in the algebra. Since they take place against the background
-of an intuitive causal structure of the world, this structure should
-also be modeled. Bayesian networks offer a tried and tested formal
-framework that can do precisely that. (More on this soon.)
+Without Bayesian networks, episodes of awareness growth could only be
+modeled by the addition of new propositions that were not previously in
+the algebra. But this approach would fail to capture crucial
+information. When awareness growth takes place against the background of
+an intuitive causal structure of the world---as in the case of
+\textsc{Lighting}---this structure should also be modeled. Bayesian
+networks offer a formal framework that can do precisely that.
 
-With a formal model of the scenario at hand, let us now tackle the
-question whether you should assess the evidence at your disposal---that
-the witness saw the defendant at the crime scene---any differently than
-before. The evidence would have the same value if the likelihood ratios
+Before we offer another example of how Bayesian network can capture the
+intuitive causal structure that underlies awareness growth, we tackle
+the question whether you should assess the evidence at your
+disposal---that the witness saw the defendant at the crime scene---any
+differently than before. Without a clear model of the scenario, it might
+seem that you should simply stay put. After all, besides the sensory
+experience of the witness, you have gained no novel information about
+the lighting conditions. Should you thus conclude that the evidence has
+the same value before and after the realization that lighting could have
+been bad?
+
+The evidence would have the same value if the likelihood ratios
 associated with it relative to the competing hypotheses were the same
 before and after awareness growth:
 \[\frac{\pr{E=e \vert H=h}}{\pr{E=e \vert H=h'}}= \frac{\ppr{+}{E=e \vert H=h}}{\ppr{+}{E=e \vert H=h'}} \tag{C}.\]
@@ -571,11 +682,7 @@ evidence is likely to appear less strong.\footnote{By the law of total
   &=^* \ppr{+}{\textit{E=seen} \vert \textit{H=absent} \wedge \textit{L=good}}  \times \ppr{+}{\textit{L=good}}\\ & +\ppr{+}{\textit{E=seen}  \vert \textit{H=absent} \wedge \textit{L=bad}} \times \ppr{+}{\textit{L=bad}}\\
   &= .4 \times .5 +.5 *.5 = .45 
   \end{align*} This argument can be repeated with many other numerical
-  assignments.}
-
-Why does this matter? We have seen that, after awareness growth, you
-should typically regard the evidence \textit{E=seen} as one that favors
-\textit{H=present} less strongly. This outcome violates Reverse
+  assignments.} If this is correct, this outcome violates Reverse
 Bayesianism since the ratio of the probabilities of \textit{H=present}
 to \textit{E=seen}, before and after awareness growth, has changed:
 \[\frac{\ppr{\textit{E=seen}}{\textit{H=present}}}{\ppr{ \textit{E=seen}}{\textit{E=seen}}} \neq \frac{\ppr{+, \textit{E=seen}}{\textit{H=present}}}{\ppr{+, \textit{E=seen}}{\textit{E=seen}}},\]
@@ -593,11 +700,10 @@ growth, updated by the evidence \(\textit{E=seen}\).\footnote{The
   \[\ppr{+}{\textit{H=present} \vert \textit{E=seen}} \neq \pr{\textit{H=present} \vert \textit{E=seen}}.\]}
 
 Besides counterexamples that can be leveled against Reverse Bayesianism,
-we think there is a more general lesson to be learned to which we have
-already alluded to. It has to do with the importance of formalizing
-structural assumptions and the role of Bayesian networks in modeling
-awareness growth. To strengthen this point, consider this variation of
-the \textsc{Lighting} scenario:
+we now return to the more general lesson to be learned here: the
+importance of formalizing structural assumptions and the role of
+Bayesian networks in modeling awareness growth. To strengthen this
+point, consider this variation of the \textsc{Lighting} scenario:
 
 \begin{quote}
 \textsc{Veracity}: A witness saw that the defendant was around the crime
@@ -614,14 +720,21 @@ disposal? If so, how?
 \textsc{Lighting}. The realization that lighting could be bad should
 make you less confident in the truthfulness of the sensory evidence. And
 the same conclusion should presumably follow from the realization that
-the witness could be lying. But, upon closer scrutiny, things are not
-that simple. The evidence at your disposal in \textsc{Lighting} is the
-sensory evidence---the experience of seeing---and the possibility of bad
-lighting does warrant lowering your confidence in the truthfulness of
-the visual experience. But the possibility of lying in \textsc{Veracity}
-does not warrant lowering your confidence in the truthfulness of the
-visual experience, only in the truthfulness of the \textit{reporting} of
-that experience. The distinction between the visual experience and its
+the witness could be lying. So both scenarios would be counterexamples
+to Reverse Bayesianism. But, upon closer scrutiny, things are not that
+simple. To run the two scenarios together would be a mistake.
+
+The evidence at your disposal in \textsc{Lighting} is the sensory
+evidence---the experience of seeing---and the possibility of bad
+lighting does affect the quality of your visual experience. So, if
+lighting was indeed bad, this would warrant lowering your confidence in
+the truthfulness of the visual experience. But the possibility of lying
+in \textsc{Veracity} does not affect the quality of the visual
+experience in and of itself, although it affects the quality of the
+\textit{reporting} of that experience. So, if the witness did lie, this
+would not warrant lowering your confidence in the truthfulness of the
+visual experience, only in the truthfulness of the reporting of that
+experience. The distinction between the visual experience and its
 reporting is crucial here. Bayesian networks help to model this
 distinction precisely, and then see why \textsc{Lighting} and
 \textsc{Veracity} are structurally different.
@@ -649,8 +762,7 @@ for any values \(e\) and \(h\) of the variables \(H\) and \(E\) that are
 shared before and after awareness growth. In comparing the old and new
 Bayesian network, this equality falls out from their structure, as the
 connection between \(H\) and \(E\) remains unchanged. Thus, Reverse
-Bayesianism and Awareness Rigidity are perfectly fine in scenarios such
-as \textsc{Veracity}.
+Bayesianism is perfectly fine in scenarios such as \textsc{Veracity}.
 
 This does not mean that the assessment of the probability of the
 hypothesis \textit{H=present} should undergo no change. If you worry
@@ -688,6 +800,27 @@ conceptualize a specific scenario are the guiding principles about how
 we update the probability function through awareness growth, not a
 formal principle like Reverse Bayesianism. We further elaborate on this
 conjecture by drawing on some examples from Anna Mathani.
+
+\hypertarget{sure-no-gain-bets}{%
+\subsection{Sure no-gain bets}\label{sure-no-gain-bets}}
+
+Suppose the witness reports to have seeing the defendant around the
+crime scene. You are not aware that the witness could be lying. Thus,
+you are 100\% confident that the witness saw is what they report to have
+seeing. In fact, you make no distinction between reporting to have
+seeing and seeing itself. So you would be willing to buy for 1\$ the
+following bet: if the witness saw the defendant, you get 1\$, and 0\$
+otherwise. If the witness did see the defendant, you get you 1\$ back,
+and otherwise you loose \textbackslash1\$. You are 100\% sure the
+witness did see the defendant, so---by your lights---you stand to loose
+no money whatsoever from this bet. But suppose that, as a matter of
+fact, there is a difference between reporting and seeing. So,the witness
+might report to have seeing something without actually having seeing it.
+So, contrary to your conviction, that the witness saw the defendant is
+not 100\% probable. This means that you would be willing to engage in a
+bet in which you are guaranteed not to win any money and could
+potentially lose money. If the witness did see the defendant you would
+get your 1\$ back, but if not, you would lose it.
 
 \hypertarget{mathanis-counterexamples}{%
 \section{Mathani's counterexamples}\label{mathanis-counterexamples}}
@@ -919,64 +1052,6 @@ induces a more fine-grained partition of the possibility space.
 Expansion occurs when the new proposition is inconsistent with the
 existing ones, thus making the old partition no longer exhaustive.
 
-The first counterexample by Steele and Stefánsson targets cases of
-awareness expansion:
-
-\begin{quote}
-\textsc{Friends}: Suppose you happen to see your partner enter your best
-friend's house on an evening when your partner had told you she would
-have to work late. At that point, you become convinced that your partner
-and best friend are having an affair, as opposed to their being warm
-friends or mere acquaintances. You discuss your suspicion with another
-friend of yours, who points out that perhaps they were meeting to plan a
-surprise party to celebrate your upcoming birthday---a possibility that
-you had not even entertained. Becoming aware of this possible
-explanation for your partner's behaviour makes you doubt that she is
-having an affair with your friend, relative, for instance, to their
-being warm friends. (Steele \& Stefánsson, 2021, sec. 5, Example 2)
-\end{quote}
-
-\doublespace
-
-\noindent Initially, the algebra only contains the hypotheses `my
-partner and my best friend met to have an affair' (\textit{Affair}) and
-`my partner and my best friend met as friends or acquaintances'
-(\textit{Friends/acquaintances}). The other proposition in the algebra
-is the evidence, that is, the fact that your partner and your best
-friend met one night without telling you (\textit{Secretive}). Given
-this evidence, \textit{Affair} is more probable than
-\textit{Friends/acquaintances}:
-\[\pr{\textit{Affair} \vert  \textit{Secretive} }> \pr{\textit{Friends/acquaintances} \vert \textit{Secretive}} \tag{>}.\]
-When the algebra changes, a new hypothesis is added which you had not
-considered before: your partner and your best friends met to plan a
-surprise party for your upcoming birthday (\textit{Surprise}). Given the
-same evidence, \textit{Friends/acquaintances} is now more likely than
-\textit{Affair}:
-\[\ppr{+}{\textit{Affair} \vert  \textit{Secretive} } < \ppr{+}{\textit{Friends/acquaintances} \vert \textit{Secretive}}. \tag{<}\]
-This holds assuming that hypothesis \textit{Surprise} is more likely
-than the hypothesis \textit{Affair}:
-\[\ppr{+}{ \textit{Surprise} \vert \textit{Secretive}}> \ppr{+}{ \textit{Affair} \vert \textit{Secretive}},\]
-and, in addition, that \textit{Surprise} implies
-\textit{Friends/acquaintances}. After all, in order to prepare a
-surprise party, your partner and best friend have to be at least
-acquaintances.
-
-The conjunction of (\(>\)) and (\(<\)) violates Reverse Bayesianism
-since \textit{Friends/acquaintances} and \textit{Affair} are basic
-propositions that do not contain any connectives. But, as Steele and
-Stefánsson admits, Reverse Bayesianism can still be made to work with a
-slightly different---though quite similar in spirit---condition, called
-\textbf{Awareness Rigidity}: \[\ppr{+}{A \vert T^*}=\pr{A},\] where
-\(T^*\) corresponds to a proposition that picks out, from the vantage
-point of the new awareness state, the entire possibility space before
-the episode of awareness growth. In our running example, the proposition
-\(\neg\textit{Surprise}\) picks out the entire possibility space in just
-this way. And conditional on \(\neg\textit{Surprise}\), the probability
-of \textit{Affair} does not change. Thus,
-\[\ppr{+}{\textit{Affair} \vert  \textit{Secretive} \& \neg\textit{Surprise} } > \ppr{+}{\textit{Friends/acquaintances} \vert \textit{Secretive} \& \neg\textit{Surprise}}. \]
-Awareness Rigidity is satisfied. Reverse Bayesianism---the spirit of it,
-not the letter---stands.
-
 This is not the end of the story, however. Steele and Stefánsson offer
 another counterexample that also works against Awareness Rigidity, this
 time targeting a case of refinement:
@@ -1078,6 +1153,12 @@ Chihara, C. S. (1987). Some problems for bayesian confirmation theory.
 \leavevmode\vadjust pre{\hypertarget{ref-eerman1992}{}}%
 Earman, J. (1992). \emph{Bayes or bust? A critical examination of
 bayesian confirmation theory}. MIT press.
+
+\leavevmode\vadjust pre{\hypertarget{ref-fenton2013GeneralStructureLegal}{}}%
+Fenton, N., Neil, M., \& Lagnado, D. A. (2013). A {General Structure}
+for {Legal Arguments About Evidence Using Bayesian Networks}.
+\emph{Cognitive Science}, \emph{37}(1), 61--102.
+\url{https://doi.org/10.1111/cogs.12004}
 
 \leavevmode\vadjust pre{\hypertarget{ref-glymour1980}{}}%
 Glymour, C. (1980). \emph{Theory and evidence}. Princeton University
