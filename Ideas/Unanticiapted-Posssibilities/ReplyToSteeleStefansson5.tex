@@ -527,32 +527,113 @@ of the network remains intact.
 
 So, expansion simply consists in the addition of an extra value in one
 of the nodes of the network. Specifically, in \textsc{Friends}, the
-extra value was added to the upstream node \(H\). Since the extra value
-was added in the upstream node, this requires a change in the
-probability table for the conditional probabilities
-\(\pr{E=e \vert H=h}\). However, for these conditional probabilities, a
-restricted variant of Reverse Bayesianism still holds. For all values
-\(e\) and \(h\) of upstream node \(H\) and downstream node \(E\) in the
-old network, the following constraint holds:
+extra value was added to the upstream node \(H\). This addition may
+require a change in the probability table for the conditional
+probabilities \(\pr{E=e \vert H=h}\). However, for all values \(e\) and
+\(h\) of upstream node \(H\) and downstream node \(E\) in the old
+network, the following constraint holds:
 \[\frac{\pr{E=e \vert H=h}}{\pr{E=e \vert H=h}} = \frac{\ppr{+}{E=e \vert H=h}}{\ppr{+}{E=e \vert H=h}}. \tag{C}\]
-What would happen is the extra value had been added to the downstream
-node \(E\)? For suppose that the evidence node \(E\) could initially
-take only two values, say \textit{Secretive} and \textit{Public}. You
-then realize the evidence node could also take a third value, say
-\textit{Ambigous}. Would that realization mandate a change in the old
-conditional probabilities \(\pr{E=e \vert H=h}\)? Since the change is
-downstream the old conditional probabilities \(\pr{E=e \vert H=h}\)
-would remain the same, and thus \emph{a fortiori}, constraint (C) would
-be satisfied.
+Constraint (C) is a restricted variant of Reverse Bayesianism that only
+applies to the conditional probabilities in the probability table for
+the evidence-hypothesis Bayesian network.
+
+The same approach can be adopted to handle a counterexample to Reverse
+Bayesianism by Mathani (2020). It goes like this:
+
+\begin{quote}
+\textsc{Tenant}: Suppose that you are staying at Bob's flat which he shares with his landlord. You know
+that Bob is a tenant, and that there is only one landlord, and that this landlord also
+lives in the flat. In the morning you hear singing coming from the shower room, and
+you try to work out from the sounds who the singer could be. At this point you have
+two relevant propositions that you consider possible ... $Landlord$ standing for the possibility that the landlord is the singer, and $Bob$ standing for the possibility that Bob is the singer  \dots  Because you know that Bob is a tenant in the flat, you also have a credence in the proposition $Tenant$ that the singer is a tenant. Your credence in $Tenant$ is the same as your credence in $Bob$, for given your state of awareness these two propositions are equivalent ... Now let's suppose the possibility suddenly occurs to you that there might be another tenant living in the same flat  ($Other$).
+\end{quote}
+
+\doublespace
+
+\noindent Initially, you thought the singer could either be the landlord
+or Bob, the tenant. Then you come to the realization that a third person
+could be the singer, another tenant. Before awareness growth, that Bob
+is in the shower and that a tenant is in the shower are equivalent
+descriptions. After awareness growth, this equivalence breaks down.
+
+Why is this scenario problematic for Reverse Bayesianism? Suppose, after
+you hear singing in the shower, you become sure someone is in there, but
+you cannot tell who. So \(\pr{Landlord} = \pr{Bob} = 1/2\), and since
+\(Bob\) and \(Tenant\) are equivalent, also \(\pr{Tenant}\) = 1/2. Now,
+\(Landlord\), \(Bob\) and \(Tenant\) are all propositions that you were
+originally aware of, and thus Reverse Bayesianisn requires that their
+assigned probabilities should remain in the same proportion after your
+awareness grows. But note that \(Other\) entails \(Tenant\) and \(Bob\)
+and \(Other\) are disjoint, so it follows that \(\ppr{+}{Other}\) must
+have zero probability.\footnote{If \(\ppr{+}{Other}>0\), the proportion
+  of \(Tenant\) to \(Landlord\) or the proportion of \(Bob\) to
+  \(Landlord\) should change.} This is an undesired outcome that rules
+out the possibility that there could be a third person in the
+shower.\footnote{Awareness Rigidity is no of help either because it
+  would require that
+  \(\ppr{+}{Landlord \vert Landlord \vee Tenant}=\ppr{+}{Bob \vert Landlord \vee Tenant}\)
+  both equal \(1/2\), thus forcing
+  \(\ppr{+}{Other \vert Landlord \vee Tenant}\) to zero.}
+
+In \textsc{Tenant}, it is natural to assign \(1/3\) to \(Landlord\),
+\(Bob\) and \(Other\) after awareness growth. That someone is singing in
+the shower is evidence that someone must be in there, but without any
+more discriminating evidence, each person should be assigned the same
+probability. Consequently, a probability of 2/3 should be assigned to
+\(Tenant\). On this picture, the proportion of \(Landlord\) to
+\(Tenant\) changes from 1:1 (before awareness growth) to 1:2 (after
+awareness growth).
+
+Bayesian networks can help to model this scenario. We start with the
+following graph:
+
+\begin{center}\includegraphics[width=0.5\linewidth,height=0.3\textheight]{ReplyToSteeleStefansson5_files/figure-latex/tenantsDAG-new-1} \end{center}
+
+\noindent Initially, the upstream node \(Person\) has two possible
+states, representing who is in the bathroom singing:
+\textit{landlord-person} and \(bob\). To simplify things, the assumption
+here is that the evidence of singing has already ruled out the
+possibility that no one would be in the shower. The downstream node
+\(Role\) has also two values, \(landlord\) and \(tenant\). After your
+awareness grows, the upstream node \(Person\) should now have one more
+possible state, \(other\).
+
+The scenarios \textsc{Friends} and \textsc{Tenant} are structurally
+identical as far as their modeling using Bayesian networks. So, if
+constraint (C) holds in \textsc{Friends}, as seen earlier, it must also
+hold in \textsc{Tenant}. This is precisely what happens. For these
+ratios remain fixed:
+
+\[\frac{\pr{\textit{Role}=\textit{landlord} \vert \textit{Person}=\textit{landlord}}}{\pr{\textit{Role}=\textit{landlord} \vert \textit{Person}=\textit{bob}}} = \frac{\ppr{+}{\textit{Role}=\textit{landlord} \vert \textit{Person}=\textit{landlord}}}{\ppr{+}{\textit{Role}=\textit{landlord} \vert \textit{Person}=\textit{bob}}} = 1/0\]
+
+\[\frac{\pr{\textit{Role}=\textit{tenant} \vert \textit{Person}=\textit{landlord}}}{\pr{\textit{Role}=\textit{tenant} \vert \textit{Person}=\textit{bob}}} = \frac{\ppr{+}{\textit{Role}=\textit{tenant} \vert \textit{Person}=\textit{landlord}}}{\ppr{+}{\textit{Role}=\textit{tenant} \vert \textit{Person}=\textit{bob}}} = 0/1\]
 
 The upshot of this discussion is this. Awareness expansion can be
 modeled by changes in the Bayesian network used to represent the
 epistemic state of the agent. The structure of the network does not
-change, but values are added to the upstream or downstream node. This
-addition of values to the nodes can be carried while satisfying a
-restricted version of Reverse Bayesian, what we called constraint (C).
-This constraint achieves the same result as Awareness Rigidity, but more
-easily applies to the conditional probabilities that are needed in the
+change, but values are added to the upstream nodes. (We will consider
+changes to the downstream node shortly.) This addition can be carried
+while satisfying a restricted version of Reverse Bayesian, what we
+called constraint (C). This constraint outperforms both Reverse
+Bayesianism (which fails in \textsc{Friends}) and Awareness Rigidity
+(which fails in \textsc{Tenant}).
+
+What would happen is the extra value is added to the downstream node in
+the hypothesis-evidence network? Consider a variation of
+\textsc{Friends}. Suppose that the evidence node \(E\) could initially
+take only two values, say \textit{Secretive} and \textit{Public}. You
+then realize the evidence node could also take a third value, say
+\textit{Ambigous}. This realization mandate a change in the old
+conditional probabilities \(\pr{E=e \vert H=h}\). Since
+\textit{Secretive} and \textit{Public} were initially considered
+exhaustive,
+
+Since the change is downstream the old conditional probabilities
+\(\pr{E=e \vert H=h}\) would remain the same, and thus \emph{a
+fortiori}, constraint (C) would be satisfied.
+
+outperformes the same result as Awareness Rigidity, but more easily
+applies to the conditional probabilities that are needed in the
 probability tables of Bayesian Networks. The challenge now is to develop
 a systematic method to determine when constraint (C) is satisfied and
 when it fails. The structure of the Bayesian network will be our guide.
