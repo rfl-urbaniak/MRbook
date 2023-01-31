@@ -1,7 +1,7 @@
 ---
 title: "Second-order Probability, Accuracy and Weight of Evidence"
 author: "Rafal Urbaniak and Marcello Di Bello"
-date: "November 24, 2022"
+date: "January 31, 2023"
 output:
   pdf_document:
     number_sections: true
@@ -71,9 +71,12 @@ source("../scripts/SCplotDistros.R")
 
 # Introduction
 
-<!---
-\textbf{M's comment: Nice exmaple and discussion. The only thing I would change (besides being clearer on certain stuff, see comments below) is make clear that we are after three strategies: precise probabilism (use precise probabilities for rando match probabilities), interval approach (senstivity analysys), and then higher-order approach. I think that sequence of moves should emerge from the discussion as it foreshadoes what is to come.)}
---->
+\todo{see M'scomment in boldface}
+\textbf{M's comment: This introductory section needs some work. This section is not well-grounded in the literature. Two main things.}
+
+\textbf{FIRST: There is a big debate among forensic scientists about whether intervals shoud be used in the presentation of the value of the evidence. There was a 2016 special issue of Science and Justice on this topic. We should mention it. See, in particular, Stewart Morrison (2016) "Special issue on measuring and reporting the precision of forensic likelihood ratios: Introduction to the debate" and also, in that special issue, Ommen, Saunders, and Neumann (2016) "An argument against presenting interval quantifications as a surrogate for the value of evidence". Both papers were added to the folder. I am not sure our framing of the debate is faithful to the complexities that are brought up in the forensic science literature.}
+
+\textbf{SECOND: The last paragraph at the end of the section in response to Kadane's remark seems too generic to me. If we are not proposing anything technically new but simply applying existing ideas, we need to cite the technical work we are relying on. Kadane mentioned "Bayesian hierarchical models". I don’t know what they are, but I looked up the wikipedia entry on the topic and talked to a statistician. They are a common thing in Bayesian statistics. So we should cite references discussing them and say how we are applying them (if we are just applying them) or say in what way our approach differs from them.}
 
 
 ```{r introStarts,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%", warning = FALSE}
@@ -361,6 +364,11 @@ Before we dive in, one more remark: ost of the time, mathematically, we do not p
 
 # Three probabilisms
 \label{sec:three-probabilism}
+
+
+\todo{see M'scomment in boldface}
+\textbf{M's comment: this section looks good more or less, but now -- given Kadane's remark -- there is the question whether the novel proposal -- higher-order probabilism -- is really new. Is it just an application of hierarchical Bayesian models to discussions in philosophy? In some sense, "probabilism" in epistemology is an application of standard probability theory to questions in epistemology, so perhpas "higher order probabilism" is also an application of existing hiearchical bayesian models to problems in epistemology. If this is right, we need to make these connections clear. }
+
 
  In introduction we sketched three probabilistic approaches that one might take for assessing the value of the evidence presented at trial. The first approach uses precise probabilities; the second uses intervals; the third uses distributions over probabilities. By relying on an example featuring two items of match evidence, we suggested that the third approach is preferable. This section buttresses this claim by providing principled, philosophical reasons in favor of the third approach.  
 
@@ -685,7 +693,11 @@ Somewhat surprisingly, most of the concerns raised by  @Taroni2015Dismissal are 
 In response to the philosophical argument, @Dahlman2022Information have also emphasized that the distinction is not so clear-cut. They argue that, if a probability assessment is a subjective attitude that is elicited via a betting preference, a probability assessment is itself a state of nature, "the formation of a betting preference by a certain person at a certain time" [p. 15]. While we will have something to say about the philosophical dimension of this debate, let us first develop  a less philosophically involved  argument for the position taken by @Sjerps2015Uncertainty.
 
 
-## An ccuracy-based argument
+## An accuracy-based argument
+
+
+\todo{see M'scomment in boldface}
+\textbf{M's comment: This accuracy-based argument is evocative and intriguing, but what does it show really? What is the significance of using PMF based on a point estimate versus a posterior predictive PMF? Does this correspond to something that is done in court? How? The more interesting question is whether using higher-order probabilities reduces errors, say the rate of false convictions or false acquittals. Does it? If so, how?}
 
  With this argument, we hope to break the stalemate in the debate by proving an argument to which both parties should be receptive. 
 It is an accuracy-based argument in favor of using higher-order probabilities---roughly, it says, if you discard relevant information that you already have contained in the densities resulting from the estimation and rely on point estimates only, your predictions about the world will be less accurate in a very precise and quantifiable sense.
@@ -823,12 +835,13 @@ ggplot()+geom_density(aes(x = klds))+labs(
 
 ## Conceptual issues
 
-
+\todo{M's comment in boldface}
+\textbf{M's comments: this subsection looks muddled to me. It goes around in circles. I cannot follow the argument. What is the key point made in this subection? The key point seems to be this: just like we compare the plausibility/probability of propositions like "defendant was at crime scene" and "defedant was not at crime scenbe", we compare the plausibility/probability of propositions like "random match probability is .0001" and "random match probability of .0002". The second comparison requires higher-order probabilities. Is this the point? But Taroni is saying that we can average over all possible random match probabilities and get a point estimate. What do we say in response to that?}
 
 
 Accuracy considerations aside, we will now engage with the more  conceptual points. 
 @Taroni2015Dismissal argue that since first-order probabilities capture your uncertainty about a proposition of interest, second-order probabilities are supposed to capture your uncertainty about how uncertain you are, and that "estimating" your first-order uncertainties is unnecessary.  They think that you can simply figure out your fair odds in a suitable bet on the proposition in question, and the fair odds track your unique, first-order uncertainty without any uncertainty about it. But this point can be questioned. For one thing, the betting interpretation of probability is not uncontroversial.^[See textbooks in formal epistemology [@bradley2015critical; @Titelbaum2020Fundamentals-of].] 
-Even assuming the betting interpretation, there seems to be nothing wrong in  saying that sometimes  we are\todo{add ref to Williamson} uncertain about what we think the fair bets are.^[On a related note, the introspective axioms in epistemic logic---that is,  if an agent knows (or doesn't know) $p$, they also know that they (don't) know $p$---are by no means uncontroversial. See, for example, Williamson 2000 (chapter 5)'s argument against the KK principle of positive introspection.] But admittedly, this answer while undermines the betting argument for the sufficiency of point estimates, does not cast much light on what the appropriate relatively uncontroversial interpretation of higher-order uncertainty should be. 
+Even assuming the betting interpretation, there seems to be nothing wrong in  saying that sometimes  we are\todo{add ref to Williamson} uncertain about what we think the fair bets are.^[On a related note, the introspective axioms in epistemic logic---that is,  if an agent knows (or doesn't know) $p$, they also know that they (don't) know $p$---are by no means uncontroversial. See, for example, Williamson 2000 (chapter 5)'s argument against the KK principle of positive introspection.] But admittedly, this answer while undermines the betting argument for the sufficiency of point estimates, does not cast much light on what the appropriate relatively uncontroversial interpretation of higher-order uncertainty should be. \todo{M's: I don't understand the argument here. What is a "relatively uncontroversial interpretation"?}
 
 
 Think again about an expert who gathers information about the allelic frequency $f$ of DNA matches in an available database, and starts with a defensible \s{beta} prior with parameters $\alpha, \beta$. Say the expert observes $s$ matches in a database of size $n$. So the population relative frequency the experts is estimating should follow the $\s{beta}(\alpha + s + 1 ,\beta + n - s)$ distribution.  So far, nothing controversial happens---the expert is estimating the relevant population frequency.
@@ -836,7 +849,7 @@ Think again about an expert who gathers information about the allelic frequency 
 
 But subjective uncertainty that is to be reported by the expert,   @Taroni2015Dismissal complain, is not about the frequency, but  about their attitude towards a proposition (supposedly expressing a "state of nature")---and, they insist, it makes no sense for an agent to attach uncertainty to their own uncertainty about a proposition.
 
-Assuming the conditions are pristine (the expert has no modeling uncertainty, rules out laboratory errors, and so on), the beta distribution can be used to pretty directly inform the expert's subjective uncertainty. But uncertainty about what? The (estimated) population frequency, for instance, can underlie a  probability assignment to the proposition \emph{a match is observed  if another person, unrelated to the suspect, is the source of the trace}. Admittedly, if only this proposition is being considered, it is yet not clear what second-order uncertainties would be uncertainties about. But the expert also considers a continuum of propositions, each of the form \emph{the true population frequency is $\theta$} for each $\theta\in [0,1]$. A density over $\theta$ models the comparative plausibility that the expert assigns to such propositions in light of the evidence.\footnote{Moreover, and normalization allows them to calculate their subjective probabilities for $\theta$ belonging to various sub-intervals of $[0,1]$.} So if one were worried that there were no propositions that the expert could be "second-order" uncertain about, there actually are plenty. In particular, if $\theta$ is a population frequency, gauging which density captures the extent to which the evidence justifies various estimates of that frequency is the same as gauging the comparative plausibility of the corresponding propositions about possible population frequencies.^[Perhaps, this should no longer be called "estimation", but the the connection with estimation is strong enough to justify this terminology. In the end, this is a verbal discussion that we will not get into.]
+Assuming the conditions are pristine (the expert has no modeling uncertainty, rules out laboratory errors, and so on), the beta distribution can be used to pretty directly inform the expert's subjective uncertainty. But uncertainty about what? The (estimated) population frequency, for instance, can underlie a  probability assignment to the proposition \emph{a match is observed  if another person, unrelated to the suspect, is the source of the trace}. Admittedly, if only this proposition is being considered, it is yet not clear what second-order uncertainties would be uncertainties about. But the expert also considers a continuum of propositions, each of the form \emph{the true population frequency is $\theta$} for each $\theta\in [0,1]$. A density over $\theta$ models the comparative plausibility that the expert assigns to such propositions in light of the evidence.\footnote{Moreover, and normalization allows them to calculate their subjective probabilities for $\theta$ belonging to various sub-intervals of $[0,1]$.} So if one were worried that there were no propositions that the expert could be "second-order" uncertain about, there actually are plenty. \todo{M: who was worried that there were no second-order propositions? What argument in the literature is this a response to? I cannot follow.} In particular, if $\theta$ is a population frequency, gauging which density captures the extent to which the evidence justifies various estimates of that frequency is the same as gauging the comparative plausibility of the corresponding propositions about possible population frequencies.^[Perhaps, this should no longer be called "estimation", but the the connection with estimation is strong enough to justify this terminology. In the end, this is a verbal discussion that we will not get into.]
 
 
 More generally, in many contexts, evidence justifies first-order probability assignments (population frequency estimates) to various degrees. Suppose there is no evidence about the bias of a coin. Then, each first-order uncertainty about it would be equally (un)-justified. (If you like to think in terms of bets, the evidence would give no reason to prefer any particular odds as fair.) If, instead, we know the coin is fair, the evidence clearly selects one preferred value, .5. (Again, if you like the betting metaphor, 1:1 would be the  unique recommended betting odds.) But often the evidence is stronger than the former case and weaker than the latter case. Consider, for example, propositions about population frequencies in light of the results of observations. In such circumstances, the evidence justifies different values of first-order uncertainty to various degrees, and densities simply capture the extent to which different first-order uncertainties are supported by the evidence.
@@ -1364,6 +1377,10 @@ AdiseaseLRPlot <- plotSample(AdiseaseLR,title = "LR: Adisease",  paste("median =
 \label{sec:weight}
 
 
+\todo{M's comments in boldface.}
+\textbf{M's comment: The discussion about weight seems the start of a new paper. We should probably work on the previous sections and make them more defensible and better grounded in the literature.}
+
+
 After sketching how the  legal applications of the higher-order approach should go, we turn to another  payoff of higher-order probabilism: it allows us to  develop a theory of the weight of evidence that outperforms the existing proposals. We will start with an informal sketch of the concept of the weight of evidence, as opposed to the balance of the evidence. We will then explore a few attempts at modeling this idea, first from the preciser's and then from the impreciser's perspective.  Finally, we will show that higher-order probabilism can offer a better theory. 
 
 
@@ -1474,10 +1491,11 @@ By the properties of logarithms, $ln(1/x) = -ln(x)$,
 so two items of evidence of equivalent strength---but 
 opposite directionality---would have the same weight. So, for example, $|ln(1/3)|= |ln(3)| = 1.61$.
 
-This account, while simple and elegant, faces difficulties.  As it is ordinally equivalent to the standard ordering of the absolute values of Good's weights, our objections, mutatis mutandis, apply. Moreover,  as it has pointed out,\todo{by whom?} there is a decomposition problem. Consider two items of evidence that, taken together, have a likelihood ratio of one, say one has a likelihood ratio of 1/3 and the other of 3. Assuming they are probabilistically independent given a hypothesis of interest, their combined likelihood ratio results from multiplying the individual likelihood ratios. Thus, their combined weight would be zero since $\ln (LR_H(E1 \wedge E_2))=\ln (1) = 0$. However, by adding the weights one by one, the combined weight would be different from zero, since $|ln(1/3)| + |ln(3)| = 3.22$. So, do the two items of evidence have zero weight or not?  Depending on how evidence is decomposed, it appears to have different weights. \todo{To think about: does the decomposition problem apply to Good's weight?}
+This account, while simple and elegant, faces difficulties.  As it is ordinally equivalent to the standard ordering of the absolute values of Good's weights, our objections, mutatis mutandis, apply. Moreover, as Nance points out, there is a decomposition problem. Consider two items of evidence that, taken together, have a likelihood ratio of one, say one has a likelihood ratio of 1/3 and the other of 3. Assuming they are probabilistically independent given a hypothesis of interest, their combined likelihood ratio results from multiplying the individual likelihood ratios. Thus, their combined weight would be zero since $\ln (LR_H(E1 \wedge E_2))=\ln (1) = 0$. However, by adding the weights one by one, the combined weight would be different from zero, since $|ln(1/3)| + |ln(3)| = 3.22$. So, do the two items of evidence have zero weight or not?  Depending on how evidence is decomposed, it appears to have different weights. \todo{To think about: does the decomposition problem apply to Good's weight?} \todo{M: the decomposition problem does not apply to Good who has a directional notion of weight.}
 
 
 \todo{R: the bit I commended out was false, I think. See the revised verson of the above passage, and think hard about the argument}
+\todo{M: Why was it false?}
 
 <!-- But another, conceptually deeper problem exists. Whether the log of the likelihood has a positive or negative sign, its absolute value is always positive. Therefore, as more evidence is added, the weight of evidence would always increase. This account might agrees with Monotonicity and Strong Increase, and in this sense, captures the generic notion of quantity of evidence.  The problem, then, is that this measure does not really track how informed the evidence makes us (as the rigged lottery example illustrates).  -->
 
