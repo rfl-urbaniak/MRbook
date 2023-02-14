@@ -1564,6 +1564,78 @@ lethal disease in son A (Figure \ref{fig:SClrs}).
 
 \end{figure}
 
+\hypertarget{relationship-with-bayesian-hierarchical-models}{%
+\subsection{Relationship with Bayesian hierarchical
+models}\label{relationship-with-bayesian-hierarchical-models}}
+
+Our approach does involve multiple parameters, uncertainty about them,
+and some dependency structure between random variables. So it is only
+natural to ask whether what we propose is not just an old wolf in a new
+sheep's clothing, as one might think that what looks like a DAG and
+quacks like a DAG is always a hierarchical model. As this question has
+been brought up to us a couple of times in discussion, we decided it
+deserves an elaboration.
+
+First, we need some clarity on what a Bayesian hierarchical model is. In
+the widest sense of the word, these are mathematical descriptions
+involving multiple parameters such that credible values for some of them
+meaningfully depend on the values of other parameters, and that
+dependencies can be re-factored into a chain of dependencies. For
+instance, think about a joint parameter space for two parameters
+\(\theta\) and \(\omega\), where
+\(p(\theta, \omega \vert D) \propto p(D \vert \theta, \omega)p(\theta, \omega)\).
+If, further some independency-motivated re-factoring of the right-hand
+side, for instance as \(p(D\vert \theta)p(\theta \omega)) p (\omega)\)
+is possible, we are dealing with a hierarchical model in the wide sense
+of the word.
+
+Such models come useful when we are dealing with clustered data, such as
+a cohort study with repeated measures, or some natural groupings at
+different levels of analysis. Then, lower-level parameters are treated
+as iid and share the same parameter distribution characterized by some
+hyper-parameters in turn characterized by a prior distribution. As a
+simple example consider a scenario in which we are dealing with multiple
+coins created by one mint---each coin has its own bias \(\theta_i\), but
+also that there is some commonality as to what these biases are in this
+mint, represented by a higher-level parameter \(\theta\). For the
+analysis we assume \(\theta_i \sim beta(a, b)\) and
+\(y_{i\vert s} \sim bern(\theta_s)\). Let's re-parametrize
+\(beta(a, b)\) as \$beta(\omega(k-2)+1, (1-\omega)(k-2)+1) \$, keep
+\(k\) fixed -- then \(\omega\) is our expected value of the \(\theta_i\)
+parameters, with some variety around it determined by \(k\). Now, if we
+also are uncertain about \(\omega\) and express our uncertainty about it
+in terms a density \(p(\omega)\) we got ourselves a hierarchical model
+with joint prior distribution over parameters
+\(\prod p(\theta_i \vert \omega) p(\omega)\). As an another example, one
+can develop a multilevel regression predicting, say the distributions of
+the radon levels in various counties, where both the intercept and the
+slope vary with counties by taking
+\todo{fix the friggin formulas in the file}
+
+How is our approach different. Conceptually, at a few levels. For one,
+we are not dealing with clustered data. Given a hypothesis \(H\) and an
+item of evidence \(E\) for it, where both are propositions (or binary
+random variables), there seems to be no interesting conceptualizations
+on which the underlying data would be clustered. For conceptual reasons,
+it is not that stains at a crime scene are a subgroup of crimes being
+committed. Yes, there is dependency between these phenomena, but
+describing it as clustering would be at least misleading. Second, the
+dependencies proceed through the values of the random variables and
+require also conditional uncertainties regarding the dependencies
+between the variables. So, for the two-node network we have
+\(H\sim Bern(p_h), p_h \sim Beta(a_h, b_h)\), \(E\sim Bern(p_e)\), but
+then we also have the beta distributions for the probability of the
+evidence conditional on the hypothesis being present, and another one
+for the probability of the evidence if the hypothesis is false, thus
+\(p_e \vert H = 1 \sim beta(a_+, b_+)\) and
+\(p_e\vert H = 0 \sim beta(a_{-}, b_{-})\). Yes, there is a meaningful
+independence/dependence structure here, but the re-factoring in terms of
+the actual values of the random variables makes it quite specific, at
+the same time allowing for the computational use of Bayesian networks.
+Finally, the reasoning we describe is not regression the way it is
+normally performed: the learning task is delegated to the bottom level
+of whatever happens to the Bayesian networks once updated with evidence.
+
 \hypertarget{weight-of-evidence}{%
 \section{Weight of Evidence}\label{weight-of-evidence}}
 

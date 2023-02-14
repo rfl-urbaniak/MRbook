@@ -24,34 +24,7 @@ indent: true
 
 
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-library(dagitty)
-library(rethinking)
-library(ggplot2)
-library(ggthemes)
-library(gridExtra)
-library(tidyr)
-library(philentropy)
-library(latex2exp)
-library(gridExtra)
-library(rethinking)
-library(bnlearn)
-library(gRain)
-library(reshape2)
-library(truncnorm)
-library(ggforce)
 
-ps <- seq(0,1, length.out = 1001)
-getwd()
-source("../scripts/CptCreate.R")
-source("../scripts/SCfunctions.R")
-
-SCprobsFinal <- readRDS("../datasets/SCprobsFinal.rds")
-attach(SCprobsFinal)      
-source("../scripts/SCplotCPTs.R")
-source("../scripts/SCplotDistros.R")
-```
 
 
 
@@ -79,32 +52,7 @@ source("../scripts/SCplotDistros.R")
 \textbf{SECOND: The last paragraph at the end of the section in response to Kadane's remark seems too generic to me. If we are not proposing anything technically new but simply applying existing ideas, we need to cite the technical work we are relying on. Kadane mentioned "Bayesian hierarchical models". I don’t know what they are, but I looked up the wikipedia entry on the topic and talked to a statistician. They are a common thing in Bayesian statistics. So we should cite references discussing them and say how we are applying them (if we are just applying them) or say in what way our approach differs from them.}
 
 
-```{r introStarts,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%", warning = FALSE}
-ps <- seq(0,1,length.out = 1001)
 
-hairMean <-  29/1148
-hairA <- 30
-hairB <- 1149
-
-dogMean <- 2/78
-dogA <- 3
-dogB <- 79
-
-lik0 <- hairMean * dogMean
-prior <- seq(0,.3, by = 0.001)
-priorH0 <- 1-prior
-denomin <- lik0 * priorH0 + prior
-num <-  lik0 * priorH0
-posterior <- 1- num/denomin
-threshold <- min(prior[posterior > .99])
-
-pointImpactPlot <- ggplot()+geom_line(aes(x = prior, y = posterior))+xlim(0,.07)+
-  theme_tufte(base_size = 10)+labs(title = "Prior vs. posterior, based on point estimates",
-                                   subtitle = "Joint evidence: dog & hair")+
-  geom_vline(xintercept = threshold, lty = 2, size =.5, alpha = .7)+
-  annotate(geom = "label", label = "posterior > .99", x = .067, y =.95, size = 2.5)+
-  theme(plot.title.position = "plot")
-```
 
 
 A defendant in a criminal case may face multiple 
@@ -126,24 +74,23 @@ The standard story among legal probabilists
 goes something like this. To evaluate the strength of the two items of match evidence, we must find the value of the likelihood ratio:
 \[\frac{\pr{\s{dog}\wedge \s{hair} \vert \s{source}}}{\pr{\s{dog}\wedge \s{hair} \vert \neg \s{source}}}\]
 For simplicity, the numerator can be equated to one. 
-To fill in the denominator, an expert provides the relevant random match probabilities. Suppose the expert testifies that the probability of a random person's hair matching the reference sample is about `r round(hairMean,4)`, and the probability of a random dog's hair matching the reference sample happens to be about the same, `r round(dogMean,4)`.^[Probabilities have been slightly but not unrealistically modified to be closer to each other in order 
+To fill in the denominator, an expert provides the relevant random match probabilities. Suppose the expert testifies that the probability of a random person's hair matching the reference sample is about 0.0253, and the probability of a random dog's hair matching the reference sample happens to be about the same, 0.0256.^[Probabilities have been slightly but not unrealistically modified to be closer to each other in order 
 to make a conceptual point. The original probabilities were  1/100 for the dog fur, and 29/1148 for Wayne Williams' hair. We modified the actual reported probabilities slightly to emphasize the point that we will elaborate further on: the same first-order probabilities, even when they sound precise, may come with different degrees of  second-order uncertainty.] 
 <!---result from various items of evidence connected to various levels of second-order uncertainty.--->
 <!---You assume that the probabilities of matches if the suspect (respectively, the suspect's dog) is the source is one, and that --->
 Presumably, the two matches are independent lines of evidence. In other words, their random match probabilities <!---of a match---> must be independent of each other conditional on <!---either truth value of---> the source hypothesis. <!---, namely that the defendant (or the defendant's dog) is the source of the hair (or dog fur) found at the scene --->  <!----and $\neg \mathsf{source}$).---> Then, to evaluate the overall impact of the evidence on the source hypothesis, you calculate: 
 \begin{align*}
 \pr{\s{dog}\wedge \s{hair} \vert \neg \s{source}} & = \pr{\s{dog} \vert \neg \s{source}} \times \pr{\s{hair} \vert \neg \s{source}} \\
-& =  `r hairMean` \times  `r dogMean` = `r hairMean * dogMean`
+& =  0.0252613 \times  0.025641 = \ensuremath{6.4772626\times 10^{-4}}
 \end{align*}
 This is a very low number. Two such random matches would be quite a coincidence. Following our advice from Chapter 5, the expert  facilitates your understanding  of how this low number should be interpreted. They show you how
-the  items of match evidence change the probability of the source hypothesis given a range of possible priors (Figure \ref{fig:impactOfPoint}).  The posterior of .99 is reached as soon as the prior is higher than  `r threshold`.^[These calculations assume that the probability of a match if the suspect and the suspect's dog are the sources is one.]
+the  items of match evidence change the probability of the source hypothesis given a range of possible priors (Figure \ref{fig:impactOfPoint}).  The posterior of .99 is reached as soon as the prior is higher than  0.061.^[These calculations assume that the probability of a match if the suspect and the suspect's dog are the sources is one.]
 While perhaps not sufficient for outright belief in the source hypothesis, the evidence seems extremely strong: a minor additional piece of evidence could make the case against the defendant overwhelming. 
 
 
 \begin{figure}[H]
-```{r impactOfPoint4,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "60%", warning = FALSE, message = FALSE}
-pointImpactPlot
-```
+
+\begin{center}\includegraphics[width=0.6\linewidth]{paper-outline_files/figure-latex/impactOfPoint4-1} \end{center}
 \caption{Impact of dog fur and human hair evidence on the prior, point estimates.}
 \label{fig:impactOfPoint}
 \end{figure}
@@ -152,33 +99,9 @@ Unfortunately, this  analysis
 leaves out something crucial. You reflect on what you have been told and ask the expert: how can you know the random match probabilities with such precision? Shouldn't we also be mindful of the uncertainty that may affect these numbers? The expert agrees, and tells you that in fact the random match probability for the hair evidence  is based on 29 matches found in a database of size 1148, while the random match probability for the dog evidence is based on finding two matches in a reference database of size 78. 
 
 
-```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%"}
-#carpetSamples <- sample(ps, 1e4, replace = TRUE, prob = dbeta(ps, carpetA, carpetB))
-set.seed(231)
-hairSamples <- sample(ps, 1e4, replace = TRUE, prob = dbeta(ps, hairA, hairB))
-dogSamples <- sample(ps, 1e4, replace = TRUE, prob = dbeta(ps, dogA, dogB))
 
-#carpetHPDI <- HPDI(carpetSamples, prob  =.9)
-hairHPDI <- HPDI(hairSamples, prob  =.99)
-dogHPDI <- HPDI(dogSamples, prob  =.99)
-```
 
-```{r charitableImpact,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%"}
-lik0l <- .037 * .103
-denominL <- lik0l * priorH0 + prior
-numL <-  lik0l * priorH0
-posteriorL <- 1- numL/denominL
-thresholdL <- min(prior[posteriorL > .99])
 
-charitableImpactPlot <- ggplot()+geom_line(aes(x = prior, y = posteriorL))+xlim(0,.32)+
-  theme_tufte(base_size = 10)+labs(title = "Prior vs. posterior, charitable reading",
-                                   subtitle = "Joint evidence: dog & hair")+
-  geom_vline(xintercept = thresholdL, lty = 2, size =.5, alpha = .7)+
-  annotate(geom = "label", label = "posterior > .99", x = .305, y =.95, size = 2.5)+ylab(
-    "posterior"
-  )+
-  theme(plot.title.position = "plot")
-```
 
 
 The expert's answer makes apparent that the precise random match probabilities do not tell the whole story. Perhaps, the information about sample sizes is good enough  and now you know how to use the evidence properly.^[This is what, effectively, CITE TARONI seem to suggest when they insist the fact-finders should be simply given point estimates and information about the study set-up, such as sample size. As will transpire, we disagree.] But if you are like most human beings, you can't. What to do, then?  
@@ -188,12 +111,11 @@ You ask the expert for guidance:  what are reasonable ranges of the random match
 \begin{align*}
 \mathsf{P}(\s{dog}\wedge \s{hair} \vert \neg \s{source})   & =  .037 \times .103 =.003811.
 \end{align*}
- This number is around `r round(.003811/lik0,2)` times greater than the original estimate. Now the prior probability of the source hypothesis needs to be higher than `r thresholdL` for the posterior probability to be above .99 (Figure \ref{fig:impactOfCharitable}). So you are no longer convinced that the two items of match evidence are strongly incriminating.
+ This number is around 5.88 times greater than the original estimate. Now the prior probability of the source hypothesis needs to be higher than 0.274 for the posterior probability to be above .99 (Figure \ref{fig:impactOfCharitable}). So you are no longer convinced that the two items of match evidence are strongly incriminating.
 
 \begin{figure}[H]
-```{r fig:charitableImpact7,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "60%", warning = FALSE, message = FALSE}
-charitableImpactPlot
-```
+
+\begin{center}\includegraphics[width=0.6\linewidth]{paper-outline_files/figure-latex/fig:charitableImpact7-1} \end{center}
 \caption{Impact of dog fur and human hair evidence on the prior, charitable reading.}
 \label{fig:impactOfCharitable}
 \end{figure}
@@ -226,43 +148,13 @@ Working with intervals might be useful if the underlying distributions are fairl
 This also means that---following our advice on how to illustrate the impact of evidence on prior probabilities---a better representation of the dependence of the posterior on the prior should comprise multiple possible sampled lines whose density mirrors the density around the probability of the evidence (Figure \ref{fig:lines}).
 
 
-```{r densitiesEvidence,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%"}
 
-jointEvidence <- dogSamples * hairSamples
-
-
-densities1Plot <- ggplot()+  
-  geom_line(aes(x = ps, y = dbeta(ps, hairA, hairB)), lty  = 2)+
-  geom_line(aes(x = ps, y = dbeta(ps, dogA, dogB)), lty = 3)+xlim(0,.15)+
-  xlab("probability")+
-  ylab("density")+
-  theme_tufte(base_size = 10)+
-  #  annotate(geom  = "label", label = "carpet", x =  0.045, y = 140)+
-  annotate(geom  = "label", label = "hair", x =  0.035, y = 80)+
-  annotate(geom  = "label", label = "dog", x =  0.06, y = 15)+
-  labs(title = "Conditional densities for  individual items of evidence if the source hypothesis is false")+
-  theme(plot.title.position = "plot")
-
-densities2Plot <- ggplot()+  
-  xlab("probability")+
-  ylab("density")+
-  theme_tufte(base_size = 10)+
-  geom_density(aes(x= jointEvidence))+
-  geom_vline(xintercept = 0.002760, lty = 2, linewidth = .5)+
-  geom_vline(xintercept = 0.000023, lty = 2, linewidth  = .5)+
-  geom_vline(xintercept = 0.000144, lty = 3, linewidth = .8)+
-  geom_vline(xintercept = 0.001742, lty = 3, linewidth  = .8)+
-  labs(title = "Conditional density for joint evidence", 
-       subtitle = "(with .99 and .9 HPDIs)")+
-  theme(plot.title.position = "plot")
-```
 
 
 
 \begin{figure}[H]
-```{r fig:densities,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "80%", warning = FALSE, message = FALSE}
-grid.arrange(densities1Plot,densities2Plot, ncol = 1 )
-```
+
+\begin{center}\includegraphics[width=0.8\linewidth]{paper-outline_files/figure-latex/fig:densities-1} \end{center}
 \caption{Beta densities for individual items of evidence and the resulting joint density with .99 and .9 highest posterior density intervals, assuming the sample sizes as discussed and independence, with uniform priors.}
 \label{fig:densities}
 \end{figure}
@@ -270,72 +162,14 @@ grid.arrange(densities1Plot,densities2Plot, ncol = 1 )
 
 
 
-```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%", warning = FALSE, message = FALSE}
-prior <- seq(0,1, by = 0.001)
-priorH0 <- 1-prior
 
-#-----
-
-jointPosterior <- list()
-minima <- numeric(1e4)
-
-
-#for each likelihood from sample, 
-#calculate the posterior based on what the prior is
-#and find the minimum above threshold
-for (s in 1:1e4){
-  lik <- jointEvidence[s] 
-  denomin <- lik * priorH0 + prior
-  num <-  lik * priorH0
-  posterior <- 1- num/denomin
-  jointPosterior[[s]] <- posterior
-  minima[s] <- min(prior[posterior > .99])
-  }
-
-
-
-minimaPlot <- ggplot()+geom_density(aes(x = minima))+
-  theme_tufte(base_size = 10)+ggtitle("Minimal priors sufficient for posterior >.99")+xlab("minimal prior")+
-  theme(plot.title.position = "plot")
-
-minimaGrob <- ggplotGrob(minimaPlot)
-
-
-
-jointPosteriorDF <-   as.data.frame(do.call(cbind, jointPosterior))
-
-
-
-jointPosteriorSubsample <- jointPosteriorDF[,1:300]
-
-jointPosteriorDF$ps <- ps
-jointPosteriorSubsample$ps <- ps
-
-jointPosteriorLong <- melt(jointPosteriorSubsample,
-                           id.vars = c("ps"))
-colnames(jointPosteriorLong) <- c("prior", "sample","probability")
-
-alpha = .25
-size = .2
-
-densitiesLinesPlot <- ggplot(jointPosteriorLong)+
-  geom_line(aes(x = prior, y = probability,group = sample),
-            alpha = alpha, linewidth = size)+
-  theme_tufte()+xlim(0,.2) + 
-  annotation_custom(minimaGrob, xmin = .085, xmax = .185, 
-                  ymin = 0.01, ymax = 0.8) +
-  ggtitle("Posterior vs prior (300 sampled lines)") + 
-  theme(plot.title.position = "plot")
-
-```
 
 
 
 
 \begin{figure}[H]
-```{r fig:lines5,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "60%", warning = FALSE, message = FALSE}
-densitiesLinesPlot
-```
+
+\begin{center}\includegraphics[width=0.6\linewidth]{paper-outline_files/figure-latex/fig:lines5-1} \end{center}
 
 \caption{300 lines illustrating the uncertainty about the dependence of the posterior on the prior given aleatory uncertainty about the evidence, with the distribution of the minimal priors required for the posterior to be above .99.}
 
@@ -489,46 +323,12 @@ as the precise, object-level credence in $X$, where $f$ is the probability densi
 The higher-order approach can easily model all the challenging scenarios we discussed so far in the manner illustrated in Figure \ref{fig:evidenceResponse}. In particular, the scenario in which the two biases of the coin are not equally likely---which imprecise probabilism cannot model---can be easily modeled within high-order probabilism by assigning different probabilities to the two biases.
   
 
-```{r evidenceResponse1,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
-p <- seq(from=0 , to=1 , by = 0.001)
-FairDensity <- ifelse(p == .5, 1, 0)
-FairDF <- data.frame(p,FairDensity)
-FairPlot <- ggplot(FairDF, aes(x = p, y = FairDensity))+geom_line()+theme_tufte()+
-  xlab("parameter value")+ylim(c(0,1))+ylab("probability")+ggtitle("Fair coin")+
-  theme(plot.title.position = "plot")
 
-UniformPlot <- ggplot()+xlim(c(0,1))+stat_function(fun = dunif, args = list(min = 0, max = 1))+
-  ylim(0,1)+
-  theme_tufte()+
-  xlab("parameter value")+
-  ylab("probability density")+theme(plot.title.position = "plot")+ggtitle("Unknown bias")
-
-
-p <- seq(from=0 , to=1 , by = 0.001)
-TwoDensity <- ifelse(p == .4 | p == .6, .5, 0)
-TwoDF <- data.frame(p,TwoDensity)
-TwoPlot <- ggplot(TwoDF, aes(x = p, y = TwoDensity))+geom_line()+theme_tufte()+
-  xlab("parameter value")+ylim(c(0,1))+ylab("probability")+ggtitle("Two biases (insufficient reason)")+
-  theme(plot.title.position = "plot")+scale_x_continuous(breaks = c(.4,.6), labels = c(.4, .6))
-
-
-
-
-p <- seq(from=0 , to=1 , by = 0.001)
-TwoUnbalancedDensity <- ifelse(p == .4, .75, ifelse(p ==  .6, .25, 0))
-TwoUnbalancedDF <- data.frame(p,TwoUnbalancedDensity)
-
-TwoUnbalancedPlot <- ggplot(TwoUnbalancedDF, aes(x = p, y = TwoUnbalancedDensity))+geom_line()+theme_tufte()+
-  xlab("parameter value")+ylim(c(0,1))+ylab("probability")+ggtitle("Two unbalanced biases")+
-  theme(plot.title.position = "plot")+scale_x_continuous(breaks = c(.4,.6), labels = c(.4, .6))
-
-```
 
 
 \begin{figure}[t]
-```{r fig:evidenceResponse2,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "80%"}
-grid.arrange(FairPlot,UniformPlot, TwoPlot, TwoUnbalancedPlot)
-```
+
+\begin{center}\includegraphics[width=0.8\linewidth]{paper-outline_files/figure-latex/fig:evidenceResponse2-1} \end{center}
 \caption{Examples of higher-order distributions for scenarios brought up in the literature.}
 \label{fig:evidenceResponse}
 \end{figure}
@@ -547,67 +347,13 @@ p(\theta \vert D) & = \frac{p(D\vert \theta)p(\theta)}{p(D)}\\
 
 
 
-```{r fig:inertia2, eval = TRUE, echo=FALSE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%", message= FALSE, warning=FALSE}
 
-n <- 1000 #parameters 
-s <- 1e5  #sample size
-
-ps <- seq(from=0 , to=1 , length.out=n)
-
-prior <- rep(1/n , n) #uniform prior
-
-likelihood1g <- dbinom( 1 , size=1 , prob=ps)
-likelihood2g <- dbinom( 2 , size=2 , prob=ps)
-likelihood2g1b <- dbinom( 2 , size=3 , prob=ps)
-
-posterior1g <- likelihood1g * prior
-posterior2g <- likelihood2g * prior
-posterior2g1b <- likelihood2g1b * prior
-
-
-posterior1g <- posterior1g / sum(posterior1g)
-posterior2g <- posterior2g / sum(posterior2g)
-posterior2g1b <- posterior2g1b / sum(posterior2g1b)
-
-upperLimit <- .003
-
-InertiaPriorPlot <- ggplot()+geom_line(aes(x = ps, y = prior))+theme_tufte(base_size = 7)+xlab("parameter")+
-  ylab("probability")+theme(plot.title.position = "plot")+ggtitle("Prior")+
-  scale_x_continuous()+scale_y_continuous(limits = c(0,upperLimit))
-
-
-InertiaOneGPlot <- ggplot()+geom_line(aes(x = ps, y = posterior1g))+theme_tufte(base_size = 7)+xlab("parameter")+
-  ylab("probability")+theme(plot.title.position = "plot",
-                            axis.text.y = element_blank(),
-                            axis.title.y = element_blank(),
-                          axis.ticks.y =element_blank()
-)+ggtitle("Evidence: h")+
-  scale_y_continuous(limits = c(0,upperLimit))
-
-
-
-InertiaTwoGPlot <- ggplot()+geom_line(aes(x = ps, y = posterior2g))+theme_tufte(base_size = 7)+xlab("p")+
-  ylab("probability")+theme(plot.title.position = "plot"#, 
-#                        axis.text.y = element_blank(),
-#                            axis.title.y = element_blank(),
-#                            axis.ticks.y = element_blank()
-                  )+ggtitle("Evidence: h, h")+
-scale_y_continuous(limits = c(0,upperLimit))
-
-InertiaTwoGoneBluePlot <- ggplot()+geom_line(aes(x = ps, y = posterior2g1b))+theme_tufte(base_size = 7)+xlab("parameter")+
-  ylab("probability")+theme(plot.title.position = "plot",     axis.text.y = element_blank(),
-  axis.title.y = element_blank(),
-      axis.ticks.y = element_blank()
-           )+ggtitle("Evidence: h, h, t")+
-  scale_y_continuous(limits = c(0,upperLimit))
-```
 
 
 
 \begin{figure}[t]
-```{r fig:inertia3, echo=FALSE, eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "80%",   message = FALSE, warning = FALSE, results = FALSE}
-grid.arrange(InertiaPriorPlot, InertiaOneGPlot,  InertiaTwoGPlot, InertiaTwoGoneBluePlot, ncol = 2, nrow = 2)
-```
+
+\begin{center}\includegraphics[width=0.8\linewidth]{paper-outline_files/figure-latex/fig:inertia3-1} \end{center}
 \caption{As observations of heads, heads and tails come in, extreme parameter values drop out of the picture and the posterior is shaped by the evidence.}
 \label{fig:intertia2}
 \end{figure}
@@ -702,59 +448,9 @@ In response to the philosophical argument, @Dahlman2022Information have also emp
  With this argument, we hope to break the stalemate in the debate by proving an argument to which both parties should be receptive. 
 It is an accuracy-based argument in favor of using higher-order probabilities---roughly, it says, if you discard relevant information that you already have contained in the densities resulting from the estimation and rely on point estimates only, your predictions about the world will be less accurate in a very precise and quantifiable sense.
 
-```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%"}
-priorA <- 1
-priorB <- 1
-set.seed(215)
-trueH <- runif(1,0,1) 
-
-sampleSize <- sample(10:20,size = 1)
-testSize <- sampleSize
-
-set.seed(319)
-successes <- rbinom(1, sampleSize, trueH)
-pointEstimate <- successes/sampleSize
-
-pointPredictions <-  rbinom( 1e4 , size = testSize , prob = pointEstimate )
-
-ps <- seq(0,1,length.out = 1001)
-
-testPredictions <- rbinom( 1e4 , size = testSize , prob = trueH )
-
-posterior <- function(x) dbeta(x, priorA + successes,
-                               priorB + sampleSize - successes)
-
-posteriorSample <- sample( ps , size=1e4 ,
-                           replace=TRUE , posterior(ps)/sum(posterior(ps)))
-
-posteriorPredictions <- rbinom( 1e4 , size=testSize , prob=posteriorSample )
 
 
-testProbs <- table(factor(testPredictions, levels = seq(0,sampleSize)))/1e4
-pointProbs <- table(factor(pointPredictions, levels = seq(0,sampleSize)))/1e4
-posteriorProbs <- table(factor(posteriorPredictions, levels = seq(0,sampleSize)))/1e4 
-
-testPlot <- ggplot()+geom_bar(aes(x= testPredictions, y = ..prop..))+
-  ggtitle(paste("Predictions based on the true parameter = ", round(trueH,2), sep = ""))+xlim(0,testSize)+ylab("probability")+xlab("successes")+theme_tufte(base_size = 8)+theme(plot.title.position = "plot")
-
-
-pointPlot <- ggplot()+geom_bar(aes(x= pointPredictions,y = ..prop..))+
-  labs(title = paste("Predictions based on the point estimate = ", round(pointEstimate,2)), subtitle = paste(successes, " successes in ", sampleSize, " observations", sep = ""))+xlim(0,testSize)+ylab("probability")+xlab("successes")+theme_tufte(base_size = 8)+theme(plot.title.position = "plot")
-
-
-samplesPlot <- ggplot()+geom_density(aes(x= posteriorSample))+
-  ggtitle(paste("Posterior sample from beta(", 1+successes, ",", 1+testSize - successes,
-                ")", sep = ""))+xlab(
-                  "parameter value"
-                )+theme_tufte(base_size = 8)+theme(plot.title.position = "plot")
-
-posteriorPlot <- ggplot()+geom_bar(aes(x= posteriorPredictions,y = ..prop..))+
-  ggtitle("Predictions based on the posterior sample")+xlim(0, testSize)+ylab("probability")+xlab("successes")+theme_tufte(base_size = 8)+theme(plot.title.position = "plot")
-
-
-```
-
-First, let us go over a particular example. Suppose we randomly draw a true population frequency from the uniform distribution. In our particular case, we obtained `r round(trueH,3)`. Then, we randomly draw a sample size as a natural number between 10 and 20. In our particular case, it is `r sampleSize`. Next, we simulate an experiment in which we draw that number of observations from the true distribution. We observe `r successes` successes and use this number to calculate the point estimate of the parameter, which is `r round(pointEstimate,3)`. 
+First, let us go over a particular example. Suppose we randomly draw a true population frequency from the uniform distribution. In our particular case, we obtained 0.632. Then, we randomly draw a sample size as a natural number between 10 and 20. In our particular case, it is 16. Next, we simulate an experiment in which we draw that number of observations from the true distribution. We observe 8 successes and use this number to calculate the point estimate of the parameter, which is 0.5. 
 
 What is the probability mass function (PMF) for all 
 possible outcomes of an observation of the same size? 
@@ -763,16 +459,15 @@ Two PMF are initially relevant: first, the true probability mass based on the tr
 
 
 \begin{figure}[H]
-```{r fig:posteriorPrediction2, echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "80%", warning=FALSE, message = FALSE, dpi = 800, warning = FALSE, message = FALSE, output = FALSE}
-grid.arrange(testPlot,pointPlot,samplesPlot,posteriorPlot, ncol = 1)
-```
+
+\begin{center}\includegraphics[width=0.8\linewidth]{paper-outline_files/figure-latex/fig:posteriorPrediction2-1} \end{center}
 
 
 \caption{Real probability mass, probability mass calculated using a point estimate, sampling distribution from the posterior, and the posterior predictive distribution based on this sampling distribution.}
 \label{fig:posteriorPrediction}
 \end{figure}
 
-The PMF based on a point estimate is further off from the real PMF than the posterior predictive distribution. For instance, if we ask about the probability of the outcome being at least 9 successes, the true answer is `r mean(testPredictions >= 9)`, the point estimate PMF tells us it is `r mean(pointPredictions >= 9 )`, while the posterior predictive distribution gives a somewhat better guess at `r mean(posteriorPredictions >= 9 )`. A similar thing happens when we ask about the probability of the outcome being at most 9 successes. The true answer is `r mean(testPredictions <= 9)`, the point-estimate-based answer is `r mean(pointPredictions <= 9 )`, while the posterior predictive distribution yields  `r mean(posteriorPredictions <= 9 )`. More generally, we can use an information-theoretic measure, Kullback-Leibler divergence,  to quantify how far the point-estimate PMF and the posterior predictive PMF are from the true PMF.\footnote{A bit of explanation of this divergence measure. Suppose we are dealing with a variable $X$ with $n$ distinct possible discrete states $x_1, \dots, x_n$ and consider two probability mass functions $p$ and $q$ which express uncertainty about the true value of $X$ so that, say, on $p$, $\pr{X=x_i}=p_i$. First, the uncertainty of a given distribution $p$, its \emph{entropy}, is given by the sum of the logarithms of surprise $\nicefrac{1}{p_i}$ for all the possible values,  $H(p) = \sum x_i \log \frac{1}{p_i} = - \sum p_i \log p_i$.  Next, suppose events arise according to $p$, but we predict them
+The PMF based on a point estimate is further off from the real PMF than the posterior predictive distribution. For instance, if we ask about the probability of the outcome being at least 9 successes, the true answer is 0.7984, the point estimate PMF tells us it is 0.4056, while the posterior predictive distribution gives a somewhat better guess at 0.4277. A similar thing happens when we ask about the probability of the outcome being at most 9 successes. The true answer is 0.3681, the point-estimate-based answer is 0.778, while the posterior predictive distribution yields  0.7051. More generally, we can use an information-theoretic measure, Kullback-Leibler divergence,  to quantify how far the point-estimate PMF and the posterior predictive PMF are from the true PMF.\footnote{A bit of explanation of this divergence measure. Suppose we are dealing with a variable $X$ with $n$ distinct possible discrete states $x_1, \dots, x_n$ and consider two probability mass functions $p$ and $q$ which express uncertainty about the true value of $X$ so that, say, on $p$, $\pr{X=x_i}=p_i$. First, the uncertainty of a given distribution $p$, its \emph{entropy}, is given by the sum of the logarithms of surprise $\nicefrac{1}{p_i}$ for all the possible values,  $H(p) = \sum x_i \log \frac{1}{p_i} = - \sum p_i \log p_i$.  Next, suppose events arise according to $p$, but we predict them
 using $q$. The \emph{cross-entropy}  is then  $\mathsf{H}(p, q)  = \sum p_i \log(q_i)$. This value is going to be higher than the entropy of $p$ if $q$ is different from it. Think of it as the uncertainty involved in using $q$ to predict events that arise according to $p$.  Third, \emph{Kullback-Leibler}  divergence is the additional entropy introduced by
 using $q$ instead of $p$ itself, that is, the difference between cross-entropy and entropy:
 \begin{align*}
@@ -788,32 +483,12 @@ difference in log probabilities. In particular, if
 which works out as it intuitively should be.}
 
 
- In our particular case, the former distance is `r kld(testProbs,pointProbs)` and the latter is `r kld(testProbs,posteriorProbs)`. The posterior predictive distribution is information-theoretically closer to the true distribution.
-
-```{r kldsCalculations,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%"}
-klds <- numeric(1000)
-for(i in 1:1000){
-trueH <- runif(1,0,1) 
-sampleSize <- sample(10:25,size = 1)
-testSize <- sampleSize
-successes <- rbinom(1, sampleSize, trueH)
-pointEstimate <- successes/sampleSize
-pointPredictions <-  rbinom( 1e4 , size = testSize , prob = pointEstimate )
-ps <- seq(0,1,length.out = 1001)
-testPredictions <- rbinom( 1e4 , size = testSize , prob = trueH )
-posteriorSample <- sample( ps , size=1e4 ,
-                           replace=TRUE , posterior(ps)/sum(posterior(ps)))
-posteriorPredictions <- rbinom( 1e4 , size=testSize , prob=posteriorSample )
-testProbs <- table(factor(testPredictions, levels = seq(0,sampleSize)))/1e4
-pointProbs <- table(factor(pointPredictions, levels = seq(0,sampleSize)))/1e4
-posteriorProbs <- table(factor(posteriorPredictions, levels = seq(0,sampleSize)))/1e4 
-klds[i] <- kld(testProbs,pointProbs) - kld(testProbs,posteriorProbs)
-}
-
-```
+ In our particular case, the former distance is 0.7905638 and the latter is 0.5681121. The posterior predictive distribution is information-theoretically closer to the true distribution.
 
 
-This was just one example, but the phenomenon generalizes.  We repeat the simulation 1000 times, each time with a new true parameter, a new sample size, and a new sample. Every time the three PMFs are constructed using the methods we described and their KL divergence from the true distribution is calculated.  Figure \ref{fig:kldsPlots} displays the empirical distribution of the results of such a simulation. A positive value indicates that the distribution based on the point-estimate was further from the true PMF than the posterior predictive distribution based on the same observed sample. Notably, the mean difference is `r round(mean(klds),3)`, the median difference is `r round(median(klds),3)`, and the distribution is asymmetrical, as there are multiple cases of large differences favoring posterior predictive distributions over point-based predictions.  All in all, accuracy-wise, point-estimate-based PMFs are systematically worse than the posterior predictive distribution. 
+
+
+This was just one example, but the phenomenon generalizes.  We repeat the simulation 1000 times, each time with a new true parameter, a new sample size, and a new sample. Every time the three PMFs are constructed using the methods we described and their KL divergence from the true distribution is calculated.  Figure \ref{fig:kldsPlots} displays the empirical distribution of the results of such a simulation. A positive value indicates that the distribution based on the point-estimate was further from the true PMF than the posterior predictive distribution based on the same observed sample. Notably, the mean difference is 0.865, the median difference is 0.044, and the distribution is asymmetrical, as there are multiple cases of large differences favoring posterior predictive distributions over point-based predictions.  All in all, accuracy-wise, point-estimate-based PMFs are systematically worse than the posterior predictive distribution. 
 
 
 
@@ -821,12 +496,8 @@ This was just one example, but the phenomenon generalizes.  We repeat the simula
 
 
 \begin{figure}[H]
-```{r fig:kldsPlots, echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "70%", warning=FALSE, message = FALSE, dpi = 800, warning = FALSE, message = FALSE, output = FALSE}
-ggplot()+geom_density(aes(x = klds))+labs(
-  title = "Point-estimates vs. posterior predictive distributions",
-  subtitle = "Differences in Kullback-Leibler divergencies from true PMFs")+
-  theme_tufte(base_size = 10)+theme(plot.title.position = "plot")+ylab("empirical density")+xlab("difference in klds")
-```
+
+\begin{center}\includegraphics[width=0.7\linewidth]{paper-outline_files/figure-latex/fig:kldsPlots-1} \end{center}
 \caption{Differences in Kullback-Leibler divergencies from the true distributions, comparing the distributions obtained using point estimates and posterior predictive distributions. Positive values indicate the point-estimate-based PMF was further from the true distribution than the posterior predictive distribution.}
 \label{fig:kldsPlots}
 \end{figure}
@@ -902,20 +573,12 @@ on the match evidence ($E$) is, with some idealization, as follows:
 For simplicity, the false negative rate is assumed to be zero, or in other words, $\pr{E\vert S} =1$. The other assumption is that the evidence could come about if: (1) the source hypothesis is true; (2) a random match ($RM$) occurred; or (3) a false positive match occurred ($FP$).
 
 
-```{r fpPointCalculations,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%"}
-ps <- seq(0,1, length.out = 100001)
-prior <- seq(0,1, by = 0.001)
-posterior <- function(prior, rmp = 10e-9, fpp){ 
-  return ( prior/(prior + rmp + fpp) )
-}
-pristinePosterior <- posterior(prior, rmp = 1e-9, fpp = 0)
-charitablePosterior <-  posterior(prior, rmp = 1e-9, fpp = 0.01)
-```
+
 
 Suppose the random match probability for the DNA match evidence  is rather low, say $10^{-9}$, and there is no uncertainty associated 
 with this number. Consider now two ways of assessing the DNA match.
 First, disregarding the possibility of a false positive---setting $FP$ to $0$---makes 
-the match evidence appear extremely strong. In this case, the minimal prior sufficient for the posterior to be above .99 is only `r min(prior[pristinePosterior >= .99])`, where the relation between the prior probabilities and the posterior probabilities of the source hypothesis 
+the match evidence appear extremely strong. In this case, the minimal prior sufficient for the posterior to be above .99 is only 0.001, where the relation between the prior probabilities and the posterior probabilities of the source hypothesis 
 is given by the dashed orange line in Figure \ref{fig:fplinesPlot}. What happens after 
 taking into account the possibility of a false positive match? This depends on how this possibility of error is quantified. Assume the false positive rate corresponds to the upper bound of the [0.001, 0.01] interval. This assumption completely changes the assessment of the match evidence. Now the posterior of $.99$ is reached only if the prior is above .99. The match evidence  appears to be extremely weak. So which is it?  As already seen in the introduction, the point estimate exaggerates the value of the match evidence, while using the upper bound of the false positive rate has the opposite effect.  What happens within  the [0.001, 0.01] interval cannot be ignored.
 
@@ -925,24 +588,7 @@ To take into consideration the values within the edges, it would be best to have
 The lingering question, however, is how these distributions can be obtained.  Admittedly, studies on false positives are limited and only give an incomplete picture. More studies  are needed. This does not mean, however, that until then using point estimates and interval edges is preferable. After deciding on the functional form of a distribution---such as truncated normal or beta---only a few numbers need to be elicited from experts for constructing a density.^[For instance, assuming the distribution is a truncated normal, it is enough for the expert to assert that both the 99\% interval is as the one we used, and that they believe with more than 50\% confidence the false positive rates to be below $.033$ for the curve to be determined.] Having to rely on such elicitation is not without problems, but it is better than asking experts for single point estimates and relying on these [@o2006uncertain].
 
 
-```{r fpSampling,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%"}
-set.seed(1233)
-fpdN <- ifelse(ps > 0 & ps <= .01015, 1, 0) 
-fpdN <- fpdN/sum(fpdN)
-fpdNsample <- sample(ps, 1e5, replace = TRUE, prob = fpdN)
-set.seed(1233)
-fpdWsample <- sample(ps, 1e5, replace = TRUE,
-                     prob = dtruncnorm(ps, a = 0, b = 1, 
-                                       mean = 0.0005,
-                                       sd = .004))
 
-fpnPlot <- ggplot()+geom_density(aes(x =  fpdNsample))+xlim(0,.02)+theme_tufte(base_size  = 10) + theme(plot.title.position =  "plot")+ labs(title = "Uniform (0, .01015)", subtitle = "Approximated with 10e5 sampled values")+ylab("density")+xlab("false positive rate")
-
-
-fpwPlot <- ggplot()+geom_density(aes(x =  fpdWsample))+xlim(0,.02)+theme_tufte(base_size  = 10) + theme(plot.title.position =  "plot")+ labs(title = "Truncated normal (.0005, .004) ", subtitle = "Approximated with 10e5 sampled values")+ylab("density")+xlab("false positive rate")
-
-# fpGrid <- grid.arrange(fpnPlot, fpwPlot,ncol=2,top=textGrob("Examples of FP densities with the same interval"))
-```
 
 
 
@@ -951,9 +597,8 @@ fpwPlot <- ggplot()+geom_density(aes(x =  fpdWsample))+xlim(0,.02)+theme_tufte(b
 \begin{figure}[H]
 
 
-```{r fig:fppdistros, echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "80%", warning=FALSE, message = FALSE, dpi = 800, warning = FALSE, message = FALSE, output = FALSE}
-grid.arrange(fpnPlot, fpwPlot,ncol=2,top=textGrob("Examples of FP densities with the same interval"))
-```
+
+\begin{center}\includegraphics[width=0.8\linewidth]{paper-outline_files/figure-latex/fig:fppdistros-1} \end{center}
 
 
 \caption{Two examples of assumptions about the false positive rates, both having pretty much the same 99\% highest density intervals. Left: all error rates are equally likely. Right: the most likely values are closer to 0, but also some high values while unlikely are possible.}
@@ -965,50 +610,7 @@ grid.arrange(fpnPlot, fpwPlot,ncol=2,top=textGrob("Examples of FP densities with
 
 
 
-```{r fpMinima,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%"}
-set.seed(1233)
-fpdNsample <- sample(ps, 1e4, replace = TRUE, prob = fpdN)
-fpdWsample <- sample(ps, 1e4, replace = TRUE,
-                     prob = dtruncnorm(ps, a = 0, b = 1, 
-                                       mean = 0.0005,
-                                       sd = .004))
-posteriorN <- list()
-posteriorW <- list()
-minimaN <- numeric(1e4)
-minimaW <- numeric(1e4)
 
-for (s in 1:1e4){
-  fppN <-    fpdNsample[s] 
-  fppW <-    fpdWsample[s] 
-  
-  posteriorN[[s]] <- posterior(prior = prior, 
-                               fpp = fpdNsample[s])
-  posteriorW[[s]] <- posterior(prior = prior, 
-                               fpp = fpdWsample[s])
-}
-
-for (s in 1:1e4){
-minimaN[s] <- ifelse(sum(posteriorN[[s]]> .99) >0,
-                     min(prior[posteriorN[[s]] > .99]), 1)
-minimaW[s] <- ifelse(sum(posteriorW[[s]]> .99) >0, 
-                     min(prior[posteriorW[[s]] > .99]), 1)
-}
-
-posteriorNDF <-   do.call(cbind, posteriorN)
-posteriorWDF <-   do.call(cbind, posteriorW)
-minimasDF <- data.frame(minima = c(minimaN, minimaW),
-                        prior = c(rep("uniform", 1e4) , 
-                                  rep("trnormal", 1e4)) )
-
-minimaPlot <- ggplot(minimasDF)+
-  geom_histogram(aes(x = minima, fill = prior, y = ..count../sum(..count..)), 
-                 bins = 50, position = "dodge2")+
-  theme_tufte(base_size = 10)+
-  ggtitle("Minimal priors sufficient for posterior >.99")+
-  ylab("Second-order probability")+theme(legend.position = c(0.9,.9),
-                                         plot.title.position = "plot")+
-                                         scale_fill_brewer(type = "qual")
-```
 
 
 
@@ -1019,9 +621,8 @@ minimaPlot <- ggplot(minimasDF)+
 \begin{figure}[H]
 
 
-```{r fig:fppMinima, echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "80%", warning=FALSE, message = FALSE, dpi = 800, warning = FALSE, message = FALSE, output = FALSE}
-minimaPlot
-```
+
+\begin{center}\includegraphics[width=0.8\linewidth]{paper-outline_files/figure-latex/fig:fppMinima-1} \end{center}
 
 
 \caption{The distribution of minimal priors sufficient for obtaining a posterior above .99 on the two distributions of false positive rates. The truncated normal distribution has its bulk towards the left, but at the same time has higher ratio of evens in which this posterior is never reached. }
@@ -1033,57 +634,15 @@ minimaPlot
 
 
 
-```{r fpLines,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%", warning = FALSE, message = FALSE}
-posteriorNDFsubset <- as.data.frame(posteriorNDF[,1:300])
-posteriorNDFsubset$prior <- prior
-posteriorNDFsubsetLong <- melt(posteriorNDFsubset, id.vars = "prior")
 
-posteriorWDFsubset <- as.data.frame(posteriorWDF[,1:300])
-posteriorWDFsubset$prior <- prior
-posteriorWDFsubsetLong <- melt(posteriorWDFsubset, id.vars = "prior")
-
-alpha = .05
-size = .2
-
-
-posteriorNplot <- ggplot()+
-  geom_line(data = posteriorNDFsubsetLong, 
-            aes(x = prior,
-                y = value, group = variable),
-                alpha = alpha, size = size)+
-  theme_tufte(base_size = 10)+ylab("posterior")+
-  geom_line(aes(x = prior, y = pristinePosterior), 
-            color = "orangered", lty = 3, linewidth = 1.1)+
-  geom_line(aes(x = prior, y = charitablePosterior),
-            color = "dodgerblue4", lty = 2, linewidth = 1.1)+
-  labs(title = "Uniform fpp density")+theme(plot.title.position = "plot")+
-  xlim(0,.25)
-  
-
-
-posteriorWplot <- ggplot()+
-  geom_line(data = posteriorWDFsubsetLong, 
-            aes(x = prior,
-                y = value, group = variable),
-            alpha = alpha, linewidth = size)+
-  theme_tufte(base_size = 10)+ylab("posterior")+
-  geom_line(aes(x = prior, y = pristinePosterior), 
-            color = "orangered", lty = 3, linewidth = 1.1)+
-  geom_line(aes(x = prior, y = charitablePosterior),
-            color = "dodgerblue4", lty = 2, linewidth = 1.1)+
-  labs(title = "Trnormal fpp density")+theme(plot.title.position = "plot")+
-  xlim(0,.25)
-```
 
 
 
 
 
 \begin{figure}[H]
-```{r fig:fplinesPlot3, echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "80%", warning=FALSE, message = FALSE, dpi = 800, warning = FALSE, message = FALSE, output = FALSE}
-grid.arrange(posteriorNplot, posteriorWplot,  ncol = 1,
-     top=textGrob("Posterior vs prior, impact of two fpp densities"))
-```
+
+\begin{center}\includegraphics[width=0.8\linewidth]{paper-outline_files/figure-latex/fig:fplinesPlot3-1} \end{center}
 \caption{Impact of prior on the posterior assumign two different densitites for false positive rates. Note how both the "pristine" error-free point estimate (orange) and the charitable version (blue) are quite far from where the bulks of the distributions in fact are. Note also how the trnormal density allows for even more charitable cases, which results from it being long-tailed.}
 \label{fig:fplinesPlot}
 \end{figure}
@@ -1133,96 +692,26 @@ An example of a higher-order Bayesian network for the Sally
 Clark case is given in Figure \ref{fig:SCwithHOP}. 
 
 
-```{r scBN,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "60%", warning=FALSE, message = FALSE, dpi = 800}
-#create SC DAG
-#define the structure of the Sally Clark BN
-SallyClarkDAG <- model2network("[Abruising|Acause][Adisease|Acause][Bbruising|Bcause][Bdisease|Bcause][Acause][Bcause|Acause][NoMurdered|Acause:Bcause][Guilty|NoMurdered]")
-SCdag <- model2network("[Abruising|Acause][Adisease|Acause][Bbruising|Bcause][Bdisease|Bcause][Acause][Bcause|Acause][NoMurdered|Acause:Bcause][Guilty|NoMurdered]")
-#plot 
-#graphviz.plot(SallyClarkDAG)
 
-
-#CPTs as used in Fenton & al.
-AcauseProb <-prior.CPT("Acause","SIDS","Murder",0.921659)
-AbruisingProb <- single.CPT("Abruising","Acause","Yes","No","SIDS","Murder",0.01,0.05)
-AdiseaseProb <- single.CPT("Adisease","Acause","Yes","No","SIDS","Murder",0.05,0.001)
-BbruisingProb <- single.CPT("Bbruising","Bcause","Yes","No","SIDS","Murder",0.01,0.05)
-BdiseaseProb <- single.CPT("Bdisease","Bcause","Yes","No","SIDS","Murder",0.05,0.001)
-BcauseProb <- single.CPT("Bcause","Acause","SIDS","Murder","SIDS","Murder",0.9993604,1-0.9998538)
-
-#E goes first; order: last variable through levels, second last, then first
-NoMurderedProb <- array(c(0, 0, 1, 0, 1, 0, 0,1,0,1,0,0), dim = c(3, 2, 2),dimnames = list(NoMurdered = c("both","one","none"),Bcause = c("SIDS","Murder"), Acause = c("SIDS","Murder")))
-
-#this one is definitional
-GuiltyProb <-  array(c( 1,0, 1,0, 0,1), dim = c(2,3),dimnames = list(Guilty = c("Yes","No"), NoMurdered = c("both","one","none")))
-
-# Put CPTs together
-SallyClarkCPTfenton <- list(Acause=AcauseProb,Adisease = AdiseaseProb,
-                      Bcause = BcauseProb,Bdisease=BdiseaseProb,
-                      Abruising = AbruisingProb,Bbruising = BbruisingProb,
-                      NoMurdered = NoMurderedProb,Guilty=GuiltyProb)
-
-# join with the DAG to get a BN
-SCfenton <- custom.fit(SallyClarkDAG,SallyClarkCPTfenton)
-```
 
 
 
 \begin{figure}[H]
-```{r scBNplot2,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "50%", warning=FALSE, message = FALSE, dpi = 800}
-graphviz.chart(SCfenton, type = "barprob", layout = "dot", #draw.labels = TRUE,
-  grid = FALSE, scale = c(0.75, 1.1), col = "black", 
-  text.col = "black", bar.col = "black", main = NULL,
-  sub = NULL)
-```
+
+\begin{center}\includegraphics[width=0.5\linewidth]{paper-outline_files/figure-latex/scBNplot2-1} \end{center}
 \caption{Bayesian network for the Sally Clark case, with marginal prior probabilities.}
 \label{fig:scBNplot}
 \end{figure}
 
 
 
-```{r scStages,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "80%", warning=FALSE, message = FALSE, dpi = 800}
 
-SCfJN <- compile(as.grain(SCfenton))
-
-priorFenton <- querygrain(SCfJN, node = "Guilty")[[1]][1]
-
-SCfJNAbruising <- setEvidence(SCfJN, nodes = c("Abruising"), states = c("Yes"))
-AbruisingFenton <- querygrain(SCfJNAbruising, node = "Guilty")[[1]][1]
-
-SCfJNAbruisingBbruising <- setEvidence(SCfJN, nodes = c("Abruising","Bbruising"),
-                                states = c("Yes","Yes"))
-AbruisingBbruisingFenton <- querygrain(SCfJNAbruisingBbruising, node = "Guilty")[[1]][1]
-
-SCfJNAbruisingBbruisingNoDisease <- setEvidence(SCfJN, nodes = c("Abruising","Bbruising","Adisease","Bdisease"),
-                                         states = c("Yes","Yes", "No", "No"))
-AbruisingBbruisingFentonNoDiseaseFenton <-   querygrain(SCfJNAbruisingBbruisingNoDisease, node = "Guilty")[[1]][1]
-
-
-SCfJNAbruisingBbruisingDiseaseA <- setEvidence(SCfJN, nodes = c("Abruising","Bbruising","Adisease","Bdisease"), 
-                                               states = c("Yes","Yes", "Yes", "No"))
-AbruisingBbruisingFentonDiseaseAFenton <- querygrain(SCfJNAbruisingBbruisingDiseaseA, node = "Guilty")[[1]][1]
-
-
-SCfentonTable <- data.frame(stage = factor(c("prior", "bruising in A", "bruising in both",
-                                      "bruising in both, no disease", "bruising in both, disease on A only"),
-                                      levels = c("prior", "bruising in A", "bruising in both",
-                                                 "bruising in both, no disease", "bruising in both, disease on A only")),
-                            probability = c(priorFenton,AbruisingFenton,AbruisingBbruisingFenton,
-                                            AbruisingBbruisingFentonNoDiseaseFenton,AbruisingBbruisingFentonDiseaseAFenton))
-```
 
 
 <!---
 \begin{figure}[H]
-```{r SCfentonTable2,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "90%", warning=FALSE, message = FALSE, dpi = 800}
-ggplot(SCfentonTable) + geom_point(aes(x = stage, y = probability, size = probability * .9))+
-  scale_x_discrete(limits=rev, expand = c(0, 2)) +coord_flip()+theme_tufte(base_size = 10)+ scale_size(guide="none")+
-  theme(plot.title.position = "plot")+ggtitle("Impact of evidence according to Fenton's BN for the Sally Clark case") +
-  geom_text(aes(x = stage, y= probability * 1.05, label= round(probability,2) ,hjust=-.3, vjust=-.3), size  = 3.5)+
-  scale_y_continuous(breaks = seq(0,.7, by =.1), limits = c(0,.8))
 
-```
+\begin{center}\includegraphics[width=0.9\linewidth]{paper-outline_files/figure-latex/SCfentonTable2-1} \end{center}
 
 \caption{The prior and posterior probabilities for Fenton's Sally Clark BN.}
 
@@ -1233,80 +722,16 @@ ggplot(SCfentonTable) + geom_point(aes(x = stage, y = probability, size = probab
 
 <!---
 \begin{figure}[H]
-```{r fig:SCwithHOPa, echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "90%", warning=FALSE, message = FALSE, dpi = 800}
 
-grid.arrange(AbruisingIfSidsPlot+xlim(0,.4),AbruisingIfMurderPlot+xlim(0,.4))
-```
+\begin{center}\includegraphics[width=0.9\linewidth]{paper-outline_files/figure-latex/fig:SCwithHOPa-1} \end{center}
 \caption{Example of approximated uncertainties about conditional probabilities in the Sally Clark case.}
 \label{fig:SCwithHOPa}
 \end{figure}
 --->
 
 \begin{figure}[H]
-```{r SCwithHOP, out.extra='angle=90', echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "110%", out.height= "200%", warning=FALSE, message = FALSE, dpi = 800}
-#SCprobsFinal <- readRDS("../datasets/SCprobsFinal.rds")
-#attach(SCprobsFinal)
-#source("../scripts/SCfunctions.R")
-#source("../scripts/SCplotCPTs.R")
-#source("../scripts/SCplotDistros.R")
 
-
-AsidsPriorPlotGrob <- ggplotGrob(AsidsPriorPlot+theme_tufte(base_size = 5))
-BcauseSidsIfAsidsPlotGrob <- ggplotGrob(BcauseSidsIfAsidsPlot+theme_tufte(base_size = 5))
-BcauseSidsIfAmurderPlotGrob<- ggplotGrob(BcauseSidsIfAmurderPlot+theme_tufte(base_size = 5)) 
-
-AbruisingIfSidsPlotGrob <- ggplotGrob(AbruisingIfSidsPlot+theme_tufte(base_size = 5)) 
-AbruisingIfMurderPlotGrob <- ggplotGrob(AbruisingIfMurderPlot+theme_tufte(base_size = 5)) 
-
-
-AdiseaseIfSidsPlotGrob <- ggplotGrob(AdiseaseIfSidsPlot+theme_tufte(base_size = 5)) 
-AdiseaseIfMurderPlotGrob <- ggplotGrob(AdiseaseIfMurderPlot+theme_tufte(base_size = 5)) 
-
-
-BbruisingIfSidsPlotGrob <- ggplotGrob(BbruisingIfSidsPlot+theme_tufte(base_size = 5)) 
-BbruisingIfMurderPlotGrob <- ggplotGrob(BbruisingIfMurderPlot+theme_tufte(base_size = 5)) 
-
-
-BdiseaseIfSidsPlotGrob <- ggplotGrob(BdiseaseIfSidsPlot+theme_tufte(base_size = 5)) 
-BdiseaseIfAmurderPlotGrob <- ggplotGrob(BdiseaseIfAmurderPlot+theme_tufte(base_size = 5)) 
-
-
-ggplot(data.frame(a=1)) + xlim(1, 40) + ylim(1, 60)+theme_void()+
-  annotation_custom(AsidsPriorPlotGrob, xmin = 9, xmax = 15, ymin = 49, ymax = 59)+
-  geom_label(aes(label = "Bcause", x = 25, y = 41),
-              size = 3 )+
-  geom_label(aes(label = "Acause", x = 12, y = 48),
-            size = 3 )+
-  geom_curve(aes(x = 13.5, y = 48.2, xend = 25, yend = 42.5), curvature = -.18,size = .3,
-             arrow = arrow(length = unit(.015, "npc")))+
-  annotation_custom(BcauseSidsIfAsidsPlotGrob, xmin = 17, xmax = 23, ymin = 47, ymax = 57)+
-  annotation_custom(BcauseSidsIfAmurderPlotGrob, xmin = 15, xmax = 21, ymin = 37, ymax = 47)+
-  geom_label(aes(label = "Abruising", x = 2, y = 41),
-             size = 3 )+
-  geom_curve(aes(x = 10.5, y = 48.2, xend = 2, yend = 42.5), curvature = .2,size = .3,
-             arrow = arrow(length = unit(.015, "npc")))+
-  annotation_custom(AbruisingIfSidsPlotGrob, xmin = 2, xmax = 8, ymin = 47, ymax = 57)+
-  annotation_custom(AbruisingIfMurderPlotGrob, xmin = 5, xmax = 11, ymin = 37, ymax = 47)+
-  geom_label(aes(label = "Adisease", x = 6, y = 21),
-             size = 3 )+
-  geom_curve(aes(x = 13, y = 46.2, xend = 6, yend = 23), curvature = -.45,size = .3,
-             arrow = arrow(length = unit(.015, "npc")))+
-  annotation_custom(AdiseaseIfSidsPlotGrob, xmin = 4.5, xmax = 10.5, ymin = 27, ymax = 37)+
-  annotation_custom(AdiseaseIfMurderPlotGrob, xmin = 9, xmax = 15, ymin = 17.5, ymax = 27.5)+
-  geom_label(aes(label = "Bbruising", x = 14, y = 12),
-             size = 3 ) +
-  geom_curve(aes(x = 24, y = 39.5, xend = 15.5, yend = 13.5), curvature = -.2,size = .3,
-                                    arrow = arrow(length = unit(.015, "npc")))+
-  annotation_custom(BbruisingIfSidsPlotGrob, xmin = 15.5, xmax = 21.5, ymin = 25, ymax = 35)+
-  annotation_custom(BbruisingIfMurderPlotGrob, xmin = 18.5, xmax = 24.5, ymin = 10, ymax = 20)+
-  geom_label(aes(label = "Bdisease", x = 33, y = 18),
-             size = 3 )  +
-  geom_curve(aes(x = 26, y = 39.5, xend = 33, yend = 19.5), curvature = -.2,size = .3,
-             arrow = arrow(length = unit(.015, "npc")))+
-  annotation_custom(BdiseaseIfSidsPlotGrob, xmin = 31, xmax = 37, ymin = 27, ymax = 37)+
-  annotation_custom(BdiseaseIfAmurderPlotGrob, xmin = 24.5, xmax = 30.5, ymin = 20, ymax = 30)
-
-```
+\begin{center}\includegraphics[width=1.1\linewidth,height=2\textheight,angle=90]{paper-outline_files/figure-latex/SCwithHOP-1} \end{center}
 
 \caption{Example of a higher-order Bayesian network for the Sally Clark Case.}
 \label{fig:SCwithHOP}
@@ -1328,9 +753,8 @@ but the uncertainty around that median is still too wide to warrant a conviction
 
 
 \begin{figure}[H]
-```{r SCwithHOP2, echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "90%", warning=FALSE, message = FALSE, dpi = 800, warning = FALSE, message = FALSE, output = FALSE}
-grid.arrange(GuiltPriorPlot, GuiltABbruisingPlot, GuiltABbruisingNoDiseasePlot, GuiltABbruisingDiseaseAPlot, ncol =2)
-```
+
+\begin{center}\includegraphics[width=0.9\linewidth]{paper-outline_files/figure-latex/SCwithHOP2-1} \end{center}
 
 
 \caption{Impact of incoming evidence in the Sally Clark case.}
@@ -1343,22 +767,8 @@ One question that arises is how this approach relates to the standard method of 
 
 \begin{figure}[H]
 
-```{r SClrs, echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "90%", warning=FALSE, message = FALSE, dpi = 800, warning = FALSE, message = FALSE, output = FALSE}
-AbruisingLR <- AbruisingIfMurder / AbruisingIfSids
 
-AbruisingLRPlot <- plotSample(AbruisingLR,title = "LR: Abruising",  paste("median =", 
-                                                            round(median(AbruisingLR),2), ", 89%HPDI = ", 
-                                                            round(HPDI(AbruisingLR),2)[1],"-",round(HPDI(AbruisingLR),2)[2],
-                                                            sep = "") )+xlim(0,30)
-
-AdiseaseLR <- AdiseaseIfMurder / AdiseaseIfSids
-
-AdiseaseLRPlot <- plotSample(AdiseaseLR,title = "LR: Adisease",  paste("median =", 
-                                                                           round(median(AdiseaseLR, na.rm = TRUE),2), ", 89%HPDI = ", 
-                                                                           round(HPDI(AdiseaseLR),2)[1],"-",round(HPDI(AdiseaseLR),2)[2],
-                                                                           sep = "") )+xlim(0,3)
- grid.arrange(AbruisingLRPlot, AdiseaseLRPlot, ncol =2)
-```
+\begin{center}\includegraphics[width=0.9\linewidth]{paper-outline_files/figure-latex/SClrs-1} \end{center}
 
 \caption{Likelihood ratios forbruising and signs of disease in child A in the Sally Clark case.}
 \label{fig:SClrs}
@@ -1493,7 +903,7 @@ As @good1985 put it, "I cannot see how anything can be relevant to the weight of
 probability given innocence" [p 250].\footnote{We can: how good those estimates are and what our uncertainty about them is. And if you want to have a context-relative notion of weight of evidence, so that weight considerations tell you when further investigation is undesirable as the potential weight of evidence is not that high given what you already know, also the weight of evidence and the posterior resulting from   the evidence you have obtained so far.}
 
 
-One important question is whether Good's weight  satisfies the desiderata we already discussed. We can investigate further developing Good's own example.   If, in an experiment, the observations $E_1, \dots, E_K$ are independent given $H$ and  given $\neg H$, the resulting joint likelihood is  the result of  multiplying the individual likelihoods. Thus, the joint weight is the result of adding the individual weights. Now, suppose a die is selected at random from a hat containing nine fair dice and one loaded die with bias $\nicefrac{1}{3}$ of obtaining a six. <!---The initial uniform distribution gives you weight of evidence for the die being loaded of $log_{10}(.1)$, that is `r log10(.1)` ---><!---(Good and Turing would say, it is -10 db).---> Every time you throw the die and obtain a six, the weight for the hypothesis that the die is biased increases by $log_{10}(\frac{\nicefrac{1}{3}}{\nicefrac{1}{6}})= log_{10}(2)$, that is `r log10(2)`, and every time you throw it and obtain something else, the weight changes by $log_{10}(\frac{\nicefrac{2}{3}}{\nicefrac{5}{6}})= log_{10}(.8)$, that is `r log10(.8)`. The weights in db (that is, multiplied by 10) for all possible outcomes of up to 20 tosses are displayed in Figure \ref{fig:goodWeight}. 
+One important question is whether Good's weight  satisfies the desiderata we already discussed. We can investigate further developing Good's own example.   If, in an experiment, the observations $E_1, \dots, E_K$ are independent given $H$ and  given $\neg H$, the resulting joint likelihood is  the result of  multiplying the individual likelihoods. Thus, the joint weight is the result of adding the individual weights. Now, suppose a die is selected at random from a hat containing nine fair dice and one loaded die with bias $\nicefrac{1}{3}$ of obtaining a six. <!---The initial uniform distribution gives you weight of evidence for the die being loaded of $log_{10}(.1)$, that is -1 ---><!---(Good and Turing would say, it is -10 db).---> Every time you throw the die and obtain a six, the weight for the hypothesis that the die is biased increases by $log_{10}(\frac{\nicefrac{1}{3}}{\nicefrac{1}{6}})= log_{10}(2)$, that is 0.30103, and every time you throw it and obtain something else, the weight changes by $log_{10}(\frac{\nicefrac{2}{3}}{\nicefrac{5}{6}})= log_{10}(.8)$, that is -0.09691. The weights in db (that is, multiplied by 10) for all possible outcomes of up to 20 tosses are displayed in Figure \ref{fig:goodWeight}. 
 \todo{Hey, why wasn't it here in the first place? Can you reinstate it, Marcello?}
 
 Two facts are notable. First, Good's weight can drop with sample size. For instance, the weight for 5 sixes and 4 other numbers is 1.2db, and it is .2db for 5 sixes and 5 other numbers. In addition, weight can drop while the sample size increases even if the proportion of sixes remains the same. For instance, if none of the observations are sixes, the weights go from -10 to -19.7 as the sample size goes from 0 to 10. Less trivially, the observation of one six in five leads to weight of -10.9, while the observation of two sixes in ten tosses leads to weight -11.7. That is, (Monotonicity) <!---, (Completeness),---> (Weak Increase) and (Strong Increase) all fail on Good's measure. This suggests  measure is too closely connected to likelihood ratio for our purpose and as such does not capture the notion of weight of evidence that we are after.
@@ -1570,183 +980,11 @@ What is the reason for this strange behavior? The shaping of Joyce's weight is a
 
 
 
-```{r joyce2calculations,echo=FALSE,eval=TRUE,fig.align = "center", cache=FALSE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
-
-weightJoyce <- function (chanceHypotheses = c(.4, .5, .6),
-                         credenceInHypotheses =  c(1/3, 1/3, 1/3),
-                         successes = 7,
-                         trials = 10){
-  
-        #chance of evidence given data
-        chex <- dbinom(successes, trials,  chanceHypotheses)
-        #overall chance of evidence (denumerator)
-        che <-  sum(chex * credenceInHypotheses)
-        #chance of x given evidence (by Bayes)
-        chxe <- (chex * credenceInHypotheses ) / che
-        
-        #credence in X before and after
-        cX <- sum (credenceInHypotheses * chanceHypotheses)
-        cXe <- sum (chxe * chanceHypotheses)
-        
-        multiplier <- (chanceHypotheses - cX)^2
-        multiplierE <- (chanceHypotheses - cXe)^2
-        
-        top <-  chxe   * multiplierE
-        bottom <- credenceInHypotheses * multiplier 
-        
-        weight <- sum ( abs( top - bottom) )
-        
-        return(list(hypotheses = chanceHypotheses, prior = credenceInHypotheses, posterior =  chxe, 
-                    cX = cX, cXe = cXe, weight = weight))  
-}
-
-outOfTenWeightsEqualPriors <- numeric(10)
-
-for(i in seq(1,11, by  = 1)){
-  outOfTenWeightsEqualPriors[i] <- 
-  weightJoyce(successes = i-1)$weight
-}
-
-
-outOfTenWeightsLeftPriors <- numeric(10)
-for(i in seq(1,11, by  = 1)){
-  outOfTenWeightsLeftPriors[i] <-   
-  weightJoyce(credenceInHypotheses = c(.5, .3, .2), 
-              successes = i-1)$weight
-}
-
-outOf10df <- data.frame( successes = seq(0,10,1),
-  equal = outOfTenWeightsEqualPriors, ".5, .3, .2" = outOfTenWeightsLeftPriors)
-
-names(outOf10df) <- c("successes", "equal", ".5, .3, .2")
-
-
-outOf10dfLong  <- gather(data = outOf10df,
-                    key = priors, value = w,
-                    "equal", ".5, .3, .2", 
-                    factor_key=TRUE)
 
 
 
-outOf100WeightsEqualPriors <- numeric(101)
-
-for(i in seq(1,101, by  = 1)){
-  outOf100WeightsEqualPriors[i] <- 
-    weightJoyce(successes = i-1, trials = 100)$weight
-}
 
 
-outOf100WeightsLeftPriors <- numeric(101)
-
-for(i in seq(1,101, by  = 1)){
-  outOf100WeightsLeftPriors[i] <- weightJoyce(credenceInHypotheses = c(.5, .3, .2),
-                                              successes = i-1, trials  = 100)$weight
-}
-
-outOf100df <- data.frame( successes = seq(0,100,1),
-              equal = outOf100WeightsEqualPriors, 
-              ".5, .3, .2" = outOf100WeightsLeftPriors)
-
-names(outOf100df) <- c("successes", "equal", ".5, .3, .2")
-
-outOf100dfLong  <- gather(data = outOf100df,
-                         key = priors, value = w,
-                         "equal", ".5, .3, .2", 
-                         factor_key=TRUE)
-
-
-
-joyce100  <- ggplot(outOf100dfLong)+geom_point(aes(x = successes,
-                                                 y = w, color = priors), size = .8 )+
-  scale_x_continuous(breaks = seq(0,100, by = 5))+theme_tufte(base_size = 12)+ylab("w")+
-  xlab("successes in ten trials")+
-  scale_y_continuous(breaks = seq(0,0.01, by = .001))+
-  labs(title = "Joyce's weight displays strange patters",
-       subtitle = "(sample size 100)")+
-  theme(plot.title.position = "plot")
-```
-
-
-
-```{r joyce3calculations,echo=FALSE,eval=TRUE,fig.align = "center", cache=FALSE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
-
-s <- seq(1,100)
-obs <- seq(10, 1000, by = 10)
-
-
-weightsBySampleSize <- numeric(length(s))
-weightsBySampleSizeLeft <- numeric(length(s))
-
-
-for (i in  1:100){
-weightsBySampleSize[i] <- weightJoyce(successes = s[i],
-                                      trials = obs[i])$weight
-}
-
-for (i in  1:100){
-  weightsBySampleSizeLeft[i] <- weightJoyce(successes = s[i],
-                                    trials = obs[i],
-                                    credenceInHypotheses = c(.5, .3, .2))$weight
-}
-
-
-wbss <- data.frame( "sample size" = obs,
-                          equal = weightsBySampleSize, 
-                          ".5, .3, .2" = weightsBySampleSizeLeft)
-
-wbss$frequency <- rep(.1, nrow(wbss))
-
-s2 <- seq(1,500)
-obs2 <-2 *s2   
-
-weightsBySampleSize2 <- numeric(length(s))
-weightsBySampleSizeLeft2 <- numeric(length(s))
-
-
-for (i in  1:500){
-  weightsBySampleSize2[i] <- weightJoyce(successes = s2[i],
-                                        trials = obs2[i])$weight
-}
-
-for (i in  1:500){
-  weightsBySampleSizeLeft2[i] <- weightJoyce(successes = s2[i],
-                                            trials = obs2[i],
-                                            credenceInHypotheses = c(.5, .3, .2))$weight
-}
-
-
-wbssHalf <- data.frame( "sample size" = obs2,
-                    equal = weightsBySampleSize2, 
-                    ".5, .3, .2" = weightsBySampleSizeLeft2)
-
-wbssHalf$frequency <- rep(.5, nrow(wbssHalf))
-
-
-names(wbss) <- c("sampleSize", "equal", ".5, .3, .2", "frequency")
-names(wbssHalf) <- c("sampleSize", "equal", ".5, .3, .2", "frequency")
-
-
-
-wbssLong <- gather(data = rbind(wbss, wbssHalf),
-                          key = priors, value = w,
-                          "equal", ".5, .3, .2", 
-                          factor_key=TRUE)
-
-
-joyceWBSS  <- ggplot(wbssLong)+geom_line(aes(x = sampleSize,
-                                y = w, color = priors,
-                                lty = as.factor(frequency)) )+
-  scale_x_continuous(breaks = seq(0,1000, by = 100))+theme_tufte(base_size = 12)+
-  ylab("w")+
-  xlab("sample size")+
-  #  scale_y_continuous(breaks = seq(0,0.01, by = .001))+
-  labs(title = "Joyce's weights  can drop with sample size",
-       subtitle = "(eventually they stop growing)",
-       lty = "observed frequency")+
-  theme(plot.title.position = "plot")
-
-
-```
 
 
 
@@ -1773,9 +1011,8 @@ joyceWBSS  <- ggplot(wbssLong)+geom_line(aes(x = sampleSize,
 
 
 \begin{figure}
-```{r joyce2b,echo=FALSE,eval=TRUE,fig.align = "center", cache=FALSE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
-grid.arrange(joyce100, joyceWBSS, ncol = 1 )
-```
+
+\begin{center}\includegraphics[width=1\linewidth]{paper-outline_files/figure-latex/joyce2b-1} \end{center}
 
 \caption{(top) Joyce's $w$ (the lower it is, the higher the weight) for various observed successes in 100 Bernoulli trials. Three chance chypotheses: $.4, .5, .6$, and two sets of priors: equal and $.5, .3, .2$ respectively. Agan, the weightiest evidence is obtained with successes close to the expected value, with  large variation for observed frequencies not too far from the expected values, fairly flat otherwise. (bottom) Joyce's $w$ (the lower it is, the higher the weight) for two fixed success ratio across various observed successes in  Bernoulli trials (lines are used for smoothing).  Note large shifts with possible decrease in the beginning, and a flattening afterwards.}
 \label{fig:joyce2}
@@ -1932,213 +1169,20 @@ in Figure \ref{fig:weightsWeird}.
 
 
 
-```{r entropyJoyceExample,echo=FALSE,eval=TRUE,fig.align = "center", cache=FALSE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
-weightEntropyCustomChances <- function(
-      hypotheses = c(.4, .5, .6),
-      prior = c(1/3, 1/3, 1/3),
-      successes  = 7,
-      trials = 10){
-      uniform <- rep(1,length(hypotheses))/ sum(rep(1,length(hypotheses)))
-      #chance of evidence given data
-      likelihood <- dbinom(x = successes, size = trials, prob = hypotheses)
-      #overall chance of evidence (denumerator)
-      evidence <-  sum(likelihood * prior)
-      #chance of x given evidence
-      posterior <- (likelihood * prior ) / evidence
 
-      weightOfPrior <- 1 - (H(prior)/H(uniform, unit  = "log2"))
-      weightOfPosterior <- 1 - (H(posterior)/H(uniform, unit  = "log2"))
-
-      weightDelta <- weightOfPosterior - weightOfPrior
-      return(list(prior = prior, weightOfPrior = weightOfPrior,
-              posterior = posterior,
-            weightOfPosterior = weightOfPosterior,
-            weightDelta = weightOfPosterior - weightOfPrior)
-      )
-}
-
-
-
-outOfTenEntropyEqualPriors <- numeric(10)
-
-for(i in seq(1,11, by  = 1)){
-  outOfTenEntropyEqualPriors[i] <- 
-    weightEntropyCustomChances(successes = i-1)$weightDelta
-}
-
-
-outOfTenEntropyLeftPriors <- numeric(10)
-
-for(i in seq(1,11, by  = 1)){
-  outOfTenEntropyLeftPriors[i] <- 
-    weightEntropyCustomChances(prior = c(.5, .3, .2), successes = i-1)$weightDelta
-}
-
-
-
-outOf10entropyDf <- data.frame( successes = seq(0,10,1),
-                         equal = outOfTenEntropyEqualPriors, ".5, .3, .2" =
-                           outOfTenEntropyLeftPriors)
-
-
-names(outOf10entropyDf) <- c("successes", "equal", ".5, .3, .2")
-
-outOf10entropyDfLong  <- gather(data = outOf10entropyDf,
-                         key = priors, value = w,
-                         "equal", ".5, .3, .2", 
-                         factor_key=TRUE)
-
-
-
-outOf10EntropyPlot  <- ggplot(outOf10entropyDfLong)+geom_point(aes(x = successes,
-                                                 y = w, color = priors) )+
-  scale_x_continuous(breaks = seq(0,10))+theme_tufte(base_size = 14)+ylab("W")+
-  xlab("successes in ten trials")+
-#  scale_y_continuous(breaks = seq(0,0.007, by = .001))+
-  labs(title = "Information-theoretic weights",
-       subtitle = "(sample size =10)")+theme(plot.title.position = "plot")
-
-
-
-
-
-outOf100EntropyEqualPriors <- numeric(101)
-
-for(i in seq(1,101, by  = 1)){
-  outOf100EntropyEqualPriors[i] <- 
-    weightEntropyCustomChances(successes = i-1,
-                               trials = 100)$weightDelta
-}
-
-
-
-outOf100EntropyLeftPriors <- numeric(101)
-
-for(i in seq(1,101, by  = 1)){
-  outOf100EntropyLeftPriors[i] <- 
-    weightEntropyCustomChances(prior = 
-      c(.5, .3, .2), successes = i-1,
-      trials = 100)$weightDelta
-}
-
-
-
-outOf100entropyDf <- data.frame( successes = seq(0,100,1),
-                                equal = outOf100EntropyEqualPriors, ".5, .3, .2" =
-                                  outOf100EntropyLeftPriors)
-
-names(outOf100entropyDf) <- c("successes", "equal", ".5, .3, .2")
-
-outOf100entropyDfLong  <- gather(data = outOf100entropyDf,
-                                key = priors, value = w,
-                                "equal", ".5, .3, .2", 
-                                factor_key=TRUE)
-
-
-
-outOf100EntropyPlot  <- ggplot(outOf100entropyDfLong)+
-  geom_point(aes(x = successes,
- y = w, color = priors), size = .5 )+
-  scale_x_continuous(breaks = seq(0,100, by = 5))+theme_tufte(base_size = 14)+ylab("W")+
-  xlab("successes in ten trials")+
-#    scale_y_continuous(breaks = seq(0,100, by = .001))+
-  labs(title = "Information-theoretic weights",
-       subtitle = "(sample size =100)")+theme(plot.title.position = "plot")
-
-s <- seq(1,100)
-obs <- seq(10, 1000, by = 10)
-
-
-EweightsBySampleSize <- numeric(length(s))
-EweightsBySampleSizeLeft <- numeric(length(s))
-
-
-for (i in  1:100){
-  EweightsBySampleSize[i] <- weightEntropyCustomChances(successes = s[i],
-                                        trials = obs[i])$weightDelta
-}
-
-
-for (i in  1:100){
-  EweightsBySampleSizeLeft[i] <- weightEntropyCustomChances(successes = s[i],
-                                            trials = obs[i],
-                                            prior = c(.5, .3, .2))$weightDelta
-}
-
-
-Ewbss <- data.frame( "sample size" = obs,
-                    equal = EweightsBySampleSize, 
-                    ".5, .3, .2" = EweightsBySampleSizeLeft)
-
-Ewbss$frequency <- rep(.1, nrow(Ewbss))
-
-
-s2 <- seq(1,500)
-obs2 <-2 *s2   
-
-
-EweightsBySampleSize2 <- numeric(length(s))
-EweightsBySampleSizeLeft2 <- numeric(length(s))
-
-
-for (i in  1:500){
-  EweightsBySampleSize2[i] <- weightEntropyCustomChances(successes = s2[i],
-                                         trials = obs2[i])$weightDelta
-}
-
-for (i in  1:500){
-  EweightsBySampleSizeLeft2[i] <- weightEntropyCustomChances(successes = s2[i],
-                                             trials = obs2[i],
-                                             prior = c(.5, .3, .2))$weightDelta
-}
-
-
-EwbssHalf <- data.frame( "sample size" = obs2,
-                        equal = EweightsBySampleSize2, 
-                        ".5, .3, .2" = EweightsBySampleSizeLeft2)
-
-EwbssHalf$frequency <- rep(.5, nrow(EwbssHalf))
-
-
-names(Ewbss) <- c("sampleSize", "equal", ".5, .3, .2", "frequency")
-names(EwbssHalf) <- c("sampleSize", "equal", ".5, .3, .2", "frequency")
-
-
-EwbssLong <- gather(data = rbind(Ewbss, EwbssHalf),
-                   key = priors, value = w,
-                   "equal", ".5, .3, .2", 
-                   factor_key=TRUE)
-
-
-
-eWBSSplot  <- ggplot(EwbssLong)+geom_line(aes(x = sampleSize,
-                                              y = w, color = priors,
-lty = as.factor(frequency)) )+
-  scale_x_continuous(breaks = seq(0,1000, by = 100))+theme_tufte(base_size = 14)+
-  ylab("w")+
-  xlab("sample size")+
-  #  scale_y_continuous(breaks = seq(0,0.01, by = .001))+
-  labs(title = "Information-theoretic weights by  sample size",
-       subtitle = "")+
-  theme(plot.title.position = "plot")
-
-
-```
 
 
 \begin{figure}
-```{r entropyJoyceExampleSampleSize,echo=FALSE,eval=TRUE,fig.align = "center", cache=FALSE, fig.show = "hold", out.width = "70%",   message = FALSE, warning = FALSE, results = FALSE}
-eWBSSplot
-```
+
+\begin{center}\includegraphics[width=0.7\linewidth]{paper-outline_files/figure-latex/entropyJoyceExampleSampleSize-1} \end{center}
 
 \caption{Entropy-based weight for two observed frequencies for various sample sizes (lines used instead of points for smoothing). Three chance chypotheses: $.4, .5, .6$, and two sets of priors: equal and $.5, .3, .2$ respectively.}
 \label{fig:entropyJoyceExampleSampleSize}
 \end{figure}
 
 \begin{figure}
-```{r entropyJoyceExamplePlot10,echo=FALSE,eval=TRUE,fig.align = "center", cache=FALSE, fig.show = "hold", out.width = "70%",   message = FALSE, warning = FALSE, results = FALSE}
-outOf10EntropyPlot
-```
+
+\begin{center}\includegraphics[width=0.7\linewidth]{paper-outline_files/figure-latex/entropyJoyceExamplePlot10-1} \end{center}
 
 \caption{Entropy-based weight for for various observed successes in 10 Bernoulli trials. Three chance chypotheses: $.4, .5, .6$, and two sets of priors: equal and $.5, .3, .2$ respectively.}
 \label{fig:entropyJoyceExamplePlot}
@@ -2146,117 +1190,16 @@ outOf10EntropyPlot
 
 
 
-```{r fig:betas,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
-n <- 1000 #parameters 
-s <- 1e5  #sample size
-ps <- seq(from=0 , to=1 , length.out=n)
-a <- seq(1,100,1)
-b <- seq(1,100,1)
-abs <- expand.grid(a=a,b=b)
-densitiesBeta <- list()
-
-for(i in 1:nrow(abs)){
-densitiesBeta[[i]] <- dbeta(ps,abs[i,1], abs[i,2])
-densitiesBeta[[i]] <- densitiesBeta[[i]]/sum(densitiesBeta[[i]])
-abs$entropy[i] <- H(densitiesBeta[[i]])
-}
 
 
 
-kld <- function(p,q) kullback_leibler_distance(p,q, testNA = TRUE, unit = "log2",
-                                               epsilon = 0.00001)
-klds <- numeric(length(densitiesBeta))
-for (i in 1:length(densitiesBeta)){
-  klds[i] <-   kld(densitiesBeta[[1]],densitiesBeta[[i]])
-}
-abs$klds <- klds
 
 
-eucs <- numeric(length(densitiesBeta))
-for (i in 1:length(densitiesBeta)){
-  eucs[i] <-   euclidean(densitiesBeta[[1]],densitiesBeta[[i]], testNA = TRUE)
-}
-
-abs$eucs <- eucs
-
-unif <-dbeta(ps,1,1)
-unif <- unif/sum(unif)
-hunif <- H(unif)
-entProp <- function(X) 1 - ( H(X)/hunif )  
-
-entProps <- numeric(length(densitiesBeta))
-for (i in 1:length(densitiesBeta)){
-  entProps[i] <-   entProp(densitiesBeta[[i]])
-}
-
-#str(abs$entProps)
-
-abs$entProps <- entProps
-```
-
-
-
-```{r weightsWeird,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
-beta44 <-  densitiesBeta[[304]]
-unif5 <- c(rep(0, n/2),rep(1 , n/2)) #uniform from .5 
-unif5 <- unif5/sum(unif5)
-unif6 <- c(rep(0, .6 * n),rep(1 , n * .4)) #uniform from .6 
-unif6 <- unif6/sum(unif6)
-A <- dnorm(ps, .4, .05)
-B <- dnorm(ps, .6, .05)
-C <- ifelse(ps <= .5, A, B) 
-bimodal <- C / sum(C)
-centered <-   dnorm(ps, .5, .05)
-centered <- centered/sum(centered)
-twoEven <- rep(0,1000)
-twoEven[abs(ps -.4)  == min(abs(ps -.4))] <- .5
-twoEven[abs(ps -.6)  == min(abs(ps -.6))] <- .5
-twoUneven <- rep(0,1000)
-twoUneven[abs(ps -.4)  == min(abs(ps -.4))] <- .3
-twoUneven[abs(ps -.6)  == min(abs(ps -.6))] <- .7
-single5 <- rep(0,1000)
-single5[abs(ps -.5)  == min(abs(ps -.5))] <- 1
-single7 <- rep(0,1000)
-single7[abs(ps -.7)  == min(abs(ps -.7))] <- 1
-
-
-distributions <- c("beta(4,4)","unif(.5,1)", "unif(.6,1)", "bimodal(.4,.6,s=.05)", "norm(.5,.05)",
-                   "evenPoints(.4,.6)","unevenPoints(.4(.3),.6(.7)","single(.5)", "single(.7)")
-
-entPropSeq <- c(entProp(beta44),entProp(unif5),entProp(unif6),
-             entProp(bimodal),entProp(centered),entProp(twoEven),
-             entProp(twoUneven),entProp(single5),entProp(single7))
-
-
-hSeq <- c(H(beta44),H(unif5),H(unif6),
-          H(bimodal),H(centered),H(twoEven),
-          H(twoUneven),H(single5),H(single7))
-  
-  
-entPropTable <- data.frame(distributions, hSeq, entPropSeq)
-
-plotDistro <- function(distro, distroList) {
-plot <-  ggplot()+theme_tufte(base_size =  7 )+xlab("parameter values")+
-  ylab("probability")+theme(plot.title.position = "plot")+ylim(0,1)+
-  ggtitle(paste(entPropTable$distributions[distroList]))+
-  geom_line(aes(x = ps,y = distro))+annotate("text",
-    x = ps[which(distro == max(distro))][1],
-    y = max(distro) * 1.14,
-    label = paste("h =",round(entPropTable$hSeq[distroList],3), ", w = ",
-            round(entPropTable$entPropSeq[distroList],3)), size = 2)+
-  ylim(c(0,1.2 * max(distro)))
-return(plot)
-}
-
-```
 
 
 \begin{figure}[H]
-```{r fig:weightsWeird,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
-grid.arrange(plotDistro(beta44,1),plotDistro(unif5,2), plotDistro(unif6,3),plotDistro(bimodal,4),plotDistro(centered,5),
-plotDistro(twoEven,6),plotDistro(twoUneven,7),
-plotDistro(single5,8),plotDistro(single7,9), ncol = 3, nrow = 3)
-```
+
+\begin{center}\includegraphics[width=1\linewidth]{paper-outline_files/figure-latex/fig:weightsWeird-1} \end{center}
 \caption{Examples of various distributions with their entropies and weights, ordered by weights. (1) beta(4,4), (2) uniform starting from .5 to 1, (3), uniform strating from .6 to 1, (4) two normal distributions centered around .4 and .6 with standard deviation .05, glued at .5. (5) normal centered around .5 with the same standard deviation, (6) one that assigns .5 to each of .4  and .6, (7) One that assigns .3 to .4 and .7 to .6., (8) one that assigns all weight to .5, and (9) one that assigns all weight to .7.}
 
 \label{fig:weightsWeird}
