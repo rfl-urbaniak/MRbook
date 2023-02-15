@@ -254,7 +254,7 @@
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
 \urlstyle{same} % disable monospaced font for URLs
 \hypersetup{
-  pdftitle={Awareness Growth in Bayesian Networks},
+  pdftitle={Awareness Growth with Bayesian Networks},
   colorlinks=true,
   linkcolor={Maroon},
   filecolor={Maroon},
@@ -262,7 +262,7 @@
   urlcolor={blue},
   pdfcreator={LaTeX via pandoc}}
 
-\title{Awareness Growth in Bayesian Networks}
+\title{Awareness Growth with Bayesian Networks}
 \author{}
 \date{\vspace{-2.5em}no point in adding a date by hand if it's not systematically
 updated and confusing}
@@ -274,11 +274,9 @@ updated and confusing}
 
 \emph{Wordcount (including footnotes)}: 5,392
 
-\todo{changed the abstract a bit, check}
-
 \begin{abstract}
 We examine different counterexamples to Reverse Bayesianism, a popular theory 
-that addresses the problem of awareness growth. We agree with the general skepticism toward Reverse Bayesianism, but submit that the problem of awareness growth cannot be tackled in an algorithmic manner, because subject-matter, structural assumptions need to be made explicit and pyal a role in determining what teh appropriate move should be. Thanks to their ability to express probabilistic dependencies, we illustrate how Bayesian networks can help to model awareness growth in the Bayesian framework. 
+that addresses the problem of awareness growth. We agree with the general skepticism toward Reverse Bayesianism, but submit that the problem of awareness growth cannot be tackled in an algorithmic manner, because subject-matter, structural assumptions need to be made explicit and play a role in determining how probabilities should be updated in light of awareness growth. Thanks to their ability to express probabilistic dependencies, we illustrate how Bayesian networks can help to model awareness growth in the Bayesian framework. 
 \end{abstract}
 
 \doublespace
@@ -346,7 +344,7 @@ propositions shared between the old and new algebra remain the same in a
 sense to be specified.
 
 Let \(\mathcal{F}\) be the initial algebra of propositions and let
-\(\mathcal{F}^+\) the algebra after the agent's awareness state has
+\(\mathcal{F}^+\) be the algebra after the agent's awareness state has
 grown. Both algebras contain the contradictory and tautologous
 propositions \(\perp\) and \(\top\), and they are closed under
 connectives such as disjunction \(\vee\), conjunction \(\wedge\) and
@@ -374,10 +372,10 @@ Unfortunately, Reverse Bayesianism does not deliver the intuitive
 results in all cases. There is no shortage of counterexamples against it
 in the recent philosophical literature (Mathani, 2020; Steele \&
 Stefánsson, 2021). In addition, attempts to extent traditional arguments
-in defense of Bayesian conditionalization to the case of awareness
-growth seem to hold little promise (Pettigrew, forthcoming). If the
-consensus in the literature is that Reverse Bayesianism is not the right
-theory of awareness growth, what theory (if any) should replace it?
+in defense of Bayesian conditionalization to Reverse Bayesianism seem to
+hold little promise (Pettigrew, forthcoming). If the consensus in the
+literature is that Reverse Bayesianism is not the right theory of
+awareness growth, what theory (if any) should replace it?
 
 Here we offer a diagnosis of what is wrong with Reverse Bayesianism and
 outline an alternative proposal. The problem of awareness growth---we
@@ -390,7 +388,19 @@ dependencies, Bayesian networks can help to model awareness growth in
 the Bayesian framework. We illustrate this claim as we examine different
 counterexamples to Reverse Bayesianism.
 
-\todo{GIven how involved and detailed some of the arguments get further on, we need a more informative overview of the paper structure: which example do we get into and why, and in what order, and why}
+The plan for the paper is as follows. To set the stage for the
+discussion, Section \ref{sec:counterexamples} begins with two
+counter-exmaples to Reverse Bayesianism by Steele \& Stefánsson (2021).
+One example targets awareness expansion and the other awareness
+refinement (more on the distinction soon). Section
+\ref{sec:expansion-networks} models cases of awareness expansion using
+Bayesian networks. Section \ref{sec:mathani} further illustrates the
+fruitfulness of this approach by looking at two counter-examples to
+Reverse Bayesianiam by Mathani (2020). When modeled with Bayesian
+networks, Mathani's examples are straightforward cases of awareness
+expansion. Section \ref{sec:structural-both} turns to awareness
+refinement. Finally, Section \ref{sec:general} outlines a general theory
+of awareness growth with Bayesian networks.
 
 \hypertarget{steele-and-stefuxe1nssons-examples}{%
 \section{Steele and Stefánsson's
@@ -455,7 +465,8 @@ better explanation overall and thus more likely than \textit{affair}.
 And since \textit{surprise} implies \textit{friends}, the latter must be
 more likely than \textit{affair}. This conclusion violates Reverse
 Bayesianism since the ratio of the probabilities of \textit{friends} and
-\textit{affair} has changed before and after awareness expansion.
+\textit{affair} has changed before and after awareness expansion:
+\[\frac{\pr{\textit{affair}}}{ \pr{\textit{friends}}}>1 \text{ but } \frac{\ppr{+}{\textit{affair}}}{ \ppr{+}{\textit{friends}}}<1.\]
 
 Steele \& Stefánsson note that a quick fix is available. It is
 reasonable to suppose that no change in the probabilities should occur
@@ -522,10 +533,17 @@ Some might object that the probability of \textit{thriller} goes up, not
 because of awareness refinement, but because you learn that the owner is
 simple-minded. And if learning in the strict Bayesian sense---one
 modeled by conditionalization---takes place, it should be no surprise
-that some probabilities will change. We will see, however, cases of
-awareness refinement that do no involve learning in the Bayesian sense
-and still violate Reverse Bayesianism and Awareness Rigidity. So it is
-incumbent to understand under what circumstances these principles fail.
+that some probabilities will change. Admittedly, the scenario can be
+split into two sub-episodes. In the first, you entertain a new variable
+besides language and genre, namely the language difficulty of the movie.
+In the second episode, you learn something new, namely that the owner is
+simple-minded. Arguably, the violation of Reverse Bayesianism or
+Awareness Rigidity can be attributed to learning that the owner is
+simple-minded, not to the mere growth in awareness. But there are cases
+of awareness refinement that do no involve learning in the Bayesian
+sense and still violate Reverse Bayesianism and Awareness Rigidity (see
+later in Section \ref{sec:structural-both}). So it is incumbent to
+understand under what circumstances these principles fail.
 
 As will become clear, we believe that theorizing about awareness growth
 should be grounded in the subject-matter information underlying the
@@ -534,16 +552,20 @@ scenario at hand. This subject-matter takes many forms. In
 presupposition that someone's behavior must have a reason. In
 \textsc{Movies}, awareness refinement does not change the fact that
 characteristics such as language, difficulty or genre may influence
-one's decision to select a movie for showing rather than another.
-Arguably, what is wrong with principles such as Reverse Bayesianism or
-Awareness Rigidity is that they are purely formal. In contrast, we need
-a formalism that can---at least in part---represent the relevant
-subject-matter information. In what follows, we illustrate how Bayesian
-networks can serve this purpose.
+one's decision to select a movie for showing rather than another. What
+is wrong with principles such as Reverse Bayesianism or Awareness
+Rigidity---we hold---is that they are purely formal. We need instead a
+formalism that can represent the relevant subject-matter information. In
+what follows, we illustrate how Bayesian networks can serve this
+purpose. We first consider expansion (Section
+\ref{sec:expansion-networks} and \ref{sec:mathani}) and then refinement
+(Section \ref{sec:structural-both}).
 
 \hypertarget{expansion-with-bayesian-networks}{%
 \section{Expansion with Bayesian
 Networks}\label{expansion-with-bayesian-networks}}
+
+\label{sec:expansion-networks}
 
 A Bayesian network is a compact formalism to represent probabilistic
 dependencies. It consists of a direct acyclic graph (DAG) accompanied by
@@ -607,13 +629,11 @@ Recall that the ratio of posterior probabilities of \textit{friends} to
 that your partner and best fried met without telling you---call this
 behavior \textit{secretive}---initially made \textit{affair} more likely
 than \textit{friends}, but then the same fact made \textit{friends} more
-likely than \textit{affair}. So, formally,
-\[1>\frac{\pr{\textit{Reason=friends} \vert \textit{Behavior=secretive}}}{\pr{\textit{Reason=affair} \vert \textit{Behavior=secretive}}} < \frac{\ppr{+}{\textit{Reason=friends} \vert Behavior=secretive}}{\ppr{+}{\textit{Reason=affair} \vert \textit{Behavior=secretive}}}>1.\]
-But, despite this change in posterior probabilities, it is plausible to
-assume that the novel state added to the upstream node \textit{Reason}
-did not change the relative plausibility of the two explanations
-initially under consideration. Even after awareness expansion, the fact
-that your partner and best fried met without telling
+likely than \textit{affair} after awareness growth. So, formally,
+\[\frac{\pr{\textit{Reason=affair} \vert \textit{Behavior=secretive}}}{\pr{\textit{Reason=friends} \vert \textit{Behavior=secretive}}} > 1 \text{ but } \frac{\ppr{+}{\textit{Reason=friends} \vert Behavior=secretive}}{\ppr{+}{\textit{Reason=affair} \vert \textit{Behavior=secretive}}}>1.\]
+Despite this change in posterior probabilities, it is plausible to
+assume that the likelihoods do not change. Even after awareness
+expansion, the fact that your partner and best fried met without telling
 you---\textit{secretive}---makes better sense in light of
 \textit{affair} compared to \textit{friends}:
 \[\frac{\pr{\textit{Behavior=secretive} \vert \textit{Reason=affair}}}{\pr{\textit{Behavior=secretive} \vert  \textit{Reason=friends}}} = \frac{\ppr{+}{\textit{Behavior=secretive} \vert \textit{Reason=affair}}}{\ppr{+}{\textit{Behavior=secretive} \vert \textit{Reason=friends}}}>1.\]
@@ -635,10 +655,10 @@ This analysis suggests a slight reformulation of conditions such as
 Reverse Bayesianism and Awareness Rigidity. Instead of comparing
 posterior probabilities of hypotheses given the evidence
 (\(\pr{H=h \vert E=e}\)), we can compare which explanation or hypothesis
-makes better sense of the evidence (\(\pr{E=e \vert H=h}\)) So, for all
-values \(e\) and \(h\) of upstream node \(H\) and downstream node \(E\)
-in the old network, consider the following constraint:
-\[\frac{\pr{E=e \vert H=h}}{\pr{E=e \vert H=h}} = \frac{\ppr{+}{E=e \vert H=h  \; \& \: X\neq x^*}}{\ppr{+}{E=e \vert H=h  \; \& \: X\neq x^*}}, \tag{C}\]
+makes better sense of the evidence (\(\pr{E=e \vert H=h}\)). So, for all
+values \(h, h'\) and \(e\) of upstream node \(H\) and downstream node
+\(E\) in the old network, consider the following constraint:
+\[\frac{\pr{E=e \vert H=h}}{\pr{E=e \vert H=h'}} = \frac{\ppr{+}{E=e \vert H=h  \; \& \: X\neq x^*}}{\ppr{+}{E=e \vert H=h'  \; \& \: X\neq x^*}}, \tag{C}\]
 where \(x^*\) is the new state added and \(X\) is the node (upstream or
 downstream) to which the new state belongs, such as
 \(H=\textit{surprise}\) in \textsc{Friends}.
@@ -650,42 +670,56 @@ evidence should remain unchanged after awareness expansion. Constraint
 probabilities of the form \(\pr{E=e \vert H=h}\) for Bayesian networks
 of the form \(H \rightarrow E\). In addition, the constraint mimics
 Awareness Rigidity in that it ensures that the conditional probabilities
-in question exclude the novel state \(X=x^*\).
+in question exclude the novel state \(X=x^*\).\footnote{When the novel
+  state is added to the upstream node \(H\), the condition \(X\neq x^*\)
+  is redundant. We will see later cases in which the novel state is
+  added to the downstream node \(E\), and here the condition is not
+  redundant.}
 
 How generally does constraint (C) apply besides examples such as
-\textsc{Friends}? The conjecture we are putting forward is that, so long
-as there is no change in the structure of the network, the constraint
-should hold. Since awareness expansion---as we have defined it---does
-not involve any change in the structure, the constraint should hold for
-all cases of expansion.\footnote{It is crucial that the new hypothesis
-  or explanation does not change the existing structure of the network.
-  For consider this example. You are wondering which horse will win the
-  race. You have done a careful study of past performances under
-  different conditions and concluded that Red is more likely to win than
-  Green. But you have not considered the possibility that Grey would
-  run. If Grey does run, it will have a greater chance of winning than
-  the others, but will also make---for some odd reason---Green a much
-  better racer than Red. So the odds that Green will win compared to Red
-  should now be higher. Here, the new hypothesis introduces some novel
-  informational that was not known before, say that the participation of
-  Grey would weaken Red's performance and strengthen Green's
-  performance. So the network should be changed in two ways: first, a
-  new state should be added to the outcome node (Green wins, Red wins,
-  Grey wins); and second, a new node should be added modeling the fact
-  that Grey is participating and its participation affects Red's and
-  Green's performance.}
+\textsc{Friends}? We put forward the following \emph{working
+hypothesis}:
+
+\begin{quote}
+If there is no change in the structure of the network, constraint (C)
+holds generally. If there is a change in the structure of the network,
+constraint (C) will fail under certain conditions (to be specified
+later).
+\end{quote}
+
+\noindent Since expansion---as we have defined it---does not change the
+network structure, the constraint should always hold for
+expansion.\footnote{It is crucial that the new hypothesis or explanation
+  does not change the existing structure of the network. Consider this
+  example. You are wondering which horse will win the race. You have
+  done a careful study of past performances under different conditions
+  and concluded that Red is more likely to win than Green. But you have
+  not considered the possibility that Grey would run. If Grey does run,
+  it will have a greater chance of winning than the others, but will
+  also make---for some odd reason---Green a much better racer than Red.
+  So the odds that Green will win compared to Red should now be higher.
+  Here, the new hypothesis introduces novel information that was not
+  known before, say that the participation of Grey would weaken Red's
+  performance and strengthen Green's performance. So the network should
+  be changed in two ways: first, a new state should be added to the
+  outcome node (Green wins; Red wins; Grey wins); and second, a new node
+  should be added modeling the fact that Grey is participating and its
+  participation affects Red's and Green's performance.} We provide
+support for this claim in the next section.
 
 \hypertarget{mathanis-examples}{%
 \section{Mathani's Examples}\label{mathanis-examples}}
 
+\label{sec:mathani}
+
 To acquire a firmer grasp on constraint (C), we now examine a couple of
-examples by Mathani (2020). In her reading, these examples serve as
-counterexamples to Reverse Bayesianism, but are also meant to challenge
-the traditional distinction between expansion and refinement. But, when
-modeled with Bayesian networks, they are straightforward cases of
+examples by Mathani (2020). These examples are intended as
+counterexamples to Reverse Bayesianism, as well as a challenge to the
+distinction between expansion and refinement. When modeled with Bayesian
+networks, however, Mathani's examples are straightforward cases of
 awareness expansion.
 
-The first of Matahani's examples goes like this:
+The first example goes like this:
 
 \begin{quote}
 \textsc{Tenant}: You are staying at Bob's flat which he shares with his landlord. You know that Bob is a tenant, and that there is only one landlord, and that this landlord also lives in the flat. In the morning you hear singing coming from the shower room, and you try to work out from the sounds who the singer could be. At this point you have two relevant propositions that you consider possible ... $landlord$ standing for the possibility that the landlord is the singer, and $bob$ standing for the possibility that Bob is the singer  \dots  Because you know that Bob is a tenant in the flat, you also have a credence in the proposition $tenant$ that the singer is a tenant. Your credence in $tenant$ is the same as your credence in $bob$, for given your state of awareness these two propositions are equivalent ... Now let's suppose the possibility suddenly occurs to you that there might be another tenant living in the same flat  ($other$).
@@ -738,25 +772,26 @@ growth, but only 1/2 before. On this picture, the proportion of
   not mean that \(\ppr{+}{other \vert landlord \vee tenant}\) should
   equal zero. This is the intended result.}
 
-But now recall that Reverse Bayesianism only applies to basic
-propositions, which we defined earlier as propositions without
-connectives. So a possible fix here is to adopt the following principle:
-if two propositions happen to be equivalent relative to some awareness
-state, they cannot be both considered basic. In \textsc{Tenant}, since
-\(bob\) and \(tenant\) are initially equivalent descriptions of the same
-state of affairs, they would not be considered both basic propositions.
-If only \(bob\) is considered basic, along with \(landlord\), then the
-proportion of the probability of \(bob\) and \(landlord\) would remain
-the same during awareness growth, but not the proportion of the
-probabilities of \(tenant\) and \(landlord\). This yields the intuitive
-result. But it is odd that \(landlord\) would be considered basic, but
-not \(tenant\). However, if \(tenant\) is considered basic along with
-\(landlord\), Reverse Bayesianism would require that the proportion of
-the probability of \(tenant\) and \(landlord\) remain the same during
-awareness growth. This is counterintuitive.
+One could resist the challenge. For recall that Reverse Bayesianism only
+applies to basic propositions, which we defined earlier as propositions
+without connectives. So a possible fix is to adopt the following
+principle: if two propositions happen to be equivalent relative to some
+awareness state, they cannot be both considered basic. In
+\textsc{Tenant}, since \(bob\) and \(tenant\) are initially equivalent
+descriptions of the same state of affairs, they would not be considered
+both basic propositions. If only \(bob\) is considered basic, along with
+\(landlord\), then the proportion of the probability of \(bob\) and
+\(landlord\) would remain the same during awareness growth, but not the
+proportion of the probabilities of \(tenant\) and \(landlord\). This
+yields the intuitive result. But it is odd that \(landlord\) would be
+considered basic, but not \(tenant\). However, if \(tenant\) is
+considered basic along with \(landlord\), Reverse Bayesianism would
+require that the proportion of the probability of \(tenant\) and
+\(landlord\) remain the same during awareness growth. This is
+counterintuitive.
 
 So dividing propositions into basic and non-basic is riddled with
-difficulties. But the above discussion alerted us to the fact that a
+difficulties. Still, the above discussion alerts us to the fact that a
 difference exists between propositions like \(bob\) and those like
 \(tenant\). The latter describes a role that different people could play
 besides Bob. Bayesian networks can help to model the person/role
@@ -781,14 +816,11 @@ The downstream node \(Role\) has also two values, \(landlord\) and
 should now have one more possible state, \(other\). Crucially, note that
 since \textsc{Tenant} is a case of expansion by our definition---a state
 was added to a node---constraint (C) should hold. This is precisely what
-happens as illustrated in Table \ref{table:tenant}.\footnote{More
-  generally, these conditional probabilities do not change during
-  awareness growth:
-  \[\pr{\textit{Role}=\textit{landlord} \vert \textit{Person}=\textit{landlord}}=
-  \ppr{+}{\textit{Role}=\textit{landlord} \vert \textit{Person}=\textit{landlord}}\]
-  \[\pr{\textit{Role}=\textit{landlord} \vert \textit{Person}=\textit{bob}}=
-  \ppr{+}{\textit{Role}=\textit{landlord} \vert \textit{Person}=\textit{bob}}\]}
-This is good news.
+happens. After all, the conditional probabilities
+\(\pr{\textit{Role}=\textit{landlord} \vert \textit{Person}=\textit{landlord}}\)
+and
+\(\pr{\textit{Role}=\textit{landlord} \vert \textit{Person}=\textit{bob}}\)
+do not change after awareness growth (see Table \ref{table:tenant}).
 
 \begin{table}
 \begin{tabular}{clccc}
@@ -823,25 +855,28 @@ $\ppr{+}{Person}$ & \multicolumn{2}{c}{$Person$} & \\
 \label{table:tenant}
 \end{table}
 
-It is now time to test the tenability fo constraint (C) a bit further.
-So far we only considered cases of awareness expansion in which a new
-state was added to an \emph{upstream} node. In \textsc{Friends}, a state
-was added to the upstream node \(Reason\), and in \textsc{Tenant}, a
-state was added to the upstream node \(Person\). What if the new state
-was added to a downstream node? For consider a variation of
-\textsc{Friends}. Suppose that the downstream node \textit{Behavior}
-could initially take only two values, say \textit{secretive} and
-\textit{public}. You then realize the node could also take a third
-value, say \textit{ambigous}. Initially, \textit{secretive} and
-\textit{public} are considered exhaustive, but that is no longer true
-after the addition of \textit{ambiguous}. So the old conditional
-probabilities will change, specifically,
+It is now time to test the tenability of constraint (C) in cases of
+awareness expansion a bit further. So far we only considered cases of
+expansion in which a new state was added to an \emph{upstream} node. In
+\textsc{Friends}, a state was added to the upstream node \(Reason\), and
+in \textsc{Tenant}, a state was added to the upstream node \(Person\).
+What if the new state was added to a downstream node? For consider a
+variation of \textsc{Friends}. Suppose the downstream node
+\textit{Behavior} could initially take only two values, say
+\textit{secretive} and \textit{transparent}. That is, the behavior of
+your partner and best friend could be secretive or transparent. You then
+realize there could be ambiguity in the behaviour, say the behavior
+could have elements of secrecy and elements of transparency. So the node
+could take a third value: \textit{ambigous}. Initially,
+\textit{secretive} and \textit{transparent} are considered exhaustive,
+but that is no longer true after adding \textit{ambiguous}. So the old
+conditional probabilities will change, specifically,
 \(\pr{E=e \vert H=h}\neq \ppr{+}{E=e \vert H=h}\), where \(H\) is the
-upstream node and \(E\) downstream. However, if we exclude the the novel
+upstream node and \(E\) downstream. However, if we exclude the novel
 state, there should be no change, so
 \(\pr{E=e \vert H=h \; \& \; E\neq e^* } = \ppr{+}{E=e \vert H=h \; \& \; E\neq e^*}\),
-where \(e^*\) is the novel state added to the downstream node \(E\). So
-constraint (C) should again be satisfied.
+where \(e^*\) is the novel state added to the downstream node \(E\).
+Hence, constraint (C) should be satisfied.
 
 The same analysis applies to a more complex example by Mathani:
 
@@ -865,7 +900,7 @@ conclusion.
 
 Mathani observes that this scenario blurs the distinction between
 expansion and refinement. For one thing, \textsc{Coin} seems a case of
-refinement. The space of possibiliiesy is held fixed---the coin could
+refinement. The space of possibilities is held fixed---the coin could
 come up heads or tails---but the options for tails are further refined,
 for tails could be \(lion\) or \(stonehenge\). On the other hand, a new
 possibility has been added after awareness growth, namely
@@ -882,8 +917,9 @@ Awareness Rigidity.\footnote{ If it is a case of refinement,
   \(\ppr{+}{stonehenge \vert heads \vee tails}\) to zero. To avoid this
   odd result for awareness Rigidity, one might argue that
   \(heads \vee tails\) picks out a possibility space larger than the old
-  one, because it also includes the possibility of \(stonehenge\). So
-  which is it?}
+  one, because it also includes the possibility of \(stonehenge\). But
+  arguably \(heads \vee tails\) should not pick out a larger possibility
+  space. So which is it?}
 
 These difficulties disappear if the scenario is modeled using Bayesian
 networks. The definition of awareness expansion we have been working
@@ -926,31 +962,49 @@ to the upstream node. Specifically, after awareness expansion, no new
 state is added to upstream node \(Outcome\), but an additional state,
 \(other\), is added to the downstream node \(Person\).
 
-The states of the upstream node model what we tend to view---somewhat
-loosely speaking--- as more causally fundamental compared to the states
-of downstream nodes. In \textsc{Tenant}, who is the person singing in
-the shower is more fundamental, while the proposition that describe
-their roles are derivatives, for multiple people could play the same
-role. In \textit{Coin}, that an outcome (heads or tails) could be
-instantiated by different kinds of engravings is considered a derivative
-fact. What seems causally fundamental is the type of outcome, not the
-engraving. Bayesian networks offer a language to model these differences
-that are crucial to model episodes of awareness expansion.
+The states of the upstream node model what we view---loosely
+speaking---as more causally fundamental compared to the states of
+downstream nodes. In \textsc{Tenant}, that a person singing in the
+shower is more fundamental, while the proposition that describes the
+person's roles is derivative, for multiple people could play the same
+role. In \textit{Coin}, that an outcome (heads or tails) is instantiated
+by different engravings is considered a derivative fact. What is
+causally more fundamental is the outcome, not the engraving. Bayesian
+networks offer a language to model these differences that are crucial to
+model episodes of awareness expansion.
 
-So what about constraint (C)? Plausible probability distributions for
-the Bayesian networks associated with the scenario \textsc{Coin} is
-displayed in Table \ref{table:coin}. It is easy to check that constraint
-(C) is once again satisfied. So, the constraint has outperformed both
-Reverse Bayesianism and Awareness Rigidity. But our objective here is
-not to replace one formal constraint with another. As noted in the
-introduction, we think that awareness growth cannot be modeled in a
-purely formal matter. The success of constraint (C) relies on the right
-network structure. How the networks should be built is based on our
-subject-matter knowledge---for example, that people's behavior must have
-a reason; that multiple peoples can play different roles; or that heads
-and tails can be associated with different specific engravings. And
-sometimes awareness growth may even require the very structure of the
-network to change. This is our next topic.
+So what about constraint (C)? It is easy to check that it is satisfied.
+Conditional probabilities such as
+\(\pr{\textit{Image = lions} \vert \textit{Outcome= tails}}\) or
+\(\pr{\textit{Image = lions} \vert \textit{Outcome= heads}}\) remain
+unchanged after awareness growth given the condition
+\(\textit{Image} \neq \textit{stonehenge}\). Initially, \(Image=lions\)
+is true if and only if \(Outcome=tails\) is true. So,
+\(\pr{\textit{Image = lions} \vert \textit{Outcome= tails}}\) equals
+one, but it must also be that
+\(\ppr{+}{\textit{Image = lions} \vert \textit{Outcome= tails} \; \& \; \textit{Image} \neq \textit{stonehenge}}\)
+equals one. More generally, plausible probability distributions for the
+Bayesian networks associated with the scenario \textsc{Coin} is
+displayed in Table \ref{table:coin}. Constraint (C) is never violated.
+
+All in all, examples in the literature that count as cases of expansion
+under our definition---that is, a state is added to a network without
+changes in the network structure---obey constraint (C). This provides
+good support for the first part of our working hypothesis: If there is
+no change in the structure of the network, constraint (C) holds
+generally. In this sense, the constraint has outperformed both Reverse
+Bayesianism and Awareness Rigidity. But our objective here is not to
+replace one formal constraint with another. As noted in the
+introduction, we think that the phenomenon of awareness growth in its
+generality cannot be modeled in a purely formal matter. The success of
+constraint (C) relies on the right network structure. How the networks
+should be built is based on our subject-matter knowledge---for example,
+that people's behavior must have a reason; that multiple peoples can
+play different roles; or that heads and tails can be associated with
+different specific engravings. Constraint (C) holds when this
+subject-matter knowledge does not change. However, sometimes awareness
+growth may bring in new subject-matter knowledge and require changes to
+the structure of the network. This is our next topic.
 
 \begin{table}
 \begin{tabular}{clcc}
@@ -985,22 +1039,15 @@ Networks}\label{refinement-with-bayesian-networks}}
 
 \label{sec:structural-both}
 
-We turn now from cases of awareness expansion to cases of awareness
-refinement. The previous section illustrated why, when no change in
-structure in the Bayesian network occurs, constraint (C) holds. But, of
-course, awareness expansion may sometimes require to change the
-structure of the network. What will happen to the constraint then? It
-will likely fail, at least sometimes. The challenge is to develop a
-method to determine when it holds and when it fails. This method will
-afford us a firmer foundation for a general theory of awareness growth.
-
-In the framework of Bayesian networks, expansion consists in adding
-states to existing nodes in the network. Refinement, instead, can be
-modeled by adding nodes to the network without adding any new state to
-existing nodes. Intuitively, refinement takes place when an epistemic
-agent acquires a more-fined grained picture of the situation, say
-instead of thinking that the political spectrum is divided into liberals
-and conservatives, the political spectrum can be further divided into
+To see how the network structure itself may require modifications, we
+turn now from cases of expansion to cases of refinement. In the
+framework of Bayesian networks, expansion consists in adding states to
+existing nodes in the network. Refinement, instead, can be modeled by
+adding nodes to the network without adding any new state to existing
+nodes. Intuitively, refinement takes place when an epistemic agent
+acquires a more-fined grained picture of the situation, say instead of
+thinking that the political spectrum is divided into liberals and
+conservatives, the political spectrum can be further divided into
 traditional-liberal, new-liberal, traditional-conservative and
 new-conservative. The political spectrum is still divided into liberal
 and conservative---no expansion occurred---but the two categories have
@@ -1071,10 +1118,16 @@ amended:
 \begin{center}\includegraphics[width=0.5\linewidth,height=0.3\textheight]{ReplyToSteeleStefansson5_files/figure-latex/lighting2DAG-1} \end{center}
 
 \noindent where the node \(L\) can have two values, \textit{L=good} and
-\textit{L=bad}. Commonsense as well as psychological findings suggest
-that when the visibility deteriorates, people's ability to identify
-faces worsen. So a plausible way to modify your assessment of the
-evidence is as follows:
+\textit{L=bad}. What is going on here? Initially, you thought that the
+perceptual experience of the witness (node \(E\)) was causally affected
+by te state of the whereabouts of the defendants (node \(H\)). But, as
+your awareness growth, you reliaze that the witness' experience may also
+be caused by the environmental condition surrounding the experience
+itself, say the lighting conditions (node \(L\)). So there are now two
+incoming arrows into node \(E\). In addition, commonsense as well as
+psychological findings suggest that when the visibility deteriorates,
+people's ability to identify faces worsen. So a plausible way to modify
+your assessment of the evidence is as follows:
 \[\ppr{+}{\textit{E=seen} \vert \textit{H=present} \wedge \textit{L=good}} > \ppr{+}{\textit{E=seen} \vert \textit{H=absent} \wedge \textit{L=good}}\]
 \[\ppr{+}{\textit{E=seen} \vert \textit{H=present} \wedge \textit{bad}} = \ppr{+}{\textit{E=seen} \vert \textit{H=absent} \wedge \textit{L=bad}}\]
 
@@ -1280,6 +1333,8 @@ Bayesianism, Awareness Rigidity or even constraint (C).
 
 \hypertarget{towards-a-general-theory}{%
 \section{Towards a general theory}\label{towards-a-general-theory}}
+
+\label{sec:general}
 
 We conclude with some programmatic remarks. We think that the awareness
 of agents grows while holding fixed certain material structural
