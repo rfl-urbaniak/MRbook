@@ -264,7 +264,7 @@
 
 \title{Awareness Growth with Bayesian Networks}
 \author{}
-\date{\vspace{-2.5em}February 26, 2023}
+\date{\vspace{-2.5em}February 27, 2023}
 
 \begin{document}
 \maketitle
@@ -1360,37 +1360,65 @@ The next step is to decide what changes to the graphical structure
 \(\mathcal{G}\) must be made to adequately model awareness growth. In
 general, awareness growth will require either to add states to the
 existing nodes (expansion) or to modify the structure of the network
-(refinement). So we should consider each cae in turn.
+(refinement). So we should consider each case in turn.
 
-Suppose awareness growth is modeled by adding states to an existing node
-\(X\) in the network. Then, the existing probability tables in which
-\(X\) occurs should be modified to accommodate the new value \(x^*\) of
-\(X\). Specifically, the probability table for \(X\) should be modified,
-as well as the probability tables for the children nodes of \(X\).
-Constraint (C) will guide on how to change the probability tables in
-question and define the new probability distribution \(\ppr{+}{}\). No
-other changes to the probability tables are necessary because the theory
-of Bayesian networks ensure that a variable \(X\) is independent from
-all other variables conditional on its so-called Markov blanket (which
-include the parent and children nodes of \(X\), as well as the parents
-of the children of \(X\)).
+Suppose awareness growth is modeled by adding a state \(x^*\) to an
+existing node \(X\) in the network. Then, the existing probability
+tables in which \(X\) occurs should be modified to accommodate the new
+value \(x^*\) of \(X\). Specifically, the probability table for \(X\)
+should be modified, as well as the probability tables for the children
+nodes of \(X\). Constraint (C) will guide on how to change the
+probability tables in question and define the new probability
+distribution \(\ppr{+}{}\). No other changes to the probability tables
+are necessary because the theory of Bayesian networks ensure that a
+variable \(X\) is independent from all other variables conditional on
+its so-called Markov blanket (which includes the parent and children
+nodes of \(X\), as well as the parents of the children of \(X\)).
 
 Suppose instead awareness growth is modeled by adding a new node \(X\)
-somewhere in the network. There are several cases to distinguish here.
-The easiest cases are ones in which the new node is added without
-breaking any existing connections between nodes. The addition of the new
-nodes only requires drawing additional arrows that connects to the new
-nodes to an existing nodes. Both \textsc{Veracity} and \textsc{Lighting}
-are such cases. A slightly more complicated case is one in which an
-alternative path between two variables is hypothesized. Say initially
-you thought that gender had an effect on graduate admission decision.
-The aggregate data available indicate that women are less likely to be
-admitted to graduate schools. So the initial graph looks like this:
-\(G \rightarrow A\). You then hypothesize that, since departments or
-units make decision about admission, not the university as a whole,
-there might is an alternative path from \(G\) to \(A\). Perhaps, women
-happen to prefer departments that have lower admission rates. So a new
-path must be added to the graph: \(G \rightarrow D \rightarrow A\).
+to the network. There are different cases to distinguish here. In the
+easiest case, the new node is added without breaking existing
+connections between nodes. The addition of the new node only requires
+drawing additional arrows that connect the new node to existing nodes.
+Both \textsc{Veracity} and \textsc{Lighting} are such cases. In these
+two scenarios, the new nodes \(X\) is either added downstream of an
+existing node or downstream. A slightly more complicated case is one in
+which the new node \(X\) is both downstream (relative to an existing
+node \(A\)) and upstream (relative to another existing node
+\(B\)).\footnote{For example, initially you thought that gender (\(G\))
+  had an effect on graduate admission decision (\(D\)). The aggregate
+  data available indicate that women are less likely to be admitted to
+  graduate schools. So the initial graph looks like this:
+  \(G \rightarrow D\). You then hypothesize that, since schools (\(S\))
+  make decision about admission, not the university as a whole, there
+  might an alternative path from \(G\) to \(D\). Perhaps, women happen
+  to prefer departments that have lower admission rates. So a new path
+  must be added to the graph: \(G \rightarrow S \rightarrow D\).}
+Another option is that the new node is downstream relative to both
+existing nodes or upstream relative to both. In other words, the new
+node creates via the novel connections an alternative path between the
+two variables \(A\) and \(B\). Here is a summary of the cases:
+
+\begin{center}
+\begin{tabular}{lccc}
+$\mathcal{G}$ & A & $\rightarrow$ & B\\
+\hline
+$\mathcal{G}^+$ &   & X  \\
+($X$ is \text{upstream}, e.g.\ \textsc{Lighting}) & $\swarrow$  & X & \\
+& A & $\rightarrow$ & B\\
+\hline
+($X$ is \text{downstream}, e.g.\ \textsc{Veracity}) & & X & $\nwarrow$\\
+& A & $\rightarrow$ & B\\
+\hline
+($X$ is \text{common cause}) & $\swarrow$ & X & $\searrow$\\
+& A & $\rightarrow$ & B\\
+\hline
+($X$ is \text{common effect}) & $\nearrow$ & X & $\nwarrow$\\
+& A & $\rightarrow$ & B\\
+\end{tabular}
+\end{center}
+
+\noindent
 
 Then, a new probability table should be added, specifically, a new
 probability table for \(X\). In addition, existing probability tables
