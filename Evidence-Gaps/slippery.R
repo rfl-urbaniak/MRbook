@@ -90,7 +90,7 @@ drawdag(slippery.daggity)
 
 
 
-slipperyProb <-prior.CPT("slippery","1","0", .05)
+slipperyProb <-priorCPT("slippery","1","0", .05)
 slipperyProb
 
 interferenceProb <- singleCPT("interference","slippery","1","0","1","0",.65,0)
