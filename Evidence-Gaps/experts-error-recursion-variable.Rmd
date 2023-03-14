@@ -12,6 +12,7 @@ output:
 library(ggplot2)
 library(grid)
 library(gridExtra)
+library(dplyr)
 ```
 
 ### The Question
@@ -639,7 +640,7 @@ Do things change significantly? Let's consider sensitivity, specificity and accu
 
 ```{r}
 
-s <- 10000
+s <- 100
 prior <- 0.5
 sr1 <- 0.7
 sr2 <- 0.7
@@ -820,7 +821,7 @@ What if we are more conservative in our assessment of expert reliability?
 
 ```{r}
 
-s <- 10000
+s <- 1000
 prior <- 0.5
 sr1 <- 0.55
 sr2 <- 0.55
@@ -906,6 +907,517 @@ acc_a <- ggplot(df_acc, aes(x=n, y=acc)) +
       xlab("Number of experts") +
       ylab("Acuracy") +
       xlim(1, 13) +
+      ylim(0, 1)
+
+grid.arrange(sen_a, spe_a, acc_a, ncol=3)
+```
+
+# Simple model
+
+
+## Three experts, different reliability 
+
+
+Suppose the first expert is highly reliable while the other two are much less. What happens when we combine the three experts opinion together?
+
+
+
+```{r}
+## expert report function
+
+expert_report <- function(r1, r2, w, s) {
+  
+      if (w == 1)
+        return(  rbinom(s, 1, r1)
+              )  
+      else
+        return(  rbinom(s, 1, (1-r2))
+              )
+      }
+
+expert_report_high <- function(w, s){
+  
+  r1_high <- 0.95
+  r2_high <- 0.95
+  expert_report(r1_high, r2_high, w, s) 
+}
+
+expert_report_mid <- function(w, s){
+  
+  r1_mid <- 0.6
+  r2_mid <- 0.6
+  expert_report(r1_mid, r2_mid, w, s) 
+}
+
+
+expert_report_low <- function(w, s){
+  
+  r1_low <- 0.51
+  r2_low <- 0.51
+  expert_report(r1_low, r2_low, w, s) 
+}
+
+
+```
+
+
+```{r}
+
+# Probability of hypotheses calculations 
+
+posterior_odds <- function(n, w) {
+  
+         if (n == 1)                              # one expert, high rel
+            return(
+               ifelse(
+                  expert_report_high(w, s) == 1, 
+                  ((-prior)/(prior-1))*(r1_high/(1-r2_high)), 
+                  ((-prior)/(prior-1))*((1-r1_high)/(r2_high))
+                    )
+                  )
+        
+        else if (n == 2)                              #  two experts, low rel 
+            return(
+               ifelse(
+                  expert_report_low(w, s) == 1, 
+                  posterior_odds(1, w)*(r1_low/(1-r2_low)), 
+                  posterior_odds(1, w)*((1-r1_low)/(r2_low))
+                    )
+                  )
+  
+        else if (n == 3)                              # three experts, low rel
+            return(
+               ifelse(
+                  expert_report_low(w, s) == 1, 
+                  posterior_odds(2, w)*(r1_low/(1-r2_low)), 
+                  posterior_odds(2, w)*((1-r1_low)/(r2_low))
+                    )
+                  )
+  
+                      }    
+
+
+
+odds_to_posterior <- function(n, w) {
+  
+  odds <- posterior_odds(n, w)
+  
+  return((odds/(1+odds)))
+}
+
+```
+
+
+
+```{r}
+
+## sensitivity, specificity and accuracy of probability-based decision threshold
+
+
+above_threshold_after_expert <- function(n, w, t) {
+    
+        ifelse(odds_to_posterior(n, w) > t, 1, 0)
+  
+}
+
+sensitivity_of_threshold <- function(n, w, t) { 
+  
+      if (w == 1)
+         return(   (length(which(above_threshold_after_expert(n, w, t) == 1)))/s          
+                )            
+      else 
+          return("Undefined because sensitivity requires the world to be in state 1")
+     
+                    }
+
+specificity_of_threshold <- function(n, w, t) { 
+  
+  if (w == 0)
+    return(   (length(which(above_threshold_after_expert(n, w, t) == 0)))/s          
+    )            
+  else 
+    return("Undefined because specificity requires the world to be in state 0")
+  
+}
+
+accuracy_of_threshold <- function(n, t) { 
+  
+  0.5*sensitivity_of_threshold(n, 1, t) + 0.5*specificity_of_threshold(n, 0, t)  
+  
+}
+```
+
+```{r}
+ t   <-  0.95
+s <- 10000
+prior <- 0.5
+r1_high <- 0.95
+r2_high <- 0.95
+r1_mid <- 0.6
+r2_mid <- 0.6
+r1_low <- 0.51
+r2_low <- 0.51
+```
+
+
+```{r, echo=FALSE}
+
+prior <- 0.5
+
+post_df <- data.frame(odds_to_posterior(1, 1))
+names(post_df) <- ("posterior")
+p1 <- ggplot(post_df, aes(x=posterior)) + 
+  geom_histogram(aes(y=..density..), binwidth = 0.01, colour="red", fill="white") +
+  xlim(0, 1.02) +
+  ylim(0, 95) +
+  ggtitle("One expert") 
+
+post_df <- data.frame(odds_to_posterior(2, 1))
+names(post_df) <- ("posterior")
+p2 <- ggplot(post_df, aes(x=posterior)) + 
+  geom_histogram(aes(y=..density..), binwidth = 0.01, colour="red", fill="white") +
+  xlim(0, 1.02) +
+  ylim(0, 95) +
+  ggtitle("Two experts") 
+
+post_df <- data.frame(odds_to_posterior(3, 1))
+names(post_df) <- ("posterior")
+p3 <- ggplot(post_df, aes(x=posterior)) + 
+  geom_histogram(aes(y=..density..), binwidth = 0.01, colour="red", fill="white") +
+  xlim(0, 1.02) +
+  ylim(0, 95) +
+  ggtitle("Three experts")  
+
+
+post_df <- data.frame(odds_to_posterior(1, 0))
+names(post_df) <- ("posterior")
+p1n <- ggplot(post_df, aes(x=posterior)) + 
+  geom_histogram(aes(y=..density..), binwidth = 0.01, colour="blue", fill="white") +
+  xlim(-0.02, 1) +
+  ylim(0, 100)
+
+post_df <- data.frame(odds_to_posterior(2, 0))
+names(post_df) <- ("posterior")
+p2n <- ggplot(post_df, aes(x=posterior)) + 
+  geom_histogram(aes(y=..density..), binwidth = 0.01, colour="blue", fill="white") +
+  xlim(-0.02, 1) +
+  ylim(0, 100) 
+
+post_df <- data.frame(odds_to_posterior(3, 0))
+names(post_df) <- ("posterior")
+p3n <- ggplot(post_df, aes(x=posterior)) + 
+  geom_histogram(aes(y=..density..), binwidth = 0.01, colour="blue", fill="white") +
+  xlim(-0.02, 1) +
+  ylim(0, 100)  
+
+
+
+grid.arrange(p1, p2, p3, p1n, p2n, p3n, ncol=3) 
+```
+
+
+
+
+
+
+```{r, echo=FALSE}
+
+
+  
+sen <- c(
+  sensitivity_of_threshold(1, 1, t), 
+  sensitivity_of_threshold(2, 1, t),
+  sensitivity_of_threshold(3, 1, t)
+        )
+
+spe <- c(
+  specificity_of_threshold(1, 0, t), 
+  specificity_of_threshold(2, 0, t),
+  specificity_of_threshold(3, 0, t)
+        )
+
+
+acc <- c(
+  accuracy_of_threshold(1, t), 
+  accuracy_of_threshold(2, t), 
+  accuracy_of_threshold(3, t) 
+        )
+  
+
+n <- c(1:3)
+
+df_sen <- data.frame(n, sen)
+df_spe <- data.frame(n, spe)
+df_acc <- data.frame(n, acc)
+
+sen_a <- ggplot(df_sen, aes(x=n, y=sen)) + 
+      geom_point(colour="red") + 
+      xlab("Number of experts") +
+      ylab("Sensitivity") +
+      xlim(1, 3) +
+      ylim(0, 1) 
+
+
+spe_a <- ggplot(df_spe, aes(x=n, y=spe)) + 
+      geom_point(colour="blue") + 
+      xlab("Number of experts") +
+      ylab("Specificity") +
+      xlim(1, 3) +
+      ylim(0, 1)
+
+acc_a <- ggplot(df_acc, aes(x=n, y=acc)) + 
+      geom_point(colour="black") + 
+      xlab("Number of experts") +
+      ylab("Acuracy") +
+      xlim(1, 3) +
+      ylim(0, 1)
+
+grid.arrange(sen_a, spe_a, acc_a, ncol=3)
+```
+
+## Three experts, same reliability 
+
+
+Suppose the three expert are midly equally reliable. What happens when we combine the three experts opinion together?
+
+
+
+```{r}
+## expert report function
+
+expert_report <- function(r1, r2, w, s) {
+  
+      if (w == 1)
+        return(  rbinom(s, 1, r1)
+              )  
+      else
+        return(  rbinom(s, 1, (1-r2))
+              )
+      }
+
+expert_report_high <- function(w, s){
+  
+  r1_high <- 0.95
+  r2_high <- 0.95
+  expert_report(r1_high, r2_high, w, s) 
+}
+
+expert_report_mid <- function(w, s){
+  
+  r1_mid <- 0.6
+  r2_mid <- 0.6
+  expert_report(r1_mid, r2_mid, w, s) 
+}
+
+
+expert_report_low <- function(w, s){
+  
+  r1_low <- 0.51
+  r2_low <- 0.51
+  expert_report(r1_low, r2_low, w, s) 
+}
+
+
+```
+
+
+```{r}
+
+# Probability of hypotheses calculations 
+
+posterior_odds <- function(n, w) {
+  
+         if (n == 1)                              # one expert, high rel
+            return(
+               ifelse(
+                  expert_report_mid(w, s) == 1, 
+                  ((-prior)/(prior-1))*(r1_mid/(1-r2_mid)), 
+                  ((-prior)/(prior-1))*((1-r1_mid)/(r2_mid))
+                    )
+                  )
+        
+        else                            #  two experts, low rel 
+            return(
+               ifelse(
+                  expert_report_low(w, s) == 1, 
+                  posterior_odds(n-1, w)*(r1_mid/(1-r2_mid)), 
+                  posterior_odds(n-1, w)*((1-r1_mid)/(r2_mid))
+                    )
+                  )
+  
+  
+                      }    
+
+
+
+odds_to_posterior <- function(n, w) {
+  
+  odds <- posterior_odds(n, w)
+  
+  return((odds/(1+odds)))
+}
+
+```
+
+
+
+```{r}
+
+## sensitivity, specificity and accuracy of probability-based decision threshold
+
+
+above_threshold_after_expert <- function(n, w, t) {
+    
+        ifelse(odds_to_posterior(n, w) > t, 1, 0)
+  
+}
+
+sensitivity_of_threshold <- function(n, w, t) { 
+  
+      if (w == 1)
+         return(   (length(which(above_threshold_after_expert(n, w, t) == 1)))/s          
+                )            
+      else 
+          return("Undefined because sensitivity requires the world to be in state 1")
+     
+                    }
+
+specificity_of_threshold <- function(n, w, t) { 
+  
+  if (w == 0)
+    return(   (length(which(above_threshold_after_expert(n, w, t) == 0)))/s          
+    )            
+  else 
+    return("Undefined because specificity requires the world to be in state 0")
+  
+}
+
+accuracy_of_threshold <- function(n, t) { 
+  
+  0.5*sensitivity_of_threshold(n, 1, t) + 0.5*specificity_of_threshold(n, 0, t)  
+  
+}
+```
+
+```{r}
+ t   <-  0.5
+s <- 10000
+prior <- 0.5
+r1_high <- 0.95
+r2_high <- 0.95
+r1_mid <- 0.6
+r2_mid <- 0.6
+r1_low <- 0.51
+r2_low <- 0.51
+```
+
+
+```{r, echo=FALSE}
+
+prior <- 0.5
+
+post_df <- data.frame(odds_to_posterior(1, 1))
+names(post_df) <- ("posterior")
+p1 <- ggplot(post_df, aes(x=posterior)) + 
+  geom_histogram(aes(y=..density..), binwidth = 0.01, colour="red", fill="white") +
+  xlim(0, 1.02) +
+  ylim(0, 95) +
+  ggtitle("One expert") 
+
+post_df <- data.frame(odds_to_posterior(2, 1))
+names(post_df) <- ("posterior")
+p2 <- ggplot(post_df, aes(x=posterior)) + 
+  geom_histogram(aes(y=..density..), binwidth = 0.01, colour="red", fill="white") +
+  xlim(0, 1.02) +
+  ylim(0, 95) +
+  ggtitle("Two experts") 
+
+post_df <- data.frame(odds_to_posterior(3, 1))
+names(post_df) <- ("posterior")
+p3 <- ggplot(post_df, aes(x=posterior)) + 
+  geom_histogram(aes(y=..density..), binwidth = 0.01, colour="red", fill="white") +
+  xlim(0, 1.02) +
+  ylim(0, 95) +
+  ggtitle("Three experts")  
+
+
+post_df <- data.frame(odds_to_posterior(1, 0))
+names(post_df) <- ("posterior")
+p1n <- ggplot(post_df, aes(x=posterior)) + 
+  geom_histogram(aes(y=..density..), binwidth = 0.01, colour="blue", fill="white") +
+  xlim(-0.02, 1) +
+  ylim(0, 100)
+
+post_df <- data.frame(odds_to_posterior(2, 0))
+names(post_df) <- ("posterior")
+p2n <- ggplot(post_df, aes(x=posterior)) + 
+  geom_histogram(aes(y=..density..), binwidth = 0.01, colour="blue", fill="white") +
+  xlim(-0.02, 1) +
+  ylim(0, 100) 
+
+post_df <- data.frame(odds_to_posterior(3, 0))
+names(post_df) <- ("posterior")
+p3n <- ggplot(post_df, aes(x=posterior)) + 
+  geom_histogram(aes(y=..density..), binwidth = 0.01, colour="blue", fill="white") +
+  xlim(-0.02, 1) +
+  ylim(0, 100)  
+
+
+
+grid.arrange(p1, p2, p3, p1n, p2n, p3n, ncol=3) 
+```
+
+
+```{r, echo=FALSE}
+
+
+  
+sen <- c(
+  sensitivity_of_threshold(1, 1, t), 
+  sensitivity_of_threshold(2, 1, t),
+  sensitivity_of_threshold(3, 1, t)
+        )
+
+spe <- c(
+  specificity_of_threshold(1, 0, t), 
+  specificity_of_threshold(2, 0, t),
+  specificity_of_threshold(3, 0, t)
+        )
+
+
+acc <- c(
+  accuracy_of_threshold(1, t), 
+  accuracy_of_threshold(2, t), 
+  accuracy_of_threshold(3, t) 
+        )
+  
+
+n <- c(1:3)
+
+df_sen <- data.frame(n, sen)
+df_spe <- data.frame(n, spe)
+df_acc <- data.frame(n, acc)
+
+sen_a <- ggplot(df_sen, aes(x=n, y=sen)) + 
+      geom_point(colour="red") + 
+      xlab("Number of experts") +
+      ylab("Sensitivity") +
+      xlim(1, 3) +
+      ylim(0, 1) 
+
+
+spe_a <- ggplot(df_spe, aes(x=n, y=spe)) + 
+      geom_point(colour="blue") + 
+      xlab("Number of experts") +
+      ylab("Specificity") +
+      xlim(1, 3) +
+      ylim(0, 1)
+
+acc_a <- ggplot(df_acc, aes(x=n, y=acc)) + 
+      geom_point(colour="black") + 
+      xlab("Number of experts") +
+      ylab("Acuracy") +
+      xlim(1, 3) +
       ylim(0, 1)
 
 grid.arrange(sen_a, spe_a, acc_a, ncol=3)
