@@ -70,29 +70,34 @@ precis(netModel)
 #rather huge sd. If we focus on mean values, we ignore this uncertainty
 
 
-#suppose we assign nean predictions for the NAs
+#suppose we assign mean predictions for the NAs
 
 #extract cases that need predictions
 fillNet <- sh %>% filter(!is.na(gross_wt),is.na(net_wt))
 netPred <- sim(netModel,fillNet)
 fillNet$mean <- apply(netPred, 2, mean)
 
+#for future reference we will also introduce HPDI low
+fillNet$low <- t(apply(netPred, 2, HPDI))[,1]
+
+
 #now let's plug known net when it's known, predicted mean if it's not
 sh$netEstimate <- ifelse( !is.na(sh$net_wt), sh$net_wt, NA )
+sh$netEstimateLow <- ifelse( !is.na(sh$net_wt), sh$net_wt, NA )
+
 
 for (obs in 1:218){
   if (is.na(sh$netEstimate[obs])){
     sh$netEstimate[obs] <- fillNet$mean[fillNet$obs == obs]
+    sh$netEstimateLow[obs] <- fillNet$low[fillNet$obs == obs]
   }
 }
-
 
 #now let's us this estimate learn the relation between balloons
 #and net weight
 
-balloonsData <- sh %>% select(balloons, netEstimate)
+balloonsData <- sh %>% select(balloons, netEstimate, netEstimateLow)
 balloonsData <- balloonsData[complete.cases(balloonsData),]
-
 
 mean(balloonsData$netEstimate)
 mean(balloonsData$netEstimate/balloonsData$balloons)
@@ -104,108 +109,101 @@ dens(balloonsData$netEstimate/balloonsData$balloons)
 sd(balloonsData$netEstimate)
 
 
+names(balloonsData)
+
 set.seed(123)
 balloonsModel <-  quap(
   alist(
     netEstimate ~ dnorm( mu , sigma ) ,
-    mu <- baseline + b + balloons,
-    baseline ~ dnorm(400,100) ,
+    mu <-  b * balloons,
+    b ~ dnorm(15,25) ,
+    sigma ~ dnorm( 200 , 200 )
+  ) , data=balloonsData)
+
+precis(balloonsModel)
+
+
+#for later use and comparison
+balloonsModelLow  <-  quap(
+  alist(
+    netEstimateLow ~ dnorm( mu , sigma ) ,
+    mu <-  b * balloons,
     b ~ dnorm(15,25) ,
     sigma ~ dnorm( 200 , 200 )
   ) , data=balloonsData)
 
 
 precis(balloonsModel)
+precis(balloonsModelLow)
 
 
-
-#but wait, Shonubi used pretty small balloons
-
+#now take the empirical distro of ballons as your prior, 
+#train on one example of Shonubi, predict the number of balloons on 
+#8000 trips, 
+#take the mean, i.e. divide by 1000, that's your point estimate of the total 
+#number of balloons he carried
 
 
 set.seed(123)
-balloonsModelShonubi <-  quap(
+balloonsCarriedModel <-  quap(
   alist(
-    netEstimate ~ dnorm( mu , sigma ) ,
-    mu <- baseline + b + balloons,
-    baseline ~ dnorm(369,34) ,
-    b ~ dnorm(14.78,24.3) ,
-    sigma ~ dnorm( 311.68 , 18.41 )
-  ) , data= list(netEstimate = 427, balloons = 103))
+    balloons ~ dnorm( mu , sigma ) ,
+    mu <- a,
+    a ~ dnorm(70, 50) ,
+    sigma ~ dunif(0,50)
+  ) , data= balloonsData)
+
+precis(balloonsCarriedModel)
 
 
-precis(balloonsModelShonubi)
-
-
-
-
-
-#so we'll use the predicted number of balloons by taking
-
-#369 + 14.7 * balloons
-
-
-#we'll use the point estimate from this model once we make a prediction of
-#how many balloons Shonubi carried on all trips, we start estimating the 
-#numbers of carried baloons in general and then use the result as a prior 
-#for shonubi with one observation only, 103 
-
-
-
-balloonsLambdaModel <- quap(
+set.seed(123)
+balloonsCarriedModelShonubi <-  ulam(
   alist(
-    balloons ~ dpois( lambda ),
-    log(lambda) <- a,
-    a ~ dnorm(5,5)
-  ), data=balloonsData)
+    balloons ~ dnorm( mu , sigma ) ,
+    mu <- a,
+    a ~ dnorm(68, 40) ,
+    sigma ~ dunif(0,50)
+  ) , data= list(balloons = 103))
 
 
-precis(balloonsLambdaModel)
-
-ballonsSim <- sim(balloonsLambdaModel)
-
-sd(ballonsSim)
-mean(ballonsSim)
+precis(balloonsCarriedModelShonubi)
 
 
+simBaloonsShonubi <- sim(balloonsCarriedModelShonubi)
+dens(simBaloonsShonubi)
 
-balloonsLambdaShonubiModel <- quap(
-  alist(
-    balloons ~ dpois( lambda ),
-    log(lambda) <- a,
-    a ~ dnorm(4.22,.01)
-  ), data= list(balloons = 103))
+pointBallonsShonubi <- mean(simBaloonsShonubi) * 8
+pointBallonsShonubi
 
-balloonsShonubiSim <- sim(balloonsLambdaShonubi)
+#now use the balloons model to mean-predict net
 
-mean(balloonsShonubiSim)
+NetShonubi <- link(balloonsModelShonubi, data = list(balloons = 760))
+pointNetShonubi <- mean(NetShonubi)
 
-mean(sh$balloons, na.rm = TRUE)
+pointNetShonubi
+#the predicted value is 4558.864
 
+#1. We're gonna use balloonsModelLow instead of balloonsModel
+#2. We're gonna use the whole distro for the number of balloons he carried
 
-68 * 8
+allTripsBalloonsDistro <- 8 * simBaloonsShonubi 
 
-#just a bit more than the mean, let's go with the mean prediction
+allTripsBalloonsDistro <- data.frame(balloons = allTripsBalloonsDistro)
 
+str(allTripsBalloonsDistro)
+#ach of this number is going to be associated with a *simulated prediction*
 
-predictedBallonsShonubiMean <- 8 * mean(balloonsShonubiSim)
-
-predictedBallonsShonubiMean
-
-#now let's use the balloons model to predict the total weight
-
-predictedBallonsShonubiMean
-
-shonubiNetPredictionMean <- sim(balloonsModel, data = list(balloons = 546))
+allTripsNetDistro <-  sim(balloonsModelShonubi, data  =
+                             list(balloons = 
+                                    as.vector(allTripsBalloonsDistro$balloons)))
 
 
+dens( allTripsNetDistro ) 
 
-mean(shonubiNetPredictionMean)
+mean( allTripsNetDistro)
 
 
-369 + 14.7 * 546
-
-#this is above 3000 grams
+mean(allTripsNetDistro > 3000)
 
 
 
