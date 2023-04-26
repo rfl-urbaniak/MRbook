@@ -44,12 +44,14 @@ th <- theme_tufte(base_size = 10) + theme(plot.title.position = "plot")
 
 sh <- read.csv("ShonubiCaseDataset.csv")
 
+head(sh)
 #FIRST, STRATEGY WHICH USES POSTERIOR MEANS ONLY
 
 
 #note there are 107 cases with gross_wt, but no net_wt. Let's first predict
 #those, then fill them in to predict weight based on balloons
 
+nrow(sh)
 sum(is.na(sh$net_wt))
 
 netData <- sh %>% select(gross_wt, net_wt)
@@ -75,10 +77,20 @@ precis(netModel)
 #extract cases that need predictions
 fillNet <- sh %>% filter(!is.na(gross_wt),is.na(net_wt))
 netPred <- sim(netModel,fillNet)
+
+str(netPred)
+
 fillNet$mean <- apply(netPred, 2, mean)
+
+fillNet$mean
 
 #for future reference we will also introduce HPDI low
 fillNet$low <- t(apply(netPred, 2, HPDI))[,1]
+
+fillNet$low <- ifelse(fillNet$low < 0, 0, fillNet$low)
+
+head(fillNet)
+
 
 
 #now let's plug known net when it's known, predicted mean if it's not
@@ -177,11 +189,11 @@ pointBallonsShonubi
 
 #now use the balloons model to mean-predict net
 
-NetShonubi <- link(balloonsModelShonubi, data = list(balloons = 760))
+NetShonubi <- link(balloonsModel, data = list(balloons = 735))
 pointNetShonubi <- mean(NetShonubi)
 
 pointNetShonubi
-#the predicted value is 4558.864
+#the predicted value is 4664.925
 
 #1. We're gonna use balloonsModelLow instead of balloonsModel
 #2. We're gonna use the whole distro for the number of balloons he carried
@@ -193,9 +205,11 @@ allTripsBalloonsDistro <- data.frame(balloons = allTripsBalloonsDistro)
 str(allTripsBalloonsDistro)
 #ach of this number is going to be associated with a *simulated prediction*
 
-allTripsNetDistro <-  sim(balloonsModelShonubi, data  =
+allTripsNetDistro <-  sim(balloonsModel, data  =
                              list(balloons = 
                                     as.vector(allTripsBalloonsDistro$balloons)))
+
+str(allTripsNetDistro )
 
 
 dens( allTripsNetDistro ) 
