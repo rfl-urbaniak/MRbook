@@ -7,19 +7,16 @@
   11pt,
   dvipsnames,enabledeprecatedfontcommands, todos]{scrartcl}
 \usepackage{amsmath,amssymb}
+\usepackage{lmodern}
 \usepackage{iftex}
 \ifPDFTeX
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
   \usepackage{textcomp} % provide euro and other symbols
 \else % if luatex or xetex
-  \usepackage{unicode-math} % this also loads fontspec
+  \usepackage{unicode-math}
   \defaultfontfeatures{Scale=MatchLowercase}
   \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
-\fi
-\usepackage{lmodern}
-\ifPDFTeX\else
-  % xetex/luatex font selection
 \fi
 % Use upquote if available, for straight quotes in verbatim environments
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
@@ -255,7 +252,7 @@
 \fi
 \IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
-\urlstyle{same}
+\urlstyle{same} % disable monospaced font for URLs
 \hypersetup{
   pdftitle={Awareness Growth with Bayesian Networks},
   colorlinks=true,
@@ -267,7 +264,7 @@
 
 \title{Awareness Growth with Bayesian Networks}
 \author{}
-\date{\vspace{-2.5em}July 19, 2023}
+\date{\vspace{-2.5em}August 10, 2023}
 
 \begin{document}
 \maketitle
@@ -278,9 +275,8 @@
 
 \emph{Wordcount (including footnotes)}: 8,475
 
-\todo{major revisions to the abstract, check}
 \begin{abstract}
-We examine different counterexamples to Reverse Bayesianism, a popular approach to the problem of awareness growth. We agree with the general skepticism toward Reverse Bayesianism, but submit that in a relatively wide range of cases the problem of awareness growth  can be tackled algorithmically once subject-matter structural assumptions are made explicit. These assumptions play an essential role in determining how probabilities should be updated in light of awareness growth. Bayesian networks are useful for the representation of such structural assumptions, so we use them to illustrate how explicit structural assumptions together with the usual probabilistic toolkit can help to model awareness growth in the Bayesian framework. 
+We examine different counterexamples to Reverse Bayesianism, a popular approach to the problem of awareness growth. We agree with the general skepticism toward Reverse Bayesianism, but submit that in a relatively wide range of cases the problem of awareness growth  can be tackled algorithmically once subject-matter structural assumptions are made explicit. These assumptions play an essential role in determining how probabilities should be updated. Bayesian networks are useful for the representation of such structural assumptions, so we use them to illustrate how awareness growth can be modeled in the Bayesian framework. 
 \end{abstract}
 
 \doublespace
@@ -315,30 +311,26 @@ propositions that we did not consider before. Or we may consider new
 propositions---without necessarily learning that they are true or
 false---and this change in awareness may in turn change what we already
 believe. How should this more complex learning process be modeled by
-Bayesianism? This is the problem of awareness growth.
-
-The algebra of propositions need not be so narrowly construed that it
-only contains propositions that are presently under consideration. The
-algebra may also contain propositions which, though outside the agent's
-present consideration, are still the object, perhaps implicitly, of
-certain dispositions to believe.\footnote{Roussos (2021) notes that, for
-  the sake of clarity, the problem of awareness growth should only
-  address propositions which agents are \emph{truly} unaware of (say new
-  scientific theories), not propositions that were temporarily forgotten
-  or set aside. This is a helpful clarification to keep in mind,
-  although the recent literature on the topic does not make a sharp a
-  distinction between true unawareness and temporary unawareness.}
-
-\todo{commented out a wordy bit, check}
-
----\textgreater{}
+Bayesianism? This is the problem of awareness growth.\footnote{The
+  algebra of propositions need not be so narrowly construed that it only
+  contains propositions that are presently under consideration. The
+  algebra may also contain propositions which, though outside the
+  agent's present consideration, are still the object, perhaps
+  implicitly, of certain dispositions to believe. Roussos (2021) notes
+  that, for the sake of clarity, the problem of awareness growth should
+  only address propositions which agents are \emph{truly} unaware of
+  (say new scientific theories), not propositions that were temporarily
+  forgotten or set aside. This is a helpful clarification to keep in
+  mind, although the recent literature on the topic does not make a
+  sharp a distinction between true unawareness and temporary
+  unawareness.}
 
 The problem of awareness growth have been discussed under different
-names for quite some time, at least since the eighties. It arises in a
-number of different contexts, such as the construction of new scientific
-theories (Chihara, 1987; Earman, 1992; Glymour, 1980), language changes
-and paradigm shifts (Williamson, 2003), and theories of induction
-(Zabell, 1992).
+names for quite some time, at least since the eighties. It arises in
+different contexts, such as the construction of new scientific theories
+(Chihara, 1987; Earman, 1992; Glymour, 1980), language changes and
+paradigm shifts (Williamson, 2003), and theories of induction (Zabell,
+1992).
 
 A proposal that has attracted considerable scholarly attention in recent
 years is Reverse Bayesianism (Bradley, 2017; Karni \& Vierø, 2015;
@@ -349,10 +341,8 @@ remain the same in a sense to be specified.
 
 Let \(\mathcal{F}\) be the initial algebra of propositions and let
 \(\mathcal{F}^+\) be the algebra after the agent's awareness state has
-grown.
-\todo{Removed redundant bit; these are conditions that algebras have to satisfy anyway}
-Denote by \(X\) and \(X^+\) the subsets of these algebras that contain
-only basic propositions (that is, those without connectives).
+grown. Denote by \(X\) and \(X^+\) the subsets of these algebras that
+contain only basic propositions (that is, those without connectives).
 \textbf{Reverse Bayesianism} posits that the ratio of probabilities for
 any basic propositions \(A\) and \(B\) that belong to both \(X\) and
 \(X^+\) remain constant through the process of awareness growth:
@@ -551,8 +541,8 @@ basic presupposition that someone's behavior must have a reason. In
 characteristics such as language, difficulty or genre may influence
 one's decision to select a movie for showing rather than another. What
 is wrong with principles such as Reverse Bayesianism or Awareness
-Rigidity---we hold---is that they are purely formal. Instead, we need to
-use formalism guided by an appropriate representation of the relevant
+Rigidity---we hold---is that they are purely formal. Modeling awareness
+growth requires an appropriate representation of the relevant
 subject-matter information. In what follows, we illustrate how Bayesian
 networks can serve this purpose.
 
@@ -830,9 +820,9 @@ $\ppr{+}{Person}$ & \multicolumn{2}{c}{$Person$} & \\
 \label{table:tenant}
 \end{table}
 
-It is now time to test the tenability of constraint (C) in cases of
-awareness expansion further. So far we only considered cases of
-expansion in which a new state was added to an \emph{upstream} node. In
+Let's now test the tenability of constraint (C) in other cases of
+awareness expansion. So far we only considered cases of expansion in
+which a new state was added to an \emph{upstream} node. In
 \textsc{Friends}, a state was added to the upstream node \(Reason\), and
 in \textsc{Tenant}, a state was added to the upstream node \(Person\).
 What if the new state was added to a downstream node? To this end,
@@ -892,9 +882,9 @@ The scenario can be modeled by this familiar graph structure:
 
 \begin{center}\includegraphics[width=0.5\linewidth,height=0.3\textheight]{ReplyToSteeleStefansson5_files/figure-latex/tailsDAG-1} \end{center}
 
-\noindent The upstream node \(outcome\) has two states, \(tails\) and
+\noindent The upstream node \(Outcome\) has two states, \(tails\) and
 \(heads\). These two states remain the same throughout. What changes are
-the states associated with the \(imagine\) node downstream. Before
+the states associated with the \(Image\) node downstream. Before
 awareness growth, the node \(image\) has two states: \(lions\) and
 \textit{heads-image}.\footnote{The heads side must have some image, not
   specified in the scenario.} You assume that \(Image=lions\) is true if
@@ -1026,7 +1016,7 @@ clear what you should do in this scenario. Since the lighting conditions
 could have been bad but could also have been good, perhaps you should
 just stay put until you learn something more.
 
-We now illustrate how Bayesian networks helps to model what is going on
+We now illustrate how Bayesian networks help to model what is going on
 in \textsc{Lighting}. The starting point of our analysis is the usual
 hypothesis-evidence idiom, repeated below:
 
@@ -1276,7 +1266,7 @@ added downstream of an existing node or downstream. A more complex case
 is one in which the new node is downstream relative to multiple existing
 nodes (common effect) or upstream relative to both (common cause). In
 these cases, either a new probability table should be added for \(X\)
-(when \(X\) is added downstream to multiple existing nodes) or existing
+(when \(X\) is added downstream to multiple existing nodes) or the
 probability tables in which \(X\) occurs should be suitably modified
 (when \(X\) is added upstream relative to multiple existing nodes). A
 more complicated case still is one in which the new node \(X\) is both
@@ -1292,28 +1282,16 @@ nodes).\footnote{For example, initially you thought that gender (\(G\))
   to prefer departments that have lower admission rates. So a new path
   must be added to the graph: \(G \rightarrow S \rightarrow D\).} In
 this case, a new probability table must be added for \(X\) and existing
-ones must be modified.
+tables modified.
 
-\todo{major revisions to this passage, check}
-
-We emphasize that this procedure is only partially algorithmic: some of
-the revised tables will require the agent's estimates which by no means
-formally fall out of the original model. For instance, no reasonable
-algorithm will spit out the probability that your wife meets with a
-given friend if she plans a surprise party for you based on the original
-distribution over a simpler algebra not containing this
-proposition---this is a material issue that depends on your wife's
-\emph{modus operandi}, what kind of friend it is, how he could be
-involved in the organization, and so on.
-
-Nevertheless, the probabilistic toolkit does provide a systematic
-element to modeling awareness growth. After all, as changes are usually
-localized to the probability tables of the node \(X\) and the children
-of node \(X\), the information contained in the original network is not
-lost and can be re-used in the extended representation. Once you
-introduce the node and make the localized changes based on material
-considerations, the general probabilistic toolkit guides your further
-reasoning.
+The choice of which nodes to add and how to fill in the missing
+probabilities is not decided algorithmically. At the same time, once a
+new node \(X\) is added to the network, changes are usually localized to
+the probability table of \(X\) and the children of \(X\). The
+information contained in the original network is not lost and can be
+re-used in the extended representation. This preservation of information
+aligns with the conservative spirit of Bayesian conditionalization and
+Reverse Bayesianism.
 
 \singlespace
 
