@@ -7,19 +7,16 @@
   10pt,
   dvipsnames,enabledeprecatedfontcommands]{scrartcl}
 \usepackage{amsmath,amssymb}
+\usepackage{lmodern}
 \usepackage{iftex}
 \ifPDFTeX
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
   \usepackage{textcomp} % provide euro and other symbols
 \else % if luatex or xetex
-  \usepackage{unicode-math} % this also loads fontspec
+  \usepackage{unicode-math}
   \defaultfontfeatures{Scale=MatchLowercase}
   \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
-\fi
-\usepackage{lmodern}
-\ifPDFTeX\else
-  % xetex/luatex font selection
 \fi
 % Use upquote if available, for straight quotes in verbatim environments
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
@@ -245,7 +242,7 @@
 \fi
 \IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
-\urlstyle{same}
+\urlstyle{same} % disable monospaced font for URLs
 \hypersetup{
   pdftitle={Second-order Probabilism: Expressive Power and Accuracy},
   pdfauthor={Rafal Urbaniak and Marcello Di Bello},
@@ -258,7 +255,7 @@
 
 \title{Second-order Probabilism: Expressive Power and Accuracy}
 \author{Rafal Urbaniak and Marcello Di Bello}
-\date{January 31, 2023}
+\date{2023-08-31}
 
 \begin{document}
 \maketitle
@@ -294,20 +291,19 @@ Accordingly, an alternative view---imprecise probabilism (IP)---has been
 proposed, on which RA's uncertainty is to be represented by a set of
 probability measures, rather than a unique one.
 
-Unfortunately, this view runs into problems as well. It still does not
-seem to be sufficiently evidence-responsive, it is claimed to get
-certain comparative probability judgments wrong, it seems to be unable
-to model learning with the starting point is complete lack of
-information, it is not rich enough to model the notion of weight of
-evidence, and notoriously there exist on inaccuracy measure of an
+Unfortunately, this view runs into problems as well. (1) It still does
+not seem to be sufficiently evidence-responsive, (2) it is claimed to
+get certain comparative probability judgments wrong, (3) it seems to be
+unable to model learning when the starting point is complete lack of
+information, and (4) notoriously there exist no inaccuracy measure of an
 imprecise credal stance if the measure is to satisfy certain
-straightforward formal conditions. Moreover, while it seems to handle
-some cases of opinion pooling better than PP, it still can't capture the
-phenomenon of synergy, where slightly disagreeing sources or experts
-jointly in some sense seem to improve the epistemic situation.
+straightforward formal conditions.
+
+\todo{Think about including synergy}
 
 The main claim of this paper is that the way forward is to use
-higher-order probabilities. The key idea is that uncertainty is not a
+higher-order probabilities to represen't RA's uncertainty in the
+relevant cases. The key idea is that uncertainty is not a
 single-dimensional thing to be mapped on a single one-dimensional scale
 like a real line and that it's the whole shape of the whole distribution
 over parameter values that should be taken under consideration. This
@@ -315,6 +311,8 @@ guiding idea can be used to resolve many problems and philosophical
 puzzles raised in the debate between PP and IP. Moreover, Bayesian
 probabilistic programming already provides a fairly reliable
 implementation framework of this approach.
+
+\todo{add structure description}
 
 \hypertarget{precise-vs.-imprecise-probabilisms}{%
 \section{Precise vs.~imprecise
@@ -330,10 +328,10 @@ uncertainty about a hypothesis is to be represented as a single, precise
 probability measure. This is an elegant and simple theory. But
 representing our uncertainty about a proposition in terms of a single,
 precise probability runs into a number of difficulties. Precise
-probabilism fails to capture an important dimension of how our fallible
-beliefs reflect the evidence we have (or have not) obtained. A couple of
-stylized examples should make the point clear. For the sake of
-simplicity, we will use examples featuring coins.
+probabilism---arguably---fails to capture an important dimension of how
+our fallible beliefs reflect the evidence we have (or have not)
+obtained. A couple of stylized examples should make the point clear. For
+the sake of simplicity, we will use examples featuring coins.
 
 \begin{quote}
 \textbf{No evidence v. fair coin}
@@ -358,22 +356,29 @@ You toss a coin with unknown bias. You toss it 10 times and observe \emph{heads}
 \end{quote}
 
 \noindent Since the coin initially had unknown bias, you should
-presumably assign a probability of .5 to both outcomes. After the 10
-tosses, you end up again with an estimate of .5. You must have learned
-something, but whatever that is, it is not modeled by precise
-probabilities. When you toss the coin 100 times and observe 50 heads,
-you learn something. But your precise probability assessment will again
-be .5.
+presumably assign a probability of .5 to both outcomes if you stick with
+\textsf{PP}. After the 10 tosses, you end up again with an estimate of
+.5. You must have learned something, but whatever that is, it is not
+modeled by precise probabilities. When you toss the coin 100 times and
+observe 50 heads, you learn something new as well. But your precise
+probability assessment will again be .5.
 
 These examples suggest that precise probabilism is not appropriately
-responsive to evidence. It ends up assigning the same probability in
+responsive to evidence when it comes to representing what RA justifiedly
+believes of has learned. It ends up assigning the same probability in
 situations in which one's evidence is quite different: when no evidence
 is available about the coin's bias; when there is little evidence that
 the coin is fair (say, after only 10 tosses); and when there is strong
 evidence that the coin is fair (say, after 100 tosses). The general
 problem is, precise probability captures the value around which your
 uncertainty should be centered, but fails to capture how centered it
-should be given the evidence.
+should be given the evidence.\footnote{In fact, analogous problems arise
+  even if we do not start with complete lack of evidence; if RA
+  initially weakly believes that the coin is .6 biased towards heads, as
+  she might still learn more, by confirming her belief by tossing the
+  coin repeatedly and observing, say, 60 heads in 100 tosses---but this
+  improvement is not mirrored in the precise probability she will assign
+  to heads.}
 
 Precise probabilism, it has been argued, fails also to account for cases
 in which an agent remains undecided even after some additional evidence
@@ -443,13 +448,13 @@ narrow.
 
 But even this seemingly straightforward piece of reasoning is hard to
 model without using densities. For to calculate
-\(\pr{\s{heads}\vert E}\) we need to calculate
-\(\pr{E \vert \s{heads}}\pr{\s{heads}}\) and divide it by
-\(\pr{E} = \pr{E \vert \s{heads}}\pr{\s{heads}} + \pr{E} = \pr{E \vert \neg \s{heads}}\pr{\neg \s{heads}}\).
-The tricky part is obtaining the conditional probabilities
-\(\pr{E \vert \s{heads}}\) and \(\pr{E \vert \neg \s{heads}}\) in a
-principled manner without explicitly going second-order, estimating the
-parameter value and using beta distributions.
+\(\pr{\s{bias} = k \vert E}\) we need to calculate
+\(\pr{E \vert \s{bias} = k }\pr{\s{bias} = k}\) and divide it by
+\(\pr{E} = \pr{E \vert \s{bias} = k }\pr{\s{bias = k}} + \pr{E \vert \s{bias} \neq k }\pr{ \s{bias} \neq k}\).
+The tricky part is obtaining \(\pr{\s{bias} = k}\) or
+\(\pr{ \s{bias} \neq k}\) in a principled manner without explicitly
+going second-order, without estimating the parameter value and without
+using beta distributions.
 
 The situation is even more difficult if we start with complete lack of
 knowledge, as imprecise probabilism runs into the problem of
@@ -465,12 +470,13 @@ ignorance.
 
 Here's another example from Rinard (2013). Either all the marbles in the
 urn are green (\(H_1\)), or exactly one tenth of the marbles are green
-(\(H_2\)). Your initial credence \([0,1]\) in each. Then you learn that
-a marble drawn at random from the urn is green (\(E\)). After
-conditionalizing each function in your representor on this evidence, you
-end up with the the same spread of values for \(H_1\) that you had
-before learning \(E\), and no matter how many marbles are sampled from
-the urn and found to be green.
+(\(H_2\)). Your initial credence is complete uncertainty with interval
+\([0,1]\) associated with each hypothesis. Then you learn that a marble
+drawn at random from the urn is green (\(E\)). After conditionalizing
+each function in your representor on this evidence, you end up with the
+the same spread of values for \(H_1\) that you had before learning
+\(E\), and no matter how many marbles are sampled from the urn and found
+to be green.
 
 Some downplay the problem of belief inertia. They insist that vacuous
 priors should not be used and that imprecise probabilism gives the right
@@ -504,8 +510,8 @@ that assigns .4. and the other that assigns .6 to the hypothesis `this
 coin lands heads'. But imprecise probabilism cannot represent the second
 situation, at least not without moving to higher-order probabilities or
 assigning probabilities to chance hypotheses, in which case it is no
-longer clear whether the object-level imprecision performs any valuable
-task.\footnote{Other scenarios can be constructed in which imprecise
+longer clear whether the object-level imprecision does any heavy
+lifting.\footnote{Other scenarios can be constructed in which imprecise
   probabilism fails to capture distinctive intuitions about evidence and
   uncertainty; see, for example, (Rinard, 2013). Suppose you know of two
   urns, \textsf{GREEN} and \textsf{MYSTERY}. You are certain
@@ -523,30 +529,30 @@ task.\footnote{Other scenarios can be constructed in which imprecise
   is more confident of \(G\) than of \(M\). This is highly
   counter-intuitive.}
 
-Second, besides descriptive inadequacy, an even deeper, foundational
-problem exists for imprecise probabilism. This problem arises when we
-attempt to measure the accuracy of a representor set of probability
-measures. Workable \emph{scoring rules} exist for measuring the accuracy
-of a single, precise credence function, such as the Brier score. These
-rules measure the distance between one's credence function (or
-probability measure) and the actual value. A requirement of scoring
-rules is that they be \emph{proper}: any agent will score their own
-credence function to be more accurate than every other credence
-function. After all, if an agent thought a different credence was more
-accurate, they should switch to it. Proper scoring rules are then used
-to formulate accuracy-based arguments for precise probabilism. These
-arguments show (roughly) that, if your precise credence follows the
-axioms of probability theory, no other credence is going to be more
-accurate than yours whatever the facts are. Can the same be done for
-imprecise probabilism? It seems not. Impossibility theorems demonstrate
-that \textbf{no proper scoring rules are available for representor
-sets}. So, as many have noted, the prospects for an accuracy-based
-argument for imprecise probabilism look dim (Campbell-Moore, 2020;
-Mayo-Wilson \& Wheeler, 2016; Schoenfield, 2017; Seidenfeld, Schervish,
-\& Kadane, 2012). Moreover, as shown by Schoenfield (2017), if an
-accuracy measure satisfies certain plausible formal constraints, it will
-never strictly recommend an imprecise stance, as for any imprecise
-stance there will be a precise one with at least the same accuracy.
+Second, besides descriptive inadequacy, imprecise probabilism fases a
+foundational problem. It arises when we attempt to measure the accuracy
+of a representor set of probability measures. Workable \emph{scoring
+rules} exist for measuring the accuracy of a single, precise credence
+function, such as the Brier score. These rules measure the distance
+between one's credence function (or probability measure) and the actual
+value. A requirement of scoring rules is that they be \emph{proper}: any
+agent will score their own credence function to be more accurate than
+every other credence function. After all, if an agent thought a
+different credence was more accurate, they should switch to it. Proper
+scoring rules are then used to formulate accuracy-based arguments for
+precise probabilism. These arguments show (roughly) that, if your
+precise credence follows the axioms of probability theory, no other
+credence is going to be more accurate than yours whatever the facts are.
+Can the same be done for imprecise probabilism? It seems not.
+Impossibility theorems demonstrate that \textbf{no proper scoring rules
+are available for representor sets}. So, as many have noted, the
+prospects for an accuracy-based argument for imprecise probabilism look
+dim (Campbell-Moore, 2020; Mayo-Wilson \& Wheeler, 2016; Schoenfield,
+2017; Seidenfeld, Schervish, \& Kadane, 2012). Moreover, as shown by
+Schoenfield (2017), if an accuracy measure satisfies certain plausible
+formal constraints, it will never strictly recommend an imprecise
+stance, as for any imprecise stance there will be a precise one with at
+least the same accuracy.
 
 The third problem with imprecise probabilism is that, \textbf{degenerate
 cases aside, it is hard to make sense of the notion of an IP agent
@@ -588,25 +594,24 @@ speaking still consistent with the observations for evidence to result
 in epistemic progress.\^{}{[} Bradley suggests that ``statistical
 evidence might inform {[}evidential{]} constraints {[}\dots and that
 evidence{]} of causes might inform structural constraints''
-{[}125-126{]}. This, however, is far cry from a clear account of how
-exactly this should proceed. Now, one suggestion might be that once a
-statistical significance threshold is selected, a given set of
-observations with a selection of background modeling assumptions yields
-a credible interval. But this is to admit that to reach such constraints
-we already have to start with a second-order approach, and drop
-information about the densities, focusing only on the intervals obtained
-with fixed margins of errors. But as we will be insisting, if you have
-the information about densities to start with, there is no clear
-advantage to going imprecise instead, and there are multiple problems
-associated with this move. Moreover, such moves require a choice of an
-error margin, which is extra-epistemic, and it is not clear what
-advantage there is to dropping information contained in second-order
-probabilities based on extra-epistemic considerations of this
-sort.\footnote{Relatedly, in forensic evidence evaluation even scholars
-  who disagree about the value of going higher-order agree that interval
-  reporting is problematic, as the choice of a limit or uncertainty
-  level is rather arbitrary (Sjerps et al., 2015; Taroni, Bozza,
-  Biedermann, \& Aitken, 2015).}
+{[}125-126{]}. This, however, is not a clear account of how exactly this
+should proceed. One suggestion might be that once a statistical
+significance threshold is selected, a given set of observations with a
+selection of background modeling assumptions yields a credible interval.
+But this is to admit that to reach such constraints, we already have to
+start with a second-order approach, and drop information about the
+densities, focusing only on the intervals obtained with fixed margins of
+errors. But as we will be insisting, if you have the information about
+densities to start with, there is no clear advantage to going imprecise
+instead, and there are multiple problems associated with this move.
+Moreover, such moves require a choice of an error margin, which is
+extra-epistemic, and it is not clear what advantage there is to use
+extra-epistemic considerations of this sort to drop information
+contained in densities.\footnote{Relatedly, in forensic evidence
+  evaluation even scholars who disagree about the value of going
+  higher-order agree that interval reporting is problematic, as the
+  choice of a limit or uncertainty level is rather arbitrary (Sjerps et
+  al., 2015; Taroni, Bozza, Biedermann, \& Aitken, 2015).}
 
 \hypertarget{higher-order-probabilism}{%
 \subsection{Higher-order probabilism}\label{higher-order-probabilism}}
@@ -614,39 +619,44 @@ sort.\footnote{Relatedly, in forensic evidence evaluation even scholars
 There is, however, a view in the neighborhood that fares better: a
 higher-order perspective. In fact, some of the comments by the
 proponents of imprecise probabilism tend to go in this direction. For
-instance, Seamus Bradley compares the measures in a representor to
-committee members, each voting on a particular issue, say the true bias
-of a coin. As they acquire more evidence, the committee members will
-often converge on a specific chance hypothesis. He writes (S. Bradley,
-2012, p. 157):
+instance, Bradley compares the measures in a representor to committee
+members, each voting on a particular issue, say the true bias of a coin.
+As they acquire more evidence, the committee members will often converge
+on a specific chance hypothesis. He writes (S. Bradley, 2012, p. 157):
 
 \begin{quote}
 \dots the committee members are ''bunching up''. Whatever measure you put over the set of probability functions---whatever ''second order probability'' you use---the ''mass'' of this measure gets more and more concentrated around the true chance hypothesis'.
 \end{quote}
 
 \noindent Note, however, that such bunching up cannot be modeled by
-imprecise probabilism.\footnote{Bradley seems to be aware of that, which
-  would explain the use of scare quotes: when he talks about the option
-  of using second-order probabilities in decision theory, he insists
-  that `there is no justification for saying that there is more of your
-  representor here or there.' \textasciitilde{[}p.\textasciitilde195{]}}
+imprecise probabilism alone.\footnote{Bradley seems to be aware of that,
+  which would explain the use of scare quotes: when he talks about the
+  option of using second-order probabilities in decision theory, he
+  insists that `there is no justification for saying that there is more
+  of your representor here or there.'
+  \textasciitilde{[}p.\textasciitilde195{]}}
 
-Joyce (2005), in a paper defending imprecise probabilism, in fact uses a
-density over chance hypotheses to account for the notion of evidential
-weight and conceptualizes the weight of evidence as an increase of
-concentration of smaller subsets of chance hypotheses, without any
-reference to representors in his explication of the notion of weight (we
-will get back to his explication when we discuss weight of evidence).
+In a similar vein, Joyce (2005), in a paper defending imprecise
+probabilism, attempts to explicate something that imprecise probabilism
+was advertised to handle better than precise probabilism: weight of
+evidence. But in fact, the explication uses a density over chance
+hypotheses to account for the notion of evidential weight and
+conceptualizes the weight of evidence as an increase of concentration of
+smaller subsets of chance hypotheses, without any reference to
+representors in the explication of the notion of weight.
+
+\#(we will get back to his explication when we discuss weight of
+evidence).
 
 The idea that one should use higher-order probabilities has also been
 suggested by critics of imprecise probabilism. For example, Carr (2020)
 argues that sometimes evidence requires uncertainty about what credences
-to have.Carr, however, does not articulate this suggestion more fully,
+to have. Carr, however, does not articulate this suggestion more fully,
 does not develop it formally, and does not explain how her approach
 would fare against the difficulties affecting precise ad imprecise
-probabilism.
+probabilism. This is the key goal of this paper.
 
-The key idea of the higher-order approach we propose is that
+The underlying idea of the higher-order approach we propose is that
 \textbf{uncertainty is not a single-dimensional thing to be mapped on a
 single one-dimensional scale such as a real line. It is the whole shape
 of the whole distribution over parameter values that should be taken
@@ -662,49 +672,54 @@ towards \(X\), they can refuse to summarize it in terms of a point value
 of a probability (density) distribution \(f_x\) treating
 \(\mathsf{P}(X)\) as a random variable. To be sure, an agent's credal
 state toward \(X\) could sometimes be usefully represented by the
-expectation. Generally, expectation is defined as
-\(\int_{0}^{1} y f(y) \, dx\). In this particular case, \(y\) is the
-appropriate/justified degree of belief in \(X\), and \(f\) is the
-density representing the uncertainty about it.
+expectation, especially when the agent is quite confident about the
+probability of a given proposition.
 
-Perhaps, such an expectation can be used as the precise, object-level
-credence in \(X\), where \(f\) is the probability density over possible
-object-level probability values. But this need not always be the case.
-If the probability density \(f\) is not sufficiently concentrated around
-a single value, a one-point summary might fail to do justice to the
-nuances of the agent's credal state. This approach lines up with common
-practice in Bayesian statistics, where the primary role of uncertainty
-representation is assigned to the whole distribution. Summaries such as
-the mean, mode standard deviation, mean absolute deviation, or highest
-posterior density intervals are only succinct ways for representing the
+Generally, expectation is defined as \(\int_{0}^{1} x f(x) \, dx\)--in
+the context of our approach here, we can think of \(x\) as the
+objectively appropriate/justified degree of belief in a given
+proposition, and of \(f\) as the density representing the agent's
+uncertainty about \(x\). Perhaps, such an expectation can be used as the
+precise, object-level credence in the proposition itself, where \(f\) is
+the probability density over possible object-level probability values.
+But this need not always be the case. If the probability density \(f\)
+is not sufficiently concentrated around a single value, a one-point
+summary might fail to do justice to the nuances of the agent's credal
+state. This approach lines up with common practice in Bayesian
+statistics, where the primary role of uncertainty representation is
+assigned to the whole distribution. Summaries such as the mean, mode
+standard deviation, mean absolute deviation, or highest posterior
+density intervals are only succinct ways for representing the
 uncertainty of a given scenario.
 
 For example, consider again the scenario in which the agent knows that
 the bias of the coin is either .4 or .6 but the former is three times
 more likely. Representing the agent's credal state with the expectation
-\(\mathsf{P}(X) = .75 \times .4 + .25 \times .6 = .45\) would be
-inadequate as it would fail to capture the agent's belief that the two
-biases are uneven.
+\(\mathsf{P}(X) = .75 \times .4 + .25 \times .6 = .45\) would fail to
+capture an important feature of RA's belief---that she believes the two
+biases to be of hugely different plausibilities, and that she in fact is
+certain that the bias is \emph{not} .75.
 
 This higher-order approach as a technical devise is not very surprising.
 Bayesian probabilistic programming languages embrace the well-known idea
-that parameters can be stacked and depend on each other in complicated
-manners.\todo{Cite PP without tears here} What is however surprising is
-that while the technical devise has been available, it hasn't been
-implemented to model agent's uncertainty and by the same token to
-address all the challenging scenarios we discussed so far.
+that parameters can be stacked and depend on each other in more or less
+complicated manners.\todo{Cite PP without tears here} What is however
+surprising is that while the technical devise has been available, it
+hasn't been implemented to model agent's uncertainty, and by the same
+token to address all the challenging scenarios we discussed so far.
 
-Once we allow more expressivity in that fashion, we obtain rather
-straightforwardly obtain representations illustrated in Figure
-\ref{fig:evidenceResponse}. In particular, the scenario in which the two
-biases of the coin are not equally likely---which imprecise probabilism
-cannot model---can be easily modeled within high-order probabilism by
-assigning different probabilities to the two biases.
+Once we allow more expressive power in this fashion, we obtain rather
+straightforwardly obtain more honest representations of RA's credal
+states, illustrated in Figure \ref{fig:evidenceResponse}. In particular,
+the scenario in which the two biases of the coin are not equally
+likely---which imprecise probabilism cannot model---can be easily
+modeled within high-order probabilism by assigning different
+probabilities to the two biases.
 
 \begin{figure}[t]
 
 \begin{center}\includegraphics[width=0.8\linewidth]{imprecision_philosophical_paper._files/figure-latex/fig:evidenceResponse2-1} \end{center}
-\caption{Examples of higher-order distributions for scenarios brought up in the literature.}
+\caption{Examples of higher-order distributions for a few  scenarios problematic for both precise and imprecise probabilism.}
 \label{fig:evidenceResponse}
 \end{figure}
 
@@ -717,7 +732,7 @@ will exclude 0 and observing any non-zero number of tails will exclude 1
 from the basis of the posterior. The posterior distribution will become
 more centered around the parameter estimate as the observations come in.
 
-Figure \ref{fig:intertia} shows---starting with a uniform prior
+Figure \ref{fig:intertia2} shows---starting with a uniform prior
 distribution--- how the posterior distribution changes after successive
 observations of heads, heads again, and then tails.\footnote{More
   generally, learning about frequencies, assuming independence and
@@ -734,7 +749,7 @@ observations of heads, heads again, and then tails.\footnote{More
   & = \frac{\theta^s (1-\theta)^{(n - s)}p(\theta)}{\int (\theta')^s (1-\theta')^{(n - s)}p(\theta')\,\, d\theta'}.
   \end{align*}}
 
-\begin{figure}[t]
+\begin{figure}
 
 \begin{center}\includegraphics[width=0.8\linewidth]{imprecision_philosophical_paper._files/figure-latex/fig:inertia3-1} \end{center}
 \caption{As observations of heads, heads and tails come in, extreme parameter values drop out of the picture and the posterior is shaped by the evidence.}
@@ -751,7 +766,7 @@ interesting feature of the framework is that the point made by
 Schoenfield against imprecise probabilism does not apply: there are
 cases in which accuracy considerations recommend an imprecise stance
 (that is, a multi-modal distribution) over a precise one. We will get
-back to these issues when we talk about accuracy.
+back to these issues when we talk about accuracy. \todo{Ref to section}
 
 All in all, higher-order probabilism outperforms both precise and
 imprecise probabilism, at the descriptive as well as the normative
