@@ -8,14 +8,16 @@ format:
     dfPrint: kable 
     keepTex: true
     toc: true
-    include-in-header: Rafal_latex7.sty
-classOptions: [dvipsnames, enabledeprecatedfontcommands]
+    include-in-header:  Rafal_latexQuarto.sty
+    latex_engine: pdflatex 
+documentClass: scrartcl
+classOptions: [dvipsnames, enabledeprecatedfontcommands, headings=big]
 font:
   size: 10pt
-documentClass: scrartcl
 url:
   color: blue
 bibliography:
+  - imprecise1.bib
   - referencesMRbook.bib
 csl: apa-6th-edition.csl
 indent: true
@@ -145,12 +147,15 @@ with the evidence.  For instance, if an agent knows that the coin is fair, their
 
 Imprecise probabilism, at least \emph{prima facie}, offers a straightforward picture of learning from evidence, that is a natural extension of the classical Bayesian approach. When faced with new evidence $E$ between time $t_0$ and $t_1$, the representor set  should be updated point-wise,  running the  standard Bayesian updating on each probability measure in the representor:
 
-$$
-\mathbb{P}_{t_1} = \left\{ \mathsf{P}_{t_1} \, \middle| \, \exists \, \mathsf{P}_{t_0} \in \mathbb{P}_{t_0}, \forall \, H \left[ \mathsf{P}_{t_1}(H) = \mathsf{P}_{t_0}(H \, | \, E) \right] \right\}.
-$$
+
+
+\begin{align*} \label{eq:updateRepresentor}
+\mathbb{P}_{t_1} = \{\mathsf{P}_{t_1}\vert \exists\, {\mathsf{P}_{t_0} \!\in  \mathbb{P}_{t_0}}\,\, \forall\, {H}\,\, \left[\mathsf{P}_{t_1}(H)=\mathsf{P}_{t_0}(H \vert E)\right] \}.
+\end{align*}
 
 
 \noindent
+
 The hope is that, if we start with a range of probabilities that is not extremely wide, point-wise learning will behave appropriately.
 <!---^[The hope is also that \s{IP} offers a feasible aggregation method [@Elkin2018resolving;@Stewart2018pooling]: just put all representors together in one set, and voil\'a! However, this is a very conservative method which quickly leads to extremely few points of agreement, and we are not aware of any successful practical deployment of this method.]
 --->
@@ -258,7 +263,7 @@ TwoUnbalancedPlot <- ggplot(TwoUnbalancedDF, aes(x = p, y = TwoUnbalancedDensity
 
 
 
-```{r fig:evidenceResponse2,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "80%"}
+```{r FigEvidenceResponse2,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "80%"}
 #| fig-pos: 'h'
 #| label: fig:evidenceResponse
 #| fig-cap: "Examples of higher-order distributions for a few  scenarios problematic for both precise and imprecise probabilism. "
@@ -268,21 +273,14 @@ grid.arrange(FairPlot,UniformPlot, TwoPlot, TwoUnbalancedPlot)
 
 
 
+
+
+
 Besides its flexibility in modelling uncertainty, higher-order probabilism does not fall prey to belief inertia. Consider a  situation in which you have no idea about the bias of a coin. So you start with a uniform density over $[0,1]$ as your prior. By using binomial probabilities as likelihoods, observing  any non-zero number of heads will exclude 0 and observing any non-zero number of  tails will exclude 1 from the basis of the posterior. The posterior distribution will become more centered around the parameter estimate as the observations come in. 
 
 
-Figure \ref{fig:intertia2} shows---starting with a uniform prior distribution--- how the posterior distribution changes after successive observations of heads,  heads again, and then tails.^[More generally, learning about frequencies, assuming independence and constant probability for all the observations, is modeled the Bayes way. You start with some prior density $p$ over the parameter values. If you start with complete lack of information, $p$ should be uniform. Then, you observe the data $D$ which is the number of successes $s$ in a certain number of observations $n$. For each particular possible value $\theta$ of the parameter, the probability of $D$ conditional on $\theta$ follows the binomial distribution. The probability of $D$ is obtained by integration. That is:
-\begin{align*}
-p(\theta \vert D) & = \frac{p(D\vert \theta)p(\theta)}{p(D)}\\
-& = \frac{\theta^s (1-\theta)^{(n - s)}p(\theta)}{\int (\theta')^s (1-\theta')^{(n - s)}p(\theta')\,\, d\theta'}.
-\end{align*}
-]
 
-
-
-
-
-```{r fig:inertia2, eval = TRUE, echo=FALSE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%", message= FALSE, warning=FALSE}
+```{r FigIinertia2, eval = TRUE, echo=FALSE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%", message= FALSE, warning=FALSE}
 
 n <- 1000 #parameters 
 s <- 1e5  #sample size
@@ -339,15 +337,22 @@ InertiaTwoGoneBluePlot <- ggplot()+geom_line(aes(x = ps, y = posterior2g1b))+the
 
 
 
-```{r fig:inertia3, echo=FALSE, eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "80%",   message = FALSE, warning = FALSE, results = FALSE}
+```{r FigInertia3, echo=FALSE, eval=TRUE,fig.align = "center", cache=TRUE, out.width = "80%",   message = FALSE, warning = FALSE, results = FALSE}
 #| fig-pos: 't'
-#| label: fig:inertia3
+#| label: fig:inertia2
 #| fig-cap: "As observations of heads, heads and tails come in, extreme parameter values drop out of the picture and the posterior is shaped by the evidence."
 
 
 grid.arrange(InertiaPriorPlot, InertiaOneGPlot,  InertiaTwoGPlot, InertiaTwoGoneBluePlot, ncol = 2, nrow = 2)
 ```
 
+
+Figure \ref{fig:inertia2} shows---starting with a uniform prior distribution--- how the posterior distribution changes after successive observations of heads,  heads again, and then tails.^[More generally, learning about frequencies, assuming independence and constant probability for all the observations, is modeled the Bayes way. You start with some prior density $p$ over the parameter values. If you start with complete lack of information, $p$ should be uniform. Then, you observe the data $D$ which is the number of successes $s$ in a certain number of observations $n$. For each particular possible value $\theta$ of the parameter, the probability of $D$ conditional on $\theta$ follows the binomial distribution. The probability of $D$ is obtained by integration. That is:
+\begin{align*}
+p(\theta \vert D) & = \frac{p(D\vert \theta)p(\theta)}{p(D)}\\
+& = \frac{\theta^s (1-\theta)^{(n - s)}p(\theta)}{\int (\theta')^s (1-\theta')^{(n - s)}p(\theta')\,\, d\theta'}.
+\end{align*}
+]
 
 
 
@@ -357,5 +362,4 @@ A further advantage of high-order probabilism over imprecise probabilism is that
 
 All in all, higher-order probabilism outperforms both precise and imprecise probabilism, at the descriptive as well as the normative level. From a descriptive standpoint, higher-order probabilism can easily model a variety of scenarios that cannot be adequately modeled by the other versions of probabilism. From a normative standpoint, accuracy maximization may sometimes recommend that a rational agent represent their credal state with a distribution over probability values rather than a precise probability measure\todo{add ref to vFraasen in fn; perhaps extend the discussion a bit } (more on this soon).^[Having read van Fraasen's "Laws and Symmetry", you might also worry that going higher order somehow leads to a contradiction; we will address this concern later on.] 
 
-
-
+#  References {-}
