@@ -502,36 +502,38 @@ Working with intervals might be useful if the underlying distributions are fairl
 This also means that---following our advice on how to illustrate the impact of evidence on prior probabilities---a better representation of the dependence of the posterior on the prior should comprise multiple possible sampled lines whose density mirrors the density around the probability of the evidence (Figure \ref{fig:lines}).
 
 
-```{r densitiesEvidence,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%"}
 
-jointEvidence <- dogSamples * hairSamples
+<!-- ```{r densitiesEvidence,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%"} -->
+
+<!-- jointEvidence <- dogSamples * hairSamples -->
 
 
-densities1Plot <- ggplot()+  
-  geom_line(aes(x = ps, y = dbeta(ps, hairA, hairB)), lty  = 2)+
-  geom_line(aes(x = ps, y = dbeta(ps, dogA, dogB)), lty = 3)+xlim(0,.15)+
-  xlab("probability")+
-  ylab("density")+
-  theme_tufte(base_size = 10)+
-  #  annotate(geom  = "label", label = "carpet", x =  0.045, y = 140)+
-  annotate(geom  = "label", label = "hair", x =  0.035, y = 80)+
-  annotate(geom  = "label", label = "dog", x =  0.06, y = 15)+
-  labs(title = "Conditional densities for  individual items of evidence if the source hypothesis is false")+
-  theme(plot.title.position = "plot")
+<!-- densities1Plot <- ggplot()+   -->
+<!--   geom_line(aes(x = ps, y = dbeta(ps, hairA, hairB)), lty  = 2)+ -->
+<!--   geom_line(aes(x = ps, y = dbeta(ps, dogA, dogB)), lty = 3)+xlim(0,.15)+ -->
+<!--   xlab("probability")+ -->
+<!--   ylab("density")+ -->
+<!--   theme_tufte(base_size = 10)+ -->
+<!--   #  annotate(geom  = "label", label = "carpet", x =  0.045, y = 140)+ -->
+<!--   annotate(geom  = "label", label = "hair", x =  0.035, y = 80)+ -->
+<!--   annotate(geom  = "label", label = "dog", x =  0.06, y = 15)+ -->
+<!--   labs(title = "Conditional densities for  individual items of evidence if the source hypothesis is false")+ -->
+<!--   theme(plot.title.position = "plot") -->
 
-densities2Plot <- ggplot()+  
-  xlab("probability")+
-  ylab("density")+
-  theme_tufte(base_size = 10)+
-  geom_density(aes(x= jointEvidence))+
-  geom_vline(xintercept = 0.002760, lty = 2, linewidth = .5)+
-  geom_vline(xintercept = 0.000023, lty = 2, linewidth  = .5)+
-  geom_vline(xintercept = 0.000144, lty = 3, linewidth = .8)+
-  geom_vline(xintercept = 0.001742, lty = 3, linewidth  = .8)+
-  labs(title = "Conditional density for joint evidence", 
-       subtitle = "(with .99 and .9 HPDIs)")+
-  theme(plot.title.position = "plot")
-```
+<!-- densities2Plot <- ggplot()+   -->
+<!--   xlab("probability")+ -->
+<!--   ylab("density")+ -->
+<!--   theme_tufte(base_size = 10)+ -->
+<!--   geom_density(aes(x= jointEvidence))+ -->
+<!--   geom_vline(xintercept = 0.002760, lty = 2, linewidth = .5)+ -->
+<!--   geom_vline(xintercept = 0.000023, lty = 2, linewidth  = .5)+ -->
+<!--   geom_vline(xintercept = 0.000144, lty = 3, linewidth = .8)+ -->
+<!--   geom_vline(xintercept = 0.001742, lty = 3, linewidth  = .8)+ -->
+<!--   labs(title = "Conditional density for joint evidence",  -->
+<!--        subtitle = "(with .99 and .9 HPDIs)")+ -->
+<!--   theme(plot.title.position = "plot") -->
+<!-- ``` -->
+
 
 
 <!-- \begin{figure}[H] -->
@@ -543,80 +545,80 @@ densities2Plot <- ggplot()+
 <!-- \end{figure} -->
 
 
+\todo{This plot will need fixing}
+
+<!-- ```{r densLines, echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%", warning = FALSE, message = FALSE} -->
+<!-- prior <- seq(0,1, by = 0.001) -->
+<!-- priorH0 <- 1-prior -->
+
+<!-- #----- -->
+
+<!-- jointPosterior <- list() -->
+<!-- minima <- numeric(1e4) -->
 
 
-```{r densLines, echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%", warning = FALSE, message = FALSE}
-prior <- seq(0,1, by = 0.001)
-priorH0 <- 1-prior
-
-#-----
-
-jointPosterior <- list()
-minima <- numeric(1e4)
-
-
-#for each likelihood from sample,
-#calculate the posterior based on what the prior is
-#and find the minimum above threshold
-for (s in 1:1e4){
-  lik <- jointEvidence[s]
-  denomin <- lik * priorH0 + prior
-  num <-  lik * priorH0
-  posterior <- 1- num/denomin
-  jointPosterior[[s]] <- posterior
-  minima[s] <- min(prior[posterior > .99])
-  }
-
-
-
-minimaPlot <- ggplot()+geom_density(aes(x = minima))+
-  theme_tufte(base_size = 10)+ggtitle("Minimal priors sufficient for posterior >.99")+xlab("minimal prior")+
-  theme(plot.title.position = "plot")
-
-minimaGrob <- ggplotGrob(minimaPlot)
+<!-- #for each likelihood from sample, -->
+<!-- #calculate the posterior based on what the prior is -->
+<!-- #and find the minimum above threshold -->
+<!-- for (s in 1:1e4){ -->
+<!--   lik <- jointEvidence[s] -->
+<!--   denomin <- lik * priorH0 + prior -->
+<!--   num <-  lik * priorH0 -->
+<!--   posterior <- 1- num/denomin -->
+<!--   jointPosterior[[s]] <- posterior -->
+<!--   minima[s] <- min(prior[posterior > .99]) -->
+<!--   } -->
 
 
 
-jointPosteriorDF <-   as.data.frame(do.call(cbind, jointPosterior))
+<!-- minimaPlot <- ggplot()+geom_density(aes(x = minima))+ -->
+<!--   theme_tufte(base_size = 10)+ggtitle("Minimal priors sufficient for posterior >.99")+xlab("minimal prior")+ -->
+<!--   theme(plot.title.position = "plot") -->
+
+<!-- minimaGrob <- ggplotGrob(minimaPlot) -->
 
 
 
-jointPosteriorSubsample <- jointPosteriorDF[,1:300]
-
-jointPosteriorDF$ps <- ps
-jointPosteriorSubsample$ps <- ps
-
-jointPosteriorLong <- melt(jointPosteriorSubsample,
-                           id.vars = c("ps"))
-colnames(jointPosteriorLong) <- c("prior", "sample","probability")
-
-alpha = .25
-size = .2
-
-densitiesLinesPlot <- ggplot(jointPosteriorLong)+
-  geom_line(aes(x = prior, y = probability,group = sample),
-            alpha = alpha, linewidth = size)+
-  theme_tufte()+xlim(0,.2) +
-  annotation_custom(minimaGrob, xmin = .085, xmax = .185,
-                  ymin = 0.01, ymax = 0.8) +
-  ggtitle("Posterior vs prior (300 sampled lines)") +
-  theme(plot.title.position = "plot")
-
-```
+<!-- jointPosteriorDF <-   as.data.frame(do.call(cbind, jointPosterior)) -->
 
 
 
+<!-- jointPosteriorSubsample <- jointPosteriorDF[,1:300] -->
 
-\begin{figure}[H]
-```{r Figlines5,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "60%", warning = FALSE, message = FALSE}
-densitiesLinesPlot
-```
+<!-- jointPosteriorDF$ps <- ps -->
+<!-- jointPosteriorSubsample$ps <- ps -->
 
-\caption{300 lines illustrating the uncertainty about the dependence of the posterior on the prior given aleatory uncertainty about the evidence, with the distribution of the minimal priors required for the posterior to be above .99.}
+<!-- jointPosteriorLong <- melt(jointPosteriorSubsample, -->
+<!--                            id.vars = c("ps")) -->
+<!-- colnames(jointPosteriorLong) <- c("prior", "sample","probability") -->
 
-\label{fig:lines}
+<!-- alpha = .25 -->
+<!-- size = .2 -->
 
-\end{figure}
+<!-- densitiesLinesPlot <- ggplot(jointPosteriorLong)+ -->
+<!--   geom_line(aes(x = prior, y = probability,group = sample), -->
+<!--             alpha = alpha, linewidth = size)+ -->
+<!--   theme_tufte()+xlim(0,.2) + -->
+<!--   annotation_custom(minimaGrob, xmin = .085, xmax = .185, -->
+<!--                   ymin = 0.01, ymax = 0.8) + -->
+<!--   ggtitle("Posterior vs prior (300 sampled lines)") + -->
+<!--   theme(plot.title.position = "plot") -->
+
+<!-- ``` -->
+
+
+
+
+<!-- \begin{figure}[H] -->
+<!-- ```{r Figlines5,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "60%", warning = FALSE, message = FALSE} -->
+<!-- densitiesLinesPlot -->
+<!-- ``` -->
+
+<!-- \caption{300 lines illustrating the uncertainty about the dependence of the posterior on the prior given aleatory uncertainty about the evidence, with the distribution of the minimal priors required for the posterior to be above .99.} -->
+
+<!-- \label{fig:lines} -->
+
+<!-- \end{figure} -->
 
 
 This, then, is the main claim of this chapter: whenever density estimates for the probabilities of interest are available (and they should be available for match evidence and many other items of scientific evidence if the reliability of a given type of evidence has been properly studied), those densities should be reported for assessing the strength of the evidence. This approach avoids hiding actual aleatory uncertainties under the carpet. It also 
