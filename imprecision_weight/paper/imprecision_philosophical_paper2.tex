@@ -105,6 +105,14 @@
 %\usepackage[polish]{babel}
 %\usepackage{polski}
 
+% modyfing quote environment
+
+\usepackage[T1]{fontenc}             % Required for correct quotes with ""
+
+\renewenvironment{quote}
+{\list{}{\leftmargin=1em\rightmargin=1em}\item[]``}
+{''\endlist}
+
 
 
 
@@ -255,7 +263,7 @@
 
 \title{Second-order Probabilism: Expressive Power and Accuracy}
 \author{Rafal Urbaniak and Marcello Di Bello}
-\date{2023-09-08}
+\date{2023-09-09}
 
 \begin{document}
 \maketitle
@@ -623,10 +631,13 @@ instance, Bradley compares the measures in a representor to committee
 members, each voting on a particular issue, say the true bias of a coin.
 As they acquire more evidence, the committee members will often converge
 on a specific chance hypothesis. He
-writes:\todo{Nikodem: fix quotation environment and reference}
+writes:\todo{Nikodem: fixed quotation and the reference}
 
 \begin{quote}
-\dots the committee members are ''bunching up''. Whatever measure you put over the set of probability functions---whatever ''second order probability'' you use---the ''mass'' of this measure gets more and more concentrated around the true chance hypothesis'. [@bradley2012scientific, p. 157]
+\dots the committee members are ``bunching up''. Whatever measure you
+put over the set of probability functions---whatever ``second order
+probability'' you use---the ``mass'' of this measure gets more and more
+concentrated around the true chance hypothesis. (Bradley, 2012, p. 157)
 \end{quote}
 
 \noindent Note, however, that such bunching up cannot be modeled by
@@ -650,7 +661,7 @@ suggested by critics of imprecise probabilism. For example, Carr (2020)
 argues that sometimes evidence requires uncertainty about what credences
 to have. Carr, however, does not articulate this suggestion more fully,
 does not develop it formally, and does not explain how her approach
-would fare against the difficulties affecting precise ad imprecise
+would fare against the difficulties affecting precise and imprecise
 probabilism. This is the key goal of this paper.
 
 The underlying idea of the higher-order approach we propose is that
@@ -698,12 +709,10 @@ certain that the bias is \emph{not} .75.
 This higher-order approach as a technical devise is not very surprising.
 Bayesian probabilistic programming languages embrace the well-known idea
 that parameters can be stacked and depend on each other in more or less
-complicated
-manners.\todo{Nikodem: Cite probabilistic progamming without tears here}
-What is however somehow surprising is that while the technical devise
-has been available, it hasn't been implemented to model agent's
-uncertainty, and by the same token to address all the challenging
-scenarios we discussed so far.
+complicated manners Bingham et al. (2021). What is however somehow
+surprising is that while the technical devise has been available, it
+hasn't been implemented to model agent's uncertainty, and by the same
+token to address all the challenging scenarios we discussed so far.
 
 Once we allow more expressive power in this fashion, we obtain rather
 straightforwardly obtain more honest representations of RA's credal
@@ -744,9 +753,18 @@ observations of heads, heads again, and then tails.\footnote{More
   \begin{align*}
   p(\theta \vert D) & = \frac{p(D\vert \theta)p(\theta)}{p(D)}\\
   & = \frac{\theta^s (1-\theta)^{(n - s)}p(\theta)}{\int (\theta')^s (1-\theta')^{(n - s)}p(\theta')\,\, d\theta'}.
-  \end{align*}}
-
-\todo{Nikodem: paragraph should not break here.}
+  \end{align*}} A further advantage of high-order probabilism over
+imprecise probabilism is that the prospects for accuracy-based arguments
+are not foreclosed. This is a significant shortcoming of imprecise
+probabilism, especially because such arguments exist for precise
+probabilism. One can show that there exist proper scoring rules for
+higher-order probabilism. These rules can then be used to formulate
+accuracy-based arguments. Another interesting feature of the framework
+is that the point made by Schoenfield against imprecise probabilism does
+not apply: there are cases in which accuracy considerations recommend an
+imprecise stance (that is, a multi-modal distribution) over a precise
+one. We will get back to these issues when we talk about accuracy.
+\todo{Ref to section}
 
 \begin{figure}
 
@@ -754,18 +772,6 @@ observations of heads, heads again, and then tails.\footnote{More
 \caption{As observations of heads, heads and tails come in, extreme parameter values drop out of the picture and the posterior is shaped by the evidence.}
 \label{fig:intertia2}
 \end{figure}
-
-A further advantage of high-order probabilism over imprecise probabilism
-is that the prospects for accuracy-based arguments are not foreclosed.
-This is a significant shortcoming of imprecise probabilism, especially
-because such arguments exist for precise probabilism. One can show that
-there exist proper scoring rules for higher-order probabilism. These
-rules can then be used to formulate accuracy-based arguments. Another
-interesting feature of the framework is that the point made by
-Schoenfield against imprecise probabilism does not apply: there are
-cases in which accuracy considerations recommend an imprecise stance
-(that is, a multi-modal distribution) over a precise one. We will get
-back to these issues when we talk about accuracy. \todo{Ref to section}
 
 \todo{The next two passages are somewhat new  and need to be carefully read and revised.}
 
@@ -1250,6 +1256,11 @@ the Bayesian networks once updated with evidence.
 
 \hypertarget{refs}{}
 \begin{CSLReferences}{1}{0}
+\leavevmode\vadjust pre{\hypertarget{ref-Bingham2021PPwithoutTears}{}}%
+Bingham, E., Koppel, J., Lew, A., Ness, R., Tavares, Z., Witty, S., \&
+Zucker, J. (2021). Causal probabilistic programming without tears.
+\emph{Proceedings of the Third Conference on Probabilistic Programming}.
+
 \leavevmode\vadjust pre{\hypertarget{ref-bradley2012scientific}{}}%
 Bradley, S. (2012). \emph{Scientific uncertainty and decision making}
 (PhD thesis). London School of Economics; Political Science (University
