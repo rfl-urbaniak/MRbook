@@ -404,8 +404,7 @@ must be the source of the crime traces (call this hypothesis $\mathsf{source}$).
 
 
 The standard story among legal 
-probabilists\todo{Nikodem: cite standford entry on legal probabilism, section that pertains to likelihood ratios.} 
-goes something like this. To evaluate the strength of the two items of match evidence, 
+probabilists goes something like this @sep-legal-probabilism. \todo{Not sure how to cite a section } To evaluate the strength of the two items of match evidence, 
 we must find the value of the likelihood ratio:
 \[\frac{\pr{\s{dog}\wedge \s{hair} \vert \s{source}}}{\pr{\s{dog}\wedge \s{hair} \vert \neg \s{source}}}\]
 For simplicity, the numerator can be equated to one. 
@@ -483,8 +482,8 @@ charitableImpactPlot <- ggplot()+geom_line(aes(x = prior, y = posteriorL))+xlim(
 
 
 The expert's answer makes apparent that the precise random match probabilities do not tell the whole story.
-Perhaps, the information about sample sizes is good enough  and now you know how to\todo{Nikodem, cite Taroni in fn.} 
-use the evidence properly.^[This is what, effectively, CITE TARONI seem to suggest when they insist 
+Perhaps, the information about sample sizes is good enough  and now you know how to\todo{"Nikodem, cite Taroni in fn." not sure if it is the right one} 
+use the evidence properly.^[This is what, effectively, @aitken2008fundamentals seem to suggest when they insist 
 the fact-finders should be simply given point estimates and information about the study set-up,
  such as sample size. We disagree.] But if you are like most human beings, you can't. What to do, then?  
 
@@ -495,8 +494,8 @@ The expert responds with 99% credible intervals---specifically, starting with un
  the ranges of the random match probabilities are (.015,.037) for hair evidence and (.002, .103) for 
  fur evidence.^[Roughly, the 99\% credible interval is the narrowest interval to which the
   expert thinks the true parameter belongs with probability .99. For a discussion of what 
-  credible intervals are, how they differ from confidence intervals, and why confidence\todo{Nikodem, cite Kruschke in fn.}
-  intervals should not be used, see KRUSCHKE.] With this information, you redo your calculations 
+  credible intervals are, how they differ from confidence intervals, and why confidence
+  intervals should not be used, see @kruschke2015doing.]  With this information, you redo your calculations 
   using the upper bounds of the two intervals: $.037$ and $.103$. The rationale for 
   choosing the upper bounds is that these numbers result in random match probabilities that 
   are most favorable to the defendant. Your new calculation yields the following:
@@ -570,7 +569,7 @@ The upper bound of this interval would then require the prior probability of the
 
 We still should think of credible intervals as rough summaries, which  might be useful if
  the underlying distributions are fairly symmetrical, or narrow enough.
- But in our case, they might not be. For instance, Figure \ref{fig:densities} depicts beta densities
+ But in our case, they might not be. For instance, Figure \ref{Figdensities} depicts beta densities
   for dog fur and human hair, together with sampling-approximated density for the joint evidence.  
   The distribution for the joint evidence is not symmetric. 
  If you were only informed about the edges of the interval, you would be oblivious to the
@@ -582,126 +581,126 @@ We still should think of credible intervals as rough summaries, which  might be 
 This also means that---following our advice on how to illustrate the impact of evidence on
  prior probabilities---a better representation of the dependence of the posterior on the prior 
  should comprise multiple possible sampled lines whose density mirrors the density around the
-  probability of the evidence (Figure \ref{fig:lines}).
+  probability of the evidence (Figure \ref{Figlines}).
 
 
 \todo{Nikodem: make these figures work (see source).}
-<!-- ```{r densitiesEvidence,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%"} -->
+```{r densitiesEvidence,echo=FALSE,eval=TRUE,fig.align = "center",cache=FALSE, fig.show = "hold", out.width = "100%"}
 
-<!-- jointEvidence <- dogSamples * hairSamples -->
-
-
-<!-- densities1Plot <- ggplot()+   -->
-<!--   geom_line(aes(x = ps, y = dbeta(ps, hairA, hairB)), lty  = 2)+ -->
-<!--   geom_line(aes(x = ps, y = dbeta(ps, dogA, dogB)), lty = 3)+xlim(0,.15)+ -->
-<!--   xlab("probability")+ -->
-<!--   ylab("density")+ -->
-<!--   theme_tufte(base_size = 10)+ -->
-<!--   #  annotate(geom  = "label", label = "carpet", x =  0.045, y = 140)+ -->
-<!--   annotate(geom  = "label", label = "hair", x =  0.035, y = 80)+ -->
-<!--   annotate(geom  = "label", label = "dog", x =  0.06, y = 15)+ -->
-<!--   labs(title = "Conditional densities for  individual items of evidence if the source hypothesis is false")+ -->
-<!--   theme(plot.title.position = "plot") -->
-
-<!-- densities2Plot <- ggplot()+   -->
-<!--   xlab("probability")+ -->
-<!--   ylab("density")+ -->
-<!--   theme_tufte(base_size = 10)+ -->
-<!--   geom_density(aes(x= jointEvidence))+ -->
-<!--   geom_vline(xintercept = 0.002760, lty = 2, linewidth = .5)+ -->
-<!--   geom_vline(xintercept = 0.000023, lty = 2, linewidth  = .5)+ -->
-<!--   geom_vline(xintercept = 0.000144, lty = 3, linewidth = .8)+ -->
-<!--   geom_vline(xintercept = 0.001742, lty = 3, linewidth  = .8)+ -->
-<!--   labs(title = "Conditional density for joint evidence",  -->
-<!--        subtitle = "(with .99 and .9 HPDIs)")+ -->
-<!--   theme(plot.title.position = "plot") -->
-<!-- ``` -->
+jointEvidence <- dogSamples * hairSamples
 
 
+densities1Plot <- ggplot()+
+  geom_line(aes(x = ps, y = dbeta(ps, hairA, hairB)), lty  = 2)+
+  geom_line(aes(x = ps, y = dbeta(ps, dogA, dogB)), lty = 3)+xlim(0,.15)+
+  xlab("probability")+
+  ylab("density")+
+  theme_tufte(base_size = 10)+
+  #  annotate(geom  = "label", label = "carpet", x =  0.045, y = 140)+
+  annotate(geom  = "label", label = "hair", x =  0.035, y = 80)+
+  annotate(geom  = "label", label = "dog", x =  0.06, y = 15)+
+  labs(title = "Conditional densities for  individual items of evidence if the source hypothesis is false")+
+  theme(plot.title.position = "plot")
 
-<!-- \begin{figure}[H] -->
-<!-- ```{r Figdensities,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "80%", warning = FALSE, message = FALSE} -->
-<!-- grid.arrange(densities1Plot,densities2Plot, ncol = 1 ) -->
-<!-- ``` -->
-<!-- \caption{Beta densities for individual items of evidence and the resulting joint density with .99 and .9 highest posterior density intervals, assuming the sample sizes as discussed and independence, with uniform priors.} -->
-<!-- \label{fig:densities} -->
-<!-- \end{figure} -->
+densities2Plot <- ggplot()+
+  xlab("probability")+
+  ylab("density")+
+  theme_tufte(base_size = 10)+
+  geom_density(aes(x= jointEvidence))+
+  geom_vline(xintercept = 0.002760, lty = 2, linewidth = .5)+
+  geom_vline(xintercept = 0.000023, lty = 2, linewidth  = .5)+
+  geom_vline(xintercept = 0.000144, lty = 3, linewidth = .8)+
+  geom_vline(xintercept = 0.001742, lty = 3, linewidth  = .8)+
+  labs(title = "Conditional density for joint evidence",
+       subtitle = "(with .99 and .9 HPDIs)")+
+  theme(plot.title.position = "plot")
+```
+
+
+
+\begin{figure}[H]
+```{r Figdensities,echo=FALSE,eval=TRUE,fig.align = "center",cache=FALSE, fig.show = "hold", out.width = "80%", warning = FALSE, message = FALSE}
+grid.arrange(densities1Plot,densities2Plot, ncol = 1 )
+```
+\caption{Beta densities for individual items of evidence and the resulting joint density with .99 and .9 highest posterior density intervals, assuming the sample sizes as discussed and independence, with uniform priors.}
+\label{Figdensities}
+\end{figure}
 
 
 \todo{This plot will need fixing}
 
-<!-- ```{r densLines, echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%", warning = FALSE, message = FALSE} -->
-<!-- prior <- seq(0,1, by = 0.001) -->
-<!-- priorH0 <- 1-prior -->
+```{r densLines23, echo=FALSE,eval=TRUE,fig.align = "center",cache=FALSE, fig.show = "hold", out.width = "100%", warning = FALSE, message = FALSE}
+prior <- seq(0,1, by = 0.001)
+priorH0 <- 1-prior
 
-<!-- #----- -->
+#-----
 
-<!-- jointPosterior <- list() -->
-<!-- minima <- numeric(1e4) -->
-
-
-<!-- #for each likelihood from sample, -->
-<!-- #calculate the posterior based on what the prior is -->
-<!-- #and find the minimum above threshold -->
-<!-- for (s in 1:1e4){ -->
-<!--   lik <- jointEvidence[s] -->
-<!--   denomin <- lik * priorH0 + prior -->
-<!--   num <-  lik * priorH0 -->
-<!--   posterior <- 1- num/denomin -->
-<!--   jointPosterior[[s]] <- posterior -->
-<!--   minima[s] <- min(prior[posterior > .99]) -->
-<!--   } -->
+jointPosterior <- list()
+minima <- numeric(1e4)
 
 
-
-<!-- minimaPlot <- ggplot()+geom_density(aes(x = minima))+ -->
-<!--   theme_tufte(base_size = 10)+ggtitle("Minimal priors sufficient for posterior >.99")+xlab("minimal prior")+ -->
-<!--   theme(plot.title.position = "plot") -->
-
-<!-- minimaGrob <- ggplotGrob(minimaPlot) -->
+# for each likelihood from sample,
+# calculate the posterior based on what the prior is
+# and find the minimum above threshold
+for (s in 1:1e4){
+  lik <- jointEvidence[s]
+  denomin <- lik * priorH0 + prior
+  num <-  lik * priorH0
+  posterior <- 1- num/denomin
+  jointPosterior[[s]] <- posterior
+  minima[s] <- min(prior[posterior > .99])
+  }
 
 
 
-<!-- jointPosteriorDF <-   as.data.frame(do.call(cbind, jointPosterior)) -->
+minimaPlot <- ggplot()+geom_density(aes(x = minima))+
+  theme_tufte(base_size = 10)+ggtitle("Minimal priors sufficient for posterior >.99")+xlab("minimal prior")+
+  theme(plot.title.position = "plot")
+
+minimaGrob <- ggplotGrob(minimaPlot)
 
 
 
-<!-- jointPosteriorSubsample <- jointPosteriorDF[,1:300] -->
-
-<!-- jointPosteriorDF$ps <- ps -->
-<!-- jointPosteriorSubsample$ps <- ps -->
-
-<!-- jointPosteriorLong <- melt(jointPosteriorSubsample, -->
-<!--                            id.vars = c("ps")) -->
-<!-- colnames(jointPosteriorLong) <- c("prior", "sample","probability") -->
-
-<!-- alpha = .25 -->
-<!-- size = .2 -->
-
-<!-- densitiesLinesPlot <- ggplot(jointPosteriorLong)+ -->
-<!--   geom_line(aes(x = prior, y = probability,group = sample), -->
-<!--             alpha = alpha, linewidth = size)+ -->
-<!--   theme_tufte()+xlim(0,.2) + -->
-<!--   annotation_custom(minimaGrob, xmin = .085, xmax = .185, -->
-<!--                   ymin = 0.01, ymax = 0.8) + -->
-<!--   ggtitle("Posterior vs prior (300 sampled lines)") + -->
-<!--   theme(plot.title.position = "plot") -->
-
-<!-- ``` -->
+jointPosteriorDF <-   as.data.frame(do.call(cbind, jointPosterior))
 
 
 
+jointPosteriorSubsample <- jointPosteriorDF[,1:300]
 
-<!-- \begin{figure}[H] -->
-<!-- ```{r Figlines5,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "60%", warning = FALSE, message = FALSE} -->
-<!-- densitiesLinesPlot -->
-<!-- ``` -->
+jointPosteriorDF$ps <- ps
+jointPosteriorSubsample$ps <- ps
 
-<!-- \caption{300 lines illustrating the uncertainty about the dependence of the posterior on the prior given aleatory uncertainty about the evidence, with the distribution of the minimal priors required for the posterior to be above .99.} -->
+jointPosteriorLong <- melt(jointPosteriorSubsample,
+                           id.vars = c("ps"))
+colnames(jointPosteriorLong) <- c("prior", "sample","probability")
 
-<!-- \label{fig:lines} -->
+alpha = .25
+size = .2
 
-<!-- \end{figure} -->
+densitiesLinesPlot <- ggplot(jointPosteriorLong)+
+  geom_line(aes(x = prior, y = probability,group = sample),
+            alpha = alpha, linewidth = size)+
+  theme_tufte()+xlim(0,.2) +
+  annotation_custom(minimaGrob, xmin = .085, xmax = .185,
+                  ymin = 0.01, ymax = 0.8) +
+  ggtitle("Posterior vs prior (300 sampled lines)") +
+  theme(plot.title.position = "plot")
+
+```
+
+
+
+
+\begin{figure}[H]
+```{r Figlines5,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "60%", warning = FALSE, message = FALSE}
+densitiesLinesPlot
+```
+
+\caption{300 lines illustrating the uncertainty about the dependence of the posterior on the prior given aleatory uncertainty about the evidence, with the distribution of the minimal priors required for the posterior to be above .99.}
+
+\label{Figlines}
+
+\end{figure}
 
 
 This, then, is the main claim illustrated in this section: higher-order approach to evidence evaluation
