@@ -418,7 +418,7 @@ must be the source of the crime traces (call this hypothesis $\mathsf{source}$).
 
 
 The standard story among legal 
-probabilists goes something like this @sep-legal-probabilism. \todo{Not sure how to cite a section } To evaluate the strength of the two items of match evidence, 
+probabilists goes something like this @sep-legal-probabilism. \todo{N: Not sure how to cite a section } To evaluate the strength of the two items of match evidence, 
 we must find the value of the likelihood ratio:
 
 $$
@@ -505,7 +505,7 @@ charitableImpactPlot <- ggplot()+geom_line(aes(x = prior, y = posteriorL))+xlim(
 
 
 The expert's answer makes apparent that the precise random match probabilities do not tell the whole story.
-Perhaps, the information about sample sizes is good enough  and now you know how to\todo{"Nikodem, cite Taroni in fn." not sure if it is the right one} 
+Perhaps, the information about sample sizes is good enough  and now you know how to\todo{"Nikodem, cite Taroni in fn." N: not sure if it is the right one} 
 use the evidence properly.^[This is what, effectively, @aitken2008fundamentals seem to suggest when they insist 
 the fact-finders should be simply given point estimates and information about the study set-up,
  such as sample size. We disagree.] But if you are like most human beings, you can't. What to do, then?  
@@ -578,7 +578,7 @@ In general, it is impossible to calculate the credible interval for the joint di
       So providing the fact-finder with individual intervals, even if further information 
       about the distributions is provided, might easily mislead.^[Investigation of the 
        extent to which the individual interval presentation is misleading  would be an interesting psychological study.]
-\todo{Nikodem: Can you google to see if there is any such study?}
+\todo{Can you google to see if there is any such study? N: failed to find such a study}
 
 
 As it turns out, given the reported sample sizes, the 99\% credible interval
@@ -606,7 +606,6 @@ This also means that---following our advice on how to illustrate the impact of e
   probability of the evidence (@fig-lines).
 
 
-\todo{Nikodem: make these figures work (see source).}
 ```{r densitiesEvidence,echo=FALSE,eval=TRUE,fig.align = "center",cache=FALSE, fig.show = "hold", out.width = "100%"}
 
 jointEvidence <- dogSamples * hairSamples
@@ -650,9 +649,9 @@ grid.arrange(densities1Plot,densities2Plot, ncol = 1 )
 ```
 
 
-\todo{This plot will need fixing}
+\todo{N: Fixed the plot}
 
-```{r densLines23, echo=FALSE,eval=TRUE,fig.align = "center",cache=FALSE, fig.show = "hold", out.width = "100%", warning = FALSE, message = FALSE}
+```{r densLines, echo=FALSE,eval=TRUE,fig.align = "center",cache=FALSE, fig.show = "hold", out.width = "100%", warning = FALSE, message = FALSE}
 prior <- seq(0,1, by = 0.001)
 priorH0 <- 1-prior
 
@@ -676,17 +675,49 @@ for (s in 1:1e4){
 
 
 
+#minimaPlot <- ggplot()+geom_density(aes(x = minima))+
+#  theme_tufte(base_size = 10)+ggtitle("Minimal priors sufficient for posterior >.99")#+xlab("minimal prior")+
+#  theme(plot.title.position = "plot")
+
+#minimaGrob <- ggplotGrob(minimaPlot)
+
+
+
+#jointPosteriorDF <-   as.data.frame(do.call(cbind, jointPosterior))
+
+
+
+#jointPosteriorSubsample <- jointPosteriorDF[,1:300]
+
+#jointPosteriorDF$ps <- ps
+#jointPosteriorSubsample$ps <- ps
+
+#jointPosteriorLong <- melt(jointPosteriorSubsample,
+#                           id.vars = c("ps"))
+#colnames(jointPosteriorLong) <- c("prior", "sample","probability")
+
+#alpha = .25
+#size = .2
+
+#densitiesLinesPlot <- ggplot(jointPosteriorLong)+
+#  geom_line(aes(x = prior, y = probability,group = sample),
+#            alpha = alpha, linewidth = size)+
+#  theme_tufte()+xlim(0,.2) +
+#  annotation_custom(minimaGrob, xmin = .085, xmax = .185,
+#                  ymin = 0.01, ymax = 0.8) +
+#  ggtitle("Posterior vs prior (300 sampled lines)") +
+#  theme(plot.title.position = "plot")
+#densitiesLinesPlot
+
+
+
+
+
 minimaPlot <- ggplot()+geom_density(aes(x = minima))+
   theme_tufte(base_size = 10)+ggtitle("Minimal priors sufficient for posterior >.99")+xlab("minimal prior")+
-  theme(plot.title.position = "plot")
-
-minimaGrob <- ggplotGrob(minimaPlot)
-
-
+  theme(plot.title.position = "plot", plot.title = element_text(size = 10))
 
 jointPosteriorDF <-   as.data.frame(do.call(cbind, jointPosterior))
-
-
 
 jointPosteriorSubsample <- jointPosteriorDF[,1:300]
 
@@ -703,11 +734,9 @@ size = .2
 densitiesLinesPlot <- ggplot(jointPosteriorLong)+
   geom_line(aes(x = prior, y = probability,group = sample),
             alpha = alpha, linewidth = size)+
-  theme_tufte()+xlim(0,.2) +
-  annotation_custom(minimaGrob, xmin = .085, xmax = .185,
-                  ymin = 0.01, ymax = 0.8) +
+  theme_tufte()+xlim(0,.2) + theme_tufte(base_size = 10)+
   ggtitle("Posterior vs prior (300 sampled lines)") +
-  theme(plot.title.position = "plot")
+  theme(plot.title.position = "plot", plot.title = element_text(size = 10))
 
 ```
 
@@ -715,12 +744,12 @@ densitiesLinesPlot <- ggplot(jointPosteriorLong)+
 
 
 
-```{r Figlines5,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "60%", warning = FALSE, message = FALSE}
+```{r Figlines,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "80%", warning = FALSE, message = FALSE}
 #| label: fig-lines
 #| fig-cap: "300 lines illustrating the uncertainty about the dependence of the posterior on the prior given aleatory uncertainty about the evidence, with the distribution of the minimal priors required for the posterior to be above .99."
 #| fig-pos: H
 
-densitiesLinesPlot
+grid.arrange(densitiesLinesPlot, minimaPlot, ncol= 2)
 ```
 
 
