@@ -1,0 +1,870 @@
+---
+title: "Chapter 5: Assessing evidential strength with the likelihood ratio"
+author: "Rafal Urbaniak and Marcello Di Bello"
+format:
+  pdf:
+    toc: false
+    include-in-header: quartoStyle.sty
+    mainfont: Times New Roman
+    sansfont: Times New Roman
+    number_sections: true
+documentClass: scrartcl
+classOptions: [dvipsnames, enabledeprecatedfontcommands, headings=big]
+font:
+  size: 10pt
+url:
+  color: blue
+bibliography: [../../references/referencesMRbook.bib]
+csl: apa-6th-edition.csl
+indent: true
+---
+
+```{r setup, include=FALSE}
+library(ggthemes)
+library(ggplot2)
+library(gridExtra)
+library(ggpubr)
+library(knitr)
+library(kableExtra)
+library(gRain)
+library(reshape2)
+library(plyr)
+library(rje)
+library(bnlearn)
+library(utils)
+library(latex2exp)
+library(useful)
+library(tidyverse)
+library(stringr)
+library(plot3D)
+knitr::opts_chunk$set(echo = TRUE)
+
+source("../utils/CptCreate.R")  
+source("../utils/kableCPTs.R")  
+```
+
+
+<!---\tableofcontents--->
+
+The fallacies we considered in Chapter 3---base rate,  prosecutor's and defense attorney's fallacy---show how the posterior probability of a hypothesis can be overestimated or underestimated. The posterior probability should reflect the evidence, but should not be identified with the probative value or strength of the evidence. <!---It is helpful to distinguish the posterior probability of the hypothesis given the evidence, $\pr{H \vert E}$, from the extent to which the evidence changes the probability of the hypothesis. This distinction is crucial. --->  A hypothesis may have a low posterior probability given the evidence, even though the evidence increases the probability of the hypothesis substantially.^[Here is a more concrete example.  Suppose an expert testifies that the blood found at the crime scene matches the defendant’s and it is $.05$ probable that a person unrelated to the crime would match by coincidence.  Absent other evidence to the contrary, it should initially be very likely that the defendant, as anyone else, had little to do with the crime. Say, for illustrative purposes, that the prior probability of the source hypothesis is $.01$, and let the probability of a match if the suspect is the source be approximately 1. By running Bayes' theorem, the posterior probability that the defendant is the source comes out to be roughly $.17$. While the match  did not make it very likely  that the defendant was the source of the traces, the posterior probability is  seventeen times larger than the prior.] So measuring evidential strength or probative value solely by posterior probabilities leaves out something crucial.
+
+
+<!--- can be misjudged, upwards or downwards, even if the subject gets the likelihoods right. These examples illustrate that   the assessment of the  posterior probability of a hypothesis given the  evidence depends also on the prior probability of the hypothesis. The correctness of such an assessment therefore requires that the priors are chosen sensibly (or that a range of sensible priors is considered) and appropriately put together with the likelihoods involved. Quite crucially, the posterior probability given a piece of evidence should not be confused with the probative value of a given piece of  evidence itself with respect to the hypothesis in question.
+--->
+
+<!---Suppose the prior probability of a given hypothesis $H$ is low, say $\pr{H}=.001$, but taking evidence $E$ into account brings this probability up to $.35$, so  $\pr{H \vert E}=.35$.   This is a dramatic upward shift. Even though the posterior probability of $H$ given $E$ is low, $E$ strongly favors $H$.  Similarly, in the Collins case, the posterior probability jumped from the $\nicefrac{1}{6 \times 10^6}$ prior to $.7$ after taking the match into account. Still not enough for a conviction, but a remarkable increase nonetheless.  Conversely, suppose the prior probability of $H$ is extremely high, say $\pr{H}=.999$, but taking evidence $E$ into account brings this probability down to $.75$, that is, $\pr{H \vert E}=.75$. This is a dramatic downward shift. Even though the posterior probability of $H$ given $E$ is high, $E$ speaks strongly against $H$.
+--->
+
+
+<!---\mar{R:Revised this passage in light of Sophie's comments, check}
+So how do we capture  the strength of an item of evidence that  reflects the impact the evidence   on the posterior probability? --->
+
+Another distinction worth making is between the global and local value of the evidence [@di2018evidential]. 
+<!---The former is more directly connected with the ultimate decision: --->
+Let $E_1,E_2,\dots, E_k$ be the total evidence presented at trial and $H$ the ultimate hypothesis, 
+say that the defendant is guilty of insider trading. The ultimate hypothesis is usually complex and can be thought of as the conjunction of several sub-hypotheses $H_1, H_2, \dots H_k$. The total evidence bearing on the ultimate hypothesis should guide the final decision. But, as a preliminary step, it is useful to locally evaluate the impact of an individual piece of evidence $E_i$ on the probability of a specific hypothesis $H_i$. <!---If a piece of evidence shifts the probability of a hypothesis say, from $.00007$ to $.007$, the posterior is still low, but the impact of the evidence is  strong. Moreover, ---> When lay witnesses and experts testify at trial, the assessment of the evidential value of their individual testimonies should precede their aggregation into a whole, complex body of evidence. 
+
+This chapter articulates a probabilistic account of probative value or evidential strength that is incremental (it tracks changes in probability) and local (it is limited to individual pieces of evidence and specific hypotheses).  <!---We prefer the expression 'evidential strength' because it coveys the fact that evidential value comes in degrees, as items of evidence may favor hypotheses more or less strongly. Another expression we will sometimes use is 'evidential support'.---> We will argue that the likelihood ratio serves these purposes well.  Section \ref{sec:lr} explains why it fares better than another popular measure of evidential strength, the Bayes factor. <!---Our goal is to offer a fair-minded discussion about the pros and cons of the likelihood ratio as a measure of evidential strength. ---> (Appendix \ref{sec:confirmation} broadens the discussion to probabilistic measures of confirmation and reaches a similar conclusion.) We then offer two illustrations of how the likelihood ratio can be fruitfully deployed. Section \ref{sec:fp} shows that it allows for a nuanced assessment of the strength of quantitative evidence,  DNA match evidence. <!---, when the risk of false positive and false negative errors should be factored in.--->  <!---We explain the reasons to take the risk of false positives in DNA identification seriously and use likelihood ratio to illustrate the impact of such a risk on the value of DNA evidence. ---> <!---To strengthen this point, Appendix \ref{sec:coldHitConfusion} and \ref{sec:cold-hit} show how the value of cold-hit DNA matches can be correctly assessed using likelihood ratios, a hotly debated topic among forensic scientists.--->
+<!---^[In principle, it would be possible to go over analogous considerations in terms of \textsf{BF}, however, as we already argued, there are reasons to prefer the use \textsf{LR}, and calculations in terms of \textsf{LR} are simpler and assume that less information is available to the agent than those in terms of \text{BF}.]
+--->  Section \ref{sec:eyewitness} examines how it can help to evaluate eyewitness testimony This should dispel the impression that the likelihood ratio is only suited for explicitly quantitative evidence. 
+
+Despite its versatility, however, the likelihood ratio should be deployed with care. It can be hard to interpret in practice, as we discuss in Section \ref{sec:hchoice}. <!---This interpretative problem arises partly because the competing hypotheses admit of different levels of specificity: we discuss this phenomenon in Section \ref{sec:lhTwoSTain}, using the two-stain problem as an illustration. ---> In Section \ref{sec:relevance} we discuss evidential relevance, a topic closely related to that of evidential value. The likelihood ratio may categorize an item of evidence as irrelevant while intuitively the item is relevant. We explain this problem away by insisting that the likelihood ratio is a \textit{local} measure whose meaning is relative to specific hypotheses.<!--- Likelihood ratios do not provide an assessment of the value of the evidence in absolute terms, nor should they be expected to do that. --->
+<!---The general lesson from these two sections is that likelihood ratio, while a very useful measure of evidential value, when presented alone without proper attention paid to hypothesis formulation and the impact of the choice of the hypotheses on the likelihood ratio itself, might be misleading.--->
+<!---Finally,  However, the discussion leads us to another reason why likelihood ratio when presented alone might be unhelpful.---> <!---Indeed, a piece of evidence might be irrelevant with respect to a certain pair of competing hypotheses, but relevant to another.--->
+<!---and all of these hypotheses might play an important role in the fact-finding process.---> To be sure, the value of an item of evidence is to be established both locally (relative to specific hypotheses) and globally (relative to the case as a whole).  <!---Instead of a single likelihood ratio, one should consider various likelihood ratios for different plausible selections of hypotheses.---> This suggests the need of formulating a more complex theory. We undertake this task in Part III. 
+<!---and so a readable representation of such complexities involved in  a given case would be useful for putting various likelihood ratios to a proper use.--->
+
+
+<!---The chapter also contains a number of appendices. To illustrate the utility of thinking in terms of likelihood ratios in theorizing about the value of evidence, we spend some time in the appendix to go over a debate about  the value of cold-hit DNA matches in which various agencies studying  or performing  DNA evaluation have still failed to reach agreement (Appendix  \ref{sec:coldHitConfusion}), and argue that a proper use of likelihood ratios leads to a fairly clear resolution (Appendix \ref{sec:cold-hit}). --->
+
+
+<!---Finally, a more philosophically minded reader, who might recall that there are quite a few probabilistic confirmation measures in the vicinity and might wonder why almost none of them were discussed in the chapter,  in Appendix \ref{sec:confirmation} we explain why we think these other measures are not fit for the particular purpose at hand:  evidence evaluation in legal-fact finding.--->
+
+
+# The likelihood ratio is better than the Bayes factor 
+\label{sec:lr}
+
+
+A popular measure of evidential strength is the \emph{Bayes factor}, corresponding to the likelihood of the evidence---the probability of the evidence given the hypothesis of interest, $\pr{E \vert H}$---divided by the probability of the evidence $\pr{E}$: 
+\begin{align*} 
+\mathsf{BF}(E,H) & = \frac{\pr{E \vert H}}{\pr{E}}.
+\end{align*}
+\noindent It is a plausible measure 
+as it appropriately deviates from one, its point of neutrality. Since, by Bayes' theorem,
+$\pr{H \vert E}$ equals $\mathsf{BF}(H, E) \times \pr{H}$,
+<!---
+\vspace{-3mm}
+
+
+\begin{align*}
+\pr{H \vert E} & = \mathsf{BF}(H, E) \times \pr{H},
+\end{align*}
+--->
+the Bayes factor is greater than one if and only if
+the posterior probability $\pr{H \vert E}$ is higher than the prior probability $\pr{H}$. The greater the Bayes factor (for values above one), the greater the upward shift from prior to posterior probability, the more strongly $E$ positively supports $H$. Conversely, <!--again by Bayes' theorem,  the probability of $H$ given $E$ is lower than the probability of $H$, $\pr{H}>\pr{H\vert E}$, just in case the Bayes factor is less than one. So --> the smaller the Bayes factor (for values below one), the greater the downward shift from prior to posterior probability, the more strongly $E$ negatively supports $H$. If $\pr{H}=\pr{H\vert E}$, the Bayes factor equals one and the evidence  has no impact on $H$. 
+
+The posterior probability of $H$ given $E$ could still be low even when the Bayes factor is significantly above one, indicating that the evidence is strongly probative of $H$ despite the low posterior probability. So, as desired,  this measure captures a dimension of the value of evidence that is not reflected in the posterior probability. Unfortunately, the Bayes factor suffers from three shortcomings that make it unsuitable for applications in trial proceedings.
+
+
+The first shortcoming is a dependency on the prior probability of the hypothesis of interest. To see why, consider the denominator $\pr{E}$. It can be unpacked by the law of total probability:
+
+\vspace{-3mm}
+
+\begin{align} \label{eq:lotpSimple}
+\pr{E}= \pr{E \vert H} \pr{H}+\pr{E \vert \neg H} \pr{\neg H}.
+\end{align}
+<!---\noindent The catch-all alternative hypothesis $\neg H$ can be replaced by a more fine-grained set of alternatives, say $H_1, H_2, \dots H_k$, provided $H$ and  these  alternatives are exclusive and  cover the entire space of possibilities (that is, they form a partition). The law of total probability would then read:
+\begin{align} \label{eq:lotpLong}
+\pr{E} & = \pr{E\vert H}\pr{H} +\sum_{i=1}^k \pr{E\vert H_i}\pr{H_i}. 
+\end{align}
+--->
+<!---\noindent For simplicity, let's stick to \eqref{eq:lotpSimple} for now, and use it to rewrite \eqref{eq:BF}:--->
+\noindent 
+So the Bayes factor can be written in a longer form:
+\begin{align}\label{eq:BFlotp}
+\mathsf{BF}(E,H) & = \frac{\pr{E \vert H}}{\pr{E \vert H} \pr{H}+\pr{E \vert \neg H} \pr{\neg H}}.
+\end{align}
+\noindent What should be clear from this formulation is the dependency on the prior probabilities $\pr{H}$ and
+$\pr{\neg H}$. Indeed, suppose $\pr{E \vert H} = 1$ and $\pr{E \vert \neg H} = .1$. If $\pr{H}=.1$, $\pr{E}$,  the denominator, is $.19$,  and so the Bayes factor is approximately $5.26$. If, however, $\pr{H} =.2$, the denominator is $.28$ and the Bayes factor is approximately $3.57$. In fact, a more general look (Figure \ref{fig:BayesFactorPrior}) shows that the prior probability can have larger impact on the Bayes factor than the likelihood $\pr{E \vert \n H}$.
+
+This is a strike against adopting this measure of evidential strength in legal fact-finding. For suppose an expert who is testifying in court is tasked with assessing the value of an item of evidence, say a DNA or fingerprint match. This assessment should not depend on the expert's prior convictions about the plausibility of the hypothesis. Further, judges and lay jurors should be in a position to understand  the expert's assessment in the same way, even if they assign different prior probabilities to the hypothesis.^[The requirement of prior independence is also in line with an objectivity requirement that the strength of evidence should not vary from one researcher to another [@bickel2012strength].]
+
+\footnotesize
+```{r bfcalculations,echo=FALSE,eval=FALSE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%"}
+
+EifH <- 1
+EifNH <- .1
+H <- .1
+E <- EifH * H + EifNH * (1-H)
+E
+BF <- EifH/E
+BF
+
+H2 <- .2
+E2 <- EifH * H2 + EifNH * (1-H2)
+E2
+BF2 <- EifH/E2
+BF2
+```
+\normalsize 
+ 
+
+
+
+```{r fig-BayesFactorPrior,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold",out.width = "100%"}
+#| label: fig-bayesfactorprior
+#| fig-cap: "Impact of the prior and likelihood of E given ~H for probabilities in (0, 0.05) and Bayes Factor restricted to (0, 250) for visibility."
+
+
+library(plot3D)
+pH <- seq(0,.05, by = 0.001)
+EifNH <- seq(0,.05, by = 0.001)
+EifH <- 1
+options <- expand.grid(pH = pH, EifNH = EifNH)
+options$E <- EifH * options$pH + options$EifNH * (1-options$pH)
+options$BF <- EifH/options$E
+options <- options[-1,]
+
+scatter3D(options$pH,options$EifNH,options$BF,pch=3,cex=0.3,byt="g",alpha=0.8,theta=50, phi=8,xlab="P(H)", ylab="P(E|~H)",zlab="Bayes Factor",main="Bayes factor as a function of prior and P(E|~H).",colvar=NULL, zlim = c(0,250),cex.main =0.8)
+```
+
+
+ 
+
+A second reason to worry about the Bayes factor is its complexity. To see this, the catch-all alternative hypothesis $\neg H$ in the denominator can be replaced by a more fine-grained set of alternatives,  $H_1, H_2, \dots H_k$, provided $H$ and these alternatives are exclusive and cover the entire space of possibilities (that is, they form a partition). The denominator becomes:
+\begin{align} \label{eq:lotpLong}
+\pr{E} & = \pr{E\vert H}\pr{H} +\sum_{i=1}^k \pr{E\vert H_i}\pr{H_i}. 
+\end{align}
+
+\noindent
+Assessing $\pr{E}$ now looks quite difficult. It would require one to sift through the entire space of possibilities, as well as coming up with a sensible selection of priors probabilities for the several alternative hypotheses on hand. Whoever is tasked with assessing  the strength of evidence---lay jurors, judges, or expert witnesses---might face too great a cognitive burden. 
+
+A third reason to hesitate about the Bayes factor comes from the problem of irrelevant conjuncts [@Gillies1986defense; @Fitelson1999plurality].  Consider the  hypothesis $H =$ 'the suspect is guilty of  murder' and suppose it is a fact that $E =$ 'the suspect killed the victim'. Fact $E$ does not establish guilt with certainty since guilt requires both \emph{actus reus}, the killing, and \emph{mens rea}, the intention. But clearly $E$ provides positive support for $H$. 
+<!---Clearly, $H$ entails $E$, and .---> Now consider a composite hypothesis $H'=$ 'the suspect is guilty of murder \textit{and} we live in a simulation built by aliens'. Presumably, the support $E$ provides for $H'$ should be weaker than the support it provides for $H$. After all, the addition of a far-fetched hypothesis should weaken evidential support. This weakening, however, cannot be captured by the Bayes factor since both $H$ and $H'$ deductively entail $E$. In general, suppose $H\models E$ (and so, also, $H \et X \models E$). Then both $\pr{E\vert H}$  and $\pr{E \vert H \et X}$ equal 1. But this means that $\mathsf{BF}(H,E) = \mathsf{BF}(H \et X, E) = \nicefrac{1}{\pr{E}}$. So, contrary to what one would expect, the Bayes factors for the two support relations are equal.^[The same point can be made using irrelevant hypotheses that are not so far-fetched. For instance, suppose one hypothesis of interest is whether the victim was running in the park on a certain night, and the relevant piece of evidence is her footprints in the park. Perhaps, another hypothesis is whether she had wine at dinner later on. Clearly, whether she did is not obviously relevant to whether she was running in the park beforehand. However, one should be very hesitant to say that the evidential strength of the presence of footprints is the same relative to 'She was running in the park' and  'She was running in the park and had wine at dinner later on'. But this is what the Bayes factor would commit one to.]
+
+<!-- There is a similar problem that suggests that Bayes factor is sub-optimal for the task at hand, if you have the intuition that if the evidence supports a certain hypothesis to a certain level, it also supports its logical consequences to at least that level. Let's go through an example, inspired by @bickel2012strength.  Suppose there are  101 distinct cosmological -->
+<!-- hypotheses $H_1, \dots, H_{101}$, assumed to be pairwise incompatible and jointly exhaustive, each providing a different physical explanation of astronomical observations represented by $E$. Say they all have equal prior probability $\approx .0099$. The first one is the Bing Bang hypothesis, and its likelihood ($\pr{E \vert H_1}$) is .5. The likelihood corresponding to other hypotheses is .1 (that is, for $i>1$ we have $\pr{E\vert H_i} = .1$). The prior of the evidence is $\sum_{i = 1}^{100} \pr{E \vert H_i}\pr{H_i} \approx .103$, and the Bayes factor for $H_1$ is $\nicefrac{\pr{E \vert H_1}}{\pr{E}} \approx 4.809$. Now consider the disjunction $H_1 \vee H_2$, which logically follows from $H_1$. Since the hypotheses are exclusive, the prior of the disjunction  is the sum of the two separate priors $\pr{H_1} + \pr{H_2} \approx .0198$. Let's derive the likelihood for this disjunction:  -->
+<!-- \begin{align*} -->
+<!-- P(E | H_1 \vee H_2) & = \frac{\pr{E \wedge ( H_1 \vee H_2)} }{\pr{H_1 \vee H_2}} \\ -->
+<!-- &  = \frac{\pr{(E \et H_1) \vee ( E \et  H_2)} } -->
+<!-- {\pr{H_1 \vee H_2}} \\ -->
+<!-- &  = \frac{\pr{E \et H_1} + \pr{E \et  H_2} } -->
+<!-- {\pr{H_1 \vee H_2}}  \\ -->
+<!-- &  = \frac{\pr{E \vert H_1}\pr{H_1} + \pr{ E \vert  H_2}\pr{H_2} } -->
+<!-- {\pr{H_1 \vee H_2}} \\ -->
+<!-- & \approx \frac{.0049 + .00099 }{.0198} \approx  .3 -->
+<!-- \end{align*} -->
+<!-- So, the Bayes factor for the disjunction is $\approx \nicefrac{.3}{.103} \approx 2.88$, which is less than the Bayes factor for the first hypothesis.   -->
+
+
+The discussion so far suggests that a good measure of evidential strength 
+should satisfy three desiderata: (i) it does not depend on priors, (ii) places no unreasonably heavy cognitive requirements, and (iii) does not fall prey to the problem of irrelevant conjuncts.  We will argue that a measure that satisfies these desiderata is the \emph{likelihood ratio}. It is defined as
+\begin{align*}
+\mathsf{LR}(E,H,H') & = \frac{\pr{E \vert H}}{\pr{E \vert H'}},
+\end{align*}
+
+\noindent where $H'$ is a hypothesis that is a competing alternative to $H$. In the most straightforward case, $H'$ is just the negation of $H$. But the competing hypotheses $H$ and $H'$ need not be one the negation of the other, a point to which we will return. As with the Bayes factor, support levels correspond to deviations from one.  If the evidence is more likely given $H$ than $H'$, the ratio would be above one, and if the evidence is more likely given $H'$ than $H$, the ratio would be below one.  The greater the likelihood ratio (for values above one), the stronger the evidence in favor of $H$ as contrasted with $H'$. The smaller the likelihood ratio (for values below one), the stronger the evidence in favor of the competing hypothesis $H'$ as contrasted with $H$. 
+<!---the ratio between $\pr{E \vert H}$ (the probability of the evidence given the hypothesis is true) and $\pr{E \vert \neg H}$ (the probability of the evidence given the hypothesis is false).---> 
+
+Note that both conditional probabilities in the numerator and denominator are needed for a correct assessment of the value of the evidence. For suppose we only relied on $\pr{E \vert H}$. In some cases, this conditional probability will be close to one. For instance, the probability that the blood from the crime matches the accused, if the accused is the source, $\pr{\textsf{blood match} \vert \textsf{source}}$, may be close to one. Similarly, the probability that the DNA from the crime scene matches the accused, again if the accused is the source, $\pr{\textsf{DNA match} \vert \textsf{source}}$, may also be close to one. Now, the DNA match should be stronger incriminating evidence than the blood type match because a specific genetic profile typically is less common than a specific blood type. Yet the quantity  $\pr{E \vert H}$, by itself,  makes no distinction here. The difference can instead be captured by the other conditional probability $\pr{E \vert \neg H}$. If the accused is \textit{not} the source, the probability of a blood type match, while relatively small, should be higher than the probability of a DNA profile match. The likelihood ratio tracks both conditional probabilities, and thus it would be higher for the DNA match than the blood match, as desired.^[Specifically, $\nicefrac{\pr{\textsf{DNA  match} \vert \textsf{source}}}{\pr{\textsf{DNA  match} \vert \neg \textsf{source}}} > \nicefrac{\pr{\textsf{blood match} \vert \textsf{source}}}{\pr{\textsf{blood match} \vert \neg \textsf{source}}}$.] For similar reasons, the strength of evidence cannot be measured by the probability $\pr{E \vert \neg H}$ alone. Consider an example by @triggsCommentWhyEffect. In a child abuse case, the prosecutor offers \label{text:rock} evidence that a couple's child rocks and that only 3\% of non-abused children rock, $\pr{\textsf{child rocks} \vert \neg \textsf{abuse}}=.3$. If it is unlikely that a child who is not abused would rock, that this child rocks might seem evidence of abuse. But this interpretation is mistaken. It could also be that 3\% of abused children rock, $\pr{\textsf{child rocks} \vert \textsf{abuse}}=.3$. If rocking is equally unlikely under either hypothesis, rocking cannot count as evidence of abuse. <!---Similarly, learning that $\pr{\textsf{child rocks} \vert \textsf{abuse}}=.3$ does not provide enough information  for evidence evaluation. One also needs information about  $\pr{\textsf{child rocks} \vert \neg \textsf{abuse}}$. Neither of the two conditional probabilities, viewed in isolation, makes this salient.---> 
+
+So, both the probability of the evidence given the hypothesis and the probability of the evidence given an alternative hypothesis should be part of any good measure of evidential strength [@Royall1997; @triggsCommentWhyEffect; @enfs2015].<!---And even when $\pr{E \vert H}$ is not close to one, there are other reasons not to use it as a measure of evidential strength. For consider --->
+The Bayes factor includes both probabilities, but---as seen before---it falls prey to three difficulties. The likelihood ratio tracks both conditional probabilities without falling prey to these difficulties. 
+
+First, unlike the Bayes factor, the likelihood ratio does not depend on the prior probability of the hypothesis. <!---It allows for a clearer separation of the impact of the priors from the impact of the evidence on the posterior probability. ---> This is is apparent from the odds version of Bayes' theorem:
+\begin{align}\label{eq:BTodds}
+\frac{\pr{H \vert E}}{\pr{H' \vert E}}= \frac{\pr{E \vert H}}{\pr{E \vert H'}}\times \frac{\pr{H}}{\pr{H'}}.
+\end{align}
+\noindent If the likelihood ratio is greater (lower) than one, the posterior odds will be greater (lower) than the prior odds of $H$. The likelihood ratio, then, is a measure of the upward or downward impact of the evidence on the prior odds of two hypotheses $H$ and $H'$. This fits nicely with the division of labor common in legal fact-finding between experts and decision-makers, judges or lay jurors. A prominent forensic scientist recommends that 'in criminal adjudication, the values of the prior odds and the posterior odds are matters for the judge and jury <!---, in accordance with the normal division of labor in forensic fact-finding--->' [@aitken2008fundamentals, p. 194]. Other scholars recommend that experts should  `not trespass on the province of the jury <!---by commenting directly on the accused's guilt or innocence,---> \dots and should generally confine their testimony to presenting the likelihood of their evidence under competing propositions' [@aitken2010fundamentals, p. 42]. <!--- If, however, experts were to report the Bayes factor, this would mean they are competent to estimate $\pr{E}$ directly, which is unlikely, or that they implicitly estimate it relying on their estimation of $\pr{H}$ in the background (if they use the law of total probability). Instead, the likelihood ratio  describes the value of evidence and abides by these constraints. ---> The meaning of the likelihood ratio can be made more perspicuous by supplementing it with a graph that conveys visually the extent to which the evidence changes the probability of the hypothesis of interest (See Figure \ref{fig:effect-evidence}).^[@lundIyer2017 have argued that the likelihood ratio often depends on the prior probabilities of the hypotheses under consideration. The reason is that the alternative hypothesis $H'$ that occurs in the denominator can be analyzed as a disjunction of several alternative sub-hypotheses 
+$H'_1\vee H'_2\vee ... \vee H'_k$. In this case, the denominator of the likelihood ratio would be the weighted sum of the likelihoods $\pr{E \vert H'_i}$, where the weights are the priors probabilities of each $H'_i$. We address this complication in later chapters after introducing the formal machinery of Bayesian networks.]
+
+```{r effect-evidence,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%", warning = FALSE, message = FALSE}
+
+
+prior <- seq(0,1,0.01)
+priorOdds <- prior/(1-prior)
+
+posteriorOddsMinS1 <- priorOdds * 9
+posteriorMinS1 <- posteriorOddsMinS1  / (1+ posteriorOddsMinS1 )
+posteriorOddsMaxS1 <- priorOdds * 11
+posteriorMaxS1 <- posteriorOddsMaxS1/(1+posteriorOddsMaxS1)
+scenario1 <- data.frame(prior,priorOdds,posteriorOddsMinS1,posteriorMinS1, posteriorOddsMaxS1, posteriorMaxS1)
+s1 <- ggplot(scenario1)+
+  geom_ribbon(aes(x = prior, ymin=posteriorMinS1,ymax=posteriorMaxS1), fill="skyblue", alpha=0.5)+theme_tufte()+
+  ggtitle("Likelihood ratio of 10 (+/- 1)", subtitle = (""))+ylab("posterior")
+
+
+
+posteriorOddsMinS2 <- priorOdds * 90
+posteriorMinS2 <- posteriorOddsMinS2  / (1+ posteriorOddsMinS2 )
+posteriorOddsMaxS2 <- priorOdds * 110
+posteriorMaxS2 <- posteriorOddsMaxS2/(1+posteriorOddsMaxS2)
+scenario2 <- data.frame(prior,priorOdds,posteriorOddsMinS2,posteriorMinS2, posteriorOddsMaxS2, posteriorMaxS2)
+s2 <- ggplot(scenario2)+geom_ribbon(aes(x = prior, ymin=posteriorMinS2, ymax=posteriorMaxS2), fill="skyblue", alpha=0.5)+
+  theme_tufte()+ggtitle("Likelihood ratio of 100 (+/- 10)", subtitle =  (""))+ylab("posterior")
+```
+
+
+```{r effect-evidence-b,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%", warning = FALSE, message = FALSE}
+#| label: fig-effect-evidence
+#| fig-cap: "This graphical representation can supplement the likelihood ratio to convey visually the extent to which the evidence changes the probability of the hypothesis. This representation assumes that the two hypotheses in the likelihood ratio are one the negation of the other. In this case, the posterior probability of $H$ equals $\nicefrac{PO}{1+PO}$, where $PO$ are the posterior odds."
+#| fig-pos: h
+
+ggarrange(s1+theme_tufte(base_size=8),s2+theme_tufte(base_size=8), ncol =2 )
+```
+
+
+Second, the likelihood ratio is less cognitively burdensome than the Bayes factor. It does not require one to think about the probability of the evidence in general, $\pr{E}$, say, the probability of a blood match under any possible scenarios. Direct and reliable estimation of this probability is difficult. From equation \eqref{eq:lotpSimple}, it would require, besides an assessment of the conditional probabilities $\pr{E\vert H}$ and $\pr{E\vert \neg H}$, an assessment of the prior probabilities of $\pr{H}$ and $\pr{\neg H}$. Instead, the likelihood ratio only requires an assessment of the conditional probabilities. In this sense, its calculation  requires less information. 
+This simplicity makes the likelihood ratio well-suited for presentation in trial proceedings.  An expert, for instance, may testify that the blood-staining on the jacket of the defendant is ten times more likely to be seen if the wearer of the jacket hit the victim (prosecutor's hypothesis) rather than if he did not (defense's hypothesis) [@aitken2010fundamentals, p. 38].  <!---This apparent simplicity, however, can give rise to confusions in the assessment of the evidence, especially if the hypotheses are not stated clearly. We will return to this point in due course. --->  <!---This is both a strength and weakness of the likelihood ratio.---> 
+
+
+
+<!---^[Note however that, as we will argue in another chapter, the likelihood ratio for conjunctive hypotheses might depend on the priors for the individual conjuncts, so some dependency on the priors does lurk in the background.]--->
+
+
+
+
+
+Finally, unlike the Bayes factor, the likelihood ratio is not susceptible to the problem of irrelevant hypotheses. For suppose $\pr{E\vert H} = \pr{E\vert H \et X} = 1$, where $X$ is an additional hypothesis that is irrelevant to $H$. 
+Note that $\mathsf{LR}(E,H) = \nicefrac{1}{\pr{E \vert \n H}}$, while $\mathsf{LR}(E, H \et X) =  \nicefrac{1}{\pr{E \vert \n H \vee \n X}}$. Here the two denominators might differ. For example, suppose a fair coin is tossed three times. Let $H=$ 'two first tosses resulted in two heads', $E=$ 'at least one of the two first tosses resulted in a head', and  $X=$ 'the third toss resulted in heads'. Then $\pr{E \vert H} =1$, $\pr{E\vert \n H} = \nicefrac{2}{3}$, $\mathsf{LR}(E,H) = \frac{1}{\nicefrac{2}{3}} = 1.5$. However, $\pr{E\vert H \et X} =1$, $\pr{E \vert \n (H \et X)} \approx .71$, so $\mathsf{LR}(E,H \et X) \approx \frac{1}{.71} = 1.4$. Thus, the support, as measured by the likelihood ratio, can drop by adding a conjunct that is probabilistically irrelevant to the  original hypothesis. In fact, this weakening of evidential support by adding an irrelevant conjunct holds in general for the likelihood ratio given sensible assumptions.^[@Fitelson2002irrelevance proved a general claim about irrelevant conjunctions. @HawthorneFitelson2004re-solving later strengthened this claim. The claim is that, if $\mathsf{LR}(E,H,\n H)>1$, $\pr{E \vert X \et H} = \pr{E \vert H}$, and $\pr{X \vert H} \neq 1$, then $\mathsf{LR}(E,H,\n H) > \mathsf{LR}(E,H \et X,\n(H \et X))$. @CrupiTentori2010irrelevant raised a related problem. They point out that if $\mathsf{LR}(E,H)\leq 1$ and $X$ is confirmationally irrelevant conjunct to $H$ with regard to $E$, then $E$ will have the same negative or null impact on $H \et X$, that is $\mathsf{LR}(E,H \et X ) \leq \mathsf{LR}(E,H)$. They find this counter-intuitive and argue that this can be avoided by switching to the $\mathsf{Z}$ confirmation measure [@crupi2007BayesianMeasuresEvidential]. As we argue in Appendix \ref{sec:confirmation}, the $\mathsf{Z}$ measure is prior-sensitive and therefore not fit for our purpose. Further, the phenomenon might not be deeply troubling either. If the likelihood ratio tracks how strongly the evidence supports a hypothesis, it should be no surprise that a more complex hypothesis---one obtained by adding an irrelevant proposition----enjoys a lower support from the same evidence.]
+
+
+\vspace{1mm}
+\footnotesize
+```{r,echo=FALSE,eval=FALSE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%"}
+#E = at least one coin toss in 1,2 is heads
+#H = both tosses 1,2 are heads
+
+EifH <- 1
+
+toss1 <- c("H", "T")
+toss2 <- c("H", "T")
+
+twoTosses <- expand.grid(toss1 = toss1, toss2 = toss2)
+
+twoTosses
+
+notH <- twoTosses[!(twoTosses$toss1 == "H" & twoTosses$toss2 == "H"),]
+notH
+
+EifNH <- 2/3
+
+
+#X = third toss is H
+
+
+LR1 <- EifH / EifNH
+
+LR1
+
+
+EifHX <- 1
+
+threeTosses <- expand.grid(toss1 = toss1, toss2 = toss2, toss3 = toss2)
+
+threeTosses
+notHX <- threeTosses[!(threeTosses$toss1 == "H" & threeTosses$toss2 == "H" & threeTosses$toss3 == "H"),]
+
+notHX$E <- notHX$toss1 == "H" | notHX$toss2 == "H"
+
+EifNHX  <- mean(notHX$E)
+
+EifNHX
+
+EifHX/EifNHX
+
+```
+
+\normalsize
+
+All in all, the likelihood ratio outperforms the Bayes factor on several respects. But, of course, there could be other measures of evidential strength that fare even better. Other measures 
+worth considering come from the literature in formal epistemology on confirmation theory. The expression 'confirmation' is more common in this literature than 'strength' (or value, support). A discussion of these measures, however, would detract us from the main task at hand. We therefore relegate it to Appendix \ref{sec:confirmation}. In it, we show that the likelihood ratio is still, all things considered, the best measure on offer. A more general consideration to keep in mind is that there may well be two different questions here: (1) To what extend does  a piece of evidence confirm our beliefs about a given hypothesis? <!---Call this the question about confirmation.---> (2) What is the strength (value, support) of a piece of evidence relative to a hypothesis? <!---Call this the question about evidential strength.---> The two questions overlap to some extent. But the difference is that confirmation can depend on prior probabilities, while evidential strength should be kept separate from prior probabilities.  Some confirmation measures may be seen as concerned with (1) rather than (2), and thus they are not always suitable for the evaluation of evidence in trial proceedings.
+
+
+# Match evidence and error probabilities \label{sec:fp}
+
+
+The two conditional probabilities that make up the likelihood ratio---for example, $\pr{E \vert H}$ and $\pr{E \vert \neg H}$---should be used in the evaluation of any form of evidence, both quantitative and non-quantitative. This section examines how a DNA match, a widely used form of quantitative evidence, should be evaluated by means of the likelihood ratio. The argument formulated here can be generalized to any 'match evidence'. <!------a statement by an expert that the defendant matches the physical material found at the crime scene.---> The match can be between genetic profiles, fingerprints, blood types, bite marks, etc. 
+
+Consider an expert testimony that there is a genetic, DNA match between the traces at the crime scene and a sample from the defendant. This statement is evidence that the defendant was the \textit{source} of the traces---that the materials found at the scene originated from the defendant.  The match can also be evidence that the defendant was present at the scene or committed the crime, but these claims are more questionable, as the chain of inferences is weaker. <!---We will discuss these complications later in section \ref{sec:lhTwoSTain}.---> For simplicity, let us  focus on the source hypothesis. 
+The likelihood ratio we should be concerned with is therefore the following:
+
+$$
+\frac{\pr{\textsf{match} \vert \textsf{source}}}{\pr{\textsf{match} \vert \neg \textsf{source}}}
+$$
+
+
+How strongly does a match favor the source hypothesis? 
+<!---In accordance with the likelihood ratio, two conditional probabilities should be compared here, $\pr{\textsf{match} \vert \textsf{source}}$ and $\pr{\textsf{match} \vert \neg \textsf{source}}$. --->
+When experts testify about a DNA match, they often only provide the so-called \emph{random match probability} as an indicator of evidential strength. This quantity expresses the probability that a random person, unrelated to the crime, would coincidentally match the crime scene profile.  The random match probability coincides (roughly) with the denominator of the likelihood ratio. <!---, that is, the probability that someone who is not the source would match. --->
+<!---A low random match probability indicates it is  unlikely two people could share the same DNA profile.--->  But what about the numerator? The hidden assumption often made is that the numerator must be close to one. So the likelihood ratio is approximated by a simple formula:
+
+
+$$
+\frac{\pr{\textsf{match} \vert \textsf{source}}}{\pr{\textsf{match} \vert \neg \textsf{source}}}\approx\frac{1}{\textsf{random match probability}}
+$$
+
+Since the random match probability is usually an impressively low number, say 1 in 500 million, this is enough to ensure that the above ratio is significantly grater than one.   <!---The theoretical point still stands, however.---> <!---$\pr{\textsf{match} \vert \textsf{source}}$ was significantly different from one, reporting only   $\pr{\textsf{match} \vert \neg \textsf{source}}$ would be misleading.--->
+<!---So the random match probability would ultimately be the only measure of evidential strength.-->
+
+This analysis, though simple and elegant, lacks precision in at least two respects. First, it assumes that the numerator $\pr{\textsf{match} \vert \textsf{source}}$ is close to one. But a DNA match need not track with 100\% probability the fact that the suspect is the source. There could be false negative matches. In addition---and more importantly---equating the denominator $\pr{\textsf{match} \vert \neg \textsf{source}}$ with the random match probability ignores the risk of false positive matches. This risk is not negligible [@Shaer2016False]. The denominator, in fact, should depend on two sources of error: a false positive match and a coincidental match. These errors are quite distinct. For suppose two individuals---say the perpetrator and the defendant---happen to share the same DNA profile by coincidence. If an expert states that the crime scene sample and the defendant's sample match, this would be a coincidental match, not a false positive match. This risk of error is captured by the random match probability. But if the two samples do not actually match, and yet the expert says that they do, this would count as a false positive match, not a coincidental match. This risk of error is not captured by the random match probability. <!---The two individuals, coincidentally, possess the same profile.--> <!---So the sources of error that should be included in the denominator $\pr{\textsf{match} \vert \textsf{source}}$ are twofold: a coincidental match as well as a false positive match. Before we detail how this can be done formally, it pays to comment on the reality of false positive matches.--->
+
+ <!---^[For instance, Houston Police Department Crime Laboratory, a large public forensic center in Texas, handles around 500 cases a year. In 2016, KHOU 11, a local television station, sent dozens of profiles processed by the lab to independent experts. The results were not optimistic: police technicians quite systematically misinterpreted samples.] ---> 
+<!--- How can do false positive DNA matches occur?--->
+<!---One notorious case is that of  Josiah Sutton (then 16) and Gregory Adams (then 19), who were arrested for a rape of a 41-year-old woman. The victim was abducted in a parking lot and assaulted in a driving car (Ford Expedition). A few days after the incident, the victim spotted Sutton and Adams walking down a street, flagged down a patrol car, and accused them of the assault. Both Sutton and Adams had alibis, neither of them matched the victim's original description of the perpetrators. Sutton and Adams agreed to a DNA test to clear their names.  A Houston lab analyst Christy Kim compared their results with DNA obtained from a  vaginal swab, which  contained a mixture of genetic material from at least three contributors, including the victim herself. The lab report did not report a match for Adams, but concluded that Sutton's DNA was consistent with the mixture DNA. In result, in 1999, Sutton was sentenced to 25 years in prison. Later on, a re-examination by prof. William Thompson, indicated that the three DNA profiles typed by Kim (two from blood, one from saliva) varied, despite reportedly coming from a single source. Moreover, Kim failed to report that the DNA from the semen found on the car seat did not match that of Sutton. When the DNA evidence was reprocessed, no DNA match was found, and in 2003 Sutton was released from prison.^[Christy Kim later sued her employer for firing her after the fact and prevailed. Her mistakes were attributable to systemic failures and inadequate supervision.]
+--->
+<!---This is only one example of quite a few cases of DNA evidence going awry.---> 
+
+Unlike  a coincidental match, a false positive match is often caused by a human error in a 
+number of circumstances (see [@thompson2012forensic] for a more exhaustive treatment and multiple examples):
+
+
+- \textbf{Cross-contamination of samples.} For instance, in Dwayne Johnson (2003) samples were accidentally swapped. In Lukis Anderson (2012), the genetic material was carried over by the paramedics. In one case, German police invested a considerable amount of time and effort searching for the so-called Phantom of Heilbronn, whose DNA profile was associated with many crimes. A bounty of EUR 300,000  was placed on her head. It turned out she was an innocent employee involved in the production of cotton swabs used across the country.
+
+- \textbf{Mislabeling of samples.} For instance, in 2011 the Las Vegas Metropolitan Police Department acknowledged that samples of two men suspected of a 2001 robbery were switched, leading to the exclusion of the perpetrator and four years of incarceration for the other suspect. The mistake came to light only because the perpetrator was later arrested for another crime. <!---In a high-profile case of a serial rapist, the notorious Night Stalker who committed more than 140 sexual assaults in London, the actual perpetrator came to the attention of the police relatively soon, but a DNA test excluded him (falsely so, because the samples  had been mistakenly switched), and so his spree continued for months. --->
+
+- \textbf{Misinterpretation of test results.}  Single-source sample comparison is not easily prone to misrepresentation, but evidence mixtures---often needed in sexual assault cases---are complicated to interpret. For example, @Dror2011subjectivity re-examined a 2002 Georgia rape trial in which two forensic scientists had concluded that the defendant could not be excluded as a contributor of the crime traces. <!--- to the mixture of sperm from inside the victim (the defendant was found guilty).---> The evidence <!--- ---DNA mixture and the DNA profiles of the victim and three suspects together those pieces of information that were highly relevant (such as the DNA amplification conditions) --->  was sent to  17  lab technicians for re-examination.  One of them agreed that the defendant could not be excluded as a contributor. Twelve considered the DNA exclusionary, and four found it  inconclusive. If the quantity of DNA is limited, there is uncertainty about the number of contributors and about whether any alleles are missing. <!---Determining which alleles to assign to which contributor  requires educated guesses on the part of the analyst.--->  Ultimately, there is an element of subjectivity in mixed DNA interpretation.
+
+<!---
+these errors that were caught, and so one might argue that they show that labs are pretty good at catching their own errors. This, however, is an optimistic interpretation. These errors have been discovered due to unusual circumstances that led to the double-checking of the results. These circumstances, however, do not normally arise. It is not always the case that when a mistake is made the result implicates a staff member or an unknown person who was too young at the time of the crime to have committed it, for instance. Crucially, a match with a person whom  the analyst might  already know is a suspect is not an outcome that would raise an eyebrow and lead to a double-check. 
+--->
+
+
+```{r pre-fpp,echo=FALSE,eval=FALSE,fig.align = "center",cache=FALSE, fig.show = "hold", out.width = "70%", warning= FALSE, message = FALSE}
+library(plotly)
+library(htmlwidgets)
+library(webshot)
+library(data.tree)
+
+reportedMatch <- Node$new(" reportedMatch ")
+trueMatch <- reportedMatch$AddChild(" trueMatch ")
+randomMatch <- trueMatch$AddChild(" randomMatch ")
+source <- trueMatch$AddChild("source")
+falsePositive <- reportedMatch$AddChild(" falsePositive ")
+error <- falsePositive$AddChild("error")
+crossContamination <- error$AddChild(" cross-contamination ")
+misinterpratation <- error$AddChild(" misinterpretation ")
+mislabelling <- error$AddChild(" mislabelling ")
+rest <- error$AddChild("...")
+
+SetNodeStyle(reportedMatch, style = "filled,rounded", shape = "box",
+             fontname = "helvetica", tooltip = GetDefaultTooltip)
+
+saveWidget(plot(reportedMatch), "img/fpp.html")
+webshot("img/fpp.html", "img/fpp.png", zoom = 5)
+```
+
+\begin{center}
+\begin{figure}
+\includegraphics[width = 12cm]{../img/fpp.png}
+\caption{Dependencies between variables in the false positive problem.}
+\label{fig-fpp}
+\end{figure}
+\end{center}
+
+
+
+<!---So DNA match evidence is prone to errors besides the random match probability.---> 
+The moral is that a careful evaluation of DNA evidence should take into account, besides the random match probability, the risks of false positive and false negative matches. This can be done using the likelihood ratio [@aitken2003probability].
+<!---in investigating  its impact on the likelihood ratio of the DNA match. We just add a bit more details to the derivation they present for the sake of clarity. For simplicity, we still assume that the false negative probability is 0, that is, that if the match is real, it will be reported with certainty. --->
+False positives are usually more worrisome than false negatives as they increase the risk of a mistaken conviction. That is also why we devoted to them more space in the foregoing discussion. But, for the sake of completeness, we will consider both. 
+
+This more refined analysis begins by making a conceptual distinction between true match and reported match. A true match is the fact that two samples actually carry the same genetic profile, while a reported match is a statement made by an expert that two samples match. A true match will exist not only if the suspect is the source, but also if, even though the suspect is not the source, the profiles are in fact the same due to a random, coincidental match. Similarly, a reported match might arise not only if there is a true match, but also if a false positive error has been made.^[The notion of a reported match is a simplification. The expert's opinion may be more fine-grained. A reported match could be conclusive or merely probable. A non-reported match could be a definite exclusion or a probable exclusion. The expert could also testify that the laboratory analyses were inconclusive. So, instead of a binary report, match versus non-match, the expert could testify about a conclusive match, probable match, inconclusive laboratory results, probable exclusion, definite exclusion. This complexity would further complicate the analysis we present in this section, but would not invalidate the conceptual framework.]  These possibilities are represented in Figure \ref{fig:fpp}. For ease of reference, we will use the following abbreviations:
+
+\begin{center} \hspace{10mm}
+\begin{tabular}{lp{9cm}}
+$S$ & The specimen comes from the suspect (source). \\
+$R$ & A match is reported (reported match). \\
+$M$ & There is a true match (true match).
+\end{tabular}
+\end{center}
+
+
+\noindent 
+In this set-up, the evidence to be assessed is the \textit{reported} match relative to the pair of hypotheses $S$ and $\neg S$. So the likelihood 
+ratio we are after has the form: 
+$$ 
+\frac{\pr{R \vert S}}{\pr{R \vert \neg S}}.
+$$
+
+\noindent
+With a few manipulations and assumptions in place, the likelihood ratio can be written as:^[By the law of total probability, the denominator $\pr{R \vert \neg S}$ can be unpacked as $\pr{R \wedge M \vert \neg S} + \pr{R \wedge \neg M | \neg S}$. The latter, by the chain rule, is equivalent to $\pr{R \vert  M \wedge \neg S}\pr{ M \vert \n S} + \pr{R \vert \n M \wedge \neg S}\pr{\n M \vert \n S}$. A similar reasoning applies to the numerator. So we have:
+\begin{align*} 
+\frac{\pr{R \vert S}}{\pr{R \vert \neg S}} = \frac{\pr{R \vert M \et S}\pr{M \vert S} + \pr{R \vert \n M \et S}\pr{\n M \vert S}} {\pr{R \vert M \et \n S}\pr{M \vert \n S} + \pr{R \vert \n M \et \n S}\pr{\n M \vert \n S}}
+\end{align*}
+Both numerator and denominator can be simplified because a reported match ($R$), given a true match obtains ($M$), is independent of whether the suspect is the source ($S$):
+\begin{align*} 
+\pr{R \vert M \et S} = \pr{R \vert M \et \n S} = \pr{R \vert M}
+\end{align*}
+\begin{align*} 
+\pr{R \vert \n M \et S} = \pr{R \vert\n M \et \n S} = \pr{R \vert \n M} 
+\end{align*}
+Finally, in the numerator, let the probability of a true match if the suspect is the source be one:
+\begin{align*} 
+\pr{M\vert S} = 1  \,\,\, \mbox{ so also } \,\,\, \pr{\n M \vert S}=0. 
+\end{align*}
+This assumption holds in virtue of the meaning of the statements involved. That the suspect is the source of the crime sample entails, almost analytically, that the two samples must carry the same genetic profile.]
+
+
+<!---\begin{align}
+\label{eq:LRfp2}
+\frac{\pr{R \vert S}}{\pr{R \vert \neg S}} & = \frac{
+\pr{R \vert M}\pr{M \vert S} + \pr{R \vert \n M}\pr{\n M \vert S}
+}{
+\pr{R \vert M }\pr{M \vert \n S} +
+\pr{R \vert \n M}\pr{\n M \vert \n S}
+}
+\end{align}
+--->
+\begin{align}
+\label{eq:LRfp4}
+\frac{\pr{R \vert S}}{\pr{R \vert \neg S}} & = \frac{
+\pr{R \vert M}
+}{
+\pr{R \vert M }\pr{M \vert \n S} +
+\pr{R \vert \n M}\pr{\n M \vert \n S}
+}
+\end{align}
+
+
+\noindent
+Note that, as intended, the numerator $\pr{R \vert M}$ can be different from one, since a false negative reported match can occur (or, which is the same, a true match need not always occur). The denominator reflects the fact that there are two ways misleading evidence can arise:  there is a true match and the suspect is not the source (because of  a random, coincidental match), or there is no true match, and a false positive error has been made in the identification process. 
+
+To make the different sources of error more salient---false negative matches, false positive matches and random or coincidental matches---the likelihood ratio can be written, as follows:
+
+\begin{align}
+\label{eq:LRfp4b}
+\frac{\pr{R \vert S}}{\pr{R \vert \neg S}} & = \frac{1-FNP}{[(1-FNP)\times RMP] + [ FPP \times (1-RMP)]}
+\end{align}
+
+\noindent
+This formula is the same as the earlier one. The expression FNP stands for the false negative probability $\pr{\neg R \vert M}$, so $1-FNP$ equals the true positive probability $\pr{R \vert M}$. The expression FPP stands for the false positive probability $\pr{R \vert \n M}$. The expression RMP stands for the random match probability $\pr{M\vert \n S}$. A false positive or false negative probability track a human error, the possibility that a match may be reported ($R$) even without a true match ($\neg M$) or that a match may \textit{not} be reported ($\neg R$) even with a true match ($M$).  The random match probability, instead, tracks a coincidence of nature, the possibility that someone who is not the source ($\neg S$) could still be---coincidentally---a true match ($M$). If we set FNP to 0, we obtain the same formula derived by @aitken2003probability, who did not consider false negatives. Their simpler formula reads:
+\begin{align*}
+\frac{\pr{R \vert S}}{\pr{R \vert \neg S}} & = \frac{1}{RMP + [ FPP \times (1-RMP)]}
+\end{align*}
+
+<!---
+
+Now, let us rewrite the numerator of the LR by extending the conversation, rewriting the probabilities of conjunctions in terms of conditional probability and simplifying: 
+
+\begin{align}
+\label{eq:numer}
+\pr{R\vert S} & = \frac{\pr{R\et S}}{\pr{S}} \\ \nonumber
+& = \frac{\pr{R \et M \et S} + \pr{R \et \n M \et S}}
+{\pr{S}}  \\ \nonumber
+& = \frac{\pr{R \vert M \et S}\pr{M \vert S}\pr{S} + \pr{R \vert \n M \et S}\pr{\n M \vert S}\pr{S}}
+{\pr{S}}  \\ \nonumber 
+& = \pr{R \vert M \et S}\pr{M \vert S} + \pr{R \vert \n M \et S}\pr{\n M \vert S}
+\end{align}
+
+\noindent  Analogously, we can rewrite the denominator:
+\begin{align}
+\label{eq:denom}
+\pr{R \vert \n S} & = \pr{R \vert M \et \n S}\pr{M \vert \n S} +
+\pr{R \vert \n M \et \n S}\pr{\n M \vert \n S}
+\end{align}
+
+Putting \eqref{eq:numer} and \eqref{eq:denom} together, we have that:
+\begin{align}
+\label{eq:LRfp1}
+\mathsf{LR}(R,S, \n S) & = \frac{\pr{R \vert M \et S}\pr{M \vert S} + \pr{R \vert \n M \et S}\pr{\n M \vert S}}
+{\pr{R \vert M \et \n S}\pr{M \vert \n S} +
+\pr{R \vert \n M \et \n S}\pr{\n M \vert \n S}}
+\end{align}
+
+
+Then, use \eqref{eq:ifSthenM} in the numerator:
+\begin{align}
+\label{eq:LRfp3}
+\mathsf{LR}(R,S, \n S) & = \frac{
+\pr{R \vert M} \times 1 + \pr{R \vert \n M}\times 0
+}{
+\pr{R \vert M }\pr{M \vert \n S} +
+\pr{R \vert \n M}\pr{\n M \vert \n S}
+}
+\end{align}
+
+
+\noindent and let the probability that a true match is reported also be one:
+\begin{align}
+\label{eq:fnNull}
+\pr{R \vert M} & = 1.
+\end{align}
+
+\noindent
+Finally, using \eqref{eq:ifSthenM} and \eqref{eq:fnNull} in the 
+numerator yields the desired formula:
+
+\begin{align}
+\frac{\pr{R \vert S}}{\pr{R \vert \neg S}} & = \frac{1}
+{\pr{R \vert  M}\pr{ M \vert \n S} + \pr{R \vert \n M}\pr{\n M \vert \n S}}
+\end{align}
+
+
+In addition, for simplicity, take the probability of a false negative to be zero. We will consider the case in which it is not zero later on. In fact, the reasons for taking false positives seriously are also reasons for taking false negatives seriously, but let's deal with one problem at a time. 
+
+--->
+
+Let's now examine the impact of the  error probabilities FNP and FPP on the likelihood ratio, 
+holding fixed certain values of the random match probability. Figure \ref{fig:fpplr} shows the impact of error rates  (for values between 0 and .05). Random match probabilities are assumed to be in the order of $10^{-9}$ (often reported in the case of two single-source samples over ten or more loci).
+<!-- and $10^{-3}$ (sometimes obtained by means of less discriminating tests when the comparison involves a mixed sample). -->
+A small increase in the false positive probability can lower the likelihood ratio dramatically. For instance, with FNP set at $.05$, the likelihood ratio drops from $10^8$ to $19$ as FPP goes from 0 to $.05$.
+Interestingly, however, the impact of the false negative probability FNP (for values between 0 and .05) is rather negligible. For instance, if $FNP$ is $.05$, the likelihood ratio goes from $20$ to $19$ as FPP moves from $0$ to $.05$.
+
+
+<!--- which is yet another reason not to ignore FPP in DNA evidence evaluation.---> <!---In our illustration, we look at two pieces of DNA evidence with the two RMP rates at  $1*10^8$  and $100$, respectively. If the false positive probability reaches 0.02, they fall down to $\approx 49.99$ and $\approx 33.55$, and they get fairly close to each other already at $FPP=0.05$, where they are  $\approx 20$ and   $\approx 16.8$.---> 
+
+
+
+
+```{r fig-fpplr,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%", message = FALSE, warning = FALSE}
+#| label: fig-fpplr
+#| fig-cap: "Impact of the error probabilities on the likelihood ratio of incriminatory DNA evidence for EQUATION (grid approximation). The impact of FNP is  minor."
+
+# \mbox{RMP=$10{^-9}$}
+
+lr <- function (fnp, rmp, fpp){
+  (1 -fnp)/
+    (  ((1-fnp)* rmp)
+       +
+         (fpp * (1-rmp))    )
+}
+
+lrneg <- function (fnp, rmp, fpp){
+  (fnp)/
+    (  ((fnp)* rmp)
+       +
+         ((1-fpp) * (1-rmp))    )
+}
+
+
+
+fpp <- seq(0,0.05, length.out = 200)
+fnp <- seq(0,0.05, length.out = 200)
+rmp9 <- 10e-9
+
+lrTable <- expand.grid(rmp9 = rmp9,fnp = fnp, fpp = fpp)
+
+lrTable$lr <- lr(lrTable$fnp, lrTable$rmp9, lrTable$fpp)
+lrTable$lrneg <- lrneg(lrTable$fnp, lrTable$rmp9, lrTable$fpp)
+
+
+#minfpp <- lrTable %>% filter(fpp == .05)
+#range(minfpp$lr) 19,20
+#max(minfpp$lr)
+#min(minfpp$lr)
+#max(minfpp$lrneg)  0.052
+#min(minfpp$lrneg)  0
+#range(maxfpp$lr)
+#maxfnp <- lrTable %>% filter(fnp == .05)
+#min(maxfnp$lr)
+#max(maxfnp$lr)  19 to 1e+08
+#max(maxfnp$lrneg)  .52
+#min(maxfnp$lrneg)   .52
+
+
+scatter3D(lrTable$fpp,lrTable$fnp,lrTable$lr,
+          pch=.1,cex=0.05,byt="g",alpha=0.4,theta=40,
+          phi=10,xlab="FPP", ylab="FNP",zlab="likelihood ratio", 
+          main="Likelihood ratio of incriminating DNA evidence",
+          colvar=NULL, zlim = c(0,250),cex.main =0.6, cex.lab = .7, cex.axis = .5, ticktype = "detailed", border = NA,
+          nticks = 5)
+```
+
+
+
+<!-- \begin{figure} -->
+<!-- ```{r fig-fpfnplr,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%", message = FALSE, warning = FALSE} -->
+<!-- rmp9 <- 10e-9 -->
+<!-- rmp3 <- 10e-3 -->
+<!-- fnp <- seq(0,0.05, by = 0.001) -->
+
+
+<!-- #lr9 <- 1/(rmp9 + (err * (1-rmp9))) -->
+<!-- #lr9b <- (1-err)/((1-err)*rmp9 + (err * (1-rmp9))) -->
+<!-- #lr9c <- (1-10*err)/((1-10*err)*rmp9 + (err * (1-rmp9))) -->
+
+<!-- lr90 <-  lr(fnp,rmp9,fpp = 0) -->
+<!-- lr905 <-  lr(fnp,rmp3,fpp = 0.01) -->
+
+<!-- fnpTable <- data.frame(fnp, lr90,  lr905) -->
+
+
+<!-- library(tidyr) -->
+<!-- fnpTableLong <- gather(fnpTable,line,value,c(lr90,lr905), factor_key=TRUE) -->
+
+
+<!-- ggplot(fnpTableLong, aes(x=fnp,y=value, lty = line))+  geom_line()+theme_tufte()+ylab("Likelihood ratio")+ -->
+<!--   xlab("False negative probability")+ -->
+<!--   scale_linetype_manual(values = c(1,2,3),  -->
+<!--         labels = c(expression(paste("FPP=",0)),expression(paste("FPP=",.01))))+ -->
+<!--   ggtitle("Positive match: impact of false negative probability on  likelihood ratio")+  -->
+<!--   theme(legend.position = c(0.85,.7))+ labs(lty = "")  -->
+<!-- ``` -->
+<!-- \caption{Positive match: negligible impact of the  false negative probability FNP on the likelihood ratio, assuming RMP=$10{^-9}$. For FPP=0 the likelihood ratio remains very close to $10^8$, and for FPP = $.01$ it drops drastically and remains very close to 50.} -->
+<!-- \label{fig:fpfnplr} -->
+<!-- \end{figure} -->
+
+A similar analysis can be used to study the impact of error probabilities on the value of exculpatory DNA evidence, corresponding to a \textit{negative} (reported) match $\neg R$. 
+By replacing $R$ with $\neg R$ in formula (\ref{eq:LRfp4}), the likelihood ratio becomes:
+\begin{align}
+\label{eq:LR-match-exc}
+\frac{\pr{\neg R \vert S}}{\pr{\neg R \vert \neg S}} & = 
+\frac{\pr{\neg R \vert M}}{\pr{\neg R \vert M }\pr{M \vert \n S} + \pr{\neg R \vert \n M}\pr{\n M \vert \n S}}\\
+& = \frac{FNP}{FNP\times RMP + [(1-FPP) \times (1-RMP)]}
+\end{align}
+
+\noindent Keep in mind that the negative reported match $\neg R$ is evidence \textit{against} the source hypothesis $S$ so long as the likelihood ratio is below one. At the extreme, if the false negative probability FNP is zero,  the numerator is zero. Thus, the likelihood ratio will be zero, as it should. In such a case, the negative match is completely exculpatory, and the posterior probability that the suspect is the source will also be zero.  If the false negative probability is not zero, the greater the likelihood ratio (for values between 0 and 1), the weaker the value of the exculpatory match. As Figure \ref{fig:fpfnplr-exc} shows, the likelihood ratio progressively moves away from zero as the false negative error probability increases. For instance, with FPP fixed at $0.05$, it goes from 0 to $.052$. Interestingly, however, the impact of the false \textit{positive} probability FPP on the likelihood ratio of exculpatory evidence is essentially null. For instance, if FNP is fixed at $.05$, the likelihood ratio moves from $.05$ to $.052$ as FPP goes from 0 to $.05$. 
+
+
+
+
+```{r fig-fpfnplr-exc,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%", message = FALSE, warning = FALSE}
+#| label: fig-fpfnplr-exc
+#| fig-cap: "Impact of the error probabilities on the likelihood ratio of exculpatory DNA evidence, assuming  EQUATION (grid approximation). The impact of FPP is minor."
+#| fig-pos: t
+
+# \mbox{RMP=$10{^-9}$}
+
+scatter3D(lrTable$fpp,lrTable$fnp,lrTable$lrneg,
+                          pch=.1, cex=.1,byt="g",alpha=0.5,theta=40,
+                          phi=10,xlab="FPP", ylab="FNP",zlab="likelihood ratio", 
+                          main="Likelihood ratio of exculpatory DNA evidence",
+                          colvar=NULL, cex.main =.6, cex.lab = .7, cex.axis = .5, ticktype = "detailed", border = NA,
+          nticks = 5)
+
+```
+
+
+
+<!---
+A puzzling phenomenon is worth pointing out. The risk of a false positive match (or FPP) has a significant impact on the value of a positive, incriminating DNA match. Even a small false positive probability can cause the likelihood ratio to drop significantly, as Figure \ref{fig:fpplr} and \ref{fig:fpfnplr} show. On the other hand, the risk of a false negative match (or FNP) appears to have a minimal impact on the value of a negative, exculpatory DNA match. Figure \ref{fig:fpfnplr-exc} shows that even a false negative probability as high as 5\% has a minor effect on the likelihood ratio, which remains relatively close to zero. How can this be explained? Is there an asymmetry between exculpatory and incriminating DNA matches? Not quite. The difference is just an artifact of using the likelihood ratio as a measure of evidential strength. Error probabilities for a positive or negative match affect the posterior probability of the source hypothesis equally strongly. It suffices to perform the calculations for the relevant posterior probabilities to convince oneself this is in fact the case. As expected, a positive match followed by a negative match, each subject to the same error probabilities, would have no impact on the posterior probability of the source hypothesis.^[Suppose the random match probability is $10^{-3}$ and the prior probability of $S$ is .5. Without taking into account the error probabilities, a positive match would bring the probability of $S$ from .5 to .99. Instead, taking into account a false positive probability of 0.05, a positive match would bring the probability of $S$ from .5 to just about .94. What about a negative match? Without taking into account the error probabilities, a negative match would bring the probability of $S$ from .5 to 0. Instead, taking into account a false negative probability of 0.05, a negative match would bring the probability of $S$ from .5 to just about .04. But if we were to combine positive and negative matches, their combined impact on the probability of $s$ would be null.]  While the likelihood ratio is helpful for assessing the value of items of evidence, it should be interpreted carefully, a point to which we will return later in this chapter. 
+--->
+
+<!---
+```{r}
+rmp <- 10e-3
+rmp0 <- 0
+err <- 0.05
+
+1/rmp
+odd <- 1/rmp
+odd/(1+odd)
+(1-0*err)/((1-0*err)*rmp + ((err)*(1-rmp)))
+odd <- (1-0*err)/((1-0*err)*rmp + ((err) * (1-rmp)))
+odd/(1+odd)
+err/(err*rmp + ((1-0*err) * (1-rmp)))
+odd <- (err/(err*rmp + ((1-0*err) * (1-rmp))))
+odd/(1+odd)
+
+odd <- (err/(err*rmp + ((1-0*err) * (1-rmp))))*(1-0*err)/((1-0*err)*rmp + ((err)*(1-rmp)))
+odd/(1+odd)
+```
+--->
+
+
+<!-- ```{r ex-inc-dna,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%", warning = FALSE, message = FALSE} -->
+
+<!-- rmp <- 10e-3 -->
+<!-- err <- 0.05 -->
+<!-- prior <- seq(0,1,0.01) -->
+<!-- priorOdds <- prior/(1-prior) -->
+<!-- lrInc <- (1-0*err)/((1-0*err)*rmp + ((err) * (1-rmp))) -->
+<!-- lrEx <- (err/(err*rmp + ((1-0*err) * (1-rmp)))) -->
+
+<!-- posteriorOdds <- priorOdds * (lrInc) -->
+<!-- posterior <- posteriorOdds  / (1+ posteriorOdds ) -->
+<!-- scenario1 <- data.frame(prior,priorOdds,posteriorOdds,posterior) -->
+<!-- s1 <- ggplot(scenario1)+ geom_line(aes(x = prior, y=posterior))+ -->
+<!--   ggtitle("Positive match: FPP .05", subtitle = (""))+ylab("posterior") -->
+
+<!-- posteriorOdds <- priorOdds * (lrEx) -->
+<!-- posterior <- posteriorOddsMinS2  / (1+ posteriorOddsMinS2 ) -->
+<!-- scenario2 <- data.frame(prior,priorOdds,posteriorOdds,posterior) -->
+<!-- s2 <- ggplot(scenario2)+geom_line(aes(x = prior, y=posterior))+ -->
+<!--   theme_tufte()+ggtitle("Negative match: FNP .05", subtitle =  (""))+ylab("posterior") -->
+<!-- ``` -->
+
+
+<!-- \begin{figure}[h] -->
+<!-- ```{r ex-inc-dna-b, eval=TRUE, echo=FALSE, fig.align="center", fig.show="hold", message=FALSE, warning=FALSE, cache=TRUE, out.width="100%"} -->
+<!-- ggarrange(s1+theme_tufte(base_size=8),s2+theme_tufte(base_size=8), ncol =2 ) -->
+<!-- ``` -->
+<!-- \caption{How positive and negative matches, subject to the same error probability, affect the probability of the source hypothesis.} -->
+<!-- \label{fig:ex-inc-dna} -->
+<!-- \end{figure} -->
+
+<!-- \raf{M: Right graph in Figure \ref{fig:ex-inc-dna}is wrong, but when you compile the individual chunk, the graph comes out correct. Mystery!} -->
+
+
+
+<!---Let us take stock. Likelihood ratios are useful in the evaluation and comparison of the impact of positive and negative error rates. --->
+So, we have seen that even a seemingly small error probability outweighs the random match probability. If there are good reasons to worry about random matches, there are even better reasons to worry about error probabilities. <!--- While they have not been studied systematically, --->
+<!---In addition, ---> <!---the above application of likelihood ratio to investigate the potential impact of hypothetical error rates is still useful in guiding further research, as it clearly suggests that error rates may have serious impact on the value of various types of evidence, and so require attention. --->
+But the impact of the error probabilities is not uniform, contrary to what one might intuitively think. The false positive probability has a marked impact on the value of incriminating DNA evidence (positive matches), while the false negative probability has a marked impact on the value of exculpatory DNA evidence (negative matches).
+<!-- ^[The impact of false positive and false negative probabilities is not symmetric across positive and negative matches when evidential value is measured by the likelihood ratio. For positive matches, even a small false positive probability can cause the likelihood ratio to drop significantly, as Figure \ref{fig:fpplr} and \ref{fig:fpfnplr} show. Instead, for negative matches, Figure \ref{fig:fpfnplr-exc} shows that even a false negative probability as high as 5\% has a minor effect on the likelihood ratio, which remains relatively close to zero. But this asymmetry is just an artifact of using the likelihood ratio as a measure of evidential strength. Error probabilities for a positive or negative match affect the posterior probability of the source hypothesis equally strongly. For suppose the random match probability is $10^{-3}$ and the prior probability of $S$ is .5. Without taking into account the error probabilities, a positive match would bring the probability of $S$ from .5 to .99. Instead, taking into account a false positive probability of 0.05, a positive match would bring the probability of $S$ from .5 to just about .94. What about a negative match? Without taking into account the error probabilities, a negative match would bring the probability of $S$ from .5 to 0. Instead, taking into account a false negative probability of 0.05, a negative match would bring the probability of $S$ from .5 to just about .04. See, more generally, \ref{fig:ex-inc-dna}. Furthermore, a positive match followed by a negative match, each subject to the same error probabilities, would have no impact on the posterior probability of the source hypothesis. All in all, the likelihood ratio should be interpreted carefully, a point to which we will return later in this chapter.] -->
+<!-- Instead, a false negative probability has a negligible impact on the value of incriminating DNA evidence, while a false positive probability has a negligible impact on the value of exculpatory DNA evidence.  -->
+So this analysis shows which error probabilities we should be concerned about  in which circumstances.
+
+<!---So, both error probabilities should be studied, even though they are most relevant in different circumstances.---> 
+<!-- But, no doubt, these claims are still rather hypothetical. <!-- False positive DNA matches are not easy to detect for practical and theoretical reasons. Since DNA evidence carries so much weight in court, it is  unusual to proceed with further DNA tests that are costly and time-consuming. It is also unusual that a defendant or their family could afford to pay for further DNA tests. For instance, an additional test exonerated Timothy Durham, sentenced to 3000 years for the rape of a young girl in Oklahoma City. So far there are two more cases known in the US where re-testing exonerated the accused: Josiah Sutton, whose case we already mentioned, and Gilbert Alejandro.---> <!--- Even more troubling is that errors from contamination or mislabeling of samples often cannot be detected with further DNA testing, because they will replicate the same mis-identification. ---> What actual numbers should we use for false positive and false negative probabilities? Unfortunately,  no serious attempt has been made to systematically quantify the relevant error probabilities. Sometimes, a lab discovers its own errors and reports them, but this is rare [@thompson2012forensic]. Anecdotal information suggest that false positive matches take place more often than coincidental matches would entail, but how often remains unclear. Regular proficiency tests used in accredited DNA laboratories involve comparison of samples from known sources, but they are criticized for being unrealistically easy (yet, it happens that analysts fail them). Sometimes, corrective action files are made available. They usually show relatively few false positive errors.^[For instance, the Santa Clara County district attorney's crime laboratory between 2003 and 2007 caught 14 instances of evidence cross-contamination with staff DNA, three of contamination by unknown person, and six of DNA contamination from other samples, three cases of DNA sample switch, one mistake in which the analyst reported an incorrect result, and three errors in the computation of the statistics to be reported.] But because of the fragmentary data available, it is premature to conclude there is no reason for concern.  
+
+More data should be collected to plug in the right values of false positive and false negative probabilities in the likelihood ratio. Quite likely generic error frequencies will not be reliable enough, and relevant factors should be identified and used as predictors. To this end, error rate should be based on data that are fine-grained enough to document the error probabilities, FPP and FNP, corresponding to scenarios in which specific procedures, safeguards, or protocols are followed. As experts who testify about a match (or lack thereof) are cross-examined at trial, they could also testify about the procedures, safeguards and protocols that the laboratory technicians followed in the specific case. This case-specific information could then be used  to estimate error probabilities under different scenarios.  This would yield a more individualized assessment of the value of match evidence. <!---This process of gathering individualized information paired with performance data about error probabilities under different scenarios is no different from what is needed to correctly assess the value of eyewitness testimony, our next topic.--->
+
+<!---
+Interestingly, there is a sense in which the  situation is not symmetric when we compare FPP to FNP. With FPP, the LR is 50 when $e=0.01$ for RMP$=10^{-3}$, while for the same $e$ and RMP it is $0.01$ for FNP, an hundredfold decrease. This illustrates that the exculpatory value of DNA evidence is higher than its incriminating value, even if the error rates and random match probabilities are the same. 
+--->
+
+<!---
+Some conceptual symmetry can be regained though. Suppose $RMP$ is really low as compared to $FPP$ and let's ignore it in our approximation. Then, the likelihood ratio of the incriminating evidence becomes $\nicefrac{1}{FPP}$ and the likelihood ratio of exculpatory evidence becomes $\nicefrac{FNP}{1}$. However, the change rate of these differ. While $\nicefrac{d}{dx}(\nicefrac{1}{x}) = \nicefrac{d}{dx} (x^{-1}) = - \nicefrac{1}{x^2}$, $\nicefrac{d}{dx}(\nicefrac{x}{1})=1$, and the derivatives look quite different (Figure \ref{fig:der})
+
+\begin{figure}[h]
+```{r fp-derivatives,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%"}
+x <- seq(0, 1, by = 0.01)
+dfn <- rep(1, length(x) )
+dfp <- -1/(x^2)
+
+ggplot()+geom_line(aes(x=x,y=dfp, color = "incriminating"))+geom_line(aes(x=x,y=dfn, color = "exculpatory"))+ylim(c(-10,2))+theme_tufte()+
+  theme(legend.position = c(0.8, 0.2), legend.title = element_blank())+ylab("likelihood ratio")+xlab("error rate")
+```
+\caption{Derivatives of incriminatory and exculpatory likelihood ratios, range restricted to (-10,2).}
+\label{fig:der}
+\end{figure}
+
+--->
+
+
+We conclude this section by noting that other proposals exist in the literature for formulating the likelihood ratio of a genetic match which also incorporate error probabilities. Another, more general proposal is due to @buckleton2018forensic. But, interestingly, the likelihood ratio of a DNA match used in equations (\ref{eq:LRfp4}) and (\ref{eq:LR-match-exc}) agrees with this other proposal given certain assumptions. This convergence is encouraging. Here we briefly go through the derivation. 
+
+First, Buckleton and co-authors make the conceptual distinction between the probability that an error occurs, $\pr{\mathsf{ERR}}$, and the probability that a match is reported if an error occurs, $\pr{R \vert \mathsf{ERR}}$. <!--- Mind your head: here $E$ stands for error, not for evidence! In terms of our notation, we have:--->
+Let $\mathsf{err}$ denote the probability of error. The intuition here is that a laboratory error is an event in which the identification fails to be proper for technical or procedural reasons, for instance,  the samples were switched, or some equipment failed and produced an erroneous reading. Whether such a laboratory error occurs should not depend on whether the source hypothesis holds. So the derivation starts with the   assumption that $\mathsf{err}$ is probabilistically independent of the source hypothesis $S$:  
+\begin{align*}
+\mathsf{err} & = \pr{\mathsf{ERR}} = \pr{\mathsf{ERR} \vert S} = \pr{\mathsf{ERR} \vert \n S}
+\end{align*}
+\noindent 
+Separately, let $k$ denote the probability of a reported match if an error occurs, also assumed to be independent of whether the source hypothesis is true:
+\begin{align*}
+k & = \pr{R \vert \mathsf{ERR}} = \pr{R \vert \mathsf{ERR}, S} = \pr{R \vert \mathsf{ERR}, \n S}
+\end{align*}
+\noindent 
+Intuitively, even if normally a reported match $R$ tracks to some extent the source of hypothesis $S$, say
+$\pr{R \vert S}>\pr{R \vert \neg S}$, this connection breaks down once an error $\mathsf{err}$ occurs. Now the derivation:
+\begin{align*}
+LR & = \frac{\pr{R\vert S}}
+{\pr{R \vert \n S}} = \frac{\pr{R \vert \n \mathsf{ERR}, S}\pr{\n \mathsf{ERR} \vert S} + \pr{R \vert\mathsf{ERR}, S}\pr{\mathsf{ERR} \vert S}}
+{\pr{R \vert \n \mathsf{ERR}, \n S}\pr {\n \mathsf{ERR} \vert \n S} + \pr{R \vert \mathsf{ERR}, \n S}\pr{\mathsf{ERR} \vert \n S}}\\
+& = \frac{1\times (1-\mathsf{err}) + k\times \mathsf{err}}
+{RMP\times (1-\mathsf{err})+k\times \mathsf{err}}  = \frac{1-\mathsf{err}+k\times \mathsf{err}}{RMP\times (1-\mathsf{err})+k\times \mathsf{err}}
+\end{align*}
+<!---
+& = \frac{1\times (1-\mathsf{err}) + k\times \mathsf{err}}
+{RMP\times (1-\mathsf{err})+k\times \mathsf{err}}  = \frac{1-\mathsf{err}+k\times \mathsf{err}}{RMP  - \mathsf{err}\times RMP + k \times \mathsf{err}} \\
+& = \frac{1 - (1-k) \times \mathsf{err}}{RMP\times (1-\mathsf{err})+k\times \mathsf{err}}
+--->
+\noindent
+As before, the likelihood ratio is the ratio of the probabilities of a reported match if the suspect is the source  and if the suspect is not the source.  The numerator $\pr{R\vert S}$ can be split into two possible scenarios: an error has not been made, or an error has been made. Accordingly, the numerator in the first line uses the law of total probability to split $\pr{R\vert S}$ into these two scenarios. Similarly, the numerator $\pr{R\vert \n S}$ can be split into two cases: the suspect is not the source, but we are dealing with a random match, or the suspect is not the source, and an error has been made. An application of the law of total probability in the denominator mirrors this. The rest of the argument is just rewriting in terms of abbreviations, and algebraic manipulation.^[The probability of a reported match $R$ if no error occurs \textit{and} the source hypothesis is false is the random match probability RMP, so $\pr{R \vert \n \mathsf{ERR}, \n S}=RMP$. The probability that a reported match occurs when the source hypothesis is true and no error has made is assumed to be one, so $\pr{R \vert S, \n \mathsf{ERR}} =1$.]
+
+What is the connection of this formula to the one derived by @aitken2003probability? If an error guarantees a mistaken reported match,  $k$ becomes $1$, $\mathsf{err}$ becomes the false positive rate, FPP.  On this assumption, straightforward algebraic manipulation gives:
+\begin{align*}
+ \frac{1-FPP+ 1\times FPP}{RMP\times (1-FPP)+1\times FPP} & = \frac{1}{RMP \times (1-FPP)+FPP}\\
+ & = \frac{1}{RMP - FPP\times RMP + FPP} 
+\end{align*}
+\noindent   It takes a straightforward algebraic manipulation to show that this formula is identical 
+to the one derived by @aitken2003probability:
+\begin{align*}
+\frac{1}{RMP + FPP \times (1-RMP)} 
+\end{align*}
+
+
+<!---Consider the probability of no match being reported if an error has been made, analogous to $k$ above:
+\begin{align*}
+l & = \pr{\n R \vert E, S} = \pr{\n R \vert E, \n S} = \pr{\n R\vert E}
+\end{align*}
+\noindent Now, the likelihood ratio calculations, assuming $l = 1$, go as follows:
+
+\begin{align*}
+\mathsf{LR}(\n R, S, \n S) & = \frac{\pr{\n R \vert S}}{\pr{\n R \vert \n S}} \\
+& = \frac{\pr{\n R \vert \n E, S}\pr{\n E \vert S} + \pr{\n R \vert E, S}\pr{E \vert S}}
+{\pr{\n R \vert \n E, \n S}\pr{\n E \vert \n S} + \pr{\n R \vert E,\n S}\pr{E \vert \n S}} \\
+& = \frac{0 (1-e) +  le}
+{(1-RMP)(1-e) + le} \\
+& = \frac{le}
+{1- RMP - e + eRMP + le} = \frac{le}{1-RMP + e(l + RMP -1)}\\
+& = \frac{e}{1 - RMP + eRMP} = \frac{e}{1+(e-1)RMP}
+\end{align*}
+
+--->
+
+<!---
+\noindent If the error rate is 0, then the numerator is 0 and so is the \textsf{LR}, as it should. In such a case, the evidence is completely exculpatory, the posterior probability that the suspect is the source will be also 0. If the error rate is not 0, the numerator simply is the probability of error, and the numerator takes values between $1-RMP$ and $1$, depending on the value of $e$.
+Quite crucially, 1 in the denominator is decreased by $(1-e)RMP$, which with usually very low RMP in the case of DNA evidence is a very small change as compared to one, so the denominator stays very close to 1 even if $e$ is very high, and the \textsf{LR} effectively simply is $\approx \nicefrac{e}{1} = e$. The lines in Figure \ref{fig:fnplr}, strictly speaking, do not overlap, but the difference between them (with $RMP$ being fairly low) is negligible.
+--->
+
+
+
+<!---
+\begin{figure}
+```{r fig-fnplr,echo=FALSE,eval=TRUE,fig.align = "center",cache=FALSE, fig.show = "hold", out.width = "100%", message = FALSE, warning = FALSE}
+rmp9 <- 10e-16
+rmp3 <- 10e-3
+fnp <- seq(0,0.5, by = 0.001)
+
+lr9n <- fnp/(1 + ((fnp -1) * rmp9))
+lr3n <- fnp/(1 + ((fnp -1) * rmp3))
+
+fnpTable <- data.frame(fnp,   lr9n,  lr3n)
+
+
+library(tidyr)
+fnpTableLong <- gather(fnpTable,line,value,c(lr9n,lr3n), factor_key=TRUE)
+
+
+ggplot(fnpTableLong, aes(x=fnp,y=value, color = line))+  geom_line()+theme_tufte()+ylab("Likelihood ratio")+xlab("False negative probability") +scale_color_manual(values = c(1,2),labels =
+              c(expression(paste("RMP=",10^{-16})),expression(paste("RMP=",10^{-3}))))+ggtitle("Impact of false negative probability on likelihood ratio")+ theme(legend.position = c(0.9,.7))+ylim(c(0,0.5))+ labs(color = "RMP") 
+```
+\label{fig:fnplr}
+\caption{Impact of the false negative probability on the likelihood ratio of exculpatory evidence for two values of RMP.}
+\end{figure}
+--->
+
+
