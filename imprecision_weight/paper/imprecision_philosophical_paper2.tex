@@ -7,19 +7,16 @@
   10pt,
   dvipsnames,enabledeprecatedfontcommands]{scrartcl}
 \usepackage{amsmath,amssymb}
+\usepackage{lmodern}
 \usepackage{iftex}
 \ifPDFTeX
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
   \usepackage{textcomp} % provide euro and other symbols
 \else % if luatex or xetex
-  \usepackage{unicode-math} % this also loads fontspec
+  \usepackage{unicode-math}
   \defaultfontfeatures{Scale=MatchLowercase}
   \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
-\fi
-\usepackage{lmodern}
-\ifPDFTeX\else
-  % xetex/luatex font selection
 \fi
 % Use upquote if available, for straight quotes in verbatim environments
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
@@ -45,38 +42,28 @@
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
 \setcounter{secnumdepth}{5}
-% definitions for citeproc citations
-\NewDocumentCommand\citeproctext{}{}
-\NewDocumentCommand\citeproc{mm}{%
-  \begingroup\def\citeproctext{#2}\cite{#1}\endgroup}
-\makeatletter
- % allow citations to break across lines
- \let\@cite@ofmt\@firstofone
- % avoid brackets around text for \cite:
- \def\@biblabel#1{}
- \def\@cite#1#2{{#1\if@tempswa , #2\fi}}
-\makeatother
 \newlength{\cslhangindent}
 \setlength{\cslhangindent}{1.5em}
 \newlength{\csllabelwidth}
 \setlength{\csllabelwidth}{3em}
-\newenvironment{CSLReferences}[2] % #1 hanging-indent, #2 entry-spacing
- {\begin{list}{}{%
-  \setlength{\itemindent}{0pt}
-  \setlength{\leftmargin}{0pt}
-  \setlength{\parsep}{0pt}
+\newlength{\cslentryspacingunit} % times entry-spacing
+\setlength{\cslentryspacingunit}{\parskip}
+\newenvironment{CSLReferences}[2] % #1 hanging-ident, #2 entry spacing
+ {% don't indent paragraphs
+  \setlength{\parindent}{0pt}
   % turn on hanging indent if param 1 is 1
   \ifodd #1
-   \setlength{\leftmargin}{\cslhangindent}
-   \setlength{\itemindent}{-1\cslhangindent}
+  \let\oldpar\par
+  \def\par{\hangindent=\cslhangindent\oldpar}
   \fi
   % set entry spacing
-  \setlength{\itemsep}{#2\baselineskip}}}
- {\end{list}}
+  \setlength{\parskip}{#2\cslentryspacingunit}
+ }%
+ {}
 \usepackage{calc}
-\newcommand{\CSLBlock}[1]{\hfill\break#1\hfill\break}
-\newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{\strut#1\strut}}
-\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{\strut#1\strut}}
+\newcommand{\CSLBlock}[1]{#1\hfill\break}
+\newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{#1}}
+\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{#1}\break}
 \newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
 %\documentclass{article}
 
@@ -263,7 +250,7 @@
 \fi
 \IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
-\urlstyle{same}
+\urlstyle{same} % disable monospaced font for URLs
 \hypersetup{
   pdftitle={Second-order Probabilism: Expressive Power and Accuracy},
   pdfauthor={Rafal Urbaniak and Marcello Di Bello},
@@ -276,7 +263,7 @@
 
 \title{Second-order Probabilism: Expressive Power and Accuracy}
 \author{Rafal Urbaniak and Marcello Di Bello}
-\date{2023-09-13}
+\date{2023-10-03}
 
 \begin{document}
 \maketitle
@@ -299,7 +286,8 @@
 
 \end{quote}
 
-\section{Introduction}\label{introduction}
+\hypertarget{introduction}{%
+\section{Introduction}\label{introduction}}
 
 \label{sec:introduction}
 
@@ -334,12 +322,14 @@ implementation framework of this approach.
 
 \todo{add structure description}
 
+\hypertarget{precise-vs.-imprecise-probabilisms}{%
 \section{Precise vs.~imprecise
-probabilisms}\label{precise-vs.-imprecise-probabilisms}
+probabilisms}\label{precise-vs.-imprecise-probabilisms}}
 
 \label{sec:three-probabilism}
 
-\subsection{Precise probabilism}\label{precise-probabilism}
+\hypertarget{precise-probabilism}{%
+\subsection{Precise probabilism}\label{precise-probabilism}}
 
 Precise probabilism (\textsf{PP}) holds that a rational agent's
 uncertainty about a hypothesis is to be represented as a single, precise
@@ -410,7 +400,8 @@ would've been fair even if the actual chance of \(H\) was .5 and not
 original lack of information was in fact correctly captured as a precise
 credence.
 
-\subsection{Imprecise probabilism}\label{imprecise-probabilism}
+\hypertarget{imprecise-probabilism}{%
+\subsection{Imprecise probabilism}\label{imprecise-probabilism}}
 
 What if we give up the assumption that probability assignments should be
 precise? Imprecise probabilism (\textsf{IP}) holds that an agent's
@@ -630,7 +621,8 @@ contained in densities.\footnote{Relatedly, in forensic evidence
   choice of a limit or uncertainty level is rather arbitrary (Sjerps et
   al., 2015; Taroni, Bozza, Biedermann, \& Aitken, 2015).}
 
-\section{Higher-order probabilism}\label{higher-order-probabilism}
+\hypertarget{higher-order-probabilism}{%
+\section{Higher-order probabilism}\label{higher-order-probabilism}}
 
 There is, however, a view in the neighborhood that fares better: a
 higher-order perspective. In fact, some of the comments by the
@@ -811,7 +803,8 @@ supported by the evidence.
 Now, let's see how thinking in terms of higher-order probabilities can
 be helpful in problems that are more realistic than coin tossing.
 
-\section{A more concrete example}\label{a-more-concrete-example}
+\hypertarget{a-more-concrete-example}{%
+\section{A more concrete example}\label{a-more-concrete-example}}
 
 In this section, we go over a stylized, but fairly realistic case in
 which it makes an important difference whether we approach the problem
@@ -831,9 +824,8 @@ traces (call this hypothesis \(\mathsf{source}\)). But how strong is
 this evidence, really? What are the fact-finders to make of it?
 
 The standard story among legal probabilists goes something like this
-Urbaniak \& Di Bello (2021). \todo{Not sure how to cite a section } To
-evaluate the strength of the two items of match evidence, we must find
-the value of the likelihood ratio:
+(Urbaniak \& Di Bello, 2021). To evaluate the strength of the two items
+of match evidence, we must find the value of the likelihood ratio:
 \[\frac{\pr{\s{dog}\wedge \s{hair} \vert \s{source}}}{\pr{\s{dog}\wedge \s{hair} \vert \neg \s{source}}}\]
 For simplicity, the numerator can be equated to one. To fill in the
 denominator, an expert provides the relevant random match probabilities.
@@ -864,14 +856,13 @@ overall impact of the evidence on the source hypothesis, you calculate:
 quite a coincidence. The expert facilitates your understanding of how
 this low number should be interpreted: they show you how the items of
 match evidence change the probability of the source hypothesis given a
-range of possible priors (Figure \ref{fig:impactOfPoint}).\\
-The posterior of .99 is reached as soon as the prior is higher than
-0.061.\footnote{These calculations assume that the probability of a
-  match if the suspect and the suspect's dog are the sources is one.}
-While perhaps not sufficient for outright belief in the source
-hypothesis, the evidence seems extremely strong: a minor additional
-piece of evidence could make the case against the defendant
-overwhelming.
+range of possible priors (Figure \ref{fig:impactOfPoint}). The posterior
+of .99 is reached as soon as the prior is higher than 0.061.\footnote{These
+  calculations assume that the probability of a match if the suspect and
+  the suspect's dog are the sources is one.} While perhaps not
+sufficient for outright belief in the source hypothesis, the evidence
+seems extremely strong: a minor additional piece of evidence could make
+the case against the defendant overwhelming.
 
 \begin{figure}[H]
 
@@ -892,12 +883,12 @@ finding two matches in a reference database of size 78.
 The expert's answer makes apparent that the precise random match
 probabilities do not tell the whole story. Perhaps, the information
 about sample sizes is good enough and now you know how
-to\todo{"Nikodem, cite Taroni in fn." not sure if it is the right one}
-use the evidence properly.\footnote{This is what, effectively, Aitken \&
-  Taroni (2008) seem to suggest when they insist the fact-finders should
-  be simply given point estimates and information about the study
-  set-up, such as sample size. We disagree.} But if you are like most
-human beings, you can't. What to do, then?
+to\todo{"Nikodem, cite Taroni in fn." not sure if it is the right one; No, I meant the one brought up in this paper already. Fixed.}
+use the evidence properly.\footnote{This is what, effectively, Taroni et
+  al. (2015) seem to suggest when they insist the fact-finders should be
+  simply given point estimates and information about the study set-up,
+  such as sample size. We disagree.} But if you are like most human
+beings, you can't. What to do, then?
 
 You ask the expert for guidance: what are reasonable ranges of the
 random match probabilities? What are the worst-case and best-case
@@ -943,9 +934,9 @@ calculations you just did. You made an important blunder: you assumed
 that because the worst-case probability for one event is \(x\) and the
 worst-case probability for another independent event is \(y\), the
 worst-case probability for their conjunction is \(xy\). But this
-conclusion does not follow i f the margin of error (credible interval)
-is fixed. The intuitive reason is simple: just because the probability
-of an extreme (or larger absolute) value \(x\) for one variable \(X\) is
+conclusion does not follow if the margin of error (credible interval) is
+fixed. The intuitive reason is simple: just because the probability of
+an extreme (or larger absolute) value \(x\) for one variable \(X\) is
 .01, and so it is for the value \(y\) of another independent variable
 \(Y\), it does not follow that the probability that those two
 independent variables take values \(x\) and \(y\) simultaneously is the
@@ -1003,16 +994,12 @@ of the dependence of the posterior on the prior should comprise multiple
 possible sampled lines whose density mirrors the density around the
 probability of the evidence (Figure \ref{Figlines}).
 
-\todo{Nikodem: make these figures work (see source).}
-
 \begin{figure}[H]
 
 \begin{center}\includegraphics[width=0.8\linewidth]{imprecision_philosophical_paper2_files/figure-latex/Figdensities-1} \end{center}
 \caption{Beta densities for individual items of evidence and the resulting joint density with .99 and .9 highest posterior density intervals, assuming the sample sizes as discussed and independence, with uniform priors.}
 \label{Figdensities}
 \end{figure}
-
-\todo{This plot will need fixing}
 
 \begin{figure}[H]
 
@@ -1033,8 +1020,8 @@ reliability of a given type of evidence has been properly studied),
 those densities should be reported for assessing the strength of the
 evidence. This approach avoids hiding actual aleatory uncertainties
 under the carpet. It also allows for a balanced assessment of the
-evidence, whereas using point estimates\\
-or intervals may exaggerate or underestimate the value of the evidence.
+evidence, whereas using point estimates or intervals may exaggerate or
+underestimate the value of the evidence.
 
 Mathematically, we do not propose anything radically new---we just put
 together some of the items from the standard Bayesian toolkit. The
@@ -1043,19 +1030,34 @@ under-appreciated in formal epistemology and in the legal scholarship
 and should be properly used to incorporate second-order uncertainties in
 evidence evaluation and incorporation.
 
-and so on. --\textgreater{}
+--\textgreater{}
 
-\section{Higher-order Bayesian
-Networks}\label{higher-order-bayesian-networks}
+\hypertarget{computational-and-representational-considerations}{%
+\section{Computational and representational
+considerations}\label{computational-and-representational-considerations}}
 
 The higher-order framework we are advocating is not only applicable to
 the evaluation of individual pieces of evidence. Complex bodies of
-evidence---for example, those represented by Bayesian networks---can
-also be assessed using higher-order probabilities. One fairly
-straightforward way to go about this is to stochastically generate
-Bayesian networks using our uncertainty about the parameter values,
-update with the evidence, and propagate uncertainty to approximate the
-marginal posterior for nodes of interest.
+evidence and hypotheses---for example, those often represented by
+Bayesian networks---can also be approached from this perspective. The
+general strategy is this: (1) capture the uncertainties involving the
+individual items of evidence in a modular fashion using the standard
+tools for statistical inference. (2) Elicit other probabilities or
+densities from experts\footnote{For expert elicitation of densities in a
+  parametric fashion and the discussion of the improvement to which
+  doing so instead of eliciting point values leads, see (O'Hagan et al.,
+  2006).}, (3) put those together using a structure similar to that of a
+Bayesian network, except allowing for uncertainties of various levels to
+be put together --- a usual tool for such a representation is a
+probabilistic program (Bingham et al., 2021), and (4) perform inference
+evaluating the relevant probabilities or densities of interest.
+
+If the reader is more used to thinking in terms of Bayesian networks, a
+somewhat restrictive but fairly straightforward way to conceptualize a
+large class of such programs is to imagine a probabilistic program as
+stochastically generating Bayesian networks using our uncertainty about
+the parameter values, update with the evidence, and propagate
+uncertainty to approximate the marginal posterior for nodes of interest.
 
 As an illustration, let us start with a simplified Bayesian network
 developed by Fenton \& Neil (2018). The network is reproduced in Figure
@@ -1101,9 +1103,8 @@ parameter values for the numbers in the probability tables.\footnote{The
   into the construction of the BN, and (3) evaluating the probability of
   interest in that precise BN. The list of the probabilities thus
   obtained will approximate the density of interest. In what follows we
-  will work with sample sizes of 10k.}\\
-An example of a higher-order Bayesian network for the Sally Clark case
-is given in Figure \ref{fig:SCwithHOP}.
+  will work with sample sizes of 10k.} An example for the Sally Clark
+case is represented in Figure \ref{fig:SCwithHOP}.
 
 \begin{figure}[H]
 
@@ -1116,27 +1117,27 @@ is given in Figure \ref{fig:SCwithHOP}.
 
 \begin{center}\includegraphics[width=1.1\linewidth,height=2\textheight,angle=90]{imprecision_philosophical_paper2_files/figure-latex/SCwithHOP-1} \end{center}
 
-\caption{Example of a higher-order Bayesian network for the Sally Clark Case.}
+\caption{An illustration of a probabilistic program for the Sally Clark case.}
 \label{fig:SCwithHOP}
 \end{figure}
 
-With the help of the higher-order Bayesian network, we can investigate
-the impact of different items of evidence on Sally Clark's probability
-of guilt (Figure \ref{fig:SCwithHOP2}). The starting point is the prior
-density for the \s{Guilt} node (first graph). Next, the network is
-updated with evidence showing signs of bruising on both children (second
-graph). Next, the assumption that both children lack signs of
-potentially lethal disease is added (third graph). Finally, we consider
-the state of the evidence at the time of the appellate case: signs of
-bruising existed on both children, but signs of lethal disease were
-discovered only on the first child. Interestingly, in the strongest
-scenario against Sally Clark (third graph), the median of the posterior
-distribution is above .95, but the uncertainty around that median is
-still too wide to warrant a conviction.\footnote{The lower limit of the
-  89\% Highest Posterior Density Intervals (HPDI) is at .83.} This
-underscores the fact that relying on point estimates can lead to
-overconfidence. Paying attention to the higher-order uncertainty about
-the first-order probability can make a difference to trial decisions.
+Using the probabilistic program, we can investigate the impact of
+different items of evidence on Sally Clark's probability of guilt
+(Figure \ref{fig:SCwithHOP2}). The starting point is the prior density
+for the \s{Guilt} node (first graph). Next, the network is updated with
+evidence showing signs of bruising on both children (second graph).
+Next, the assumption that both children lack signs of potentially lethal
+disease is added (third graph). Finally, we consider the state of the
+evidence at the time of the appellate case: signs of bruising existed on
+both children, but signs of lethal disease were discovered only on the
+first child. Interestingly, in the strongest scenario against Sally
+Clark (third graph), the median of the posterior distribution is above
+.95, but the uncertainty around that median is still too wide to warrant
+a conviction.\footnote{The lower limit of the 89\% Highest Posterior
+  Density Intervals (HPDI) is at .83.} This underscores the fact that
+relying on point estimates can lead to overconfidence. Paying attention
+to the higher-order uncertainty about the first-order probability can
+make a difference to trial decisions.
 
 \begin{figure}[H]
 
@@ -1174,10 +1175,11 @@ lethal disease in son A (Figure \ref{fig:SClrs}).
 
 \end{figure}
 
-\section{Discussion}\label{discussion}
+\hypertarget{a-comment-of-the-relationship-with-bayesian-hierarchical-models}{%
+\section{A comment of the relationship with Bayesian hierarchical
+models}\label{a-comment-of-the-relationship-with-bayesian-hierarchical-models}}
 
-\subsection{Relationship with Bayesian hierarchical
-models}\label{relationship-with-bayesian-hierarchical-models}
+\todo{Nikodem: read carefully make sure everything makes sense here!}
 
 Our approach does involve multiple parameters, uncertainty about them,
 and some dependency structure between random variables. So it is only
@@ -1256,156 +1258,166 @@ actual values of the random variables---the truth-values---thus
 re-factoring in terms of the actual values of the random variables
 (which just happen to resemble probabilities because they are truth
 values) makes it quite specific, at the same time allowing for the
-computational use of Bayesian networks. Finally, the reasoning we
+computational use of a probabilistic program. Finally, the reasoning we
 describe is not a regression the way it is normally performed: the
 learning task is delegated to the bottom level of whatever happens to
 the Bayesian networks once updated with evidence.
 
-\section*{References}\label{references}
+Summing up, we would prefer to reserve the term
+\emph{hierarchical model} for a class of models dealing with interesting
+cluster structures in the data. A more fitting term for the
+representation tool we propose should be used here is
+\emph{probabilistic programs}. We do not claim any originality in
+devising this tool: it's an already existing tool. What we argue for,
+though, is its ability for being usefully deployed in the context of
+forensic evidence evaluation and integration with other assumptions and
+hypotheses.
+
+\hypertarget{references}{%
+\section*{References}\label{references}}
 \addcontentsline{toc}{section}{References}
 
-\phantomsection\label{refs}
+\hypertarget{refs}{}
 \begin{CSLReferences}{1}{0}
-\bibitem[\citeproctext]{ref-aitken2008fundamentals}
-Aitken, C., \& Taroni, F. (2008). Fundamentals of statistical evidence -
-a primer for legal professionals. \emph{The International Journal of
-Evidence and Proof}, \emph{12}(3), 181--207.
-\url{https://doi.org/10.1350/ijep.2008.12.3.296}
-
-\bibitem[\citeproctext]{ref-Bingham2021PPwithoutTears}
+\leavevmode\vadjust pre{\hypertarget{ref-Bingham2021PPwithoutTears}{}}%
 Bingham, E., Koppel, J., Lew, A., Ness, R., Tavares, Z., Witty, S., \&
 Zucker, J. (2021). Causal probabilistic programming without tears.
 \emph{Proceedings of the Third Conference on Probabilistic Programming}.
 
-\bibitem[\citeproctext]{ref-bradley2012scientific}
+\leavevmode\vadjust pre{\hypertarget{ref-bradley2012scientific}{}}%
 Bradley, S. (2012). \emph{Scientific uncertainty and decision making}
 (PhD thesis). London School of Economics; Political Science (University
 of London).
 
-\bibitem[\citeproctext]{ref-bradley2019imprecise}
+\leavevmode\vadjust pre{\hypertarget{ref-bradley2019imprecise}{}}%
 Bradley, S. (2019). {Imprecise Probabilities}. In E. N. Zalta (Ed.),
 \emph{The {Stanford} encyclopedia of philosophy} ({S}pring 2019).
 \url{https://plato.stanford.edu/archives/spr2019/entries/imprecise-probabilities/};
 Metaphysics Research Lab, Stanford University.
 
-\bibitem[\citeproctext]{ref-CampbellMoore2020accuracy}
+\leavevmode\vadjust pre{\hypertarget{ref-CampbellMoore2020accuracy}{}}%
 Campbell-Moore, C. (2020). \emph{Accuracy and imprecise probabilities}.
 
-\bibitem[\citeproctext]{ref-Carr2020impreciseEvidence}
+\leavevmode\vadjust pre{\hypertarget{ref-Carr2020impreciseEvidence}{}}%
 Carr, J. R. (2020). Imprecise evidence without imprecise credences.
 \emph{Philosophical Studies}, \emph{177}(9), 2735--2758.
 \url{https://doi.org/10.1007/s11098-019-01336-7}
 
-\bibitem[\citeproctext]{ref-deadman1984fiber2}
+\leavevmode\vadjust pre{\hypertarget{ref-deadman1984fiber2}{}}%
 Deadman, H. A. (1984a). Fiber evidence and the wayne williams trial
 (conclusion). \emph{FBI L. Enforcement Bull.}, \emph{53}, 10--19.
 
-\bibitem[\citeproctext]{ref-deadman1984fiber1}
+\leavevmode\vadjust pre{\hypertarget{ref-deadman1984fiber1}{}}%
 Deadman, H. A. (1984b). Fiber evidence and the wayne williams trial
 (part i). \emph{FBI L. Enforcement Bull.}, \emph{53}, 12--20.
 
-\bibitem[\citeproctext]{ref-Lee2017impreciseEpistemology}
+\leavevmode\vadjust pre{\hypertarget{ref-Lee2017impreciseEpistemology}{}}%
 Elkin, L. (2017). \emph{Imprecise probability in epistemology} (PhD
 thesis). Ludwig-Maximilians-Universit{ä}t;
 Ludwig-Maximilians-Universität München.
 
-\bibitem[\citeproctext]{ref-Fenton2018Risk}
+\leavevmode\vadjust pre{\hypertarget{ref-Fenton2018Risk}{}}%
 Fenton, N., \& Neil, M. (2018). \emph{Risk assessment and decision
 analysis with bayesian networks}. Chapman; Hall.
 
-\bibitem[\citeproctext]{ref-VanFraassen2006vague}
+\leavevmode\vadjust pre{\hypertarget{ref-VanFraassen2006vague}{}}%
 Fraassen, B. C. V. (2006). Vague expectation value loss.
 \emph{Philosophical Studies}, \emph{127}(3), 483--491.
 \url{https://doi.org/10.1007/s11098-004-7821-2}
 
-\bibitem[\citeproctext]{ref-Gardenfors1982unreliable}
+\leavevmode\vadjust pre{\hypertarget{ref-Gardenfors1982unreliable}{}}%
 Gärdenfors, P., \& Sahlin, N.-E. (1982). Unreliable probabilities, risk
 taking, and decision making. \emph{Synthese}, \emph{53}(3), 361--386.
 \url{https://doi.org/10.1007/bf00486156}
 
-\bibitem[\citeproctext]{ref-joyce2005probabilities}
+\leavevmode\vadjust pre{\hypertarget{ref-joyce2005probabilities}{}}%
 Joyce, J. M. (2005). How probabilities reflect evidence.
 \emph{Philosophical Perspectives}, \emph{19}(1), 153--178.
 
-\bibitem[\citeproctext]{ref-Kaplan1968decision}
+\leavevmode\vadjust pre{\hypertarget{ref-Kaplan1968decision}{}}%
 Kaplan, J. (1968). Decision theory and the fact-finding process.
 \emph{Stanford Law Review}, \emph{20}(6), 1065--1092.
 
-\bibitem[\citeproctext]{ref-keynes1921treatise}
+\leavevmode\vadjust pre{\hypertarget{ref-keynes1921treatise}{}}%
 Keynes, J. M. (1921). \emph{A treatise on probability, 1921}. London:
 Macmillan.
 
-\bibitem[\citeproctext]{ref-konek2013foundations}
+\leavevmode\vadjust pre{\hypertarget{ref-konek2013foundations}{}}%
 Konek, J. (2013). \emph{New foundations for imprecise bayesianism} (PhD
 thesis). University of Michigan.
 
-\bibitem[\citeproctext]{ref-kruschke2015doing}
+\leavevmode\vadjust pre{\hypertarget{ref-kruschke2015doing}{}}%
 Kruschke, J. (2015). \emph{Doing bayesian data analysis (second
 edition)}. Boston: Academic Press.
 
-\bibitem[\citeproctext]{ref-Kyburg1961}
+\leavevmode\vadjust pre{\hypertarget{ref-Kyburg1961}{}}%
 Kyburg, H. E. (1961). \emph{Probability and the logic of rational
 belief}. Wesleyan University Press.
 
-\bibitem[\citeproctext]{ref-kyburg2001uncertain}
+\leavevmode\vadjust pre{\hypertarget{ref-kyburg2001uncertain}{}}%
 Kyburg Jr, H. E., \& Teng, C. M. (2001). \emph{Uncertain inference}.
 Cambridge University Press.
 
-\bibitem[\citeproctext]{ref-Levi1974ideterminate}
+\leavevmode\vadjust pre{\hypertarget{ref-Levi1974ideterminate}{}}%
 Levi, I. (1974). On indeterminate probabilities. \emph{The Journal of
 Philosophy}, \emph{71}(13), 391. \url{https://doi.org/10.2307/2025161}
 
-\bibitem[\citeproctext]{ref-Levi1980enterprise}
+\leavevmode\vadjust pre{\hypertarget{ref-Levi1980enterprise}{}}%
 Levi, I. (1980). \emph{The enterprise of knowledge: An essay on
 knowledge, credal probability, and chance}. MIT Press.
 
-\bibitem[\citeproctext]{ref-Mayo-Wilson2016scoring}
+\leavevmode\vadjust pre{\hypertarget{ref-Mayo-Wilson2016scoring}{}}%
 Mayo-Wilson, C., \& Wheeler, G. (2016). Scoring imprecise credences: A
 mildly immodest proposal. \emph{Philosophy and Phenomenological
 Research}, \emph{92}(1), 55--78.
 \url{https://doi.org/10.1111/phpr.12256}
 
-\bibitem[\citeproctext]{ref-Rinard2013against}
+\leavevmode\vadjust pre{\hypertarget{ref-o2006uncertain}{}}%
+O'Hagan, A., Buck, C. E., Daneshkhah, A., Eiser, J. R., Garthwaite, P.
+H., Jenkinson, D. J., \ldots{} Rakow, T. (2006). \emph{Uncertain
+judgements: Eliciting experts' probabilities}.
+
+\leavevmode\vadjust pre{\hypertarget{ref-Rinard2013against}{}}%
 Rinard, S. (2013). Against radical credal imprecision. \emph{Thought: A
 Journal of Philosophy}, \emph{2}(1), 157--165.
 \url{https://doi.org/10.1002/tht3.84}
 
-\bibitem[\citeproctext]{ref-Schoenfield2017accuracy}
+\leavevmode\vadjust pre{\hypertarget{ref-Schoenfield2017accuracy}{}}%
 Schoenfield, M. (2017). The accuracy and rationality of imprecise
 credences. \emph{Noûs}, \emph{51}(4), 667--685.
 \url{https://doi.org/10.1111/nous.12105}
 
-\bibitem[\citeproctext]{ref-seidenfeld2012forecasting}
+\leavevmode\vadjust pre{\hypertarget{ref-seidenfeld2012forecasting}{}}%
 Seidenfeld, T., Schervish, M., \& Kadane, J. (2012). Forecasting with
 imprecise probabilities. \emph{International Journal of Approximate
 Reasoning}, \emph{53}, 1248--1261.
 \url{https://doi.org/10.1016/j.ijar.2012.06.018}
 
-\bibitem[\citeproctext]{ref-Sjerps2015Uncertainty}
+\leavevmode\vadjust pre{\hypertarget{ref-Sjerps2015Uncertainty}{}}%
 Sjerps, M. J., Alberink, I., Bolck, A., Stoel, R. D., Vergeer, P., \&
 Zanten, J. H. van. (2015). {Uncertainty and LR: to integrate or not to
 integrate, that's the question}. \emph{Law, Probability and Risk},
 \emph{15}(1), 23--29. \url{https://doi.org/10.1093/lpr/mgv005}
 
-\bibitem[\citeproctext]{ref-Sturgeon2008grain}
+\leavevmode\vadjust pre{\hypertarget{ref-Sturgeon2008grain}{}}%
 Sturgeon, S. (2008). Reason and the grain of belief. \emph{No{û}s},
 \emph{42}(1), 139--165. Retrieved from
 \url{http://www.jstor.org/stable/25177157}
 
-\bibitem[\citeproctext]{ref-Taroni2015Dismissal}
+\leavevmode\vadjust pre{\hypertarget{ref-Taroni2015Dismissal}{}}%
 Taroni, F., Bozza, S., Biedermann, A., \& Aitken, C. (2015). {Dismissal
 of the illusion of uncertainty in the assessment of a likelihood ratio}.
 \emph{Law, Probability and Risk}, \emph{15}(1), 1--16.
 \url{https://doi.org/10.1093/lpr/mgv008}
 
-\bibitem[\citeproctext]{ref-sep-legal-probabilism}
+\leavevmode\vadjust pre{\hypertarget{ref-sep-legal-probabilism}{}}%
 Urbaniak, R., \& Di Bello, M. (2021). {Legal Probabilism}. In E. N.
 Zalta (Ed.), \emph{The {Stanford} encyclopedia of philosophy} (Fall
 2021).
 \url{https://plato.stanford.edu/archives/fall2021/entries/legal-probabilism/};
 Metaphysics Research Lab, Stanford University.
 
-\bibitem[\citeproctext]{ref-walley1991statistical}
+\leavevmode\vadjust pre{\hypertarget{ref-walley1991statistical}{}}%
 Walley, P. (1991). \emph{Statistical reasoning with imprecise
 probabilities}. Chapman; Hall London.
 
