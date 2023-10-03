@@ -8,6 +8,7 @@ format:
     mainfont: Times New Roman
     sansfont: Times New Roman
     number_sections: true
+    keep-tex: true
 documentClass: scrartcl
 classOptions: [dvipsnames, enabledeprecatedfontcommands, headings=big]
 font:
@@ -125,7 +126,7 @@ So the Bayes factor can be written in a longer form:
 \mathsf{BF}(E,H) & = \frac{\pr{E \vert H}}{\pr{E \vert H} \pr{H}+\pr{E \vert \neg H} \pr{\neg H}}.
 \end{align}
 \noindent What should be clear from this formulation is the dependency on the prior probabilities $\pr{H}$ and
-$\pr{\neg H}$. Indeed, suppose $\pr{E \vert H} = 1$ and $\pr{E \vert \neg H} = .1$. If $\pr{H}=.1$, $\pr{E}$,  the denominator, is $.19$,  and so the Bayes factor is approximately $5.26$. If, however, $\pr{H} =.2$, the denominator is $.28$ and the Bayes factor is approximately $3.57$. In fact, a more general look (Figure \ref{fig:BayesFactorPrior}) shows that the prior probability can have larger impact on the Bayes factor than the likelihood $\pr{E \vert \n H}$.
+$\pr{\neg H}$. Indeed, suppose $\pr{E \vert H} = 1$ and $\pr{E \vert \neg H} = .1$. If $\pr{H}=.1$, $\pr{E}$,  the denominator, is $.19$,  and so the Bayes factor is approximately $5.26$. If, however, $\pr{H} =.2$, the denominator is $.28$ and the Bayes factor is approximately $3.57$. In fact, a more general look (@fig-bayesfactorprior) shows that the prior probability can have larger impact on the Bayes factor than the likelihood $\pr{E \vert \n H}$.
 
 This is a strike against adopting this measure of evidential strength in legal fact-finding. For suppose an expert who is testifying in court is tasked with assessing the value of an item of evidence, say a DNA or fingerprint match. This assessment should not depend on the expert's prior convictions about the plausibility of the hypothesis. Further, judges and lay jurors should be in a position to understand  the expert's assessment in the same way, even if they assign different prior probabilities to the hypothesis.^[The requirement of prior independence is also in line with an objectivity requirement that the strength of evidence should not vary from one researcher to another [@bickel2012strength].]
 
@@ -215,7 +216,7 @@ First, unlike the Bayes factor, the likelihood ratio does not depend on the prio
 \begin{align}\label{eq:BTodds}
 \frac{\pr{H \vert E}}{\pr{H' \vert E}}= \frac{\pr{E \vert H}}{\pr{E \vert H'}}\times \frac{\pr{H}}{\pr{H'}}.
 \end{align}
-\noindent If the likelihood ratio is greater (lower) than one, the posterior odds will be greater (lower) than the prior odds of $H$. The likelihood ratio, then, is a measure of the upward or downward impact of the evidence on the prior odds of two hypotheses $H$ and $H'$. This fits nicely with the division of labor common in legal fact-finding between experts and decision-makers, judges or lay jurors. A prominent forensic scientist recommends that 'in criminal adjudication, the values of the prior odds and the posterior odds are matters for the judge and jury <!---, in accordance with the normal division of labor in forensic fact-finding--->' [@aitken2008fundamentals, p. 194]. Other scholars recommend that experts should  `not trespass on the province of the jury <!---by commenting directly on the accused's guilt or innocence,---> \dots and should generally confine their testimony to presenting the likelihood of their evidence under competing propositions' [@aitken2010fundamentals, p. 42]. <!--- If, however, experts were to report the Bayes factor, this would mean they are competent to estimate $\pr{E}$ directly, which is unlikely, or that they implicitly estimate it relying on their estimation of $\pr{H}$ in the background (if they use the law of total probability). Instead, the likelihood ratio  describes the value of evidence and abides by these constraints. ---> The meaning of the likelihood ratio can be made more perspicuous by supplementing it with a graph that conveys visually the extent to which the evidence changes the probability of the hypothesis of interest (See Figure \ref{fig:effect-evidence}).^[@lundIyer2017 have argued that the likelihood ratio often depends on the prior probabilities of the hypotheses under consideration. The reason is that the alternative hypothesis $H'$ that occurs in the denominator can be analyzed as a disjunction of several alternative sub-hypotheses 
+\noindent If the likelihood ratio is greater (lower) than one, the posterior odds will be greater (lower) than the prior odds of $H$. The likelihood ratio, then, is a measure of the upward or downward impact of the evidence on the prior odds of two hypotheses $H$ and $H'$. This fits nicely with the division of labor common in legal fact-finding between experts and decision-makers, judges or lay jurors. A prominent forensic scientist recommends that 'in criminal adjudication, the values of the prior odds and the posterior odds are matters for the judge and jury <!---, in accordance with the normal division of labor in forensic fact-finding--->' [@aitken2008fundamentals, p. 194]. Other scholars recommend that experts should  `not trespass on the province of the jury <!---by commenting directly on the accused's guilt or innocence,---> \dots and should generally confine their testimony to presenting the likelihood of their evidence under competing propositions' [@aitken2010fundamentals, p. 42]. <!--- If, however, experts were to report the Bayes factor, this would mean they are competent to estimate $\pr{E}$ directly, which is unlikely, or that they implicitly estimate it relying on their estimation of $\pr{H}$ in the background (if they use the law of total probability). Instead, the likelihood ratio  describes the value of evidence and abides by these constraints. ---> The meaning of the likelihood ratio can be made more perspicuous by supplementing it with a graph that conveys visually the extent to which the evidence changes the probability of the hypothesis of interest (See @fig-effect-evidence).^[@lundIyer2017 have argued that the likelihood ratio often depends on the prior probabilities of the hypotheses under consideration. The reason is that the alternative hypothesis $H'$ that occurs in the denominator can be analyzed as a disjunction of several alternative sub-hypotheses 
 $H'_1\vee H'_2\vee ... \vee H'_k$. In this case, the denominator of the likelihood ratio would be the weighted sum of the likelihoods $\pr{E \vert H'_i}$, where the weights are the priors probabilities of each $H'_i$. We address this complication in later chapters after introducing the formal machinery of Bayesian networks.]
 
 ```{r effect-evidence,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%", warning = FALSE, message = FALSE}
@@ -398,7 +399,7 @@ webshot("img/fpp.html", "img/fpp.png", zoom = 5)
 \begin{figure}
 \includegraphics[width = 12cm]{../img/fpp.png}
 \caption{Dependencies between variables in the false positive problem.}
-\label{fig-fpp}
+\label{fig:fpp}
 \end{figure}
 \end{center}
 
@@ -546,7 +547,7 @@ In addition, for simplicity, take the probability of a false negative to be zero
 --->
 
 Let's now examine the impact of the  error probabilities FNP and FPP on the likelihood ratio, 
-holding fixed certain values of the random match probability. Figure \ref{fig:fpplr} shows the impact of error rates  (for values between 0 and .05). Random match probabilities are assumed to be in the order of $10^{-9}$ (often reported in the case of two single-source samples over ten or more loci).
+holding fixed certain values of the random match probability. @fig-fpplr shows the impact of error rates  (for values between 0 and .05). Random match probabilities are assumed to be in the order of $10^{-9}$ (often reported in the case of two single-source samples over ten or more loci).
 <!-- and $10^{-3}$ (sometimes obtained by means of less discriminating tests when the comparison involves a mixed sample). -->
 A small increase in the false positive probability can lower the likelihood ratio dramatically. For instance, with FNP set at $.05$, the likelihood ratio drops from $10^8$ to $19$ as FPP goes from 0 to $.05$.
 Interestingly, however, the impact of the false negative probability FNP (for values between 0 and .05) is rather negligible. For instance, if $FNP$ is $.05$, the likelihood ratio goes from $20$ to $19$ as FPP moves from $0$ to $.05$.
@@ -654,7 +655,7 @@ By replacing $R$ with $\neg R$ in formula (\ref{eq:LRfp4}), the likelihood ratio
 & = \frac{FNP}{FNP\times RMP + [(1-FPP) \times (1-RMP)]}
 \end{align}
 
-\noindent Keep in mind that the negative reported match $\neg R$ is evidence \textit{against} the source hypothesis $S$ so long as the likelihood ratio is below one. At the extreme, if the false negative probability FNP is zero,  the numerator is zero. Thus, the likelihood ratio will be zero, as it should. In such a case, the negative match is completely exculpatory, and the posterior probability that the suspect is the source will also be zero.  If the false negative probability is not zero, the greater the likelihood ratio (for values between 0 and 1), the weaker the value of the exculpatory match. As Figure \ref{fig:fpfnplr-exc} shows, the likelihood ratio progressively moves away from zero as the false negative error probability increases. For instance, with FPP fixed at $0.05$, it goes from 0 to $.052$. Interestingly, however, the impact of the false \textit{positive} probability FPP on the likelihood ratio of exculpatory evidence is essentially null. For instance, if FNP is fixed at $.05$, the likelihood ratio moves from $.05$ to $.052$ as FPP goes from 0 to $.05$. 
+\noindent Keep in mind that the negative reported match $\neg R$ is evidence \textit{against} the source hypothesis $S$ so long as the likelihood ratio is below one. At the extreme, if the false negative probability FNP is zero,  the numerator is zero. Thus, the likelihood ratio will be zero, as it should. In such a case, the negative match is completely exculpatory, and the posterior probability that the suspect is the source will also be zero.  If the false negative probability is not zero, the greater the likelihood ratio (for values between 0 and 1), the weaker the value of the exculpatory match. As @fig-fpfnplr-exc shows, the likelihood ratio progressively moves away from zero as the false negative error probability increases. For instance, with FPP fixed at $0.05$, it goes from 0 to $.052$. Interestingly, however, the impact of the false \textit{positive} probability FPP on the likelihood ratio of exculpatory evidence is essentially null. For instance, if FNP is fixed at $.05$, the likelihood ratio moves from $.05$ to $.052$ as FPP goes from 0 to $.05$. 
 
 
 
@@ -934,7 +935,7 @@ In the second scenario, the minimum and the maximum are as follows:
 \begin{align*}
 \mathsf{min}(lr_1) = \nicefrac{.85}{.2} =  4.25 &  \,\,\,\,\,\,\,\,   \mathsf{max}(lr_1) = \nicefrac{.75}{.3} \approx 2.5  
 \end{align*}
-\noindent So the likelihood ratio is in the range of  2.5-4.25.  Figure \ref{fig:eyewitness3b} gives a compact illustration of the strength of an eyewitness identification under the two scenarios. 
+\noindent So the likelihood ratio is in the range of  2.5-4.25.  @fig-eyewitness3b gives a compact illustration of the strength of an eyewitness identification under the two scenarios. 
 
 
 
@@ -1625,7 +1626,7 @@ Dependence on prior probabilities is particularly problematic in the legal setti
 
 So the only measures that withstand scrunity so far are the likelihood ratio (and ordinarilly equivalent measures) and Z-measures. But the latter suffer from another problem. Say $E$ and $E'$ are confirmationally independent regarding $H$ just in case both $c(T, E \vert E' ) = c(T, E )$ and $c(T, E' \vert E ) = c(T, E')$. Say $E$ and $E'$ are conflicting evidence regarding $T$ iff $\pr{T\vert E}> \pr{T}$ while $\pr{T\vert E'} < \pr{T}$. @Fitelson2021z_measure   has proven that any measure ordinally equivalent with $Z$ excludes the fairly intuitive possibility of the existence of confirmationally independent and yet conflicting evidence. <!--- (he also gives a clear example of such a case).--->  
 
-Table \ref{tab:confirmation} summarizes the reasons not to adopt a certain measure of confirmation. The likelihood ratio emerges as the clear winner. The Log likelihood and Kemeny-Oppenheim's measures are ordinally equivalent to the likelihood ratio. The reason not to use them in the legal setting is a matter of convenience.  Kemeny-Oppenheim's measure is conceptually more complex than likelihood ratio, and thinking in terms of logarithms is unnatural for ordinary reasoners. 
+Table \ref{tbl:confirmation} summarizes the reasons not to adopt a certain measure of confirmation. The likelihood ratio emerges as the clear winner. The Log likelihood and Kemeny-Oppenheim's measures are ordinally equivalent to the likelihood ratio. The reason not to use them in the legal setting is a matter of convenience.  Kemeny-Oppenheim's measure is conceptually more complex than likelihood ratio, and thinking in terms of logarithms is unnatural for ordinary reasoners. 
 
 
 \begin{table}
@@ -1649,8 +1650,8 @@ Measure & Reason not to use\\
 \bottomrule
 \end{tabular}
 \endgroup{}
-\caption{Reasons not to use various confirmation measures in legal fact-finding applications.}
-\label{tab:confirmation}
+\caption{Reasons not to use various confirmation measures in legal fact-finding applications.} 
+\label{tbl:confirmation}
 \end{table}
 
 Finally, we should mention a general argument for preferring the likelihood ratio.  This argument was developed by @Heckerman1988axiomatic. Suppose you have background information $b$, and consider a hypothesis $H$ when you obtain a piece of evidence $E$. A belief update, $U(H, E, b)$, together with your prior stance about $H$, should determine your posterior belief in $H$. If we denote conditional belief in $H$ given $E$, without assuming it is probabilistic yet, as $H\vert E$, this means that there should be a function $f$  such that:
