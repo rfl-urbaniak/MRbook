@@ -7,16 +7,19 @@
   10pt,
   dvipsnames,enabledeprecatedfontcommands]{scrartcl}
 \usepackage{amsmath,amssymb}
-\usepackage{lmodern}
 \usepackage{iftex}
 \ifPDFTeX
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
   \usepackage{textcomp} % provide euro and other symbols
 \else % if luatex or xetex
-  \usepackage{unicode-math}
+  \usepackage{unicode-math} % this also loads fontspec
   \defaultfontfeatures{Scale=MatchLowercase}
   \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
 \fi
 % Use upquote if available, for straight quotes in verbatim environments
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
@@ -42,28 +45,38 @@
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
 \setcounter{secnumdepth}{5}
+% definitions for citeproc citations
+\NewDocumentCommand\citeproctext{}{}
+\NewDocumentCommand\citeproc{mm}{%
+  \begingroup\def\citeproctext{#2}\cite{#1}\endgroup}
+\makeatletter
+ % allow citations to break across lines
+ \let\@cite@ofmt\@firstofone
+ % avoid brackets around text for \cite:
+ \def\@biblabel#1{}
+ \def\@cite#1#2{{#1\if@tempswa , #2\fi}}
+\makeatother
 \newlength{\cslhangindent}
 \setlength{\cslhangindent}{1.5em}
 \newlength{\csllabelwidth}
 \setlength{\csllabelwidth}{3em}
-\newlength{\cslentryspacingunit} % times entry-spacing
-\setlength{\cslentryspacingunit}{\parskip}
-\newenvironment{CSLReferences}[2] % #1 hanging-ident, #2 entry spacing
- {% don't indent paragraphs
-  \setlength{\parindent}{0pt}
+\newenvironment{CSLReferences}[2] % #1 hanging-indent, #2 entry-spacing
+ {\begin{list}{}{%
+  \setlength{\itemindent}{0pt}
+  \setlength{\leftmargin}{0pt}
+  \setlength{\parsep}{0pt}
   % turn on hanging indent if param 1 is 1
   \ifodd #1
-  \let\oldpar\par
-  \def\par{\hangindent=\cslhangindent\oldpar}
+   \setlength{\leftmargin}{\cslhangindent}
+   \setlength{\itemindent}{-1\cslhangindent}
   \fi
   % set entry spacing
-  \setlength{\parskip}{#2\cslentryspacingunit}
- }%
- {}
+  \setlength{\itemsep}{#2\baselineskip}}}
+ {\end{list}}
 \usepackage{calc}
-\newcommand{\CSLBlock}[1]{#1\hfill\break}
-\newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{#1}}
-\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{#1}\break}
+\newcommand{\CSLBlock}[1]{\hfill\break#1\hfill\break}
+\newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{\strut#1\strut}}
+\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{\strut#1\strut}}
 \newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
 %\documentclass{article}
 
@@ -250,7 +263,7 @@
 \fi
 \IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
-\urlstyle{same} % disable monospaced font for URLs
+\urlstyle{same}
 \hypersetup{
   pdftitle={Second-order Probabilism: Expressive Power and Accuracy},
   pdfauthor={Rafal Urbaniak and Marcello Di Bello},
@@ -286,8 +299,7 @@
 
 \end{quote}
 
-\hypertarget{introduction}{%
-\section{Introduction}\label{introduction}}
+\section{Introduction}\label{introduction}
 
 \label{sec:introduction}
 
@@ -322,14 +334,12 @@ implementation framework of this approach.
 
 \todo{add structure description}
 
-\hypertarget{precise-vs.-imprecise-probabilisms}{%
 \section{Precise vs.~imprecise
-probabilisms}\label{precise-vs.-imprecise-probabilisms}}
+probabilisms}\label{precise-vs.-imprecise-probabilisms}
 
 \label{sec:three-probabilism}
 
-\hypertarget{precise-probabilism}{%
-\subsection{Precise probabilism}\label{precise-probabilism}}
+\subsection{Precise probabilism}\label{precise-probabilism}
 
 Precise probabilism (\textsf{PP}) holds that a rational agent's
 uncertainty about a hypothesis is to be represented as a single, precise
@@ -400,8 +410,7 @@ would've been fair even if the actual chance of \(H\) was .5 and not
 original lack of information was in fact correctly captured as a precise
 credence.
 
-\hypertarget{imprecise-probabilism}{%
-\subsection{Imprecise probabilism}\label{imprecise-probabilism}}
+\subsection{Imprecise probabilism}\label{imprecise-probabilism}
 
 What if we give up the assumption that probability assignments should be
 precise? Imprecise probabilism (\textsf{IP}) holds that an agent's
@@ -621,8 +630,7 @@ contained in densities.\footnote{Relatedly, in forensic evidence
   choice of a limit or uncertainty level is rather arbitrary (Sjerps et
   al., 2015; Taroni, Bozza, Biedermann, \& Aitken, 2015).}
 
-\hypertarget{higher-order-probabilism}{%
-\section{Higher-order probabilism}\label{higher-order-probabilism}}
+\section{Higher-order probabilism}\label{higher-order-probabilism}
 
 There is, however, a view in the neighborhood that fares better: a
 higher-order perspective. In fact, some of the comments by the
@@ -803,8 +811,7 @@ supported by the evidence.
 Now, let's see how thinking in terms of higher-order probabilities can
 be helpful in problems that are more realistic than coin tossing.
 
-\hypertarget{a-more-concrete-example}{%
-\section{A more concrete example}\label{a-more-concrete-example}}
+\section{A more concrete example}\label{a-more-concrete-example}
 
 In this section, we go over a stylized, but fairly realistic case in
 which it makes an important difference whether we approach the problem
@@ -1032,9 +1039,8 @@ evidence evaluation and incorporation.
 
 --\textgreater{}
 
-\hypertarget{computational-and-representational-considerations}{%
 \section{Computational and representational
-considerations}\label{computational-and-representational-considerations}}
+considerations}\label{computational-and-representational-considerations}
 
 The higher-order framework we are advocating is not only applicable to
 the evaluation of individual pieces of evidence. Complex bodies of
@@ -1175,9 +1181,8 @@ lethal disease in son A (Figure \ref{fig:SClrs}).
 
 \end{figure}
 
-\hypertarget{a-comment-of-the-relationship-with-bayesian-hierarchical-models}{%
 \section{A comment of the relationship with Bayesian hierarchical
-models}\label{a-comment-of-the-relationship-with-bayesian-hierarchical-models}}
+models}\label{a-comment-of-the-relationship-with-bayesian-hierarchical-models}
 
 \todo{Nikodem: read carefully make sure everything makes sense here!}
 
@@ -1273,151 +1278,150 @@ though, is its ability for being usefully deployed in the context of
 forensic evidence evaluation and integration with other assumptions and
 hypotheses.
 
-\hypertarget{references}{%
-\section*{References}\label{references}}
+\section*{References}\label{references}
 \addcontentsline{toc}{section}{References}
 
-\hypertarget{refs}{}
+\phantomsection\label{refs}
 \begin{CSLReferences}{1}{0}
-\leavevmode\vadjust pre{\hypertarget{ref-Bingham2021PPwithoutTears}{}}%
+\bibitem[\citeproctext]{ref-Bingham2021PPwithoutTears}
 Bingham, E., Koppel, J., Lew, A., Ness, R., Tavares, Z., Witty, S., \&
 Zucker, J. (2021). Causal probabilistic programming without tears.
 \emph{Proceedings of the Third Conference on Probabilistic Programming}.
 
-\leavevmode\vadjust pre{\hypertarget{ref-bradley2012scientific}{}}%
+\bibitem[\citeproctext]{ref-bradley2012scientific}
 Bradley, S. (2012). \emph{Scientific uncertainty and decision making}
 (PhD thesis). London School of Economics; Political Science (University
 of London).
 
-\leavevmode\vadjust pre{\hypertarget{ref-bradley2019imprecise}{}}%
+\bibitem[\citeproctext]{ref-bradley2019imprecise}
 Bradley, S. (2019). {Imprecise Probabilities}. In E. N. Zalta (Ed.),
 \emph{The {Stanford} encyclopedia of philosophy} ({S}pring 2019).
 \url{https://plato.stanford.edu/archives/spr2019/entries/imprecise-probabilities/};
 Metaphysics Research Lab, Stanford University.
 
-\leavevmode\vadjust pre{\hypertarget{ref-CampbellMoore2020accuracy}{}}%
+\bibitem[\citeproctext]{ref-CampbellMoore2020accuracy}
 Campbell-Moore, C. (2020). \emph{Accuracy and imprecise probabilities}.
 
-\leavevmode\vadjust pre{\hypertarget{ref-Carr2020impreciseEvidence}{}}%
+\bibitem[\citeproctext]{ref-Carr2020impreciseEvidence}
 Carr, J. R. (2020). Imprecise evidence without imprecise credences.
 \emph{Philosophical Studies}, \emph{177}(9), 2735--2758.
 \url{https://doi.org/10.1007/s11098-019-01336-7}
 
-\leavevmode\vadjust pre{\hypertarget{ref-deadman1984fiber2}{}}%
+\bibitem[\citeproctext]{ref-deadman1984fiber2}
 Deadman, H. A. (1984a). Fiber evidence and the wayne williams trial
 (conclusion). \emph{FBI L. Enforcement Bull.}, \emph{53}, 10--19.
 
-\leavevmode\vadjust pre{\hypertarget{ref-deadman1984fiber1}{}}%
+\bibitem[\citeproctext]{ref-deadman1984fiber1}
 Deadman, H. A. (1984b). Fiber evidence and the wayne williams trial
 (part i). \emph{FBI L. Enforcement Bull.}, \emph{53}, 12--20.
 
-\leavevmode\vadjust pre{\hypertarget{ref-Lee2017impreciseEpistemology}{}}%
+\bibitem[\citeproctext]{ref-Lee2017impreciseEpistemology}
 Elkin, L. (2017). \emph{Imprecise probability in epistemology} (PhD
 thesis). Ludwig-Maximilians-Universit{ä}t;
 Ludwig-Maximilians-Universität München.
 
-\leavevmode\vadjust pre{\hypertarget{ref-Fenton2018Risk}{}}%
+\bibitem[\citeproctext]{ref-Fenton2018Risk}
 Fenton, N., \& Neil, M. (2018). \emph{Risk assessment and decision
 analysis with bayesian networks}. Chapman; Hall.
 
-\leavevmode\vadjust pre{\hypertarget{ref-VanFraassen2006vague}{}}%
+\bibitem[\citeproctext]{ref-VanFraassen2006vague}
 Fraassen, B. C. V. (2006). Vague expectation value loss.
 \emph{Philosophical Studies}, \emph{127}(3), 483--491.
 \url{https://doi.org/10.1007/s11098-004-7821-2}
 
-\leavevmode\vadjust pre{\hypertarget{ref-Gardenfors1982unreliable}{}}%
+\bibitem[\citeproctext]{ref-Gardenfors1982unreliable}
 Gärdenfors, P., \& Sahlin, N.-E. (1982). Unreliable probabilities, risk
 taking, and decision making. \emph{Synthese}, \emph{53}(3), 361--386.
 \url{https://doi.org/10.1007/bf00486156}
 
-\leavevmode\vadjust pre{\hypertarget{ref-joyce2005probabilities}{}}%
+\bibitem[\citeproctext]{ref-joyce2005probabilities}
 Joyce, J. M. (2005). How probabilities reflect evidence.
 \emph{Philosophical Perspectives}, \emph{19}(1), 153--178.
 
-\leavevmode\vadjust pre{\hypertarget{ref-Kaplan1968decision}{}}%
+\bibitem[\citeproctext]{ref-Kaplan1968decision}
 Kaplan, J. (1968). Decision theory and the fact-finding process.
 \emph{Stanford Law Review}, \emph{20}(6), 1065--1092.
 
-\leavevmode\vadjust pre{\hypertarget{ref-keynes1921treatise}{}}%
+\bibitem[\citeproctext]{ref-keynes1921treatise}
 Keynes, J. M. (1921). \emph{A treatise on probability, 1921}. London:
 Macmillan.
 
-\leavevmode\vadjust pre{\hypertarget{ref-konek2013foundations}{}}%
+\bibitem[\citeproctext]{ref-konek2013foundations}
 Konek, J. (2013). \emph{New foundations for imprecise bayesianism} (PhD
 thesis). University of Michigan.
 
-\leavevmode\vadjust pre{\hypertarget{ref-kruschke2015doing}{}}%
+\bibitem[\citeproctext]{ref-kruschke2015doing}
 Kruschke, J. (2015). \emph{Doing bayesian data analysis (second
 edition)}. Boston: Academic Press.
 
-\leavevmode\vadjust pre{\hypertarget{ref-Kyburg1961}{}}%
+\bibitem[\citeproctext]{ref-Kyburg1961}
 Kyburg, H. E. (1961). \emph{Probability and the logic of rational
 belief}. Wesleyan University Press.
 
-\leavevmode\vadjust pre{\hypertarget{ref-kyburg2001uncertain}{}}%
+\bibitem[\citeproctext]{ref-kyburg2001uncertain}
 Kyburg Jr, H. E., \& Teng, C. M. (2001). \emph{Uncertain inference}.
 Cambridge University Press.
 
-\leavevmode\vadjust pre{\hypertarget{ref-Levi1974ideterminate}{}}%
+\bibitem[\citeproctext]{ref-Levi1974ideterminate}
 Levi, I. (1974). On indeterminate probabilities. \emph{The Journal of
 Philosophy}, \emph{71}(13), 391. \url{https://doi.org/10.2307/2025161}
 
-\leavevmode\vadjust pre{\hypertarget{ref-Levi1980enterprise}{}}%
+\bibitem[\citeproctext]{ref-Levi1980enterprise}
 Levi, I. (1980). \emph{The enterprise of knowledge: An essay on
 knowledge, credal probability, and chance}. MIT Press.
 
-\leavevmode\vadjust pre{\hypertarget{ref-Mayo-Wilson2016scoring}{}}%
+\bibitem[\citeproctext]{ref-Mayo-Wilson2016scoring}
 Mayo-Wilson, C., \& Wheeler, G. (2016). Scoring imprecise credences: A
 mildly immodest proposal. \emph{Philosophy and Phenomenological
 Research}, \emph{92}(1), 55--78.
 \url{https://doi.org/10.1111/phpr.12256}
 
-\leavevmode\vadjust pre{\hypertarget{ref-o2006uncertain}{}}%
+\bibitem[\citeproctext]{ref-o2006uncertain}
 O'Hagan, A., Buck, C. E., Daneshkhah, A., Eiser, J. R., Garthwaite, P.
 H., Jenkinson, D. J., \ldots{} Rakow, T. (2006). \emph{Uncertain
 judgements: Eliciting experts' probabilities}.
 
-\leavevmode\vadjust pre{\hypertarget{ref-Rinard2013against}{}}%
+\bibitem[\citeproctext]{ref-Rinard2013against}
 Rinard, S. (2013). Against radical credal imprecision. \emph{Thought: A
 Journal of Philosophy}, \emph{2}(1), 157--165.
 \url{https://doi.org/10.1002/tht3.84}
 
-\leavevmode\vadjust pre{\hypertarget{ref-Schoenfield2017accuracy}{}}%
+\bibitem[\citeproctext]{ref-Schoenfield2017accuracy}
 Schoenfield, M. (2017). The accuracy and rationality of imprecise
 credences. \emph{Noûs}, \emph{51}(4), 667--685.
 \url{https://doi.org/10.1111/nous.12105}
 
-\leavevmode\vadjust pre{\hypertarget{ref-seidenfeld2012forecasting}{}}%
+\bibitem[\citeproctext]{ref-seidenfeld2012forecasting}
 Seidenfeld, T., Schervish, M., \& Kadane, J. (2012). Forecasting with
 imprecise probabilities. \emph{International Journal of Approximate
 Reasoning}, \emph{53}, 1248--1261.
 \url{https://doi.org/10.1016/j.ijar.2012.06.018}
 
-\leavevmode\vadjust pre{\hypertarget{ref-Sjerps2015Uncertainty}{}}%
+\bibitem[\citeproctext]{ref-Sjerps2015Uncertainty}
 Sjerps, M. J., Alberink, I., Bolck, A., Stoel, R. D., Vergeer, P., \&
 Zanten, J. H. van. (2015). {Uncertainty and LR: to integrate or not to
 integrate, that's the question}. \emph{Law, Probability and Risk},
 \emph{15}(1), 23--29. \url{https://doi.org/10.1093/lpr/mgv005}
 
-\leavevmode\vadjust pre{\hypertarget{ref-Sturgeon2008grain}{}}%
+\bibitem[\citeproctext]{ref-Sturgeon2008grain}
 Sturgeon, S. (2008). Reason and the grain of belief. \emph{No{û}s},
 \emph{42}(1), 139--165. Retrieved from
 \url{http://www.jstor.org/stable/25177157}
 
-\leavevmode\vadjust pre{\hypertarget{ref-Taroni2015Dismissal}{}}%
+\bibitem[\citeproctext]{ref-Taroni2015Dismissal}
 Taroni, F., Bozza, S., Biedermann, A., \& Aitken, C. (2015). {Dismissal
 of the illusion of uncertainty in the assessment of a likelihood ratio}.
 \emph{Law, Probability and Risk}, \emph{15}(1), 1--16.
 \url{https://doi.org/10.1093/lpr/mgv008}
 
-\leavevmode\vadjust pre{\hypertarget{ref-sep-legal-probabilism}{}}%
+\bibitem[\citeproctext]{ref-sep-legal-probabilism}
 Urbaniak, R., \& Di Bello, M. (2021). {Legal Probabilism}. In E. N.
 Zalta (Ed.), \emph{The {Stanford} encyclopedia of philosophy} (Fall
 2021).
 \url{https://plato.stanford.edu/archives/fall2021/entries/legal-probabilism/};
 Metaphysics Research Lab, Stanford University.
 
-\leavevmode\vadjust pre{\hypertarget{ref-walley1991statistical}{}}%
+\bibitem[\citeproctext]{ref-walley1991statistical}
 Walley, P. (1991). \emph{Statistical reasoning with imprecise
 probabilities}. Chapman; Hall London.
 
