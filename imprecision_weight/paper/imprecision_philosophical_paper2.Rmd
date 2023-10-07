@@ -181,8 +181,8 @@ This is not a  mathematical question: mathematically [@bradley2012scientific], e
 
 Most of the  examples  in the literature start with the assumption that the agent is told by a believable source that the chances are such-and-such, or that the experimental set-up is such that the agent knows that such and such structural constraint is satisfied. But, besides ideal circumstances, it is unclear how an agent could come to accept such structural constraints upon observation.  The chain of testimonial evidence has to end somewhere. 
 
-Admittedly, there are straightforward degenerate cases: if you see the outcome of a coin toss to be heads, you reject the measure with $\mathsf{P}(H)=0$, and similarly for tails. Another class of cases might arise if you are randomly drawing objects from a finite set where the real frequencies are already known, because this finite set has been inspected. But such extreme cases aside, what else?  Mere consistency constraint wouldn't get the agent very far in the game of excluding probability measures, as way too many probability measures are strictly speaking still consistent with the observations for evidence to result in epistemic progress.^[ 
-Bradley suggests that "statistical evidence might inform [evidential] constraints [\dots and that evidence] of causes might inform structural constraints" [125-126]. This, however, is not a clear account of how exactly this should proceed. One suggestion might be that once a statistical significance threshold is selected, a given set of observations with a selection of background modeling assumptions yields a credible interval. But this is to admit that to reach such constraints, we already have to start with a second-order approach, and drop information about the densities, focusing only on the intervals obtained with fixed margins of errors. But as we will be insisting, if you have the information about densities to start with, there is no clear advantage to going imprecise instead, and there are multiple problems associated with this move. Moreover, such moves require a choice of an error margin, which is extra-epistemic, and it is not clear what advantage there is to  use extra-epistemic considerations of this sort to drop information contained in densities.^[Relatedly, in forensic evidence evaluation even scholars who disagree about the value of going higher-order agree that interval reporting is problematic, as the choice of a limit or uncertainty level is rather arbitrary  [@Taroni2015Dismissal;@Sjerps2015Uncertainty].] 
+Admittedly, there are straightforward degenerate cases: if you see the outcome of a coin toss to be heads, you reject the measure with $\mathsf{P}(H)=0$, and similarly for tails. Another class of cases might arise if you are randomly drawing objects from a finite set where the real frequencies are already known, because this finite set has been inspected. But such extreme cases aside, what else?  Mere consistency constraint wouldn't get the agent very far in the game of excluding probability measures, as way too many probability measures are strictly speaking still consistent with the observations for evidence to result in epistemic progress.\footnote{
+Bradley suggests that "statistical evidence might inform [evidential] constraints [\dots and that evidence] of causes might inform structural constraints" [125-126].} This, however, is not a clear account of how exactly this should proceed. One suggestion might be that once a statistical significance threshold is selected, a given set of observations with a selection of background modeling assumptions yields a credible interval. But this is to admit that to reach such constraints, we already have to start with a second-order approach, and drop information about the densities, focusing only on the intervals obtained with fixed margins of errors. But as we will be insisting, if you have the information about densities to start with, there is no clear advantage to going imprecise instead, and there are multiple problems associated with this move. Moreover, such moves require a choice of an error margin, which is extra-epistemic, and it is not clear what advantage there is to  use extra-epistemic considerations of this sort to drop information contained in densities.^[Relatedly, in forensic evidence evaluation even scholars who disagree about the value of going higher-order agree that interval reporting is problematic, as the choice of a limit or uncertainty level is rather arbitrary  [@Taroni2015Dismissal;@Sjerps2015Uncertainty].] 
 
 
 # Higher-order probabilism
@@ -481,7 +481,7 @@ charitableImpactPlot <- ggplot()+geom_line(aes(x = prior, y = posteriorL))+xlim(
 
 
 The expert's answer makes apparent that the precise random match probabilities do not tell the whole story.
-Perhaps, the information about sample sizes is good enough  and now you know how to\todo{"Nikodem, cite Taroni in fn." not sure if it is the right one; No, I meant the one brought up in this paper already. Fixed.} 
+Perhaps, the information about sample sizes is good enough  and now you know how to
 use the evidence properly.^[This is what, effectively, @Taroni2015Dismissal seem to suggest when they insist 
 the fact-finders should be simply given point estimates and information about the study set-up,
  such as sample size. We disagree.] But if you are like most human beings, you can't. What to do, then?  
@@ -554,7 +554,7 @@ In general, it is impossible to calculate the credible interval for the joint di
       So providing the fact-finder with individual intervals, even if further information 
       about the distributions is provided, might easily mislead.^[Investigation of the 
        extent to which the individual interval presentation is misleading  would be an interesting psychological study.]
-\todo{Nikodem: Can you google to see if there is any such study?}
+
 
 
 As it turns out, given the reported sample sizes, the 99\% credible interval
@@ -648,17 +648,49 @@ for (s in 1:1e4){
 
 
 
+#minimaPlot <- ggplot()+geom_density(aes(x = minima))+
+#  theme_tufte(base_size = 10)+ggtitle("Minimal priors sufficient for posterior >.99")#+xlab("minimal prior")+
+#  theme(plot.title.position = "plot")
+
+#minimaGrob <- ggplotGrob(minimaPlot)
+
+
+
+#jointPosteriorDF <-   as.data.frame(do.call(cbind, jointPosterior))
+
+
+
+#jointPosteriorSubsample <- jointPosteriorDF[,1:300]
+
+#jointPosteriorDF$ps <- ps
+#jointPosteriorSubsample$ps <- ps
+
+#jointPosteriorLong <- melt(jointPosteriorSubsample,
+#                           id.vars = c("ps"))
+#colnames(jointPosteriorLong) <- c("prior", "sample","probability")
+
+#alpha = .25
+#size = .2
+
+#densitiesLinesPlot <- ggplot(jointPosteriorLong)+
+#  geom_line(aes(x = prior, y = probability,group = sample),
+#            alpha = alpha, linewidth = size)+
+#  theme_tufte()+xlim(0,.2) +
+#  annotation_custom(minimaGrob, xmin = .085, xmax = .185,
+#                  ymin = 0.01, ymax = 0.8) +
+#  ggtitle("Posterior vs prior (300 sampled lines)") +
+#  theme(plot.title.position = "plot")
+#densitiesLinesPlot
+
+
+
+
+
 minimaPlot <- ggplot()+geom_density(aes(x = minima))+
   theme_tufte(base_size = 10)+ggtitle("Minimal priors sufficient for posterior >.99")+xlab("minimal prior")+
-  theme(plot.title.position = "plot")
-
-minimaGrob <- ggplotGrob(minimaPlot)
-
-
+  theme(plot.title.position = "plot", plot.title = element_text(size = 10))
 
 jointPosteriorDF <-   as.data.frame(do.call(cbind, jointPosterior))
-
-
 
 jointPosteriorSubsample <- jointPosteriorDF[,1:300]
 
@@ -675,20 +707,19 @@ size = .2
 densitiesLinesPlot <- ggplot(jointPosteriorLong)+
   geom_line(aes(x = prior, y = probability,group = sample),
             alpha = alpha, linewidth = size)+
-  theme_tufte()+xlim(0,.2) +
-  annotation_custom(minimaGrob, xmin = .085, xmax = .185,
-                  ymin = 0.01, ymax = 0.8) +
+  theme_tufte()+xlim(0,.2) + theme_tufte(base_size = 10)+
   ggtitle("Posterior vs prior (300 sampled lines)") +
-  theme(plot.title.position = "plot")
+  theme(plot.title.position = "plot", plot.title = element_text(size = 10))
 
 ```
 
 
 
-
 \begin{figure}[H]
-```{r Figlines5,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "60%", warning = FALSE, message = FALSE}
-densitiesLinesPlot
+```{r Figlines5,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "85%", warning = FALSE, message = FALSE}
+
+grid.arrange(densitiesLinesPlot, minimaPlot, ncol= 2)
+#densitiesLinesPlot
 ```
 
 \caption{300 lines illustrating the uncertainty about the dependence of the posterior on the prior given aleatory uncertainty about the evidence, with the distribution of the minimal priors required for the posterior to be above .99.}
@@ -1487,10 +1518,7 @@ AdiseaseLRPlot <- plotSample(AdiseaseLR,title = "LR: Adisease",  paste("median =
 As we already discussed, one challenge for the imprecisers is providing a workable scoring rule that would be a
 counterpart of, say, the Brier scoring rule for the precise case.
 While the imprecisers have hard time defining what the accuracy of a set of measures is, our path is easier.
-Already some work has been done on the notion of accuracy of continuous probability distributions. 
-\todo{Nikodem cite here: Hersbach 2000, decomposition, Pettigrew 2013 epistemic utility and norms for credences,
- Gneiting and Rafter 2007 stricty proper scoring rules} 
-One key notion in use is that of continuous ranked probability score (CRPS) of a distribution $p$
+Already some work has been done on the notion of accuracy of continuous probability distributions (@HersbachDecomp2000, @Pettigrew2012Epistemic-Utili, @GneitRafter2007). One key notion in use is that of continuous ranked probability score (CRPS) of a distribution $p$
  with respect to a possible world $w$:
 \begin{align*}
 I(p,w) &= \int_{-\infty}^\infty \vert \mathsf{P}(x) - \mathbf{ 1 }(x\geq V(w))\vert ^2 \, dx
@@ -1514,8 +1542,7 @@ cumulative density functions:
 First, as in practice we are unable to work with infinite precision anyway, not much harm is done
 and much computational ease is made with (grid) approximations, so we will keep using these in line
 with the previous developments (note for instance that there are no readily computable solutions to
-the integral used in the definition of CRPS, although it can sometimes be evaluated in closed form).
-\todo{Nikodem cite Gneiting Rafter, 366} 
+the integral used in the definition of CRPS, although it can sometimes be evaluated in closed form) [ @GneitRafter2007, p. 366].
 So, instead of integration, we'll be using summation over the values for a finite number of bins.
 
 Now, let's see how this approach would play out in a scenario very much like Schoenfield's  (EMC),
@@ -1607,7 +1634,7 @@ expKLDCe <- expCe * kldCe1 + (1-expCe) * kldCe0
 
 \begin{figure}[H]
 ```{r figEMC,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
-ggarrange(plotDistroPlain(bimodal, "Bimodal, with modes at .3 and .5"),
+grid.arrange(plotDistroPlain(bimodal, "Bimodal, with modes at .3 and .5"),
 plotDistroPlain(centered, "Centered around .4"),
 plotDistroPlain(bimodalWide, "Wide bimodal, with modes at .2 and .6"), ncol = 1)
 ```
@@ -1666,8 +1693,7 @@ For the three distributions we're discussing in this chapter, the inaccuracies c
 divergence with respect to various potential true probability distributions look as in Figure \ref{fig:inaccuracies2}.
 
 \begin{figure}[H]
-```{r fig:inaccuracies2,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%", 
-  message = FALSE, warning = FALSE, results = FALSE}
+```{r figinaccuracies2,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%", message = FALSE, warning = FALSE, results = FALSE}
 point <- function (value) ifelse(abs(ps - value) == min(abs(ps - value)), 1, 0)
 indicator <- function(pointf) ifelse( ps >= ps[min(which(pointf != 0))], 1,0  )
 
@@ -1717,6 +1743,8 @@ bwkplot <- plotDistroPlain(InaBiW$klds, "Bimodal wide: KLD")+ylab("inaccuracy")+
 library(gridExtra)
 grid.arrange(bcplot, bkplot, ccplot, ckplot, bwcplot, bwkplot)
 ```
+
+
 \caption{CLPSR and KL divergence based inaccuracies vs (omniscient functions corresponding to) $n$ true 
 probability hypotheses for the three distributions discussed in this section.}
 \label{fig:inaccuracies2}
@@ -1794,18 +1822,19 @@ pointed wide bimodal & 99.75 & 99.75 & 16.61 & 16.61\\
 \end{table}
 
 
-
 Now, the reader might worry that this has been only a discussion of an example, which fails 
 to establish the strict propriety of the KLD inaccuracy measure. Fair point. In fact, such a proof
- is given in the appendix to this paper. Just to get the gist of the argument,  consider taking 
- the inaccuracy of a second-order discretized probability mass $p$ over a parameter space $[0,1]$,
-  given that the real probability is $\theta$  as the Kullback-Leibler divergence of $p$ from 
-  the indicator distribution  of $\theta$  (which assigns 1 to $\theta$ and 0 to all other parameter
-   values in the parameter space), denoted as $\mathcal{I}_{\dkl}^2$.\footnote{The argument generalizes 
-   to parameter spaces that correspond to probabilities of multiple propositions which are Cartesian 
-   products of parameter spaces explicitly used in the argument in this section.} It turns out that 
-   this is a strictly proper inaccuracy measure: each $p$ expects itself to be the least 
-   inaccurate distribution. The argument has four  key moves. 
+is given in the appendix to this paper. Just to get the gist of the argument,  consider taking 
+the inaccuracy of a second-order discretized probability mass $p$ over a parameter space $[0,1]$,
+given that the real probability is $\theta$  as the Kullback-Leibler divergence of $p$ from 
+the indicator distribution  of $\theta$  (which assigns 1 to $\theta$ and 0 to all other parameter
+values in the parameter space), denoted as $\mathcal{I}_{\dkl}^2$.^[The argument generalizes 
+to parameter spaces that correspond to probabilities of multiple propositions which are Cartesian 
+products of parameter spaces explicitly used in the argument in this section.] It turns out that 
+this is a strictly proper inaccuracy measure: each $p$ expects itself to be the least 
+inaccurate distribution. The argument has four  key moves.
+
+   
 \begin{enumerate}
 \item the inaccuracy of $p$ w.r.t. to parameter $\theta$ is just $- \log_2 p(\theta)$,
 \item  the expected inaccuracy of $p$ from the perspective of $p$ is the entropy of $p$, $H(p)$,
@@ -1820,10 +1849,7 @@ to establish the strict propriety of the KLD inaccuracy measure. Fair point. In 
 
 # Discussion
 
-\todo{Nikodem: read carefully make sure everything makes sense here!}
-
-Our approach does involve multiple parameters, uncertainty about them, and
-some dependency structure  between random variables. So it is only natural to ask whether what we propose 
+Our approach does involve multiple parameters, uncertainty about them, along with a dependency structure between random variables. So it is only natural to ask whether what we propose 
 is not just an old wolf in a new sheep's clothing, as one might think that what looks like a DAG and quacks
 like a DAG is always a hierarchical model. In this section we briefly clarify what the answer to this question is.
 
@@ -1833,7 +1859,7 @@ First, we need some clarity on what a Bayesian hierarchical model is. In the wid
   a chain of dependencies.  For instance, think about a joint parameter  space   for two parameters $\theta$
    and $\omega$, where $p(\theta, \omega \vert D) \propto p(D \vert \theta, \omega)p(\theta, \omega)$.
     If, further, some independence-motivated re-factoring of the right-hand side---for instance
-     as $p(D\vert \theta)p(\theta \omega)) p (\omega)$---is possible, we are dealing with a hierarchical
+     as $p(D\vert \theta)p(\theta \omega)p(\omega)$---is possible, we are dealing with a hierarchical
       model in the wide sense of the word.
 
 Such models usually come useful when we are dealing with clustered data, such as a cohort study with
@@ -1851,7 +1877,7 @@ about $\omega$ and express our uncertainty about it in terms a density $p(\omega
 hierarchical model with joint prior distribution over parameters $\prod p(\theta_i \vert \omega) p(\omega)$. 
 
 
-As  another example, one can develop a multilevel regression model of the distributions of the radom levels 
+As  another example, one can develop a multilevel regression model of the distributions of the random levels 
 in various counties, where both the intercept and the slope vary with counties by taking  
 $y_i\sim \mathsf{Norm}(\alpha_{\mbox{j[i]}}\, + \beta_{\mbox{j[i]}}  x_i, \sigma^2_y )$, where $j$ is a county index, 
 $\alpha_j \sim \mathsf{Norm}(\mu_\alpha,\sigma_\alpha^2 )$,  and
@@ -1863,8 +1889,8 @@ there is a meaningful independence structure and distributions over parameter va
 However, our  approach is unlike such models in a few respects. For one, we are not dealing with clustered data, 
 and the random variables are mostly propositions and their truth values. Given a hypothesis $H$ and an item
 of evidence $E$ for it, there seems to be no interesting conceptualization on which the underlying data would
-be clustered. After all, for instance, it is not that  stains at a crime scene are a subgroup of crimes
-being committed---this does not even make sense. Yes, there is dependency between these phenomena, 
+be clustered. For example, considering stains at a crime scene as a subgroup of crimes being committed doesn't make logical sense.
+Yes, there is dependency between these phenomena, 
 but describing it as clustering would be at least misleading.  Second, the dependencies proceed through
  the values of the random variables which are **not** parameters, but rather truth-values, and require 
  also conditional uncertainties regarding the dependencies between these truth-values. 
@@ -1972,8 +1998,8 @@ concave just in case its second derivative is non-positive (negative). In partic
 
 
 \begin{lemma}[Jensen's inequality]
-If $f$ is concave, and $g$ is any function of a random variable, $\E(f(g(x))) \leq f(\E(g(x)))$. If $f$ is 
-strictly concave, the equality holds only if $g(x) = \E g(x)$, that is, if $g(x)$ is constant everywhere.
+If $f$ is concave, and $g$ is any function of a random variable, $\mathbb{E}(f(g(x))) \leq f(\mathbb{E}(g(x)))$. If $f$ is 
+strictly concave, the equality holds only if $g(x) = \mathbb{E} g(x)$, that is, if $g(x)$ is constant everywhere.
 \end{lemma}
 
 
@@ -1990,7 +2016,7 @@ p_1f(g(x_1))+ p_2f(g(x_2)) &\leq f(p_1g(x_1) + p_2g(x_2))
 Now, suppose that  $ p_1f(g(x_1))+ p_2f(g(x_2)) = f(p_1g(x_1) + p_2g(x_2))$ and that   $f$ is strictly concave.
  That means either $(p_1 = 1\wedge p_2 = 0)$, or $(p_1 = 0 \wedge p_2 =1)$. Then either $x$ always takes
   value $x_1$, in the former case, or always takes value $x_2$, in the latter
-   case. $\E g (x) =  p_1 g(x_1) + p_2 g(x_2)$, which equals  $g(x_1)$ in the former case and $g(x_2)$ in the latter.
+   case. $\mathbb{E} g (x) =  p_1 g(x_1) + p_2 g(x_2)$, which equals  $g(x_1)$ in the former case and $g(x_2)$ in the latter.
 
 
 Now suppose Jensen's inequality and the consequence of strict contativity) holds for $k-1$ mass points. 
@@ -2005,9 +2031,9 @@ Write $p_i' = \frac{p_i}{1-p_k}$ for $i = 1, 2, \dots, k-1$. We now reason:
  \end{align*}
 
 Notice also that at the induction hypothesis application stage we know that the equality holds only if 
-$p_k =1 \vee p+k = 0$. In the former case $g(x)$ always takes value $x_k = \E g(x)$. In the latter case,
+$p_k =1 \vee p+k = 0$. In the former case $g(x)$ always takes value $x_k = \mathbb{E} g(x)$. In the latter case,
  $p_k$ can be safely ignored and $\sum_{i=1}^{k}p_ig(x_i) = \sum_{i=1}^{k-1}p'g(x_i)$ and by the induction 
- hypothesis we already know that $\E g(x) = g(x)$.
+ hypothesis we already know that $\mathbb{E} g(x) = g(x)$.
 
 
 \end{proof}
@@ -2098,10 +2124,10 @@ Further, $Ind^k_k= 1$ and therefore $\log_2 Ind^k_k =0$, so we simplify:
 & =  - \log_2 p_k
 \end{align*}
 
-\noindent Now, let's think about expected values. First, what the inaccuracy of $p$ as expected by $p$, $\EI(p,p)$$?
+\noindent Now, let's think about expected values. First, what the inaccuracy of $p$ as expected by $p$, $EI(p,p)$$?
 
 \begin{align*}
-\EI(p,p) & = \sum_{i =1}^n p_i \mathcal{I}_{\dkl}^2(p, \theta_k) \\
+EI(p,p) & = \sum_{i =1}^n p_i \mathcal{I}_{\dkl}^2(p, \theta_k) \\
 & = \sum_{i =1}^n  p_i - \log_2 p_k \\
 & = - \sum_{i =1}^n  p_i  \log_2 p_k = H(p)
 \end{align*}
@@ -2109,12 +2135,12 @@ Further, $Ind^k_k= 1$ and therefore $\log_2 Ind^k_k =0$, so we simplify:
 \noindent Analogously, the inaccuracy of $q$ as expected from the perspective of $p$ is:
 
 \begin{align*}
-\EI(p, q) & =   \sum_{i =1}^n p_i \left( - \log_2 q_i\right)\\
+EI(p, q) & =   \sum_{i =1}^n p_i \left( - \log_2 q_i\right)\\
 & = -  \sum_{i =1}^n p_i  \log_2 q_i) = H(p,q)
 \end{align*}
 
 
-But that means, by Gibb's inequality, that $\EI(p,q) \geq EI(p,p)$ unless $p=q$, which completes the proof.
+But that means, by Gibb's inequality, that $EI(p,q) \geq EI(p,p)$ unless $p=q$, which completes the proof.
 
 
 
