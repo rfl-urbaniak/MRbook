@@ -19,6 +19,7 @@ csl: apa-6th-edition.csl
 indent: true
 ---
 
+
   <!-- pdf:
     numberSections: true
     dfPrint: kable 
@@ -26,6 +27,7 @@ indent: true
     toc: true
     include-in-header:  quartoStyle.sty
     latex_engine: pdflatex  -->
+
 
 
 ```{r setup}
@@ -60,6 +62,7 @@ source("../../scripts/SCplotCPTs.R")
 source("../../scripts/SCplotDistros.R")
 
 ```
+
 
 
 
@@ -229,6 +232,7 @@ This higher-order approach as a technical devise is not very surprising. Bayesia
 Once we allow more expressive power in this fashion, we obtain rather straightforwardly more honest representations  of RA's credal states, illustrated in @fig-evidenceResponse. In particular, the scenario in which the two biases of the coin are not equally likely---which imprecise probabilism cannot model---can be easily modeled within high-order probabilism by assigning different probabilities to the two biases.
   
 
+
 ```{r evidenceResponse1,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
 p <- seq(from=0 , to=1 , by = 0.001)
 FairDensity <- ifelse(p == .5, 1, 0)
@@ -264,8 +268,6 @@ TwoUnbalancedPlot <- ggplot(TwoUnbalancedDF, aes(x = p, y = TwoUnbalancedDensity
 
 ```
 
-
-
 ```{r FigevidenceResponse2,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "80%"}
 #| label: fig-evidenceResponse
 #| fig-cap: "Examples of higher-order distributions for a few  scenarios problematic for both precise and imprecise probabilism."
@@ -273,6 +275,7 @@ TwoUnbalancedPlot <- ggplot(TwoUnbalancedDF, aes(x = p, y = TwoUnbalancedDensity
 
 grid.arrange(FairPlot,UniformPlot, TwoPlot, TwoUnbalancedPlot)
 ```
+
 
 
 
@@ -285,6 +288,7 @@ p(\theta \vert D) & = \frac{p(D\vert \theta)p(\theta)}{p(D)}\\
 & = \frac{\theta^s (1-\theta)^{(n - s)}p(\theta)}{\int (\theta')^s (1-\theta')^{(n - s)}p(\theta')\,\, d\theta'}.
 \end{align*}
 ] A further advantage of high-order probabilism over imprecise probabilism is that the prospects for accuracy-based arguments are not foreclosed. This is a significant shortcoming of imprecise probabilism, especially because such arguments exist for precise probabilism. One can show that there exist proper scoring rules for higher-order probabilism. These rules can then be used to formulate accuracy-based arguments. Another interesting feature of the framework is that the point made by Schoenfield against imprecise probabilism does not apply: there are cases in which accuracy considerations recommend an imprecise stance (that is, a multi-modal distribution) over a precise one. We will get back to these issues when we talk about accuracy. \todo{Ref to section}
+
 
 ```{r Figinertia2, eval = TRUE, echo=FALSE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%", message= FALSE, warning=FALSE}
 
@@ -341,8 +345,6 @@ InertiaTwoGoneBluePlot <- ggplot()+geom_line(aes(x = ps, y = posterior2g1b))+the
   scale_y_continuous(limits = c(0,upperLimit))
 ```
 
-
-
 ```{r Figinertia3, echo=FALSE, eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "80%",   message = FALSE, warning = FALSE, results = FALSE}
 #| label: fig-intertia2
 #| fig-cap: "As observations of heads, heads and tails come in, extreme parameter values drop out of the picture and the posterior is shaped by the evidence."
@@ -350,6 +352,7 @@ InertiaTwoGoneBluePlot <- ggplot()+geom_line(aes(x = ps, y = posterior2g1b))+the
 
 grid.arrange(InertiaPriorPlot, InertiaOneGPlot,  InertiaTwoGPlot, InertiaTwoGoneBluePlot, ncol = 2, nrow = 2)
 ```
+
 
 
 
@@ -415,6 +418,7 @@ Now, let's see how this approach would play out in a scenario very much like Sch
   one  with the distribution of Heads either normal around  $.3$, and one  normal 
   around  $.5$, both with the standard deviation of $.05$, randomly pick one of these coins and then toss it. 
   The RA knows the setup. Consider the following three (out of many) possible stances that RA could take:
+
 
 
 ```{r calculationsEMC,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
@@ -496,8 +500,6 @@ expKLDbW <- expBiW * kldBiW1 + (1-expBiW) * kldBiW0
 expKLDCe <- expCe * kldCe1 + (1-expCe) * kldCe0
 ```
 
-
-
 ```{r figEMC,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
 #| label: fig-emc
 #| fig-cap: 'Three (out of many) candidates in a vague EMS scenario. All distributions are built from normal  distributions with standard deviation $.5$, the bimodal ones are "glued" in the middle.'
@@ -507,6 +509,7 @@ grid.arrange(plotDistroPlain(bimodal, "Bimodal, with modes at .3 and .5"),
 plotDistroPlain(centered, "Centered around .4"),
 plotDistroPlain(bimodalWide, "Wide bimodal, with modes at .2 and .6"), ncol = 1)
 ```
+
 
 
 An impreciser might be inclined to say that  it is the bimodal distribution that's appropriately evidence-responsive.
@@ -558,6 +561,7 @@ plays out. So, instead of  measuring inaccuracy with respect to two omniscient c
 
 For the three distributions we're discussing in this chapter, the inaccuracies calculated using CRPS  and KL 
 divergence with respect to various potential true probability distributions look as in @fig-inaccuracies2.
+
 
 
 ```{r figinaccuracies2,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%", message = FALSE, warning = FALSE, results = FALSE}
@@ -615,6 +619,7 @@ bwkplot <- plotDistroPlain(InaBiW$klds, "Bimodal wide: KLD")+ylab("inaccuracy")+
 library(gridExtra)
 grid.arrange(bcplot, bkplot, ccplot, ckplot, bwcplot, bwkplot)
 ```
+
 
 
 
@@ -735,6 +740,7 @@ inaccurate distribution. The argument has four  key moves.
 This is not the end of the story. Beyond the difficulties discussed in the literature, we also think that both precise and imprecise probabilities have difficulties when it comes to evidence aggregation when it comes to more realistic cases. In this section we illustrate this with a running example of two pieces of evidence. In the next section, we discuss how the approach we proposed can exploit existing computational methods to handle even more complex cases. Our strategy is to  go over a stylized, but fairly realistic case in which  it makes an important difference whether we approach the problem from the precise, imprecise, or higher-order
  perspective. 
 
+
 ```{r introStarts,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%", warning = FALSE}
 ps <- seq(0,1,length.out = 1001)
 
@@ -761,6 +767,7 @@ pointImpactPlot <- ggplot()+geom_line(aes(x = prior, y = posterior))+xlim(0,.07)
   annotate(geom = "label", label = "posterior > .99", x = .067, y =.95, size = 2.5)+
   theme(plot.title.position = "plot")
 ```
+
 
 
 A defendant in a criminal case may face multiple 
@@ -820,6 +827,7 @@ While perhaps not sufficient for outright belief in the source hypothesis, the e
 
 
 
+
 ```{r impactOfPoint4,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "60%", warning = FALSE, message = FALSE}
 #| label: fig-impactOfPoint
 #| fig-cap: "Impact of dog fur and human hair evidence on the prior, point estimates."
@@ -829,6 +837,7 @@ pointImpactPlot
 ```
 
 
+
 Unfortunately, this  analysis 
 leaves out something crucial. You reflect on what you have been told and ask the expert:
  how can you know the random match probabilities 
@@ -836,6 +845,7 @@ with such precision? Shouldn't we also be mindful of the uncertainty that may af
 The expert agrees, and tells you that in fact the random match probability for the hair evidence
   is based on 29 matches found in a database of size 1148, while the random match probability 
   for the dog evidence is based on finding two matches in a reference database of size 78. 
+
 
 
 ```{r hair,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%"}
@@ -865,6 +875,7 @@ charitableImpactPlot <- ggplot()+geom_line(aes(x = prior, y = posteriorL))+xlim(
   )+
   theme(plot.title.position = "plot")
 ```
+
 
 
 The expert's answer makes apparent that the precise random match probabilities do not tell the whole story.
@@ -899,6 +910,7 @@ The expert responds with 99% credible intervals---specifically, starting with un
    convinced that the two items of match evidence are strongly incriminating.
 
 
+
 ```{r FigcharitableImpact75,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "60%", warning = FALSE, message = FALSE}
 #| label: fig-impactofcharitable
 #| fig-cap: "Impact of dog fur and human hair evidence on the prior, charitable reading."
@@ -906,6 +918,7 @@ The expert responds with 99% credible intervals---specifically, starting with un
 
 charitableImpactPlot
 ```
+
 
 
 This result is puzzling.  Are the two items of match evidence strongly incriminating evidence 
@@ -971,6 +984,7 @@ This also means that---following our advice on how to illustrate the impact of e
   probability of the evidence (@fig-lines).
 
 
+
 ```{r densitiesEvidence,echo=FALSE,eval=TRUE,fig.align = "center",cache=FALSE, fig.show = "hold", out.width = "100%"}
 
 jointEvidence <- dogSamples * hairSamples
@@ -1002,9 +1016,6 @@ densities2Plot <- ggplot()+
   theme(plot.title.position = "plot")
 ```
 
-
-
-
 ```{r Figdensities,echo=FALSE,eval=TRUE,fig.align = "center",cache=FALSE, fig.show = "hold", out.width = "80%", warning = FALSE, message = FALSE}
 #| label: fig-densities
 #| fig-cap: "Beta densities for individual items of evidence and the resulting joint density with .99 and .9 highest posterior density intervals, assuming the sample sizes as discussed and independence, with uniform priors."
@@ -1012,8 +1023,6 @@ densities2Plot <- ggplot()+
 
 grid.arrange(densities1Plot,densities2Plot, ncol = 1 )
 ```
-
-
 
 ```{r densLines, echo=FALSE,eval=TRUE,fig.align = "center",cache=FALSE, fig.show = "hold", out.width = "100%", warning = FALSE, message = FALSE}
 prior <- seq(0,1, by = 0.001)
@@ -1104,10 +1113,6 @@ densitiesLinesPlot <- ggplot(jointPosteriorLong)+
 
 ```
 
-
-
-
-
 ```{r Figlines,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "80%", warning = FALSE, message = FALSE}
 #| label: fig-lines
 #| fig-cap: "300 lines illustrating the uncertainty about the dependence of the posterior on the prior given aleatory uncertainty about the evidence, with the distribution of the minimal priors required for the posterior to be above .99."
@@ -1115,6 +1120,7 @@ densitiesLinesPlot <- ggplot(jointPosteriorLong)+
 
 grid.arrange(densitiesLinesPlot, minimaPlot, ncol= 2)
 ```
+
 
 
 This, then, is the main claim illustrated in this section: higher-order approach to evidence evaluation
@@ -1214,6 +1220,7 @@ Mathematically, we do not
 <!--  With this argument, we hope to break the stalemate in the debate by proving an argument to which both parties should be receptive. -->
 <!-- It is an accuracy-based argument in favor of using higher-order probabilities---roughly, it says, if you discard relevant information that you already have contained in the densities resulting from the estimation and rely on point estimates only, your predictions about the world will be less accurate in a very precise and quantifiable sense. -->
 
+
 ```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%"}
 priorA <- 1
 priorB <- 1
@@ -1266,6 +1273,7 @@ posteriorPlot <- ggplot()+geom_bar(aes(x= posteriorPredictions,y = ..prop..))+
 
 ```
 
+
 <!-- First, let us go over a particular example. Suppose we randomly draw a true population frequency from the uniform distribution. In our particular case, we obtained `r round(trueH,3)`. Then, we randomly draw a sample size as a natural number between 10 and 20. In our particular case, it is `r sampleSize`. Next, we simulate an experiment in which we draw that number of observations from the true distribution. We observe `r successes` successes and use this number to calculate the point estimate of the parameter, which is `r` round(pointEstimate,3)`. -->
 
 <!-- What is the probability mass function (PMF) for all -->
@@ -1302,6 +1310,7 @@ posteriorPlot <- ggplot()+geom_bar(aes(x= posteriorPredictions,y = ..prop..))+
 
 <!--  In our particular case, the former distance is `r` kld(testProbs,pointProbs)` and the latter is `r kld(testProbs,posteriorProbs)`. The posterior predictive distribution is information-theoretically closer to the true distribution. -->
 
+
 ```{r kldsCalculations,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%"}
 klds <- numeric(1000)
 for(i in 1:1000){
@@ -1323,6 +1332,7 @@ klds[i] <- kld(testProbs,pointProbs) - kld(testProbs,posteriorProbs)
 }
 
 ```
+
 
 
 <!-- This was just one example, but the phenomenon generalizes.  We repeat the simulation 1000 times, each time with a new true parameter, a new sample size, and a new sample. Every time the three PMFs are constructed using the methods we described and their KL divergence from the true distribution is calculated.  Figure \ref{fig:kldsPlots} displays the empirical distribution of the results of such a simulation. A positive value indicates that the distribution based on the point-estimate was further from the true PMF than the posterior predictive distribution based on the same observed sample. Notably, the mean difference is `r` round(mean(klds),3)`, the median difference is `r round(median(klds),3)`, and the distribution is asymmetrical, as there are multiple cases of large differences favoring posterior predictive distributions over point-based predictions.  All in all, accuracy-wise, point-estimate-based PMFs are systematically worse than the posterior predictive distribution. -->
@@ -1653,6 +1663,7 @@ These concerns can be addressed, at least in part, by recourse to higher-order p
 Clark case is represented in @fig-scwithhop. 
 
 
+
 ```{r scBN,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "60%", warning=FALSE, message = FALSE, dpi = 800}
 #create SC DAG
 #define the structure of the Sally Clark BN
@@ -1686,9 +1697,6 @@ SallyClarkCPTfenton <- list(Acause=AcauseProb,Adisease = AdiseaseProb,
 SCfenton <- custom.fit(SallyClarkDAG,SallyClarkCPTfenton)
 ```
 
-
-
-
 ```{r scBNplot2,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "80%", warning=FALSE, message = FALSE, dpi = 800, fig.height= 5, fig.width= 7}
 #| label: fig-scbnplot
 #| fig-cap: "Bayesian network for the Sally Clark case, with marginal prior probabilities."
@@ -1700,8 +1708,6 @@ graphviz.chart(SCfenton, type = "barprob", layout = "dot", #draw.labels = TRUE,
   text.col = "black", bar.col = "black", main = NULL,
   sub = NULL)
 ```
-
-
 
 ```{r scStages,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "80%", warning=FALSE, message = FALSE, dpi = 800}
 
@@ -1735,8 +1741,10 @@ SCfentonTable <- data.frame(stage = factor(c("prior", "bruising in A", "bruising
 ```
 
 
+
 <!---
 \begin{figure}[H]
+
 ```{r SCfentonTable2,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "90%", warning=FALSE, message = FALSE, dpi = 800}
 ggplot(SCfentonTable) + geom_point(aes(x = stage, y = probability, size = probability * .9))+
   scale_x_discrete(limits=rev, expand = c(0, 2)) +coord_flip()+theme_tufte(base_size = 10)+ scale_size(guide="none")+
@@ -1745,6 +1753,7 @@ ggplot(SCfentonTable) + geom_point(aes(x = stage, y = probability, size = probab
   scale_y_continuous(breaks = seq(0,.7, by =.1), limits = c(0,.8))
 
 ```
+
 
 \caption{The prior and posterior probabilities for Fenton's Sally Clark BN.}
 
@@ -1755,14 +1764,17 @@ ggplot(SCfentonTable) + geom_point(aes(x = stage, y = probability, size = probab
 
 <!---
 \begin{figure}[H]
+
 ```{r FigSCwithHOPa, echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "90%", warning=FALSE, message = FALSE, dpi = 800}
 
 grid.arrange(AbruisingIfSidsPlot+xlim(0,.4),AbruisingIfMurderPlot+xlim(0,.4))
 ```
+
 \caption{Example of approximated uncertainties about conditional probabilities in the Sally Clark case.}
 \label{fig:SCwithHOPa}
 \end{figure}
 --->
+
 
 
 ```{r SCwithHOP,  echo=FALSE,eval=TRUE,fig.align = "center",cache=FALSE, fig.show = "hold", out.width = "125%", out.height= "230%", warning=FALSE, message = FALSE, dpi = 800, fig.height=5 , fig.width= 7}
@@ -1842,6 +1854,7 @@ print(daigramToRotate, vp=viewport(angle=90), width=7, height=5)
 
 ```
 
+
 \todo{N: I am still searching for a good fix of that plot}
 
 
@@ -1859,6 +1872,7 @@ but the uncertainty around that median is still too wide to warrant a conviction
 
 
 
+
 ```{r SCwithHOP2, echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "90%", warning=FALSE, message = FALSE, dpi = 800, warning = FALSE, message = FALSE, output = FALSE}
 #| label: fig-scwithhop2
 #| fig-cap: 'Impact of incoming evidence in the Sally Clark case.'
@@ -1869,8 +1883,10 @@ grid.arrange(GuiltPriorPlot, GuiltABbruisingPlot, GuiltABbruisingNoDiseasePlot, 
 
 
 
+
 One question that arises is how this approach relates to the standard method of using likelihood ratios to report the value of the evidence. On this approach, the conditional probabilities that are used in the likelihood ratio calculations are estimated and come in a package with an uncertainty about them. Accordingly, these uncertainties propagate: to estimate the likelihood ratio while keeping track of the uncertainty involved, we can   sample probabilities from the selected distributions appropriate for the conditional probabilities needed for the calculations, then divide the corresponding samples, obtaining a sample of likelihood ratios, thus approximating the density capturing the recommended uncertainty about the likelihood ratio. Uncertainty about likelihood ratio is just propagated uncertainty about the involved conditional probabilities. For instance, we can use this tool to gauge our uncertainty about the likelihood ratios corresponding to the signs of bruising in son A and the presence of the symptoms of a potentially lethal disease in son A (@fig-sclrs).
 \todo{N: it's confusing, crossreference to a hidden visualization}
+
 
 
 
@@ -1895,6 +1911,7 @@ AdiseaseLRPlot <- plotSample(AdiseaseLR,title = "LR: Adisease",  paste("median =
                                                                            sep = "") )+xlim(0,3)
  grid.arrange(AbruisingLRPlot, AdiseaseLRPlot, ncol =2)
 ```
+
 
 
 
