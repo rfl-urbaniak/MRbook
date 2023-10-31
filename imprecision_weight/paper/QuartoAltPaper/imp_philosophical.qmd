@@ -50,6 +50,7 @@ library(truncnorm)
 library(ggforce)
 
 
+
 ps <- seq(0,1, length.out = 1001)
 getwd()
 source("../../scripts/CptCreate.R")
@@ -523,29 +524,18 @@ wide bimodal & 485.4052 & 285.6177 & 54.13433 & 19.50965 & 365.5340 & 33.35974\\
 
 Based on Table \ref{tbl:comp1}, it is worth noting that the expected inaccuracy metric recommends the wide bimodal distribution, which does not seem desirable! Furthermore, this conclusion remains consistent even when we use the KL divergence from the omniscient measure instead of the CRPS. This suggests that the choice of the evaluation metric itself is not the root cause of this recommendation.
 
-The problem here is that all these distributions have the same expected value: $.4$, which is used in 
+The problem here is that all these distributions share the same expected value: $.4$, which is used in 
 the calculations of the expected inaccuracies. This also means that not only the wide bimodal distribution 
 expects itself to be the least inaccurate, \todo{I do not understand this sentence.} but also that other measures expect it to be the least inaccurate! 
-This also suggests that the strategy of (i) calculating two distances/divergencies from the two 
-extreme omniscient measures and (ii) averaging by plugging in the expected value, does not result in a proper 
-inaccuracy score. 
+This observation raises concerns about the strategy of (i) calculating two distances/divergencies from the two 
+extreme omniscient measures and (ii) averaging by plugging in the expected value, because it will not result in a proper inaccuracy score. 
 
-But this strategy is clearly against the spirit of our enterprise. If we start with the idea that expected 
-values are often not good representations of RA's uncertainty, it is not terribly surprising that they do 
-not lead to sensible expected inaccuracy calculations. After all, since the three distributions do have the 
-same expected value, the difference between the probabilities they assigned don't seem to be taken seriously
- in the weighting stage (ii). The question now is, how can we do justice to the complexity of RA's credal state
-  in the expected inaccuracy considerations?
+This approach however is clearly against the spirit of our enterprise. If we start with the idea that expected 
+values are often not good representations of RA's uncertainty, it is not particularly surprising that they fail to yield reasonable expected inaccuracy calculations. Because all three distributions share the same expected value, the difference in the probabiliies they assign will be insignificant in the weightning stage (ii). This leaves us with a question, how can we adequately account for the complexity of RA's credal state in the expected inaccuracy considerations?  
 
-Well, if we start  with taking RA's higher order probabilities to be probabilities about which parameter
-values are the right ones (true chances, real population frequencies, the point credences justified by the 
-evidence, or what have you, philosophically speaking), we should see how taking these intuitions seriously
-plays out. So, instead of  measuring inaccuracy with respect to two omniscient credences peaking at
-  
- either 0 or 1 and averaging using expected values, we should instead  look at $n$ potential true probability
-  hypotheses, each of them pointed at a single bin in our approximation,  calculate all the inaccuracies with 
-  respect to their corresponding omniscient functions, and calculate the expected inaccuracies scores using
-   whole distributions rather than their expected values. 
+If we instead treat RA's higher-order probabilities as beliefs regarding which parameter values are the righ ones (e.g. true chances, real population frequencies, the point credences justified by the evidence) we should see how taking these intuitions seriously plays out.     
+
+Rather than measuring inaccuracy in relation to just two omniscient credences that peak at either 0 or 1 and then averaging using expected values, we should instead utilize a set of $n$ potential true probability hypotheses. Each of these hypotheses corresponds to a single bin in our approximation. We would then compute all the inaccuracies with respect to their corresponding omniscient functions and determine the expected inaccuracy scores using the entire distributions rather than relying solely on their expected values.   
 
 For the three distributions we're discussing in this chapter, the inaccuracies calculated using CRPS  and KL 
 divergence with respect to various potential true probability distributions look as in @fig-inaccuracies2.
@@ -618,7 +608,7 @@ inaccuracy in fact jumps a bit for values in between the peaks for the bimodal d
 seems intuitive and desirable.
 
 
-Note that now the expected inaccuracies of the distributions from their perspective look as in 
+Note that now the expected inaccuracies of the distributions from their perspective look as in \todo{nl: Their perspective?}
 \mbox{Table \ref{tbl:expected2}.}
 
 \begin{table}[H]
@@ -637,12 +627,10 @@ wide bimodal & 137.699 & 171.719 & 113.989 & 11.541 & 19.231 & 8.689\\
 \label{tbl:expected2}
 \end{table}
 
-Note that now the results are as intuitively they should: each distribution recommends itself. 
-How does the framework capture the idea that it is the bimodal distribution that seems more adequate than the others?
+It's worth noting that the results now match our common sense: each distribution recommends itself. But how does the framework capture the idea that it is the bimodal distribution that seems more adequate than the others?
 
-Well, one way to go would be to measure inaccuracy with respect to the only chance hypotheses that 
-should be on the table, given the testimonial evidence. $H_3$ on which the true chance is $.3$ and $H_5$
- on which the true chance is $.5$. The respective inaccuracies are as in Table \ref{tbl:schoen}.
+One way to interpret that is by looking at inaccuracy concerning chance hyphoteses given by the testimonoial evidence. In this case, these are $H_3$, where the true chance is $0.3$, and $H_5$, where the true chance is $0.5$. You can find the specific inaccuracies for them in Table \ref{tbl:schoen}.
+
 
 
 
@@ -664,11 +652,7 @@ wide bimodal & 86.230 & 86.223 & 10.871 & 10.882\\
 \end{table}
 
 
-
-Just to double-check if some of this desirable outcome isn't caused by not using pointed credences, 
-we can run the calculations using the pointy version: with all the weight on .4, or weights split in half,
- either between $.3$ and $.5$, or between $.2$ and $.6$. As expected, inaccuracy considerations recommend 
- the bimodal version, whichever of the two hypotheses holds (Table \ref{tbl:schoen2}).
+To make sure that this favorable outcome isn't due to not using pointed credences, we can redo the calculations using the pointed version. In the pointed version, all the focus is on 0.4, or the weight is evenly divided between 0.3 and 0.5, or between 0.2 and 0.6. As anticipated, when we consider inaccuracy, both of these setups recommend the bimodal version, regardless of which of the two hypotheses is in play (see Table \ref{tbl:schoen2}).
 
 
 
@@ -690,17 +674,13 @@ pointed wide bimodal & 99.75 & 99.75 & 16.61 & 16.61\\
 
 
 
-Now, the reader might worry that this has been only a discussion of an example, which fails 
-to establish the strict propriety of the KLD inaccuracy measure. Fair point. In fact, such a proof
-is given in the appendix to this paper. Just to get the gist of the argument,  consider taking 
-the inaccuracy of a second-order discretized probability mass $p$ over a parameter space $[0,1]$,
-given that the real probability is $\theta$  as the Kullback-Leibler divergence of $p$ from 
+The discussion so far, while based on an example, might leave the reader wondering about the strict propriety of the KLD inaccuracy measure. To address this concern, a proof is provided in the paper's appendix. In essence, the argument demonstrates that for a second-order discretized probability mass $p$ over a parameter space $[0,1]$, given that the real probability is $\theta$  as the Kullback-Leibler divergence of $p$ from 
 the indicator distribution  of $\theta$  (which assigns 1 to $\theta$ and 0 to all other parameter
 values in the parameter space), denoted as $\mathcal{I}_{\dkl}^2$.^[The argument generalizes 
 to parameter spaces that correspond to probabilities of multiple propositions which are Cartesian 
 products of parameter spaces explicitly used in the argument in this section.] It turns out that 
 this is a strictly proper inaccuracy measure: each $p$ expects itself to be the least 
-inaccurate distribution. The argument has four  key moves.
+inaccurate distribution.\footnote{ The argument has four key moves:  
 
    
 \begin{enumerate}
@@ -709,6 +689,13 @@ inaccurate distribution. The argument has four  key moves.
 \item  the inaccuracy of $q$ from the perspective of $p$ is the cross-entropy $H(p,q)$,
 \item and it is an established result that cross-entropy is strictly larger than entropy as soon as $p\neq q$.
   \end{enumerate}
+}
+
+
+
+
+ While imprecisers face challenges in formulating appropriate scoring rules, the second-order approach, which incorporates KLD and centers its focus on the distribution of all conceivable hypotheses, emerges as a more coherent framework. 
+
 
 
 
