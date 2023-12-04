@@ -395,10 +395,7 @@ fails against imprecise probabilism: there are cases in which accuracy considera
 As already noted, one challenge for the imprecisers is providing a proper scoring rule that would be a
 counterpart of, say, the Brier score for the precise case. Imprecise probabilism cannot meet this challenge, but we show that higher-order probabilism can. 
 
-\todo{A sentence in  English with the intuitve explanation of these CRPS score would be good. Do these scores generalize the Brier score? Why measuring the distance between cumulative distributions?}
-The task is to define a score for comparing the accuracy of probability distribitions. As a first pass, we can help ourselves to existing work on the accuracy of continuous probability distributions (@HersbachDecomp2000, @Pettigrew2012Epistemic-Utili, @GneitRafter2007). The continuous ranked probability score (CRPS) of a distribution $p$
- with respect to a possible world $w$ can be of service here. It is 
- defined as follows:
+The task is to define a score for comparing the accuracy of probability distributions. As a first pass, we can help ourselves to existing work on the accuracy of continuous probability distributions (@HersbachDecomp2000, @Pettigrew2012Epistemic-Utili, @GneitRafter2007). The continuous ranked probability score (CRPS) that assesses how well a probability distribution aligns with a chance hypothesis that either puts all weight on $0$ or $1$ can be of service here.  The (CRPS) of a distribution $p$ with respect to a possible world $w$ is defined as follows:
 \begin{align*}
 I(p,w) &= \int_{-\infty}^\infty \vert \mathsf{P}(x) - \mathbf{ 1 }(x\geq V(w))\vert ^2 \, dx
 \end{align*}
@@ -409,15 +406,18 @@ I(p,w) &= \int_{-\infty}^\infty \vert \mathsf{P}(x) - \mathbf{ 1 }(x\geq V(w))\v
 \end{cases}
 \end{align*}
 \noindent  
-The CRPS score measures the distance relative to an epistemically omniscient chance hypothesis, which either puts full weight on 0, if a given proposition is false, or on 1, otherwise.^[The CRPS score is a particular case of the more general Cramer-Von-Mises measure of distance between 
+The CRPS score measures the distance relative to an epistemically omniscient chance hypothesis, which either puts full weight on $0$, if a given proposition is false, or on $1$, otherwise.^[The CRPS score is a particular case of the more general Cramer-Von-Mises measure of distance between 
 densities, defined in terms of the area under the squared euclidean distances between the corresponding cumulative density functions:
 \begin{align*}
 \mathcal{C}(p,q) & = \int_{0}^{1} \vert P(x) - Q(x)\vert^2 \, dx
-\end{align*}] It generalizes the Brier score as the distance between the true value and the assigned probability to the case of continous probability distributions. We will start by reflecting on this approach, but we will soon see that it runs into difficulties.^[For the computational ease, we will be using a grid approximation of the densities, as in practice we are unable to work with infinite precision anyway (note for instance that there are no readily computable solutions to the integral used in the definition of CRPS, although it can sometimes be evaluated in closed form) [ @GneitRafter2007, p. 366].] 
+\end{align*}] Measuring the distance between the cumulative distributions helps capture the overall disparity between the predicted and actual probabilities. 
+
+The CRPS generalizes the Brier score as the distance between the true value and the assigned probability to the case of continuous probability distributions. We will start by reflecting on this approach, but we will soon see that it runs into difficulties.^[For the computational ease, we will be using a grid approximation of the densities, as in practice we are unable to work with infinite precision anyway (note for instance that there are no readily computable solutions to the integral used in the definition of CRPS, although it can sometimes be evaluated in closed form) [ @GneitRafter2007, p. 366].] 
 
 
-To fix ideas, consider a variation of a scenario by @Schoenfield2017accuracy. A rational agent is invited to engage in a bet by an opponent who has two coins. \todo{What does it mean for a coin to have a distribution? Can this be said more clearly?} One of these coins has a normal distribution of *Heads* centered at $.3$, while the other is centered at $.5$. Both coins have a standard deviation of $.05$. The opponent randomly selects one of these coins and flips it. The rational agent knows all the details of this set-up. 
-What credal state should the rational agent form in respone? Consider three options, but there could be more: first, a *faithful bimodal* distribution centered at $.3$ and $.5$; second, a *unimodal* distribution centered at $.4$; third, a *wide bimodal* distribution centered at $.2$ and $.6$. The three options are depictuted in Figure \textbf{XYZ}. \todo{cross reference to figure with distributions missing}
+To fix ideas, consider a variation of a scenario by @Schoenfield2017accuracy. A rational agent is invited to engage in a bet by an opponent who has two coins. The behavior of the coins, instead of being described with single point estimates, is described with parameters that reflect the shape of the distribution of $n$ tosses. One of these coins has a normal distribution of *Heads* centered at $.3$, while the other is centered at $.5$. Both coins have a standard deviation of $.05$. The opponent randomly selects one of these coins and flips it. The rational agent knows all the details of this set-up. 
+
+What credal state should the rational agent form in response? Consider three options, but there could be more: first, a *faithful bimodal* distribution centered at $.3$ and $.5$; second, a *unimodal* distribution centered at $.4$; third, a *wide bimodal* distribution centered at $.2$ and $.6$. The three options are depicted in @fig-emc.
 
 ```{r calculationsEMC,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
 
@@ -526,9 +526,10 @@ wide bimodal & 485.4052 & 285.6177 & 54.13433 & 19.50965 & 365.5340 & 33.35974\\
 \label{tbl:comp1}
 \end{table}
 
- Table \ref{tbl:comp1} displays the CRPS accuracy scores assuming the true outcome is *heads* (CRPS1) and assuming the true outcome is *tails* (CRPS0). The two scores are averaged by using expected value of $.4$ as the weighting factor (ExpCRPS).  For the sake of completeness, the table also displays analogous accuracy scores for KL divergence. \todo{Missing explanation here. How is the KL divergence accuracy score defined?} As it turns out, the expected CRPS score recommends the wide bimodal distribution as the most accuracte (or least inaccurate). The KL divergence from the omniscient measure makes the same reccomendation.^[This indicates that the choice of the evaluation metric is not the cause of the recommendation.] This is counterintuitve because the faithful bimodal seems the one most appropriately evidence-responsive. The unimodal distribution, while centering on the expected value, gets the chances wrong, and the wide bimodal has its guesses too close to the truth values and too far from the known chances.  But there is a further problem. The wide bimodal distribution expects itself to be the least inaccurate, but also the other distributions expect the wide bimodal to be the least inaccurate.^[The distribution expects itself - the expected inaccuracy distribution is measured with the use of the inaccuracy score of the distribution. The outcome when the distribution does not find itself to be the most accurate signifies a violation of strict propriety.] This means that the CRPS score and teh KL divergence are not proper scores. \todo{How do we see violation of score propriety from the table? Something missing?}
+ Table \ref{tbl:comp1} displays the CRPS accuracy scores assuming the true outcome is *heads* (CRPS1) and assuming the true outcome is *tails* (CRPS0). The two scores are averaged by using the expected value of $.4$ as the weighting factor (ExpCRPS).  For the sake of completeness, the table also displays analogous accuracy scores for KL divergence. \todo{Missing explanation here. How is the KL divergence accuracy score defined?} As it turns out, the expected CRPS score recommends the wide bimodal distribution as the most accurate (or least inaccurate). The KL divergence from the omniscient measure makes the same reccomendation.^[This indicates that the choice of the evaluation metric is not the cause of the recommendation.] This is counterintuitive because the faithful bimodal seems the one most appropriately evidence-responsive. The unimodal distribution, while centering on the expected value, gets the chances wrong, and the wide bimodal has its guesses too close to the truth values and too far from the known chances.  But there is a further problem. The wide bimodal distribution expects itself to be the least inaccurate, but the other distributions expect the wide bimodal to be the least inaccurate.^[The distribution expects itself - the expected inaccuracy distribution is measured with the use of the inaccuracy score of the distribution. The outcome when the distribution does not find itself to be the most accurate signifies a violation of strict propriety.] This means that the CRPS score and the KL divergence are not proper scores, as. \todo{How do we see violation of score propriety from the table? Something missing?}
+ \todo{NL Wait, how the table 1 compares wide-bimodal with wide-bimodal?}
 
-What are we to make of this result? Note that three distributions share the same expected value $.4$. The latter is then used in the calculations of the expected inaccuracies for both CRPS and KL. The appropach consists in (i) calculating two distances from the two extreme omniscient measures and (ii) averaging by plugging in the expected value. This approach, however, runs against the spirit of our enterprise. If expected values are often not good representations of a rational agent's uncertainty, it should not be surprising that relying on them fails to deliver plausible expected accuracy scores. <!---Because the three distributions share the same expected value, the difference in the probabilies they assign will be insignificant in the weightning stage (ii). --> So the question is, how can we adequately account for the complexity of a rational agent's credal state in formulating a proper  accuracy score?  
+What are we to make of this result? Note that the three distributions share the same expected value $.4$. The latter is then used in the calculations of the expected inaccuracies for both CRPS and KL. The approach consists of (i) calculating two distances from the two extreme omniscient measures and (ii) averaging by plugging in the expected value. This approach, however, runs against the spirit of our enterprise. If expected values are often not good representations of a rational agent's uncertainty, it should not be surprising that relying on them fails to deliver plausible expected accuracy scores. <!---Because the three distributions share the same expected value, the difference in the probabilies they assign will be insignificant in the weightning stage (ii). --> So the question is, how can we adequately account for the complexity of a rational agent's credal state in formulating a proper accuracy score?  
 
 <!---
 If we instead treat RA's higher-order probabilities as beliefs regarding which parameter values are the righ ones (e.g. true chances, real population frequencies, the point credences justified by the evidence) we should see how taking these intuitions seriously plays out.     
@@ -616,11 +617,12 @@ wide bimodal & 137.699 & 171.719 & 113.989 & 11.541 & 19.231 & 8.689\\
 
 
 Here is our proposal. Rather than measuring inaccuracy in relation to two omniscient credences that peak at either 0 or 1 and then averaging using expected values, we should instead utilize a set of $n$ potential true probability hypotheses. <!---Each of these hypotheses corresponds to a single bin in our approximation.---> We  then compute all the inaccuracies with respect to their corresponding omniscient functions and determine the expected inaccuracy scores using the entire distributions rather than relying solely on their expected values.  \todo{Something missing here. Can we get a precise, formal statement of the new accuracy score being proposed?}
+
 For the three distributions under consideration, the accuracy scores calculated using CRPS  and KL divergence with respect to various potential true probability distributions are given by @fig-inaccuracies2.^[One important difference transpires between using CRPS and KLD. Notice how for chance hypotheses between the actual peaks the inaccuracy remains flat. This seems to be an artifice of choosing a squared distance metric. If instead we go with a more principled, information-theory-inspired KL divergence,
 inaccuracy in fact jumps a bit for values in between the peaks for the bimodal distributions, which seems intuitive and desirable.]
 The expected inaccuracies of the distributions from their perspective are given by \mbox{Table \ref{tbl:expected2}.} The results now match our common sense: each distribution recommends itself. So the CRPS score and KL divergence are now proper scores. 
 
-One question remains: how does the framework capture the idea that it is the bimodal distribution that seems more adequate than the others? One way to interpret that is by looking at inaccuracy concerning chance hyphoteses given by the testimononial evidence. In this case, these are $H_3$, where the true chance is $0.3$, and $H_5$, where the true chance is $0.5$. You can find the specific inaccuracies for them in Table \ref{tbl:schoen}. To make sure that this favorable outcome isn't due to not using pointed credences, we can redo the calculations using the pointed version. In the pointed version, all the focus is on 0.4, or the weight is evenly divided between 0.3 and 0.5, or between 0.2 and 0.6. As anticipated, when we consider inaccuracy, both of these setups recommend the bimodal version (Table \ref{tbl:schoen2}).
+One question remains: how does the framework capture the idea that it is the bimodal distribution that seems more adequate than the others? One way to interpret that is by looking at inaccuracy concerning chance hypotheses given by the testimonial evidence. In this case, these are $H_3$, where the true chance is $0.3$, and $H_5$, where the true chance is $0.5$. You can find the specific inaccuracies for them in Table \ref{tbl:schoen}. To make sure that this favorable outcome isn't due to not using pointed credences, we can redo the calculations using the pointed version. In the pointed version, all the focus is on 0.4, or the weight is evenly divided between 0.3 and 0.5, or between 0.2 and 0.6. As anticipated, when we consider inaccuracy, both of these setups recommend the bimodal version (Table \ref{tbl:schoen2}).
 
 
 \begin{table}[H]
@@ -635,7 +637,7 @@ centered &72.281 & 72.090 & 9.836 & 9.825\\
 wide bimodal & 86.230 & 86.223 & 10.871 & 10.882\\
 \bottomrule
 \end{tabular}
-\caption{CRPS and KLD inacurracies of the three distributions with respect to the two hypotheses. On both inaccuracy measures the bimodal distribution dominates the other two.}
+\caption{CRPS and KLD inaccuracies of the three distributions with respect to the two hypotheses. On both inaccuracy measures the bimodal distribution dominates the other two.}
 \label{tbl:schoen}
 \end{table}
 
@@ -651,7 +653,7 @@ pointed centered &100.00 & 100.00 & 16.61 & 16.61\\
 pointed wide bimodal & 99.75 & 99.75 & 16.61 & 16.61\\
 \bottomrule
 \end{tabular}
-\caption{CRPS and KLD inacurracies of the three pointed distributions with respect to the two hypotheses.}
+\caption{CRPS and KLD inacurracies of the three-pointed distributions with respect to the two hypotheses.}
 \label{tbl:schoen2}
 \end{table}
 
@@ -682,7 +684,7 @@ inaccurate distribution.\footnote{ The argument has four key moves:
 
 # Evidence aggregation
 
-The upshot so far is this.  Higher-order probabilism outperforms both precise and imprecise probabilism, at the descriptive as well as the normative level. From a descriptive standpoint, higher-order probabilism can easily model a variety of scenarios that cannot be adequately modeled by the other versions of probabilism. From a normative standpoint, accuracy maximization may sometimes recommend that a rational agent represent their credal state with a distribution over probability values rather than a precise probability measure\todo{add ref to vFraasen in fn; perhaps extend the discussion a bit } (more on this soon).^[Having read van Fraasen's "Laws and Symmetry", you might also worry that going higher order somehow leads to a contradiction; we will address this concern later on.]  \todo{where do we show that accuracy reccomend a dfistribution over probability measures? This bit seems missing.}
+The upshot so far is this.  Higher-order probabilism outperforms both precise and imprecise probabilism, at the descriptive as well as the normative level. From a descriptive standpoint, higher-order probabilism can easily model a variety of scenarios that cannot be adequately modeled by the other versions of probabilism. From a normative standpoint, accuracy maximization may sometimes recommend that a rational agent represent their credal state with a distribution over probability values rather than a precise probability measure\todo{add ref to vFraasen in fn; perhaps extend the discussion a bit } (more on this soon).^[Having read van Fraasen's "Laws and Symmetry", you might also worry that going higher order somehow leads to a contradiction; we will address this concern later on.]  \todo{where do we show that accuracy recommends a distribution over probability measures? This bit seems missing.}
 In this final section, we present a new challenge for imprecise probabilism, and we show that higher-order probabilism can meet this challenge. 
 
 <!--
@@ -690,16 +692,15 @@ In this final section, we present a new challenge for imprecise probabilism, and
  perspective. 
 -->
 
-Rational agents are often tasked with aggregating 
-pieces of evidence and assess their value relative to a hypothesis. For two items of evidence, $E_a$ and $E_B$, 
-the posterior odds are obtained by multiplying the likelihood ratio by the prior odds, while filling in the required probabilities:
+Rational agents are often tasked with aggregating pieces of evidence and assessing their value relative to a hypothesis. For two items of evidence, $E_a$ and $E_B$, 
+the posterior odds are obtained by multiplying the likelihood ratio by the prior odds while filling in the required probabilities:
 
 $$
 \frac{\pr{H \vert E_a \wedge E_b}}{\pr{\neg H \vert E_a \wedge E_b}} = \frac{\pr{E_a \wedge E_b \vert H}}{\pr{E_a \wedge E_b \vert \neg H}} \times \frac{\pr{H}}{\pr{\neg H}} 
 $$
 
 \noindent
-This is a straightforward application of Bayes's theorem in odds form (often easier to use while carrying out calculations.) In the simplest case, the pieces of information are independent lines of evidence both relevant for hypothesis $H$. Stated formally, $E_a$ and $E_b$ are probabilistic independent conditional on hypothesis $H$. Think, for example, at two diagnostic tests performed by two independent laboratories or two independent witnesses in a trial testifying about the same issue. The posterior odds results from multiplying the likeliohood ratios associated with each piece of evidence by the prior odds:
+This is a straightforward application of Bayes's theorem in odds form (often easier to use while carrying out calculations.) In the simplest case, the pieces of information are independent lines of evidence both relevant for hypothesis $H$. Stated formally, $E_a$ and $E_b$ are probabilistic independent conditional on hypothesis $H$. Think, for example, at two diagnostic tests performed by two independent laboratories or two independent witnesses in a trial testifying about the same issue. The posterior odds results from multiplying the likelihood ratios associated with each piece of evidence by the prior odds:
 
 $$
 \frac{\pr{H \vert E_a \wedge E_b}}{\pr{\neg H \vert E_a \wedge E_b}} = \frac{\pr{E_a \vert H}}{\pr{E_a \vert \neg H}}\times \frac{\pr{E_b \vert H}}{\pr{E_b \vert \neg H}} \times \frac{\pr{H}}{\pr{\neg H}} 
@@ -759,9 +760,9 @@ $$
 \noindent
 In assigning precise probabilities, the numerators can simply be equated to one. If the defendant is a contributor, the laboratory will declare a match for sure. To fill in the denominators, an expert will provide the relevant 
 random match probabilities, for example, by counting of many matches are found in a representative sample of the population. Suppose the matching hair type occurs  `r round(hairMean,4)` times in a reference database, and the matching dog fur type occurs  `r round(dogMean,4)` times in a reference database.^[Probabilities have been slightly but not unrealistically modified to be closer to each other in order 
-to make a conceptual point: the same first-order probabilities, even when they sound precise, may come with different degrees of  second-order uncertainty (more on this soon). The original probabilities were  1/100 for the dog fur, and 29/1148 for Wayne Williams' hair.] 
+to make a conceptual point: the same first-order probabilities, even when they sound precise, may come with different degrees of second-order uncertainty (more on this soon). The original probabilities were  1/100 for the dog fur, and 29/1148 for Wayne Williams' hair.] 
 These frequencies can be used to fill in the random match probabilities. 
-So, putting everything toghether:
+So, putting everything together:
 \begin{align*}
 \frac{{\pr{\s{dog} \vert \s{source}}}}{{\pr{\s{dog}  \vert \neg \s{source}}}} \times
  \frac{{\pr{\s{hair} \vert \s{source}}}}{{\pr{\s{hair} \vert \neg \s{source}}}}
