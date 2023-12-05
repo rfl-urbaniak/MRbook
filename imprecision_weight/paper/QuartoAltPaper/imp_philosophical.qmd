@@ -410,14 +410,17 @@ The CRPS score measures the distance relative to an epistemically omniscient cha
 densities, defined in terms of the area under the squared euclidean distances between the corresponding cumulative density functions:
 \begin{align*}
 \mathcal{C}(p,q) & = \int_{0}^{1} \vert P(x) - Q(x)\vert^2 \, dx
-\end{align*}] Measuring the distance between the cumulative distributions helps capture the overall disparity between the predicted and actual probabilities. 
+\end{align*}] Measuring the distance between the cumulative distributions helps capture the overall disparity between the predicted and actual probabilities.  The CRPS generalizes the Brier score as the distance between the true value and the assigned probability to the case of continuous probability distributions. We will start by reflecting on this approach, but we will soon see that it runs into difficulties.
 
-The CRPS generalizes the Brier score as the distance between the true value and the assigned probability to the case of continuous probability distributions. We will start by reflecting on this approach, but we will soon see that it runs into difficulties.^[For computational ease, we will be using a grid approximation of the densities, as in practice we are unable to work with infinite precision anyway (note for instance that there are no readily computable solutions to the integral used in the definition of CRPS, although it can sometimes be evaluated in closed form) [ @GneitRafter2007, p. 366].] 
-
+For computational ease, we will be using a grid approximation of the densities, as in practice we are unable to work with infinite precision anyway (note for instance that there are no readily computable solutions to the integral used in the definition of CRPS, although it can sometimes be evaluated in closed form) [ @GneitRafter2007, p. 366] In parallel, we will be also using the Kullback-Leibler divergence:
+$$
+D_{\text{KL}}(p \,||\, q) = \sum_{x} p(x) \log\left(\frac{p(x)}{q(x)}\right)
+$$
+\noindent which is a standard information-theoretic measure of divergence of $q$ from $p$ from the perspective of $p$.\footnote{In the continuous case we'd need to use differential KL divergence.}
 
 To fix ideas, consider a variation of a scenario by @Schoenfield2017accuracy. A rational agent is invited to engage in a bet by an opponent who has two coins. The behavior of the coins, instead of being described with single point estimates, is described with parameters that reflect the shape of the distribution of $n$ tosses. One of these coins has a normal distribution of *Heads* centered at $.3$, while the other is centered at $.5$. Both coins have a standard deviation of $.05$. The opponent randomly selects one of these coins and flips it. The rational agent knows all the details of this set-up. 
 
-What credal state should the rational agent form in response? Consider three options, but there could be more: first, a *faithful bimodal* distribution centered at $.3$ and $.5$; second, a *unimodal* distribution centered at $.4$; third, a *wide bimodal* distribution centered at $.2$ and $.6$. The three options are depicted in @fig-emc.
+What credal state should the rational agent form in response? Consider three options, but there could be more: first, a *faithful bimodal* distribution centered at $.3$ and $.5$; second, a *unimodal* distribution centered at $.4$; third, a *wide bimodal* distribution centered at $.2$ and $.6$. The three options are depicted in @fig-emc. All of them have expected values at .4 rounded to four digits.
 
 ```{r calculationsEMC,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
 
@@ -510,6 +513,14 @@ plotDistroPlain(centered, "Centered around .4"),
 plotDistroPlain(bimodalWide, "Wide bimodal, with modes at .2 and .6"), ncol = 1)
 ```
 
+Denote these distributions as $b, c, w$ correspondingly. Now consider what happens if we think of expected inaccuracy of these distributions with possible true outcomes, conceptualized as either heads ($H$) or tails ($T$). Whatever our inaccuracy measure, we will have six inaccuracy scores of the form $I(\mathsf{distribution}, \mathsf{outcome})$, where $\mathsf{outcome}$ is one of two omniscient distributions that give all weight to either heads or tails. In the calculation of expected values, these will need to be multiplied by the probability of $H$ and the probability of $T$. However, none of these distributions assigns such a probability, so to obtain such point values we in fact already need to take expected values of the form $\mathbb{E}_{\mathsf{distribution}}(H) = \sum (x * \mathsf{distribution}(x))$, where $x$ are the values on the discretized grid  (as in our example these expectations are pretty much the same, we can simply take $\mathsf{distribution}(H)$ to be .4): 
+
+$$\mathbb{E}I_{binary}(p,q) = I(p,\mathsf{heads}) \mathbb{E}q(\mathsf{heads}) + I(p,\mathsf{tails}) \mathbb{E}q(\mathsf{tails}).$$
+
+\noindent  Table \ref{tbl:comp1} displays the accuracy scores assigned by CRPS assuming the true outcome is *heads* (CRPS1) and assuming the true outcome is *tails* (CRPS0), and analogously for the KL divergence. Then, we obtain the expected inaccuracies by averaging the two scores by using the point probability of heads set to $.4$.  These result in ExpCRPS and ExpKL respectively, note that since the probability of heads is the same on all the distributions, those are expected values from the perspective of each of the measures; changing the perspective in this example doesn't change the expected inaccuracy.
+ 
+ 
+
 
 \begin{table}[H]
 \centering
@@ -526,14 +537,29 @@ wide bimodal & 485.4052 & 285.6177 & 54.13433 & 19.50965 & 365.5340 & 33.35974\\
 \label{tbl:comp1}
 \end{table}
 
- Table \ref{tbl:comp1} displays the CRPS accuracy scores assuming the true outcome is *heads* (CRPS1) and assuming the true outcome is *tails* (CRPS0). The two scores are averaged by using the expected value of $.4$ as the weighting factor (ExpCRPS).  For the sake of completeness, the table also displays analogous accuracy scores for KL divergence. \todo{Missing explanation here. How is the KL divergence accuracy score defined?} As it turns out, the expected CRPS score recommends the wide bimodal distribution as the most accurate (or least inaccurate). The KL divergence from the omniscient measure makes the same reccomendation.^[This indicates that the choice of the evaluation metric is not the cause of the recommendation.] This is counterintuitive because the faithful bimodal seems the one most appropriately evidence-responsive. The unimodal distribution, while centering on the expected value, gets the chances wrong, and the wide bimodal has its guesses too close to the truth values and too far from the known chances.  But there is a further problem. The wide bimodal distribution expects itself to be the least inaccurate, but the other distributions expect the wide bimodal to be the least inaccurate.^[The distribution expects itself - the expected inaccuracy distribution is measured with the use of the inaccuracy score of the distribution. The outcome when the distribution does not find itself to be the most accurate signifies a violation of strict propriety.] This means that the CRPS score and the KL divergence are not proper scores. \todo{How do we see violation of score propriety from the table? Something missing?}
- \todo{NL Wait, how the table 1 compares wide-bimodal with wide-bimodal?}
 
-What are we to make of this result? Note that the three distributions share the same expected value $.4$. The latter is then used in the calculations of the expected inaccuracies for both CRPS and KL. The approach consists of (i) calculating two distances from the two extreme omniscient measures and (ii) averaging by plugging in the expected value. This approach, however, runs against the spirit of our enterprise. If expected values are often not good representations of a rational agent's uncertainty, it should not be surprising that relying on them fails to deliver plausible expected accuracy scores. <!---Because the three distributions share the same expected value, the difference in the probabilies they assign will be insignificant in the weightning stage (ii). --> So the question is, how can we adequately account for the complexity of a rational agent's credal state in formulating a proper accuracy score?  
+ As it turns out, the expected CRPS score recommends the wide bimodal distribution as the most accurate (or least inaccurate). The KL divergence from the omniscient measure makes the same reccomendation.^[This indicates that the choice of the evaluation metric is not the cause of the recommendation.] This is counterintuitive because the faithful bimodal seems the one most appropriately evidence-responsive. The unimodal distribution, while centering on the expected value, gets the chances wrong, and the wide bimodal has its guesses too close to the truth values and too far from the known chances.  But there is a further problem.  While the wide bimodal distribution expects itself to be the least inaccurate, the other distributions also  expect the wide bimodal to be the least inaccurate. This indicates that in this setting  the CRPS score and the KL divergence are not proper scores, as they allow for cases of some distributions recommending other distibutions as less accurate, whatever the true state of the world turns out to be.
 
-<!---
-If we instead treat RA's higher-order probabilities as beliefs regarding which parameter values are the righ ones (e.g. true chances, real population frequencies, the point credences justified by the evidence) we should see how taking these intuitions seriously plays out.     
---->
+
+What are we to make of this result? Note that the three distributions share the same expected value $.4$. The latter is then used in the calculations of the expected inaccuracies for both CRPS and KL. The approach consists of (i) calculating two distances from the two extreme omniscient measures and (ii) averaging by plugging in the expected value. This approach, however, runs against the spirit of our enterprise. If expected values are often not good representations of a rational agent's uncertainty, it should not be surprising that relying on them fails to deliver plausible expected accuracy scores. By reducing each of the distributions' stance towards heads to a single point value .4, we've effectively washed out key information.
+So the question is, how can we adequately account for the complexity of a rational agent's credal state in formulating a proper accuracy score?  
+
+
+
+Here is our proposal. Rather than measuring inaccuracy in relation to "true states of the world" conceptualized as two omniscient credences that peak at either 0 or 1 and then averaging using expected values, we should instead utilize a set of $n$ potential true probability hypotheses (ideally, going continuous, but we're working with a discrete grid of $n=1000$ possible coin baises in this paper).  We  then compute all the inaccuracies with respect to each of these $n$ values represented by "omniscient" distributions (or true chance hypotheses) and determine the expected inaccuracy scores using the entire distributions rather than relying solely on their expected values. 
+
+
+
+$$\mathbb{E}I_{discretized}(p,q) = \sum  I(p,x) q(x),$$
+
+\noindent where $I(p,x)$ denotes the inaccuracy score of distribution $p$ from the omniscient distribution assigning all weight to $x$, for $x$ belonging to the discretized grid.
+
+
+
+For the three distributions under consideration, the accuracy scores calculated using CRPS  and KL divergence with respect to omniscient distributions corresponding to various values of $x$ are given by @fig-inaccuracies2. The expected inaccuracies of the distributions from their perspective are given by \mbox{Table \ref{tbl:expected2}.} The results now match our common sense: each distribution recommends itself. So, once we pay attention to the whole range of possiblities, the CRPS score and KL divergence are now proper scores. 
+
+
+
 
 
 ```{r figinaccuracies2,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%", message = FALSE, warning = FALSE, results = FALSE}
@@ -613,14 +639,7 @@ wide bimodal & 137.699 & 171.719 & 113.989 & 11.541 & 19.231 & 8.689\\
 \label{tbl:expected2}
 \end{table}
 
-
-
-
-Here is our proposal. Rather than measuring inaccuracy in relation to two omniscient credences that peak at either 0 or 1 and then averaging using expected values, we should instead utilize a set of $n$ potential true probability hypotheses. <!---Each of these hypotheses corresponds to a single bin in our approximation.---> We  then compute all the inaccuracies with respect to their corresponding omniscient functions and determine the expected inaccuracy scores using the entire distributions rather than relying solely on their expected values.  \todo{Something missing here. Can we get a precise, formal statement of the new accuracy score being proposed?}
-
-For the three distributions under consideration, the accuracy scores calculated using CRPS  and KL divergence with respect to various potential true probability distributions are given by @fig-inaccuracies2.^[One important difference transpires between using CRPS and KLD. Notice how for chance hypotheses between the actual peaks the inaccuracy remains flat. This seems to be an artifice of choosing a squared distance metric. If instead we go with a more principled, information-theory-inspired KL divergence,
-inaccuracy in fact jumps a bit for values in between the peaks for the bimodal distributions, which seems intuitive and desirable.]
-The expected inaccuracies of the distributions from their perspective are given by \mbox{Table \ref{tbl:expected2}.} The results now match our common sense: each distribution recommends itself. So the CRPS score and KL divergence are now proper scores. 
+ One important difference transpires between using CRPS and KLD. Notice how for chance hypotheses between the actual peaks the inaccuracy remains flat. This seems to be an artifice of choosing a squared distance metric. If instead we go with a more principled, information-theory-inspired KL divergence, inaccuracy in fact jumps a bit for values in between the peaks for the bimodal distributions, which seems intuitive and desirable. This seems to be a reason to prefer a KL-based accuracy measure.
 
 One question remains: how does the framework capture the idea that it is the bimodal distribution that seems more adequate than the others? One way to interpret that is by looking at inaccuracy concerning chance hypotheses given by the testimonial evidence. In this case, these are $H_3$, where the true chance is $0.3$, and $H_5$, where the true chance is $0.5$. You can find the specific inaccuracies for them in Table \ref{tbl:schoen}. To make sure that this favorable outcome isn't due to not using pointed credences, we can redo the calculations using the pointed version. In the pointed version, all the focus is on 0.4, or the weight is evenly divided between 0.3 and 0.5, or between 0.2 and 0.6. As anticipated, when we consider inaccuracy, both of these setups recommend the bimodal version (Table \ref{tbl:schoen2}).
 
