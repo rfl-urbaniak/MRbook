@@ -1,0 +1,104 @@
+---
+title: "Awareness Growth with Bayesian Networks"
+author: ""
+date: '`r Sys.Date()`'
+format:
+  pdf:
+    toc: true
+    include-in-header: quartoStyle.sty
+    mainfont: Times New Roman
+    sansfont: Times New Roman
+documentClass: scrartcl
+classOptions: [dvipsnames, enabledeprecatedfontcommands, headings=big]
+font:
+  size: 10pt
+url:
+  color: blue
+bibliography: [../../../references/referencesMRbook.bib]
+csl: apa-6th-edition.csl
+indent: true
+---
+
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(echo = TRUE)
+library(dagitty)
+library(rethinking)
+
+```
+
+
+<!-- [/Users/mdibello/Desktop/Book-Legal-Prob/references/referencesMRbook.bib] -->
+<!-- [/Users/mdibello/Desktop/Book-Legal-Prob/references/apa-6th-edition.csl] -->
+
+\doublespace
+
+
+*Wordcount (including footnotes)*: 8,250
+
+
+
+\begin{abstract}
+We examine different counterexamples to Reverse Bayesianism, a popular approach to the problem of awareness growth. We agree with the general skepticism toward Reverse Bayesianism, but submit that in a relatively wide range of cases the problem of awareness growth  can be tackled algorithmically once subject-matter structural assumptions are made explicit. These assumptions play an essential role in determining how probabilities should be updated. Bayesian networks are useful for the representation of such structural assumptions, so we use them to illustrate how awareness growth can be modeled in the Bayesian framework. 
+\end{abstract}
+
+
+\doublespace
+<!---\linenumbers--->
+
+
+# Introduction
+
+Learning is modeled in the Bayesian framework by the rule of conditionalization. 
+This rule posits that the agent's new degree of belief in a proposition $H$ 
+after a learning experience $E$ should be the same as the agent's old degree 
+of belief in $H$ conditional on $E$. That is, 
+\[\ppr{E}{H}=\pr{H \vert E},\]
+where $\pr{}$ represents the agent's old degree of belief (before the learning experience $E$) 
+and $\ppr{E}{}$ represents the agent's new degree of belief (after the learning experience $E$).
+
+<!---One assumption here is that $E$ is learned with certainty. After the agent learns about $E$, there 
+is no longer any doubt about the truth of $E$. This assumption has been the topic of extensive discussion in the literature.^[As is well-known, Jeffrey's conditionalization relaxes this assumption.] The other assumption---which we focus on here---is that $E$ and $H$ belong to the agent's algebra of propositions.
+This algebra models the agent's awareness state, the propositions that the agent entertains as live possibilities. --->
+
+Both $E$ and $H$ belong to the agent's algebra of propositions.
+This algebra models the agent's awareness state, the propositions taken to be live possibilities.   Conditionalization never modifies the algebra and thus makes it impossible for an agent to learn something they have never thought about. <!---This forces a great deal of rigidity on the learning process.---> Even before learning about $E$, the agent must already have assigned a degree of belief to any proposition conditional on $E$. This picture commits the agent to the specification of their 'total possible future experience' [@howson1976], as though learning was confined to an 'initial prison' [@lakatos1968].  
+
+But, arguably, the learning process is more complex than what conditionalization allows. 
+Not only do we learn that some propositions under consideration 
+are true or false, but we may also learn new propositions that we did not consider before.  Or we may consider new propositions---without necessarily learning that they are true or false---and this change in awareness may in turn change what we already believe. How should this more complex learning process be modeled by Bayesianism?  This is the problem of awareness growth.^[The algebra of propositions need not be so narrowly construed that it only contains propositions that are presently under consideration. The algebra may also contain propositions which, though outside the agent's present consideration, are still the object, perhaps implicitly, of certain dispositions to believe. @roussos2021 notes that, for the sake of clarity, the problem of awareness growth should only address propositions which agents are *truly* unaware of (say new scientific theories), not propositions that were temporarily forgotten or set aside. This is a helpful clarification to keep in mind, although the recent literature on the topic does not make a sharp a distinction between true unawareness and temporary unawareness.]
+
+
+<!-- But even this expanded algebra will have to be revised sooner or later. The algebra of propositions could in principle contain anything that could possibly be conceived, expressed, thought of. Such a rich algebra would not need to change at any point, but this is an implausible model of ordinary agents with bounded resources such as ourselves.  <!---If, however, we have actual applications of probabilistic tools in mind, this is not a promising strategy. We are not God-like agents, -->
+
+<!---Probabilistic models are small-world models always restricted to a pre-specified set of variables.  Guidance as to how these should be revised when our awareness changes without the unrealistic assumption of us already having selected the right algebra to start with is desirable.
+--->
+
+The problem of awareness growth have been discussed under 
+different names for quite some time, at least since the eighties. It arises in different contexts, such as the construction of  new scientific theories [@glymour1980; @eerman1992; @chihara1987], language changes  and paradigm shifts [@williamson2003], and theories of induction [@zabell1992].
+
+A proposal that has attracted considerable scholarly attention in recent years is Reverse Bayesianism [@karniViero2015; @wenmackersRomeijn2016; @bradley2017]. The idea  is to model awareness growth as a change in the algebra while ensuring that the proportions of probabilities of the propositions shared between the old and new algebra remain the same in a sense to be specified.
+
+Let $\mathcal{F}$ be the initial algebra of propositions and let $\mathcal{F}^+$ be the algebra after the agent's awareness state has grown. 
+<!-- Both algebras contain the contradictory and tautologous propositions $\perp$ and $\top$, and they are closed under connectives such as disjunction $\vee$, conjunction $\wedge$ and negation $\neg$. -->
+Denote by $X$ and $X^+$ the subsets of these algebras that contain only basic propositions (that is, those without connectives). <!---Since   $\mathcal{F}\subseteq \mathcal{F}^+$, then also $X\subseteq X^+$. --->  \textbf{Reverse Bayesianism} posits that the ratio of probabilities for any basic propositions $A$ and $B$ that belong to  both $X$ and $X^+$ remain constant through the process of awareness growth:
+\[\frac{\pr{A}}{\pr{B}} = \frac{\ppr{+}{A}}{\ppr{+}{B}},\] 
+where $\pr{}$ represents the agent's degree of belief before awareness growth 
+and $\ppr{+}{}$ represents the agent's degree of belief after awareness growth.
+
+<!---What is the justification for Reverse Bayesianism? Perhaps the best justification is pragmatic. --->
+Reverse Bayesianism is an elegant theory that manages to cope with a seemingly intractable problem. As the awareness state of an an agent grows, the agent would prefer not to throw away completely the epistemic work they have done previously. The agent may desire to retain as much of their old degrees of beliefs as possible. Reverse Bayesianism provides a simple recipe to do that. It also coheres with the conservative spirit of  Bayesian conditionalization which preserves the old probability distribution conditional on what is learned. 
+
+Unfortunately, Reverse Bayesianism does not deliver the intuitive results in all cases. There is no shortage of counterexamples against it in the recent philosophical literature [@steeleStefansson2021; @mathani2020]. In addition, attempts to extent traditional arguments in defense of Bayesian conditionalization to Reverse Bayesianism seem to hold little promise [@Pettigrew2022]. If the consensus in the literature is that Reverse Bayesianism is not the right theory of awareness growth,  what theory (if any) should replace it? 
+
+Here we offer a diagnosis of what is wrong with Reverse Bayesianism and outline an alternative proposal. The problem of awareness growth---we hold---cannot be tackled in an algorithmic manner until subject-matter structural assumptions are made explicit. As they tend to vary on a case-by-case basis, no general formal plug-and-play theory of awareness growth  can be provided. This does not mean, however, we should give up on probabilistic epistemology altogether. Thanks to their ability to express probabilistic dependencies, Bayesian networks can help to model awareness growth in the Bayesian framework and capture whatever formal properties of awareness growth there are to be captured. We illustrate this claim as we examine  different counterexamples to Reverse Bayesianism.
+
+
+<!---\todo{GIven how involved and detailed some of the arguments get further on, we need a more informative overview of the paper structure: which example do we get into and why, and in what order, and why}
+--->
+
+The plan for the paper is as follows. To set the stage for the discussion, 
+Section \ref{sec:counterexamples} begins with two counter-exmaples to Reverse Bayesianism by @steeleStefansson2021. One example targets awareness expansion and the other awareness refinement (more on the distinction soon). Section \ref{sec:expansion-networks} models cases of awareness expansion using Bayesian networks. <!---We show that awareness expansion can be modeled as a change 
+in the states of the nodes of a Bayesian network without changes in the structure 
+of the network. Whenever the structure of the network does not change, a simple formal constraint holds fixed throughout awareness growth. ---> Section  \ref{sec:mathani} further illustrates the fruitfulness of this approach by looking at two counter-examples to Reverse Bayesianism by @mathani2020. <!---When modeled with Bayesian networks, Mathani's examples are straightforward cases of awareness expansion.--> Section \ref{sec:structural-both} turns to awareness refinement. <!---Unlike awareness expansion, modeling awareness refinement may sometimes require to change the structure of the network itself. We identify  when this change is necessary and when it is not. ---> Finally, Section \ref{sec:general} outlines a general theory of awareness growth with Bayesian networks. 
