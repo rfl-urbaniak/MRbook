@@ -748,20 +748,18 @@ A popular measure of the value of the evidece is the likelihood ratio.
 This ratio is relative to a pair of competing hypotheses, say $H$ and its negation $\neg H$ (though the two hypotheses 
 need not be one the negation of the other). Relative to these hypotheses, the likelihood ratio of a single piece of 
 evidence $E$ is the probability of $E$ given  $H$ divided by the probability of $E$ given $\neg H$, 
-or more succinctly, $\frac{\pr{E \vert H}}{\pr{E \vert \neg H }}$.
+or in short, $\frac{\pr{E \vert H}}{\pr{E \vert \neg H }}$.
 In qualitative terms, evidence 
 $E$ supports $H$ over its negation insofar as the probability of $E$ is 
 higher given hypothesis $H$ than given its negation, that is, the likelihood ratio is greater than one. 
-This is intuitive: a piece of evidence speaks in favor of $H$$ rather than its negation insofar as it is 
-present with a higher probability when $H$ holds than when its negation holds. 
-Similarly, degrees of evidential value (or support) 
+In quantitative terms, degrees of evidential value (or support) 
 can be expressed as follows:
 \begin{quote}
-the higher $\frac{\pr{E \vert H}}{\pr{E \vert \neg H }}$ (if greater than one), the more strongly $E$ supports $H$.\footnote{On different measures of degrees of evidential value (or support, confirmation), see \textbf{CITE FITELSON}.}
+the higher $\frac{\pr{E \vert H}}{\pr{E \vert \neg H }}$ (if greater than one), the more strongly $E$ supports $H$.
 \end{quote}
 
 \noindent
-This should again be intuitive. The ratio increases, and thus the value of the evidence  increases, whenever $\pr{E \vert H}$ increases or whenever $\pr{E \vert \neg H }$ decreases. The higher $\pr{E \vert H}$, the better the evidence at tracking $H$ (a true positive); the lower $\pr{E \vert \neg H }$, the better the evidence at avoiding $\neg H$ (a true negative).
+The value of the evidence  increases whenever $\pr{E \vert H}$ increases or whenever $\pr{E \vert \neg H }$ decreases. The higher $\pr{E \vert H}$, the better the evidence at tracking $H$ (a true positive); the lower $\pr{E \vert \neg H }$, the better the evidence at avoiding $\neg H$ (a true negative).
 
 
 <!--
@@ -779,16 +777,9 @@ $$
 $$
 -->
 
-
-Likelihood ratios can also be used for assessing the value of multiple pieces of evidence, again relative to a pair of hypotheses of interest, as follows:
+Likelihood ratios can also be used for assessing the value of multiple pieces of evidence in the aggregate, again relative to a pair of hypotheses of interest. To evaluate items of evidence in the aggregate, it is enough to multiply their individual likelihood ratios. 
 $$
-\frac{\pr{E_1 \wedge E_2 \dots E_k\vert H}}{\pr{E_1 \wedge E_2 \dots E_k \vert \neg H}}
-$$
-
-\noindent
- In the simplest case, consider two independent lines of evidence, $E_a$ and $E_b$, both relevant for hypothesis $H$. Stated formally, $E_a$ and $E_b$ are probabilistically independent conditional on hypothesis $H$. Think, for example, at two diagnostic tests performed by independent laboratories or two independent witnesses in a trial testifying about the same issue. To aggregate the two items of evidence, multiplying their likelihood ratios will do: 
-$$
-\frac{\pr{E_a \wedge E_b \vert H}}{\pr{E_a \wedge E_b \vert \neg H}} = \frac{\pr{E_a \vert H}}{\pr{E_a \vert \neg H}}\times \frac{\pr{E_b \vert H}}{\pr{E_b \vert \neg H}}
+\frac{\pr{E_1 \wedge E_1 \dots E_k \vert H}}{\pr{E_1 \wedge E_2 \dots E_k \vert \neg H}} = \frac{\pr{E_1 \vert H}}{\pr{E_1 \vert \neg H}}\times \frac{\pr{E_2 \vert H}}{\pr{E_2 \vert \neg H}} \times \dots \times \frac{\pr{E_k \vert H}}{\pr{E_k \vert \neg H}}
 $$
 
 ```{r introStarts,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%", warning = FALSE}
@@ -801,6 +792,7 @@ hairB <- 1149
 dogMean <- 2/78
 dogA <- 3
 dogB <- 79
+
 
 lik0 <- hairMean * dogMean
 prior <- seq(0,.3, by = 0.001)
@@ -818,11 +810,16 @@ pointImpactPlot <- ggplot()+geom_line(aes(x = prior, y = posterior))+xlim(0,.07)
   theme(plot.title.position = "plot")
 ```
 
-<!--To be sure, even in more complex scenarios, precise probabilism handles evidence aggregation elegangly, with the help of Bayesian networks. Suppose two pieces of information bear on different hypotheses and probabilistically depend one another in important ways. Think, for example, of two witnesses testifying in a trial about two different yet related issues, say the defendant's whereabouts and the defendant's motive. Bayesian networks have been been developed to model these more complex evidential scenarios. Bayesian networks have a graphical and a numerical compnent. The grahical part visually represent relationships of probabilistic depedencies between different hypotheses and items of evidence. The numerical part consists of probability tables in which precise probabilities are be entered so that the Bayesian networks can run the calculations. The calculations can quickly get out of hand, so softwares exist that can perform them automatically.-->
+<!--To be sure, even in more complex scenarios, precise probabilism handles evidence aggregation elegangly, with the help of Bayesian networks. Suppose two pieces of information bear on different hypotheses and probabilistically depend one another in important ways. Think, for example, of two witnesses testifying in a trial about two different yet related issues, say the defendant's whereabouts and the defendant's motive. Bayesian networks have been been developed to model these more complex evidential scenarios. Bayesian networks have a graphical and a numerical component. The grahical part visually represents relationships of probabilistic depedency between different hypotheses and items of evidence. The numerical part consists of probability tables in which precise probabilities are entered so that the Bayesian network can run the calculations. The calculations can quickly get out of hand, so softwares exist to perform the calculations automatically.-->
+
+
+\noindent
+The equality holds provided $E_1, E_2, \dots, E_k$ are probabilistically independent conditional on hypothesis $H$ and its negation. Think, for example, at several diagnostic tests performed by independent laboratories or independent witnesses in a trial testifying about the same issue. The precise probabilist holds that, in cases of evidence aggregation, the precise probabilities must be put together following the formula above. We will show, however, that this approach risks over- or under-estimating the value of aggregate evidence. (We will focus on the likelihood ratio, but the claim we defend can be generalized 
+to other measures.\footnote{On different measures of degrees of evidential value (or support, confirmation), see \textbf{CITE FITELSON}.})
 
 An example can help to fix ideas. Consider a murder case in which the police recover two items of trace evidence, both against the defendant. First, hair found at the crime scene matches the defendant's hair; call this evidence '\textsf{hair}.' Second, the fur of the defendant's dog matches the fur found in a carpet wrapped around one of the bodies; call this evidence '\textsf{fur}.'^[The hair evidence and the dog fur evidence are stylized after two 
  items of  evidence in the notorious 1981 Wayne Williams case [@deadman1984fiber1; @deadman1984fiber2].] 
-The two matches favor the hypothesis that the defendant (and the defendant's dog) must be the source of the crime traces; call this hypothesis '$\mathsf{source}$'). If the two matches are independent lines of evidence (conditional on the source hypothesis), their likelihood ratios can be multiplied:^[Strictly speaking, it is  possible for $A$ and $B$ to be independent conditional on $H$, but not conditional on $\neg H$. Here, we require both independencies to hold.]
+The two matches favor the hypothesis that the defendant (and the defendant's dog) must be the source of the crime traces; call this hypothesis '$\mathsf{source}$'. If the two matches are independent lines of evidence (conditional on the source hypothesis), their likelihood ratios can be multiplied:^[Strictly speaking, it is  possible for $A$ and $B$ to be independent conditional on $H$, but not conditional on $\neg H$. Here, we require both independencies to hold.]
 
  
 $$
@@ -832,8 +829,7 @@ $$
 
 
 \noindent
-The only thing left to do is to fill in the numbers. 
-The numerators can simply be equated to one: if the defendant is a contributor, the laboratory will declare a match for sure. This is a simplication, but it will do for our purposes. To fill in the denominators, a trial expert will provide the match probabilities. They express the likelihood that, by coincidence, a random person (or a random dog) who is not a contributor would still match.  The match probabilities are approximated by counting of many matches are found in a representative sample of the human population (or the canine population). Suppose the matching hair type occurs  `r round(hairMean,4)` times in a reference database, and the matching dog fur type occurs  `r round(dogMean,4)` times in a reference database.^[Probabilities have been slightly but not unrealistically modified to be closer to each other in order 
+So far so good. But how do we fill in the numbers? The precise probabilist will answer along these lines. The numerators can be equated to one: if the defendant is a contributor, the laboratory will declare a match for sure. This is a simplication, but it will do for our purposes. To fill in the denominators, a trial expert will provide the match probabilities. They express the likelihood that, by coincidence, a random person (or a random dog) who is not a contributor would still match.  The match probabilities are approximated by counting of many matches are found in a representative sample of the human population (or the canine population). Suppose the matching hair type occurs  `r round(hairMean,4)` times in a reference database, and the matching dog fur type occurs  `r round(dogMean,4)` times in a reference database.^[Probabilities have been slightly but not unrealistically modified to be closer to each other in order 
 to make a conceptual point: the same first-order probabilities, even when they sound precise, may come with different degrees of second-order uncertainty (more on this soon). The original probabilities were  1/100 for the dog fur, and 29/1148 for Wayne Williams' hair.] 
 These frequencies can fill in the match probabilities. 
 Putting everything together:
@@ -904,28 +900,32 @@ assume that the probability of a match if the suspect and the suspect's dog are 
 Sensitivity analysis moves away from precise probabilism. It gives up on the prospect of assigning precise numbers to the prior probabilities. 
 --->
 
-This is the story about evidence aggregation told from the perspective of precise probabilism.  But, as we know, this story misses something crucial. The match probabiltiies $\pr{\s{dog}  \vert \neg \s{source}}$ and $\pr{\s{fur}  \vert \neg \s{source}}$ are themselves subejct to uncertainty. They are assessed by looking at sample data. Suppose that the match probability for the hair evidence is based on 29 matches found in a sample database of size 1148, while the random match probability for the dog evidence is based on finding two matches in a smaller database of size 78. The relative frequencies are about 2.5% in both cases, but the two samples differ in size. The smaller the sample, the greater the uncertainty about the match probabilities. 
-This point should be familiar from the earlier discussion. Since the match probability for hair evidence is based on a larger sample than the match probability for dog fur evidence, there is less uncertainty about the former than the latter. So simply reporting the exact the numbers `r round(hairMean,4)` and  `r round(dogMean,4)` makes it seem as though the value of the two items of match evidence is the same, but actually it is not. 
+This is the story about evidence aggregation (in the simple case) told from the perspective of precise probabilism.  But, as we know now, this story misses something crucial. The match probabiltiies $\pr{\s{dog}  \vert \neg \s{source}}$ and $\pr{\s{fur}  \vert \neg \s{source}}$ are themselves subejct to uncertainty. They are assessed by looking at sample data. Suppose that the match probability for the hair evidence is based on 29 matches found in a sample database of size 1148, while the random match probability for the dog evidence is based on finding two matches in a smaller database of size 78. The relative frequencies are about 2.5% in both cases, but the two samples differ in size. The smaller the sample, the greater the uncertainty about the match probabilities. Since the match probability for hair evidence is based on a larger sample than the match probability for dog fur evidence, there is less uncertainty about the former than the latter. So simply reporting the exact the numbers `r round(hairMean,4)` and  `r round(dogMean,4)` makes it seem as though the value of the two items of match evidence is the same, but actually it is not. 
 
-Can imprecise probabilism do better? In imprecise probabilism, the probability measures in the representor set are those compatible with the evidence, data or observations.  The problem is that almost any precise random match probability will be compatible with any sample data---with any number of matches found in a reference database. This point should also be familiar from earlier discussion. Think by analogy to coin tossing: even a coin that has a .99 bias toward tails could come up heads on every toss. This series of outcomes is unlikely, but still possible. Similarly, even a hair type that has a match probability extremely small could be found several times in a sample population. So, from the perspective of imprecise probabilism, it is not clear how to proceed forward if one takes seriously the binary notion of compatibility. Imprecise probabilism is so permissive that almost any match probability will count as compatible with the data. 
+Here is another variant of the same problem. Imagine that the match probabilities associated with two items of match evidence derived from very small population samples.  Suppose two matches were found in the dog fur database and two matches in the human hair database, both of size 10. 
+In this scenario, the evidence against the defendant consists of two matches, one based on dog fur and the other based on human hair. This set-up is the same as our running scenario, but the samples are smaller. The combined evidential value of the two matches should be worthless. And yet, by multiplying 0.02 and 0.02, it would seem overwhelming. If, on the other hand, the samples were much larger, the evidential value of the two matches would be the same, but intuitively it should be greater. The evidence should be assessed as having different values in these different scenarios---smaller versus larger samples, and anything in between---but precise probabilism makes no difference between them. So it will inevitably overestimate and underestimate the value of the evidence in some scenarios. 
 
-Another option is to rely on a a reasonable ranges of probabilities, say the worst-case and best-case scenarios. Suppose the reasonable ranges of the match probabilities are (.015,.037) (.002, .103), for hair and fur evidence respectively.^[These are 99% credible intervals starting with uniform priors. A 99\% credible interval is the narrowest interval to which the   expert thinks the true parameter belongs with probability .99. For a discussion of what   credible intervals are, how they differ from confidence intervals, and why confidence intervals should not be used, see @kruschke2015doing.] 
+Can imprecise probabilism do better? The probability measures in the representor set are those compatible with the evidence.  The problem is that almost any random match probability will be compatible with any sample data---with any number of matches found in a reference database. This point should be familiar from the earlier discussion. Think by analogy to coin tossing: even a coin that has a .99 bias toward tails could come up heads on every toss. This series of outcomes is unlikely, but possible. Similarly, a hair type that has a match probability extremely small could still be found several times in a sample population. So, it is not clear how to proceed if one takes seriously the binary notion of compatibility. Imprecise probabilism is too permissive because almost any match probability will be compatible with the data. 
+
+Another option is to rely on reasonable ranges of matches probabilities. Suppose these ranges are (.015,.037) (.002, .103), for hair and fur evidence respectively.^[These are 99% credible intervals starting with uniform priors. A 99\% credible interval is the narrowest interval to which the   expert thinks the true parameter belongs with probability .99. For a discussion of what   credible intervals are, how they differ from confidence intervals, and why confidence intervals should not be used, see @kruschke2015doing.] 
 <!-- Now, the representor covers
   the convex hull of the probability measures that result in probabilities that are the edges of the intervals. For this reason, to investigate what span of probabilities the imprecise probabilities will end with,
   -->
-  Note that the range is wider for dog fur match evidence than hair match evidence. This is as it should be. The uncertainty about the the dog fur match probability is greater since the sample database was assumed to be smaller. Now, to assess the joint uncertainty in the context of imprecise probabilism, it is enough to focus on what happens at the edges of the two intervals. Reasoning with representor members at the edges of the intervals will yield the most extreme probability measure the impreciser is going to be committed to. Redoing the calculations  using the upper bounds of the two intervals, $.037$ and $.103$,  yields the following:
+The range is wider for dog fur match evidence than hair match evidence. This is as it should be: the uncertainty about the the dog fur match probability is greater since the sample database was assumed to be smaller. To assess the joint uncertainty in the context of imprecise probabilism, it is enough to focus on what happens at the edges of the two intervals. Reasoning with representor members at the edges of the intervals will yield the most extreme probability measure the impreciser is going to be committed to, the worst-case and best-case scenarios. On the interval approach, we end up with a new range for the joint evidence: (.00003, .003811). The two matches, combined, could be much stronger evidence against the defendant (lower bound) or much weaker evidence (upper bound) than previously thought. This is not particularly clarifying.\footnote{Redoing the calculations using the upper bounds of the two intervals, $.037$ and $.103$,  yields the following:
 \begin{align*}
 \mathsf{P}(\s{dog}\wedge \s{hair} \vert \neg \s{source})   & =  .037 \times .103 =.003811.
 \end{align*}
 
 \noindent
- This number is around `r round(.003811/lik0,2)` times greater than the original estimate.  <!--Now the prior probability of the source hypothesis needs to be higher than `r thresholdL` for the posterior probability to be above .99 (@fig-impactofcharitable). --> The calculation for the lower bounds, $.015$ and $.002$, yields the following:
+ This number is around `r round(.003811/lik0,2)` times greater than the original estimate. Given this number, the two matchs are much weaker evidence for the source hypothesis than previously thought.    The calculation for the lower bounds, $.015$ and $.002$, yields the following:
 \begin{align*}
 \mathsf{P}(\s{dog}\wedge \s{hair} \vert \neg \s{source})   & =  .015 \times .002 =.00003
 \end{align*}
    
  \noindent  
-This number is around `r round(.0003/lik0,2)` times lower than the original estimate. 
+This number is around `r round(.0003/lik0,2)` times lower than the original estimate.  Given this number, the two matchs are much stronger evidence for the source hypothesis than previously thought.}
+
+ <!--Now the prior probability of the source hypothesis needs to be higher than `r thresholdL` for the posterior probability to be above .99 (@fig-impactofcharitable). -->
 
 <!--
 ```{r FigcharitableImpact75,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "60%", warning = FALSE, message = FALSE}
@@ -937,14 +937,6 @@ charitableImpactPlot
 ```
 -->
 
-<!---
-This result is puzzling.  Are the two items of match evidence strongly incriminating evidence 
-(as you initially thought) or somewhat weaker (as the new calculation suggests)? For one thing,
-  using precise random match probabilities might be too unfavorable toward the defendant. 
-  On the other hand, your new assessment of the evidence based on the upper bounds might be
-   too *favorable* toward them. Is there a middle way that avoids overestimating and underestimating 
-   the strength of the evidence?
--->
 
 <!--
 To see what this middle path looks like, 
@@ -984,17 +976,18 @@ The upper bound of this interval would then require the prior probability of the
  are still not quite as strong as you initially thought, but stronger than what your second calculation indicated. 
 -->
 
-Using plausible ranges for the match probabilties leaves the impression 
-that any value in the interval is just as good as any other. But this  will often misrepresent the data. 
-<!---We still should think of credible intervals as rough summaries, which  might be useful if  the underlying distributions are fairly symmetrical, or narrow enough.  But in our case, they might not be.---> 
- @fig-densities (upper part) depicts the probability distribution of different match probabilities given the sample data---the actual number of matches found in the sample database. Recall that, by hypothesis, 29 matches were found in a sample database of human hair of size 1148, and 2 matches were found in a sample database of dog fur of size 78.  As expected, some random match probabilities are more likely than others.  And since the sizes of the two databases are also different, the distribitions have different spreads. The smaller the database the greater the spread, the greater the uncertainty about the match probability. In light of this, now consider @fig-densities (lower part). It depicts the probability distribtion for the joint match probability associated with both items of match evidence, hair and fur evidence. Interestingly, the distribution for the joint evidence 
-  is not symmetric. This means that the most likely value of the joint match probability (and the bulk of the distribution, really) does not 
+
+
+
+Using plausible ranges for the match probabilties leaves the impression that any value in the interval is just as good as any other. Perhpas we should just pick the middle value as representative of the interval? But this choice will misrepresent the data. To see why, consider @fig-densities (upper part). It depicts the probability distribution of different match probabilities given the sample data---the actual number of matches found in the sample database. By hypothesis, 29 matches were found in the sample database of human hair of size 1148, and 2 matches were found in the sample database of dog fur of size 78.  As expected, some random match probabilities are more likely than others.  Further, since the sizes of the two databases are different, the distribitions have different spreads: the smaller the database the greater the spread, the greater the uncertainty about the match probability. In light of this, now consider @fig-densities (lower part). It depicts the probability distribtion for the joint match probability associated with both items of match evidence, hair and fur evidence. Interestingly, the distribution for the joint evidence 
+  is not symmetric. So the most likely value of the joint match probability (and the bulk of the distribution, really) does not 
   lie in the middle between the edges. <!--Just because the parameter lies in an interval with some   posterior probability, it does not mean that the ranges near the edges of the interval are equally 
   likely---the bulk of the density might very well be closer to one of the edges. --> Therefore, only 
-  relying on the edges---or taking central values as representative of the interval---can lead to overestimating or underestimating the probabilities at play. <!--- This also means that---following our advice on how to illustrate the impact of evidence on
- prior probabilities---a better representation of the dependence of the posterior on the prior should comprise multiple possible sampled lines whose density mirrors the density around the probability of the evidence (@fig-lines).--->
+  relying on the edges---or taking central values as representative of the interval---can lead to overestimating or underestimating the probabilities at play. <!-- This also means that, following our advice on how to illustrate the impact of evidence on prior probabilities a better representation of the dependence of the posterior on the prior should comprise multiple possible sampled lines whose density mirrors the density around the probability of the evidence (@fig-lines).-->\todo{What is the mean of the joint distribution? Does it coincide with the value that precise probabilism would give? Does the mean of the joint distribution change depending on the sizes of hair and dog samples?} 
  
- If the interval approach is riddled with difficulties, should we revert back to single match probabilities, as reccomended by precise probabilism? Single number match probabilities will yield, as the combined match probability, the figure `r hairMean * dogMean`.  As seen earlier, this is the result of multiplying the individuasl match probabilities. In @fig-densities (lower part), this value is plotted as a thick vertical line. Note that this value of the combined match probability does not coincide with the most likely value, or the mean of the join distribution of match probabilities: it is actually on overstimation of the most likely value.  \todo{Is it right that it is an overestimation? What is the mean of the joint distribution actually?} This phenomenon of overestimation (or conversely, unederestimation) can become even more pronounced when several items of evidence are aggregated. \todo{Is this point correct? Can we make it more precise?}
+ All in all, precise and imprecise probabilims---as well as the interval approahc, a variation of imprecise probabilism---do not fare well in modelling how the value of evidence in the aggregate should be assessed. The alternative, we think, is easily available: the evaluation of multiple items of evidence should take into account higher-order uncertainty (as illustrated in @fig-densities). Whenever probability distributions for the probabilities of interest are available (and they should be available for match evidence and many forms of scientific evidence whose reliability has been studied), those distributions should be reported for assessing the value of the evidence. This approach avoids hiding actual aleatory uncertainties under the carpet. It also allows for a more balanced assessment of the evidence, whereas using point values or intervals may exaggerate or underestimate the value of the evidence.
+ \textbf{Marcello: Can we have a formula of how the two matchs are combined in the higher-order approach. In precise probabilism, you multiply the individual LRs, in higher-order probabilism, what do we do formally? The next section then generalize this simple cases to all complex cases with dependencies between items of evidence and hypotheses.}
+
 
 
 
@@ -1154,9 +1147,7 @@ grid.arrange(densitiesLinesPlot, minimaPlot, ncol= 2)
 
 
 
-The moral, then, is this: the evaluation of multiple items of evidence should take into account higher-order uncertainty. Whenever probability distributions for the probabilities of interest are available 
-(and they should be available for match evidence and many forms of scientific evidence whose reliability has been studied),  those distributions should be reported for assessing the value of the evidence. 
- This approach avoids hiding actual aleatory uncertainties under the carpet. It also allows for a more balanced assessment of the evidence, whereas using point estimates or intervals may exaggerate or underestimate the value of the evidence.
+
 
 
 ```{r,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%"}
