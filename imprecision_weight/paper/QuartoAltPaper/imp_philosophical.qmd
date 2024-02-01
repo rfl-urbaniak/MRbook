@@ -389,66 +389,99 @@ The section can be skipped upon first reading without losing track of the main l
 The overall dialecticts of this section is as follows. (1) we define two imporant divergence measures, (2) we define two inaccuracy measures using those divergencies, (3) we define the notion of expected inaccuracy, emphasizing a particular case, in which one additionally assumes that there are only two possible outcomes, 0 and 1. Then we (4) set up a thought experiment in which intuitively from three candidate subjective distributions only one matches the known true generative process and so should come out, intuitively, as the most accurate. Moreover, if a given accuracy measure is *proper* each of the subjective candidate distributions should expect itself to be the most accurate (in a sense to be specified). (5) We will show that propriety failures arise if we stick to the additional assumption mentioned in (3) and use our example to gesture towards a more general claim that's proven in the appendix, namely that KL divergence without this restrictive assumption is a strictly proper accuracy measure. (6) The example also illustrates that from the two measures discussed, the KL-divergence based one provides more intuitive results. 
 -->
 
-As already noted, one challenge for the imprecisers is providing a proper scoring rule that would be a counterpart of, say, the Brier score for the precise case. Imprecise probabilism cannot meet this challenge, but we show that higher-order probabilism can.  The task is to define a scoring rule for comparing the accuracy of probability distributions and show that it is proper.
-The scoring rule we propose is based on well-known measures of divergence between probability distributions, building on existing work on this topic (@HersbachDecomp2000, @Pettigrew2012Epistemic-Utili, @GneitRafter2007). We first show that this scoring rule is improper given the assumption that there are only two possible outcomes. \todo{Is this summary correct? Check and modify as nedded!} But, as we will see, this assumption is unwarranted. When it is dropped, the scoring rule turns out to be proper. 
+As already noted, one challenge for the imprecisers is providing a proper scoring rule that would be a counterpart of, say, the Brier score for the precise case. A crucial and well acknowledged characteristic for such a scoring rule is known as \emph{strict propriety}.^[When an inaccuracy measure is strictly proper, each probability distribution anticipates itself to be the least inaccurate.]
 
-  Our starting point are two well-known measures of divergence between probability distributions. For computational ease, we will use a grid approximation instead of continous distribitions, as in practice we are unable to work with infinite precision.^[Note  also for instance that there are no readily computable solutions to the integral used in the definition of CRPS, although it can sometimes be evaluated in closed form [ @GneitRafter2007, p. 366].]  To this end, $x$ will denote the finite vector of discrete states under consideration (by default, we will use equally spaced values between 0 and 1 here). 
+This challenge becomes particularly pronounced in the context of imprecise probabilism, where meeting the requirement of strict propriety proves elusive. However, this section aims to illustrate that higher-order probabilism can indeed offer a scoring rule that has this crucial characteristic.
+
+
+The primary objective is to devise a scoring rule capable of assessing the accuracy of probability distributions while ensuring its propriety. 
+The scoring rule we propose is based on well-known measures of divergence between probability distributions, building on existing work on this topic (@HersbachDecomp2000, @Pettigrew2012Epistemic-Utili, @GneitRafter2007). 
+
+A key modification to this framework involves abandoning the assumption that only two possible outcomes (truth and false) exist. Once we present the positive proposal, we will illustrate how such an assumption is problematic.
+
+
+Our method employs Kullback-Leibler Divergence between probability distributions. For computational ease, we will use a grid approximation instead of continous distribitions, as in practice we are unable to work with infinite precision.  To this end, $x$ will denote the finite vector of discrete states under consideration (by default, we will use equally spaced values between 0 and 1 here).   Kullback-Leibler Divergence is defined as follows: 
+$$D_{\text{KL}}(p \,||\, q) = \sum_{x} p(x) \log\left(\frac{p(x)}{q(x)}\right)$$
+
+\noindent It is a standard information-theoretic measure of divergence of $q$ from $p$ from the perspective of $p$.\footnote{In the continuous case, we would need to use the so-called differential KL divergence, but our main points wouldn't change otherwise.}
+\noindent
+
+
+To convert this measure into the measure of *(in)accuracy*, we need to define relations between probability distributions and possible worlds. Let the outcome under consideration in $w$  be $V(w)$ (in a very simple case you might take there to be two possible oucomes, 0 and 1, the range of $V$ is simply the vector of possible states). The  KL-inaccuracy of a distribution $p$ with respect to $w$ is defined, as follows:
+
+\begin{align*}
+I_{\text{KL}}(p,w) & = D_{\text{KL}}(f(w)||p)
+\end{align*}
+
+\noindent where:
+\begin{align*}
+f(x) & = \begin{cases} 1 & \text{ if } x = V(w)\\
+0 & \text{ o$\,$/w. }
+\end{cases}
+\end{align*}
+
+\noindent  
+
+
+\noindent That is, it is the KL-divergence of $p$ from the "true" probability distribution which assigns probability 1 to the outcome $V(w)$ and probability 0 to any other outcome,^[If you prefer to think in continuous terms, you'd need to use Delta-Dirac distributions here.] as seen from the perspective of $w$, the "ground truth" here, conceptually.
+
+The crucial characteristic of a scoring rule that we go after is strict-propriety. Our  discussion in this section will be based on an example for the sake of accessibility. We do, however, include the proof of strict propriety of the as an KLD-based inaccuracy measure in the appendix. In a nutshell, the argument demonstrates that for a second-order discretized probability mass $p$ over a parameter space $[0,1]$, with the actual probability denoted as $\theta$,  the Kullback-Leibler divergence of $p$ from the indicator distribution  of $\theta$  (which assigns 1 to $\theta$ and 0 to all other parameter values in the parameter space) is expressed as $\mathcal{I}_{\dkl}^2$.^[The argument generalizes 
+to parameter spaces that correspond to probabilities of multiple propositions which are Cartesian products of parameter spaces explicitly used in the argument in this section.] This serves as a demonstration of the strict propriety of the inaccuracy measure: each $p$ anticipates itself to be the least inaccurate distribution.\footnote{ The argument has four key moves. Consider a given "point probability", i.e. the unique $x$ such that $V(w)=x$. Call this parameter $\theta$.
+
+   
 \begin{enumerate}
-\item The Cramer-Von-Mises measure of which we will be using a discretized version:\footnote{In the continuous case, this measure is defined as the area under the squared Euclidean distances between the corresponding cumulative density functions That is, $D_{CM}(p,q)  = \int_{0}^{1} \vert P(x) - Q(x)\vert^2 \, dx$. Looking at cumulative densities ensures that all densities are considered on the same scale.}
+\item we show that the inaccuracy of $p$ w.r.t.  $\theta$ can be reduced to $- \log_2 p(\theta)$,
+\item  then we show that the expected inaccuracy of $p$ from the perspective of $p$ is the entropy of $p$, $H(p)$,
+\item  next we show that the inaccuracy of $q$ from the perspective of $p$ is the cross-entropy $H(p,q)$,
+\item we then plug in  the well-established result that cross-entropy is strictly larger than entropy as soon as $p\neq q$.
+  \end{enumerate}
+}
+
+
+
+<!--- While imprecisers face challenges in formulating appropriate scoring rules, the second-order approach, which incorporates KLD and centers its focus on the distribution of all conceivable hypotheses, emerges as a more coherent framework. 
+--->
+
+
+The propriety requirement is that a measure expects itself to be the least accurate---to be able to formalize this requirement, we need the notion of *expected inaccuracy*. To calculate the expected accuracy of a measure, first you need to calculate its inaccuracy w,r,t  every possible hypothesis. Then, you factor in how probable the measure thinks those hypothesis as weights to calculate the expectation. Within our working framework in which we work with a discretized vector $x$ of possible outcomes, outcomes the expected inaccuracy is:
+$$\mathbb{E_{discretized}}I(p,q) = \sum  I(p,w) q(w),$$
+\noindent where $I(p,w)$ is an inaccuracy score of  distribution $p$ relative to the possible world $w$ (we use $I_{KL}$, but in principle other distance measures can be plugged in here).^[In practice, instead of working with $w$ and saying things like $V(w)=x$, we will be working with scalars and finite vectors, and simply say that the outcome is $x$.]
+
+
+Let's now compare, and show on an example the difference between our approach, which uses KL-divergence and a fairly standard  approach represented by CRPS^[Note that there are no readily computable solutions to the integral used in the definition of CRPS, although it can sometimes be evaluated in closed form [ @GneitRafter2007, p. 366].].
+todo{Say that it is used for example by Konek}. We will start by providing a definition of another inaccuracy measure, Cramer-Von-Mises. In the discretized version, it is defined as:\footnote{In the continuous case, this measure is defined as the area under the squared Euclidean distances between the corresponding cumulative density functions That is, $D_{CM}(p,q)  = \int_{0}^{1} \vert P(x) - Q(x)\vert^2 \, dx$. Looking at cumulative densities ensures that all densities are considered on the same scale.}
 \begin{align*}
 D_{\text{CM}}(p,q) & = \sum_{x} \vert P(x) - Q(x)\vert^2 
 \end{align*}
 
-\item Kullback-Leibler Divergence measure: 
-$$D_{\text{KL}}(p \,||\, q) = \sum_{x} p(x) \log\left(\frac{p(x)}{q(x)}\right)$$
-\noindent which is a standard information-theoretic measure of divergence of $q$ from $p$ from the perspective of $p$.\footnote{In the continuous case, the measure is in the form of differential KL divergence.}
-\end{enumerate}
+\noindent where $\mathsf{P}$ is the cumulative probability corresponding to the probability distribution $p$.
 
-\noindent
-To convert these measures into measures of *(in)accuracy*, we need to define relations between probability distributions and possible worlds. Let the outcome under consideration in $w$  be $V(w)$ (in a very simple case you might take there to be two possible oucomes, 0 and 1, the range of $V$ is simply the vector of possible states, $x$). The CRPS-inaccuracy of a distribution $p$ with respect to $w$ is defined, as follows:
+\noindent This inaccuracy measure can be used to define the inaccuracy of $p$ with respect to $w$ as follows:
+
 \begin{align*}
 I_{\text{CRPS}}(p,w) &= \sum \vert \mathsf{P}(x) - \mathbf{ 1 }(x\geq V(w))\vert ^2 
 \end{align*}
-\noindent where $\mathsf{P}$ is the cumulative probability corresponding to the probability distribution $p$, and
+\noindent where:
 \begin{align*}
 \mathbf{ 1 }(x \geq V(w)) & = \begin{cases} 1 & \text{ if } x \geq V(w)\\
 0 & \text{ o$\,$/w. }
 \end{cases}
 \end{align*}
-\noindent  
+\noindent 
+Cramer-Von-Mises can also be used to define the expected inaccuracy, analogously to the case of KL-divergence. 
 
-\todo{Are these the scoring rules whose propriety will be demonstrated? Or are these improper scoring rules? Section is ambiguous on this. Is the problem that we take 0 and 1 as the only outcomes? If so, I'd say it explicitly.}
-
-\noindent Analogously, KL-inaccuracy of $p$ is defined, as follows: 
-\begin{align*}
-I_{\text{KL}}(p,w) & = D_{\text{KL}}(f(w)||p)
-\end{align*}
-\noindent where \begin{align*}
-f(x) & = \begin{cases} 1 & \text{ if } x = V(w)\\
-0 & \text{ o$\,$/w. }
-\end{cases}
-\end{align*}
-\noindent That is, it is the KL-divergence of $p$ from the "true" probability distribution which assigns probability 1 to the outcome $V(w)$ and probability 0 to any other outcome,^[If you prefer to think in continuous terms, you'd need to use Delta-Dirac distributions here.] as seen from the perspective of $w$, the "ground truth" here, conceptually.
-
-Another notion is needed, that of *expected inaccuracy*, which we will define using the discretized vector $x$ of outcomes. \todo{Why need expected inaccuracy? Is it nedded to show (im)propriety?}
-
-$$\mathbb{E_{discretized}}I(p,q) = \sum  I(p,w) q(w),$$
-
-\noindent where $I(p,w)$ is an inaccuracy score of distribution $p$ relative to the possible world $w$, whethere in the form of KL-divergence or Cramer-Von-Mises measure. In practice, instead of working with $w$ and saying things like $V(w)=x$, we will be working with scalars and finite vectors, and simply say that the outocome is $x$.
-
-If you think there are only two possible outcomes, $\mathsf{tails}$ and $\mathsf{heads}$, *and you take the distributions* expected values as the probabilities they assign to those outcomes, you might think a seemingly simpler notion of expected inaccuracy is preferrable:
+At this point, a friend of point estimates might insist, \emph{but who do we have to pay attention to all these possible values, we can just run with point estimates!} To illustrate why the move to consider values in-between without prior integration, we will  go over an example in which there are only two possible lowe-level outcomes, $\mathsf{tails}$ and $\mathsf{heads}$, *and we take the distribution's expected values as the probabilities they assign to those outcomes. On this approach, instead of calculating inaccuracy w.r.t. to all possible hypotheses about the coin's bias, we first average out, and proceed in terms of probabilities of the two outcomes only instead. That is, we use:
 
 $$\mathbb{E_{binary}}(p,q) = I(p,\mathsf{heads}) \mathbb{E}q(\mathsf{heads}) + I(p,\mathsf{tails}) \mathbb{E}q(\mathsf{tails}).$$
 
-\todo{Are you going to show impropriety---that is, Ebinary(p,p)< Ebinary(p, q), for some q? If so, better to be explicit about this.}
-\noindent  We will start by reflecting on this binary approach, but we will soon see that it runs into difficulties. To fix ideas, consider a variation of a scenario by @Schoenfield2017accuracy. A rational agent is invited to engage in a bet by an opponent who has a representative bag of coins coming from a factory where the distribution of bias among the coins produced, the true generative process, is known. It is a mixture of two normal distributions  centered at $.3$ and at $.5$, both  with standard deviation of $.05$. The opponent randomly selects one of these coins and flips it. The rational agent knows all the details of this set-up. 
+We will start by reflecting on this binary approach, but we will soon see that it runs into difficulties. To fix ideas, consider a variation of a scenario by @Schoenfield2017accuracy. A rational agent is invited to engage in a bet by an opponent who has a representative bag of coins coming from a factory where the distribution of bias among the coins produced, the true generative process, is known. It is a mixture of two normal distributions  centered at $.3$ and at $.5$, both  with standard deviation of $.05$. The opponent randomly selects one of these coins and flips it. The rational agent knows all the details of this set-up. 
 
 What credal state should the rational agent form in response? Consider three out of many possible options: first, a *faithful bimodal* distribution centered at $.3$ and $.5$; second, a *unimodal* distribution centered at $.4$; third, a *wide bimodal* distribution centered at $.2$ and $.6$. The three options are depicted in @fig-emc. All of them have expected values at .4 rounded to four digits.
 
 
 
 
-Denote these distributions as $b, c, w$ correspondingly. Now consider what happens if we think of expected inaccuracy of these distributions assuming there are only two possible true outcomes, conceptualized as either heads ($H$) or tails ($T$). Whatever our inaccuracy measure, we will have six inaccuracy scores of the form $I(\mathsf{distribution}, \mathsf{outcome})$, where $\mathsf{outcome}$ is one of two omniscient distributions that give all weight to either heads or tails. In the calculation of expected values, \todo{why calculate expected inaccuracy? Can you say what is the aim here? Is it to show impropriety?} these will need to be multiplied by the probability of $H$ and the probability of $T$. However, none of these distributions assigns such a probability. They all assign probabilities to different values of coin bias, but not to different *outcomes* directly. Suppose we do what seems to be the natural way to go and  obtain such probabilities by  taking expected values of the form $\mathbb{E}_{\mathsf{distribution}}(H) = \sum (x * \mathsf{distribution}(x))$, where $x$ are the values on the discretized grid  (as in our example these expectations are pretty much the same, we can simply take $\mathsf{distribution}(H)$ to be .4): 
+Denote these distributions as $b, c,$ and $w$ correspondingly. Now consider what happens if we think of expected inaccuracy of these distributions assuming there are only two possible true outcomes, conceptualized as either heads ($H$) or tails ($T$). Whatever our inaccuracy measure, we will have six inaccuracy scores of the form $I(\mathsf{distribution}, \mathsf{outcome})$, where $\mathsf{outcome}$ is one of two omniscient distributions that give all weight to either heads or tails. In the calculation of expected values,these will need to be multiplied by the probability of $H$ and the probability of $T$. However, none of these distributions assigns such a probability. They all assign probabilities to different values of coin bias, but not to different *outcomes* directly. Suppose we do what seems to be the natural way to go for the friends of point estimation and  obtain such probabilities by  taking expected values of the form $\mathbb{E}_{\mathsf{distribution}}(H) = \sum (x * \mathsf{distribution}(x))$, where $x$ are the values on the discretized grid  (as in our example these expectations are pretty much the same, we can simply take $\mathsf{distribution}(H)$ to be .4): 
 
 
 
@@ -560,19 +593,19 @@ centered & 571.2192 & 371.4192 & 110.84220 & 53.13440 & 451.3392 & 76.21752\\
 wide bimodal & 485.4052 & 285.6177 & 54.13433 & 19.50965 & 365.5340 & 33.35974\\
 \bottomrule
 \end{tabular}
-\caption{CPRS and KLD inaccuracies of the three distributions to the TRUE and FALSE omniscient functions, with expected inaccuracies.}
+\caption{CPRS and KLD inaccuracies of the three distributions to the TRUE and FALSE omniscient functions, with expected inaccuracies, calculated using the shared point estimates of the probabilities of heads and tails.}
 \label{tbl:comp1}
 \end{table}
 
 
- As it turns out, the expected CRPS score recommends the wide bimodal distribution as the most accurate (or least inaccurate). \todo{The claim of impropriety is not clear from the table: the expected inacuracis are all from different perspectives or same perspective? If the latter, which perspective? Need something like Table 2.} The KL divergence from the omniscient measure makes the same reccomendation.^[This indicates that the choice of the evaluation metric is not the cause of the recommendation.] This is counterintuitive, because the faithful bimodal seems the one most appropriately evidence-responsive. The unimodal distribution, while centering on the expected value, gets the chances wrong, and the wide bimodal has its guesses too close to the truth values and too far from the known chances.  But there is a further problem.  While the wide bimodal distribution expects itself to be the least inaccurate, the other distributions also  expect the wide bimodal to be the least inaccurate. This indicates that in this setting  the CRPS score and the KL divergence are not proper scores, as they allow for cases of some distributions recommending other distibutions as less accurate, whatever the true state of the world turns out to be.
+ As it turns out, the expected CRPS score recommends the wide bimodal distribution as the most accurate (or least inaccurate).  The KL divergence from the omniscient measure makes the same reccomendation.^[This indicates that the choice of the evaluation metric is not the cause of the recommendation.] This is counterintuitive, because the faithful bimodal seems the one most appropriately evidence-responsive. The unimodal distribution, while centering on the expected value, gets the chances wrong, and the wide bimodal has its guesses too close to the truth values and too far from the known chances.  But there is a further problem.  While the wide bimodal distribution expects itself to be the least inaccurate, the other distributions also expect the wide bimodal to be the least inaccurate. This indicates that in this setting  the CRPS score and the KL divergence are not proper scores, as they allow for cases of some distributions recommending other distributions as less accurate, whatever the true state of the world turns out to be.
 
 
 What are we to make of this result? Note that the three distributions share the same expected value $.4$. The latter is then used in the calculations of the expected inaccuracies for both CRPS and KL with the assumption there are two possible outcomes with respect to which expected inaccuracy calculations are to be made. This approach, however, runs against the spirit of our enterprise. If expected values are often not good representations of a rational agent's uncertainty, it should not be surprising that relying on them fails to deliver plausible expected accuracy scores. By reducing each of the distributions' stance towards heads to a single point value .4, we've effectively washed out key information. So the question is, how can we adequately account for the complexity of a rational agent's credal state in formulating a proper accuracy score?  
 
 
 
-Here is our proposal. \todo{what is a formal statement of this accuracy measure / scoring rule?} Rather than measuring inaccuracy in relation to "true states of the world" conceptualized as two omniscient credences that peak at either 0 or 1 and averaging using expected values of the distributions, we should instead utilize a set of $n$ potential true probability hypotheses (ideally, going continuous, but we're working with a discrete grid of $n=1000$ possible coin baises in this paper).  We  then compute all the inaccuracies with respect to each of these $n$ values represented by "omniscient" distributions (or true chance hypotheses) and determine the expected inaccuracy scores using the entire distributions rather than relying solely on the expected values of the distributions. 
+Our proposal is that rather than measuring inaccuracy in relation to "true states of the world" conceptualized as two omniscient credences that peak at either 0 or 1 and averaging using expected values of the distributions, we should instead utilize a set of $n$ potential true probability hypotheses (ideally, going continuous, but we're working with a discrete grid of $n=1000$ possible coin baises in this paper).  We  then compute all the inaccuracies with respect to each of these $n$ values represented by "omniscient" distributions (or true chance hypotheses) and determine the expected inaccuracy scores using the entire distributions rather than relying solely on the expected values of the distributions. 
 
 
 
@@ -698,24 +731,6 @@ pointed wide bimodal & 99.75 & 99.75 & 16.61 & 16.61\\
 \end{table}
 
 
-
-The discussion so far, while based on an example, may raise questions about the strict propriety of the KLD as an inaccuracy measure. To address this concern, a proof is provided in the appendix. \todo{From the footnote the scorign rule seems to -log p(theta). how does this connect with teh divergence measures fro before?}In a nutshell, the argument demonstrates that for a second-order discretized probability mass $p$ over a parameter space $[0,1]$, with the actual probability denoted as $\theta$,  the Kullback-Leibler divergence of $p$ from 
-the indicator distribution  of $\theta$  (which assigns 1 to $\theta$ and 0 to all other parameter values in the parameter space) is expressed as $\mathcal{I}_{\dkl}^2$.^[The argument generalizes 
-to parameter spaces that correspond to probabilities of multiple propositions which are Cartesian products of parameter spaces explicitly used in the argument in this section.] This serves as a demonstration of the strict propriety of the inaccuracy measure: each $p$ anticipates itself to be the least inaccurate distribution.\footnote{ The argument has four key moves:  
-
-   
-\begin{enumerate}
-\item the inaccuracy of $p$ w.r.t. to parameter $\theta$ is just $- \log_2 p(\theta)$,
-\item  the expected inaccuracy of $p$ from the perspective of $p$ is the entropy of $p$, $H(p)$,
-\item  the inaccuracy of $q$ from the perspective of $p$ is the cross-entropy $H(p,q)$,
-\item and it is an established result that cross-entropy is strictly larger than entropy as soon as $p\neq q$.
-  \end{enumerate}
-}
-
-
-
-<!--- While imprecisers face challenges in formulating appropriate scoring rules, the second-order approach, which incorporates KLD and centers its focus on the distribution of all conceivable hypotheses, emerges as a more coherent framework. 
---->
 
 
 # Evidence aggregation: the simple case
