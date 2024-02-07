@@ -474,7 +474,7 @@ At this point, a friend of point estimates might insist, \emph{but who do we hav
 
 $$\mathbb{E_{binary}}(p,q) = I(p,\mathsf{heads}) \mathbb{E}q(\mathsf{heads}) + I(p,\mathsf{tails}) \mathbb{E}q(\mathsf{tails}).$$
 
-We will start by reflecting on this binary approach, but we will soon see that it runs into difficulties. To fix ideas, consider a variation of a scenario by @Schoenfield2017accuracy. A rational agent is invited to engage in a bet by an opponent who has a representative bag of coins coming from a factory where the distribution of bias among the coins produced, the true generative process, is known. It is a mixture of two normal distributions  centered at $.3$ and at $.5$, both  with standard deviation of $.05$. The opponent randomly selects one of these coins and flips it. The rational agent knows all the details of this set-up. 
+We will start by reflecting on this binary approach, but we will soon see that it runs into difficulties. To fix ideas, consider a variation of a scenario by @Schoenfield2017accuracy^[Schoenfield's argument against imprecise credences, based on the concept of accuracy, does not hold in our example for several reasons: we consider distributions, the probability function is not limited to a two-cell partition, and we utilize expected inaccuracy distributions.]. A rational agent is invited to engage in a bet by an opponent who has a representative bag of coins coming from a factory where the distribution of bias among the coins produced, the true generative process, is known. It is a mixture of two normal distributions  centered at $.3$ and at $.5$, both  with standard deviation of $.05$. The opponent randomly selects one of these coins and flips it. The rational agent knows all the details of this set-up. 
 
 What credal state should the rational agent form in response? Consider three out of many possible options: first, a *faithful bimodal* distribution centered at $.3$ and $.5$; second, a *unimodal* distribution centered at $.4$; third, a *wide bimodal* distribution centered at $.2$ and $.6$. The three options are depicted in @fig-emc. All of them have expected values at .4 rounded to four digits.
 
@@ -521,6 +521,17 @@ centeredCum <- cumsum(centered)
 distCe1 <- (centeredCum - indicator1)^2
 distCe0 <- (centeredCum - indicator0)^2
 
+
+# precise
+
+precise <- rep(0, n)
+precise[400] <- 1
+precise <- precise/sum(precise)
+preciseCum <- cumsum(precise)
+distPrecise1 <- (preciseCum - indicator1)^2
+distPrecise0 <- (preciseCum - indicator0)^2
+
+
 aw <- dnorm(ps, .2, .05)
 bw <- dnorm(ps, .6, .05)
 cw <- ifelse(ps <= .4, aw, bw) 
@@ -562,6 +573,17 @@ kldCe0 <- kld(ch0,centered)
 expKLDbi <- expBi * kldBi1 + (1-expBi) * kldBi0
 expKLDbW <- expBiW * kldBiW1 + (1-expBiW) * kldBiW0
 expKLDCe <- expCe * kldCe1 + (1-expCe) * kldCe0
+
+
+# precise measurments
+expPrecise <- sum(ps * precise)
+
+preciseCRPS1 <- sum(distPrecise1)
+preciseCRPS0 <- sum(distPrecise0)
+preciseKLD1 <- kld(ch1,precise)
+preciseKLD0 <- kld(ch0,precise)
+preciseExpCRPS <- expPrecise * preciseCRPS1 + (1-expPrecise) * preciseCRPS0
+preciseExpKLD <- expPrecise * preciseKLD1 + (1-expPrecise) * preciseKLD0
 ```
 
 
@@ -574,6 +596,7 @@ expKLDCe <- expCe * kldCe1 + (1-expCe) * kldCe0
 grid.arrange(plotDistroPlain(bimodal, "Bimodal, with modes at .3 and .5"),
 plotDistroPlain(centered, "Centered around .4"),
 plotDistroPlain(bimodalWide, "Wide bimodal, with modes at .2 and .6"), ncol = 1)
+plotDistroPlain(precise, "Precise .4")
 ```
 
 
@@ -588,6 +611,7 @@ plotDistroPlain(bimodalWide, "Wide bimodal, with modes at .2 and .6"), ncol = 1)
 \toprule
 distribution & CRPS1 & CRPS0 & KLD1 & KLD0 & ExpCRPS & ExpKLD\\
 \midrule
+precise & 600 & 399 & 16.6096 & 16.6096 & 479.2793 & 16.6096\\
 bimodal & 534.7305 & 334.9305 & 80.06971 & 33.90347 & 414.8505 & 52.36997\\
 centered & 571.2192 & 371.4192 & 110.84220 & 53.13440 & 451.3392 & 76.21752\\
 wide bimodal & 485.4052 & 285.6177 & 54.13433 & 19.50965 & 365.5340 & 33.35974\\
