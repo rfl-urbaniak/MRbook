@@ -216,7 +216,7 @@ Making, *Philosophical Perspectives* 24, pp. 281–323.}
 \noindent
 The upshot is that vacuous priors should not be used and that imprecise probabilism gives the right results when the priors are non-vacuous. \todo{Rafal to develop a response to this point.} Another strategy is to say that, in a state of complete ignorance, a special updating rule should be deployed.^[@Lee2017impreciseEpistemology suggests the rule of  \emph{credal set replacement} that recommends that upon receiving evidence the agent should  drop measures rendered implausible, and add all non-extreme plausible probability measures. This, however, is tricky. One  needs a separate account of what makes a distribution plausible from a principled account of why one should use a separate special update rule when starting with complete ignorance.] 
 
-Finally, imprecise probabilism faces a third, deeper problem that does not arise for precise probabilism. As it turns out, it is impossible to define proper scoring rules for measuring the accuracy of a representor. Workable *scoring rules* exist for measuring the accuracy of a single, precise probability measure, such as the Brier score. These rules measure the distance between a rational agent's probability measure and the actual value. A  requirement of scoring rules is that they  be \emph{proper}: any rational agent will expect their own probability measure to be more accurate than any other. After all, if an agent thought a different probability measure was more accurate, they should switch to it.  Proper scoring rules are then used to formulate accuracy-based arguments for precise probabilism. These arguments show (roughly) that, if your precise measure follows the axioms of probability theory, no other non-probabilistic measure is going to be more accurate than yours whatever the facts are.  Can the same be done for imprecise probabilism? It cannot. Impossibility theorems demonstrate that no proper scoring rules are available for representor sets. So, as many have noted, the prospects for an accuracy-based argument for imprecise probabilism look dim  [@seidenfeld2012forecasting; @Mayo-Wilson2016scoring; @Schoenfield2017accuracy; @CampbellMoore2020accuracy]. Moreover, as shown by  @Schoenfield2017accuracy, if an accuracy measure satisfies certain plausible formal constraints, it will never strictly recommend an imprecise stance, as for any imprecise stance there will be a precise one with at least the same accuracy. 
+Finally, imprecise probabilism faces a third, deeper problem that does not arise for precise probabilism. As it turns out, it is impossible to define proper scoring rules for measuring the accuracy of a representor. Workable *scoring rules* exist for measuring the accuracy of a single, precise probability measure, such as the Brier score. These rules measure the distance between a rational agent's probability measure and the actual value. A  requirement of scoring rules is that they  be \emph{proper}: any rational agent will expect their own probability measure to be more accurate than any other. After all, if an agent thought a different probability measure was more accurate, they should switch to it.  Proper scoring rules are then used to formulate accuracy-based arguments for precise probabilism. These arguments show (roughly) that, if your precise measure follows the axioms of probability theory, no other non-probabilistic measure is going to be more accurate than yours whatever the facts are.  Can the same be done for imprecise probabilism? It cannot. Impossibility theorems demonstrate that no proper scoring rules are available for representor sets [@seidenfeld2012forecasting]. So, as many have noted, the prospects for an accuracy-based argument for imprecise probabilism look dim  [@Mayo-Wilson2016scoring; @CampbellMoore2020accuracy]. Moreover, as shown by  @Schoenfield2017accuracy, if an accuracy measure satisfies certain plausible formal constraints, it will never strictly recommend an imprecise stance, as for any imprecise stance there will be a precise one with at least the same accuracy. 
 
 
 # Higher-order probabilism
@@ -382,35 +382,49 @@ The section can be skipped upon first reading without losing track of the main l
 # Proper scoring for higher-order probabilism
 \label{sec:proper-scores}
 
-
-
-
 <!--
 The overall dialecticts of this section is as follows. (1) we define two imporant divergence measures, (2) we define two inaccuracy measures using those divergencies, (3) we define the notion of expected inaccuracy, emphasizing a particular case, in which one additionally assumes that there are only two possible outcomes, 0 and 1. Then we (4) set up a thought experiment in which intuitively from three candidate subjective distributions only one matches the known true generative process and so should come out, intuitively, as the most accurate. Moreover, if a given accuracy measure is *proper* each of the subjective candidate distributions should expect itself to be the most accurate (in a sense to be specified). (5) We will show that propriety failures arise if we stick to the additional assumption mentioned in (3) and use our example to gesture towards a more general claim that's proven in the appendix, namely that KL divergence without this restrictive assumption is a strictly proper accuracy measure. (6) The example also illustrates that from the two measures discussed, the KL-divergence based one provides more intuitive results. 
 -->
 
-As already noted, one challenge for the imprecisers is providing a proper scoring rule that would be a counterpart of, say, the Brier score for the precise case. A crucial and well acknowledged characteristic for such a scoring rule is known as \emph{strict propriety}.^[When an inaccuracy measure is strictly proper, each probability distribution anticipates itself to be the least inaccurate.]
+A scoring rules or inaccuracy score quantifies the distance (inaccuracy) between a probability distribution and the true state of the world.  A desirable property that any such score should have is strict propriety. In the precise case, let $I_w(p)$ be an inaccuracy score of a probability distribution $p$ relative to the true state of the world $w \in W$. The score $I_w(p)$ is strictly proper if, for any other probability distribution $q$ different from $p$, the following holds: 
 
-This challenge becomes particularly pronounced in the context of imprecise probabilism, where meeting the requirement of strict propriety proves elusive. However, this section aims to illustrate that higher-order probabilism can indeed offer a scoring rule that has this crucial characteristic.
+$$\sum_{w\in W} p(w)I_w(p)< \sum_{w\in W} q(w)I_w(p).$$
 
+\noindent 
+That is, the expected inaccuracy of $p$ from the perspeective of $p$ itself shoud always be smaller than the expected inaccuracy of $p$ from the perspective of another distribution $q$. Other common requirements for an inaccuracy score are extensionality (the score should be a function of the probability distribution and the true state) as well as continuity (the score $I_w(p)$ should be a continous function around $p$). Well-known results show that the Brier score is an extensional score for precise probabilities that is both proper and continous.^[The Brier score is defined as the squared distance between the true state of the world and the probability forecast, or formally,  $(p(w)-V(w))^2$, where $p(w)$ is the probability forecast and $V(w)$ determines if a state $w\in W$ obtains ($V(w)=1$) or not ($V(w)=0$). If, for example, the true state of the world is 'rain', the forecast 'rain with .9 probability' would be more accurate than the forecast 'rain with .8 probability'. If, on the other hand, the true state were 'not rain', the latter forecast would be more accurate.]\todo{Is the formal statement of Brier score in the footnote correct? Are probabilities  defined over possible worlds or propositions that (partially) describe possible worlds?}
 
-The primary objective is to devise a scoring rule capable of assessing the accuracy of probability distributions while ensuring its propriety. 
-The scoring rule we propose is based on well-known measures of divergence between probability distributions, building on existing work on this topic (@HersbachDecomp2000, @Pettigrew2012Epistemic-Utili, @GneitRafter2007). 
-
-A key modification to this framework involves abandoning the assumption that only two possible outcomes (truth and false) exist. Once we present the positive proposal, we will illustrate how such an assumption is problematic.
-
-
-Our method employs Kullback-Leibler Divergence between probability distributions. For computational ease, we will use a grid approximation instead of continous distribitions, as in practice we are unable to work with infinite precision.  To this end, $x$ will denote the finite vector of discrete states under consideration (by default, we will use equally spaced values between 0 and 1 here).   Kullback-Leibler Divergence is defined as follows: 
-$$D_{\text{KL}}(p \,||\, q) = \sum_{x} p(x) \log\left(\frac{p(x)}{q(x)}\right)$$
-
-\noindent It is a standard information-theoretic measure of divergence of $q$ from $p$ from the perspective of $p$.\footnote{In the continuous case, we would need to use the so-called differential KL divergence, but our main points wouldn't change otherwise.}
-\noindent
+<!--
+The propriety requirement is that a measure expects itself to be the least accurate---to be able to formalize this requirement, we need the notion of *expected inaccuracy*. To calculate the expected accuracy of a measure, first you need to calculate its inaccuracy w,r,t  every possible hypothesis. Then, you factor in how probable the measure thinks those hypothesis as weights to calculate the expectation. Within our working framework in which we work with a discretized vector $x$ of possible outcomes, outcomes the expected inaccuracy is:
+$$\mathbb{E_{discretized}}I(p,q) = \sum  I(p,w) q(w),$$
+\noindent where $I(p,w)$ is an inaccuracy score of  distribution $p$ relative to the possible world $w$ (we use $I_{KL}$, but in principle other distance measures can be plugged in here).^[In practice, instead of working with $w$ and saying things like $V(w)=x$, we will be working with scalars and finite vectors, and simply say that the outcome is $x$.]
+-->
 
 
-To convert this measure into the measure of *(in)accuracy*, we need to define relations between probability distributions and possible worlds. Let the outcome under consideration in $w$  be $V(w)$ (in a very simple case you might take there to be two possible oucomes, 0 and 1, the range of $V$ is simply the vector of possible states). The  KL-inaccuracy of a distribution $p$ with respect to $w$ is defined, as follows:
+Can a similar result be established for imprecise probabilities? The answer is likely to be negative, since several hurdles exist. 
+First, it is is not straightforward to formulate an intuitively plausible scoring rule for imprecise probabilities. Suppose an imprecise forecast assigns the [.8, .9] interval to the probability of rain, where the true state is 'rain'. Would the [.6, .99] interval be more accurate since its .99 upper bound is closer to the true state? Intuitively, the [.6, .99] interval should not be more accurate than [.8, .9], otherwise the trivial interval [0, 1] would always be more accurate than any other interval. To avoid this outcome, a plausible inaccuracy score for imprecise probabilities could perhaps depend on two things. First, it decreases with the Brier score computed using the side of the interval closer to the true state. Second, the inaccuracy score increaes with the size of the interval itself. This blocks the result that the [0, 1] interval is the most accurate. For more details, see @seidenfeld2012forecasting. 
 
-\begin{align*}
-I_{\text{KL}}(p,w) & = D_{\text{KL}}(f(w)||p)
+Still, however the score for imprecise probabilities is defined, a second hurdle remains. The notion of expected inaccuracy is needed to establish the score's strict propriety, but this notion cannot be easily defined for imprecise probabilities. To see why, let $I_w([p_-, p_+])$ be an inaccuracy score for the interval $[p_-, p_+]$. Its expected inaccuracy from the perspective of the interval $[p_-, p_+]$ itself cannot be easily defined. After all, $I_w([p_-, p_+])$ cannot be multiplied by $[p_-, p_+](w)$, in the way in which $I_w(p)$ can be multipled by $p(w)$. One option is to evaluate the expected inaccuracy of $[p_-, p_+]$ from the perspective of $p_-$ or $p_+$.^[So the expected inaccuracy of $I_w([p_-, p_+])$ would equal $\sum_{w\in W} p_-(w)I_w([p_-, p_+])$ or $\sum_{w\in W} p_+(w)I_w([p_-, p_+])$.] But the impreciser would still face a problem. If the expected inaccuracy of the interval $[p_-, p_+]$ is evaluated from the perspective of the precise probabilities $p_-$ or $p_+$, finding a proper inaccuracy score that is also continous turns out to be impossible  [@seidenfeld2012forecasting].  If, instead, the notion of expected inaccuracy cannot be defined, the very question whether an inaccuracy score for imprecise probabilities can be proper is ill-defined to begin with. 
+
+
+Despite the difficulties that plague imprecise probabilism in defining scoring rules that are proper, here we show that there is a intuitively plausible scoring rule for higher-order probabilities that is both proper and continous. Building on existing work on this topic (@HersbachDecomp2000, @Pettigrew2012Epistemic-Utili, @GneitRafter2007), the higher-order scoring rule we propose is based on well-known measures of divergence between probability distributions. In particular, we rely 
+on the Kullback-Leibler (KL) divergence, which is defined as follows: <!--A key modification to this framework involves abandoning the assumption that only two possible outcomes (truth and false) exist. Once we present the positive proposal, we will illustrate how such an assumption is problematic.--> 
+$$ D_{\text{KL}}(q \,||\, p) = \sum_{x} q(x) \log\left(\frac{q(x)}{p(x)}\right) $$
+
+\noindent This is a standard information-theoretic measure of divergence of $p$ from $q$ from the perspective of $q$. For computational ease, we are using a grid approximation instead of continous distribitions, as in practice we are unable to work with infinite precision.\footnote{In the continuous case, we would need to use the so-called differential KL divergence, but our main points wouldn't change otherwise.}   To this end, $x$ will denote the finite vector of discrete states under consideration (by default, we will use equally spaced values between 0 and 1 here).  \todo{Marcello: I am not clear what x is here. What are states? Is the same x used below (outcomes)?}
+
+ The goal now is to deploy KL divergence as a measure of inaccuracy of $p$ relative to the true state of the world $W$, denoted by $I^{KL}_w(p)$. To this end, it is enough for the probability distribution $q(x)$ to play the role of the 'true' distribution tracking the true state $w$; call it $t(x)$, 
+
+$$ D_{\text{KL}}(t \,||\, p) = \sum_{x} t(x) \log\left(\frac{t(x)}{p(x)}\right), $$
+
+where to the possible outcomes $x$, the ominscient distribution $t$ will either assigns 1  (full probability one, if the outcome obtain in $w$) or 0 (zero probability, if the state does not obtain in $w$). 
+
+ 
+ <!-- Let the outcome under consideration in $w$  be $V(w)$ (in a very simple case you might take there to be two possible oucomes, 0 and 1; the range of $V$ is simply the vector of possible states). So the  KL-inaccuracy of a distribution $p$ with respect to $w$ is defined, as follows:
+-->
+
+<!--
+ \begin{align*}
+I_w^{KL}(p) & = D_{\text{KL}}(f(w)||p)
 \end{align*}
 
 \noindent where:
@@ -419,9 +433,7 @@ f(x) & = \begin{cases} 1 & \text{ if } x = V(w)\\
 0 & \text{ o$\,$/w. }
 \end{cases}
 \end{align*}
-
-\noindent  
-
+-->
 
 \noindent That is, it is the KL-divergence of $p$ from the "true" probability distribution which assigns probability 1 to the outcome $V(w)$ and probability 0 to any other outcome,^[If you prefer to think in continuous terms, you'd need to use Delta-Dirac distributions here.] as seen from the perspective of $w$, the "ground truth" here, conceptually.
 
@@ -443,9 +455,6 @@ to parameter spaces that correspond to probabilities of multiple propositions wh
 --->
 
 
-The propriety requirement is that a measure expects itself to be the least accurate---to be able to formalize this requirement, we need the notion of *expected inaccuracy*. To calculate the expected accuracy of a measure, first you need to calculate its inaccuracy w,r,t  every possible hypothesis. Then, you factor in how probable the measure thinks those hypothesis as weights to calculate the expectation. Within our working framework in which we work with a discretized vector $x$ of possible outcomes, outcomes the expected inaccuracy is:
-$$\mathbb{E_{discretized}}I(p,q) = \sum  I(p,w) q(w),$$
-\noindent where $I(p,w)$ is an inaccuracy score of  distribution $p$ relative to the possible world $w$ (we use $I_{KL}$, but in principle other distance measures can be plugged in here).^[In practice, instead of working with $w$ and saying things like $V(w)=x$, we will be working with scalars and finite vectors, and simply say that the outcome is $x$.]
 
 
 Let's now compare, and show on an example the difference between our approach, which uses KL-divergence and a fairly standard  approach represented by CRPS^[Note that there are no readily computable solutions to the integral used in the definition of CRPS, although it can sometimes be evaluated in closed form [ @GneitRafter2007, p. 366].].
