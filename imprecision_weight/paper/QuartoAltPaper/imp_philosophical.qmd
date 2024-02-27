@@ -1052,7 +1052,7 @@ Another option for the imprecise probabilist is to rely on reasonable ranges of 
 <!-- Now, the representor covers
   the convex hull of the probability measures that result in probabilities that are the edges of the intervals. For this reason, to investigate what span of probabilities the imprecise probabilities will end with,
   -->
-As expected, the range is wider for dog fur match evidence than hair match evidence: the uncertainty about the the dog fur match probability is greater since the sample database was smaller. This is a desirable feature of the interval approach.  Now, to assess the joint uncertainty, it is enough to focus on what happens at the edges of the two intervals. Reasoning with representor members at the edges of the intervals will yield the most extreme probability measure the impreciser is committed to, the worst-case and best-case scenarios. We end up with a new range for the joint match probabilties, (.00003, .003811).\footnote{Redoing the calculations using the upper bounds of the two intervals, $.037$ and $.103$,  yields the following:
+As expected, the range is wider for dog fur match evidence than hair match evidence: the uncertainty about the dog fur match probability is greater since the sample database was smaller. This is a desirable feature of the interval approach.  Now, to assess the joint uncertainty, it is enough to focus on what happens at the edges of the two intervals. Reasoning with representor members at the edges of the intervals will yield the most extreme probability measure the impreciser is committed to, the worst-case and best-case scenarios. We end up with a new range for the joint match probabilties, (.00003, .003811).\footnote{Redoing the calculations using the upper bounds of the two intervals, $.037$ and $.103$,  yields the following:
 \begin{align*}
 \mathsf{P}(\s{dog}\wedge \s{hair} \vert \neg \s{source})   & =  .037 \times .103 =.003811.
 \end{align*}
@@ -1065,7 +1065,7 @@ As expected, the range is wider for dog fur match evidence than hair match evide
    
  \noindent  
 This number is around `r round(.0003/lik0,2)` times lower than the original estimate.  Given this number, the two matchs are much stronger evidence for the source hypothesis than previously thought.}
-The corresponding likelihood ratios could be as high as $`r 1/0.00003`$ or as low as $`r 1/0.003811`$. The two matches could be much stronger or much weaker evidence than previously thought.
+The corresponding likelihood ratios could be as high as  `r round(1/0.00003,4)` or as low as `r round(1/0.003811,4)`. The two matches could be much stronger or much weaker evidence than previously thought.
 
  <!--Now the prior probability of the source hypothesis needs to be higher than `r thresholdL` for the posterior probability to be above .99 (@fig-impactofcharitable). -->
 
@@ -1107,18 +1107,39 @@ The upper bound of this interval would then require the prior probability of the
 
 
 
-Using plausible ranges for the match probabilities leaves the impression that any value in the interval is just as good as any other. Perhpas we should pick the middle value as representative of the interval. But relying on the entire interval or the middle value will misrepresent the evidence.  To see why, consider again @fig-densities (lower part) which depicts the probability distribution for the joint match probability. Interestingly, this distribution is not symmetric. So the most likely value (and the bulk of the distribution, really) does not lie in the middle between the edges. <!--Just because the parameter lies in an interval with some   posterior probability, it does not mean that the ranges near the edges of the interval are equally likely---the bulk of the density might very well be closer to one of the edges. --> Therefore, only relying on the edges---or taking central values as representative of the interval---can lead to overestimating or underestimating the probabilities at play.\footnote{The calculations for the joint interval assume that because the worst- or best-case probability for one event is $x$ and the worst- or best-case probability for another independent event is $y$, the worst- or best-case probability  for their conjunction is  $xy$. But this conclusion does not follow if the margin of error (credible interval) is fixed. Just because the probability of an extreme value $x$ for one variable $X$ is .01, and so it is for the value $y$ of another independent variable $Y$, it does not follow that the probability that  those two independent variables take values $x$ and $y$ simultaneously is the same. In general, it is impossible to calculate the credible interval for the joint distribution based solely on the individual credible intervals corresponding to the individual events.}
+Using plausible ranges for the match probabilities leaves the impression that any value in the interval is just as good as any other. Perhaps we should pick the middle value as representative of the interval. However, relying on the entire interval or the middle value will misrepresent the evidence.  To see why, consider again @fig-densities (lower part) which depicts the probability distribution for the joint match probability. Interestingly, this distribution is not symmetric. So the most likely value (and the bulk of the distribution, really) does not lie in the middle between the edges. <!--Just because the parameter lies in an interval with some posterior probability, it does not mean that the ranges near the edges of the interval are equally likely---the bulk of the density might very well be closer to one of the edges. --> Therefore, only relying on the edges---or taking central values as representative of the interval---can lead to overestimating or underestimating the probabilities at play.\footnote{The calculations for the joint interval assume that because the worst- or best-case probability for one event is $x$ and the worst- or best-case probability for another independent event is $y$, the worst- or best-case probability for their conjunction is  $xy$. However, this conclusion does not follow if the margin of error (credible interval) is fixed. Just because the probability of an extreme value $x$ for one variable $X$ is .01, and so it is for the value $y$ of another independent variable $Y$, it does not follow that the probability that those two independent variables take values $x$ and $y$ simultaneously is the same. In general, it is impossible to calculate the credible interval for the joint distribution based solely on the individual credible intervals corresponding to the individual events.}
  
-  Another problem in taking intervals as representative of the value of the evidence is that they will tend to widen as more items of evidence are evaluated. The size of the likelihood ratio interval was initially 
-  `r 1/.015 - 1/.037` (hair evidence)  and `r 1/.002 - 1/.103` (fur evidence). 
-  After aggregating the two items of evidence, the likelihood ratio interval widened to `r 1/.00003 - 1/.003811`. 
-  The size of the match probability interval was initially 
-  `r .015 - .037` (hair evidence)  and `r .002 - .103` (fur evidence). 
-  After aggregating the two items of evidence, the match probability interval narrowed to `r .00003 - .003811`.
-  Posterior interval (starting with 1:1 prior odds) was initially `r (1/.015)/(1+1/.015) - (1/.037)/(1+1/.037)` (hair evidence)  and `r (1/.002)/(1+1/.002) - (1/.103)/(1+1/.103)` (fur evidence). After aggregating the two items of evidence, the posterior interval narrowed to `r (1/.00003)/(1+1/.00003) - (1/.003811)/(1+1/.003811)`. 
+
+```{r, lratiosCalc, echo= FALSE, eval=TRUE}
+
+# imprecise intervals: hair - (.015,.037), dog - (.002, .103)
+hair_low <- .015
+hair_high <- .037
+
+dog_low <- .002
+dog_high  <- .103
+
+hair_LR_width <- 1/hair_low - 1/hair_high
+dog_LR_width <- 1/dog_low - 1/dog_high
+
+# aggregating two items of evidence
+
+aggregated_low <- 1/ (hair_low * dog_low)
+aggregated_high <- 1/ (hair_high * dog_high)
+
+# posteriors ???
+
+
+
+```
+
+
+Another problem in taking intervals as representative of the value of the evidence is that they will tend to widen as more items of evidence are evaluated. The size of the likelihood ratio interval was initially `r round(hair_LR_width, 2)` (hair evidence)  and `r round(dog_LR_width, 2)` (fur evidence). After aggregating the two items of evidence, the likelihood ratio interval widened to `r aggregated_low - aggregated_high`. The size of the match probability interval was initially `r hair_low - hair_high` (hair evidence)  and `r dog_low - dog_high` (fur evidence). 
+After aggregating the two items of evidence, the match probability interval narrowed to `r hair_low * dog_low - hair_high * dog_high`. Posterior interval (starting with 1:1 prior odds) was initially `r (1/.015)/(1+1/.015) - (1/.037)/(1+1/.037)` (hair evidence)  and `r (1/.002)/(1+1/.002) - (1/.103)/(1+1/.103)` (fur evidence). After aggregating the two items of evidence, the posterior interval narrowed to `r (1/.00003)/(1+1/.00003) - (1/.003811)/(1+1/.003811)`. 
+
 \todo{LR intervals widen but match and posterior probability intervals do not? How does that work? How can we claim that uncertainty increases?}
 
- All in all, precise and imprecise probabilim do not fare well in modelling  the value of evidence in the aggregate. 
+ All in all, precise and imprecise probabilism do not fare well in modelling the value of evidence in the aggregate. 
  Instead, the evaluation of multiple items of evidence should take into account higher-order uncertainty (as illustrated in @fig-densities). Whenever probability distributions for the probabilities of interest are available (and they should be available for match evidence and many forms of scientific evidence whose reliability has been studied), those distributions should be reported for assessing the value of the evidence. This approach avoids hiding actual aleatory uncertainties under the carpet. It also allows for a more balanced assessment of the evidence, whereas using point values or intervals may exaggerate or underestimate the value of the evidence.
 
 A couple of clarifications are in order. First, the problem we are highlighting is not confined to match evidence. Say an eyewitness testifies against the defendant: they saw the defendant near the crime scene at the relevant time. To assess the value of this testimony, one should know something analogous to the match probability: if the defendant was not there, how probable is it that the witness would still say the defendant was there? Or suppose a medical test for a disease turns out positive. Here again, to asses the evidential value of the positive test, one should know how probable it is that the test would still turn out positive even when a patient is actually negative. And so on.  These false positive probabilities are usually derived from sample-based frequencies in surveys or experiments: how often witness misidentify people; how often tests misdiagnose; etc. So, depending on the sample size, the false positive probabilities will have different degrees of uncertainty, and the latter should be taken into account when evaluating eyewitness testimonies, diagnostic test results, and many other forms of evidence. At the same time---and this is the second clarification---this discussion is not meant to suggest that the problem we are highlighting is confined to differences in sample size; it is broader than that. Probabilities can be subject to uncertainty for other reasons, for example, when they are derived from a probability model for which there is little support, or when the sample size is large but unrepresentative. So, in short, the problem of higher-order uncertainty is widespread and goes beyond match evidence and questions of sample size.
@@ -1402,7 +1423,7 @@ The standard response to these concerns is to invoke *sensitivity analysis*: a r
 But, as discussed earlier, imprecise probabilism, the interval approach and sensitivity analysis ignore the shape of the underlying distributions. They do not distinguish between probability measures (or point estimates) in terms of their plausibility, even though some will be more plausible than others. Moreover, if the sensitivity analysis is only guided by the values at the edges of the interval, these extremes will often play an undeservedly strong role. 
 
 
-These concerns can be addressed by recourse to higher-order probabilities.  In a precise Bayesian network, each  node is associated with a probability table determined by a finite list of numbers (precise probabilities). In an imprecise Bayesdian network, each node is associated with a table dertermined by an interval of numbers. But suppose that, instead of precise numbers or intervals of numbers, we have distributions over the possible numbers to enter into the probability tables.^[The densities of interests can then be approximated by (1) sampling parameter values from the specified distributions, (2) plugging them into the construction of the BN, and (3) evaluating the probability of interest in that precise BN. The list of the probabilities thus obtained will approximate the density of interest. In what follows we will work with sample sizes of 10k.]   An example of such higher-order Bayesian network for the Sally Clark case is represented in @fig-scwithhop. 
+These concerns can be addressed by recourse to higher-order probabilities.  In a precise Bayesian network, each  node is associated with a probability table determined by a finite list of numbers (precise probabilities). In an imprecise Bayesdian network, each node is associated with a table dertermined by an interval of numbers. But suppose that, instead of precise numbers or intervals of numbers, we have distributions over the possible numbers to enter into the probability tables.^[The densities of interests can then be approximated by (1) sampling parameter values from the specified distributions, (2) plugging them into the construction of the BN, and (3) evaluating the probability of interest in that precise BN. The list of the probabilities thus obtained will approximate the density of interest. In what follows we will work with sample sizes of 10k.]   An example of such higher-order Bayesian network for the Sally Clark case is represented in Figure \ref{fig-scwithhop}. 
 
 The higher-order Bayesian network helps to investigate the impact of different items of evidence on Sally Clark's probability of guilt  (see @fig-scwithhop2). The starting point is the prior distribution for the \s{Guilt} node (first graph). Next, the network is updated with evidence showing signs of bruising on both children (second graph). Next, the assumption that both children lack signs of 
 potentially lethal disease is added (third graph). Finally, we consider the state of the evidence at the time of the appellate case: signs of bruising existed on both children, but signs of lethal disease were discovered only on the first child. Interestingly, in the strongest case against Sally Clark (third graph), the median of the posterior distribution is above .95, but the uncertainty around that median is still quite wide.^[The lower limit of the 89\% Highest Posterior Density Intervals (HPDI) is at .83.] This underscores the fact that relying on point estimates can lead to overconfidence. 
@@ -1468,13 +1489,12 @@ grid.arrange(AbruisingIfSidsPlot+xlim(0,.4),AbruisingIfMurderPlot+xlim(0,.4))
 \label{fig:SCwithHOPa}
 \end{figure}
 --->
+<!---
 
-
-```{r SCwithHOP,  echo=FALSE,eval=TRUE,fig.align = "center",cache=FALSE, fig.show = "hold", out.width = "125%", out.height= "230%", warning=FALSE, message = FALSE, dpi = 800, fig.height=5 , fig.width= 7}
+```{r SCwithHOPa, out.extra='angle=90', echo=FALSE,eval=TRUE,fig.align = "center",cache=FALSE, fig.show = "hold", out.width = "125%", out.height= "230%", warning=FALSE, message = FALSE, dpi = 800}
 #| label: fig-scwithhop
 #| fig-cap: "An illustration of a probabilistic program for the Sally Clark case."
 #| fig-pos: h
-
 
 # out.extra='angle=90'               does not seem to work in quarto
 # , 
@@ -1487,67 +1507,80 @@ grid.arrange(AbruisingIfSidsPlot+xlim(0,.4),AbruisingIfMurderPlot+xlim(0,.4))
 #source("../scripts/SCplotDistros.R")
 
 
-AsidsPriorPlotGrob <- ggplotGrob(AsidsPriorPlot+theme_tufte(base_size = 5))
-BcauseSidsIfAsidsPlotGrob <- ggplotGrob(BcauseSidsIfAsidsPlot+theme_tufte(base_size = 5))
-BcauseSidsIfAmurderPlotGrob<- ggplotGrob(BcauseSidsIfAmurderPlot+theme_tufte(base_size = 5)) 
+# AsidsPriorPlotGrob <- ggplotGrob(AsidsPriorPlot+theme_tufte(base_size = 5))
+# BcauseSidsIfAsidsPlotGrob <- ggplotGrob(BcauseSidsIfAsidsPlot+theme_tufte(base_size = 5))
+# BcauseSidsIfAmurderPlotGrob<- ggplotGrob(BcauseSidsIfAmurderPlot+theme_tufte(base_size = 5)) 
 
-AbruisingIfSidsPlotGrob <- ggplotGrob(AbruisingIfSidsPlot+theme_tufte(base_size = 5)) 
-AbruisingIfMurderPlotGrob <- ggplotGrob(AbruisingIfMurderPlot+theme_tufte(base_size = 5)) 
-
-
-AdiseaseIfSidsPlotGrob <- ggplotGrob(AdiseaseIfSidsPlot+theme_tufte(base_size = 5)) 
-AdiseaseIfMurderPlotGrob <- ggplotGrob(AdiseaseIfMurderPlot+theme_tufte(base_size = 5)) 
+# AbruisingIfSidsPlotGrob <- ggplotGrob(AbruisingIfSidsPlot+theme_tufte(base_size = 5)) 
+# AbruisingIfMurderPlotGrob <- ggplotGrob(AbruisingIfMurderPlot+theme_tufte(base_size = 5)) 
 
 
-BbruisingIfSidsPlotGrob <- ggplotGrob(BbruisingIfSidsPlot+theme_tufte(base_size = 5)) 
-BbruisingIfMurderPlotGrob <- ggplotGrob(BbruisingIfMurderPlot+theme_tufte(base_size = 5)) 
+# AdiseaseIfSidsPlotGrob <- ggplotGrob(AdiseaseIfSidsPlot+theme_tufte(base_size = 5)) 
+# AdiseaseIfMurderPlotGrob <- ggplotGrob(AdiseaseIfMurderPlot+theme_tufte(base_size = 5)) 
 
 
-BdiseaseIfSidsPlotGrob <- ggplotGrob(BdiseaseIfSidsPlot+theme_tufte(base_size = 5)) 
-BdiseaseIfAmurderPlotGrob <- ggplotGrob(BdiseaseIfAmurderPlot+theme_tufte(base_size = 5)) 
+# BbruisingIfSidsPlotGrob <- ggplotGrob(BbruisingIfSidsPlot+theme_tufte(base_size = 5)) 
+# BbruisingIfMurderPlotGrob <- ggplotGrob(BbruisingIfMurderPlot+theme_tufte(base_size = 5)) 
 
 
-daigramToRotate <- ggplot(data.frame(a=1)) + xlim(1, 40) + ylim(1, 60)+theme_void()+
-  annotation_custom(AsidsPriorPlotGrob, xmin = 9, xmax = 15, ymin = 49, ymax = 59)+
-  geom_label(aes(label = "Bcause", x = 25, y = 41),
-              size = 3 )+
-  geom_label(aes(label = "Acause", x = 12, y = 48),
-            size = 3 )+
-  geom_curve(aes(x = 13.5, y = 48.2, xend = 25, yend = 42.5), curvature = -.18,size = .3,
-             arrow = arrow(length = unit(.015, "npc")))+
-  annotation_custom(BcauseSidsIfAsidsPlotGrob, xmin = 17, xmax = 23, ymin = 47, ymax = 57)+
-  annotation_custom(BcauseSidsIfAmurderPlotGrob, xmin = 15, xmax = 21, ymin = 37, ymax = 47)+
-  geom_label(aes(label = "Abruising", x = 2, y = 41),
-             size = 3 )+
-  geom_curve(aes(x = 10.5, y = 48.2, xend = 2, yend = 42.5), curvature = .2,size = .3,
-             arrow = arrow(length = unit(.015, "npc")))+
-  annotation_custom(AbruisingIfSidsPlotGrob, xmin = 2, xmax = 8, ymin = 47, ymax = 57)+
-  annotation_custom(AbruisingIfMurderPlotGrob, xmin = 5, xmax = 11, ymin = 37, ymax = 47)+
-  geom_label(aes(label = "Adisease", x = 6, y = 21),
-             size = 3 )+
-  geom_curve(aes(x = 13, y = 46.2, xend = 6, yend = 23), curvature = -.45,size = .3,
-             arrow = arrow(length = unit(.015, "npc")))+
-  annotation_custom(AdiseaseIfSidsPlotGrob, xmin = 4.5, xmax = 10.5, ymin = 27, ymax = 37)+
-  annotation_custom(AdiseaseIfMurderPlotGrob, xmin = 9, xmax = 15, ymin = 17.5, ymax = 27.5)+
-  geom_label(aes(label = "Bbruising", x = 14, y = 12),
-             size = 3 ) +
-  geom_curve(aes(x = 24, y = 39.5, xend = 15.5, yend = 13.5), curvature = -.2,size = .3,
-                                    arrow = arrow(length = unit(.015, "npc")))+
-  annotation_custom(BbruisingIfSidsPlotGrob, xmin = 15.5, xmax = 21.5, ymin = 25, ymax = 35)+
-  annotation_custom(BbruisingIfMurderPlotGrob, xmin = 18.5, xmax = 24.5, ymin = 10, ymax = 20)+
-  geom_label(aes(label = "Bdisease", x = 33, y = 18),
-             size = 3 )  +
-  geom_curve(aes(x = 26, y = 39.5, xend = 33, yend = 19.5), curvature = -.2,size = .3,
-             arrow = arrow(length = unit(.015, "npc")))+
-  annotation_custom(BdiseaseIfSidsPlotGrob, xmin = 31, xmax = 37, ymin = 27, ymax = 37)+
-  annotation_custom(BdiseaseIfAmurderPlotGrob, xmin = 24.5, xmax = 30.5, ymin = 20, ymax = 30)
+# BdiseaseIfSidsPlotGrob <- ggplotGrob(BdiseaseIfSidsPlot+theme_tufte(base_size = 5)) 
+# BdiseaseIfAmurderPlotGrob <- ggplotGrob(BdiseaseIfAmurderPlot+theme_tufte(base_size = 5)) 
 
-print(daigramToRotate, vp=viewport(angle=90), width=7, height=5)
+
+# daigramToRotate <- ggplot(data.frame(a=1)) + xlim(1, 40) + ylim(1, 60)+theme_void()+
+#   annotation_custom(AsidsPriorPlotGrob, xmin = 9, xmax = 15, ymin = 49, ymax = 59)+
+#   geom_label(aes(label = "Bcause", x = 25, y = 41),
+#               size = 3 )+
+#   geom_label(aes(label = "Acause", x = 12, y = 48),
+#             size = 3 )+
+#   geom_curve(aes(x = 13.5, y = 48.2, xend = 25, yend = 42.5), curvature = -.18,size = .3,
+#              arrow = arrow(length = unit(.015, "npc")))+
+#   annotation_custom(BcauseSidsIfAsidsPlotGrob, xmin = 17, xmax = 23, ymin = 47, ymax = 57)+
+#   annotation_custom(BcauseSidsIfAmurderPlotGrob, xmin = 15, xmax = 21, ymin = 37, ymax = 47)+
+#   geom_label(aes(label = "Abruising", x = 2, y = 41),
+#              size = 3 )+
+#   geom_curve(aes(x = 10.5, y = 48.2, xend = 2, yend = 42.5), curvature = .2,size = .3,
+#              arrow = arrow(length = unit(.015, "npc")))+
+#   annotation_custom(AbruisingIfSidsPlotGrob, xmin = 2, xmax = 8, ymin = 47, ymax = 57)+
+#   annotation_custom(AbruisingIfMurderPlotGrob, xmin = 5, xmax = 11, ymin = 37, ymax = 47)+
+#   geom_label(aes(label = "Adisease", x = 6, y = 21),
+#              size = 3 )+
+#   geom_curve(aes(x = 13, y = 46.2, xend = 6, yend = 23), curvature = -.45,size = .3,
+#              arrow = arrow(length = unit(.015, "npc")))+
+#   annotation_custom(AdiseaseIfSidsPlotGrob, xmin = 4.5, xmax = 10.5, ymin = 27, ymax = 37)+
+#   annotation_custom(AdiseaseIfMurderPlotGrob, xmin = 9, xmax = 15, ymin = 17.5, ymax = 27.5)+
+#   geom_label(aes(label = "Bbruising", x = 14, y = 12),
+#              size = 3 ) +
+#   geom_curve(aes(x = 24, y = 39.5, xend = 15.5, yend = 13.5), curvature = -.2,size = .3,
+#                                     arrow = arrow(length = unit(.015, "npc")))+
+#   annotation_custom(BbruisingIfSidsPlotGrob, xmin = 15.5, xmax = 21.5, ymin = 25, ymax = 35)+
+#   annotation_custom(BbruisingIfMurderPlotGrob, xmin = 18.5, xmax = 24.5, ymin = 10, ymax = 20)+
+#   geom_label(aes(label = "Bdisease", x = 33, y = 18),
+#              size = 3 )  +
+#   geom_curve(aes(x = 26, y = 39.5, xend = 33, yend = 19.5), curvature = -.2,size = .3,
+#              arrow = arrow(length = unit(.015, "npc")))+
+#   annotation_custom(BdiseaseIfSidsPlotGrob, xmin = 31, xmax = 37, ymin = 27, ymax = 37)+
+#   annotation_custom(BdiseaseIfAmurderPlotGrob, xmin = 24.5, xmax = 30.5, ymin = 20, ymax = 30)
+
+# print(daigramToRotate, vp=viewport(angle=90), width=7, height=5)
+
+
+# knitr::include_graphics("imp_philosophical_files/figure-pdf/SCwithHOP-1.pdf") # alternative method
 
 
 ```
 
 \todo{N: I am still searching for a good fix of that plot}
+
+--->
+
+\begin{figure}[htbp] 
+    \centering
+    \includegraphics[angle=90, width=\textwidth]{imp_philosophical_files/figure-pdf/SCwithHOP-1.pdf}
+    \caption{An illustration of a probabilistic program for the Sally Clark case.}
+    \label{fig-scwithhop}
+\end{figure} 
+
 
 
 
@@ -1564,7 +1597,7 @@ grid.arrange(GuiltPriorPlot, GuiltABbruisingPlot, GuiltABbruisingNoDiseasePlot, 
 
 
 
-One question that arises is how this approach relates to the standard method of using likelihood ratios to report the value of the evidence. On this approach, the conditional probabilities that are used in the likelihood ratio calculations are estimated and come in a package with an uncertainty about them. Accordingly, these uncertainties propagate: to estimate the likelihood ratio while keeping track of the uncertainty involved, we can   sample probabilities from the selected distributions appropriate for the conditional probabilities needed for the calculations, then divide the corresponding samples, obtaining a sample of likelihood ratios, thus approximating the density capturing the recommended uncertainty about the likelihood ratio. Uncertainty about likelihood ratio is just propagated uncertainty about the involved conditional probabilities. For instance, we can use this tool to gauge our uncertainty about the likelihood ratios corresponding to the signs of bruising in son A and the presence of the symptoms of a potentially lethal disease in son A (@fig-sclrs).
+One question that arises is how this approach relates to the standard method of using likelihood ratios to report the value of the evidence. On this approach, the conditional probabilities that are used in the likelihood ratio calculations are estimated and come in a package with an uncertainty about them. Accordingly, these uncertainties propagate: to estimate the likelihood ratio while keeping track of the uncertainty involved, we can sample probabilities from the selected distributions appropriate for the conditional probabilities needed for the calculations, then divide the corresponding samples, obtaining a sample of likelihood ratios, thus approximating the density capturing the recommended uncertainty about the likelihood ratio. Uncertainty about likelihood ratio is just propagated uncertainty about the involved conditional probabilities. For instance, we can use this tool to gauge our uncertainty about the likelihood ratios corresponding to the signs of bruising in son A and the presence of the symptoms of a potentially lethal disease in son A (@fig-sclrs).
 
 
 
