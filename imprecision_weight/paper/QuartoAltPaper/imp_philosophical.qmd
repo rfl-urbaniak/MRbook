@@ -908,6 +908,7 @@ This is the story about evidence aggregation told by the precise probabilist.  B
 
 A better alternative is easily available: the evaluation of multiple items of evidence should take into account higher-order uncertainty. @fig-densities (upper part) depicts higher-order probability distributions of different match probabilities given the sample data---the actual number of matches found in the sample databases. <!---By hypothesis, 29 matches were found in the sample database of human hair of size 1,148, and 2 matches were found in the sample database of dog fur of size 78.---> As expected, some random match probabilities are more likely than others, and since the sizes of the two databases are different, the distributions have different spreads: the smaller the database the greater the spread, the greater the uncertainty about the match probability. In light of this, @fig-densities (lower part) depicts the probability distribution for the joint match probability associated with both items of match evidence, hair and fur evidence. The aggregate value of the two pieces of match evidence, then, is given by a distribution over possible likelihood ratios. \todo{add distributions of LRs figure} The shape of this distribution conveys the degree of higher-order uncertainty about the value of the aggregate evidence. \textbf{Marcello (Rafal/Nikodem to add): Can we have a formula of how the two matches are combined in the higher-order approach? In precise probabilism, you multiply the individual LRs, in higher-order probabilism, what do we do formally? Can we also have a distribution of likelihood ratios? What happens if both numerator and denominator in the LR are distributions?} 
 
+
 ```{r LR_dist,echo=FALSE,eval=TRUE,fig.align = "center",cache=FALSE, fig.show = "hold", out.width = "100%"}
 
 # initial calculations #################
@@ -965,6 +966,7 @@ joined_dists <- ggplot() +
   geom_text(aes(x = 20000, y = 0.0001, label = "HPDI 0.9: 326 | 2976"), color = "steelblue") # HPDI(lh_joint, 0.9)
 
 ```
+
 
 
 ```{r LR_dist_vis,echo=FALSE,eval=TRUE,fig.align = "center",cache=FALSE, fig.show = "hold", out.width = "90%", warning = FALSE, message = FALSE}
@@ -1260,7 +1262,6 @@ densitiesLinesPlot <- ggplot(jointPosteriorLong)+
 -->
 
 
-
 <!--
 ```{r Figlines,echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "80%", warning = FALSE, message = FALSE}
 #| label: fig-lines
@@ -1501,7 +1502,7 @@ ggplot(SCfentonTable) + geom_point(aes(x = stage, y = probability, size = probab
 \end{figure}
 --->
 
-<!---
+<!--
 \begin{figure}[H]
 ```{r FigSCwithHOPa, echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "90%", warning=FALSE, message = FALSE, dpi = 800}
 
@@ -1510,8 +1511,8 @@ grid.arrange(AbruisingIfSidsPlot+xlim(0,.4),AbruisingIfMurderPlot+xlim(0,.4))
 \caption{Example of approximated uncertainties about conditional probabilities in the Sally Clark case.}
 \label{fig:SCwithHOPa}
 \end{figure}
---->
-<!---
+-->
+
 
 ```{r SCwithHOPa, out.extra='angle=90', echo=FALSE,eval=TRUE,fig.align = "center",cache=FALSE, fig.show = "hold", out.width = "125%", out.height= "230%", warning=FALSE, message = FALSE, dpi = 800}
 #| label: fig-scwithhop
@@ -1594,21 +1595,22 @@ grid.arrange(AbruisingIfSidsPlot+xlim(0,.4),AbruisingIfMurderPlot+xlim(0,.4))
 
 \todo{N: I am still searching for a good fix of that plot}
 
---->
 
+
+<!--
 \begin{figure}[htbp] 
     \centering
     \includegraphics[angle=90, width=\textwidth]{imp_philosophical_files/figure-pdf/SCwithHOP-1.pdf}
     \caption{An illustration of a probabilistic program for the Sally Clark case.}
     \label{fig-scwithhop}
 \end{figure} 
+-->
 
 
 
 
 
-
-
+<!--
 ```{r SCwithHOP2, echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "90%", warning=FALSE, message = FALSE, dpi = 800, warning = FALSE, message = FALSE, results= 'hide'}
 #| label: fig-scwithhop2
 #| fig-cap: 'Impact of incoming evidence in the Sally Clark case.'
@@ -1616,7 +1618,7 @@ grid.arrange(AbruisingIfSidsPlot+xlim(0,.4),AbruisingIfMurderPlot+xlim(0,.4))
 
 grid.arrange(GuiltPriorPlot, GuiltABbruisingPlot, GuiltABbruisingNoDiseasePlot, GuiltABbruisingDiseaseAPlot, ncol =2)
 ```
-
+-->
 
 
 One question that arises is how this approach relates to the standard method of using likelihood ratios to report the value of the evidence. On this approach, the conditional probabilities that are used in the likelihood ratio calculations are estimated and come in a package with an uncertainty about them. Accordingly, these uncertainties propagate: to estimate the likelihood ratio while keeping track of the uncertainty involved, we can sample probabilities from the selected distributions appropriate for the conditional probabilities needed for the calculations, then divide the corresponding samples, obtaining a sample of likelihood ratios, thus approximating the density capturing the recommended uncertainty about the likelihood ratio. Uncertainty about likelihood ratio is just propagated uncertainty about the involved conditional probabilities. For instance, we can use this tool to gauge our uncertainty about the likelihood ratios corresponding to the signs of bruising in son A and the presence of the symptoms of a potentially lethal disease in son A (@fig-sclrs).
