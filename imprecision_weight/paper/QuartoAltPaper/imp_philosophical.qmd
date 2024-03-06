@@ -603,7 +603,7 @@ plotDistroPlain(bimodalWide, "Wide bimodal, with modes at .2 and .6"), ncol = 1)
 
 ```{r figinaccuracies2,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%", message = FALSE, warning = FALSE, results = FALSE}
 #| label: fig-inaccuracies2
-#| fig-cap: 'CLPSR and KL divergence based inaccuracies relative to $n$ true chance hypotheses for the three distributions, faithful bimodal, centered unimodal and wide bimodal.'
+#| fig-cap: 'CRPS and KL divergence based inaccuracies relative to $n$ true chance hypotheses for the three distributions, faithful bimodal, centered unimodal and wide bimodal.'
 #| fig-pos: H
 
 
@@ -664,7 +664,7 @@ grid.arrange(bcplot, bkplot, ccplot, ckplot, bwcplot, bwkplot)
 
 \begin{table}[H]
 \begin{tabular}{lrrrrrr}
-& \multicolumn{3}{c}{CPRS} & \multicolumn{3}{c}{KLD} \\
+& \multicolumn{3}{c}{CRPS} & \multicolumn{3}{c}{KLD} \\
 \toprule
   & bimodal & centered & wide bimodal & bimodal & centered & wide bimodal\\
 \midrule
@@ -678,11 +678,38 @@ wide bimodal & 137.699 & 171.719 & 113.989 & 11.541 & 19.231 & 8.689\\
 \end{table}
 
  
-The accuracy scores of these higher-order distributions are in @fig-inaccuracies2.  Each point in the graph reflects the accuracy score calculated relative to a possible omniscient distribution corresponding to the values of $\theta$, the true bias of the coin. The expected inaccuracies of the three distributions from their own perspective, as well as from the perspective of the other distributions, are in \mbox{Table \ref{tbl:expected2}.} The results are as intended: from their own perspective, the distributions see themselves as the least inaccurate. The strict propriety of the scoring rule is verified.^[One important difference transpires between using CRPS and KLD. Notice how for chance hypotheses between the actual peaks the inaccuracy remains flat. This seems to be an artifice of choosing a squared distance metric. If instead we go with a more principled, information-theory-inspired KL divergence, inaccuracy in fact jumps a bit for values in between the peaks for the bimodal distributions, which seems intuitive and desirable. This seems to be a reason to prefer a KL-based inaccuracy scores.] 
+The accuracy scores of these higher-order distributions are in @fig-inaccuracies2.  Each point in the graph reflects the accuracy score calculated relative to a possible omniscient distribution corresponding to the values of $\theta$, the true bias of the coin. \todo{NL: Distribution, not a value representing a coin's bias?}The expected inaccuracies of the three distributions from their own perspective, as well as from the perspective of the other distributions, are in \mbox{Table \ref{tbl:expected2}.} The results are as intended: from their own perspective, the distributions see themselves as the least inaccurate. The strict propriety of the scoring rule is verified.^[One important difference transpires between using CRPS and KLD. Notice how for chance hypotheses between the actual peaks the inaccuracy remains flat. This seems to be an artifice of choosing a squared distance metric. If instead we go with a more principled, information-theory-inspired KL divergence, inaccuracy in fact jumps a bit for values in between the peaks for the bimodal distributions, which seems intuitive and desirable. This seems to be a reason to prefer a KL-based inaccuracy scores.] 
 
 
 Even though they all reccommend themselves, the three distributions are by no means equivalent. The faithful bimodal is the one that best reflects the true generative process, while the others less so. How does the KL-based inaccuracy score we propose capture the fact that the wide bimodal seems more adequate than the others? This is apparent by looking at the inaccuracy score relative to two chance hypotheses $H_3$, where the true chance is $0.3$, and $H_5$, where the true chance is $0.5$. \todo{Why just those two, and not also .4, another possible true chance hypothesis? The unimodal has a better score with .4. This seems ad hoc. }You can find the inaccuracies for them in Table \ref{tbl:schoen}. To make sure that this favorable outcome isn't due to not using pointed credences, we can redo the calculations using the pointed version. In the pointed version, all the focus is on 0.4, or the weight is evenly divided between 0.3 and 0.5, or between 0.2 and 0.6. As anticipated, when we consider inaccuracy, both of these setups recommend the faithful bimodal distribution (Table \ref{tbl:schoen2}).
 
+
+```{r tableh3h5,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%", message = FALSE, warning = FALSE, results = FALSE}
+h3 <- rep(0, n)
+h3[300] <- 1
+
+h5 <- rep(0, n)
+h5[500] <- 1
+
+BKLDH3 <- kld(bimodal, h3)
+BKLDH5 <-kld(bimodal, h5)
+
+CKLDH3 <- kld(centered, h3)
+CKLDH5 <-kld(centered, h5)
+
+BWKLDH3 <- kld(bimodalWide, h3)
+BWKLDH5 <-kld(bimodalWide, h5)
+
+BCVMH3 <-cvm(bimodal, h3)
+BCVMH5 <-cvm(bimodal, h5)
+
+CCVMH3 <-cvm(centered, h3)
+CCVMH5 <-cvm(centered, h5)
+
+BWCVMH3 <-cvm(bimodalWide, h3)
+BWCVMH5 <-cvm(bimodalWide, h5)
+
+```
 
 \begin{table}[H]
 \centering
@@ -699,6 +726,18 @@ wide bimodal & 86.230 & 86.223 & 10.871 & 10.882\\
 \caption{CRPS and KLD inaccuracies of the three distributions with respect to the two hypotheses. On both inaccuracy measures the bimodal distribution dominates the other two.}
 \label{tbl:schoen}
 \end{table}
+
+```{r tableh3h52,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%", message = FALSE, warning = FALSE, results = FALSE}
+
+
+point_bimodal <- rep(0, n)
+point_bimodal[c(300, 500)] <- 1
+
+pointKLDBH5 <- kld(point_bimodal, h5)   
+
+pointCVMBH3 <- cvm(point_bimodal, h3)
+
+```
 
 
 \begin{table}[H]
@@ -734,8 +773,33 @@ Instead of calculating inaccuracy relative to all possible chance hypotheses abo
  
  This approach to expected inaccuracy runs into trouble. As it turns out, the expected KL-inaccuracy score recommends the wide bimodal distribution as the most accurate (or least inaccurate), and the KL divergence from the omniscient measure makes the same reccomendation. This is counterintuitive, because the faithful bimodal seems the most evidence-responsive. The unimodal distribution, while centering on the expected value, gets the chances wrong, and the wide bimodal has its guesses too close to the truth values and too far from the known chances.  But there is a further problem.  While the wide bimodal distribution expects itself to be the least inaccurate, the other distributions also expect the wide bimodal to be the least inaccurate. In this setting, then,  strict propriety fails.
  since some distributions recommend others as less inaccurate, whatever the true state of the world.
- 
 
+ <!---
+
+```{r tabelPointsCRPSKLD,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%", message = FALSE, warning = FALSE}
+#| label: tbl-comp1
+#| tbl-cap: 'CPRS and KLD inaccuracies of the three distributions to the TRUE and FALSE omniscient functions, with expected inaccuracies, calculated using the shared point estimates of the probabilities of heads and tails.'
+
+library(knitr)
+# library(kable)
+library(kableExtra)
+table_pointsCRPSKLD <- data.frame(
+  distribution = c("bimodal", "centered", "wide bimodal"),
+  CRPS1 = c(db1, dc1, dbw1),
+  CRPS0 = c(db0, dc0, dbw0),
+  KLD1 = c(kldBi1, kldCe1, kldBiW1),
+  KLD0 = c(kldBi0, kldCe0, kldBiW0),
+  ExpCRPS = c(expCVMbi, expCVMCe, expCVMbW),
+  ExpKLD = c(expKLDbi, expKLDCe, expKLDbW)
+)
+
+table_pointsCRPSKLD %>%
+  kable("latex", booktabs = TRUE)
+
+
+```
+
+--->
 
 \begin{table}[H]
 \centering
