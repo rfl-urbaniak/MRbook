@@ -408,7 +408,7 @@ The overall dialecticts of this section is as follows. (1) we define two imporan
 
 A scoring rule or inaccuracy score quantifies the distance (inaccuracy) between a probability distribution and the true state of the world.  A desirable property that any such score should have is strict propriety. In the precise case, let $I(p, w)$ be an inaccuracy score of a probability distribution $p$ relative to the true state $w \in W$. The score $I(p, w)$ is strictly proper if, for any other probability distribution $q$ different from $p$, the following holds: 
 
-
+$$\sum_{w \in W} p(w) I(p, w) < \sum_{w \in W}  q(w)I(p, w).$$
 
 <!--
 A scoring rule or inaccuracy score quantifies the distance (inaccuracy) between a probability distribution and the true state of the world.  A desirable property that any such score should have is strict propriety. In the precise case, let $I(p, \theta_k)$ be an inaccuracy score of a probability distribution $p$ relative to the true chance $\theta_k$ defined over a parameter space $[0,1]$. The score $I(p, \theta_k)$ is strictly proper if, for any other probability distribution $q$ different from $p$, the following holds: 
@@ -663,6 +663,47 @@ return(df)
 InaBi <- inaccuracyChancy(bimodal)
 InaCe <- inaccuracyChancy(centered)
 InaBiW <- inaccuracyChancy(bimodalWide)
+
+
+
+fun_perspective <- function(perspective, expInaccScores){ # vectors!
+  return(sum(perspective * expInaccScores))
+}
+
+perspectives <- list(
+  'centered' = centered,
+  'bimodalWide' = bimodalWide,
+  'bimodal' = bimodal
+)
+
+expInaccScores <- list(
+  'InaBiCVM' = InaBi$crpss,
+  'InaBiKLD' = InaBi$klds,
+  'InaCeCVM' = InaCe$crpss,
+  'InaCeKLD' = InaCe$klds,
+  'InaBiWCVM' = InaBiW$crpss,
+  'InaBiWKLD' = InaBiW$klds
+)
+
+combinations <- expand.grid(names(perspectives), names(expInaccScores))
+
+expPersDF <- data.frame(Perspective = character(),
+                     ExpInaccScore = character(),
+                     Score = numeric(),
+                     stringsAsFactors = FALSE)
+
+for (i in 1:nrow(combinations)) {
+  perspective_name <- combinations[i, 1]
+  expInaccScore_name <- combinations[i, 2]
+  perspective <- perspectives[[perspective_name]]
+  expInaccScore <- expInaccScores[[expInaccScore_name]]
+  score <- fun_perspective(perspective, expInaccScore)
+  expPersDF <- rbind(expPersDF, data.frame(Perspective = perspective_name,
+                                     ExpInaccScore = expInaccScore_name,
+                                     Score = score))
+}
+
+expPersDF$Score <- round(expPersDF$Score, 3) 
 
 
 bcplot <- plotDistroPlain(InaBi$crpss, "Bimodal: CRPS")+ylab("inaccuracy")+
