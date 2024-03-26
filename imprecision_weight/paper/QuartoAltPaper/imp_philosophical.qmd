@@ -49,6 +49,7 @@ library(reshape2)
 library(truncnorm)
 library(ggforce)
 library(dplyr)
+library(magick)
 
 
 
@@ -90,7 +91,7 @@ source("../../scripts/SCplotDistros.R")
 
  As rational agents, we are uncertain about the truth of many propositions since the evidence we possess about them is often fallible. To represent this uncertainty, it is natural to rely on probability theory. Two options are typically on the table: precise and imprecise probabilism. Precise probabilism models an agent's state of uncertainty (or credal state) with a single probability measure: each proposition is assigned one probability value between 0 and 1 (a sharp credence).  The problem is that a single probability measure is not expressive enough to distinguish between intuitively different states of uncertainty rational agents may find themselves in (\S \ref{sec:precise-probabilism}).  To avoid this problem, a *set* of probability measures, rather than a single one, can be used to represent the uncertainty of a rational agent. This approach is known as imprecise probabilism. It outperforms precise probabilism in some respects, but also runs into problems of its own, such as belief inertia and the impossibility of defining proper scoring rules (\S \ref{sec:imprecise-probabilism}). 
  
- To make progress, this paper argues that the uncertainty of a rational agent is to be represented neither by a single probability measure nor a set of  measures. Rather, it is to be represented by a higher-order probability measure, more specifically, a probability distribution over parameter values intepreted as probabilities.  <!---The key insight is that a rational agent's uncertainty (or credal state) is not single-dimensional and thus cannot be mapped onto a one-dimensional scale like the real line. Uncertainty is best modeled by the shape of a probability distribution over multiple probability measures. --->  The theory we propose is not mathematically novel, but addresses many of the problems that plague both precise and imprecise probabilism (\S \ref{sec:higher-order} and \S \ref{sec:proper-scores}). It also fares better than existing versions of probabilism when the probability of multiple propositions, dependent or independent, is to be assessed (\S \ref{sec:higher-order-conjunction} and \ref{sec:higher-order-networks}). 
+ To make progress, this paper argues that the uncertainty of a rational agent is to be represented neither by a single probability measure nor a set of measures. Rather, it is to be represented by a higher-order probability measure, more specifically, a probability distribution over parameter values interpreted as probabilities.  <!---The key insight is that a rational agent's uncertainty (or credal state) is not single-dimensional and thus cannot be mapped onto a one-dimensional scale like the real line. Uncertainty is best modeled by the shape of a probability distribution over multiple probability measures. --->  The theory we propose is not mathematically novel, but addresses many of the problems that plague both precise and imprecise probabilism (\S \ref{sec:higher-order} and \S \ref{sec:proper-scores}). It also fares better than existing versions of probabilism when the probability of multiple propositions, dependent or independent, is to be assessed (\S \ref{sec:higher-order-conjunction} and \ref{sec:higher-order-networks}). 
  
  ]
  
@@ -122,18 +123,18 @@ capture an important dimension of how
 our fallible beliefs reflect the evidence 
 we have (or have not) obtained. A couple of stylized 
 examples featuring coin tosses should make the point clear. 
-Herer is the first:
+Here is the first:
 
 \begin{quote}
 \textbf{No evidence v. fair coin}
-You are about to toss a coin, but have no evidence 
+You are about to toss a coin but have no evidence 
 about its bias. You are completely ignorant. 
 Compare this to the situation in which you know, 
 based on overwhelming evidence, that the coin is fair. 
 \end{quote}
 
 \noindent On precise probabilism, both scenarios are represented by assigning a probability of .5 to the outcome \emph{heads}. If you are completely 
-ignorant, the principle of insufficient evidence suggests that you assign .5 to both outcomes.  Similarly, if you know for sure the coin is fair, assigning .5 seems the best way to quantify the uncertainty about the outcome. The agent's evidence in the two scenarios is quite different, but precise probabilities fail to  capture this difference. 
+ignorant, the principle of insufficient evidence suggests that you assign .5 to both outcomes.  Similarly, if you know for sure the coin is fair, assigning .5 seems the best way to quantify the uncertainty about the outcome. The agent's evidence in the two scenarios is quite different, but precise probabilities fail to capture this difference. 
 
 And now consider a  second scenario:
 \begin{quote}
@@ -148,7 +149,7 @@ After the 10 tosses, you again assess the probability to be .5.
 You must have learned something, but whatever that is, it is not modeled by precise probabilities. When you toss the coin 100 times and observe 50 heads, you learn something new as well. But your precise probability assessment will again be .5.
 
 These examples suggest that precise probabilism is not appropriately responsive to evidence. Representing an agent's uncertainty by a precise probability measure can fail to track what an agent has learned from new evidence. Precise probabilism assigns the same probability in situations in which one's evidence is quite different:  when no evidence is available about a coin's bias; when there is little evidence that the coin is fair (say, after only 10 tosses); and when there is strong evidence that the coin is fair (say, after 100 tosses). In fact, analogous problems also arise for evidence that the coin is not fair. Suppose the rational agent starts with a weak belief that the coin is  .6 biased towards heads. They can strengthen that belief by tossing the coin repeatedly and observing, say, 60 heads in 100 tosses. But this improvement in their evidence is not mirrored in the .6 probability they are supposed to assign to *heads*.^[Here is another problem for precise probabilism. Imagine a rational agent who does not know the bias of the coin. For precise probabilism, this state of uncertainty should be represented by a .5 probability assignment to the *heads*. Next, the agent learns that the bias towards heads, whatever the bias is, has been slightly increased, say by .001. The addition of this new information is called \emph{sweetening}
-in the philosophical literature. This sweetening should now make the agent bet on heads: if the probability of *heads* was initially .5, it must now be slightly above .5. But, intuitively, the new information should leave the agent equally undecided about betting on heads or tails. After sweetening, the agent still does not know much about the actual bias of the coin.]
+in the philosophical literature [@sweetening2010]. This sweetening should now make the agent bet on heads: if the probability of *heads* was initially .5, it must now be slightly above .5. But, intuitively, the new information should leave the agent equally undecided about betting on heads or tails. After sweetening, the agent still does not know much about the actual bias of the coin.]
 \todo{add reference about sweetening in footnote}
 
 <!-- 
@@ -162,7 +163,7 @@ The general problem is, precise probability captures the value around which your
  <!-- ^[Precise probabilism suffers from other difficulties. For example,  it has problems  with formulating a sensible method of probabilistic opinion  aggregation [@Elkin2018resolving,@Stewart2018pooling].  A seemingly intuitive constraint is that if every member agrees that $X$ and $Y$ are probabilistically independent, the aggregated credence should respect this. But this is hard to achieve if we stick to \s{PP} [@Dietrich2016pooling]. For instance, a \emph{prima facie} obvious method of linear pooling does not respect this. Consider probabilistic measures $p$ and $q$ such that $p(X)  = p(Y)  = p(X\vert Y) = 1/3$ and  $q(X)  =  q(Y) = q(X\vert Y) = 2/3$. On both measures, taken separately, $X$ and $Y$ are independent. Now take the average, $r=p/2+q/2$. Then $r(X\cap Y) = 5/18 \neq r(X)r(Y)=1/4$. This inability to capture an important epistemological difference, the impreciser insists, is a serious limitation. Intuitively, a precise stance is not justified by the very scant evidence available.] -->
 
 These problems generalize beyond cases of coin tossing. It is one thing not to know much about whether a proposition is true, for example, whether
-an individual is guilty of a crime. It is another thing to have strong evidence that favors a hypothesis and equally strong evidence that favors its negation, for example, strong evidence favoring the guilt hypothesis and equally strong evidence favoring the hypothesis of innocence. Despite this difference, precise probabilism would reccomend that a probability of .5 be assigned to both hypotheses in either case. Here, too, precise probabilities fail to be appropriately responsive to the evidence. 
+an individual is guilty of a crime. It is another thing to have strong evidence that favors a hypothesis and equally strong evidence that favors its negation, for example, strong evidence favoring the guilt hypothesis and equally strong evidence favoring the hypothesis of innocence. Despite this difference, precise probabilism would recommend that a probability of .5 be assigned to both hypotheses in either case. Here, too, precise probabilities fail to be appropriately responsive to the evidence. 
 
 In addition, evidence can accumulate in a way that does not require changing our initial probability assignments. Suppose that, at first, one's overall evidence favors $A$ over $B$. So the probability assigned to $A$ should be greater than that assigned to $B$. Next, the agent acquires new evidence. The total quantity of evidence has increased, but suppose this larger body of evidence overall still favors $A$ over $B$. So no change in the probabilities seems required. Still, something has changed about the agent's state of uncertainty towards $A$ and $B$: the quantity of evidence on which the agent can make their assessment whether $A$ is more probable than $B$ has become larger. And yet, this change in the quantity of overall evidence is not reflected in the precise probabilities assigned to the propositions $A$ and $B$.^[The distinction here is sometimes formulated in terms of the *balance* of the evidence (that is, whether the evidence available tips in favor a hypothesis or another) as opposed to its *weight* (that is, the overall quantity of evidence regardless of its balance); see @keynes1921treatise and @joyce2005probabilities among others.]
 
@@ -171,12 +172,12 @@ In addition, evidence can accumulate in a way that does not require changing our
 # Imprecise probabilism
 \label{sec:imprecise-probabilism}
 
-What if we give up the assumption that probability assignments should be precise? Imprecise probabilism holds that  a rational agent's credal stance towards a hypothesis is to be represented by a set of probability measures, typically called a  representor $\mathbb{P}$, rather than a single measure $\mathsf{P}$. The representor should include all and only those probability measures which are compatible
-with the evidence (more on this point later).^[For  the development of imprecise probabilism, see @keynes1921treatise; @Levi1974ideterminate; @Gardenfors1982unreliable; @Kaplan1968decision;  @joyce2005probabilities; @VanFraassen2006vague; @Sturgeon2008grain; @walley1991statistical. @bradley2019imprecise is a good source of further references. Imprecise probabilism shares some similarities with what we might call interval probabilism [@Kyburg1961; @kyburg2001uncertain]. On interval probabilism, precise probabilities are replaced  by intervals of probabilities. On imprecise probabilism, instead, precise probabilities are replaced by sets of probabilities.  This makes imprecise probabilism more general, since the probabilities of a proposition in the representor set do not have to form a closed interval.] It is easy to see that modeling an agent's credal state by sets of probability measures avoids some of the shortcomings of precise probabilism.  For instance, if an agent knows that the coin is fair, their credal state  would  be represented by the singleton set $\{\mathsf{P}\}$, where $\mathsf{P}$ is a probability measure that assigns $.5$ to \emph{heads}. If, on the other hand, the agent knows nothing about the coin's bias, their credal state would be represented by the set of all probabilistic measures, since none of them is excluded by the available evidence. Note that the set of probability measures does not represent admissible options that the agent could legitimately pick from. Rather, the agent's credal state is essentially imprecise and should be represented by means of the entire set of probability measures.
+What if we give up the assumption that probability assignments should be precise? Imprecise probabilism holds that a rational agent's credal stance towards a hypothesis is to be represented by a set of probability measures, typically called a representor $\mathbb{P}$, rather than a single measure $\mathsf{P}$. The representor should include all and only those probability measures which are compatible
+with the evidence (more on this point later).^[For  the development of imprecise probabilism, see @keynes1921treatise; @Levi1974ideterminate; @Gardenfors1982unreliable; @Kaplan1968decision;  @joyce2005probabilities; @VanFraassen2006vague; @Sturgeon2008grain; @walley1991statistical. @bradley2019imprecise is a good source of further references. Imprecise probabilism shares some similarities with what we might call interval probabilism [@Kyburg1961; @kyburg2001uncertain]. In interval probabilism, precise probabilities are replaced by intervals of probabilities. On imprecise probabilism, instead, precise probabilities are replaced by sets of probabilities.  This makes imprecise probabilism more general, since the probabilities of a proposition in the representor set do not have to form a closed interval.] It is easy to see that modeling an agent's credal state by sets of probability measures avoids some of the shortcomings of precise probabilism.  For instance, if an agent knows that the coin is fair, their credal state would be represented by the singleton set $\{\mathsf{P}\}$, where $\mathsf{P}$ is a probability measure that assigns $.5$ to \emph{heads}. If, on the other hand, the agent knows nothing about the coin's bias, their credal state would be represented by the set of all probabilistic measures, since none of them is excluded by the available evidence. Note that the set of probability measures does not represent admissible options that the agent could legitimately pick from. Rather, the agent's credal state is essentially imprecise and should be represented by means of the entire set of probability measures.
 
 
 So far so good. But, just as precise probabilism fails to be appropriately 
-evidence-responsive in certain scenarios, imprecise probabilism runs in similar difficulties 
+evidence-responsive in certain scenarios, imprecise probabilism runs into similar difficulties 
 in other scenarios. 
 
 \begin{quote}
@@ -185,12 +186,12 @@ in other scenarios.
 \end{quote}
 
 \noindent
-The first situation can be easily represented by imprecise probabilism. The representor would contain two probability measures, one that assigns .4. and the other that assigns .6 to the hypothesis 'this coin lands heads'.  But imprecise probabilism cannot represent the second situation. Since the probability measures in the set are all compatible with the agent's evidence, no probability measure can be assigned a greater (higher-order) probability than any other.^[Other scenarios can be constructed in which imprecise probabilism fails to capture distinctive intuitions about evidence and uncertainty; see, for example, [@Rinard2013against].  Suppose you know of two urns, \textsf{GREEN} and \textsf{MYSTERY}. You  are  certain \textsf{GREEN} contains only green marbles, but have no information about \textsf{MYSTERY}. A marble will be drawn at random from each. You should be certain that the marble drawn from \textsf{GREEN}  will be green ($G$), and you should be more confident about this than about the proposition that the marble from \textsf{MYSTERY} will be green ($M$). For each $r\in [0,1]$  your representor will contain a $\mathsf{P}$ with $\pr{M}=r$. But then,  it also contains one with $\pr{M}=1$. This means that it is not the case that for any probability measure  $\mathsf{P}$ in the representor set, $\mathsf{P}(G) > \mathsf{P}(M)$, that is, it is not the case that a rational agent should be more confident of $G$ than of $M$. This is counter-intuitive.] 
+The first situation can be easily represented by imprecise probabilism. The representor would contain two probability measures, one that assigns .4. and the other that assigns .6 to the hypothesis 'this coin lands heads'.  However imprecise probabilism cannot represent the second situation. Since the probability measures in the set are all compatible with the agent's evidence, no probability measure can be assigned a greater (higher-order) probability than any other.^[Other scenarios can be constructed in which imprecise probabilism fails to capture distinctive intuitions about evidence and uncertainty; see, for example, [@Rinard2013against].  Suppose you know of two urns, \textsf{GREEN} and \textsf{MYSTERY}. You are certain \textsf{GREEN} contains only green marbles, but have no information about \textsf{MYSTERY}. A marble will be drawn at random from each. You should be certain that the marble drawn from \textsf{GREEN}  will be green ($G$), and you should be more confident about this than about the proposition that the marble from \textsf{MYSTERY} will be green ($M$). For each $r\in [0,1]$  your representor will contain a $\mathsf{P}$ with $\pr{M}=r$. But then,  it also contains one with $\pr{M}=1$. This means that it is not the case that for any probability measure  $\mathsf{P}$ in the representor set, $\mathsf{P}(G) > \mathsf{P}(M)$, that is, it is not the case that a rational agent should be more confident of $G$ than of $M$. This is counter-intuitive.] 
 
 These examples show that imprecise probabilism is not expressive enough to model the scenario of uneven bias. <!--We believe that the solution is to add a probability distribution over the probability measures (more on this in the next section).--> Defenders of imprecise probabilism might concede this point but prefer their account for reasons of simplicity. They could also point out that imprecise probabilism models scenarios that precise probabilism cannot model, for example, a state of complete lack of evidence. In this respect, imprecise probabilism outperforms precise probabilism in expressive power, and also retains theoretical simplicity. But this is not quite true as imprecise probabilism suffers from several shortcomings that do not affect precise probabilism.  
 
-The first shortcoming has not received extensive discussion in the literature, but it is fundamental. Recall that, for imprecise probabilism, an agent's state of uncertainty is represented by those probability measures that are *compatible* with the agent's evidence. The question is, how should the notion of compatibility be understood here? <!---The idea is that thanks to this feature, imprecise credal stances are evidence-responsive in a way precise probabilistic stances are not.---> Perhaps we can think of compatibility as the fact that the agent's evidence is consistent with the probability measure in question. But mere consistency wouldn't get the agent very far in excluding probability measures, as too many probability measures are consistent with most observations and data. Admittedly, there will be  clear-cut cases: if you see the outcome of a coin toss to be heads, you reject the measure with $\mathsf{P}(H)=0$, and similarly for tails. Another class of cases might arise while randomly drawing objects from a finite set where the objective chances are known. But clear-cut cases aside, what else?  Data will often be consistent with almost any 
-probability measure.^[Probability measures can be inconsistent with evidential constraints that agents believe to be true. Mathematically, non-trivial evidential constraints are easy to model [@bradley2012scientific]. They can take the form, for example, of the \emph{evidence of chances} $\{ \mathsf{P}(X) = x\}$ or $\mathsf{P}(X) \in [x,y]$, or \emph{structural constraints} such as  "$X$ and $Y$ are independent" or "$X$ is more likely than $Y$." These constraints are something that an agent can come to accept outright, but only if offered such information by an expert whom the agent completely defers to. <!---Most of the  examples  in the literature start with the assumption that the agent is told by a believable source that the chances are such-and-such, or that certain structural constraint hold.--->  Besides these idealized cases, it is unclear how an agent could come to accept such structural constraints upon observation. There will usually be some degree of uncertainty about the acceptability of these constraints.]
+The first shortcoming has not received extensive discussion in the literature, but it is fundamental. Recall that, for imprecise probabilism, an agent's state of uncertainty is represented by those probability measures that are *compatible* with the agent's evidence. The question is, how should the notion of compatibility be understood here? <!---The idea is that thanks to this feature, imprecise credal stances are evidence-responsive in a way precise probabilistic stances are not.---> Perhaps we can think of compatibility as the fact that the agent's evidence is consistent with the probability measure in question. But mere consistency wouldn't get the agent very far in excluding probability measures, as too many probability measures are consistent with most observations and data. Admittedly, there will be clear-cut cases: if you see the outcome of a coin toss to be heads, you reject the measure with $\mathsf{P}(H)=0$, and similarly for tails. Another class of cases might arise while randomly drawing objects from a finite set where the objective chances are known. But clear-cut cases aside, what else?  Data will often be consistent with almost any 
+probability measure.^[Probability measures can be inconsistent with evidential constraints that agents believe to be true. Mathematically, non-trivial evidential constraints are easy to model [@bradley2012scientific]. They can take the form, for example, of the \emph{evidence of chances} $\{ \mathsf{P}(X) = x\}$ or $\mathsf{P}(X) \in [x,y]$, or \emph{structural constraints} such as  "$X$ and $Y$ are independent" or "$X$ is more likely than $Y$." These constraints are something that an agent can come to accept outright, but only if offered such information by an expert whom the agent completely defers. <!---Most of the  examples  in the literature start with the assumption that the agent is told by a believable source that the chances are such-and-such, or that certain structural constraint hold.--->  Besides these idealized cases, it is unclear how an agent could come to accept such structural constraints upon observation. There will usually be some degree of uncertainty about the acceptability of these constraints.]
 
 
 <!---
@@ -207,39 +208,39 @@ measure in the representor:
 The hope is that, if we start with a range of probabilities that is not extremely wide, point-wise learning will behave appropriately.
 <!---^[The hope is also that \s{IP} offers a feasible aggregation method [@Elkin2018resolving;@Stewart2018pooling]: just put all representors together in one set, and voil\'a! However, this is a very conservative method which quickly leads to extremely few points of agreement, and we are not aware of any successful practical deployment of this method.]
 --->
-For instance, if we start with a prior probability of \emph{heads} equal to .4 or .6, then those measures should be updated to something closer to $.5$ once we learn that a given coin has already been tossed  ten times with the observed number of heads equal 5 (call this evidence $E$). This would mean that if the initial range of values was $[.4,.6]$ the posterior range of values should be narrower.
+For instance, if we start with a prior probability of \emph{heads} equal to .4 or .6, then those measures should be updated to something closer to $.5$ once we learn that a given coin has already been tossed ten times with the observed number of heads equal 5 (call this evidence $E$). This would mean that if the initial range of values was $[.4,.6]$ the posterior range of values should be narrower.
 
 <!---But even this seemingly straightforward piece of reasoning is hard to model within the confines of imprecise probabilism. For to calculate $\pr{\s{bias} = k \vert E}$ we need to calculate $\pr{E \vert \s{bias} = k }\pr{\s{bias} = k}$ and divide it by $\pr{E} = \pr{E \vert \s{bias} = k }\pr{\s{bias = k}} + \pr{E \vert  \s{bias} \neq k }\pr{ \s{bias} \neq k}$. The tricky part is obtaining  $\pr{\s{bias} = k}$ or  $\pr{ \s{bias} \neq k}$ in a principled manner without explicitly going second-order, without estimating the parameter value and without using beta distributions. 
 --->
 
-Unfortunately, this narrowing of the range of values becomes impossible whenever the starting point is complete lack of knowledge, as imprecise probabilism runs into the problem of belief inertia  [@Levi1980enterprise]. This problem arises in situations in which no amount of evidence could lead the agent to change their belief state, according to a given modeling strategy. Consider a situation in which you start tossing a coin  knowing nothing about its bias. The range of possibilities is $[0,1]$. After a few tosses, if you observed at least one tail and one heads, you can exclude the measures assigning 0 or 1 to \emph{heads}. But what else have you learned?  If you are to update your representor set point-wise, you will end up with the same representor set. For any sequence of outcomes that you can obtain and any probability value in $[0, 1],$ there will exist a probability measure (conditional on the oucomes) that assigns that probability to *heads*. Consequently, the edges of your resulting interval will remain the same. In the end, it is not clear how you are supposed to learn anything if you start from complete ignorance.^[Here is another example of belief inertia by 
-@Rinard2013against.  Suppose all the marbles in the urn are green ($H_1$), or exactly one tenth of the marbles are green ($H_2$). Your initial credence about these  hypotheses is completely uncertain, the interval $[0,1]$. Next,  you learn that a marble drawn at random from the urn is green ($E$). After conditioning on this evidence, you end up with the same spread of values for $H_1$ that you had  before learning $E$. This result holds  no matter  how many green marbles are drawn. This is counterintuitive: if you keep drawing green marbles, the hypothesis that all marbles are green should become more probable.]
+Unfortunately, this narrowing of the range of values becomes impossible whenever the starting point is a complete lack of knowledge, as imprecise probabilism runs into the problem of belief inertia  [@Levi1980enterprise]. This problem arises in situations in which no amount of evidence could lead the agent to change their belief state, according to a given modeling strategy. Consider a situation in which you start tossing a coin knowing nothing about its bias. The range of possibilities is $[0,1]$. After a few tosses, if you observed at least one tail and one head, you can exclude the measures assigning 0 or 1 to \emph{heads}. But what else have you learned?  If you are to update your representor set point-wise, you will end up with the same representor set. For any sequence of outcomes that you can obtain and any probability value in $[0, 1],$ there will exist a probability measure (conditional on the outcomes) that assigns that probability to *heads*. Consequently, the edges of your resulting interval will remain the same. In the end, it is not clear how you are supposed to learn anything if you start from complete ignorance.^[Here is another example of belief inertia by 
+@Rinard2013against.  Suppose all the marbles in the urn are green ($H_1$), or exactly one-tenth of the marbles are green ($H_2$). Your initial credence about these hypotheses is completely uncertain, the interval $[0,1]$. Next,  you learn that a marble drawn at random from the urn is green ($E$). After conditioning on this evidence, you end up with the same spread of values for $H_1$ that you had before learning $E$. This result holds no matter how many green marbles are drawn. This is counterintuitive: if you keep drawing green marbles, the hypothesis that all marbles are green should become more probable.]
 
-Some downplay the problem of belief inertia.  After all, if you started with knowing truly nothing, then it is right to conclude that you will never learn anything. Joyce (2010) writes:
+Some downplay the problem of belief inertia.  After all, if you start with knowing truly nothing, then it is right to conclude that you will never learn anything. Joyce (2010) writes:
 
 > You cannot learn anything in cases of pronounced ignorance simply because a prerequisite for learning is to have prior views about how potential data should alter your beliefs (p. 291) [@Joyce2010defense] 
 
 \noindent
-The upshot is that uniform priors should not be used and that imprecise probabilism gives the right results when the priors are non-vacuous. \todo{add citation to Moss} \textbf{Moss CITE} arrives at the same conclusion by drawing the following parallelism. If contigent propositions should not be assigned probabilities of 0 or 1 whenver these extreme values are unrevisable, then by the same token  the uniform interval [0, 1] should not be used  for imprecise probabilities whenever it is impervious to revision.^[Another strategy is to say that, in a state of complete ignorance, a special updating rule should be deployed. @Lee2017impreciseEpistemology suggests the rule of  \emph{credal set replacement} that recommends that upon receiving evidence the agent should  drop measures rendered implausible, and add all non-extreme plausible probability measures. This, however, is tricky. One  needs a separate account of what makes a distribution plausible from a principled account of why one should use a separate special update rule when starting with complete ignorance.] The challenge, however, is to explain in a principled manner which types of priors a rational agent is justified in assigning and why. What is the reason not to assign uniform priors except that they are unrevisable and thus cause belief inertia? While it is true that one cannot learn anything in a state of complete ignorance, the scenarios giving rise to belief inertia are not like that. The agent knows that the coin is two-sided, that the bias of the coin does not change from one toss to the next, etc. As we will soon see, uniform priors are not necessarily unrevisable and can be a starting point for learning. This suggests that the problem lies with imprecise probabilism, not with uniform priors as such.
+The upshot is that uniform priors should not be used and that imprecise probabilism gives the right results when the priors are non-vacuous. \todo{add citation to Moss} \textbf{Moss CITE} arrives at the same conclusion by drawing the following parallelism. If contingent propositions should not be assigned probabilities of 0 or 1 whenever these extreme values are unrevisable, then by the same token the uniform interval [0, 1] should not be used for imprecise probabilities whenever it is impervious to revision.^[Another strategy is to say that, in a state of complete ignorance, a special updating rule should be deployed. @Lee2017impreciseEpistemology suggests the rule of  \emph{credal set replacement} that recommends that upon receiving evidence the agent should drop measures rendered implausible, and add all non-extreme plausible probability measures. This, however, is tricky. One  needs a separate account of what makes a distribution plausible from a principled account of why one should use a separate special update rule when starting with complete ignorance.] The challenge, however, is to explain in a principled manner which types of priors a rational agent is justified in assigning and why. What is the reason not to assign uniform priors except that they are unrevisable and thus cause belief inertia? While it is true that one cannot learn anything in a state of complete ignorance, the scenarios giving rise to belief inertia are not like that. The agent knows that the coin is two-sided, that the bias of the coin does not change from one toss to the next, etc. As we will soon see, uniform priors are not necessarily unrevisable and can be a starting point for learning. This suggests that the problem lies with imprecise probabilism, not with uniform priors as such.
 
 
 
-Finally, even setting aside belief inertia,  imprecise probabilism faces a third major problem that does not arise for precise probabilism. As it turns out, it is impossible to define proper scoring rules for measuring the accuracy of a representor. Workable scoring rules exist for measuring the accuracy of a single, precise probability measure, such as the Brier score. These rules measure the distance between a rational agent's probability measure and the actual value. A  requirement of scoring rules is that they  be \emph{proper}: any rational agent will expect their own probability measure to be more accurate than any other. After all, if an agent thought a different probability measure was more accurate, they should switch to it.  Proper scoring rules are then used to formulate accuracy-based arguments for precise probabilism. These arguments show (roughly) that, if your precise measure follows the axioms of probability theory, no other non-probabilistic measure is going to be more accurate than yours whatever the facts are.  Can the same be done for imprecise probabilism? It cannot. Impossibility theorems demonstrate that no proper scoring rules are available for representor sets [@seidenfeld2012forecasting]. So, as many have noted, the prospects for an accuracy-based argument for imprecise probabilism look dim  [@Mayo-Wilson2016scoring; @CampbellMoore2020accuracy]. Moreover, as shown by  @Schoenfield2017accuracy, if an accuracy measure satisfies certain plausible formal constraints, it will never strictly recommend an imprecise stance, as for any imprecise stance there will be a precise one with at least the same accuracy.
+Finally, even setting aside belief inertia,  imprecise probabilism faces a third major problem that does not arise for precise probabilism. As it turns out, it is impossible to define proper scoring rules for measuring the accuracy of a representor. Workable scoring rules exist for measuring the accuracy of a single, precise probability measure, such as the Brier score. These rules measure the distance between a rational agent's probability measure and the actual value. A  requirement of scoring rules is that they be \emph{proper}: any rational agent will expect their own probability measure to be more accurate than any other. After all, if an agent thought a different probability measure was more accurate, they should switch to it.  Proper scoring rules are then used to formulate accuracy-based arguments for precise probabilism. These arguments show (roughly) that, if your precise measure follows the axioms of probability theory, no other non-probabilistic measure is going to be more accurate than yours whatever the facts are.  Can the same be done for imprecise probabilism? It cannot. Impossibility theorems demonstrate that no proper scoring rules are available for representor sets [@seidenfeld2012forecasting]. So, as many have noted, the prospects for an accuracy-based argument for imprecise probabilism look dim  [@Mayo-Wilson2016scoring; @CampbellMoore2020accuracy]. Moreover, as shown by  @Schoenfield2017accuracy, if an accuracy measure satisfies certain plausible formal constraints, it will never strictly recommend an imprecise stance, as for any imprecise stance there will be a precise one with at least the same accuracy.
 
 
 # Higher-order probabilism
 \label{sec:higher-order}
 
-Let us take stock. Imprecise probabilism is more expressive than precise probabilism. It can model the difference between a state in which there is no evidence about a proposition (or its negation) and a state in which the evidence for and against a proposition is in equipoise. But imprecise probabilism has its own expressive limitations, for example, it cannot model the case of uneven bias. In addition, imprecise probabilism faces difficulties that do not affect precise probabilism: the notion of compatibility between a probability measure and the evidence is too permissive; belief inertia makes it impossible for a rational agent to learn via Bayesian updating; and no proper scoring rules exist for imprecise probabilism. In this section, we show that higher-order probabilism overcomes the expressive limitations of imprecise probabilism without falling prey to any such difficulties.  
+Let us take stock. Imprecise probabilism is more expressive than precise probabilism. It can model the difference between a state in which there is no evidence about a proposition (or its negation) and a state in which the evidence for and against a proposition is in equipoise. However imprecise probabilism has its own expressive limitations, for example, it cannot model the case of uneven bias. In addition, imprecise probabilism faces difficulties that do not affect precise probabilism: the notion of compatibility between a probability measure and the evidence is too permissive; belief inertia makes it impossible for a rational agent to learn via Bayesian updating; and no proper scoring rules exist for imprecise probabilism. In this section, we show that higher-order probabilism overcomes the expressive limitations of imprecise probabilism without falling prey to any such difficulties.  
 
-Proponents of imprecise probabilism already hinted at the need of relying on higher order-probabilities. For instance, Bradley   compares the measures in a representor to committee members, each voting on a particular issue, say the true chance or bias of a coin. As they acquire more evidence, the committee members will often converge on a chance hypothesis.
+Proponents of imprecise probabilism already hinted at the need to rely on higher order-probabilities. For instance, Bradley compares the measures in a representor to committee members, each voting on a particular issue, say the true chance or bias of a coin. As they acquire more evidence, the committee members will often converge on a chance hypothesis.
 
 > \dots the committee members are "bunching up". Whatever measure you put over the set of probability functions---whatever "second order probability" you use---the "mass" of this measure gets more and more concentrated around the true chance hypothesis. [@bradley2012scientific, p. 157]
 
 
 \noindent
 But such bunching up cannot be modeled by imprecise probabilism alone: a probability distribution over chance hypotheses is needed.^[In a similar vein, @joyce2005probabilities, in a paper defending imprecise probabilism,  explicates the notion of weight of evidence using a probability distribution over chance hypotheses. 
-<!---something that imprecise probabilism was advertised to handle better than precise probabilism: weight of evidence. \todo{briefly add quote from Keynes to clarify weight of evidence} The explication uses a density over chance hypotheses and conceptualizes the  weight of evidence  as an increase of concentration of smaller subsets of chance hypotheses. ---> Oddly, representor sets play no central role in Joyce's account of the weight of evidence.] That one should use  higher-order probabilities  has also been suggested by critics of imprecise probabilism. For example, @Carr2020impreciseEvidence argues that sometimes evidence requires uncertainty about what credences to have. Carr, however, does not articulate this suggestion more fully; does not develop it formally; and does not explain how her approach would fare against the difficulties affecting precise and imprecise probabilism. We now set out to do precisely that. 
+<!---something that imprecise probabilism was advertised to handle better than precise probabilism: weight of evidence. \todo{briefly add quote from Keynes to clarify weight of evidence} The explication uses a density over chance hypotheses and conceptualizes the  weight of evidence  as an increase of concentration of smaller subsets of chance hypotheses. ---> Oddly, representor sets play no central role in Joyce's account of the weight of evidence.] That one should use higher-order probabilities has also been suggested by critics of imprecise probabilism. For example, @Carr2020impreciseEvidence argues that sometimes evidence requires uncertainty about what credences to have. Carr, however, does not articulate this suggestion more fully; does not develop it formally; and does not explain how her approach would fare against the difficulties affecting precise and imprecise probabilism. We now set out to do precisely that. 
 
 <!--Such bunching up cannot be modeled by imprecise probabilism alone. A probability distribution over chance hypotheses is needed. Bradley seems to be aware of that, which would explain the use of scare quotes: when he talks about the option of using second-order probabilities in decision theory, he  insists that  'there is no justification for saying that there is more of your representor here or there.' ~[p.~195]--> 
 
@@ -248,7 +249,7 @@ But such bunching up cannot be modeled by imprecise probabilism alone: a probabi
 \todo{Revised this bit, take a look.}
 -->
 
- The central idea of higher-order probabilism is this:  a rational agent's uncertainty is not single-dimensional and thus cannot be mapped onto a one-dimensional scale such as  the real line. Uncertainty is best modeled by the shape of a probability distribution, sometimes even over the parameters which are best construed as probabilities themselves. In some straighforward cases of narrow and symmetric distributions we can get away with using point estimates, but such approximations will fail to be useful in more complex cases. Stated more formally, a rational agent's state of uncertainty (or credal stance) towards a proposition $X$ is not represented by a single probability value $\mathsf{P}(X)$ between 0 and 1, but by a probability density $f(\mathsf{P}(X))$, where the first-order probability of $X$ is the parameter in question, and is treated as a random variable.  \todo{Since f is discretized, can we just say distribution?}Crucially, this representation is general. While the examples used so far may not indicate this, the the first-order probability of $X$ is not restricted to chance hypotheses or the bias of a coin. The probability density $f(\mathsf{P}(X))$ assigns a second-order probability (density) to all possible first-order probabilities $\mathsf{P}(X)$.^[For computational ease, we will use a higher-order density that is discretized and ranges over 1000 first-order probabilities.]
+ The central idea of higher-order probabilism is this:  a rational agent's uncertainty is not single-dimensional and thus cannot be mapped onto a one-dimensional scale such as the real line. Uncertainty is best modeled by the shape of a probability distribution, sometimes even over the parameters that are best construed as probabilities themselves. In some straightforward cases of narrow and symmetric distributions, we can get away with using point estimates, but such approximations will fail to be useful in more complex cases. Stated more formally, a rational agent's state of uncertainty (or credal stance) towards a proposition $X$ is not represented by a single probability value $\mathsf{P}(X)$ between 0 and 1, but by a probability density $f(\mathsf{P}(X))$, where the first-order probability of $X$ is the parameter in question and is treated as a random variable.  \todo{Since f is discretized, can we just say distribution?}Crucially, this representation is general. While the examples used so far may not indicate this, the first-order probability of $X$ is not restricted to chance hypotheses or the bias of a coin. The probability density $f(\mathsf{P}(X))$ assigns a second-order probability (density) to all possible first-order probabilities $\mathsf{P}(X)$.^[For computational ease, we will use a higher-order density that is discretized and ranges over 1000 first-order probabilities.]
 
 <!---^[Bradley admits this much [@bradley2012scientific, 90], and so does  Konek  [@konek2013foundations, 59]. For instance, Konek disagrees with: (1)  $X$ is more probable than $Y$ just in case $p(X)>p(Y)$, (2)  $D$ positively supports $H$ if $p_D(H)> p(H)$, or (3)  $A$ is preferable to $B$ just in case the expected utility of $A$ w.r.t. $p$ is larger than that of $B$.]
 ---> 
@@ -258,7 +259,7 @@ The reader might be worried. The examples we discussed so far involve estimation
 --->
 
 How should these second-order probabilities be understood? It is helpful to think of higher-order probabilism as a generalization of imprecise probabilism. Imprecisers already admit that some probability measures are compatible and others incompatible with the agent's evidence at some point. Compatibility is a coarse notion; it is an all-or-nothing affair. <!---For instance, suppose there is no evidence about the bias of a coin. Then, any first-order point probability about *heads* would be compatible with the evidence. If, instead, we know the coin is fair, the evidence clearly selects one preferred value, .5, and all other first-order probabilities would be incompatible with the evidence. But often, evidence is stronger than the former case and weaker than the latter case. --->
-But, as seen earlier, evidence can hardly exclude a probability measure in a definitive manner except in clear-cut cases. Just as it is often a matter of degrees whether evidence supports a proposition, the notion of compatibility between evidence and probability measures can itself be a matter of degrees. On this picture, the evidence justifies different values of first-order probability to various degrees. So, second-order probabilities express the extent to which the first-order probabilities are supported by the evidence. 
+But, as seen earlier, evidence can hardly exclude a probability measure in a definitive manner except in clear-cut cases. Just as it is often a matter of degrees whether the evidence supports a proposition, the notion of compatibility between evidence and probability measures can itself be a matter of degrees. In this picture, the evidence justifies different values of first-order probability to various degrees. So, second-order probabilities express the extent to which the first-order probabilities are supported by the evidence. 
 
 
 This higher-order approach at the technical level is by no means novel. Bayesian probabilistic programming languages embrace the well-known idea that parameters can be stacked and depend on each other [@Bingham2021PPwithoutTears]. But, while the technical machinery has been around for a while, it has not been deployed by philosophers to model a rational agent's uncertainty or credal state. Because of its greater expressive power, higher-order probabilism can represent uncertainty in a more fine-grained manner, as illustrated in @fig-evidenceResponse. In particular, the uneven coin scenario in which the two biases of the coin are not equally likely---which imprecise probabilism cannot model---can be easily modeled within high-order probabilism by assigning different probabilities to the two biases.
@@ -316,12 +317,12 @@ mean(TwoUnbalancedDensity)*mean(TwoDensity)
 grid.arrange(FairPlot,UniformPlot, TwoPlot, TwoUnbalancedPlot)
 ```
 
-An agent's uncertainty could---perhaps, should---sometimes be represented by a sigle probability value. Higher-order probabilism does not prohibit that. For example, there may well be cases in which an agent's uncertainty is aptly represented by the expectation.^[The 
-expectation is usually defined as $\int_{0}^{1} x f(x) \, dx$. In the context of our approach here, $x$ is the first-order probability of a given proposition, and $f$ is the density representing the agent's uncertainty about $x$.]
-<!---can be used as  the precise, object-level credence in the proposition itself, where $f$ is the probability density over possible object-level probability values.--->  But this need not always be the case. If the probability distribution is not sufficiently concentrated around a single value, a one-point summary will fail to do justice to the nuances of the agent's credal state.^[This approach lines up with common practice in Bayesian statistics, where the primary role of uncertainty representation is assigned to the whole distribution. Summaries such as the mean, mode standard deviation,  mean absolute deviation, or highest posterior density intervals are only succinct ways for representing uncertainty.] For example, consider again the scenario in which the agent knows that the bias of the coin is  either .4 or .6 but the former is three times more likely. Representing the agent's credal state with the expectation $.75 \times .4 + .25 \times .6 = .45$ would fail to capture the agent's different epistemic attitudes towards the two biases. The agent believes the two biases have different probabilities, and is also certain the bias is *not* .45. 
+An agent's uncertainty could---perhaps, should---sometimes be represented by a single probability value. Higher-order probabilism does not prohibit that. For example, there may well be cases in which an agent's uncertainty is aptly represented by the expectation.^[The 
+expectation is usually defined as $\int_{0}^{1} x f(x) \, dx$. In the context of our approach here, $x$ is the first-order probability of a given proposition and $f$ is the density representing the agent's uncertainty about $x$.]
+<!---can be used as  the precise, object-level credence in the proposition itself, where $f$ is the probability density over possible object-level probability values.--->  But this need not always be the case. If the probability distribution is not sufficiently concentrated around a single value, a one-point summary will fail to do justice to the nuances of the agent's credal state.^[This approach lines up with common practice in Bayesian statistics, where the primary role of uncertainty representation is assigned to the whole distribution. Summaries such as the mean, mode standard deviation,  mean absolute deviation or highest posterior density intervals are only succinct ways of representing uncertainty.] For example, consider again the scenario in which the agent knows that the bias of the coin is either .4 or .6 but the former is three times more likely. Representing the agent's credal state with the expectation $.75 \times .4 + .25 \times .6 = .45$ would fail to capture the agent's different epistemic attitudes towards the two biases. The agent believes the two biases have different probabilities, and is also certain the bias is *not* .45. 
 
 
-Besides its greater expressive power in modelling uncertainty, higher-order probabilism does not fall prey to belief inertia. Consider a situation in which you have no idea about the bias of a coin.  You start with a uniform distribution over $[0,1]$ as your prior. Observing  any non-zero number of heads will exclude 0 and observing any non-zero number of  tails will exclude 1 from the basis of the posterior. The posterior distribution will become more centered as the observations come in. This result is a straightforward application of Bayesian updating. Instead of plugging sharp probability values into the formula for Bayes's theorem , the factors to be mutiplied in the theorem will be probability densities (or ratios of densities as needed). @fig-intertia2 illustrates---starting with a uniform prior distribution---how the posterior (beta) distribution changes after successive observations.^[Assuming independence and constant probability for all the observations, learning is modeled the Bayesian way. You start with some prior density $p$ over the parameter values. If you start with complete lack of information, $p$ should be uniform. Then, you observe the data $D$ which is the number of successes $s$ in a certain number of observations $n$. For each particular possible value $\theta$ of the parameter, the probability of $D$ conditional on $\theta$ follows the binomial distribution. The probability of $D$ is obtained by integration. That is:
+Besides its greater expressive power in modeling uncertainty, higher-order probabilism does not fall prey to belief inertia. Consider a situation in which you have no idea about the bias of a coin.  You start with a uniform distribution over $[0,1]$ as your prior. Observing any non-zero number of heads will exclude 0 and observing any non-zero number of tails will exclude 1 from the basis of the posterior. The posterior distribution will become more centered as the observations come in. This result is a straightforward application of Bayesian updating. Instead of plugging sharp probability values into the formula for Bayes's theorem, the factors to be multiplied in the theorem will be probability densities (or ratios of densities as needed). @fig-intertia2 illustrates---starting with a uniform prior distribution---how the posterior (beta) distribution changes after successive observations.^[Assuming independence and constant probability for all the observations, learning is modeled the Bayesian way. You start with some prior density $p$ over the parameter values. If you start with a complete lack of information, $p$ should be uniform. Then, you observe the data $D$ which is the number of successes $s$ in a certain number of observations $n$. For each particular possible value $\theta$ of the parameter, the probability of $D$ conditional on $\theta$ follows the binomial distribution. The probability of $D$ is obtained by integration. That is:
 \begin{align*}
 p(\theta \vert D) & = \frac{p(D\vert \theta)p(\theta)}{p(D)}\\
 & = \frac{\theta^s (1-\theta)^{(n - s)}p(\theta)}{\int (\theta')^s (1-\theta')^{(n - s)}p(\theta')\,\, d\theta'}.
@@ -395,7 +396,7 @@ grid.arrange(InertiaPriorPlot, InertiaOneGPlot,  InertiaTwoGPlot, InertiaTwoGone
 
 
 The impossibility of defining proper scoring rules was another weakness of imprecise probabilism.  This is a significant shortcoming, especially because proper scores do exist for precise probabilism. Fortunately, one can show that there exist proper scoring rules for higher-order probabilism. <!--These rules can then be used to formulate accuracy-based arguments. In addition, recall the point made by  @Schoenfield2017accuracy:  an accuracy measure  will not usually recommend an imprecise stance. This argument 
-fails against imprecise probabilism: there are cases in which accuracy considerations recommend an imprecise stance (that is, a multi-modal distribution) over a precise one. --> We defend this claim in the next section. The argument, however, will be more formal and  can be skipped upon first reading.
+fails against imprecise probabilism: there are cases in which accuracy considerations recommend an imprecise stance (that is, a multi-modal distribution) over a precise one. --> We defend this claim in the next section. The argument, however, will be more formal and can be skipped upon first reading.
 
 
 # Proper scores
@@ -408,7 +409,7 @@ The overall dialecticts of this section is as follows. (1) we define two imporan
 
 A scoring rule or inaccuracy score quantifies the distance (inaccuracy) between a probability distribution and the true state of the world.  A desirable property that any such score should have is strict propriety. In the precise case, let $I(p, w)$ be an inaccuracy score of a probability distribution $p$ relative to the true state $w \in W$. The score $I(p, w)$ is strictly proper if, for any other probability distribution $q$ different from $p$, the following holds: 
 
-
+$$\sum_{w \in W} p(w) I(p, w) < \sum_{w \in W}  q(w)I(p, w).$$
 
 <!--
 A scoring rule or inaccuracy score quantifies the distance (inaccuracy) between a probability distribution and the true state of the world.  A desirable property that any such score should have is strict propriety. In the precise case, let $I(p, \theta_k)$ be an inaccuracy score of a probability distribution $p$ relative to the true chance $\theta_k$ defined over a parameter space $[0,1]$. The score $I(p, \theta_k)$ is strictly proper if, for any other probability distribution $q$ different from $p$, the following holds: 
@@ -440,22 +441,32 @@ Can similar results be established for imprecise probabilities? The answer is li
 First, a plausible scoring rule for imprecise probabilities cannot be easily found. Suppose an imprecise forecast assigns the [.8, .9] interval to the outcome that it would rain tomorrow, where the true state is 'rain'. Would the [.6, .99] interval be more accurate since its .99 upper bound is closer to the true state? Intuitively, the [.6, .99] interval should not be more accurate, otherwise, the trivial interval [0, 1] would always be more accurate than any other interval. To remedy this problem, a plausible inaccuracy score for imprecise probabilities could be directly proportional to the Brier score computed using the side of the interval closer to the true state, but inversely proportional to the size of the interval.^[If the score increases when the Brier score (thus defined) increases or when the size of the interval increases, this would block the result that the [0, 1] interval is always the most accurate; see @seidenfeld2012forecasting.] 
 
 Still, 
-even if a well-behaved score for imprecise probabilities can be found, a second hurdle remains. Recall that the notion of expected inaccuracy is needed to establish strict propriety. Unfortunately, expected inaccuracy cannot be easily defined for imprecise probabilities. Let $I([p_-, p_+], w)$ be an inaccuracy score for the interval $[p_-, p_+]$. What is its expected inaccuracy from the perspective of the interval $[p_-, p_+]$ itself, or from the perspective of another interval $[q_-, q_+]$? There is no standard answer to this question. After all, $I([p_-, p_+], w)$ cannot be multiplied by $[p_-, p_+]$, in the way in which $I(p, w)$ can be multipled by $p(w)$. And if the notion of expected inaccuracy is not defined, the question of whether an imprecise inaccuracy score can be proper is ill-defined.  Perhaps the expected inaccuracy of the interval $[p_-, p_+]$ can be evaluated from the perspective of the precise probabilities $p_-$ or $p_+$ at the edges.^[So the expected inaccuracy of $I_w([p_-, p_+])$ would equal $\sum_{w\in W} p_-(w)I([p_-, p_+], w)$ or $\sum_{w\in W} p_+(w)I([p_-, p_+], w)$.] But now the impreciser would face another problem. If the expected inaccuracy of the interval $[p_-, p_+]$ is evaluated from the perspective of the precise probabilities at the edges, finding a proper inaccuracy score that is also continous turns out to be impossible  [@seidenfeld2012forecasting].  
+even if a well-behaved score for imprecise probabilities can be found, a second hurdle remains. Recall that the notion of expected inaccuracy is needed to establish strict propriety. Unfortunately, expected inaccuracy cannot be easily defined for imprecise probabilities. Let $I([p_-, p_+], w)$ be an inaccuracy score for the interval $[p_-, p_+]$. What is its expected inaccuracy from the perspective of the interval $[p_-, p_+]$ itself, or from the perspective of another interval $[q_-, q_+]$? There is no standard answer to this question. After all, $I([p_-, p_+], w)$ cannot be multiplied by $[p_-, p_+]$, in the way in which $I(p, w)$ can be multipled by $p(w)$. And if the notion of expected inaccuracy is not defined, the question of whether an imprecise inaccuracy score can be proper is ill-defined.  Perhaps the expected inaccuracy of the interval $[p_-, p_+]$ can be evaluated from the perspective of the precise probabilities $p_-$ or $p_+$ at the edges.^[So the expected inaccuracy of $I_w([p_-, p_+])$ would equal $\sum_{w\in W} p_-(w)I([p_-, p_+], w)$ or $\sum_{w\in W} p_+(w)I([p_-, p_+], w)$.] But now the impreciser would face another problem. If the expected inaccuracy of the interval $[p_-, p_+]$ is evaluated from the perspective of the precise probabilities at the edges, finding a proper inaccuracy score that is also continuous turns out to be impossible  [@seidenfeld2012forecasting].  
 
 
 Despite the difficulties that plague imprecise probabilism in defining scoring rules that are proper, here we put forward an intuitively plausible scoring rule for higher-order probabilities that is both proper and continuous. Building on existing work on this topic (@HersbachDecomp2000, @Pettigrew2012Epistemic-Utili, @GneitRafter2007), the higher-order scoring rule we propose is based on a well-known measure of divergence between probability distributions, the Kullback-Leibler (KL) divergence, which is defined as follows: <!--A key modification to this framework involves abandoning the assumption that only two possible outcomes (truth and false) exist. Once we present the positive proposal, we will illustrate how such an assumption is problematic.--> 
-$$ D_{\text{KL}}(q \,||\, p) = \sum_{x} q(x) \log\left(\frac{q(x)}{p(x)}\right) $$
+$$ D_{\text{KL}}(p ,||, q) = \sum_{x} p(x) \log\left(\frac{p(x)}{q(x)}\right) $$
 
-\noindent This is a standard information-theoretic measure of divergence of $p$ from $q$ from the perspective of $q$. For computational ease, we are using a grid approximation instead of continuous distributions, as in practice we are unable to work with infinite precision.\footnote{In the continuous case, we would need to use the so-called differential KL divergence.}   To this end, $x$ will denote the finite vector of discrete outcomes under consideration. <!--- (by default, we will use equally spaced values between 0 and 1 here). ---> 
+\noindent where $x$ ranges over all hypotheses under consideration (i.e. the elements of the sample space). This is a standard information-theoretic measure of divergence of $p$ from $q$ from the perspective of $p$.\footnote{In the continuous case, we would need to use the so-called differential KL divergence.}  In our particular case, we will be dealing with a finite array of evenly spaced hypotheses $\theta_1, \dots, \theta_n$ about what the true chance is (this is our discretization). Each particular hypothesis $\theta_k \in [0, 1]$ is associated with an omniscient distribution tracking the true state of the world (i.e. the true chance being $\theta_k$). We denote it by $Ind^k(\cdot)$ so that $Ind^k(\theta_i)$ is 1 if $i=k$ and $0$ otherwise. We write $Ind^k_i$ instead of $Ind^k(\theta_i)$.
 
-The goal is to deploy KL divergence as a measure of inaccuracy of $p$ relative to a true state $w\in W$, denoted by $I_{KL}(p, w)$. To this end, let $t_w(x)$ be the omniscient distribution tracking the true state $w$. For any outcome $x$, the distribution $t_w(x)$ will either assign probability 1 (if the outcome obtains in $w$) or 0 (if the outcome does not obtain in $w$). Since $t_w(x)$ will equal one for the true outcome $x$, call it $x_w$, and zero for the others, KL divergence simplifies to:
+With this notation, we can now formulate our notion of inaccuracy of $q$ if the true hypothesis is $\theta_k$. It's the KL divergence between $q$ and $Ind^k$.
+
+\begin{align*}
+I_{\text{DK}}(q, \theta_k)  = D_{KL}(Ind_k\vert \vert q)
+\end{align*}
+\noindent As shown in the appendix, this boils down to $-\log_2 p_k$.  
+
+
+<!--
+
+The goal is to deploy KL divergence as a measure of the inaccuracy of $p$ relative to a true state $w\in W$, denoted by $I_{KL}(p, w)$. To this end, let $t_w(x)$ be the omniscient distribution tracking the true state $w$. For any outcome $x$, the distribution $t_w(x)$ will either assign probability 1 (if the outcome obtains in $w$) or 0 (if the outcome does not obtain in $w$). Since $t_w(x)$ will equal one for the true outcome $x$, call it $x_w$, and zero for the others, KL divergence simplifies to:
 \todo{!please check that notation is correct throughout! Are the x's a partition?}
 
 $$ I_{KL}(p, w) = D_{\text{KL}}(t_w \,||\, p) = \sum_{x} t_w(x) \log\left(\frac{t_w(x)}{p(x)}\right) = \log\left(\frac{1}{p(x_w)}\right)= -\log p(x_w) $$
 
 \noindent That is, $I_{KL}(p, w)$ is the KL divergence of $p$ from the omniscient probability distribution $t_w$.
 
-
+-->
 
 
 
@@ -479,34 +490,56 @@ f(x) & = \begin{cases} 1 & \text{ if } x = V(w)\\
 \end{align*}
 -->
 
-The KL inaccuracy score $I_{KL}$ applies to any probability distribution $p$, including higher-order ones. For suppose the possible outcomes are the chance hypotheses $\theta_1, \theta_2, \dots, \theta_n$ about the true bias of a coin. Let $\theta_w$ be the true bias of the coin at $w$, and let $p(\theta_w)$ be the higher-order probability that the distribution $p$ assigns to the bias $\theta_w$. Then, $-\log p(\theta_w)$ is the KL-based inaccuracy score of the higher-order probability $p$ at $w$. If, for example, the true bias of the coin is $.6$ and the higher-order distribution $p$ assigns $.8$ to this bias, the higher-order inaccuracy score of $p$ would be $-\log .8$. Notice that, on this approach, two distributions $p$ and $q$ which assign the same probability to the true chance hypothesis in $w$---$p(\theta_w)=q(\theta_w)$---will have the same inaccuracy score $I_{KL}$ even though they might differ in the probabilities they assign to other chance hypotheses. So the shape of the distribution does not matter for the inaccuracy score; it does matter for expected inaccuracy, as we will soon see.
 
-We will now establish the strict propriety of the scoring rule $I_{KL}$. The first step is to define the score's expected inaccuracy, as follows: 
-\todo{summing over w or $x_w$? confused about that? check!}
-$$\sum_{w\in W} q(x_w)I_{KL}(p, w) = \sum_{w\in W} q(x_w)(-\log p(x_w)) $$
+For instance, imagine the possible outcomes being the chance hypotheses $\theta_1, \theta_2, \dots, \theta_n$ about the true bias of a coin.  If, for example, the true bias of the coin is $.6$ and the higher-order distribution $p$ assigns $.8$ to this bias, the higher-order inaccuracy score of $p$ would be $-\log .8$. Notice that, on this approach, two distributions $p$ and $q$ which assign the same probability to the true chance hypothesis will have the same inaccuracy score even though they might differ in the probabilities they assign to other chance hypotheses. So the shape of the distribution does not matter for the inaccuracy score; it does matter for expected inaccuracy, as we will soon see.
 
-\noindent
-In other words, consider several potential true outcomes $x_w$, each associated with a true state $w$ (say, $n$ true chance hypotheses $\theta_w$); then, compute the inaccuracy scores of $p$ with respect to each of the $x_w$'s (omniscient distributions, chance hypotheses), that is, $-\log p(x_w)$; finally, calculate the expected inaccuracy by summing over the entire distribution $q$. 
-Now, to show strict propriety, it is enough to notice two facts. First, the expected inaccurracy of $p$ from the perspective of $p$ itself is the entropy of $p$, 
-namely $H(p)$.^[As usual, the expected inaccuracy of $p$ from the perspective of $p$ itself is obtained by replacing $q(x_w)$ with $p(x_w)$ in the formula above: $\sum_{w\in W} p(x_w)I_{KL}(p, w) = -\sum_{w\in W} p(x_w)\log p(x_w) = H(p).$] Second, the expected inaccuracy of $p$ from the perspective of another distribution $q$ is the cross-entropy between $p$ and $q$, namely $H(p, q)$.^[$\sum_{w\in W} q(x_w)I_{KL}(p, w) = H(p, q).$] Since $H(p)$ is always smaller than $H(p, q)$ (see the appendix for details), the inaccuracy score $I_{KL}$ is proper.\todo{Say that CRPS  is used for example by Konek}\footnote{KL divergence is not the only possible score for higher-order probabilities. Another approach relies on the Cramer-Von-Mises measure (CRPS). In the discretized version, it is defined as follows:
+We will now give a higher-level description of the proof of strict propriety of the scoring rule $I_{DK}$. The first step is to define the score's expected inaccuracy, as follows: 
+
+\begin{align*}
+\mathit{EI}_{\text{DK}}(p,q) & = \sum_{k =1}^n p_k  I_{\text{DK}}(q, \theta_k)\\
+\end{align*}
+\noindent As shown in the appendix, this is identical to:
+\begin{align*} &  =  - \sum_{k =1}^n p_k   \log_2 q_k   = H(p,q)\\
+\end{align*}
+
+\noindent where $H(p,q)$ stands for cross-entropy.
+
+In particular if we measure $\mathit{EI}_{\text{DK}}$ of $p$ from the perspective of $p$ this further boils down to:
+\begin{align*} &  =  - \sum_{k =1}^n p_k   \log_2 p_k   = H(p)\\
+\end{align*}
+
+\noindent where $H(p)$ stands for the entropy of $p$. The only missing part now is Gibb's inequality, according to which $H(p,q) \geq H(p)$ with identity holding only if $p=q$ (we elaborate on why this holds in the appendix as well).\footnote{KL divergence is not the only possible score for higher-order probabilities. Another approach relies on the Cramer-Von-Mises measure (CRPS). In the discretized version, it is defined as follows:
 \begin{align*}
 D_{\text{CM}}(p,q) & = \sum_{x} \vert P(x) - Q(x)\vert^2, 
 \end{align*}
 
-\noindent where $P$ and $Q$ are the cumulative distributions corresponding to the probability distribution $p$ and $q$. Looking at cumulative densities ensures that all densities are considered on the same scale. (In the continuous case, this measure is defined as the area under the squared Euclidean distances between the corresponding cumulative density functions. That is, $D_{CM}(p,q)  = \int_{0}^{1} \vert P(x) - Q(x)\vert^2 \, dx$.) If $q$ plays the role of the true distribution, the CRPS measure can be turned into an inaccuracy measure that closely resembles the Brier score. The inaccuracy of $p$ with respect to the true state $w$ is defined, as follows:
+\noindent where $P$ and $Q$ are the cumulative distributions corresponding to the probability distribution $p$ and $q$. Looking at cumulative densities ensures that all densities are considered on the same scale. (In the continuous case, this measure is defined as the area under the squared Euclidean distances between the corresponding cumulative density functions. That is, $D_{CM}(p,q)  = \int_{0}^{1} \vert P(x) - Q(x)\vert^2 \, dx$.) If $q$ plays the role of the true distribution, the CRPS measure can be turned into an inaccuracy measure that closely resembles the Brier score. The inaccuracy of $p$ with respect to the true state $\theta_{k}$ is defined, as follows:
+
 \begin{align*}
-I_{\text{CRPS}}(p,w) &= \sum \vert \mathsf{P}(x) - \mathbf{ 1 }(x\geq V(w))\vert ^2 
+I_{\text{CRPS}}(p, \theta_{k}) &= \sum_{i=1}^n \vert \mathsf{P}(x) - Ind^k_i \vert ^2 
 \end{align*}
-\noindent where:
+
+\noindent Finally, Cramer-Von-Mises can also be used to define the expected inaccuracy, analogously to the case of KL-divergence.
+However, for reasons that will soon become clear, we believe that KL divergence is a more natural higher-order inaccuracy measure.} 
+\todo{why two acronyms, CM and CRPS? CM is enough, no?}
+
+<!--
+ where:
 \begin{align*}
 \mathbf{ 1 }(x \geq V(w)) & = \begin{cases} 1 & \text{ if } x \geq V(w)\\
 0 & \text{ o$\,$/w. }
 \end{cases}
 \end{align*}
-\noindent 
-Finally, Cramer-Von-Mises can also be used to define the expected inaccuracy, analogously to the case of KL-divergence.
-However, for reasons that will soon become clear, we believe that KL divergence is a more natural higher-order inaccuracy measure.} 
-\todo{why two acronyms, CM adn CRPS? CM is enough, no?}
+\noindent
+In other words, consider several potential true outcomes $x_w$, each associated with a true state $w$ (say, $n$ true chance hypotheses $\theta_w$); then, compute the inaccuracy scores of $p$ with respect to each of the $x_w$'s (omniscient distributions, chance hypotheses), that is, $-\log p(x_w)$; finally, calculate the expected inaccuracy by summing over the entire distribution $q$. 
+Now, to show strict propriety, it is enough to notice two facts. First, the expected inaccurracy of $p$ from the perspective of $p$ itself is the entropy of $p$, 
+namely $H(p)$.^[As usual, the expected inaccuracy of $p$ from the perspective of $p$ itself is obtained by replacing $q(x_w)$ with $p(x_w)$ in the formula above: $\sum_{w\in W} p(x_w)I_{KL}(p, w) = -\sum_{w\in W} p(x_w)\log p(x_w) = H(p).$] Second, the expected inaccuracy of $p$ from the perspective of another distribution $q$ is the cross-entropy between $p$ and $q$, namely $H(p, q)$.^[$\sum_{w\in W} q(x_w)I_{KL}(p, w) = H(p, q).$] Since $H(p)$ is always smaller than $H(p, q)$ (see the appendix for details), the inaccuracy score $I_{KL}$ is proper.\todo{Say that CRPS  is used for example by Konek}
+
+-->
+
+
+
+
 
 <!--
 ^[Note that there are no readily computable solutions to the integral used in the definition of CRPS, although it can sometimes be evaluated in closed form [ @GneitRafter2007, p. 366].]}
@@ -535,7 +568,7 @@ to parameter spaces that correspond to probabilities of multiple propositions wh
 <!--- While imprecisers face challenges in formulating appropriate scoring rules, the second-order approach, which incorporates KLD and centers its focus on the distribution of all conceivable hypotheses, emerges as a more coherent framework. 
 --->
 
-To see that the proposed account of expected inaccuracy works as intended, consider a variation of a scenario by @Schoenfield2017accuracy. A rational agent is invited to engage in a bet by an opponent who has a representative bag of coins coming from a factory where the distribution of bias among the coins produced, the true generative process, is known. It is a mixture of two normal distributions centered at $.3$ and at $.5$, both with standard deviation of $.05$. The opponent randomly selects one of the coins in the bag and flips it. The rational agent who knows this set-up may form a number of higher-order credal states in response to this information. Consider three such credal states, out of many options: first, a faithful bimodal distribution centered at $.3$ and $.5$; second, a unimodal distribution centered at $.4$; third, a wide bimodal distribution centered at $.2$ and $.6$. The three options are depicted in @fig-emc. <!--All of them have expected values at about $.4$. So, if precise probabilities were the only measure of uncertainty, $.4$ would be the most natural value to assign to the probability that coin came up, say, heads. The three distributions, however, differ in how they represent higher-order uncertainty, and it seems that the faithful bimodal distribution gives the best representation, a point to which we will return. -->
+To see that the proposed account of expected inaccuracy works as intended, consider a variation of a scenario by @Schoenfield2017accuracy. A rational agent is invited to engage in a bet by an opponent who has a representative bag of coins coming from a factory where the distribution of bias among the coins produced, the true generative process, is known. It is a mixture of two normal distributions centered at $.3$ and at $.5$, both with a standard deviation of $.05$. The opponent randomly selects one of the coins in the bag and flips it. The rational agent who knows this set-up may form a number of higher-order credal states in response to this information. Consider three such credal states, out of many options: first, a faithful bimodal distribution centered at $.3$ and $.5$; second, a unimodal distribution centered at $.4$; third, a wide bimodal distribution centered at $.2$ and $.6$. The three options are depicted in @fig-emc. <!--All of them have expected values at about $.4$. So, if precise probabilities were the only measure of uncertainty, $.4$ would be the most natural value to assign to the probability that coin came up, say, heads. The three distributions, however, differ in how they represent higher-order uncertainty, and it seems that the faithful bimodal distribution gives the best representation, a point to which we will return. -->
 
 
 ```{r calculationsEMC,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
@@ -665,6 +698,47 @@ InaCe <- inaccuracyChancy(centered)
 InaBiW <- inaccuracyChancy(bimodalWide)
 
 
+
+fun_perspective <- function(perspective, expInaccScores){ # vectors!
+  return(sum(perspective * expInaccScores))
+}
+
+perspectives <- list(
+  'centered' = centered,
+  'bimodalWide' = bimodalWide,
+  'bimodal' = bimodal
+)
+
+expInaccScores <- list(
+  'InaBiCVM' = InaBi$crpss,
+  'InaBiKLD' = InaBi$klds,
+  'InaCeCVM' = InaCe$crpss,
+  'InaCeKLD' = InaCe$klds,
+  'InaBiWCVM' = InaBiW$crpss,
+  'InaBiWKLD' = InaBiW$klds
+)
+
+combinations <- expand.grid(names(perspectives), names(expInaccScores))
+
+expPersDF <- data.frame(Perspective = character(),
+                     ExpInaccScore = character(),
+                     Score = numeric(),
+                     stringsAsFactors = FALSE)
+
+for (i in 1:nrow(combinations)) {
+  perspective_name <- combinations[i, 1]
+  expInaccScore_name <- combinations[i, 2]
+  perspective <- perspectives[[perspective_name]]
+  expInaccScore <- expInaccScores[[expInaccScore_name]]
+  score <- fun_perspective(perspective, expInaccScore)
+  expPersDF <- rbind(expPersDF, data.frame(Perspective = perspective_name,
+                                     ExpInaccScore = expInaccScore_name,
+                                     Score = score))
+}
+
+expPersDF$Score <- round(expPersDF$Score, 3) 
+
+
 bcplot <- plotDistroPlain(InaBi$crpss, "Bimodal: CRPS")+ylab("inaccuracy")+
             xlab("true probability")
 
@@ -709,7 +783,7 @@ wide bimodal & 137.699 & 171.719 & 113.989 & 11.541 & 19.231 & 8.689\\
 \end{table}
 
  
-The accuracy scores of these higher-order distributions are in @fig-inaccuracies2.  Each point in the graph reflects the accuracy score calculated relative to a possible omniscient distribution corresponding to the values of $\theta$, the true bias of the coin. \todo{NL: Distribution, not a value representing a coin's bias?}The expected inaccuracies of the three distributions from their own perspective, as well as from the perspective of the other distributions, are in \mbox{Table \ref{tbl:expected2}.} The results are as intended: from their own perspective, the distributions see themselves as the least inaccurate. The strict propriety of the scoring rule is verified.^[One important difference transpires between using CRPS and KLD. Notice how for chance hypotheses between the actual peaks the inaccuracy remains flat. This seems to be an artifice of choosing a squared distance metric. If instead we go with a more principled, information-theory-inspired KL divergence, inaccuracy in fact jumps a bit for values in between the peaks for the bimodal distributions, which seems intuitive and desirable. This seems to be a reason to prefer a KL-based inaccuracy scores.] 
+The accuracy scores of these higher-order distributions are in @fig-inaccuracies2.  Each point in the graph reflects the accuracy score calculated relative to a possible omniscient distribution corresponding to the values of $\theta$, the true bias of the coin. \todo{NL: Distribution, not a value representing a coin's bias?}The expected inaccuracies of the three distributions from their own perspective, as well as from the perspective of the other distributions, are in \mbox{Table \ref{tbl:expected2}.} The results are as intended: from their own perspective, the distributions see themselves as the least inaccurate. The strict propriety of the scoring rule is verified.^[One important difference transpires between using CRPS and KLD. Notice how for chance hypotheses between the actual peaks the inaccuracy remains flat. This seems to be an artifice of choosing a squared distance metric. If instead we go with a more principled, information-theory-inspired KL divergence, inaccuracy in fact jumps a bit for values in between the peaks for the bimodal distributions, which seems intuitive and desirable. This seems to be a reason to prefer KL-based inaccuracy scores.] 
 
 
 Even though they all recommend themselves, the three distributions are by no means equivalent. The faithful bimodal is the one that best reflects the true generative process, while the others less so. How does the KL-based inaccuracy score we propose to capture the fact that the wide bimodal seems more adequate than the others? This is apparent by looking at the inaccuracy score relative to two chance hypotheses $H_3$, where the true chance is $0.3$, and $H_5$, where the true chance is $0.5$. \todo{Why just those two, and not also .4, another possible true chance hypothesis? The unimodal has a better score of .4. This seems ad hoc. }You can find the inaccuracies for them in Table \ref{tbl:schoen}. To make sure that this favorable outcome isn't due to not using pointed credences, we can redo the calculations using the pointed version. In the pointed version, all the focus is on 0.4, or the weight is evenly divided between 0.3 and 0.5, or between 0.2 and 0.6. As anticipated, when we consider inaccuracy, both of these setups recommend the faithful bimodal distribution (Table \ref{tbl:schoen2}).
@@ -851,8 +925,10 @@ wide bimodal & 485.4052 & 285.6177 & 54.13433 & 19.50965 & 365.5340 & 33.35974\\
  
 
 
-What are we to make of this result? The same expected value $.4$ is used in the calculations of the expected inaccuracies on the assumption that there are two possible outcomes with respect to which expected inaccuracy is calculated. This approach, however, runs against the spirit of our enterprise. If expected values are often not good representations of a rational agent's uncertainty, it should not be surprising that relying on them fails to deliver plausible expected accuracy scores. By reducing each of the distributions' stances towards heads to a single point value .4, key information is washed away. As emphasized earlier, 
-rather than measuring inaccuracy relative to two omniscient distributions that peak at either 0 or 1 and averaging using expected values of the distributions, we should instead utilize a set of $n$ potential true probability hypotheses.  We then compute all the inaccuracies with respect to each of these $n$ values represented by possible omniscient distributions (or true chance hypotheses) and determine the expected inaccuracy scores using the entire distributions rather than relying solely on the expected values of the distributions. As we have seen, this approach delivers the result of strict propriety we were looking for.
+What are we to make of this result? The same expected value of $.4$ is used in the calculations of the expected inaccuracies on the assumption that there are two possible outcomes with respect to which expected inaccuracy is calculated. This approach, however, runs against the spirit of our enterprise. If expected values are often not good representations of a rational agent's uncertainty, it should not be surprising that relying on them fails to deliver plausible expected accuracy scores. By reducing each of the distributions' stances towards heads to a single point value .4, key information is washed away. As emphasized earlier, 
+rather than measuring inaccuracy relative to two omniscient distributions that peak at either 0 or 1 and averaging using expected values of the distributions, we should instead utilize a set of $n$ potential true probability hypotheses.  We then compute all the inaccuracies with respect to each of these $n$ values represented by possible omniscient distributions (or true chance hypotheses) and determine the expected inaccuracy scores using the entire distributions rather than relying solely on the expected values of the distributions. As we have seen, this approach delivers the result of strict propriety we were looking for.\todo{take a look at fn}
+^[What if we abandon this focus on true distributions being "pointy" and allow them to be any distributions whatsoever? Then we have a bit of work to do to make sure the framework is coherent and the semantics is well-defined (this is possible, as illustrated by the work of @Dorst2022higher-order). However we do that, if we then take KL divergence to the true distribution as an inaccuracy measure, since $\log(1)$ is $0$, whatever the weights,
+any distribution will expect itself to be the least inaccurate, as expected inaccuracy calculation for a distribution and itself will always involve multiplying by zero.]
 
 
 
@@ -989,7 +1065,7 @@ grid.arrange(densities1Plot,densities2Plot, ncol = 1 )
 
 The precise probabilist might insist that our best assessment of the first-order coincidental match probabilities is still the relative frequency of matches found in the database, whether large or small. All things considered, our best assessment of the match probabilities for both fur and hair evidence should be about $.025$, based on the relative frequencies 2/78 and 29/1,148.   After all, if we were to bet whether a dog or a human picked at random would have the matching fur or hair type, our odds should be $.025$ no matter the size of the database. This argument has some bite for individual events. In fact, the expected values of the coincidental probabilities for hair and match evidence---based on the higher-order distributions in  @fig-densities (upper part)---still end up being about $.025$. If, as the precise probabilist assumes, first-order probabilities are all we should care about, going higher-order would seem a needless complication.
 
-This line of reasoning, however, breaks down when evaluating conjunctions of events. What should our betting odds be for the proposition that a human and a dog, both picked at random, would have the matching fur and hair type in question? For the precise probabilist, the answer is straightforward: on the assumption of independence, multiply the $.025$ individual match probabilities and obtain a joint match probability of `r round(hairMean * dogMean,6)`. The higher-order probabilist will proceed differently. In assessing first-order match probabilities, they will retain information about higher-order uncertainty as much as possible. This can done in two steps: first, aggregate the higher-order distributions for the two match probabilities and obtain a higher-order distribution for the joint match probability (see @fig-densities); next, to obtain our best assessment of the first-order joint match probability, take the expected value of this latter distribution. Interestingly, the higher-order probabilist will assign `r round(mean(jointEvidence),6)` to the joint coincidental match probability, a value greater than what the precise probabilist would assign. 
+This line of reasoning, however, breaks down when evaluating conjunctions of events. What should our betting odds be for the proposition that a human and a dog, both picked at random, would have the matching fur and hair type in question? For the precise probabilist, the answer is straightforward: on the assumption of independence, multiply the $.025$ individual match probabilities and obtain a joint match probability of `r round(hairMean * dogMean,6)`. The higher-order probabilist will proceed differently. In assessing first-order match probabilities, they will retain information about higher-order uncertainty as much as possible. This can done in two steps: first, aggregate the higher-order distributions for the two-match probabilities and obtain a higher-order distribution for the joint match probability (see @fig-densities); next, to obtain our best assessment of the first-order joint match probability, take the expected value of this latter distribution. Interestingly, the higher-order probabilist will assign `r round(mean(jointEvidence),6)` to the joint coincidental match probability, a value greater than what the precise probabilist would assign. 
 
 
 
@@ -1049,7 +1125,7 @@ Consider now how the imprecise probabilism fares in these cases.
 It will also run into its own problems when assessing probabilities of multiple events in conjunction. Recall that the probability measures in the representor set are those compatible with the evidence.  The problem is that almost any coincidental match probability will be compatible with any sample data^[Think by analogy to coin tossing: even a coin that has a .99 bias toward tails could come up heads on every toss. This series of outcomes is unlikely but possible. Similarly, a hair type that has a match probability extremely small could still be found several times in a sample population.] So the appropriate interval would be [0,1] for both coincidental match probabilities, and the same for the conjunction. This result would make it impossible to learn anything.
 
 But now suppose we rely on reasonable ranges of coincidental match probabilities, for example, (.015,.037) (.002, .103), for hair and fur match evidence respectively.^[These are 99% credible intervals starting with uniform priors. A 99\% credible interval is the narrowest interval to which the   expert thinks the true parameter belongs with probability .99. For a discussion of what credible intervals are, how they differ from confidence intervals, and why confidence intervals should not be used, see @kruschke2015doing.] 
-As expected, the range is wider for dog fur match evidence than hair match evidence: the uncertainty about the dog fur match probability is greater since the sample database was smaller. This is a good feature of the interval approach, unavailable to the precise probabilist. Now, what to do to assess the joint uncertainty? The most natural strategy is to focus on what happens at the edges of the two intervals. Reasoning with representor members at the edges of the intervals will yield the most extreme probability measure the impreciser is committed to, the worst-case and best-case scenarios. Following this strategy yields a new range for the joint match probabilties: (.00003, .003811).\footnote{Redoing the calculations using the upper bounds of the two intervals, $.037$ and $.103$,  yields the following:
+As expected, the range is wider for dog fur match evidence than hair match evidence: the uncertainty about the dog fur match probability is greater since the sample database was smaller. This is a good feature of the interval approach, unavailable to the precise probabilist. Now, what to do to assess the joint uncertainty? The most natural strategy is to focus on what happens at the edges of the two intervals. Reasoning with representor members at the edges of the intervals will yield the most extreme probability measure the impreciser is committed to, the worst-case and best-case scenarios. Following this strategy yields a new range for the joint match probabilities: (.00003, .003811).\footnote{Redoing the calculations using the upper bounds of the two intervals, $.037$ and $.103$,  yields the following:
 \begin{align*}
 \mathsf{P}(\s{dogMatch}\wedge \s{hairMatch} \vert \neg \s{contributor})   & =  .037 \times .103 =.003811.
 \end{align*}
@@ -1160,10 +1236,10 @@ graphviz.chart(SCfenton, type = "barprob", layout = "dot", #draw.labels = TRUE,
 Much has been written about Sally Clark by philosophers and statisticians. The discussion has often focused on whether Meadow was allowed to assume, as he did, that the two SIDS deaths would be independent events.  The assumption of independence delivered the low probability of 1 in 73 million by multiplying  1 in 8,543 by itself. Another much-discussed point was this: even if it was unlikely that two consecutive SIDS deaths would occur, it does not follow it was likely that Sally murdered her children.^[One could reason that, since 1 in 73 million is a low probability, the alternative explanation, that Sally murdered her children, should be likely. But that a mother would do such a thing is also unlikely, perhaps even less likely than 1 in 73 million.]  A Bayesian network helps to avoid these mistakes. It also helps to view the case holistically. The two consecutive deaths were an important piece of evidence, but other evidence was also important, including signs of bruising and signs of a lethal disease as they were discovered during the appeal process.
 
 
-Unfortunately, Bayesian networks, in their standard formulation, inherit the shortcomings of precise probabilism. The choice of the input probabilities should be precise, and it is often unclear where the values come from or whether they are justified. Consider, for example, the probability that a death by SIDS would occur. How sure are we that this probability equals, exactly, 1 in 8,543? The figure Meadow used is a sample-based frequency. How big was that sample? How representative? Other input probabilities need to be entered in the network to carry out the calculations, for example, the probability that a mother would kill her son, or the probability that signs of bruising would be found given the hypothesis that Sally was trying to murder her child, and so on. There will be uncertainty about these probabilities, since they are based on sample frequencies or expert elicitation. 
+Unfortunately, Bayesian networks, in their standard formulation, inherit the shortcomings of precise probabilism. The choice of the input probabilities should be precise, and it is often unclear where the values come from or whether they are justified. Consider, for example, the probability that a death by SIDS would occur. How sure are we that this probability equals, exactly, 1 in 8,543? The figure Meadow used is a sample-based frequency. How big was that sample? How representative? Other input probabilities need to be entered in the network to carry out the calculations, for example, the probability that a mother would kill her son, or the probability that signs of bruising would be found given the hypothesis that Sally was trying to murder her child, and so on. There will be uncertainty about these probabilities since they are based on sample frequencies or expert elicitation. 
 
-The standard response to these concerns is to invoke *sensitivity analysis*: a range of plausible values is tested. Say we are interested in the output probability that Sally is guilty. The network is updated by the known facts---the items of evidence---following standard Bayesian conditionalization.  The input probabilities in the network are then assigned a range of possible values to see how they impact the output probability of Sally's guilt. Sensitivity analysis is another variant, perhaps more rudimentary, of the interval approach we considered earlier.  \todo{add references to imprecise BNs; see footnote.} In fact, Bayesian networks for reasoning with intervals and imprecise probabilities already exist.^[One can use uniform sampling with Bayesian networks to approximate the impreciser's commitments \textbf{Cite} \url{https://arxiv.org/abs/2302.09656}. Another approach is to rely on probabilistic programs with the restriction that the
- variables corresponding to probabilities are sampled from uniform distributions corresponding to the representor set. A critical survey of approaches along these lines shows that, in complex reasoning situations, ''the imprecision of inferences increases rapidly as new premises are added to an argument''.\textbf{add ref to} \url{https://www.sciencedirect.com/science/article/pii/S0004370296000215}.]
+The standard response to these concerns is to invoke *sensitivity analysis*: a range of plausible values is tested. Say we are interested in the output probability that Sally is guilty. The network is updated by the known facts---the items of evidence---following standard Bayesian conditionalization.  The input probabilities in the network are then assigned a range of possible values to see how they impact the output probability of Sally's guilt. Sensitivity analysis is another variant, perhaps more rudimentary, of the interval approach we considered earlier.  \todo{add references to imprecise BNs; see footnote.} In fact, Bayesian networks for reasoning with intervals and imprecise probabilities already exist.^[One can use uniform sampling with Bayesian networks to approximate the impreciser's commitments [@caprio2024credal]. Another approach is to rely on probabilistic programs with the restriction that the
+ variables corresponding to probabilities are sampled from uniform distributions corresponding to the representor set. A critical survey of approaches along these lines shows that, in complex reasoning situations, "the imprecision of inferences increases rapidly as new premises are added to an argument" [@KLEITER1996143].]
 But, as discussed earlier, imprecise probabilism, the interval approach and sensitivity analysis ignore the shape of the underlying distributions. They do not distinguish between probability measures (or point estimates) in terms of their plausibility, even though some will be more plausible than others. Moreover, if the sensitivity analysis is only guided by the values at the edges of the interval, these extremes will often play an undeservedly strong role. 
 
 
@@ -1235,113 +1311,120 @@ grid.arrange(AbruisingIfSidsPlot+xlim(0,.4),AbruisingIfMurderPlot+xlim(0,.4))
 -->
 
 
-```{r SCwithHOPa, out.extra='angle=90', echo=FALSE,eval=TRUE,fig.align = "center",cache=FALSE, fig.show = "hold", out.width = "125%", out.height= "230%", warning=FALSE, message = FALSE, dpi = 800}
-#| label: fig-scwithhop
-#| fig-cap: "An illustration of a probabilistic program for the Sally Clark case."
-#| fig-pos: h
+
+
+```{r SCwithHOPa,  echo=FALSE,eval=TRUE, fig.align = "center",cache=FALSE, fig.show = "hold", out.width = "100%", message = FALSE, warnings=FALSE}
+#| message: false
+#| warning: false
+#| results: hide
+
+# SCwithHOPa, out.extra='angle=90', echo=FALSE,eval=TRUE,fig.align = "center",cache=FALSE, fig.show = "hold", out.width = "125%", out.height= "230%", warning=FALSE, message = FALSE, dpi = 800
+
 
 # out.extra='angle=90'               does not seem to work in quarto
 # , 
 
 
-#SCprobsFinal <- readRDS("../datasets/SCprobsFinal.rds")
-#attach(SCprobsFinal)
-#source("../scripts/SCfunctions.R")
-#source("../scripts/SCplotCPTs.R")
-#source("../scripts/SCplotDistros.R")
+# SCprobsFinal <- readRDS("../datasets/SCprobsFinal.rds")
+# attach(SCprobsFinal)
+# source("../scripts/SCfunctions.R")
+# source("../scripts/SCplotCPTs.R")
+# source("../scripts/SCplotDistros.R")
 
 
-# AsidsPriorPlotGrob <- ggplotGrob(AsidsPriorPlot+theme_tufte(base_size = 5))
-# BcauseSidsIfAsidsPlotGrob <- ggplotGrob(BcauseSidsIfAsidsPlot+theme_tufte(base_size = 5))
-# BcauseSidsIfAmurderPlotGrob<- ggplotGrob(BcauseSidsIfAmurderPlot+theme_tufte(base_size = 5)) 
+AsidsPriorPlotGrob <- ggplotGrob(AsidsPriorPlot+theme_tufte(base_size = 5))
+BcauseSidsIfAsidsPlotGrob <- ggplotGrob(BcauseSidsIfAsidsPlot+theme_tufte(base_size = 5))
+BcauseSidsIfAmurderPlotGrob<- ggplotGrob(BcauseSidsIfAmurderPlot+theme_tufte(base_size = 5)) 
 
-# AbruisingIfSidsPlotGrob <- ggplotGrob(AbruisingIfSidsPlot+theme_tufte(base_size = 5)) 
-# AbruisingIfMurderPlotGrob <- ggplotGrob(AbruisingIfMurderPlot+theme_tufte(base_size = 5)) 
-
-
-# AdiseaseIfSidsPlotGrob <- ggplotGrob(AdiseaseIfSidsPlot+theme_tufte(base_size = 5)) 
-# AdiseaseIfMurderPlotGrob <- ggplotGrob(AdiseaseIfMurderPlot+theme_tufte(base_size = 5)) 
+AbruisingIfSidsPlotGrob <- ggplotGrob(AbruisingIfSidsPlot+theme_tufte(base_size = 5)) 
+AbruisingIfMurderPlotGrob <- ggplotGrob(AbruisingIfMurderPlot+theme_tufte(base_size = 5)) 
 
 
-# BbruisingIfSidsPlotGrob <- ggplotGrob(BbruisingIfSidsPlot+theme_tufte(base_size = 5)) 
-# BbruisingIfMurderPlotGrob <- ggplotGrob(BbruisingIfMurderPlot+theme_tufte(base_size = 5)) 
+AdiseaseIfSidsPlotGrob <- ggplotGrob(AdiseaseIfSidsPlot+theme_tufte(base_size = 5)) 
+AdiseaseIfMurderPlotGrob <- ggplotGrob(AdiseaseIfMurderPlot+theme_tufte(base_size = 5)) 
 
 
-# BdiseaseIfSidsPlotGrob <- ggplotGrob(BdiseaseIfSidsPlot+theme_tufte(base_size = 5)) 
-# BdiseaseIfAmurderPlotGrob <- ggplotGrob(BdiseaseIfAmurderPlot+theme_tufte(base_size = 5)) 
+BbruisingIfSidsPlotGrob <- ggplotGrob(BbruisingIfSidsPlot+theme_tufte(base_size = 5)) 
+BbruisingIfMurderPlotGrob <- ggplotGrob(BbruisingIfMurderPlot+theme_tufte(base_size = 5)) 
 
 
-# daigramToRotate <- ggplot(data.frame(a=1)) + xlim(1, 40) + ylim(1, 60)+theme_void()+
-#   annotation_custom(AsidsPriorPlotGrob, xmin = 9, xmax = 15, ymin = 49, ymax = 59)+
-#   geom_label(aes(label = "Bcause", x = 25, y = 41),
-#               size = 3 )+
-#   geom_label(aes(label = "Acause", x = 12, y = 48),
-#             size = 3 )+
-#   geom_curve(aes(x = 13.5, y = 48.2, xend = 25, yend = 42.5), curvature = -.18,size = .3,
-#              arrow = arrow(length = unit(.015, "npc")))+
-#   annotation_custom(BcauseSidsIfAsidsPlotGrob, xmin = 17, xmax = 23, ymin = 47, ymax = 57)+
-#   annotation_custom(BcauseSidsIfAmurderPlotGrob, xmin = 15, xmax = 21, ymin = 37, ymax = 47)+
-#   geom_label(aes(label = "Abruising", x = 2, y = 41),
-#              size = 3 )+
-#   geom_curve(aes(x = 10.5, y = 48.2, xend = 2, yend = 42.5), curvature = .2,size = .3,
-#              arrow = arrow(length = unit(.015, "npc")))+
-#   annotation_custom(AbruisingIfSidsPlotGrob, xmin = 2, xmax = 8, ymin = 47, ymax = 57)+
-#   annotation_custom(AbruisingIfMurderPlotGrob, xmin = 5, xmax = 11, ymin = 37, ymax = 47)+
-#   geom_label(aes(label = "Adisease", x = 6, y = 21),
-#              size = 3 )+
-#   geom_curve(aes(x = 13, y = 46.2, xend = 6, yend = 23), curvature = -.45,size = .3,
-#              arrow = arrow(length = unit(.015, "npc")))+
-#   annotation_custom(AdiseaseIfSidsPlotGrob, xmin = 4.5, xmax = 10.5, ymin = 27, ymax = 37)+
-#   annotation_custom(AdiseaseIfMurderPlotGrob, xmin = 9, xmax = 15, ymin = 17.5, ymax = 27.5)+
-#   geom_label(aes(label = "Bbruising", x = 14, y = 12),
-#              size = 3 ) +
-#   geom_curve(aes(x = 24, y = 39.5, xend = 15.5, yend = 13.5), curvature = -.2,size = .3,
-#                                     arrow = arrow(length = unit(.015, "npc")))+
-#   annotation_custom(BbruisingIfSidsPlotGrob, xmin = 15.5, xmax = 21.5, ymin = 25, ymax = 35)+
-#   annotation_custom(BbruisingIfMurderPlotGrob, xmin = 18.5, xmax = 24.5, ymin = 10, ymax = 20)+
-#   geom_label(aes(label = "Bdisease", x = 33, y = 18),
-#              size = 3 )  +
-#   geom_curve(aes(x = 26, y = 39.5, xend = 33, yend = 19.5), curvature = -.2,size = .3,
-#              arrow = arrow(length = unit(.015, "npc")))+
-#   annotation_custom(BdiseaseIfSidsPlotGrob, xmin = 31, xmax = 37, ymin = 27, ymax = 37)+
-#   annotation_custom(BdiseaseIfAmurderPlotGrob, xmin = 24.5, xmax = 30.5, ymin = 20, ymax = 30)
+BdiseaseIfSidsPlotGrob <- ggplotGrob(BdiseaseIfSidsPlot+theme_tufte(base_size = 5)) 
+BdiseaseIfAmurderPlotGrob <- ggplotGrob(BdiseaseIfAmurderPlot+theme_tufte(base_size = 5)) 
+
+
+daigramToRotate <- ggplot(data.frame(a=1)) + xlim(1, 40) + ylim(1, 60)+theme_void()+
+  annotation_custom(AsidsPriorPlotGrob, xmin = 9, xmax = 15, ymin = 49, ymax = 59)+
+  geom_label(aes(label = "Bcause", x = 25, y = 41),
+              size = 3 )+
+  geom_label(aes(label = "Acause", x = 12, y = 48),
+            size = 3 )+
+  geom_curve(aes(x = 13.5, y = 48.2, xend = 25, yend = 42.5), curvature = -.18,size = .3,
+             arrow = arrow(length = unit(.015, "npc")))+
+  annotation_custom(BcauseSidsIfAsidsPlotGrob, xmin = 17, xmax = 23, ymin = 47, ymax = 57)+
+  annotation_custom(BcauseSidsIfAmurderPlotGrob, xmin = 15, xmax = 21, ymin = 37, ymax = 47)+
+  geom_label(aes(label = "Abruising", x = 2, y = 41),
+             size = 3 )+
+  geom_curve(aes(x = 10.5, y = 48.2, xend = 2, yend = 42.5), curvature = .2,size = .3,
+             arrow = arrow(length = unit(.015, "npc")))+
+  annotation_custom(AbruisingIfSidsPlotGrob, xmin = 2, xmax = 8, ymin = 47, ymax = 57)+
+  annotation_custom(AbruisingIfMurderPlotGrob, xmin = 5, xmax = 11, ymin = 37, ymax = 47)+
+  geom_label(aes(label = "Adisease", x = 6, y = 21),
+             size = 3 )+
+  geom_curve(aes(x = 13, y = 46.2, xend = 6, yend = 23), curvature = -.45,size = .3,
+             arrow = arrow(length = unit(.015, "npc")))+
+  annotation_custom(AdiseaseIfSidsPlotGrob, xmin = 4.5, xmax = 10.5, ymin = 27, ymax = 37)+
+  annotation_custom(AdiseaseIfMurderPlotGrob, xmin = 9, xmax = 15, ymin = 17.5, ymax = 27.5)+
+  geom_label(aes(label = "Bbruising", x = 14, y = 12),
+             size = 3 ) +
+  geom_curve(aes(x = 24, y = 39.5, xend = 15.5, yend = 13.5), curvature = -.2,size = .3,
+                                    arrow = arrow(length = unit(.015, "npc")))+
+  annotation_custom(BbruisingIfSidsPlotGrob, xmin = 15.5, xmax = 21.5, ymin = 25, ymax = 35)+
+  annotation_custom(BbruisingIfMurderPlotGrob, xmin = 18.5, xmax = 24.5, ymin = 10, ymax = 20)+
+  geom_label(aes(label = "Bdisease", x = 33, y = 18),
+             size = 3 )  +
+  geom_curve(aes(x = 26, y = 39.5, xend = 33, yend = 19.5), curvature = -.2,size = .3,
+             arrow = arrow(length = unit(.015, "npc")))+
+  annotation_custom(BdiseaseIfSidsPlotGrob, xmin = 31, xmax = 37, ymin = 27, ymax = 37)+
+  annotation_custom(BdiseaseIfAmurderPlotGrob, xmin = 24.5, xmax = 30.5, ymin = 20, ymax = 30)
+
+ggsave("scWithHOPPrint.jpg", plot = daigramToRotate, width = 10, height = 8, units = "in", dpi = 800)
+
+
+plot_path <- "scWithHOPPrint.jpg"
+plot_image <- image_read(plot_path)
+rotated_image <- image_rotate(plot_image, 270)
+output_path <- "rotated_scWithHOPPrint.jpg"
+image_write(rotated_image, output_path)
 
 # print(daigramToRotate, vp=viewport(angle=90), width=7, height=5)
-
+#knitr::include_graphics('rotated_scWithHOPPrint.jpg')
 
 # knitr::include_graphics("imp_philosophical_files/figure-pdf/SCwithHOP-1.pdf") # alternative method
 
 
 ```
 
-\todo{N: I am still searching for a good fix of that plot}
+```{r SCwithHOPaPRINT,  echo=FALSE,eval=TRUE, fig.align = "center",cache=FALSE, fig.show = "hold", message = FALSE, warnings=FALSE, out.width = "120%"}
+#| label: fig-scwithhop
+#| fig-cap: "An illustration of a probabilistic program for the Sally Clark case."
+#| fig-pos: h
 
+knitr::include_graphics("rotated_scWithHOPPrint.jpg")
 
-
-<!--
-\begin{figure}[htbp] 
-    \centering
-    \includegraphics[angle=90, width=\textwidth]{imp_philosophical_files/figure-pdf/SCwithHOP-1.pdf}
-    \caption{An illustration of a probabilistic program for the Sally Clark case.}
-    \label{fig-scwithhop}
-\end{figure} 
--->
+```
 
 
 
 
 
-
-
-<!--
-```{r SCwithHOP2, echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "90%", warning=FALSE, message = FALSE, dpi = 800, warning = FALSE, message = FALSE, results= 'hide'}
+```{r SCwithHOP2, echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "90%", message = FALSE, warning = FALSE}
 #| label: fig-scwithhop2
 #| fig-cap: 'Impact of incoming evidence in the Sally Clark case.'
 #| fig-pos: H
 
 grid.arrange(GuiltPriorPlot, GuiltABbruisingPlot, GuiltABbruisingNoDiseasePlot, GuiltABbruisingDiseaseAPlot, ncol =2)
 ```
--->
+
 
 <!---
 One question that arises is how this approach relates to the standard method of using likelihood ratios to report the value of the evidence. On this approach, the conditional probabilities that are used in the likelihood ratio calculations are estimated and come in a package with an uncertainty about them. Accordingly, these uncertainties propagate: to estimate the likelihood ratio while keeping track of the uncertainty involved, we can sample probabilities from the selected distributions appropriate for the conditional probabilities needed for the calculations, then divide the corresponding samples, obtaining a sample of likelihood ratios, thus approximating the density capturing the recommended uncertainty about the likelihood ratio. Uncertainty about likelihood ratio is just propagated uncertainty about the involved conditional probabilities. For instance, we can use this tool to gauge our uncertainty about the likelihood ratios corresponding to the signs of bruising in son A and the presence of the symptoms of a potentially lethal disease in son A (@fig-sclrs).
@@ -1616,7 +1699,7 @@ With information inequality this easily entails  Gibbs' inequality:
 We are done with our theoretical set-up, which is already common knowledge, except presented in an orderly manner in one place. Now we present our argument for the claim that the above entails the propriety of $I_{KL}$. 
 First, let's systematize the notation.
 Consider a discretization of the parameter space $[0,1]$ into $n$ equally spaced values $\theta_1, \dots, \theta_n$. 
-For each $i$ the ``true'' second-order distribution if the true parameter indeed is $\theta_i$---we'll call it 
+For each $i$ the 'true' second-order distribution if the true parameter indeed is $\theta_i$---we'll call it 
 the indicator of $\theta_i$--- which is defined by
 \begin{align*}
 Ind^k(\theta_i) & = \begin{cases} 1 & \mbox{if } \theta_i = \theta_k\\
@@ -1644,27 +1727,24 @@ Further, $Ind^k_k= 1$ and therefore $\log_2 Ind^k_k =0$, so we simplify:
 & =  - \log_2 p_k
 \end{align*}
 
-\noindent Now, let's think about expected values. First, what is the inaccuracy of $p$ as expected by $p$, $\mathit{EI}_{\text{DK}}(p,p)$?
+\noindent Now, let's think about expected values. First, what is the inaccuracy of a distribution $q$ as expected by $p$, $\mathit{EI}_{\text{DK}}(p,q)$?
 
 \begin{align*}
-\mathit{EI}_{\text{DK}}(p,p) & = \sum_{i =1}^n p_i I_{\text{DK}}(p, \theta_i) \\
-& = \sum_{i =1}^n  p_i - \log_2 p_i \\
-& = - \sum_{i =1}^n  p_i  \log_2 p_i = H(p)
+\mathit{EI}_{\text{DK}}(p,q) & = \sum{k =1}^n p_k I_{\text{DK}}(q, \theta_k) \\
+& = \sum_{k =1}^n p_k \sum_{i=1}^n Ind^k_i \left( \log_2 Ind^k_i - \log_2 q_i \right)\\
+& = \sum_{k =1}^n p_k Ind^k_k \left( \log_2 Ind^k_k - \log_2 q_k \right)\\
+& = \sum_{k =1}^n p_k ( - \log_2 q_k) \\
+& = - \sum_{k =1}^n p_k \log_2 q_k = H(p,q)\\
 \end{align*}
 
-\noindent Analogously, the inaccuracy of $q$ as expected from the perspective of $p$ is:
+How can we measure the expected inaccuracy of $p$ from its perspective?
 
 \begin{align*}
-\mathit{EI}_{\text{DK}}(p, q) & =   \sum_{i =1}^n p_i \left( - \log_2 q_i\right)\\
-& = -  \sum_{i =1}^n p_i  \log_2 q_i = H(p,q)
+\mathit{EI}_{\text{DK}}(p,p) & = - \sum{k =1}^n p_k \log_2 p_k = H(p)
 \end{align*}
 
 
-But that means, by Gibbs' inequality, that $\mathit{EI}_{\text{DK}}(p,q) \geq \mathit{EI}_{\text{DK}}(p,p)$ unless $p=q$, which completes the proof.
 
-
-
-#  References {-}
 
 # Evidence aggregation: the simple case - SET ASIDE FOR BOOK
 
@@ -1805,9 +1885,9 @@ charitableImpactPlot <- ggplot()+geom_line(aes(x = prior, y = posteriorL))+xlim(
 ```
 
 
-This is the story about evidence aggregation told by the precise probabilist.  But this story misses something crucial. As it happens, the match probability for hair evidence is based on 29 matches found in a sample database of size 1148, while the match probability for the dog evidence is based on finding two matches in a smaller database of size 78. The relative frequencies are about $.025$ in both cases, but the two samples differ in size. The smaller the sample, the greater the uncertainty about the match probabilities. So, for individual pieces of evidence, simply reporting the exact numbers makes it seem as though the evidential value of the matches is the same, but actually it is not.^[The match probabilities in the Wayne Williams case  on which our running example is based were 1/100 for the dog fur, and 29/1148 for Wayne Williams' hair. Match probabilities have been slightly but not unrealistically modified to be closer to each other in order to make a conceptual point: the same first-order probabilities, even when they sound precise, may come with different degrees of second-order uncertainty.] In the aggregate, multiplying the individual likelihood ratios further washes away this difference. 
+This is the story about evidence aggregation told by the precise probabilist.  But this story misses something crucial. As it happens, the match probability for hair evidence is based on 29 matches found in a sample database of size 1148, while the match probability for the dog evidence is based on finding two matches in a smaller database of size 78. The relative frequencies are about $.025$ in both cases, but the two samples differ in size. The smaller the sample, the greater the uncertainty about the match probabilities. So, for individual pieces of evidence, simply reporting the exact numbers makes it seem as though the evidential value of the matches is the same, but actually, it is not.^[The match probabilities in the Wayne Williams case on which our running example is based were 1/100 for the dog fur, and 29/1148 for Wayne Williams' hair. Match probabilities have been slightly but not unrealistically modified to be closer to each other in order to make a conceptual point: the same first-order probabilities, even when they sound precise, may come with different degrees of second-order uncertainty.] In the aggregate, multiplying the individual likelihood ratios further washes away this difference. 
 
-A better alternative is easily available: the evaluation of multiple items of evidence should take into account higher-order uncertainty. @fig-densities (upper part) depicts higher-order probability distributions of different match probabilities given the sample data---the actual number of matches found in the sample databases. <!---By hypothesis, 29 matches were found in the sample database of human hair of size 1,148, and 2 matches were found in the sample database of dog fur of size 78.---> As expected, some random match probabilities are more likely than others, and since the sizes of the two databases are different, the distributions have different spreads: the smaller the database the greater the spread, the greater the uncertainty about the match probability. In light of this, @fig-densities (lower part) depicts the probability distribution for the joint match probability associated with both items of match evidence, hair and fur evidence. The aggregate value of the two pieces of match evidence, then, is given by a distribution over possible likelihood ratios. \todo{add distributions of LRs figure} The shape of this distribution conveys the degree of higher-order uncertainty about the value of the aggregate evidence. \textbf{Marcello (Rafal/Nikodem to add): Can we have a formula of how the two matches are combined in the higher-order approach? In precise probabilism, you multiply the individual LRs, in higher-order probabilism, what do we do formally? Can we also have a distribution of likelihood ratios? What happens if both numerator and denominator in the LR are distributions?} 
+A better alternative is easily available: the evaluation of multiple items of evidence should take into account higher-order uncertainty. @fig-densities (upper part) depicts higher-order probability distributions of different match probabilities given the sample data---the actual number of matches found in the sample databases. <!---By hypothesis, 29 matches were found in the sample database of human hair of size 1,148, and 2 matches were found in the sample database of dog fur of size 78.---> As expected, some random match probabilities are more likely than others, and since the sizes of the two databases are different, the distributions have different spreads: the smaller the database the greater the spread, the greater the uncertainty about the match probability. In light of this, @fig-densities (lower part) depicts the probability distribution for the joint match probability associated with both items of match evidence, hair and fur evidence. The aggregate value of the two pieces of match evidence, then, is given by a distribution over possible likelihood ratios. \todo{add distributions of LRs figure} The shape of this distribution conveys the degree of higher-order uncertainty about the value of the aggregate evidence. \textbf{Marcello (Rafal/Nikodem to add): Can we have a formula for how the two matches are combined in the higher-order approach? In precise probabilism, you multiply the individual LRs, in higher-order probabilism, what do we do formally? Can we also have a distribution of likelihood ratios? What happens if both the numerator and denominator in the LR are distributions?} 
 
 
 ```{r LR_dist,echo=FALSE,eval=TRUE,fig.align = "center",cache=FALSE, fig.show = "hold", out.width = "100%"}
@@ -1927,9 +2007,9 @@ grid.arrange(densities1Plot,densities2Plot, ncol = 1 )
 ```
 
 
-The precise probabilist might insist that the value of the evidence---one item or multiple items of evidence---is naturally captured by a precise likelihood ratio. In our running example, this ratio equals one over the first-order match probabilty, and our best assessment of this first-order probability is still the relative frequency of matches found in the database, whether large or small. If this is right, our best assessment of the match probabilities for both fur and hair evidence should be about $.025$, based on the relative frequencies 2/78 and 29/1148.   If we were to bet whether a dog or a human picked at random would have the matching fur or hair type, our odds should be $.025$ no matter the size of the database. This argument has some bite when evaluating single items of evidence. In fact, the expected values of the match probabilities for hair and match evidence---based on the higher-order distributions in  @fig-densities (upper part)---still end up being about $.025$. If, as the precise probabilist assumes, first-order probabilities is all we should care about, going higher-order would seem a needless complication.
+The precise probabilist might insist that the value of the evidence---one item or multiple items of evidence---is naturally captured by a precise likelihood ratio. In our running example, this ratio equals one over the first-order match probability, and our best assessment of this first-order probability is still the relative frequency of matches found in the database, whether large or small. If this is right, our best assessment of the match probabilities for both fur and hair evidence should be about $.025$, based on the relative frequencies 2/78 and 29/1148.   If we were to bet whether a dog or a human picked at random would have the matching fur or hair type, our odds should be $.025$ no matter the size of the database. This argument has some bite when evaluating single items of evidence. In fact, the expected values of the match probabilities for hair and match evidence---based on the higher-order distributions in  @fig-densities (upper part)---still end up being about $.025$. If, as the precise probabilist assumes, first-order probabilities is all we should care about, going higher-order would seem a needless complication.
 
-This line of reasoning, however, breaks down when evaluating two or more items of evidence. What should our betting odds be for the proposition that a human and a dog, both picked at random, would have the matching fur and hair type in question? For the precise probabilist, the answer is straightforward: on the assumption of independence, it is enough to multiply the $.025$ individual match probabilities and obtain a joint match probability of `r hairMean * dogMean`. The higher-order probabilist will proceed differently. In assessing first-order match probabilities, they will retain information about higher-order uncertainty as much as possible. This can done in two steps: first, aggregate the higher-order distributions for the two match probabilities and obtain a higher-order probability distribution for the joint match probability (see @fig-densities); next, to obtain our best assessment of the first-order joint match probability, take the expected value of this latter  distribution. The higher-order probabilist will assign `r mean(jointEvidence)` to the joint match probability, a value greater than what the precise probabilist would assign. 
+This line of reasoning, however, breaks down when evaluating two or more items of evidence. What should our betting odds be for the proposition that a human and a dog, both picked at random, would have the matching fur and hair type in question? For the precise probabilist, the answer is straightforward: on the assumption of independence, it is enough to multiply the $.025$ individual match probabilities and obtain a joint match probability of `r hairMean * dogMean`. The higher-order probabilist will proceed differently. In assessing first-order match probabilities, they will retain information about higher-order uncertainty as much as possible. This can done in two steps: first, aggregate the higher-order distributions for the two-match probabilities and obtain a higher-order probability distribution for the joint match probability (see @fig-densities); next, to obtain our best assessment of the first-order joint match probability, take the expected value of this latter distribution. The higher-order probabilist will assign `r mean(jointEvidence)` to the joint match probability, a value greater than what the precise probabilist would assign. 
 
 
 
@@ -1969,21 +2049,21 @@ jointEvidenceSeven2 <- evidence2Samples^7
 ```
 
 
-So, the higher-order and precise probabilist will disagree  about the betting odds for the proposition that a human and a dog, both picked at random, would have the matching fur and hair type. The disagreement will become even starker as a larger number of independent items of evidence are evaluated.^[Consider the simple case of independent items of evidence whose individual match probabilities are $.025$. For three, five and seven items of evidence, the joint match probabilities would be: `r (evidence1Mean)^3`,`r (evidence1Mean)^5` and `r (evidence1Mean)^7` (for the precise probabilist) and `r mean(jointEvidenceThree1)`, `r mean(jointEvidenceFive1)` and `r mean(jointEvidenceSeven1)` (for the higher-order probabilist, based on small databases of size 20).] Who should be trusted? Since the higher-order probabilist takes into accout more information---that is, the higher-distributions---there is good reason to think that the higher-order probabilist should be trusted more than the precise probabilist.^[As a further illustration of this point, consider a couple of variations of our running example. First, suppose the match probabilities associated with two matches are both set to $.05$, since they are based on the following relative frequencies: one match occurs in a dog fur database and one match occurs in a human hair database, where both databases are small, say of size 20. By multiplying the individual $1/.05$ likelihood ratios associated with the two matches, their evidential value against the defendant would seem quite strong: $1/.05\times 1/.05=`r 1/(evidence1Mean*evidence1Mean)`$. But the match probabilities are based on frequencies resulting from small databases, so their evidential value should be rather weak. Precise probability here seems to exaggerate the aggregate value of the evidence. Following higher-order probabilism, the  joint likelihood ratio would be `r 1/mean(jointEvidence1)`, a significantly smaller value. On the other hand, if the same $.05$ match probabilities were based on larger databases, the evidential value of the two matches should be correspondingly greater, but precise probabilism would make no difference. If, for example, 1,000 hair and fur matches are found in databases of size 20,000, the higher-order probabilist would assign `r 1/mean(jointEvidence2)` to the joint likelihood ratio, a much greater value than before. This outcome agrees with our intuituions.] 
+So, the higher-order and precise probabilist will disagree about the betting odds for the proposition that a human and a dog, both picked at random, would have matching fur and hair type. The disagreement will become even starker as a larger number of independent items of evidence are evaluated.^[Consider the simple case of independent items of evidence whose individual match probabilities are $.025$. For three, five and seven items of evidence, the joint match probabilities would be: `r (evidence1Mean)^3`,`r (evidence1Mean)^5` and `r (evidence1Mean)^7` (for the precise probabilist) and `r mean(jointEvidenceThree1)`, `r mean(jointEvidenceFive1)` and `r mean(jointEvidenceSeven1)` (for the higher-order probabilist, based on small databases of size 20).] Who should be trusted? Since the higher-order probabilist takes into account more information---that is, the higher-distributions---there is good reason to think that the higher-order probabilist should be trusted more than the precise probabilist.^[As a further illustration of this point, consider a couple of variations of our running example. First, suppose the match probabilities associated with two matches are both set to $.05$ since they are based on the following relative frequencies: one match occurs in a dog fur database and one match occurs in a human hair database, where both databases are small, say of size 20. By multiplying the individual $1/.05$ likelihood ratios associated with the two matches, their evidential value against the defendant would seem quite strong: $1/.05\times 1/.05=`r 1/(evidence1Mean*evidence1Mean)`$. However the match probabilities are based on frequencies resulting from small databases, so their evidential value should be rather weak. Precise probability here seems to exaggerate the aggregate value of the evidence. Following higher-order probabilism, the joint likelihood ratio would be `r 1/mean(jointEvidence1)`, a significantly smaller value. On the other hand, if the same $.05$ match probabilities were based on larger databases, the evidential value of the two matches should be correspondingly greater, but precise probabilism would make no difference. If, for example, 1,000 hair and fur matches are found in databases of size 20,000, the higher-order probabilist would assign `r 1/mean(jointEvidence2)` to the joint likelihood ratio, a much greater value than before. This outcome agrees with our intuitions.] 
 
-Imprecise probabilism will also run into its own problems when assessing the value of aggregate evidence. Recall that the probability measures in the representor set are those compatible with the evidence.  The problem is that almost any random match probability will be compatible with any sample data---with any number of matches found in a reference database. This point should be familiar from the earlier discussion. Think by analogy to coin tossing: even a coin that has a .99 bias toward tails could come up heads on every toss. This series of outcomes is unlikely, but possible. Similarly, a hair type that has a match probability extremely small could still be found several times in a sample population. So, it is not clear how to proceed if one takes seriously the binary notion of compatibility. Imprecise probabilism is too permissive because almost any match probability will be compatible with the data. 
+Imprecise probabilism will also run into its own problems when assessing the value of aggregate evidence. Recall that the probability measures in the representor set are those compatible with the evidence.  The problem is that almost any random match probability will be compatible with any sample data---with any number of matches found in a reference database. This point should be familiar from the earlier discussion. Think by analogy to coin tossing: even a coin that has a .99 bias toward tails could come up heads on every toss. This series of outcomes is unlikely but possible. Similarly, a hair type that has a match probability extremely small could still be found several times in a sample population. So, it is not clear how to proceed if one takes seriously the binary notion of compatibility. Imprecise probabilism is too permissive because almost any match probability will be compatible with the data. 
 
 Another option for the imprecise probabilist is to rely on reasonable ranges of match probabilities. Suppose these ranges are (.015,.037) (.002, .103), for hair and fur evidence respectively in our original case.^[These are 99% credible intervals starting with uniform priors. A 99\% credible interval is the narrowest interval to which the   expert thinks the true parameter belongs with probability .99. For a discussion of what credible intervals are, how they differ from confidence intervals, and why confidence intervals should not be used, see @kruschke2015doing.] 
 <!-- Now, the representor covers
   the convex hull of the probability measures that result in probabilities that are the edges of the intervals. For this reason, to investigate what span of probabilities the imprecise probabilities will end with,
   -->
-As expected, the range is wider for dog fur match evidence than hair match evidence: the uncertainty about the dog fur match probability is greater since the sample database was smaller. This is a desirable feature of the interval approach.  Now, to assess the joint uncertainty, it is enough to focus on what happens at the edges of the two intervals. Reasoning with representor members at the edges of the intervals will yield the most extreme probability measure the impreciser is committed to, the worst-case and best-case scenarios. We end up with a new range for the joint match probabilties, (.00003, .003811).\footnote{Redoing the calculations using the upper bounds of the two intervals, $.037$ and $.103$,  yields the following:
+As expected, the range is wider for dog fur match evidence than hair match evidence: the uncertainty about the dog fur match probability is greater since the sample database was smaller. This is a desirable feature of the interval approach.  Now, to assess the joint uncertainty, it is enough to focus on what happens at the edges of the two intervals. Reasoning with representor members at the edges of the intervals will yield the most extreme probability measure the impreciser is committed to, the worst-case and best-case scenarios. We end up with a new range for the joint match probabilities, (.00003, .003811).\footnote{Redoing the calculations using the upper bounds of the two intervals, $.037$ and $.103$,  yields the following:
 \begin{align*}
 \mathsf{P}(\s{dog}\wedge \s{hair} \vert \neg \s{source})   & =  .037 \times .103 =.003811.
 \end{align*}
 
 \noindent
- This number is around `r round(.003811/lik0,2)` times greater than the original estimate. Given this number, the two matchs are much weaker evidence for the source hypothesis than previously thought.    The calculation for the lower bounds, $.015$ and $.002$, yields the following:
+ This number is around `r round(.003811/lik0,2)` times greater than the original estimate. Given this number, the two matches are much weaker evidence for the source hypothesis than previously thought.    The calculation for the lower bounds, $.015$ and $.002$, yields the following:
 \begin{align*}
 \mathsf{P}(\s{dog}\wedge \s{hair} \vert \neg \s{source})   & =  .015 \times .002 =.00003
 \end{align*}
@@ -2064,10 +2144,10 @@ After aggregating the two items of evidence, the match probability interval narr
 
 \todo{LR intervals widen but match and posterior probability intervals do not? How does that work? How can we claim that uncertainty increases?}
 
- All in all, precise and imprecise probabilism do not fare well in modelling the value of evidence in the aggregate. 
+ All in all, precise and imprecise probabilism does not fare well in modeling the value of evidence in the aggregate. 
  Instead, the evaluation of multiple items of evidence should take into account higher-order uncertainty (as illustrated in @fig-densities). Whenever probability distributions for the probabilities of interest are available (and they should be available for match evidence and many forms of scientific evidence whose reliability has been studied), those distributions should be reported for assessing the value of the evidence. This approach avoids hiding actual aleatory uncertainties under the carpet. It also allows for a more balanced assessment of the evidence, whereas using point values or intervals may exaggerate or underestimate the value of the evidence.
 
-A couple of clarifications are in order. First, the problem we are highlighting is not confined to match evidence. Say an eyewitness testifies against the defendant: they saw the defendant near the crime scene at the relevant time. To assess the value of this testimony, one should know something analogous to the match probability: if the defendant was not there, how probable is it that the witness would still say the defendant was there? Or suppose a medical test for a disease turns out positive. Here again, to asses the evidential value of the positive test, one should know how probable it is that the test would still turn out positive even when a patient is actually negative. And so on.  These false positive probabilities are usually derived from sample-based frequencies in surveys or experiments: how often witness misidentify people; how often tests misdiagnose; etc. So, depending on the sample size, the false positive probabilities will have different degrees of uncertainty, and the latter should be taken into account when evaluating eyewitness testimonies, diagnostic test results, and many other forms of evidence. At the same time---and this is the second clarification---this discussion is not meant to suggest that the problem we are highlighting is confined to differences in sample size; it is broader than that. Probabilities can be subject to uncertainty for other reasons, for example, when they are derived from a probability model for which there is little support, or when the sample size is large but unrepresentative. So, in short, the problem of higher-order uncertainty is widespread and goes beyond match evidence and questions of sample size.
+A couple of clarifications are in order. First, the problem we are highlighting is not confined to match evidence. Say an eyewitness testifies against the defendant: they saw the defendant near the crime scene at the relevant time. To assess the value of this testimony, one should know something analogous to the match probability: if the defendant was not there, how probable is it that the witness would still say the defendant was there? Or suppose a medical test for a disease turns out positive. Here again, to assess the evidential value of the positive test, one should know how probable it is that the test would still turn out positive even when a patient is actually negative. And so on.  These false positive probabilities are usually derived from sample-based frequencies in surveys or experiments: how often witnesses misidentify people; how often tests misdiagnose; etc. So, depending on the sample size, the false positive probabilities will have different degrees of uncertainty, and the latter should be taken into account when evaluating eyewitness testimonies, diagnostic test results, and many other forms of evidence. At the same time---and this is the second clarification---this discussion is not meant to suggest that the problem we are highlighting is confined to differences in sample size; it is broader than that. Probabilities can be subject to uncertainty for other reasons, for example, when they are derived from a probability model for which there is little support, or when the sample size is large but unrepresentative. So, in short, the problem of higher-order uncertainty is widespread and goes beyond match evidence and questions of sample size.
 
 
 
@@ -2256,5 +2336,5 @@ klds[i] <- kld(testProbs,pointProbs) - kld(testProbs,posteriorProbs)
 ```
 
 
-
+#  References {-}
 
