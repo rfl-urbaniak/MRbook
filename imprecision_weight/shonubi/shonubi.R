@@ -45,6 +45,39 @@ th <- theme_tufte(base_size = 10) + theme(plot.title.position = "plot")
 sh <- read.csv("ShonubiCaseDataset.csv")
 
 head(sh)
+
+weights <- data.frame(gross = sh$gross_wt,
+                      net = sh$net_wt)
+weights <- weights[complete.cases(weights), ]
+
+weights_melted <- melt(weights)
+
+ggplot(weights_melted, aes(x= variable, y= value)) + geom_jitter() +
+  geom_boxplot()+ th
+  
+
+ggplot() + geom_density(aes(x = weights$gross), col= 'skyblue', linewidth = 1)+
+  geom_density(aes(x = weights$net), col= 'purple', linewidth = 1)+ th+ 
+  geom_vline(xintercept = mean(weights$gross), linetype = "dashed", color = "red")+
+  geom_vline(xintercept = mean(weights$net), linetype = "dashed", color = "red")
+  
+mean(weights$net)
+
+
+weights_arrDiff <- weights %>% 
+  arrange(gross) %>% 
+  mutate(diff = gross - net) %>% 
+  mutate(proportion = net / gross)
+
+dens(weights_arrDiff$proportion)
+
+ggplot(weights_arrDiff, aes(x= 1:nrow(weights_arrDiff), y= proportion)) + geom_line()+
+  geom_smooth()
+
+ggplot(weights_arrDiff, aes(x= diff, y= proportion)) + geom_line()+
+  geom_smooth()
+
+
 #FIRST, STRATEGY WHICH USES POSTERIOR MEANS ONLY
 
 
