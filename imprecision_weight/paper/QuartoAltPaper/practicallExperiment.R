@@ -24,6 +24,7 @@ c <- ifelse(ps <= .4, a, b)
 
 bimodal <- c / sum(c)
 bimodalCum <- cumsum(bimodal)
+plot(bimodal)
 
 centered <-   dnorm(ps, .4, .05)
 centered <- centered/sum(centered)
@@ -156,6 +157,10 @@ inaccuracy_coins_sample_cum <- function(coins, tested_dist) {
 df_bimodalCum <- inaccuracy_coins_sample_cum(onekCoins, bimodal)
 df_bimodalWideCum <- inaccuracy_coins_sample_cum(onekCoins, bimodalWideCum)
 df_centeredCum <- inaccuracy_coins_sample_cum(onekCoins, centered)
+
+c(mean(df_bimodalCum$CVM), mean(df_bimodalCum$KLD))
+c(mean(df_bimodalWideCum$CVM), mean(df_bimodalWideCum$KLD))
+c(mean(df_centeredCum$CVM), mean(df_centeredCum$KLD))
 
 
 # cvm winnnings
