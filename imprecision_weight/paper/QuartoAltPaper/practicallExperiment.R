@@ -16,6 +16,8 @@ dens(onekCoins)
 
 # priors ------------------------------------------------------------------
 
+# creating 3 distributions that are used in the paper
+
 n <- 1000
 ps <- seq(0,1,  length.out =n)
 a <- dnorm(ps, .3, .05)
@@ -37,7 +39,9 @@ bimodalWide <- cw / sum(cw)
 bimodalWideCum <- cumsum(bimodalWide)
 
 
-# coin practicall ---------------------------------------------------------
+# coin practical ---------------------------------------------------------
+
+# introducing kld and cvm measures
 
 kld <- function(p,q) kullback_leibler_distance(p,q, testNA = TRUE, unit = "log2",
                                                epsilon = 0.00001)
@@ -51,7 +55,15 @@ cvm <- function(w,p){
 
 
 
-# non cum
+
+
+# non cum measures --------------------------------------------------------
+
+# each sampled coin bias will be treated as a true chance, from which
+# we will calculate the inaccuracy for all 3 dists.
+# with 2 methods, in cumulative and non-cumulative scenario
+
+
 
 inaccuracy_coins_sample <- function(coins, tested_dist) {
   results_df <- data.frame(Element = numeric(length(coins)),
@@ -81,7 +93,15 @@ df_centered <- inaccuracy_coins_sample(onekCoins, centered)
 df_bimodalWide <- inaccuracy_coins_sample(onekCoins, bimodalWide)
 
 
-# cvm winnings
+
+
+
+
+
+# cvm winnings ######
+
+# calculating the 'winners' for cvm, a dist. is a winner when
+# it has the lowest inacc. score for a given value
 
 cvm_compDF <-  data.frame(Element = df_bimodal$Element,
                           CVM_bimodal = df_bimodal$CVM,
@@ -98,13 +118,18 @@ cvm_compDF$Winning_Distribution <- apply(cvm_compDF[, c("CVM_bimodal",
 
 cvm_compDF$Winning_Distribution <- as.factor(cvm_compDF$Winning_Distribution)
 
-table(cvm_compDF$Winning_Distribution)
+table(cvm_compDF$Winning_Distribution) # the results
 
 
 
 
 
-# kld winnings
+
+
+
+
+# kld winnings ##########
+
 kld_compDF <-  data.frame(Element = df_bimodal$Element,
                           KLD_bimodal = df_bimodal$KLD,
                           KLD_centered = df_centered$KLD,
@@ -122,13 +147,16 @@ kld_compDF$Winning_Distribution <- apply(kld_compDF[, c("KLD_bimodal",
 kld_compDF$Winning_Distribution <- as.factor(kld_compDF$Winning_Distribution)
 
 
-table(kld_compDF$Winning_Distribution)
+table(kld_compDF$Winning_Distribution) # the results
 
 
 
 
 
-# CUMULATIVE
+# cumulative versions -----------------------------------------------------
+
+
+
 
 inaccuracy_coins_sample_cum <- function(coins, tested_dist) {
   results_df <- data.frame(Element = numeric(length(coins)),
@@ -163,7 +191,11 @@ c(mean(df_bimodalWideCum$CVM), mean(df_bimodalWideCum$KLD))
 c(mean(df_centeredCum$CVM), mean(df_centeredCum$KLD))
 
 
-# cvm winnnings
+
+
+
+
+# cvm winnnings ####
 
 cvm_compDF_cum <-  data.frame(Element = df_bimodalCum$Element,
                               CVM_bimodal = df_bimodalCum$CVM,
@@ -180,9 +212,12 @@ cvm_compDF_cum$Winning_Distribution <- apply(cvm_compDF_cum[, c("CVM_bimodal",
 
 cvm_compDF_cum$Winning_Distribution <- as.factor(cvm_compDF_cum$Winning_Distribution)
 
-table(cvm_compDF_cum$Winning_Distribution)
+table(cvm_compDF_cum$Winning_Distribution) # results
 
-# kld winnings
+
+
+
+# kld winnings #######
 
 
 
@@ -203,18 +238,40 @@ kld_compDF_cum$Winning_Distribution <- apply(kld_compDF_cum[, c("KLD_bimodal",
 kld_compDF_cum$Winning_Distribution <- as.factor(kld_compDF_cum$Winning_Distribution)
 
 
-table(kld_compDF_cum$Winning_Distribution)
+table(kld_compDF_cum$Winning_Distribution)  # the results
 
 
 
 
-## all winnings comparison
+
+# comparison of all the winnings ------------------------------------------
+
+
 
 table(cvm_compDF$Winning_Distribution)
+
+cvm_compDF_means <- colMeans(cvm_compDF[, 2:4])
+print(cvm_compDF_means)
+
+
 table(kld_compDF$Winning_Distribution)
 
+kld_compDF_means <- colMeans(kld_compDF[, 2:4])
+print(kld_compDF_means)
+
+
 table(cvm_compDF_cum$Winning_Distribution)
+
+cvm_compDF_cum_means <- colMeans(cvm_compDF_cum[, 2:4])
+print(cvm_compDF_cum_means)
+
+
+
 table(kld_compDF_cum$Winning_Distribution)
+
+kld_compDF_cum_means <- colMeans(kld_compDF_cum[, 2:4])
+print(kld_compDF_cum_means)
+
 
 
 
