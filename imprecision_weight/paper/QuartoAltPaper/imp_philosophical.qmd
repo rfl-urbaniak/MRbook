@@ -80,8 +80,6 @@ source("../../scripts/SCplotDistros.R")
 
 \end{quote}
 
-\todo{check abstract and intro}
-
 # Introduction
 \label{sec:introduction}
 
@@ -93,7 +91,6 @@ source("../../scripts/SCplotDistros.R")
  
  To make progress, this paper argues that the uncertainty of a rational agent is to be represented neither by a single probability measure nor a set of measures. Rather, it is to be represented by a higher-order probability measure, more specifically, a probability distribution over parameter values interpreted as probabilities.  <!---The key insight is that a rational agent's uncertainty (or credal state) is not single-dimensional and thus cannot be mapped onto a one-dimensional scale like the real line. Uncertainty is best modeled by the shape of a probability distribution over multiple probability measures. --->  The theory we propose is not mathematically novel, but addresses many of the problems that plague both precise and imprecise probabilism (\S \ref{sec:higher-order} and \S \ref{sec:proper-scores}). It also fares better than existing versions of probabilism when the probability of multiple propositions, dependent or independent, is to be assessed (\S \ref{sec:higher-order-conjunction} and \ref{sec:higher-order-networks}). 
  
- ]
  
  <!--
 Moreover, Bayesian probabilistic programming already provides a fairly reliable implementation framework of this approach.
@@ -190,7 +187,7 @@ The first situation can be easily represented by imprecise probabilism. The repr
 
 These examples show that imprecise probabilism is not expressive enough to model the scenario of uneven bias. <!--We believe that the solution is to add a probability distribution over the probability measures (more on this in the next section).--> Defenders of imprecise probabilism might concede this point but prefer their account for reasons of simplicity. They could also point out that imprecise probabilism models scenarios that precise probabilism cannot model, for example, a state of complete lack of evidence. In this respect, imprecise probabilism outperforms precise probabilism in expressive power, and also retains theoretical simplicity. But this is not quite true as imprecise probabilism suffers from several shortcomings that do not affect precise probabilism.  
 
-The first shortcoming has not received extensive discussion in the literature, but it is fundamental. Recall that, for imprecise probabilism, an agent's state of uncertainty is represented by those probability measures that are *compatible* with the agent's evidence. The question is, how should the notion of compatibility be understood here? <!---The idea is that thanks to this feature, imprecise credal stances are evidence-responsive in a way precise probabilistic stances are not.---> Perhaps we can think of compatibility as the fact that the agent's evidence is consistent with the probability measure in question. But mere consistency wouldn't get the agent very far in excluding probability measures, as too many probability measures are consistent with most observations and data. Admittedly, there will be clear-cut cases: if you see the outcome of a coin toss to be heads, you reject the measure with $\mathsf{P}(H)=0$, and similarly for tails. Another class of cases might arise while randomly drawing objects from a finite set where the objective chances are known. But clear-cut cases aside, what else?  Data will often be consistent with almost any 
+The first shortcoming we discuss has not received extensive discussion in the literature. Recall that, for imprecise probabilism, an agent's state of uncertainty is represented by those probability measures that are *compatible* with the agent's evidence. How should the notion of compatibility be understood here? <!---The idea is that thanks to this feature, imprecise credal stances are evidence-responsive in a way precise probabilistic stances are not.---> Perhaps we can think of compatibility as the fact that the agent's evidence is consistent with the probability measure in question. But mere consistency wouldn't get the agent very far in excluding probability measures, as too many probability measures are consistent with most observations and data. Admittedly, there will be clear-cut cases: if you see the outcome of a coin toss to be heads, you reject the measure with $\mathsf{P}(H)=0$, and similarly for tails. Another class of cases might arise while randomly drawing objects from a finite set where the objective chances are known. But clear-cut cases aside, what else?  Data will often be consistent with almost any 
 probability measure.^[Probability measures can be inconsistent with evidential constraints that agents believe to be true. Mathematically, non-trivial evidential constraints are easy to model [@bradley2012scientific]. They can take the form, for example, of the \emph{evidence of chances} $\{ \mathsf{P}(X) = x\}$ or $\mathsf{P}(X) \in [x,y]$, or \emph{structural constraints} such as  "$X$ and $Y$ are independent" or "$X$ is more likely than $Y$." These constraints are something that an agent can come to accept outright, but only if offered such information by an expert whom the agent completely defers. <!---Most of the  examples  in the literature start with the assumption that the agent is told by a believable source that the chances are such-and-such, or that certain structural constraint hold.--->  Besides these idealized cases, it is unclear how an agent could come to accept such structural constraints upon observation. There will usually be some degree of uncertainty about the acceptability of these constraints.]
 
 
@@ -225,7 +222,22 @@ The upshot is that uniform priors should not be used and that imprecise probabil
 
 
 
-Finally, even setting aside belief inertia,  imprecise probabilism faces a third major problem that does not arise for precise probabilism. As it turns out, it is impossible to define proper scoring rules for measuring the accuracy of a representor. Workable scoring rules exist for measuring the accuracy of a single, precise probability measure, such as the Brier score. These rules measure the distance between a rational agent's probability measure and the actual value. A  requirement of scoring rules is that they be \emph{proper}: any rational agent will expect their own probability measure to be more accurate than any other. After all, if an agent thought a different probability measure was more accurate, they should switch to it.  Proper scoring rules are then used to formulate accuracy-based arguments for precise probabilism. These arguments show (roughly) that, if your precise measure follows the axioms of probability theory, no other non-probabilistic measure is going to be more accurate than yours whatever the facts are.  Can the same be done for imprecise probabilism? It cannot. Impossibility theorems demonstrate that no proper scoring rules are available for representor sets [@seidenfeld2012forecasting]. So, as many have noted, the prospects for an accuracy-based argument for imprecise probabilism look dim  [@Mayo-Wilson2016scoring; @CampbellMoore2020accuracy]. Moreover, as shown by  @Schoenfield2017accuracy, if an accuracy measure satisfies certain plausible formal constraints, it will never strictly recommend an imprecise stance, as for any imprecise stance there will be a precise one with at least the same accuracy.
+Finally, even setting aside belief inertia,  imprecise probabilism faces a third major problem that does not arise for precise probabilism. Workable scoring rules exist for measuring the accuracy of a precise probability measure, but it is hard to define workable scoring rules for imprecise probabilities. In the precise case, scoring rules measure the distance between a rational agent's probability measure and the actual value. The Brier score is the most common scoring rule for precise probabilities.^[The Brier score is defined as the squared distance between the true state and the probability forecast, or formally,  $(p(x)-V(x, w))^2$, where $p(x)$ is the probability forecast and $V(x, w)$ determines if a proposition obtains at $w$ ($V(x, w)=1$) or not ($V(x, w)=0$). If, for example, the proposition 'rain' obtains at $w$, the forecast 'rain with .9 probability' would be more accurate at $w$ than the forecast 'rain with .8 probability'. If, on the other hand, the proposition 'not rain' obtained at $w$, the latter forecast would be more accurate.] A  requirement of scoring rules is that they be \emph{proper}: any rational agent will expect their own probability measure to be more accurate than any other. After all, if an agent thought a different probability measure was more accurate, they should switch to it.  More specifically, let $I(p, w)$ be an inaccuracy score of a probability distribution $p$ relative to the true state $w$. The score $I(p, w)$ is strictly proper if, for any other probability distribution $q$ different from $p$, the following holds: 
+
+$$\sum_{w \in W} p(w) I(p, w) < \sum_{w}  q(w)I(p, w).$$
+
+
+\noindent 
+That is, the expected inaccuracy of $p$ from the perspective of $p$ should always be smaller than the expected inaccuracy of $p$ from the perspective of another distribution $q$. To calculate the expected accuracy of $p$, first you need to calculate its inaccuracy $I(p, w)$ at every possible true state $w$, and then factor in the probabilities $p(w)$ of the true states according to $p$. Well-known results demonstrate the strict propriety of the Brier score for precise probabilities. ^[Besides propriety, other common requirements (which the Brier score also satisfies) are: the score $I(p, w)$ should be a function of the probability distribution $p$ and the true state $w$ (extensionality); and the score should be a continuous function around $p$ (continuity).] 
+
+Can similar results be established for imprecise probabilities? The answer is likely to be negative. Several hurdles exist. First, a plausible scoring rule for imprecise probabilities is not easy to define. Suppose a forecaster assigns the [.8, .9] probability interval to the outcome that it would rain tomorrow, where the true state is 'rain'. Would the wider [.6, .99] interval be more accurate since its .99 upper bound is closer to the true state? Intuitively, the wider interval should not be more accurate. If it were,  the trivial interval [0, 1] would always be more accurate than any other interval since either of its edges are closer to whatever the true state turns out to be. To remedy this problem, an inaccuracy score for imprecise probabilities should depend both on the closeness to the true state  and the size of the interval.^[If, for example, the inacurracy score were to increase as the size of the interval increases, this would block the result that the [0, 1] interval is always the lest inaccurate.] Still, even if a well-behaved score for imprecise probabilities can be found, a further problem arises in defining its expected inaccuracy. Let $I([p_-, p_+], w)$ be an inaccuracy score for the interval $[p_-, p_+]$. What is its expected inaccuracy, say, from the perspective of the interval $[p_-, p_+]$ itself? There is no straightfoward answer to this question because $I([p_-, p_+], w)$ cannot be multiplied by $[p_-, p_+]$, in the way in which $I(p, w)$ can be multipled by $p(w)$. Perhaps the expected inaccuracy of $[p_-, p_+]$ can be evaluated from the perspective of the precise probabilities at its eged, either $p_-$ or $p_+$. So the expected inaccuracy would equal 
+
+$$\sum_{w\in W} p_-(w)I([p_-, p_+], w) \text{ or } \sum_{w\in W} p_+(w)I([p_-, p_+], w).$$ 
+
+\noindent
+The proble is that, if the expected inaccuracy of $[p_-, p_+]$ is evaluated from the perspective of the precise probabilities at the edges, finding a proper inaccuracy score that is also continuous turns out to be mathematically impossible [@seidenfeld2012forecasting].  
+
+Proper scoring rules are often used to formulate accuracy-based arguments for precise probabilism. These arguments show (roughly) that, if your precise measure follows the axioms of probability theory, no other non-probabilistic measure is going to be more accurate than yours whatever the facts are.  So, without proper scoring rules for imprecise probabilities, the prospects for an accuracy-based argument for imprecise probabilism look dim  [@Mayo-Wilson2016scoring; @CampbellMoore2020accuracy]. Moreover, as shown by  @Schoenfield2017accuracy, if an accuracy measure satisfies certain plausible formal constraints, it will never strictly recommend an imprecise stance, as for any imprecise stance there will be a precise one with at least the same accuracy.
 
 
 # Higher-order probabilism
@@ -249,7 +261,7 @@ But such bunching up cannot be modeled by imprecise probabilism alone: a probabi
 \todo{Revised this bit, take a look.}
 -->
 
- The central idea of higher-order probabilism is this:  a rational agent's uncertainty is not single-dimensional and thus cannot be mapped onto a one-dimensional scale such as the real line. Uncertainty is best modeled by the shape of a probability distribution, sometimes even over the parameters that are best construed as probabilities themselves. In some straightforward cases of narrow and symmetric distributions, we can get away with using point estimates, but such approximations will fail to be useful in more complex cases. Stated more formally, a rational agent's state of uncertainty (or credal stance) towards a proposition $X$ is not represented by a single probability value $\mathsf{P}(X)$ between 0 and 1, but by a probability density $f(\mathsf{P}(X))$, where the first-order probability of $X$ is the parameter in question and is treated as a random variable.  \todo{Since f is discretized, can we just say distribution?}Crucially, this representation is general. While the examples used so far may not indicate this, the first-order probability of $X$ is not restricted to chance hypotheses or the bias of a coin. The probability density $f(\mathsf{P}(X))$ assigns a second-order probability (density) to all possible first-order probabilities $\mathsf{P}(X)$.^[For computational ease, we will use a higher-order density that is discretized and ranges over 1000 first-order probabilities.]
+ The central idea of higher-order probabilism is this:  a rational agent's uncertainty cannot be mapped onto a one-dimensional scale such as the real line. Uncertainty is best modeled by the shape of a probability distribution. In some straightforward cases of narrow and symmetric distributions, we can get away with using point probabilities, but such approximations will fail to be useful in more complex cases. So, special cases aside, a rational agent's state of uncertainty (or credal stance) towards a proposition $x$ is not represented by a single probability value $p(x)$ between 0 and 1, but by a probability density $f(p(x))$, where the first-order probability of $x$ is the parameter in question and is treated as a random variable. Crucially, this representation is general. While the examples used so far may not indicate this, the first-order probability of $x$ is not restricted to chance hypotheses or the bias of a coin. The probability density $f(p(x))$ assigns a second-order probability (density) to all possible first-order probabilities $p(x)$.^[For computational ease, we will use a higher-order density that is discretized and ranges over 1000 first-order probabilities.]
 
 <!---^[Bradley admits this much [@bradley2012scientific, 90], and so does  Konek  [@konek2013foundations, 59]. For instance, Konek disagrees with: (1)  $X$ is more probable than $Y$ just in case $p(X)>p(Y)$, (2)  $D$ positively supports $H$ if $p_D(H)> p(H)$, or (3)  $A$ is preferable to $B$ just in case the expected utility of $A$ w.r.t. $p$ is larger than that of $B$.]
 ---> 
@@ -259,7 +271,7 @@ The reader might be worried. The examples we discussed so far involve estimation
 --->
 
 How should these second-order probabilities be understood? It is helpful to think of higher-order probabilism as a generalization of imprecise probabilism. Imprecisers already admit that some probability measures are compatible and others incompatible with the agent's evidence at some point. Compatibility is a coarse notion; it is an all-or-nothing affair. <!---For instance, suppose there is no evidence about the bias of a coin. Then, any first-order point probability about *heads* would be compatible with the evidence. If, instead, we know the coin is fair, the evidence clearly selects one preferred value, .5, and all other first-order probabilities would be incompatible with the evidence. But often, evidence is stronger than the former case and weaker than the latter case. --->
-But, as seen earlier, evidence can hardly exclude a probability measure in a definitive manner except in clear-cut cases. Just as it is often a matter of degrees whether the evidence supports a proposition, the notion of compatibility between evidence and probability measures can itself be a matter of degrees. In this picture, the evidence justifies different values of first-order probability to various degrees. So, second-order probabilities express the extent to which the first-order probabilities are supported by the evidence. 
+But, as seen earlier, evidence can hardly exclude a probability measure in a definitive manner except in clear-cut cases. Just as it is often a matter of degrees whether the evidence supports a proposition, the compatibility between evidence and a probability measure can itself be a matter of degrees. In this picture, the evidence justifies different values of first-order probability to various degrees. So, second-order probabilities express the extent to which the first-order probabilities are supported by the evidence. 
 
 
 This higher-order approach at the technical level is by no means novel. Bayesian probabilistic programming languages embrace the well-known idea that parameters can be stacked and depend on each other [@Bingham2021PPwithoutTears]. But, while the technical machinery has been around for a while, it has not been deployed by philosophers to model a rational agent's uncertainty or credal state. Because of its greater expressive power, higher-order probabilism can represent uncertainty in a more fine-grained manner, as illustrated in @fig-evidenceResponse. In particular, the uneven coin scenario in which the two biases of the coin are not equally likely---which imprecise probabilism cannot model---can be easily modeled within high-order probabilism by assigning different probabilities to the two biases.
@@ -406,172 +418,47 @@ fails against imprecise probabilism: there are cases in which accuracy considera
 The overall dialecticts of this section is as follows. (1) we define two imporant divergence measures, (2) we define two inaccuracy measures using those divergencies, (3) we define the notion of expected inaccuracy, emphasizing a particular case, in which one additionally assumes that there are only two possible outcomes, 0 and 1. Then we (4) set up a thought experiment in which intuitively from three candidate subjective distributions only one matches the known true generative process and so should come out, intuitively, as the most accurate. Moreover, if a given accuracy measure is *proper* each of the subjective candidate distributions should expect itself to be the most accurate (in a sense to be specified). (5) We will show that propriety failures arise if we stick to the additional assumption mentioned in (3) and use our example to gesture towards a more general claim that's proven in the appendix, namely that KL divergence without this restrictive assumption is a strictly proper accuracy measure. (6) The example also illustrates that from the two measures discussed, the KL-divergence based one provides more intuitive results. 
 -->
 
+Despite the difficulties that plague imprecise probabilism in defining proper scoring rules, here we put forward an intuitively plausible scoring rule for higher-order probabilities that is both proper and continuous. Building on existing work on this topic (@HersbachDecomp2000, @Pettigrew2012Epistemic-Utili, @GneitRafter2007), we begin by laying out two common measures of distance between probabilities distributions. We will then use these measures to define higher-order inaccuracy scores 
+and argue for their propriety.
 
-A scoring rule or inaccuracy score quantifies the distance (inaccuracy) between a probability distribution and the true state of the world.  A desirable property that any such score should have is strict propriety. In the precise case, let $I(p, w)$ be an inaccuracy score of a probability distribution $p$ relative to the true state $w \in W$. The score $I(p, w)$ is strictly proper if, for any other probability distribution $q$ different from $p$, the following holds: 
-
-$$\sum_{w \in W} p(w) I(p, w) < \sum_{w \in W}  q(w)I(p, w).$$
-
-
-<!--
-A scoring rule or inaccuracy score quantifies the distance (inaccuracy) between a probability distribution and the true state of the world.  A desirable property that any such score should have is strict propriety. In the precise case, let $I(p, \theta_k)$ be an inaccuracy score of a probability distribution $p$ relative to the true chance $\theta_k$ defined over a parameter space $[0,1]$. The score $I(p, \theta_k)$ is strictly proper if, for any other probability distribution $q$ different from $p$, the following holds: 
-
-
-$$\sum_{i=1}^{n} p_i I(p, Ind^k_i)< sum_{i=1}^{n}  q(w)I(p, Ind^k_i).$$
-
-
-where  $Ind^k_i$ denotes $Ind^k(\theta_i)$ defined as:
-
-\begin{align*}
-Ind^k(\theta_i) & = \begin{cases} 1 & \mbox{if } \theta_i = \theta_k\\
-                        0 & \mbox{otherwise}  \end{cases}
-\end{align*}
--->
-
-
-\noindent 
-That is, the expected inaccuracy of $p$ from the perspective of $p$ itself should always be smaller than the expected inaccuracy of $p$ from the perspective of another distribution $q$. Other common requirements are: the score $I(p, w)$ should be a function of the probability distribution $p$ and the true state $w$ (extensionality); and the score should be a continuous function around $p$ (continuity). Well-known results demonstrate that the Brier score is an extensional score for precise probabilities that is both proper and continous.^[The Brier score is defined as the squared distance between the true state and the probability forecast, or formally,  $(p(x)-V(x, w))^2$, where $p(x)$ is the probability forecast and $V(x, w)$ determines if a proposition obtains at $w$ ($V(x, w)=1$) or not ($V(x, w)=0$). If, for example, the proposition 'rain' obtains at $w$, the forecast 'rain with .9 probability' would be more accurate at $w$ than the forecast 'rain with .8 probability'. If, on the other hand, the proposition 'not rain' obtained at $w$, the latter forecast would be more accurate.]\todo{Is the formal statement of Brier score in the footnote correct?} \todo{Looks alright, don't remove comment, will pay attention when reading the section at some point.}
-
-<!--
-The propriety requirement is that a measure expects itself to be the least accurate---to be able to formalize this requirement, we need the notion of *expected inaccuracy*. To calculate the expected accuracy of a measure, first you need to calculate its inaccuracy w,r,t  every possible hypothesis. Then, you factor in how probable the measure thinks those hypothesis as weights to calculate the expectation. Within our working framework in which we work with a discretized vector $x$ of possible outcomes, outcomes the expected inaccuracy is:
-$$\mathbb{E_{discretized}}I(p,q) = \sum  I(p,w) q(w),$$
-\noindent where $I(p,w)$ is an inaccuracy score of  distribution $p$ relative to the possible world $w$ (we use $I_{KL}$, but in principle other distance measures can be plugged in here).^[In practice, instead of working with $w$ and saying things like $V(w)=x$, we will be working with scalars and finite vectors, and simply say that the outcome is $x$.]
--->
-
-
-Can similar results be established for imprecise probabilities? The answer is likely to be negative since several hurdles exist. 
-First, a plausible scoring rule for imprecise probabilities cannot be easily found. Suppose an imprecise forecast assigns the [.8, .9] interval to the outcome that it would rain tomorrow, where the true state is 'rain'. Would the [.6, .99] interval be more accurate since its .99 upper bound is closer to the true state? Intuitively, the [.6, .99] interval should not be more accurate, otherwise, the trivial interval [0, 1] would always be more accurate than any other interval. To remedy this problem, a plausible inaccuracy score for imprecise probabilities could be directly proportional to the Brier score computed using the side of the interval closer to the true state, but inversely proportional to the size of the interval.^[If the score increases when the Brier score (thus defined) increases or when the size of the interval increases, this would block the result that the [0, 1] interval is always the most accurate; see @seidenfeld2012forecasting.] 
-
-Still, 
-even if a well-behaved score for imprecise probabilities can be found, a second hurdle remains. Recall that the notion of expected inaccuracy is needed to establish strict propriety. Unfortunately, expected inaccuracy cannot be easily defined for imprecise probabilities. Let $I([p_-, p_+], w)$ be an inaccuracy score for the interval $[p_-, p_+]$. What is its expected inaccuracy from the perspective of the interval $[p_-, p_+]$ itself, or from the perspective of another interval $[q_-, q_+]$? There is no standard answer to this question. After all, $I([p_-, p_+], w)$ cannot be multiplied by $[p_-, p_+]$, in the way in which $I(p, w)$ can be multipled by $p(w)$. And if the notion of expected inaccuracy is not defined, the question of whether an imprecise inaccuracy score can be proper is ill-defined.  Perhaps the expected inaccuracy of the interval $[p_-, p_+]$ can be evaluated from the perspective of the precise probabilities $p_-$ or $p_+$ at the edges.^[So the expected inaccuracy of $I_w([p_-, p_+])$ would equal $\sum_{w\in W} p_-(w)I([p_-, p_+], w)$ or $\sum_{w\in W} p_+(w)I([p_-, p_+], w)$.] But now the impreciser would face another problem. If the expected inaccuracy of the interval $[p_-, p_+]$ is evaluated from the perspective of the precise probabilities at the edges, finding a proper inaccuracy score that is also continuous turns out to be impossible  [@seidenfeld2012forecasting].  
-
-
-Despite the difficulties that plague imprecise probabilism in defining scoring rules that are proper, here we put forward an intuitively plausible scoring rule for higher-order probabilities that is both proper and continuous. Building on existing work on this topic (@HersbachDecomp2000, @Pettigrew2012Epistemic-Utili, @GneitRafter2007), the higher-order scoring rule we propose is based on a well-known measure of divergence between probability distributions, the Kullback-Leibler (KL) divergence, which is defined as follows: <!--A key modification to this framework involves abandoning the assumption that only two possible outcomes (truth and false) exist. Once we present the positive proposal, we will illustrate how such an assumption is problematic.--> 
-$$ D_{\text{KL}}(p || q) = \sum_{x} p(x) \log\left(\frac{p(x)}{q(x)}\right) $$
-
-\noindent where $x$ ranges over all hypotheses under consideration (i.e. the elements of the sample space). This is a standard information-theoretic measure of divergence of $p$ from $q$ from the perspective of $p$.\footnote{In the continuous case, we would need to use the so-called differential KL divergence.}  In our particular case, we will be dealing with a finite array of evenly spaced hypotheses $\theta_1, \dots, \theta_n$ about what the true chance is (this is our discretization). Each particular hypothesis $\theta_k \in [0, 1]$ is associated with an omniscient distribution tracking the true state of the world (i.e. the true chance being $\theta_k$). We denote it by $Ind^k(\cdot)$ so that $Ind^k(\theta_i)$ is 1 if $i=k$ and $0$ otherwise. We write $Ind^k_i$ instead of $Ind^k(\theta_i)$.
-
-With this notation, we can now formulate our notion of the inaccuracy of a probability distribution $q$ if the true hypothesis is $\theta_k$. It's the KL divergence between $q$ and $Ind^k$.
-\begin{align*}
-I_{\text{DK}}(q, \theta_k)  = D_{KL}(Ind_k\vert \vert q)
-\end{align*}
-\noindent As shown in the appendix, this boils down to $-\log_2 q_k$.  
-
-
-<!--
-
-The goal is to deploy KL divergence as a measure of the inaccuracy of $p$ relative to a true state $w\in W$, denoted by $I_{KL}(p, w)$. To this end, let $t_w(x)$ be the omniscient distribution tracking the true state $w$. For any outcome $x$, the distribution $t_w(x)$ will either assign probability 1 (if the outcome obtains in $w$) or 0 (if the outcome does not obtain in $w$). Since $t_w(x)$ will equal one for the true outcome $x$, call it $x_w$, and zero for the others, KL divergence simplifies to:
-\todo{!please check that notation is correct throughout! Are the x's a partition?}
-
-$$ I_{KL}(p, w) = D_{\text{KL}}(t_w \,||\, p) = \sum_{x} t_w(x) \log\left(\frac{t_w(x)}{p(x)}\right) = \log\left(\frac{1}{p(x_w)}\right)= -\log p(x_w) $$
-
-\noindent That is, $I_{KL}(p, w)$ is the KL divergence of $p$ from the omniscient probability distribution $t_w$.
-
--->
-
-
-
-
-
-<!--- which assigns probability 1 to the outcome $V(w)$ and probability 0 to any other outcome,^[If you prefer to think in continuous terms, you'd need to use Delta-Dirac distributions here.] as seen from the perspective of $w$, the "ground truth" here, conceptually.--->
- 
- <!-- Let the outcome under consideration in $w$  be $V(w)$ (in a very simple case you might take there to be two possible oucomes, 0 and 1; the range of $V$ is simply the vector of possible states). So the  KL-inaccuracy of a distribution $p$ with respect to $w$ is defined, as follows:
--->
-
-<!--
- \begin{align*}
-I_{KL}(p, w) & = D_{\text{KL}}(f(w)||p)
-\end{align*}
-
-\noindent where:
-\begin{align*}
-f(x) & = \begin{cases} 1 & \text{ if } x = V(w)\\
-0 & \text{ o$\,$/w. }
-\end{cases}
-\end{align*}
--->
-
-
-For instance, imagine the possible outcomes being the chance hypotheses $\theta_1, \theta_2, \dots, \theta_n$ about the true bias of a coin.  If, for example, the true bias of the coin is $.6$ and the higher-order distribution $p$ assigns $.8$ to this bias, the higher-order inaccuracy score of $p$ would be $-\log .8$. Notice that, on this approach, two distributions $p$ and $q$ which assign the same probability to the true chance hypothesis will have the same inaccuracy score even though they might differ in the probabilities they assign to other chance hypotheses. So the shape of the distribution does not matter for the inaccuracy score, but it does matter for expected inaccuracy, as we will soon see.
-
-We will now give a higher-level description of the proof of strict propriety of the scoring rule $I_{DK}$. The first step is to define the expected inaccuracy of probability distribution $q$ from the perspective of probability distribution $p$: 
-\begin{align*}
-\mathit{EI}_{\text{DK}}(p,q) & = \sum_{k =1}^n p_k  I_{\text{DK}}(q, \theta_k)\\
-\end{align*}
-As shown in the appendix, this is identical to the cross-entropy $H(p,q)$. In particular, if we measure $\mathit{EI}_{\text{DK}}$ of $p$ from the perspective of $p$ this further boils down to $H(p)$, so the entropy of $p$.
-
-<!--
-\begin{align*} &  =  - \sum_{k =1}^n p_k   \log_2 q_k   =  H(p,q)\\
-\end{align*}
--->
-
-
-
-<!--
-\begin{align*} &  =  - \sum_{k =1}^n p_k   \log_2 p_k   = H(p)\\
-\end{align*}
--->
-
-The only missing part now is Gibb's inequality, according to which $H(p,q) \geq H(p)$ with identity holding only if $p=q$ (we elaborate on why this holds in the appendix as well). Therefore the inaccuracy of a distribution from its perspective will always be the lowest, which goes along the principle of strict propriety. \footnote{KL divergence is not the only possible score for higher-order probabilities. Another approach relies on the Cramer-Von-Mises measure (CRPS). In the discretized version, it is defined as follows:
+As a measure of the distance between two distributions $p$ and $q$, 
+the Cramer-Von-Mises (CM) measure is a natural starting point. 
+It is defined as follows:
 \begin{align*}
 D_{\text{CM}}(p,q) & = \sum_{x} \vert P(x) - Q(x)\vert^2, 
 \end{align*}
+\noindent where $x$ ranges over all hypotheses under consideration 
+(i.e. the elements of the sample space), and $P$ and $Q$ are the cumulative distributions corresponding to the probability distribution $p$ and $q$. Looking at cumulative densities 
+is a technical requirement that ensures that all densities are 
+considered on the same scale. As an alternative measure, the Kullback-Leibler (KL) divergence is a common information-theoretic measure of distance between probability distributions. The divergence of $p$ and $q$ from the perspective of $p$ is defined as follows: 
+$$ D_{\text{KL}}(p || q) = \sum_{x} p(x) \log\left(\frac{p(x)}{q(x)}\right) $$
 
-\noindent where $P$ and $Q$ are the cumulative distributions corresponding to the probability distribution $p$ and $q$. Looking at cumulative densities ensures that all densities are considered on the same scale. (In the continuous case, this measure is defined as the area under the squared Euclidean distances between the corresponding cumulative density functions. That is, $D_{CM}(p,q)  = \int_{0}^{1} \vert P(x) - Q(x)\vert^2 \, dx$.) If $q$ plays the role of the true distribution, the CRPS measure can be turned into an inaccuracy measure that closely resembles the Brier score. The inaccuracy of $p$ with respect to the true state $\theta_{k}$ is defined, as follows:
-
-\begin{align*}
-I_{\text{CRPS}}(p, \theta_{k}) &= \sum_{i=1}^n \vert \mathsf{P}(x) - Ind^k_i \vert ^2 
-\end{align*}
-
-\noindent Finally, Cramer-Von-Mises can also be used to define the expected inaccuracy, analogously to the case of KL-divergence.
-However, for reasons that will soon become clear, we believe that KL divergence is a more natural higher-order inaccuracy measure.} 
-
-
-<!--
- where:
-\begin{align*}
-\mathbf{ 1 }(x \geq V(w)) & = \begin{cases} 1 & \text{ if } x \geq V(w)\\
-0 & \text{ o$\,$/w. }
-\end{cases}
-\end{align*}
 \noindent
-In other words, consider several potential true outcomes $x_w$, each associated with a true state $w$ (say, $n$ true chance hypotheses $\theta_w$); then, compute the inaccuracy scores of $p$ with respect to each of the $x_w$'s (omniscient distributions, chance hypotheses), that is, $-\log p(x_w)$; finally, calculate the expected inaccuracy by summing over the entire distribution $q$. 
-Now, to show strict propriety, it is enough to notice two facts. First, the expected inaccurracy of $p$ from the perspective of $p$ itself is the entropy of $p$, 
-namely $H(p)$.^[As usual, the expected inaccuracy of $p$ from the perspective of $p$ itself is obtained by replacing $q(x_w)$ with $p(x_w)$ in the formula above: $\sum_{w\in W} p(x_w)I_{KL}(p, w) = -\sum_{w\in W} p(x_w)\log p(x_w) = H(p).$] Second, the expected inaccuracy of $p$ from the perspective of another distribution $q$ is the cross-entropy between $p$ and $q$, namely $H(p, q)$.^[$\sum_{w\in W} q(x_w)I_{KL}(p, w) = H(p, q).$] Since $H(p)$ is always smaller than $H(p, q)$ (see the appendix for details), the inaccuracy score $I_{KL}$ is proper.\todo{Say that CRPS  is used for example by Konek}
+Note that KL divergence measure contains a weighing by the
+distributions $p$, while the CM measure does not. For ease of computation, both 
+these measures are discretized.^[In the continuous case, KL divergence is defined as the differential KL divergence and the CM measure as the area under the squared Euclidean distances between the corresponding cumulative density functions. That is, $D_{CM}(p,q)  = \int_{0}^{1} \vert P(x) - Q(x)\vert^2 \, dx$. There are no readily computable solutions to this integral, although it can sometimes be evaluated in closed form [@GneitRafter2007, p. 366].]
 
--->
-
-
-
+Both KL divergence and the CM measure can be turned into inaccuracy scoring rules provided one of the two distributions plays the role of the higher-order distribution whose accuracy is to be measured and the other plays the role of the true, omniscient distribution that tracks the true state of the world. But first we need some notation. Since our running example is about coin biases, let $\theta_1, \dots, \theta_n$ be a finite set of hypothesis about the bias of a coin (this is our discretization of the sample space). Depending on what the true state turns out to be, one of these hypotheses will correspond to the true coin bias, call it $\theta_k$. Each $\theta_k$ is associated with an omniscient distribution $Ind^k(\cdot)$, where $Ind^k(\theta_i)$ is 1 if $i=k$ and $0$ otherwise. In other words, since the omniscient distribution tracks the true state of the world (i.e. the true bias being $\theta_k$), it will assign
+1 to the true chance hypothesis $\theta_k$ and 0 to all the others. For simplicity of notation, we will write $Ind^k_i$ instead of $Ind^k(\theta_i)$.
 
 
-<!--
-^[Note that there are no readily computable solutions to the integral used in the definition of CRPS, although it can sometimes be evaluated in closed form [ @GneitRafter2007, p. 366].]}
--->
+With this notation, the inaccuracy of a higher-order probability distribution $p$ 
+if the true state is $\theta_k$ can be defined using the CM measure, as follows:
+\begin{align*}
+I_{\text{CM}}(p, \theta_{k}) &= \sum_{i=1}^n \vert \mathsf{P}(x) - Ind^k_i \vert ^2 
+\end{align*}
 
-<!---
-The crucial characteristic of a scoring rule that we go after is strict-propriety. Our  discussion in this section will be based on an example for the sake of accessibility. We do, however, include the proof of strict propriety of the as an KLD-based inaccuracy measure in the appendix. In a nutshell, the argument demonstrates that for a second-order discretized probability mass $p$ over a parameter space $[0,1]$, with the actual probability denoted as $\theta$,  the Kullback-Leibler divergence of $p$ from the indicator distribution  of $\theta$  (which assigns 1 to $\theta$ and 0 to all other parameter values in the parameter space) is expressed as $\mathcal{I}_{\dkl}^2$.
--->
+\noindent Using instead KL divergence 
+between $p$ and $Ind^k$, the inaccuracy of a higher-order probability distribution $p$ 
+if the true state is $\theta_k$ can be defined, as follows:
+\begin{align*}
+I_{\text{KL}}(p, \theta_k)  = \sum_{i=1}^n Ind^k_i \log\left(\frac{Ind^k_i}{p(x)}\right)
+\end{align*}
 
-<!--
-^[The argument generalizes 
-to parameter spaces that correspond to probabilities of multiple propositions which are Cartesian products of parameter spaces explicitly used in the argument in this section.] This serves as a demonstration of the strict propriety of the inaccuracy measure: each $p$ anticipates itself to be the least inaccurate distribution.\footnote{ The argument has four key moves. Consider a given "point probability", i.e. the unique $x$ such that $V(w)=x$. Call this parameter $\theta$.
--->
-
-<!--   
-\begin{enumerate}
-\item we show that the inaccuracy of $p$ w.r.t.  $\theta$ can be reduced to $- \log_2 p(\theta)$,
-\item  then we show that the expected inaccuracy of $p$ from the perspective of $p$ is the entropy of $p$, $H(p)$,
-\item  next we show that the inaccuracy of $q$ from the perspective of $p$ is the cross-entropy $H(p,q)$,
-\item we then plug in  the well-established result that cross-entropy is strictly larger than entropy as soon as $p\neq q$.
-  \end{enumerate}
-}
--->
+\noindent As shown in the appendix, $I_{\text{KL}}(p, \theta_k)$ boils down to $-\log_2 q_k$.  If, for example, the true bias of the coin is $.6$ and the higher-order distribution $p$ assigns $.8$ to this bias, the higher-order inaccuracy score of $p$ would be $-\log .8$.^[On this approach, two distributions $p$ and $p'$ which assign the same probability to the true coin bias will have the same inaccuracy score even though they might differ in the probabilities they assign to other possible coin biases. So the shape of the distribution does not matter for the inaccuracy score, but it does matter for expected inaccuracy (more on this soon).]
 
 
-<!--- While imprecisers face challenges in formulating appropriate scoring rules, the second-order approach, which incorporates KLD and centers its focus on the distribution of all conceivable hypotheses, emerges as a more coherent framework. 
---->
-
-To see that the proposed account of expected inaccuracy works as intended, consider a variation of a scenario by @Schoenfield2017accuracy. A rational agent is invited to engage in a bet by an opponent who has a representative bag of coins coming from a factory where the distribution of bias among the coins produced, the true generative process, is known. It is a mixture of two normal distributions centered at $.3$ and at $.5$, both with a standard deviation of $.05$. The opponent randomly selects one of the coins in the bag and flips it. The rational agent who knows this set-up may form a number of higher-order credal states in response to this information. Consider three such credal states, out of many options: first, a faithful bimodal distribution centered at $.3$ and $.5$; second, a unimodal distribution centered at $.4$; third, a wide bimodal distribution centered at $.2$ and $.6$. The three options are depicted in @fig-emc. <!--All of them have expected values at about $.4$. So, if precise probabilities were the only measure of uncertainty, $.4$ would be the most natural value to assign to the probability that coin came up, say, heads. The three distributions, however, differ in how they represent higher-order uncertainty, and it seems that the faithful bimodal distribution gives the best representation, a point to which we will return. -->
+To check the inaccuracy scores just defined work as intended, consider a variation of a scenario by @Schoenfield2017accuracy. A rational agent is invited to engage in a bet by an opponent who has a representative bag of coins coming from a factory where the distribution of bias among the coins produced, the true generative process, is known. It is a mixture of two normal distributions centered at $.3$ and at $.5$, both with a standard deviation of $.05$. The opponent randomly selects one of the coins in the bag and flips it. The rational agent who knows this set-up may form a number of higher-order credal states in response to this information. Consider three such credal states, out of many options: first, a faithful bimodal distribution centered at $.3$ and $.5$; second, a unimodal distribution centered at $.4$; third, a wide bimodal distribution centered at $.2$ and $.6$. The three options are depicted in @fig-emc. All of them have expected values at about $.4$. So, if precise probabilities were the only measure of uncertainty, $.4$ would be the most natural value to assign to the probability that coin came up, say, heads. The three distributions, however, differ in how they represent higher-order uncertainty, and it seems that the faithful bimodal distribution gives the best representation, a point to which we will return.
 
 
 ```{r calculationsEMC,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
@@ -670,7 +557,7 @@ plotDistroPlain(bimodalWide, "Wide bimodal, with modes at .2 and .6"), ncol = 1)
 
 ```{r figinaccuracies2,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%", message = FALSE, warning = FALSE, results = FALSE}
 #| label: fig-inaccuracies2
-#| fig-cap: 'CRPS and KL divergence based inaccuracies relative to $n$ true chance hypotheses for the three distributions, faithful bimodal, centered unimodal and wide bimodal.'
+#| fig-cap: 'CM and KL divergence based inaccuracies relative to $n$ true chance hypotheses for the three distributions, faithful bimodal, centered unimodal and wide bimodal.'
 #| fig-pos: H
 
 
@@ -783,23 +670,23 @@ for (i in 1:nrow(combinations)) {
 expPersDF$Score <- round(expPersDF$Score, 3) 
 
 
-bcplot <- plotDistroPlain(InaBi$crpss, "Bimodal: CRPS")+ylab("inaccuracy")+
+bcplot <- plotDistroPlain(InaBi$crpss, "Bimodal: CM")+ylab("inaccuracy")+
             xlab("true probability")
 
-bkplot <- plotDistroPlain(InaBi$klds, "Bimodal: KLD")+
+bkplot <- plotDistroPlain(InaBi$klds, "Bimodal: KL")+
   ylab("inaccuracy")+xlab("true probability")
 
 
-ccplot <- plotDistroPlain(InaCe$crpss, "Centered: CRPS")+ylab("inaccuracy")+
+ccplot <- plotDistroPlain(InaCe$crpss, "Centered: CM")+ylab("inaccuracy")+
   xlab("true probability")
 
-ckplot <- plotDistroPlain(InaCe$klds, "Centered: KLD")+ylab("inaccuracy")+
+ckplot <- plotDistroPlain(InaCe$klds, "Centered: KL")+ylab("inaccuracy")+
   xlab("true probability")
 
-bwcplot <- plotDistroPlain(InaBiW$crpss, "Bimodal wide: CRPS")+ylab("inaccuracy")+
+bwcplot <- plotDistroPlain(InaBiW$crpss, "Bimodal wide: CM")+ylab("inaccuracy")+
   xlab("true probability")
 
-bwkplot <- plotDistroPlain(InaBiW$klds, "Bimodal wide: KLD")+ylab("inaccuracy")+
+bwkplot <- plotDistroPlain(InaBiW$klds, "Bimodal wide: KL")+ylab("inaccuracy")+
   xlab("true probability")
 
 library(gridExtra)
@@ -808,12 +695,21 @@ grid.arrange(bcplot, bkplot, ccplot, ckplot, bwcplot, bwkplot)
 
 
 
+The accuracy scores of these higher-order distributions are in @fig-inaccuracies2.  Each point in the graph reflects the accuracy score calculated relative to a possible omniscient distribution corresponding to the values of $\theta$, the true bias of the coin. \todo{NL: Distribution, not a value representing a coin's bias?} Both inaccuarcy scores behave as intended. The inaccurcy scores are higher at the extremes: if the true coin bias is indeed close to 1 (the coin is fully weighted to heads) or 0 (the coinc is fully weighted to tails), the three distributions consider these biases extremely unlikely. An important difference transpires between the CR measure and KL divergence. For chance hypotheses between the peaks of the two bimodal distrtibutions, the CR measure remains flat. This is  result of using a squared distance metric. By contrast, the KL-based inaccuracy score jumps slightly for values in between the peaks. This is intuitive, and a reason to prefer KL-based inaccuracy scores.
 
 
+To complete our discusison, the final step is 
+argue for the propriety of the scoring rules 
+$I_{KL}$ and $I_{CM}$. The higher-order score $I(p, \theta_k)$, whether in the KL or CM version, is strictly proper if, for any other probability distribution 
+$q$ different from $p$, the following holds: 
+
+$$ \sum_{k=1}^n  p(\theta_k) I(p, \theta_k) < \sum_{k=1}^n  q(\theta_k)I(p, \theta_k).$$
+
+\noindent That is, the expected inaccuracy of $p$ must be lower when evaluated from the perspective of itself compared to any other distribution $q$. That the inequality holds is confirmed by simulations in our running example. The expected inaccuracies, in the KL and CM version, of the three distributions---faithful bimodal, wide bimodal and unimodal---from their own perspective, as well as from the perspective of the other distributions, are in \mbox{Table \ref{tbl:expected2}.} The results show that from their own perspective, the distributions see themselves as the least inaccurate. The strict propriety of the scoring rules is verified. 
 
 \begin{table}[H]
 \begin{tabular}{lrrrrrr}
-& \multicolumn{3}{c}{CRPS} & \multicolumn{3}{c}{KLD} \\
+& \multicolumn{3}{c}{CM} & \multicolumn{3}{c}{KL} \\
 \toprule
   & bimodal & centered & wide bimodal & bimodal & centered & wide bimodal\\
 \midrule
@@ -826,12 +722,28 @@ wide bimodal & 137.699 & 171.719 & 113.989 & 11.541 & 19.231 & 8.689\\
 \label{tbl:expected2}
 \end{table}
 
- 
-The accuracy scores of these higher-order distributions are in @fig-inaccuracies2.  Each point in the graph reflects the accuracy score calculated relative to a possible omniscient distribution corresponding to the values of $\theta$, the true bias of the coin. \todo{NL: Distribution, not a value representing a coin's bias?}The expected inaccuracies of the three distributions from their own perspective, as well as from the perspective of the other distributions, are in \mbox{Table \ref{tbl:expected2}.} The results are as intended: from their own perspective, the distributions see themselves as the least inaccurate. The strict propriety of the scoring rule is verified.^[One important difference transpires between using CRPS and KLD. Notice how for chance hypotheses between the actual peaks the inaccuracy remains flat. This seems to be an artifice of choosing a squared distance metric. If instead we go with a more principled, information-theory-inspired KL divergence, inaccuracy in fact jumps a bit for values in between the peaks for the bimodal distributions, which seems intuitive and desirable. This seems to be a reason to prefer KL-based inaccuracy scores.] 
+\noindent To generalize this argument, we prove the strict propriety of the KL-based inaccuracy measure in the appendix. 
+<!--The first step is to define the expected inaccuracy of probability distribution $q$ from the perspective of probability distribution $p$: 
+\begin{align*}
+\mathit{EI}_{\text{DK}}(p,q) & = \sum_{k =1}^n p_k  I_{\text{DK}}(q, \theta_k)\\
+\end{align*}
+--> 
+The gitst of the proof is this: $p$'s expected KL-based inaccuracy from the perspective of $p$ itself equals $p$'s entropy $H(p)$, while $p$'s expected inaccuracy from the perspective of a different $q$ equals the cross-entropy $H(p, q)$. Since the inequality $H(p) < H(p, q)$ holds by Gibb's inequality (assuming $p\neq q$), the KL-based inaccuracy of a distribution from its own perspective will always be the lowest.
 
 
-Even though they all recommend themselves, the three distributions are by no means equivalent. The faithful bimodal is the one that best reflects the true generative process, while the others less so. How does the KL-based inaccuracy score capture the fact that the wide bimodal seems more adequate than the others? This is apparent by looking at the inaccuracy score relative to two chance hypotheses $H_3$, where the true chance is $0.3$, and $H_5$, where the true chance is $0.5$. \todo{Why just those two, and not also .4, another possible true chance hypothesis? The unimodal has a better score of .4. This seems ad hoc. }You can find the inaccuracies for them in Table \ref{tbl:schoen}. To make sure that this favorable outcome isn't due to not using pointed credences, we can redo the calculations using the pointed version. In the pointed version, all the focus is on 0.4, or the weight is evenly divided between 0.3 and 0.5, or between 0.2 and 0.6. As anticipated, when we consider inaccuracy, both of these setups recommend the faithful bimodal distribution (Table \ref{tbl:schoen2}).
 
+
+
+Even though they all recommend themselves, the three distributions are by no means equivalent. The faithful bimodal is the one that best reflects the true generative process, while the others less so. How does the KL-based inaccuracy score capture the fact that the wide bimodal seems more adequate than the others? 
+
+
+
+
+
+
+<!--
+This is apparent by looking at the inaccuracy score relative to two chance hypotheses $H_3$, where the true chance is $0.3$, and $H_5$, where the true chance is $0.5$. \todo{Why just those two, and not also .4, another possible true chance hypothesis? The unimodal has a better score of .4. This seems ad hoc. }You can find the inaccuracies for them in Table \ref{tbl:schoen}. To make sure that this favorable outcome isn't due to not using pointed credences, we can redo the calculations using the pointed version. In the pointed version, all the focus is on 0.4, or the weight is evenly divided between 0.3 and 0.5, or between 0.2 and 0.6. As anticipated, when we consider inaccuracy, both of these setups recommend the faithful bimodal distribution (Table \ref{tbl:schoen2}).
+-->
 
 ```{r tableh3h5,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%", message = FALSE, warning = FALSE, results = FALSE}
 h3 <- rep(0, n)
@@ -860,6 +772,7 @@ BWCVMH5 <-cvm(bimodalWide, h5)
 
 ```
 
+<!--
 \begin{table}[H]
 \centering
 \begin{tabular}{lrrrr}
@@ -875,6 +788,7 @@ wide bimodal & 86.230 & 86.223 & 10.871 & 10.882\\
 \caption{CRPS and KLD inaccuracies of the three distributions with respect to the two hypotheses. On both inaccuracy measures the bimodal distribution dominates the other two.}
 \label{tbl:schoen}
 \end{table}
+-->
 
 ```{r tableh3h52,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%", message = FALSE, warning = FALSE, results = FALSE}
 
@@ -889,6 +803,7 @@ pointCVMBH3 <- cvm(point_bimodal, h3)
 ```
 
 
+<!--
 \begin{table}[H]
 \centering
 \begin{tabular}{lrrrr}
@@ -904,7 +819,13 @@ pointed wide bimodal & 99.75 & 99.75 & 16.61 & 16.61\\
 \label{tbl:schoen2}
 \end{table}
 
- \todo{Not sure this last part is needed.}
+-->
+
+
+
+
+
+
 Key to the result of strict propriety is summing over all possible chance hypotheses. But the precise probabilist might insist that this is unnecessary. There are ultimately only two possible first-order level outcomes, heads and tails, and thus also only two possible chance hypotheses (or omniscient distributions), one that places all weight on heads and the other that places all weight on tails.  On this view, the accuracy score $I_{KL}$ of a distribution $p$, should only take two possible values, $I(p,\mathsf{heads})$ and $I(p,\mathsf{tails})$, where  '$\mathsf{tails}$' or '$\mathsf{heads}$' is one of the two onmiscient distributions. Thus, expected inaccuracy would be calculated as follows:
 
 $$\mathsf{EI_{binary}}(p,q) = I(p,\mathsf{heads}) \times q(\mathsf{heads}) + I(p,\mathsf{tails}) \times q(\mathsf{tails}).$$
