@@ -450,12 +450,11 @@ $$ D_{\text{KL}}(p || q) = \sum_{x} p(x) \log\left(\frac{p(x)}{q(x)}\right) $$
 
 \noindent where $x$ ranges over all hypotheses under consideration (i.e. the elements of the sample space). This is a standard information-theoretic measure of divergence of $p$ from $q$ from the perspective of $p$.\footnote{In the continuous case, we would need to use the so-called differential KL divergence.}  In our particular case, we will be dealing with a finite array of evenly spaced hypotheses $\theta_1, \dots, \theta_n$ about what the true chance is (this is our discretization). Each particular hypothesis $\theta_k \in [0, 1]$ is associated with an omniscient distribution tracking the true state of the world (i.e. the true chance being $\theta_k$). We denote it by $Ind^k(\cdot)$ so that $Ind^k(\theta_i)$ is 1 if $i=k$ and $0$ otherwise. We write $Ind^k_i$ instead of $Ind^k(\theta_i)$.
 
-With this notation, we can now formulate our notion of the inaccuracy of a probability distribution $p$ if the true hypothesis is $\theta_k$. It's the KL divergence between $p$ and $Ind^k$.
-
+With this notation, we can now formulate our notion of the inaccuracy of a probability distribution $q$ if the true hypothesis is $\theta_k$. It's the KL divergence between $q$ and $Ind^k$.
 \begin{align*}
-I_{\text{DK}}(p, \theta_k)  = D_{KL}(Ind_k\vert \vert p)
+I_{\text{DK}}(q, \theta_k)  = D_{KL}(Ind_k\vert \vert q)
 \end{align*}
-\noindent As shown in the appendix, this boils down to $-\log_2 p_k$.  
+\noindent As shown in the appendix, this boils down to $-\log_2 q_k$.  
 
 
 <!--
@@ -492,14 +491,12 @@ f(x) & = \begin{cases} 1 & \text{ if } x = V(w)\\
 -->
 
 
-For instance, imagine the possible outcomes being the chance hypotheses $\theta_1, \theta_2, \dots, \theta_n$ about the true bias of a coin.  If, for example, the true bias of the coin is $.6$ and the higher-order distribution $p$ assigns $.8$ to this bias, the higher-order inaccuracy score of $p$ would be $-\log .8$. Notice that, on this approach, two distributions $p$ and $q$ which assign the same probability to the true chance hypothesis will have the same inaccuracy score even though they might differ in the probabilities they assign to other chance hypotheses. So the shape of the distribution does not matter for the inaccuracy score; it does matter for expected inaccuracy, as we will soon see.
+For instance, imagine the possible outcomes being the chance hypotheses $\theta_1, \theta_2, \dots, \theta_n$ about the true bias of a coin.  If, for example, the true bias of the coin is $.6$ and the higher-order distribution $p$ assigns $.8$ to this bias, the higher-order inaccuracy score of $p$ would be $-\log .8$. Notice that, on this approach, two distributions $p$ and $q$ which assign the same probability to the true chance hypothesis will have the same inaccuracy score even though they might differ in the probabilities they assign to other chance hypotheses. So the shape of the distribution does not matter for the inaccuracy score, but it does matter for expected inaccuracy, as we will soon see.
 
-We will now give a higher-level description of the proof of strict propriety of the scoring rule $I_{DK}$. The first step is to define the score's expected inaccuracy \todo{Score's EI or EI of p from the persp. of q?}, as follows: 
-
+We will now give a higher-level description of the proof of strict propriety of the scoring rule $I_{DK}$. The first step is to define the expected inaccuracy of probability distribution $q$ from the perspective of probability distribution $p$: 
 \begin{align*}
 \mathit{EI}_{\text{DK}}(p,q) & = \sum_{k =1}^n p_k  I_{\text{DK}}(q, \theta_k)\\
 \end{align*}
-
 As shown in the appendix, this is identical to the cross-entropy $H(p,q)$. In particular, if we measure $\mathit{EI}_{\text{DK}}$ of $p$ from the perspective of $p$ this further boils down to $H(p)$, so the entropy of $p$.
 
 <!--
