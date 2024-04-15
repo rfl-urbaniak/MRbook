@@ -16,8 +16,8 @@ classoption: dvipsnames,enabledeprecatedfontcommands
 fontsize: 10pt
 documentclass: scrartcl
 urlcolor: blue
-bibliography: ../../references/referencesMRbook.bib
-csl: [../../references/apa-6th-edition.csl]
+bibliography: ../references/referencesMRbook.bib
+csl: [../references/apa-6th-edition.csl]
 indent: yes
 ---
 
@@ -43,7 +43,7 @@ getwd()
 source("../scripts/CptCreate.R")
 source("../scripts/SCfunctions.R")
 
-SCprobsFinal <- readRDS("../datasets/SCprobsFinal.rds")
+SCprobsFinal <- readRDS("datasets/SCprobsFinal.rds")
 attach(SCprobsFinal)      
 source("../scripts/imprecision_weight/SCplotCPTs.R")
 source("../scripts/imprecision_weight/SCplotDistros.R")
@@ -832,7 +832,7 @@ TwoUnbalancedPlot <- ggplot(TwoUnbalancedDF, aes(x = p, y = TwoUnbalancedDensity
 
 \begin{figure}
 
-```{r fig:evidenceResponse,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%"}
+```{r fevidenceResponseArr,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%"}
 grid.arrange(FairPlot,UniformPlot, TwoPlot, TwoUnbalancedPlot)
 ```
 \caption{Examples of RA's distributions responding to various types of evidence for typical cases brought up in the literature.}
@@ -886,7 +886,7 @@ Another difficulty for \textsf{IP} is belief inertia. In this framework, the pro
 
 If you just start with a uniform density over $[0,1]$ as your prior, use binomial probability as likelihood, observing  any non-zero number of heads will exclude 0 and observing any non-zero number of  tails will exclude 1 from the basis of the posterior. Let's see an example with a grid approximation ($n=1k$). For simplicity assume there are only green and black balls. Our prior is uniform, and then, in subsequent steps, we observe one green ball, another green ball, and then a black ball. This is what  happens with the posterior as we go (Figure \ref{fig:intertia2}).
 
-```{r fig:inertia, eval = TRUE, echo=FALSE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%", message= FALSE, warning=FALSE}
+```{r inertia, eval = TRUE, echo=FALSE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%", message= FALSE, warning=FALSE}
 
 n <- 1000 #parameters 
 s <- 1e5  #sample size
@@ -944,7 +944,7 @@ InertiaTwoGoneBluePlot <- ggplot()+geom_line(aes(x = ps, y = posterior2g1b))+the
 
 
 \begin{figure}[H]
-```{r fig:inertia2, echo=FALSE, eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
+```{r inertia2, echo=FALSE, eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
 grid.arrange(InertiaPriorPlot, InertiaOneGPlot,  InertiaTwoGPlot, InertiaTwoGoneBluePlot, ncol = 2, nrow = 2)
 ```
 \caption{As observations of green, green and black come in, extreme parameter values drop out of the picture and the posterior is shaped by the evidence.}
@@ -1007,7 +1007,7 @@ rinard <- grid.arrange(priorPlot, OneGPlot,  TwoGPlot, TwoGoneBluePlot, nrow = 2
 
 
 \begin{figure}[H]
-```{r fig:rinard2,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
+```{r rinard2,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
 rinard
 ```
 \caption{Learning in Rinard's example of belief inertia.}
@@ -1195,7 +1195,7 @@ to 40 heads and 10 tails, and so on. To get a feel for what beta
 distributions look like, inspect Figure \ref{fig:betas}. Remember  we're working with a grid approximation ($n=1k$).
 
 
-```{r fig:betas,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
+```{r betas,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
 n <- 1000 #parameters 
 s <- 1e5  #sample size
 ps <- seq(from=0 , to=1 , length.out=n)
@@ -1245,7 +1245,7 @@ abs$entProps <- entProps
 
 
 
-```{r fig:betas2,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
+```{r betas2,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
 entropiesBetaPlot <- ggplot()+theme_tufte()+xlab("parameter values")+
   ylab("probability")+theme(plot.title.position = "plot")+ylim(0,1)+
   ggtitle("Examples of beta distributions with their entropies and weights")+
@@ -1262,7 +1262,7 @@ entropiesBetaPlot <- ggplot()+theme_tufte()+xlab("parameter values")+
 
 \begin{figure}[H]
 
-```{r fig:betas3,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
+```{r betas3,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
 entropiesBetaPlot
 ```
 \caption{Examples of beta distributions with entropies and their weights with grid approximation ($n=1000$). Note that distribution weight does not strongly depend on its expected value.}
@@ -1533,7 +1533,7 @@ eWBSSplot
 Now, let us generalize and see how the measure behaves with respect to beta distributions. Two phenomena are as expected. First, the entropy decreases with the number of observations, and second, it decreases faster if the proportions are closer to the extremes. This is mirrored by the corresponding weights (Figure \ref{fig:weights}).
 
 \begin{figure}[H]
-```{r fig:weights,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
+```{r weights,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
 weightsNo <-   ggplot(abs, aes(x = a + b, y = entProps, color = abs(a/(a+b)-.5)))+
     geom_point( alpha = .9, size = .3)+theme_tufte(base_size = 7)+
   xlab("a+b")+ylab("Weight")+ggtitle("Weight increases with the number of observations")+
@@ -1562,7 +1562,7 @@ grid.arrange(weightsNo,weightsProp)
 Moreover, the framework is capable of sensible comparison of weights for distributions of various shapes, including those involving all weights focused on a particular point (strictly speaking, a single bin in the grid approximation). Here are some  examples of shapes  worth looking at (Figure \ref{fig:weightsWeird}).
 
 
-```{r weightsWeird,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
+```{r weightsWeird2,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
 beta44 <-  densitiesBeta[[304]]
 unif5 <- c(rep(0, n/2),rep(1 , n/2)) #uniform from .5 
 unif5 <- unif5/sum(unif5)
@@ -1618,7 +1618,7 @@ return(plot)
 
 
 \begin{figure}[H]
-```{r fig:weightsWeird,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
+```{r weightsWeird,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
 grid.arrange(plotDistro(beta44,1),plotDistro(unif5,2), plotDistro(unif6,3),plotDistro(bimodal,4),plotDistro(centered,5),
 plotDistro(twoEven,6),plotDistro(twoUneven,7),
 plotDistro(single5,8),plotDistro(single7,9), ncol = 3, nrow = 3)
@@ -1757,7 +1757,7 @@ One reason the reader might worry is that the choice of the probabilities is fai
 Some of these concerns are at least dampened when we deploy the higher order probabilities in the BN. For instance, your conditional probabilities might look as illustrated in Figure  \ref{fig:SCwithHOPa}. \todo{describe the sampling approach}
 
 \begin{figure}
-```{r fig:SCwithHOPa, echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "90%", warning=FALSE, message = FALSE, dpi = 800}
+```{r SCwithHOPa, echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "90%", warning=FALSE, message = FALSE, dpi = 800}
 
 grid.arrange(AbruisingIfSidsPlot+xlim(0,.4),AbruisingIfMurderPlot+xlim(0,.4))
 ```
@@ -1779,9 +1779,9 @@ grid.arrange(AbruisingIfSidsPlot+xlim(0,.4),AbruisingIfMurderPlot+xlim(0,.4))
 ```{r SCwithHOP, out.extra='angle=90', echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "160%", out.height= "200%", warning=FALSE, message = FALSE, dpi = 800}
 #SCprobsFinal <- readRDS("../datasets/SCprobsFinal.rds")
 #attach(SCprobsFinal)
-#source("../scripts/SCfunctions.R")
-#source("../scripts/SCplotCPTs.R")
-#source("../scripts/SCplotDistros.R")
+source("../scripts/SCfunctions.R")
+source("../scripts/imprecision_weight/SCplotCPTs.R")
+source("../scripts/imprecision_weight/SCplotDistros.R")
 
 
 AsidsPriorPlotGrob <- ggplotGrob(AsidsPriorPlot+theme_tufte(base_size = 5))
@@ -2053,7 +2053,7 @@ abuseExamplePlot <- plotDistroPlain(paeDistro, multiplier = 4.5)+
 
 
 \begin{figure}[H]
-```{r fig:abuse4d,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
+```{r abuse4d,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
 abuseExamplePlot
 ```
 \caption{Shifts from prior $\mathsf{beta}(2,4)$ to the posteriors, given various conditional probabilities.}
@@ -2091,8 +2091,8 @@ abuseExamplePlot
 What results do we get when we apply the weight calculations to the guilt node in  the Sally Clark BNs?
 
 
-```{r fig:entropies19,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
-source("../scripts/SCplotDistros.R")
+```{r entropies19,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
+source("../scripts/imprecision_weight/SCplotDistros.R")
 source("../scripts/SCfunctions.R")
 
 
@@ -2132,7 +2132,7 @@ SCguiltPlotP <- grid.arrange(priorPlotP+theme_tufte(base_size = 9),
 
 
 \begin{figure}
-```{r fig:entropies2_19,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
+```{r entropies2_19,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
 SCguiltPlotP
 ```
 
@@ -2150,8 +2150,9 @@ One use of weight is to use expected weight of still missing pieces of evidence 
 
 
 
-
 ## Expected weight 
+
+\todo{missing part here because of wdelta problem}
 
 
 ```{r SCexpectedWeightsb, echo=FALSE,eval=TRUE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "100%", warning=FALSE, message = FALSE, dpi = 800, warning = FALSE, message = FALSE, output = FALSE}
@@ -2170,7 +2171,6 @@ SCweightsPlot
 
 \ref{fig:SCexpectedWeights2}
 \end{figure}
-
 
 
 \todo{some loose ends, not sure if all of them deserve to be included}
@@ -2317,7 +2317,7 @@ plotDistroPlain(bimodalWide, "Wide bimodal, with modes at .2 and .6"), ncol = 1)
 For the three distributions we're discussing in this chapter, the inaccuracies calculated using CRPS  and KL divergence with respect to various potential true probability distributions look as in Figure \ref{fig:inaccuracies2}.
 
 \begin{figure}[H]
-```{r fig:inaccuracies2,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
+```{r inaccuracies2,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "100%",   message = FALSE, warning = FALSE, results = FALSE}
 point <- function (value) ifelse(abs(ps - value) == min(abs(ps - value)), 1, 0)
 indicator <- function(pointf) ifelse( ps >= ps[min(which(pointf != 0))], 1,0  )
 
