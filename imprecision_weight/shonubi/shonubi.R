@@ -101,6 +101,8 @@ netModel <- quap(
 
 precis(netModel)
 
+
+
 #note how the model is pretty certain about where the mean is, but has a
 #rather huge sd. If we focus on mean values, we ignore this uncertainty
 
