@@ -90,7 +90,7 @@ sum(is.na(sh$net_wt))
 netData <- sh %>% select(gross_wt, net_wt)
 netData <- netData[complete.cases(netData),]
 
-netModel <- quap(
+netModel2 <- quap(
   alist(
     net_wt ~ dnorm( mu , sigma ) ,
     mu <- m * gross_wt,
