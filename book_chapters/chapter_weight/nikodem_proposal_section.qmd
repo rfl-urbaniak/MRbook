@@ -1,0 +1,82 @@
+---
+title: "Nikodem: Proposal Section - weight of evidence chapter"
+execute:
+  enabled: true
+format:
+  pdf:
+    toc: false
+    number-sections: true
+    colorlinks: true
+---
+
+# Our Proposal
+
+
+To model higher-order uncertainty, we propose using a probability density function $f$ on a probability function $p(x)$ that captures the probability of hypotheses. This can be mathematically represented as $f(p(x))$. This construct effectively maps weights to their respective hypotheses by adding another layer of probabilities in the form of a probability density function, rather than using less modest approaches like extending the set of hypotheses with a variable representing the weight of the hypotheses.
+
+A higher-order model for obtaining new evidence, which represents the weight of that evidence, can be described as follows:
+
+- The set of possible hypotheses $\theta_{n}$
+- Prior probability distribution over the hypotheses $p(\theta_{n})$
+- A piece of evidence $E$
+- Posterior probability distribution over the hypotheses $q(\theta_{n})$
+
+The update process follows Bayes' theorem:
+
+$$
+q(\theta_{n}) = \frac{p(E \mid \theta_{n}) \times p(\theta_{n})}{p(E)}
+$$
+
+
+```{python}
+#| echo: false
+
+import numpy as np
+from scipy.stats import beta
+from scipy.stats import entropy
+from typing import List
+
+x = np.linspace(0, 1, 1000)
+prior = beta.pdf(x, 1, 1)
+posterior_1 = beta.pdf(x, 2, 201)
+posterior_2 = beta.pdf(x, 2, 2001)
+posterior_3 = beta.pdf(x, 2, 20001)
+
+def weight(posterior: List[float], base=2) -> float:
+
+    grid_length = len(posterior)
+    x = np.linspace(0, 1, grid_length)
+    uniform = beta.pdf(x, 1, 1)
+    entropy_uniform = entropy(uniform, base=base)
+    entropy_posterior = entropy(posterior, base=base)
+    return 1 - entropy_posterior / entropy_uniform
+
+
+# print(round(weight(posterior_1), 4), round(weight(posterior_2), 4), round(weight(posterior_3), 4))
+
+```
+Consider a case where a DNA test plays a crucial role, and we are assessing the strength of the evidence given the random match probability (RMP). The RMP was calculated three times, as there were some doubts about the first test on a random sample. These pieces of evidence are represented as follows:
+
+- 1 match in 200: $E_{1} = \text{Beta}(201, 2)$
+- 1 match in 2000: $E_{2} = \text{Beta}(2001, 2)$
+- 1 match in 20000: $E_{3} = \text{Beta}(20001, 2)$
+
+The sample sizes differ significantly, and intuitively, the weight of the evidence for $E_{3}$ is the highest.
+
+Assuming a grid approximation and defining our set of hypotheses as $\theta_{1}, \dots, \theta_{1000}$, we use a uniform prior defined with a beta distribution $p(\theta_{n}) = \text{Beta}(1, 1)$.
+
+To compare the weights of these pieces of evidence, we can use information entropy $H = - \sum(p \log(p))$:
+
+$$
+\text{Weight}(q) = 1 - \frac{H(q)}{H(p)}
+$$
+
+The weights of the three posteriors achieved from learning from these three pieces of evidence are as follows:
+
+- Weight($q_{1}$) ~ 0.5428
+- Weight($q_{2}$) ~ 0.8964
+- Weight($q_{3}$) ~ 1.0
+
+This clearly demonstrates the significance of the number of observations that the evidence introduces.
+
+
