@@ -1,5 +1,5 @@
 ---
-title: "Higher-order Probabilism" 
+title: "Higher-order (Precise) Probabilism" 
 date: 'May 15, 2024'
 format:
   pdf:
@@ -28,7 +28,30 @@ numbersections: true
     latex_engine: pdflatex  -->
 
 
+```{r setup}
+#| include: false
 
+knitr::opts_chunk$set(echo = TRUE)
+#library(dagitty)
+#library(rethinking)
+library(ggplot2)
+library(ggthemes)
+library(gridExtra)
+library(tidyr)
+#library(philentropy)
+#library(latex2exp)
+#library(gridExtra)
+#library(rethinking)
+#library(bnlearn)
+#library(gRain)
+#library(reshape2)
+#library(truncnorm)
+#library(ggforce)
+library(dplyr)
+# library(magick)
+
+
+```
 
 \begin{quote} \textbf{Abstract.}  Rational agents are often uncertain about the truth of many propositions. To represent this uncertainty, it is natural to rely on probability theory. Two options are typically on the table, precise and imprecise probabilism, but both fall short in some respect. Precise probabilism is not expressive enough, while imprecise probabilism suffers from belief inertia and the impossibility of proper scoring rules. We put forward a novel version of probabilism, higher-order probabilism, and we argue that it outperforms existing alternatives.
 
@@ -46,7 +69,7 @@ Keywords: Probabilism; Imprecise probabilities; Evidence; Probability; Belief in
  As rational agents, we are uncertain about the truth of many propositions since our evidence is often fallible. To represent this uncertainty, it is natural to rely on probabilities. Two options are typically on the table: precise and imprecise probabilism. Precise probabilism models an agent's state of uncertainty (or credal state) with a single probability measure: each proposition in the algebra is assigned a probability value between 0 and 1 (a sharp credence).  The problem is that a single probability measure is not expressive enough to distinguish between intuitively different states of uncertainty (\S \ref{sec:precise-probabilism}).  To avoid this problem, a *set* of probability measures can be used to represent the uncertainty of a rational agent. This approach is known as imprecise probabilism. It outperforms precise probabilism in some respects, but also runs into its own problems, such as belief inertia and the impossibility of defining proper scoring rules (\S \ref{sec:imprecise-probabilism}). 
  
  To make progress, this paper argues that a rational agent's uncertainty should be represented  <!---neither by a single probability measure nor a set of measures, but rather-->
- by a set of precise probability measures defined over an algebra of propositions, and in addition, a probability distribution over parameter values interpreted as probability measures. We call this proposal \emph{high-order probabilism}. <!---The key insight is that a rational agent's uncertainty (or credal state) is not single-dimensional and thus cannot be mapped onto a one-dimensional scale like the real line. Uncertainty is best modeled by the shape of a probability distribution over multiple probability measures. --->  The theory we propose is not mathematically novel, nor are philosophers unfamiliar with higher-order probabilities **CITE SOME: Skyrms, Gaifmann, Domotor, Uchii, Pearl, Peijnenburg and Atkinson**. Here we address specifically how higher-order probabilism can overcome the problems that plague precise and imprecise probabilism (\S \ref{sec:higher-order} and \S \ref{sec:proper-scores}). We also argue that higher-order probabilism fares better than existing versions of probabilism when the probability of multiple propositions, dependent or independent, is to be assessed (\S \ref{sec:higher-order-conjunction} and \ref{sec:higher-order-networks}).  Many of the examples in this paper are about coin tosses, but in the final two sections, we discuss legal examples and illustrate the broader applicability of higher-order probabilism.
+ by a set of precise probability measures defined over an algebra of propositions, and in addition, a probability distribution over parameter values interpreted as probability measures. We call this proposal \emph{high-order (precise) probabilism}. <!---The key insight is that a rational agent's uncertainty (or credal state) is not single-dimensional and thus cannot be mapped onto a one-dimensional scale like the real line. Uncertainty is best modeled by the shape of a probability distribution over multiple probability measures. --->  The theory we propose is not mathematically novel, nor are philosophers unfamiliar with higher-order probabilities **CITE SOME: Skyrms, Gaifmann, Domotor, Uchii, Pearl, Peijnenburg and Atkinson**. Here we address specifically how higher-order probabilism can overcome the problems that plague precise and imprecise probabilism (\S \ref{sec:higher-order} and \S \ref{sec:proper-scores}). We also argue that higher-order probabilism fares better than existing versions of probabilism when the probability of multiple propositions, dependent or independent, is to be assessed (\S \ref{sec:higher-order-conjunction} and \ref{sec:higher-order-networks}).  Many of the examples in this paper are about coin tosses, but in the final two sections, we discuss legal examples and illustrate the broader applicability of higher-order probabilism.
   
 
 # Precise probabilism
@@ -184,3 +207,174 @@ $\sum_{w\in W} p_-(w)I([p_-, p_+], w)$ or  $\sum_{w\in W} p_+(w)I([p_-, p_+], w)
 The problem is that, in this case, finding a proper inaccuracy score that is also continuous is mathematically impossible [@seidenfeld2012forecasting].
 
 Proper scoring rules are often used to formulate accuracy-based arguments for precise probabilism. These arguments show (roughly) that, if your precise measure follows the axioms of probability theory, no other non-probabilistic measure is going to be more accurate than yours whatever the facts are.  So, without proper scoring rules for imprecise probabilities, the prospects for an accuracy-based argument for imprecise probabilism look dim  [@Mayo-Wilson2016scoring; @CampbellMoore2020accuracy].^[Moreover, as shown by  @Schoenfield2017accuracy, if an accuracy measure satisfies certain plausible formal constraints, it will never strictly recommend an imprecise stance, as for any imprecise stance there will be a precise one with at least the same accuracy.]
+
+
+# Higher-order probabilism
+\label{sec:higher-order}
+
+Let us take stock. Imprecise probabilism is expressive enough to model the difference between a state in which there is no evidence about a proposition (or its negation) and a state in which the evidence for and against a proposition is in equipoise. However, imprecise probabilism has its own expressive limitations, for example, it cannot model the case of uneven bias. In addition, imprecise probabilism faces difficulties that do not affect precise probabilism: the notion of compatibility between a probability measure and the evidence is too permissive; belief inertia makes it impossible for a rational agent to learn via Bayesian updating; and no proper scoring rules exist for imprecise probabilism. In this section and the next, we show that higher-order probabilism overcomes the expressive limitations of imprecise probabilism without falling prey to any such difficulties.  
+
+Proponents of imprecise probabilism already hinted at the need to rely on higher-order probabilities. For instance, Bradley compares the measures in a representor to committee members, each voting on a particular issue, say the true chance or bias of a coin. As they acquire more evidence, the committee members will often converge on a chance hypothesis.
+
+> \dots the committee members are "bunching up". Whatever measure you put over the set of probability functions---whatever "second order probability" you use---the "mass" of this measure gets more and more concentrated around the true chance hypothesis. [@bradley2012scientific, p. 157]
+
+
+\noindent
+But such bunching up cannot be modeled by imprecise probabilism alone: a probability distribution over chance hypotheses is needed.^[In a similar vein, @joyce2005probabilities, in a paper defending imprecise probabilism,  explicates the notion of weight of evidence using a probability distribution over chance hypotheses. 
+<!---something that imprecise probabilism was advertised to handle better than precise probabilism: weight of evidence. \todo{briefly add quote from Keynes to clarify weight of evidence} The explication uses a density over chance hypotheses and conceptualizes the  weight of evidence  as an increase of concentration of smaller subsets of chance hypotheses. ---> Oddly, representor sets play no central role in Joyce's account of the weight of evidence.] That one should use higher-order probabilities has also been suggested by critics of imprecise probabilism. @Carr2020impreciseEvidence argues that sometimes evidence requires uncertainty about what credences to have. Carr, however, does not articulate this suggestion more fully; does not develop it formally; and does not explain how her approach would fare against the difficulties affecting precise and imprecise probabilism. We now set out to do precisely that. 
+
+<!--Such bunching up cannot be modeled by imprecise probabilism alone. A probability distribution over chance hypotheses is needed. Bradley seems to be aware of that, which would explain the use of scare quotes: when he talks about the option of using second-order probabilities in decision theory, he  insists that  'there is no justification for saying that there is more of your representor here or there.' ~[p.~195]--> 
+
+<!--
+\todo{Rafal to correct technical mistakes in this paragraph (e.g. concept of distribution over probability measures seems incorrect for our purposes)}
+\todo{Revised this bit, take a look.}
+-->
+
+ The central idea of higher-order probabilism is this:  a rational agent's uncertainty cannot be mapped onto a one-dimensional scale such as the real line. Uncertainty is best modeled by the shape of a probability distribution. In some straightforward cases of narrow and symmetric distributions, we can get away with using point probabilities, but such approximations will fail to be useful in more complex cases. So, special cases aside, a rational agent's state of uncertainty (or credal stance) towards a proposition $x$ is not represented by a single probability value $p(x)$ between 0 and 1, but by a probability density $f(p(x))$, where the first-order probability of $x$ is the parameter in question and is treated as a random variable. Crucially, this representation is general. While the examples used so far may not indicate this, the first-order probability of $x$ is not restricted to chance hypotheses or the bias of a coin. The probability density $f(p(x))$ assigns a second-order probability (density) to all possible first-order probabilities $p(x)$.^[For computational ease, we will use a higher-order density that is discretized and ranges over 1000 first-order probabilities.]
+
+<!---^[Bradley admits this much [@bradley2012scientific, 90], and so does  Konek  [@konek2013foundations, 59]. For instance, Konek disagrees with: (1)  $X$ is more probable than $Y$ just in case $p(X)>p(Y)$, (2)  $D$ positively supports $H$ if $p_D(H)> p(H)$, or (3)  $A$ is preferable to $B$ just in case the expected utility of $A$ w.r.t. $p$ is larger than that of $B$.]
+---> 
+
+<!---
+The reader might be worried. The examples we discussed so far involve estimation of chances or population frequencies; but how are we to conceptualize higher order probabilities in a more general settings when we think of first-order probabilities as RAs degrees of belief?
+--->
+
+How should these second-order probabilities be understood? It is helpful to think of higher-order probabilism as a generalization of imprecise probabilism. Imprecisers already admit that some probability measures are compatible and others incompatible with the agent's evidence at some point. Compatibility is a coarse notion; it is an all-or-nothing affair. <!---For instance, suppose there is no evidence about the bias of a coin. Then, any first-order point probability about *heads* would be compatible with the evidence. If, instead, we know the coin is fair, the evidence clearly selects one preferred value, .5, and all other first-order probabilities would be incompatible with the evidence. But often, evidence is stronger than the former case and weaker than the latter case. --->
+But, as seen earlier, evidence can hardly exclude a probability measure in a definitive manner except in clear-cut cases. Just as it is often a matter of degrees whether the evidence supports a proposition, the compatibility between evidence and a probability measure can itself be a matter of degrees. In this picture, the evidence justifies different values of first-order probability to various degrees. So, second-order probabilities express the extent to which the first-order probabilities are supported by the evidence. 
+
+
+This higher-order approach at the technical level is by no means novel. Bayesian probabilistic programming languages embrace the well-known idea that parameters can be stacked and depend on each other [@Bingham2021PPwithoutTears]. But, while the technical machinery has been around for a while, it has not been deployed by philosophers to model a rational agent's uncertainty or credal state. Because of its greater expressive power, higher-order probabilism can represent uncertainty in a more fine-grained manner, as illustrated in @fig-evidenceResponse. In particular, the uneven coin scenario in which the two biases of the coin are not equally likely---which imprecise probabilism cannot model---can be easily modeled within high-order probabilism by assigning different probabilities to the two biases.
+  
+
+```{r evidenceResponse1,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "60%",   message = FALSE, warning = FALSE, results = FALSE}
+p <- seq(from=0 , to=1 , by = 0.001)
+FairDensity <- ifelse(p == .5, 1, 0)
+FairDF <- data.frame(p,FairDensity)
+FairPlot <- ggplot(FairDF, aes(x = p, y = FairDensity))+geom_line()+theme_tufte()+
+  xlab("parameter value")+ylim(c(0,1))+ylab("probability")+ggtitle("Fair coin")+
+  theme(plot.title.position = "plot")
+
+UniformPlot <- ggplot()+xlim(c(0,1))+stat_function(fun = dunif, args = list(min = 0, max = 1))+
+  ylim(0,1)+
+  theme_tufte()+
+  xlab("parameter value")+
+  ylab("probability")+theme(plot.title.position = "plot")+ggtitle("Unknown bias")
+
+
+p <- seq(from=0 , to=1 , by = 0.001)
+TwoDensity <- ifelse(p == .4 | p == .6, .5, 0)
+TwoDF <- data.frame(p,TwoDensity)
+TwoPlot <- ggplot(TwoDF, aes(x = p, y = TwoDensity))+geom_line()+theme_tufte()+
+  xlab("parameter value")+ylim(c(0,1))+ylab("probability")+ggtitle("Two biases (insufficient reason)")+
+  theme(plot.title.position = "plot")+scale_x_continuous(breaks = c(.4,.6), labels = c(.4, .6))
+
+p <- seq(from=0 , to=1 , by = 0.001)
+TwoUnbalancedDensity <- ifelse(p == .4, .75, ifelse(p ==  .6, .25, 0))
+TwoUnbalancedDF <- data.frame(p,TwoUnbalancedDensity)
+
+TwoUnbalancedPlot <- ggplot(TwoUnbalancedDF, aes(x = p, y = TwoUnbalancedDensity))+geom_line()+theme_tufte()+
+  xlab("parameter value")+ylim(c(0,1))+ylab("probability")+ggtitle("Two unbalanced biases")+
+  theme(plot.title.position = "plot")+scale_x_continuous(breaks = c(.4,.6), labels = c(.4, .6))
+
+```
+
+<!---
+```{r}
+mean(TwoUnbalancedDensity)
+mean(TwoDensity)
+mean(TwoDensity)*mean(TwoDensity)
+mean(TwoDensity*TwoDensity)
+mean(TwoUnbalancedDensity*TwoDensity)
+mean(TwoUnbalancedDensity)*mean(TwoDensity)
+
+```
+--->
+
+```{r FigevidenceResponse2,echo=FALSE,eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "65%"}
+#| label: fig-evidenceResponse
+#| fig-cap: "Examples of higher-order distributions for a few  scenarios problematic for both precise and imprecise probabilism."
+#| fig-pos: t
+
+grid.arrange(FairPlot,UniformPlot, TwoPlot, TwoUnbalancedPlot)
+```
+
+An agent's uncertainty could---perhaps, should---sometimes be represented by a single probability value. Higher-order probabilism does not prohibit that. For example, there may well be cases in which an agent's uncertainty is aptly represented by the expectation.^[The 
+expectation is usually defined as $\int_{0}^{1} x f(x) \, dx$. In the context of our approach here, $x$ is the first-order probability of a given proposition and $f$ is the density representing the agent's uncertainty about $x$.]
+<!---can be used as  the precise, object-level credence in the proposition itself, where $f$ is the probability density over possible object-level probability values.--->  But this need not always be the case. If the probability distribution is not sufficiently concentrated around a single value, a one-point summary will fail to do justice to the nuances of the agent's credal state.^[This approach lines up with common practice in Bayesian statistics, where the primary role of uncertainty representation is assigned to the whole distribution. Summaries such as the mean, mode standard deviation,  mean absolute deviation or highest posterior density intervals are only succinct ways of representing uncertainty.] For example, consider again the scenario in which the agent knows that the bias of the coin is either .4 or .6 but the former is three times more likely. Representing the agent's credal state with the expectation $.75 \times .4 + .25 \times .6 = .45$ would fail to capture the agent's different epistemic attitudes towards the two biases. The agent believes the two biases have different probabilities, and is also certain the bias is *not* .45. 
+
+
+Besides its greater expressive power in modeling uncertainty, higher-order probabilism does not fall prey to belief inertia. Consider a situation in which you have no idea about the bias of a coin.  You start with a uniform distribution over $[0,1]$ as your prior. Observing any non-zero number of heads will exclude 0 and observing any non-zero number of tails will exclude 1 from the basis of the posterior. The posterior distribution will become more centered as the observations come in. This result is a straightforward application of Bayesian updating. Instead of plugging sharp probability values into the formula for Bayes's theorem, the factors to be multiplied in the theorem will be probability densities (or ratios of densities as needed). @fig-intertia2 illustrates---starting with a uniform prior distribution---how the posterior (beta) distribution changes after successive observations.^[Assuming independence and constant probability for all the observations, learning is modeled the Bayesian way. You start with some prior density $p$ over the parameter values. If you start with a complete lack of information, $p$ should be uniform. Then, you observe the data $D$ which is the number of successes $s$ in a certain number of observations $n$. For each particular possible value $\theta$ of the parameter, the probability of $D$ conditional on $\theta$ follows the binomial distribution. The probability of $D$ is obtained by integration. That is:
+\begin{align*}
+p(\theta \vert D) & = \frac{p(D\vert \theta)p(\theta)}{p(D)}\\
+& = \frac{\theta^s (1-\theta)^{(n - s)}p(\theta)}{\int (\theta')^s (1-\theta')^{(n - s)}p(\theta')\,\, d\theta'}.
+\end{align*}
+] 
+
+```{r Figinertia2, eval = TRUE, echo=FALSE,fig.align = "center",cache=TRUE, fig.show = "hold", out.width = "70%", message= FALSE, warning=FALSE}
+
+n <- 1000 #parameters 
+s <- 1e5  #sample size
+
+ps <- seq(from=0 , to=1 , length.out=n)
+
+prior <- rep(1/n , n) #uniform prior
+
+likelihood1g <- dbinom( 1 , size=1 , prob=ps)
+likelihood2g <- dbinom( 2 , size=2 , prob=ps)
+likelihood2g1b <- dbinom( 2 , size=3 , prob=ps)
+
+posterior1g <- likelihood1g * prior
+posterior2g <- likelihood2g * prior
+posterior2g1b <- likelihood2g1b * prior
+
+
+posterior1g <- posterior1g / sum(posterior1g)
+posterior2g <- posterior2g / sum(posterior2g)
+posterior2g1b <- posterior2g1b / sum(posterior2g1b)
+
+upperLimit <- .003
+
+InertiaPriorPlot <- ggplot()+geom_line(aes(x = ps, y = prior))+theme_tufte(base_size = 7)+xlab("parameter")+
+  ylab("probability")+theme(plot.title.position = "plot")+ggtitle("Prior")+
+  scale_x_continuous()+scale_y_continuous(limits = c(0,upperLimit))
+
+
+InertiaOneGPlot <- ggplot()+geom_line(aes(x = ps, y = posterior1g))+theme_tufte(base_size = 7)+xlab("parameter")+
+  ylab("probability")+theme(plot.title.position = "plot",
+                            axis.text.y = element_blank(),
+                            axis.title.y = element_blank(),
+                          axis.ticks.y =element_blank()
+)+ggtitle("Evidence: h")+
+  scale_y_continuous(limits = c(0,upperLimit))
+
+
+
+InertiaTwoGPlot <- ggplot()+geom_line(aes(x = ps, y = posterior2g))+theme_tufte(base_size = 7)+xlab("p")+
+  ylab("probability")+theme(plot.title.position = "plot"#, 
+#                        axis.text.y = element_blank(),
+#                            axis.title.y = element_blank(),
+#                            axis.ticks.y = element_blank()
+                  )+ggtitle("Evidence: h, h")+
+scale_y_continuous(limits = c(0,upperLimit))
+
+InertiaTwoGoneBluePlot <- ggplot()+geom_line(aes(x = ps, y = posterior2g1b))+theme_tufte(base_size = 7)+xlab("parameter")+
+  ylab("probability")+theme(plot.title.position = "plot",     axis.text.y = element_blank(),
+  axis.title.y = element_blank(),
+      axis.ticks.y = element_blank()
+           )+ggtitle("Evidence: h, h, t")+
+  scale_y_continuous(limits = c(0,upperLimit))
+```
+
+
+
+```{r Figinertia3, echo=FALSE, eval=TRUE,fig.align = "center", cache=TRUE, fig.show = "hold", out.width = "75%",   message = FALSE, warning = FALSE, results = FALSE}
+#| label: fig-intertia2
+#| fig-cap: "As observations of heads, heads and tails come in, extreme parameter values drop out of the picture and the posterior is shaped by the evidence."
+
+
+grid.arrange(InertiaPriorPlot, InertiaOneGPlot,  InertiaTwoGPlot, InertiaTwoGoneBluePlot, ncol = 2, nrow = 2)
+```
+
+
+The impossibility of defining proper scoring rules was another weakness of imprecise probabilism.  This is a significant shortcoming, especially because proper scores do exist for precise probabilism. Fortunately, one can show that there exist proper scoring rules for higher-order probabilism. <!--These rules can then be used to formulate accuracy-based arguments. In addition, recall the point made by  @Schoenfield2017accuracy:  an accuracy measure  will not usually recommend an imprecise stance. This argument 
+fails against imprecise probabilism: there are cases in which accuracy considerations recommend an imprecise stance (that is, a multi-modal distribution) over a precise one. --> We defend this claim in the next section. The argument, however, will be more formal and can be skipped upon first reading.
