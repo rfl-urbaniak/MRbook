@@ -7,13 +7,13 @@ format:
     include-in-header: quartoStyle.sty
     mainfont: Times New Roman
     sansfont: Times New Roman
+    keep-tex: true
 documentClass: scrartcl
 classOptions: [dvipsnames, enabledeprecatedfontcommands, headings=big]
 font:
   size: 10pt
 url:
   color: blue
-bibliography: [../../../references/referencesMRbook.bib]
 csl: apa-6th-edition.csl
 indent: true
 numbersections: true
@@ -1361,14 +1361,18 @@ daigramToRotate <- ggplot(data.frame(a=1)) + xlim(1, 40) + ylim(1, 60)+theme_voi
   annotation_custom(BdiseaseIfSidsPlotGrob, xmin = 31, xmax = 37, ymin = 27, ymax = 37)+
   annotation_custom(BdiseaseIfAmurderPlotGrob, xmin = 24.5, xmax = 30.5, ymin = 20, ymax = 30)
 
-ggsave("scWithHOPPrint.jpg", plot = daigramToRotate, width = 10, height = 8, units = "in", dpi = 800)
+ggsave("scWithHOPPrint.png", plot = daigramToRotate, width = 10, height = 8, units = "in", dpi = 800)
 
 
-plot_path <- "scWithHOPPrint.jpg"
+
+plot_path <- "scWithHOPPrint.png"
 plot_image <- image_read(plot_path)
 rotated_image <- image_rotate(plot_image, 270)
-output_path <- "rotated_scWithHOPPrint.jpg"
+output_path <- "rotated_scWithHOPPrint.png"
 image_write(rotated_image, output_path)
+
+pdf_output_path <- "rotated_scWithHOPPrint.pdf"
+image_write(rotated_image, pdf_output_path, format = "pdf")
 
 # print(daigramToRotate, vp=viewport(angle=90), width=7, height=5)
 #knitr::include_graphics('rotated_scWithHOPPrint.jpg')
@@ -1383,7 +1387,7 @@ image_write(rotated_image, output_path)
 #| fig-cap: "An illustration of a probabilistic program for the Sally Clark case."
 #| fig-pos: h
 
-knitr::include_graphics("rotated_scWithHOPPrint.jpg")
+knitr::include_graphics("rotated_scWithHOPPrint.pdf")
 
 ```
 
