@@ -1,0 +1,42 @@
+name: Test notebooks
+
+on:
+    push:
+      branches: [ main ]
+    pull_request:
+      branches: [ main, staging-* ]
+    workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.10']
+
+    steps:
+        - uses: actions/checkout@v2
+
+        - name: pip cache
+          uses: actions/cache@v2
+          with:
+            path: ~/.cache/pip
+            key: deploy-docs-${{ hashFiles('**/pyproject.toml') }}
+            restore-keys: |
+              deploy-docs-
+
+
+        - name: Set up Python ${{ matrix.python-version }}
+          uses: actions/setup-python@v1
+          with:
+            python-version: ${{ matrix.python-version }}
+
+        - name: Setup Graphviz
+          uses: ts-graphviz/setup-graphviz@v1
+
+        - name: Install Python packages
+          run: |
+            pip install --upgrade pip
+            pip install -e .[dev]
+    
+    
