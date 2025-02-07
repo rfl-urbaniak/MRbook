@@ -1,1 +1,1 @@
-from .weight import (weight, expected_weight)
+from .weight import expected_weight, weight  # noqa: F401

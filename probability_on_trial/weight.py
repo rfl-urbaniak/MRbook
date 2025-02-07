@@ -1,5 +1,5 @@
 import warnings
-from typing import Dict, List, Optional
+from typing import Dict, Optional
 
 import pyro.distributions as dist
 import torch
@@ -14,7 +14,9 @@ def normalize_sample(sample: torch.Tensor, k: int = 1000) -> torch.Tensor:
     return hist / hist.sum()
 
 
-def weight(posterior: torch.Tensor, prior: Optional[torch.tensor] = None, base=2.0) -> torch.Tensor:
+def weight(
+    posterior: torch.Tensor, prior: Optional[torch.Tensor] = None, base=2.0
+) -> torch.Tensor:
     """
     Calculates the weight of the posterior distribution.
     The weight is defined as 1 - H(posterior) / H(prior)
@@ -29,18 +31,18 @@ def weight(posterior: torch.Tensor, prior: Optional[torch.tensor] = None, base=2
 
     # else:
     #     prior = prior.broadcast_to(posterior.shape)
-    if prior is not None andprior.dim() == 0:
+    if prior is not None and prior.dim() == 0:
         warnings.warn("prior is a scalar, assuming it is a probability of success")
-        prior_no = 1-prior
-        prior_distro = torch.stack([prior_no, prior], dim = -1)
+        prior_no = 1 - prior
+        prior_distro = torch.stack([prior_no, prior], dim=-1)
         prior = prior_distro.broadcast_to(posterior.shape)
 
     assert torch.allclose(
-        posterior.sum(dim = -1, keepdim=True), torch.tensor(1.0)
+        posterior.sum(dim=-1, keepdim=True), torch.tensor(1.0)
     ), f"Sum of posterior distribution is {posterior.sum()}"
 
-    if posterior.isnan().sum()>0: 
-        raise ValueError(f"Posterior contains nan values!")
+    if posterior.isnan().sum() > 0:
+        raise ValueError("Posterior contains nan values!")
 
     if posterior.numel() == 0:
         return torch.tensor(float("nan"))
@@ -51,15 +53,15 @@ def weight(posterior: torch.Tensor, prior: Optional[torch.tensor] = None, base=2
         x = torch.broadcast_to(x, posterior.shape)
 
         prior = dist.Beta(1, 1).log_prob(x).exp()
-        prior = prior / prior.sum(dim = -1, keepdim=True)
+        prior = prior / prior.sum(dim=-1, keepdim=True)
 
-        assert torch.allclose(
-            prior.sum(dim = -1), torch.tensor(1.0)
-        )
+        assert torch.allclose(prior.sum(dim=-1), torch.tensor(1.0))
 
     entropy_prior = -torch.sum(prior * torch.log(prior) / torch.log(base), dim=-1)
 
-    entropy_posterior = -torch.sum(posterior * torch.log(posterior) / torch.log(base), dim = -1)
+    entropy_posterior = -torch.sum(
+        posterior * torch.log(posterior) / torch.log(base), dim=-1
+    )
 
     return 1 - entropy_posterior / entropy_prior
 
@@ -71,10 +73,10 @@ def expected_weight(
     base=2,
 ) -> Dict[str, torch.Tensor]:
     """
-    Compute the expected weight change given a prior distribution, posterior distributions, 
+    Compute the expected weight change given a prior distribution, posterior distributions,
     and the probabilities of evidence.
 
-    The function evaluates how much the weight of evidence changes based on different 
+    The function evaluates how much the weight of evidence changes based on different
     posterior distributions, adjusting for the probabilities of the evidence.
 
     Args:
@@ -86,41 +88,30 @@ def expected_weight(
     Returns:
         Dict[str, torch.Tensor]: A dictionary containing the following elements:
 
-        - **expected_weight** (`torch.Tensor`): The overall expected change in weight across possible 
+        - **expected_weight** (`torch.Tensor`): The overall expected change in weight across possible
           evidence values, incorporating both prior information and posterior adjustments.
 
         - **weight_prior** (`torch.Tensor`): The weight of the prior distribution before observing any evidence.
 
-        - **posterior_weights** (`torch.Tensor`): The computed weights of the posterior distributions. 
-          A posterior weight close to 1 indicates more certainty (lower entropy), whereas a value close 
+        - **posterior_weights** (`torch.Tensor`): The computed weights of the posterior distributions.
+          A posterior weight close to 1 indicates more certainty (lower entropy), whereas a value close
           to 0 suggests higher uncertainty.
 
-        - **weight_changes** (`torch.Tensor`): The differences between posterior weights and the prior weight, 
+        - **weight_changes** (`torch.Tensor`): The differences between posterior weights and the prior weight,
           quantifying how much each posterior deviates from the prior.
 
-        - **weighted_weight_changes** (`torch.Tensor`): The `weight_changes` values scaled by their respective 
-          probabilities (`probs_of_evidence`), representing each piece of evidence's contribution to the 
+        - **weighted_weight_changes** (`torch.Tensor`): The `weight_changes` values scaled by their respective
+          probabilities (`probs_of_evidence`), representing each piece of evidence's contribution to the
           overall expected weight change.
 
-    Mathematical Formulation: 
-    
-    The expected value of the evidence weight change is computed as:
+    Mathematical Formulation:
 
-    \[
-    \mathbb{E}[E, PRIOR] = \sum_{i=1}^{k} P(S_i \mid PRIOR) \times \text{VAL}[E_i, PRIOR]
-    \]
-
-    The expected weight change due to evidence is given by:
-
-    \[
-    E_{\text{Vchange}}[E, PRIOR] = \sum_{i=1}^{k} P(E_i \mid PRIOR) \times \left( \text{VAL}(\text{POSTERIOR}_{E_i}) - \text{VAL}(\text{PRIOR}) \right)
-    \]
 
     """
 
     weight_prior = weight(outcome_prior, base=base)
 
-    posterior_weights = weight(posterior, base=base) 
+    posterior_weights = weight(posteriors, base=base)
 
     weight_changes = posterior_weights - weight_prior
 
