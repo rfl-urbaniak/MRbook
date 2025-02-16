@@ -15,7 +15,8 @@ def normalize_sample(sample: torch.Tensor, k: int = 1000) -> torch.Tensor:
 
 
 def weight(
-    posterior: torch.Tensor, prior: Optional[torch.Tensor] = None, base=2.0
+    posterior: torch.Tensor, prior: Optional[torch.Tensor] = None, base=2.0,
+    epsilon = 1e-10
 ) -> torch.Tensor:
     """
     Calculates the weight of the posterior distribution.
@@ -60,7 +61,7 @@ def weight(
     entropy_prior = -torch.sum(prior * torch.log(prior) / torch.log(base), dim=-1)
 
     entropy_posterior = -torch.sum(
-        posterior * torch.log(posterior) / torch.log(base), dim=-1
+        posterior * torch.log(posterior+epsilon) / torch.log(base), dim=-1
     )
 
     return 1 - entropy_posterior / entropy_prior
