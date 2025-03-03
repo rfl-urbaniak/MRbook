@@ -116,7 +116,7 @@ def expected_weight(
 
     posterior_weights = weight(posteriors, base=base)
 
-    weight_changes = posterior_weights - weight_prior
+    weight_changes = torch.abs(posterior_weights - weight_prior)
 
     weighted_weight_changes = weight_changes * probs_of_evidence
 
